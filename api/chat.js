@@ -1,22 +1,36 @@
 // /api/chat.js
-import profile from '../data/profile.json' assert { type: 'json' };
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+
+let cachedProfile = null;
+async function loadProfile() {
+  if (cachedProfile) return cachedProfile;
+  const profilePath = path.join(__dirname, '..', 'data', 'profile.json'); // ../data/profile.json
+  const txt = await readFile(profilePath, 'utf8');
+  cachedProfile = JSON.parse(txt);
+  return cachedProfile;
+}
 
 export default async function handler(req, res) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
 
-    const body = (await req.json?.()) || req.body || {};
+    // Body (Vercel parse généralement req.body si JSON)
+    const body = (typeof req.body === 'string')
+      ? JSON.parse(req.body || '{}')
+      : (req.body || {});
+
     const question = (body.question || '').trim();
     const lang = (body.lang || 'fr').toLowerCase();
+    if (!question) return res.status(400).json({ error: 'Missing question' });
 
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
-    }
-    if (!question) {
-      return res.status(400).json({ error: 'Missing question' });
-    }
+    const profile = await loadProfile();
 
-    // Faits → texte compact pour le "context grounding"
     const facts =
       `NAME: ${profile.name}\n` +
       `LOCATION: ${profile.location}\n` +
@@ -82,9 +96,7 @@ ${facts}`
     });
 
     const json = await r.json();
-    if (!r.ok) {
-      return res.status(500).json({ error: json.error?.message || 'OpenAI error' });
-    }
+    if (!r.ok) return res.status(500).json({ error: json.error?.message || 'OpenAI error' });
 
     const answer = json.choices?.[0]?.message?.content?.trim() || '';
     return res.status(200).json({ answer });
