@@ -10,29 +10,20 @@
 <header class="nav">
   <div class="container">
     <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-    <nav class="nav-links">
-      <a href="./index.html">Accueil</a><a href="./cv.html">CV</a><a href="./chatbot.html">Chatbot</a>
-      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
-    </nav>
-    <div class="nav-links">
-      <button class="btn linkish" data-toggle-theme>🌓</button>
-    </div>
+    <nav class="nav-links"><a href="./index.html">Accueil</a><a href="./cv.html">CV</a><a href="./chatbot.html">Chatbot</a><button id="dlCvBtn" class="btn linkish">Télécharger le CV</button></nav>
+    <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button><a class="btn linkish" href="./portfolio.html">FR</a><a class="btn linkish" href="./portfolio-en.html">EN</a><a class="btn linkish" href="./portfolio-de.html">DE</a></div>
   </div>
 </header>
 
 <main class="section container">
   <h1 class="title">Portfolio</h1>
-  <p class="lead">Sélection de mini-projets. “Visiter” ouvre dans un nouvel onglet. “Aperçu” tente un embed sécurisé (si autorisé par le site).</p>
+  <p class="lead">Visiter ouvre un nouvel onglet. “Aperçu” tente un embed sécurisé (si autorisé par le site).</p>
   <div id="portfolioGrid" class="grid"></div>
 </main>
 
-<!-- overlay preview -->
 <div class="overlay" id="overlay" role="dialog" aria-modal="true">
   <div class="overlay-inner">
-    <div class="overlay-bar">
-      <strong id="overlayTitle">Aperçu</strong>
-      <button class="btn" id="overlayClose">Fermer</button>
-    </div>
+    <div class="overlay-bar"><strong id="overlayTitle">Aperçu</strong><button class="btn" id="overlayClose">Fermer</button></div>
     <iframe id="overlayFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
   </div>
 </div>
@@ -40,8 +31,4 @@
 <script src="./portfolio-data.js"></script>
 <script src="./portfolio.js"></script>
 <script src="./site.js" defer></script>
-<script>
-(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
-</script>
-</body>
-</html>
+<script>(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener
