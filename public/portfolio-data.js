@@ -5,7 +5,7 @@ const PORTFOLIO_I18N = {
       id:"adwall",
       title:"AdWall — mur d'affiches éducatives",
       desc:"Mur numérique pour ressources, critères et rappels.",
-      url:"https://adwall.example.com",
+      url:"https://adwall.net",
       image:"",
       icon:"" // ex: "./assets/adwall-icon.png"
     },
@@ -13,7 +13,7 @@ const PORTFOLIO_I18N = {
       id:"documate",
       title:"Documate — générateur de docs pédagogiques",
       desc:"Séquences, rubriques et supports rapides.",
-      url:"https://documate.example.com",
+      url:"https://documate.work",
       image:"",
       icon:""
     },
@@ -21,7 +21,7 @@ const PORTFOLIO_I18N = {
       id:"petnames",
       title:"PetNames — mini-app JS",
       desc:"Nommer des personnages / mascottes en classe.",
-      url:"https://petnames.example.com",
+      url:"https://nix177.github.io/petnames/",
       image:"",
       icon:""
     }
