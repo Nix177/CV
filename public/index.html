@@ -2,10 +2,10 @@
 <html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Didactique de l’informatique & IA</title>
+  <title>Nicolas Tuor — Didactique & IA</title>
   <link rel="stylesheet" href="./style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
 <body>
 
@@ -20,113 +20,148 @@
       <a href="./ai-lab.html">Idées IA en éducation</a>
       <a href="./chatbot.html">Chatbot</a>
       <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
-    </nav>
-    <nav class="nav-links">
-      <button class="btn linkish" data-toggle-theme title="Basculer le thème">🌓</button>
-      <a class="btn linkish is-active" href="./index.html">FR</a>
-      <a class="btn linkish" href="./index-en.html">EN</a>
-      <a class="btn linkish" href="./index-de.html">DE</a>
+      <button class="btn linkish" data-toggle-theme title="Thème">🌓</button>
+      <a class="btn chip" href="./index.html">FR</a>
+      <a class="btn chip" href="./index-en.html">EN</a>
+      <a class="btn chip" href="./index-de.html">DE</a>
     </nav>
   </div>
 </header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container hero-grid">
-      <div>
-        <h1 class="xxl">Didactique de l’informatique & <span class="accent">éducation avec IA</span></h1>
-        <p class="lead">Apprentissages explicites, critères de réussite et usage raisonné de l’IA — des gains concrets, sans baisser les exigences.</p>
-        <div class="row gap">
-          <a class="btn primary" href="./cv.html">Voir le CV</a>
-          <a class="btn ghost" href="./portfolio.html">Exemples</a>
-          <a class="btn ghost" href="./chatbot.html">💬 Chatbot « Pourquoi m’embaucher ? »</a>
-        </div>
+<main class="container section">
+  <h1 class="title">Didactique de l’informatique & éducation avec IA</h1>
+  <p class="lead">
+    Apprentissages explicites, critères de réussite et usage raisonné de l’IA —
+    des gains concrets sans baisser les exigences.
+  </p>
 
-        <ul class="kpis">
-          <li>🧠 Pensée critique</li>
-          <li>🧭 Guidage</li>
-          <li>🏫 Primaire</li>
-          <li>🤖 IA</li>
-        </ul>
-      </div>
+  <div class="row gap">
+    <a class="btn primary" href="./cv.html">Voir le CV</a>
+    <a class="btn" href="./portfolio.html">Exemples</a>
+    <a class="btn" href="./chatbot.html">💬 Chatbot “Pourquoi m’embaucher ?”</a>
+  </div>
 
-      <div>
-        <!-- Petit rappel des forces sous forme de flip stable -->
-        <div class="cards">
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>🧭</span></div>
-            <div class="face back"><p>Objectifs clairs, supports étagés, retours fréquents.</p></div>
-          </article>
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>🤖</span></div>
-            <div class="face back"><p>IA comme outil : mesurée, transparente, didactique.</p></div>
-          </article>
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>🌿</span></div>
-            <div class="face back"><p>J’apprends vite, je connais mes limites et je progresse.</p></div>
-          </article>
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>✅</span></div>
-            <div class="face back"><p>Solutions simples, robustes et accessibles.</p></div>
-          </article>
+  <hr class="soft" />
+
+  <!-- Cartes recto/verso -->
+  <section class="section">
+    <h2 class="h3">Forces et centres d’intérêt</h2>
+    <div id="skillsGrid" class="flip-grid">
+      <!-- 1 -->
+      <article class="card3d" tabindex="0" aria-label="Pensée critique">
+        <div class="inner">
+          <div class="face front">
+            <div class="emoji">🧠</div>
+            <div class="card-title">Pensée critique</div>
+          </div>
+          <div class="face back">
+            <ul class="bullets">
+              <li>Vérifier & comparer les sources</li>
+              <li>Expliciter des critères</li>
+              <li>Former à l’évaluation de fiabilité</li>
+            </ul>
+          </div>
         </div>
-      </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="card3d" tabindex="0" aria-label="Guidage progressif">
+        <div class="inner">
+          <div class="face front">
+            <div class="emoji">🧩</div>
+            <div class="card-title">Guidage progressif</div>
+          </div>
+          <div class="face back">
+            <ul class="bullets">
+              <li>Objectifs clairs</li>
+              <li>Supports étagés</li>
+              <li>Feedback fréquent</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="card3d" tabindex="0" aria-label="IA responsable">
+        <div class="inner">
+          <div class="face front">
+            <div class="emoji">🤖</div>
+            <div class="card-title">IA responsable</div>
+          </div>
+          <div class="face back">
+            <ul class="bullets">
+              <li>Exigences maintenues</li>
+              <li>Gains mesurés</li>
+              <li>Éthique & transparence</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="card3d" tabindex="0" aria-label="Hobbies">
+        <div class="inner">
+          <div class="face front">
+            <div class="emoji">🌿</div>
+            <div class="card-title">Hobbies</div>
+          </div>
+          <div class="face back">
+            <ul class="bullets">
+              <li>Bricolage numérique</li>
+              <li>Veille techno</li>
+              <li>Nature / sport</li>
+            </ul>
+          </div>
+        </div>
+      </article>
     </div>
+    <p class="muted" style="margin-top:8px">Astuce : cliquer ou presser <kbd>Entrée</kbd> pour retourner une carte.</p>
   </section>
 
-  <!-- GUIDAGE CRITIQUE (mini-jeu pédagogique) -->
+  <hr class="soft" />
+
   <section class="section">
-    <div class="container demo">
-      <div class="toolbar">
-        <span class="muted">Vérifier une information en 3 questions</span>
-        <span class="muted">Adapté par âge · feedback instantané</span>
+    <h2 class="h3">Mini-activité pédagogique (évaluation rapide de source)</h2>
+    <form id="factForm" class="stack">
+      <div class="row gap">
+        <label style="flex:2">Sujet ou URL
+          <input id="fTopic" placeholder="ex. L’IA à l’école… ou https://exemple.com/article" />
+        </label>
+        <label style="flex:1">Âge (optionnel)
+          <input id="fAge" inputmode="numeric" placeholder="ex. 12" />
+        </label>
       </div>
-
-      <form id="factForm" class="grid" style="grid-template-columns:1fr">
-        <label>Âge / niveau
-          <input id="fAge" placeholder="ex. 11–12 ans, 6H">
+      <div class="row gap">
+        <label style="flex:1">Auteur / qualifications
+          <input id="fAuth" placeholder="ex. journaliste tech, enseignant·e…" />
         </label>
-        <label>Sujet / lien
-          <input id="fTopic" placeholder="ex. « Les écrans rendent myopes » — ou coller une URL">
+        <label style="flex:1">Date / sources
+          <input id="fDate" placeholder="ex. 2024, sources citées ?" />
         </label>
-
-        <div class="cards">
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>👤</span></div>
-            <div class="face back"><p>L’auteur·rice a-t-il/elle des compétences reconnues sur ce sujet ?</p></div>
-          </article>
-          <textarea id="fAuth" rows="2" placeholder="Ce que j’ai trouvé (ou je ne sais pas)…"></textarea>
-
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>🗓️</span></div>
-            <div class="face back"><p>La date et les sources sont-elles claires et vérifiables ?</p></div>
-          </article>
-          <textarea id="fDate" rows="2" placeholder="Indices, captures, lien vers la source…"></textarea>
-
-          <article class="card3d" tabindex="0">
-            <div class="face front"><span>🧪</span></div>
-            <div class="face back"><p>Y a-t-il des preuves solides (étude, données, consensus) ?</p></div>
-          </article>
-          <textarea id="fProof" rows="2" placeholder="Preuves trouvées, contre-exemples…"></textarea>
-        </div>
-
+      </div>
+      <label>Preuves / où as-tu trouvé ?
+        <textarea id="fProof" rows="3" placeholder="Notes, URLs, éléments concrets…"></textarea>
+      </label>
+      <div class="row gap">
         <button class="btn primary" data-busy>Demander un feedback</button>
-      </form>
-
-      <pre id="factOut" class="code" style="margin-top:12px;white-space:pre-wrap"></pre>
-    </div>
+      </div>
+      <pre id="factOut" class="output" aria-live="polite"></pre>
+    </form>
   </section>
 </main>
 
 <footer class="container section footer">
-  <div class="foot">
-    <small>© Nicolas Tuor</small>
-  </div>
+  <div class="foot"><small>© Nicolas Tuor</small></div>
 </footer>
 
 <script src="./site.js" defer></script>
 <script>
+  // flip des cartes
+  document.addEventListener('DOMContentLoaded', () => {
+    window.UI?.initFlipGrid?.('#skillsGrid');
+  });
+
+  // mini-activité (feedback avec spinner)
   const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
   F.addEventListener('submit', async (e)=>{
     e.preventDefault();
@@ -151,6 +186,5 @@ Preuves:${document.getElementById('fProof').value.trim()}`;
     }
   });
 </script>
-
 </body>
 </html>
