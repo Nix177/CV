@@ -1,57 +1,132 @@
 <!DOCTYPE html>
 <html lang="de" data-theme="dark">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nicolas Tuor — Informatikdidaktik & KI</title>
-  <link rel="stylesheet" href="./style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nicolas Tuor — Informatikdidaktik & verantwortungsvolle KI</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
+
 <header class="nav">
   <div class="container">
-    <a class="brand" href="./index-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="./index-de.html">
+      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
+    </a>
     <nav class="nav-links">
-      <a href="./cv-de.html">CV</a><a href="./portfolio-de.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot-de.html">Chatbot</a>
+      <a href="./cv-de.html">CV</a>
+      <a href="./portfolio-de.html">Portfolio</a>
+      <a href="./ai-lab.html">KI-Ideen im Unterricht</a>
+      <a href="./chatbot-de.html">Chatbot</a>
       <button id="dlCvBtn" class="btn linkish">PDF herunterladen</button>
     </nav>
     <div class="nav-links">
       <button class="btn linkish" data-toggle-theme>🌓</button>
-      <a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a>
+      <a class="btn linkish" href="./index.html">FR</a>
+      <a class="btn linkish" href="./index-en.html">EN</a>
+      <a class="btn linkish is-active" href="./index-de.html">DE</a>
     </div>
   </div>
 </header>
 
-<main class="section container">
-  <h1 class="title">Informatikdidaktik & <span class="stroke">verantwortungsvolle KI</span></h1>
-  <p class="lead">Klare Lernsequenzen, Erfolgskriterien und ein maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
-  <div class="buttons"><a class="btn primary" href="./cv-de.html">Zum CV</a><a class="btn" href="./portfolio-de.html">Projekte</a><a class="btn ghost" href="./chatbot-de.html">💬 „Warum mich einstellen?“</a></div>
-  <div class="cards">
-    <div class="card" tabindex="0">
-      <div class="face front">🧠</div>
-      <div class="face back"><strong>Kritisches Denken</strong><br>Prüfen, vergleichen, Kriterien offenlegen.</div>
+<main>
+  <!-- Hero -->
+  <section class="hero container section">
+    <h1 class="xxl">
+      Informatikdidaktik &amp; <span class="accent">verantwortungsvolle KI</span>
+    </h1>
+    <p class="lead">Klare Lernsequenzen, Erfolgskriterien und ein maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
+    <div class="row gap">
+      <a class="btn" href="./cv-de.html">Zum CV</a>
+      <a class="btn ghost" href="./portfolio-de.html">Projekte</a>
+      <a class="btn ghost" href="#ai-compass">„Warum mich einstellen?“</a>
     </div>
-    <div class="card" tabindex="0">
-      <div class="face front">🧭</div>
-      <div class="face back"><strong>Gezielte Begleitung</strong><br>Klar formulierte Ziele, gestufte Hilfen, häufiges Feedback.</div>
+  </section>
+
+  <!-- Cartes forces/valeurs (flip) -->
+  <section class="container section">
+    <div class="cards">
+      <article class="card3d" tabindex="0">
+        <div class="face front"><span>🧭</span></div>
+        <div class="face back"><p>Struktur und Orientierung: klare Ziele, häufiges Feedback.</p></div>
+      </article>
+      <article class="card3d" tabindex="0">
+        <div class="face front"><span>🤖</span></div>
+        <div class="face back"><p>KI als Werkzeug: planbar, transparent, didaktisch begründet.</p></div>
+      </article>
+      <article class="card3d" tabindex="0">
+        <div class="face front"><span>🌿</span></div>
+        <div class="face back"><p>Wachstums-Mindset: schnell lernen, eigene Grenzen kennen.</p></div>
+      </article>
+      <article class="card3d" tabindex="0">
+        <div class="face front"><span>✅</span></div>
+        <div class="face back"><p>Verlässlichkeit und einfache, robuste Lösungen.</p></div>
+      </article>
     </div>
-    <div class="card" tabindex="0">
-      <div class="face front">🤖</div>
-      <div class="face back"><strong>Verantwortungsvolle KI</strong><br>Nutzen messen, Ansprüche halten, ethisch bleiben.</div>
-    </div>
-    <div class="card" tabindex="0">
-      <div class="face back"><strong>Hobbys</strong><br>Digitales Tüfteln, Tech-Scouting, Natur & Sport.</div>
-      <div class="face front">🌿</div>
-    </div>
-  </div>
-  <script>
-    document.querySelectorAll('.card').forEach(c=>{
-      const flip=()=>c.classList.toggle('flipped');
-      c.addEventListener('click', flip);
-      c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
-    });
-  </script>
+  </section>
+
+  <!-- AI Compass (mini-interactif) -->
+  <section id="ai-compass" class="container section">
+    <h2>AI-Kompass: Ideen in 30 Sekunden</h2>
+    <form id="compassForm" class="stack">
+      <label>Alter / Stufe
+        <input type="text" id="compassAge" placeholder="z.B. 11–12 Jahre, 6. Klasse" />
+      </label>
+      <label>Thema / Fach
+        <input type="text" id="compassTopic" placeholder="z.B. Brüche, Ökosysteme, Zeitformen" />
+      </label>
+      <button class="btn" data-busy>Ideen generieren</button>
+    </form>
+    <div id="compassOut" class="grid"></div>
+  </section>
 </main>
 
+<footer class="container section">
+  <small>© Nicolas Tuor</small>
+</footer>
+
 <script src="./site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+<script>
+  // flips
+  document.addEventListener('click', e => {
+    const c = e.target.closest('.card3d'); if(!c) return;
+    c.classList.toggle('is-flipped');
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){ const c = e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); }
+  });
+
+  // AI Compass: utilise /api/factcheck en mode generate
+  const f = document.getElementById('compassForm');
+  const out = document.getElementById('compassOut');
+
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const age = document.getElementById('compassAge').value.trim();
+    const topic = document.getElementById('compassTopic').value.trim();
+    const btn = f.querySelector('[data-busy]');
+    window.UI.setBusy(btn, true);
+
+    out.innerHTML = "";
+    try{
+      const r = await fetch('/api/factcheck', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ mode:'generate', lang:'de', topic, age })
+      });
+      const data = await r.json();
+      // attend une liste d'étapes/astuces
+      (data.steps || []).forEach(step => {
+        const card = document.createElement('article');
+        card.className = 'card3d';
+        card.innerHTML = `<div class="face front"><span>💡</span></div>
+                          <div class="face back"><p>${step}</p></div>`;
+        out.appendChild(card);
+      });
+    } finally {
+      window.UI.setBusy(btn, false);
+    }
+  });
+</script>
 </body>
 </html>
