@@ -11,7 +11,7 @@
   <div class="container">
     <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
     <nav class="nav-links">
-      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot IA</a>
+      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot.html">Chatbot IA</a>
       <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
     </nav>
     <div class="nav-links">
@@ -35,13 +35,31 @@
         </div>
         <ul class="kpis"><li>🧠 Pensée critique</li><li>🧭 Didactique</li><li>📚 Primaire</li><li>🤖 IA</li></ul>
       </div>
-      <!-- Cartes : icône devant, texte au dos -->
       <div class="cards">
-        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🧭</div><div class="face back">Guidage progressif : objectifs clairs, étayage, feedback.</div></div>
-        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">✅</div><div class="face back">Évaluer pour apprendre : critères partagés, rubriques, micro-révisions.</div></div>
-        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🤖</div><div class="face back">IA responsable : gains mesurés, vigilance, respect des attendus.</div></div>
-        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🗣️</div><div class="face back">Communication claire : consignes narrées, exemples, reformulation.</div></div>
+        <div class="card" tabindex="0">
+          <div class="face front">🧠</div>
+          <div class="face back"><strong>Pensée critique</strong><br>Vérifier, comparer, expliciter les critères.</div>
+        </div>
+        <div class="card" tabindex="0">
+          <div class="face front">🧭</div>
+          <div class="face back"><strong>Guidage progressif</strong><br>Objectifs clairs, supports étagés, retours fréquents.</div>
+        </div>
+        <div class="card" tabindex="0">
+          <div class="face front">🤖</div>
+          <div class="face back"><strong>IA responsable</strong><br>Gains mesurés, exigences maintenues, éthique.</div>
+        </div>
+        <div class="card" tabindex="0">
+          <div class="face back"><strong>Hobbies</strong><br>bricolage numérique, veille techno, nature/sport.</div>
+          <div class="face front">🌿</div>
+        </div>
       </div>
+      <script>
+        document.querySelectorAll('.card').forEach(c=>{
+          const flip=()=>c.classList.toggle('flipped');
+          c.addEventListener('click', flip);
+          c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
+        });
+      </script>
     </div>
   </section>
 
@@ -89,13 +107,6 @@
 
 <!-- flips + jeu + mode nuit + protections -->
 <script>
-  // flip cards
-  document.querySelectorAll('.card').forEach(c => {
-    const flip = () => c.classList.toggle('flipped');
-    c.addEventListener('click', flip);
-    c.addEventListener('keydown', e => (e.key==='Enter'||e.key===' ') && (e.preventDefault(), flip()));
-  });
-
   // mini-jeu : Info ou Intox (3 questions)
   const QUESTIONS = [
     { q: "Un article sans date ni source fiable est-il crédible ?", choices: ["Probablement oui", "Plutôt non"], ok: 1, why: "Absence de date/source = signal faible de fiabilité." },
@@ -120,9 +131,6 @@
   draw();
 </script>
 <script src="./site.js" defer></script>
-<script>
-  // mode nuit persisté
-  (function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
-</script>
+<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
 </body>
 </html>
