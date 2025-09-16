@@ -99,4 +99,16 @@ a{color:var(--brand-2)}
   background: #fff; box-shadow: var(--shadow); object-fit: cover;
   border: 1px solid color-mix(in oklab, var(--ink), transparent 85%);
 }
+/* --- Stable flip cards --- */
+.cards { display:grid; grid-template-columns:repeat(2,minmax(260px,1fr)); gap:16px; }
+.card { position:relative; height:220px; perspective:1000px; }
+.card .face { position:absolute; inset:0; display:grid; place-items:center;
+  border-radius:18px; background:var(--panel);
+  border:1px solid color-mix(in oklab,var(--ink),transparent 85%);
+  transition:transform .5s ease; backface-visibility:hidden; transform-style:preserve-3d;
+}
+.card .front { font-size:54px; }
+.card .back { padding:16px; transform:rotateY(180deg); text-align:center; }
+.card.flipped .front { transform:rotateY(180deg); }
+.card.flipped .back { transform:rotateY(0); }
 
