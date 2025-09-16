@@ -91,3 +91,12 @@ h1.title{font-size:clamp(28px,4.2vw,46px);line-height:1.08;margin:0 0 8px}
 
 .footer{padding:28px 0;border-top:1px solid color-mix(in oklab,var(--ink),transparent 90%)}.foot{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px}
 a{color:var(--brand-2)}
+/* --- Portfolio icons --- */
+.site-thumb { position: relative; }
+.site-thumb .site-icon {
+  position: absolute; top: 12px; left: 12px;
+  width: 36px; height: 36px; border-radius: 8px;
+  background: #fff; box-shadow: var(--shadow); object-fit: cover;
+  border: 1px solid color-mix(in oklab, var(--ink), transparent 85%);
+}
+
