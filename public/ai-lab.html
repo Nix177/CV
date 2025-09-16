@@ -1,106 +1,110 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Fact-Check Lab — Nicolas Tuor</title>
-  <link rel="stylesheet" href="./style.css">
-  <style>
-    .lab { max-width: 960px; margin: 0 auto; }
-    .cardy { background: var(--panel); border:1px solid color-mix(in oklab,var(--ink),transparent 85%); border-radius:16px; padding:16px; box-shadow:var(--shadow); }
-    .row { display:flex; gap:10px; }
-    .row > * { flex:1; }
-    .muted { opacity:.8 }
-    .list { display:grid; gap:10px; }
-    .item { background: var(--bg-soft); border:1px solid color-mix(in oklab,var(--ink),transparent 85%); border-radius:10px; padding:10px; }
-    .small { font-size:.9rem }
-    textarea { width:100%; min-height:120px; border-radius:12px; padding:12px; background:var(--bg-soft); color:var(--ink); border:1px solid color-mix(in oklab,var(--ink),transparent 80%) }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Idées IA en éducation — Nicolas Tuor</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-<header class="nav"><div class="container">
-  <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-  <nav class="nav-links"><a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot.html">Chatbot</a></nav>
-  <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button></div>
-</div></header>
-
-<main class="section container lab">
-  <h1 class="title">🔎 AI Fact-Check Lab</h1>
-  <p class="lead">Colle une affirmation (ou un mini-titre d’article). L’IA propose des pistes de vérification et te fait réfléchir avant de donner un verdict.</p>
-
-  <section class="cardy">
-    <label for="claim"><strong>Affirmation</strong></label>
-    <textarea id="claim" placeholder="ex. 'Les écrans bleus la nuit améliorent le sommeil.'"></textarea>
-    <div class="row">
-      <input id="topic" placeholder="Sujet (optionnel), ex. éducation, santé, IA">
-      <button id="gen" class="btn primary">Générer les vérifications</button>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./cv.html">CV</a>
+      <a href="./portfolio.html">Portfolio</a>
+      <a class="is-active" href="./ai-lab.html">Idées IA en éducation</a>
+      <a href="./chatbot.html">Chatbot</a>
+      <button id="dlCvBtn" class="btn linkish">Télécharger le PDF</button>
+    </nav>
+    <div class="nav-links">
+      <button class="btn linkish" data-toggle-theme>🌓</button>
+      <a class="btn linkish" href="./ai-lab.html">FR</a>
+      <a class="btn linkish" href="./portfolio-en.html">EN</a>
+      <a class="btn linkish" href="./portfolio-de.html">DE</a>
     </div>
+  </div>
+</header>
+
+<main class="container section">
+  <h1>Idées IA en éducation</h1>
+  <p class="lead">Décris ton contexte ; l’IA propose des étapes, tu argumentes (texte/URL) et elle répond avec un feedback didactique.</p>
+
+  <form id="labGen" class="stack">
+    <label>Âge / niveau
+      <input id="labAge" type="text" placeholder="ex. 10–11 ans, 6H" />
+    </label>
+    <label>Thème
+      <input id="labTopic" type="text" placeholder="ex. fractions, cycle de l’eau…" />
+    </label>
+    <button class="btn" data-busy>Générer des étapes</button>
+  </form>
+
+  <div id="steps" class="stack"></div>
+
+  <section id="arg" class="stack" hidden>
+    <h2>Mes arguments / preuves</h2>
+    <label>Notes (libre)
+      <textarea id="labNotes" rows="4" placeholder="Que ferais-tu ? Pourquoi ?"></textarea>
+    </label>
+    <label>Sources / URLs (optionnel)
+      <textarea id="labUrls" rows="2" placeholder="Une URL par ligne"></textarea>
+    </label>
+    <button id="judgeBtn" class="btn" data-busy>Demander un feedback</button>
+    <pre id="judgeOut" class="code"></pre>
   </section>
-
-  <section id="checks" class="list" style="margin-top:14px"></section>
-
-  <section id="reflect" class="cardy" style="display:none;margin-top:14px">
-    <label for="self"><strong>Ton analyse (3-5 phrases)</strong></label>
-    <textarea id="self" placeholder="Explique si l’affirmation te paraît crédible, quelles sources tu consulterais, et pourquoi."></textarea>
-    <button id="judge" class="btn">Demander un feedback</button>
-  </section>
-
-  <section id="feedback" class="cardy" style="display:none;margin-top:14px"></section>
 </main>
 
-<script>
-const $ = sel => document.querySelector(sel);
-const checks = $('#checks'); const reflect = $('#reflect'); const feedback = $('#feedback');
-
-$('#gen').onclick = async () => {
-  checks.innerHTML = ''; feedback.style.display='none';
-  const claim = $('#claim').value.trim(); if(!claim) return alert('Écris une affirmation.');
-  const topic = $('#topic').value.trim();
-
-  const r = await fetch('/api/factcheck', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ mode:'generate', claim, topic, lang:'fr' })
-  });
-  const j = await r.json();
-
-  checks.innerHTML = j.tasks.map((t,i)=>`
-    <div class="item">
-      <div><strong>Étape ${i+1} — ${t.title}</strong></div>
-      <div class="small muted">${t.hint}</div>
-      ${t.options.map((o,idx)=>`
-        <label style="display:block;margin-top:8px">
-          <input type="radio" name="q${i}" value="${idx}"> ${o}
-        </label>`).join('')}
-      <div class="small muted" style="margin-top:6px">Sources suggérées : ${t.sources.join(', ')}</div>
-    </div>
-  `).join('');
-
-  reflect.style.display='block';
-  reflect.dataset.payload = JSON.stringify(j);
-};
-
-$('#judge').onclick = async () => {
-  const lab = JSON.parse(reflect.dataset.payload || '{}');
-  const answers = (lab.tasks || []).map((t,i)=>{
-    const el = document.querySelector(`input[name="q${i}"]:checked`);
-    return el ? Number(el.value) : null;
-  });
-
-  const r = await fetch('/api/factcheck', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ mode:'judge', lab, answers, self: $('#self').value.trim(), lang:'fr' })
-  });
-  const j = await r.json();
-
-  feedback.style.display='block';
-  feedback.innerHTML = `
-    <div><strong>Retour de l’IA</strong></div>
-    <p>${j.summary}</p>
-    <div class="small muted">${j.tips || ''}</div>
-  `;
-};
-</script>
-
 <script src="./site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+<script>
+const $ = s => document.querySelector(s);
+const stepsBox = $('#steps');
+const arg = $('#arg');
+$('#labGen').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('[data-busy]');
+  window.UI.setBusy(btn, true);
+  stepsBox.innerHTML = "";
+  arg.hidden = true;
+
+  const age = $('#labAge').value.trim();
+  const topic = $('#labTopic').value.trim();
+
+  try{
+    const r = await fetch('/api/factcheck', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ mode:'generate', lang:'fr', topic, age })
+    });
+    const data = await r.json();
+    if(Array.isArray(data.steps)){
+      stepsBox.innerHTML = data.steps.map((s,i)=>`<div class="card3d">
+        <div class="face front"><span>${i+1}</span></div>
+        <div class="face back"><p>${s}</p></div>
+      </div>`).join('');
+      arg.hidden = false;
+    }
+  } finally { window.UI.setBusy(btn,false); }
+});
+
+document.addEventListener('click', e=>{
+  const c = e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped');
+});
+
+$('#judgeBtn').addEventListener('click', async ()=>{
+  const btn = $('#judgeBtn'); window.UI.setBusy(btn,true);
+  try{
+    const age = $('#labAge').value.trim();
+    const topic = $('#labTopic').value.trim();
+    const notes = $('#labNotes').value.trim();
+    const urls = $('#labUrls').value.trim().split(/\n+/).filter(Boolean);
+    const r = await fetch('/api/factcheck', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ mode:'judge', lang:'fr', topic, age, notes, urls })
+    });
+    const data = await r.json();
+    $('#judgeOut').textContent = data.feedback || JSON.stringify(data,null,2);
+  } finally { window.UI.setBusy(btn,false); }
+});
+</script>
 </body>
 </html>
