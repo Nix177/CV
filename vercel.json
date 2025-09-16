@@ -1,17 +1,1 @@
-{
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/index", "destination": "/index.html" }
-  ],
-  "routes": [
-    { "src": "/(cv|portfolio|chatbot).html", "dest": "/$1.html" },
-    { "src": "/(.*)", "dest": "/$1" }
-  ],
-  "redirects": [
-    { "source": "/", "has":[{"type":"host","value":"cv.nicolastuor.ch"}], "destination": "/cv.html", "permanent": false },
-    { "source": "/", "has":[{"type":"host","value":"chat.nicolastuor.ch"}], "destination": "/chatbot.html", "permanent": false },
-    { "source": "/", "has":[{"type":"host","value":"work.nicolastuor.ch"}], "destination": "/portfolio.html", "permanent": false }
-  ]
-}
+{ "cleanUrls": true }
