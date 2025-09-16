@@ -1,124 +1,95 @@
-// cv.js
-const root = document.getElementById("cvRoot");
-const viewSel = document.getElementById("viewMode");
-const printBtn = document.getElementById("printBtn");
-const D = window.cvData;
+(function(){
+  const modeSel = document.getElementById("viewMode");
+  const area = document.getElementById("cvArea");
+  const printBtn = document.getElementById("printBtn");
 
-function h(tag, attrs = {}, children = []) {
-  const el = document.createElement(tag);
-  Object.entries(attrs).forEach(([k,v]) => {
-    if (k === "class") el.className = v;
-    else el.setAttribute(k, v);
-  });
-  (Array.isArray(children) ? children : [children]).forEach(c => {
-    if (typeof c === "string") el.appendChild(document.createTextNode(c));
-    else if (c) el.appendChild(c);
-  });
-  return el;
-}
+  function renderPDF() {
+    area.innerHTML = `
+      <iframe title="CV PDF" style="width:100%;height:80vh;border:0;background:#111"
+        src="./CV_Nicolas_Tuor.pdf#view=FitH"></iframe>
+    `;
+  }
 
-function line(items) {
-  const p = h("p");
-  items.forEach((seg, i) => {
-    p.appendChild(typeof seg === "string" ? document.createTextNode(seg) : seg);
-    if (i < items.length-1) p.appendChild(document.createTextNode(" · "));
-  });
-  return p;
-}
+  function renderConstellation() {
+    area.innerHTML = `<canvas id="cvCanvas" class="cv-canvas"></canvas><div id="hint" class="muted" style="margin-top:8px">Survolez un nœud</div>`;
+    const canvas = document.getElementById("cvCanvas");
+    const ctx = canvas.getContext("2d");
+    function resize(){ canvas.width=area.clientWidth; canvas.height=540; }
+    resize(); window.addEventListener("resize", resize);
 
-/* ----------------------------- Essentiel ------------------------------ */
-function renderEssentiel() {
-  const wrap = h("div");
-  wrap.append(
-    h("h2", {}, D.person.name),
-    line([D.person.title]),
-    line([D.person.email, D.person.phone, D.person.location]),
-    h("hr"),
-    h("h3", {}, "Forces"),
-    h("ul", {}, D.person.strengths.map(s => h("li", {}, s))),
-    h("h3", {}, "Expériences"),
-    h("ul", {}, D.experience.map(x =>
-      h("li", {}, [
-        h("strong", {}, `${x.period} — ${x.role}`),
-        " – ", x.org,
-        x.bullets?.length ? h("ul", {}, x.bullets.map(b => h("li", {}, b))) : ""
-      ])
-    )),
-    h("h3", {}, "Formation"),
-    h("ul", {}, D.education.map(e =>
-      h("li", {}, [
-        h("strong", {}, `${e.period} — ${e.school}`),
-        ": ", e.degree, e.details ? ` — ${e.details}` : ""
-      ])
-    )),
-    h("h3", {}, "Compétences"),
-    h("ul", {}, D.skills.map(s => h("li", {}, s))),
-    h("h3", {}, "Langues"),
-    h("p", {}, D.person.languages.map(l => `${l.name} (${l.level})`).join(" · ")),
-    h("h3", {}, "Centres d’intérêt"),
-    h("p", {}, D.interests.join(" · "))
-  );
-  return wrap;
-}
+    // positionnement radial
+    const R = 220, cx = canvas.width/2, cy = canvas.height/2;
+    const nodes = CV_SKILLS.map((s,i) => {
+      const a = (i / CV_SKILLS.length) * Math.PI*2;
+      const r = R - (s.weight*16);
+      return { ...s, x: cx + r*Math.cos(a), y: cy + r*Math.sin(a) };
+    });
 
-/* ----------------------------- Timeline ------------------------------- */
-function renderTimeline() {
-  const wrap = h("div");
-  wrap.append(h("h2", {}, "Timeline"));
-  const list = h("ul", { class: "experience-list" }, D.experience.map(x =>
-    h("li", {}, [
-      h("strong", {}, x.period), ": ", x.role, " — ", x.org,
-      x.bullets?.length ? h("ul", {}, x.bullets.map(b => h("li", {}, b))) : ""
-    ])
-  ));
-  wrap.append(list);
-  return wrap;
-}
+    function draw(highlight) {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // liens
+      ctx.strokeStyle = "rgba(150,180,255,.35)"; ctx.lineWidth = 1.2;
+      CV_LINKS.forEach(([a,b])=>{
+        const na = nodes.find(n=>n.id===a), nb = nodes.find(n=>n.id===b);
+        if(!na||!nb) return;
+        ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+      });
+      // nœuds
+      nodes.forEach(n=>{
+        const r = 8 + n.weight*2;
+        const isH = highlight && highlight.id===n.id;
+        ctx.beginPath();
+        ctx.fillStyle = isH ? "#00c2ff" : "rgba(255,255,255,.85)";
+        ctx.globalAlpha = 1;
+        ctx.arc(n.x,n.y,r,0,Math.PI*2);
+        ctx.fill();
+        ctx.font = (isH? "700":"600")+" 14px Inter,ui-sans-serif";
+        ctx.fillStyle = isH ? "#00c2ff" : "rgba(220,235,255,.85)";
+        ctx.textAlign="center"; ctx.fillText(n.label, n.x, n.y - r - 8);
+      });
+    }
+    draw(null);
 
-/* ----------------------------- Académique ----------------------------- */
-function renderAcademique() {
-  const wrap = h("div");
-  wrap.append(
-    h("h2", {}, D.person.name),
-    h("p", {}, D.person.title),
-    h("p", {}, `${D.person.email} · ${D.person.phone} · ${D.person.location}`),
-    h("hr"),
-    h("h3", {}, "Résumé"),
-    h("p", {}, "Enseignant et didacticien en informatique, j’articule pédagogie, technologies et rigueur méthodologique pour concevoir des formations claires et efficaces, avec une attention à l’évaluation et à la documentation."),
-    h("h3", {}, "Compétences clés"),
-    h("ul", {}, D.skills.map(s => h("li", {}, s))),
-    h("h3", {}, "Expériences"),
-    h("table", { class: "table-cv" }, [
-      h("tbody", {}, D.experience.map(x =>
-        h("tr", {}, [
-          h("td", {}, h("strong", {}, x.period)),
-          h("td", {}, [h("strong", {}, x.role), " — ", x.org,
-            x.bullets?.length ? h("ul", {}, x.bullets.map(b => h("li", {}, b))) : ""])
-        ])
-      ))
-    ]),
-    h("h3", {}, "Formation"),
-    h("ul", {}, D.education.map(e =>
-      h("li", {}, [h("strong", {}, `${e.period} — ${e.school}`), ": ", e.degree, e.details ? ` — ${e.details}` : ""])
-    )),
-    h("h3", {}, "Langues"),
-    h("p", {}, D.person.languages.map(l => `${l.name} (${l.level})`).join(" · "))
-  );
-  return wrap;
-}
+    // interaction
+    const hint = document.getElementById("hint");
+    canvas.addEventListener("mousemove", (e)=>{
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      const hit = nodes.find(n => Math.hypot(n.x-mx, n.y-my) < 14);
+      draw(hit||null);
+      hint.textContent = hit ? `${hit.label} — groupe: ${hit.group}` : "Survolez un nœud";
+    });
+  }
 
-/* ------------------------------ Router -------------------------------- */
-function render(mode) {
-  root.innerHTML = "";
-  let view;
-  if (mode === "timeline") view = renderTimeline();
-  else if (mode === "academique") view = renderAcademique();
-  else view = renderEssentiel();
-  root.appendChild(view);
-}
+  function renderStory() {
+    area.innerHTML = `
+      <div class="story" id="story"></div>
+      <div class="buttons" style="justify-content:center;margin-top:10px">
+        <button class="btn" id="prevStep">◀ Précédent</button>
+        <button class="btn primary" id="nextStep">Suivant ▶</button>
+      </div>
+    `;
+    const wrap = document.getElementById("story");
+    let idx = 0;
+    function draw(){
+      wrap.innerHTML = `
+        <div class="card-step"><h4>${CV_STEPS[idx].title}</h4><p>${CV_STEPS[idx].body}</p></div>
+        <div class="card-step"><h4>Evidence</h4><p>Exemples d'élèves, captures, extraits de code, grilles d'évaluation.</p></div>
+      `;
+    }
+    draw();
+    document.getElementById("prevStep").onclick = ()=>{ idx = (idx-1+CV_STEPS.length)%CV_STEPS.length; draw(); };
+    document.getElementById("nextStep").onclick = ()=>{ idx = (idx+1)%CV_STEPS.length; draw(); };
+  }
 
-viewSel.addEventListener("change", () => render(viewSel.value));
-printBtn.addEventListener("click", () => window.print());
+  function render() {
+    const m = modeSel.value;
+    if (m === "pdf") renderPDF();
+    else if (m === "constellation") renderConstellation();
+    else renderStory();
+  }
 
-// Initial
-render(viewSel.value);
+  modeSel.addEventListener("change", render);
+  printBtn.addEventListener("click", ()=>window.print());
+  render(); // init
+})();
