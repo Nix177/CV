@@ -1,106 +1,73 @@
-// /api/chat.js
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { readFile } from 'node:fs/promises';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
-
-let cachedProfile = null;
-async function loadProfile() {
-  if (cachedProfile) return cachedProfile;
-  const profilePath = path.join(__dirname, '..', 'data', 'profile.json'); // ../data/profile.json
-  const txt = await readFile(profilePath, 'utf8');
-  cachedProfile = JSON.parse(txt);
-  return cachedProfile;
-}
-
 export default async function handler(req, res) {
   try {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
-    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
+    if (req.method !== "POST") {
+      res.setHeader("Allow", "POST");
+      return res.status(405).json({ error: "Method not allowed" });
+    }
 
-    // Body (Vercel parse généralement req.body si JSON)
-    const body = (typeof req.body === 'string')
-      ? JSON.parse(req.body || '{}')
-      : (req.body || {});
+    const { question = "", lang = "fr" } = (await parseJSON(req)) || {};
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "Missing OPENAI_API_KEY" });
+    }
+    if (!question.trim()) {
+      return res.status(400).json({ error: "Empty question" });
+    }
 
-    const question = (body.question || '').trim();
-    const lang = (body.lang || 'fr').toLowerCase();
-    if (!question) return res.status(400).json({ error: 'Missing question' });
+    const profile =
+      "Profil: enseignant primaire (FR), didactique de l'informatique, pensée critique," +
+      " usages responsables de l'IA, expériences variées; apprenant rapide et pragmatique.";
 
-    const profile = await loadProfile();
+    const sys =
+      `Tu es un assistant de candidature. Reste concis, honnête, factuel, sans exagérer. ` +
+      `Si on te demande quelque chose hors expertise, admets les limites et propose d'apprendre rapidement. ` +
+      `Langue: ${lang}. Utilise le profil du candidat fourni. ` +
+      `Structure: 1–2 phrases claires; éventuellement puces courtes. ` +
+      `N'invente pas d'expériences non mentionnées.`;
 
-    const facts =
-      `NAME: ${profile.name}\n` +
-      `LOCATION: ${profile.location}\n` +
-      `SUMMARY: ${profile.summary}\n` +
-      `VALUES: ${profile.values.join(', ')}\n` +
-      `SKILLS_PEDAGOGY: ${profile.skills.pedagogy.join(', ')}\n` +
-      `SKILLS_TECH: ${profile.skills.tech.join(', ')}\n` +
-      `SKILLS_AI: ${profile.skills.ai.join(', ')}\n` +
-      `EXPERIENCE:\n` +
-      profile.experience.map(e => `- ${e.period}: ${e.role} — ${e.org} (${e.focus})`).join('\n') +
-      `\nNOTES: ${profile.notes.join(' | ')}`;
-
-    const locales = {
-      fr: {
-        system: `Tu es un assistant de candidature STRICTEMENT borné aux faits fournis.
-- Réponds en français, de façon brève, concrète et honnête.
-- Utilise UNIQUEMENT les faits de la section FACTS ci-dessous.
-- Si la question est hors sujet (recettes, météo, etc.), explique poliment que tu es dédié au profil professionnel de Nicolas.
-- Si l'information n'est pas présente dans les faits, dis-le explicitement (pas d'invention).
-- Mentionne quand c’est pertinent que Nicolas aime apprendre et apprend vite, sans en faire trop.
-- Jamais de promesses exagérées, ni de superlatifs marketing.
-FACTS:
-${facts}`
-      },
-      en: {
-        system: `You are a hiring assistant STRICTLY constrained to the provided facts.
-- Answer in English, briefly and concretely.
-- Use ONLY the FACTS below.
-- If the question is unrelated (recipes, random topics), politely refuse and state you only discuss Nicolas's professional profile.
-- If something is unknown, say so explicitly (no invention).
-- When relevant, mention he enjoys learning and learns quickly, without overselling.
-FACTS:
-${facts}`
-      },
-      de: {
-        system: `Du bist ein Bewerbungsassistent, der STRIKT an die bereitgestellten Fakten gebunden ist.
-- Antworte auf Deutsch, kurz und konkret.
-- Nutze NUR die untenstehenden FAKTEN.
-- Bei fachfremden Fragen (Rezepte usw.) lehne höflich ab und erkläre den Fokus auf das berufliche Profil von Nicolas.
-- Wenn etwas unbekannt ist, sage das deutlich (keine Erfindungen).
-- Erwähne bei Bedarf, dass er gerne lernt und sich schnell einarbeitet – ohne zu übertreiben.
-FAKTEN:
-${facts}`
-      }
+    const payload = {
+      model: "gpt-4o-mini",
+      temperature: 0.4,
+      max_tokens: 600,
+      messages: [
+        { role: "system", content: sys },
+        { role: "user", content: `Contexte candidat: ${profile}` },
+        { role: "user", content: `Question: ${question}` }
+      ]
     };
 
-    const sys = (locales[lang] || locales.fr).system;
-
-    const r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json'
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        temperature: 0.2,
-        messages: [
-          { role: 'system', content: sys },
-          { role: 'user', content: question }
-        ]
-      })
+      body: JSON.stringify(payload)
     });
 
-    const json = await r.json();
-    if (!r.ok) return res.status(500).json({ error: json.error?.message || 'OpenAI error' });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const msg = data?.error?.message || "OpenAI error";
+      return res.status(500).json({ error: msg });
+    }
 
-    const answer = json.choices?.[0]?.message?.content?.trim() || '';
+    const answer = data?.choices?.[0]?.message?.content || "";
     return res.status(200).json({ answer });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Chat error", detail: String(err) });
   }
+}
+
+function parseJSON(req) {
+  return new Promise((resolve) => {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      try {
+        resolve(JSON.parse(body || "{}"));
+      } catch {
+        resolve({});
+      }
+    });
+  });
 }
