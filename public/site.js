@@ -1,4 +1,4 @@
-// Theme + outils globaux + téléchargement CV protégé
+// Theme + outils globaux + téléchargement CV protégé + flip cards
 (function () {
   const KEY = "theme";
   const R = document.documentElement;
@@ -34,7 +34,7 @@ window.UI = {
       prompt("Code pour télécharger le CV :");
     if (!code) return;
     const r = await fetch("/api/verify?code=" + encodeURIComponent(code));
-    const { ok } = await r.json();
+    const { ok } = await r.json().catch(() => ({ ok: false }));
     if (!ok) {
       alert("Code invalide.");
       return;
@@ -44,6 +44,21 @@ window.UI = {
     a.href = "/api/cv?code=" + encodeURIComponent(code);
     a.rel = "noopener";
     a.click();
+  },
+
+  initFlipGrid(selector) {
+    const grid = document.querySelector(selector);
+    if (!grid) return;
+    grid.addEventListener("click", (e) => {
+      const c = e.target.closest(".card3d");
+      if (c) c.classList.toggle("is-flipped");
+    });
+    grid.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const c = document.activeElement?.closest?.(".card3d");
+        if (c) c.classList.toggle("is-flipped");
+      }
+    });
   },
 };
 
