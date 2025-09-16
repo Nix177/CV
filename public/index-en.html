@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nicolas Tuor — CS Education & AI</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./index-en.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a>
+      <button id="dlCvBtn" class="btn linkish">Download PDF</button>
+    </nav>
+    <div class="nav-links">
+      <button class="btn linkish" data-toggle-theme>🌓</button>
+      <a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a>
+    </div>
+  </div>
+</header>
+<main class="section container">
+  <h1 class="title">Computer Science Education & <span class="stroke">responsible AI</span></h1>
+  <p class="lead">I design explicit learning sequences, clear success criteria and use AI where it truly helps without lowering expectations.</p>
+  <div class="buttons"><a class="btn primary" href="./cv.html">See CV</a><a class="btn" href="./portfolio.html">Work</a></div>
+</main>
+<script src="./site.js" defer></script>
+<script>
+(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
+</script>
+</body>
+</html>
