@@ -126,15 +126,12 @@
 
 <script src="./site.js" defer></script>
 <script>
-  // Flip 3D au clic / Enter
-  document.addEventListener('click', e => { const c=e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); });
-  document.addEventListener('keydown', e => { if(e.key==='Enter'){ const c=document.activeElement?.closest?.('.card3d'); if(c) c.classList.toggle('is-flipped'); }});
-
-  // Formulaire : feedback IA
   const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
   F.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const btn = F.querySelector('[data-busy]'); window.UI.setBusy(btn,true);
+    const btn = F.querySelector('[data-busy]');
+    OUT.textContent = "⏳ Analyse en cours…";
+    window.UI.setBusy(btn, true);
     try{
       const age   = document.getElementById('fAge').value.trim();
       const topic = document.getElementById('fTopic').value.trim();
@@ -146,8 +143,13 @@ Preuves:${document.getElementById('fProof').value.trim()}`;
         body: JSON.stringify({ mode:'judge', lang:'fr', topic, age, notes, urls })});
       const j = await r.json();
       OUT.textContent = j.feedback || JSON.stringify(j,null,2);
-    } finally { window.UI.setBusy(btn,false); }
+    } catch(err){
+      OUT.textContent = "❌ Erreur : " + (err?.message || err);
+    } finally {
+      window.UI.setBusy(btn, false);
+    }
   });
 </script>
+
 </body>
 </html>
