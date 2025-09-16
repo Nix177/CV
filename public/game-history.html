@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Histoire Aventure — Platformer IA</title>
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    /* Styles spécifiques au jeu (légers) */
+    .gh-wrap { display:grid; gap:14px; }
+    .gh-toolbar { display:grid; gap:10px; grid-template-columns:1fr 1fr 1fr auto; }
+    .gh-toolbar label { display:grid; gap:6px; }
+    .gh-card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .gh-card.pad { padding: 14px; }
+    .gh-canvas-box { position: relative; overflow:hidden; }
+    #gh_canvas { width:100%; height:auto; display:block; background: radial-gradient(1000px 600px at 30% -10%, rgba(255,255,255,.06), transparent 60%), rgba(255,255,255,.02); }
+    .gh-hud { position:absolute; inset: 10px auto auto 10px; display:grid; gap:6px; pointer-events:none; }
+    .gh-hud .pill { background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.15); border-radius: 999px; padding:6px 10px; font-weight:700; }
+    .gh-hud .rt { justify-self: end; pointer-events:none; }
+    .gh-overlay {
+      position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+      background: radial-gradient(400px 300px at 50% 40%, rgba(0,0,0,.55), rgba(0,0,0,.75));
+      padding: 16px;
+    }
+    .gh-overlay.show { display:flex; }
+    .gh-dialog { width:min(760px, 94vw); }
+    .gh-choices { display:grid; gap:8px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .gh-flex { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap: wrap; }
+    .gh-mini { font-size:.92rem; color: var(--muted); }
+    .gh-note { color:var(--muted); font-size:.95rem; }
+    .gh-success { color:#8CF0A7; }
+    .gh-fail { color:#ff8181; }
+    .gh-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius: 999px; border:1px solid var(--border); background:var(--surface);}
+    @media (max-width: 840px){ .gh-toolbar{ grid-template-columns:1fr; } }
+  </style>
+  <script defer src="./site.js"></script>
+  <script defer src="./game-history.js"></script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./cv">CV</a>
+      <a href="./portfolio">Portfolio</a>
+      <a href="./ai">Idées IA en éducation</a>
+      <a href="./chatbot">Chatbot</a>
+      <button class="btn chip" data-toggle-theme title="Thème">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container section gh-wrap">
+  <h1 class="title">Histoire Aventure — <span class="muted">Plateformer IA</span></h1>
+  <p class="lead">Configurez la partie (âge et thématique). L’IA génère le contexte et les questions. Votre personnage doit franchir les portes en répondant correctement.</p>
+
+  <!-- Barre de configuration -->
+  <section class="gh-card pad">
+    <form id="gh_form" class="gh-toolbar">
+      <label>Âge (ou niveau)
+        <input name="age" type="number" min="7" max="99" value="12" placeholder="12" />
+      </label>
+      <label>Thématique d’histoire
+        <input name="topic" value="Révolution française" placeholder="ex. Révolution française, Égypte antique, Moyen Âge…" />
+      </label>
+      <label>Langue des contenus
+        <select name="lang">
+          <option value="fr" selected>Français (vous)</option>
+          <option value="en">English</option>
+          <option value="de">Deutsch (Sie)</option>
+        </select>
+      </label>
+      <div class="gh-flex">
+        <button class="btn primary" data-busy>🎮 Générer & Jouer</button>
+        <span id="gh_status" class="gh-mini">Prêt.</span>
+      </div>
+    </form>
+  </section>
+
+  <!-- Canvas + HUD -->
+  <section class="gh-card gh-canvas-box">
+    <canvas id="gh_canvas" width="1280" height="720" aria-label="Jeu Histoire Aventure"></canvas>
+
+    <div class="gh-hud">
+      <div class="pill" id="hud_title">—</div>
+      <div class="pill" id="hud_score">★ 0</div>
+      <div class="pill" id="hud_gate">Portes: 0/3</div>
+      <div class="pill" id="hud_life">Vies: 3</div>
+    </div>
+
+    <!-- Overlay Question -->
+    <div id="gh_overlay" class="gh-overlay">
+      <div class="gh-dialog card pad">
+        <h3 id="q_title">Question</h3>
+        <p id="q_text" class="gh-note"></p>
+        <div id="q_choices" class="gh-choices" style="margin:10px 0 6px;"></div>
+        <div class="gh-flex">
+          <span id="q_msg" class="gh-mini"></span>
+          <div class="row gap">
+            <button class="btn chip" id="q_explain">Je n’ai pas compris</button>
+            <button class="btn" id="q_close">Continuer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro générée -->
+  <section class="gh-card pad">
+    <div class="gh-flex">
+      <strong>Contexte:</strong>
+      <span id="gh_badges" class="row gap"></span>
+    </div>
+    <p id="gh_intro" class="gh-note">Configurez puis cliquez sur « Générer & Jouer » pour créer la session.</p>
+  </section>
+
+  <section class="gh-card pad">
+    <details>
+      <summary><strong>Contrôles</strong></summary>
+      <p class="gh-note">← → pour vous déplacer — <kbd>Espace</kbd> pour sauter — <kbd>Entrée</kbd> interagir — <kbd>P</kbd> pause.</p>
+    </details>
+  </section>
+</main>
+
+<footer class="container section footer">
+  <p class="foot">© Nicolas Tuor — Démo pédagogique IA.</p>
+</footer>
+
+</body>
+</html>
