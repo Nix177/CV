@@ -3,147 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nicolas Tuor — Enseignant & Didactique informatique</title>
-  <meta name="description" content="CV interactif de Nicolas Tuor — enseignant diplômé, master en didactique de l’informatique. Pédagogie, éducation numérique, IA." />
-  <meta name="theme-color" content="#203A43" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <title>Portfolio — Nicolas Tuor</title>
   <link rel="stylesheet" href="./style.css" />
-  <!-- JSON-LD Person -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Nicolas Tuor",
-    "jobTitle": "Enseignant & didactique de l’informatique",
-    "email": "mailto:nicolas.tuor@bluewin.ch",
-    "telephone": "+41797622667",
-    "address": { "@type": "PostalAddress", "addressLocality": "Fribourg", "addressCountry": "CH" }
-  }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<!-- HERO -->
-<header class="hero-section">
-  <div class="container">
-    <nav>
-      <a href="./cv.html" class="nav-link">CV en ligne</a>
-      &nbsp;|&nbsp;
-      <a href="./chatbot.html" class="nav-link">Chatbot IA</a>
-    </nav>
-
-    <div class="hero-content">
-      <h1>Nicolas Tuor</h1>
-      <p class="tagline">
-        Penseur critique & pédagogue passionné, spécialisé en didactique de l’informatique.
-        Je rends les apprentissages clairs, progressifs et efficaces — avec un usage réfléchi des outils numériques et de l’IA.
-      </p>
-      <div class="hero-buttons">
-        <a href="./cv.html" class="btn primary-btn">Voir le CV en ligne</a>
-        <a href="#" id="dlCvBtn" class="btn" title="Téléchargement via code secret">Télécharger le CV (protégé)</a>
-        <a href="./chatbot.html" class="btn">💬 Chatbot IA</a>
-      </div>
-      <noscript>
-        <p style="margin-top:8px;opacity:.9">Le téléchargement sécurisé nécessite JavaScript. Vous pouvez consulter <a href="./cv.html" style="color:#ffd866">le CV en ligne</a>.</p>
-      </noscript>
-    </div>
-
-    <div class="arrow">↓</div>
-  </div>
+<header class="chat-header">
+  <h1>Portfolio</h1>
+  <nav>
+    <a href="./index.html">Accueil</a> |
+    <a href="./cv.html">CV en ligne</a> |
+    <a href="./chatbot.html">Chatbot IA</a>
+  </nav>
 </header>
 
-<!-- À PROPOS -->
-<section class="about-section">
-  <div class="container">
-    <h2>À propos</h2>
-    <p>
-      Enseignant diplômé (HEP Fribourg) et titulaire d’un Master en didactique de l’informatique (HEP Lausanne),
-      j’ai enseigné du primaire à l’université. Je structure les apprentissages, explicite les attentes et documente les progrès.
-      Je m’appuie sur une pratique rigoureuse, une pensée critique solide et un intérêt fort pour l’éducation numérique et l’IA.
-    </p>
-    <p>
-      J’intègre les technologies de manière pragmatique (Python, HTML/CSS, notions C++ ; Moodle côté enseignant)
-      et je conçois des dispositifs sobres et efficaces (fiches pas-à-pas, critères partagés, évaluations formatives/sommatives).
-      Je travaille en français (natif), anglais (C2) et allemand (B2/C1).
-    </p>
-  </div>
-</section>
+<main class="chat-container">
+  <p class="chat-description">Sélection de mini-projets et sites. Cliquez sur “Visiter” pour ouvrir, “Aperçu” tente un embed (si autorisé par le site).</p>
 
-<!-- COMPÉTENCES -->
-<section class="skills-section">
-  <div class="container">
-    <h2>Compétences</h2>
-    <ul class="skills-list">
-      <li>Pédagogie, structuration d’objectifs & séquences</li>
-      <li>Évaluation formative/sommative & critères partagés</li>
-      <li>Méthodologie de recherche, analyse & synthèse</li>
-      <li>Éducation numérique & intégration d’outils d’IA</li>
-      <li>Programmation : Python, HTML/CSS (notions C++)</li>
-      <li>Communication claire, documentation & travail d’équipe</li>
-    </ul>
+  <div id="portfolioGrid" class="portfolio-grid"></div>
+</main>
 
-    <h3>Langues</h3>
-    <p>Français (natif) · Anglais (C2) · Allemand (B2/C1)</p>
-  </div>
-</section>
-
-<!-- EXPÉRIENCES -->
-<section class="experience-section">
-  <div class="container">
-    <h2>Expériences</h2>
-    <ul class="experience-list">
-      <li><strong>2019 – présent</strong> : Enseignant primaire (remplacements), divers établissements (FR).</li>
-      <li><strong>2020 – 2021</strong> : Enseignant titulaire 5H, École de Corminboeuf.</li>
-      <li><strong>2024</strong> : Formateur (journée), éducation numérique (HEP Fribourg).</li>
-      <li><strong>2022 – 2023</strong> : Stage Master (CRE/ATE, HEP FR) — cloud de classe local (Nextcloud intranet), ressources & activités ; recherche de terrain.</li>
-      <li><strong>2017 – 2023</strong> : Service civil & expériences diverses (accompagnement, archivage, accueil, sécurité).</li>
-    </ul>
-  </div>
-</section>
-
-<!-- FORMATION -->
-<section class="education-section">
-  <div class="container">
-    <h2>Formation</h2>
-    <ul class="education-list">
-      <li><strong>2020 – 2024</strong> : Master — Didactique de l’informatique, HEP Lausanne (TM : enseignement explicite du débogage & transfert de compétences).</li>
-      <li><strong>2015 – 2019</strong> : Bachelor — Enseignement préscolaire & primaire, HEP Fribourg.</li>
-    </ul>
-  </div>
-</section>
-
-<!-- INTÉRÊTS -->
-<section class="interests-section">
-  <div class="container">
-    <h2>Centres d’intérêt</h2>
-    <ul class="interests-list">
-      <li>Astronomie / Astrophotographie</li>
-      <li>Aviron (compétition)</li>
-      <li>Théâtre d’improvisation</li>
-      <li>Vulgarisation scientifique & pensée critique</li>
-      <li>Technologies & outils IA</li>
-      <li>Arts martiaux</li>
-    </ul>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<footer class="contact-section">
-  <div class="container">
-    <h2>Contact</h2>
-    <p>
-      📧 <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a><br/>
-      📱 +41 79 762 26 67<br/>
-      📍 Fribourg, Suisse
-    </p>
-    <p class="footnote">
-      Site personnel — démonstrations IA : <a href="./chatbot.html">chatbot</a> · <a href="./cv.html">CV en ligne</a>.
-    </p>
-  </div>
-</footer>
-
-<!-- Téléchargement CV protégé -->
-<script src="./site.js" defer></script>
+<script src="./portfolio-data.js"></script>
+<script src="./portfolio.js"></script>
 </body>
 </html>
