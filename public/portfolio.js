@@ -1,58 +1,69 @@
-(function () {
-  const grid = document.getElementById("portfolioGrid");
-  if (!grid) return;
-
+// Rendu des cartes Portfolio + Aperçu sécurisé dans un overlay (iframe).
+(function(){
   const lang = document.documentElement.lang || "fr";
-  const items = (PORTFOLIO_I18N[lang] || PORTFOLIO_I18N.fr);
+  const T = {
+    fr: { visit: "Visiter", preview: "Aperçu", title: "Portfolio" },
+    en: { visit: "Visit",  preview: "Preview", title: "Portfolio" },
+    de: { visit: "Besuchen", preview: "Vorschau", title: "Portfolio" }
+  }[lang] || T_fr;
 
-  const faviconFrom = (url) => {
-    try {
-      const u = new URL(url);
-      // 1) icône du domaine si dispo
-      return `${u.origin}/favicon.ico`;
-    } catch {
-      // 2) service de fallback (optionnel) :
-      return `https://www.google.com/s2/favicons?sz=64&domain_url=${encodeURIComponent(url)}`;
-    }
-  };
+  const list = (window.PORTFOLIO && window.PORTFOLIO[lang]) || [];
+  const mount = document.getElementById("portfolioList");
+  if (!mount) return;
 
-  function card(item) {
-    const icon = item.icon && item.icon.trim() ? item.icon : faviconFrom(item.url);
-    const imgBG = item.image ? `background-image:url('${item.image}');background-size:cover;background-position:center` : "";
-    return `
-      <article class="card-site" data-id="${item.id}">
-        <div class="site-thumb" style="${imgBG}">
-          <img class="site-icon" alt="" src="${icon}" onerror="this.style.display='none'">
+  // Build overlay once
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="overlay-inner">
+      <div class="overlay-bar">
+        <strong>${T.title}</strong>
+        <div class="row gap">
+          <button class="btn" data-overlay-close>✕</button>
         </div>
-        <div class="site-body">
-          <h3 class="site-title">${item.title}</h3>
-          <p class="site-desc">${item.desc}</p>
-        </div>
-        <div class="site-actions">
-          <a class="btn" href="${item.url}" target="_blank" rel="noopener">Visiter</a>
-          <button class="btn ghost" data-preview="${item.url}">Aperçu</button>
-        </div>
-      </article>
-    `;
+      </div>
+      <iframe id="previewFrame" referrerpolicy="no-referrer"></iframe>
+    </div>`;
+  document.body.appendChild(overlay);
+  const frame = overlay.querySelector("#previewFrame");
+
+  function openPreview(url){
+    frame.src = url;
+    overlay.classList.add("show");
   }
-
-  grid.innerHTML = items.map(card).join("");
-
-  // overlay
-  const overlay = document.getElementById("overlay");
-  const frame = document.getElementById("overlayFrame");
-  const title = document.getElementById("overlayTitle");
-  grid.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-preview]");
-    if (!btn) return;
-    const url = btn.getAttribute("data-preview");
-    const card = btn.closest(".card-site");
-    title.textContent = card.querySelector(".site-title").textContent;
-    frame.src = url; // si X-Frame-Options bloque, l’iframe restera vide
-    overlay.classList.add("open");
-  });
-  document.getElementById("overlayClose").addEventListener("click", () => {
+  function closePreview(){
     frame.src = "about:blank";
-    overlay.classList.remove("open");
+    overlay.classList.remove("show");
+  }
+  overlay.addEventListener("click", e=>{
+    if (e.target.hasAttribute("data-overlay-close") || e.target === overlay) closePreview();
+  });
+
+  // Render cards
+  mount.innerHTML = list.map(p => `
+    <article class="port-card">
+      <div class="port-meta">
+        ${p.icon ? `<img class="port-icon" src="${p.icon}" alt="">` : ""}
+        <h3>${p.title}</h3>
+      </div>
+      <p class="muted">${p.desc||""}</p>
+      <div class="row gap">
+        <button class="btn" data-visit="${encodeURIComponent(p.url)}">${T.visit}</button>
+        <button class="btn ghost" data-preview="${encodeURIComponent(p.url)}">${T.preview}</button>
+      </div>
+    </article>
+  `).join("");
+
+  // Delegated actions
+  mount.addEventListener("click", e=>{
+    const v = e.target.closest("[data-visit]"); if (v) {
+      const url = decodeURIComponent(v.getAttribute("data-visit"));
+      window.open(url, "_blank", "noopener");
+      return;
+    }
+    const p = e.target.closest("[data-preview]"); if (p) {
+      const url = decodeURIComponent(p.getAttribute("data-preview"));
+      openPreview(url);
+    }
   });
 })();
