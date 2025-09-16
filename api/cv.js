@@ -1,34 +1,31 @@
-// api/cv.js
 import fs from "fs";
 import path from "path";
 
+function isAllowed(code) {
+  const list =
+    (process.env.CV_ACCESS_CODE || "nicolastuorcv|nicolastuor")
+      .split("|")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  return !!code && list.includes(code);
+}
+
 export default async function handler(req, res) {
   try {
-    const { code } = req.query; // GET /api/cv?code=XXXX
-    const SECRET = process.env.CV_SECRET;
+    const { code = "" } = req.query || {};
+    if (!isAllowed(code)) return res.status(401).end("Unauthorized");
 
-    if (!SECRET) {
-      return res.status(500).json({ error: "CV_SECRET non configuré côté serveur." });
-    }
-    if (!code || code !== SECRET) {
-      return res.status(401).json({ error: "Code invalide." });
-    }
-
-    // Le PDF doit être commité dans /public/
     const pdfPath = path.join(process.cwd(), "public", "CV_Nicolas_Tuor.pdf");
-    if (!fs.existsSync(pdfPath)) {
-      return res.status(404).json({ error: "CV introuvable sur le serveur." });
-    }
+    if (!fs.existsSync(pdfPath)) return res.status(404).end("PDF not found");
 
-    const stat = fs.statSync(pdfPath);
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Length", stat.size);
-    res.setHeader("Content-Disposition", 'attachment; filename="Nicolas_Tuor_CV.pdf"');
+    res.setHeader("Content-Disposition", 'inline; filename="CV_Nicolas_Tuor.pdf"');
+    res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=600");
 
     const stream = fs.createReadStream(pdfPath);
     stream.pipe(res);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Erreur interne." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).end("pdf-error");
   }
 }
