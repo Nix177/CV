@@ -39,7 +39,7 @@ async function sendMessage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer VOTRE_CLÉ_API_OPENAI_ICI"
+        "Authorization": "Bearer maclefapi"
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
