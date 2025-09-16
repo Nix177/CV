@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/", "has": [{"type":"host","value":"cv.nicolastuor.ch"}], "destination": "/cv.html", "permanent": false },
+    { "source": "/", "has": [{"type":"host","value":"chat.nicolastuor.ch"}], "destination": "/chatbot.html", "permanent": false },
+    { "source": "/", "has": [{"type":"host","value":"work.nicolastuor.ch"}], "destination": "/portfolio.html", "permanent": false }
+  ]
+}
