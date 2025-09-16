@@ -1,190 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Didactique & IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nicolas Tuor – Didactique & IA</title>
+  <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="./style.css" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script defer src="./site.js"></script>
+  <script defer src="./beehive.js"></script>
 </head>
 <body>
 
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="./index.html">
-      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-    </a>
-    <nav class="nav-links">
-      <a href="./cv.html">CV</a>
-      <a href="./portfolio.html">Portfolio</a>
-      <a href="./ai-lab.html">Idées IA en éducation</a>
-      <a href="./chatbot.html">Chatbot</a>
-      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
-      <button class="btn linkish" data-toggle-theme title="Thème">🌓</button>
-      <a class="btn chip" href="./index.html">FR</a>
-      <a class="btn chip" href="./index-en.html">EN</a>
-      <a class="btn chip" href="./index-de.html">DE</a>
-    </nav>
-  </div>
-</header>
-
-<main class="container section">
-  <h1 class="title">Didactique de l’informatique & éducation avec IA</h1>
-  <p class="lead">
-    Apprentissages explicites, critères de réussite et usage raisonné de l’IA —
-    des gains concrets sans baisser les exigences.
-  </p>
-
-  <div class="row gap">
-    <a class="btn primary" href="./cv.html">Voir le CV</a>
-    <a class="btn" href="./portfolio.html">Exemples</a>
-    <a class="btn" href="./chatbot.html">💬 Chatbot “Pourquoi m’embaucher ?”</a>
-  </div>
-
-  <hr class="soft" />
-
-  <!-- Cartes recto/verso -->
-  <section class="section">
-    <h2 class="h3">Forces et centres d’intérêt</h2>
-    <div id="skillsGrid" class="flip-grid">
-      <!-- 1 -->
-      <article class="card3d" tabindex="0" aria-label="Pensée critique">
-        <div class="inner">
-          <div class="face front">
-            <div class="emoji">🧠</div>
-            <div class="card-title">Pensée critique</div>
-          </div>
-          <div class="face back">
-            <ul class="bullets">
-              <li>Vérifier & comparer les sources</li>
-              <li>Expliciter des critères</li>
-              <li>Former à l’évaluation de fiabilité</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <!-- 2 -->
-      <article class="card3d" tabindex="0" aria-label="Guidage progressif">
-        <div class="inner">
-          <div class="face front">
-            <div class="emoji">🧩</div>
-            <div class="card-title">Guidage progressif</div>
-          </div>
-          <div class="face back">
-            <ul class="bullets">
-              <li>Objectifs clairs</li>
-              <li>Supports étagés</li>
-              <li>Feedback fréquent</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <!-- 3 -->
-      <article class="card3d" tabindex="0" aria-label="IA responsable">
-        <div class="inner">
-          <div class="face front">
-            <div class="emoji">🤖</div>
-            <div class="card-title">IA responsable</div>
-          </div>
-          <div class="face back">
-            <ul class="bullets">
-              <li>Exigences maintenues</li>
-              <li>Gains mesurés</li>
-              <li>Éthique & transparence</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <!-- 4 -->
-      <article class="card3d" tabindex="0" aria-label="Hobbies">
-        <div class="inner">
-          <div class="face front">
-            <div class="emoji">🌿</div>
-            <div class="card-title">Hobbies</div>
-          </div>
-          <div class="face back">
-            <ul class="bullets">
-              <li>Bricolage numérique</li>
-              <li>Veille techno</li>
-              <li>Nature / sport</li>
-            </ul>
-          </div>
-        </div>
-      </article>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="./">
+        <span class="brand-badge">NT</span>
+        <span class="brand-text">Nicolas Tuor</span>
+      </a>
+      <nav class="nav-links">
+        <a href="./cv">CV</a>
+        <a href="./portfolio">Portfolio</a>
+        <a href="./ai">Idées IA en éducation</a>
+        <a href="./chatbot">Chatbot</a>
+        <button id="themeBtn" class="btn chip" title="Thème">◐</button>
+        <a class="btn chip" href="./index.html">FR</a>
+        <a class="btn chip" href="./index-en.html">EN</a>
+        <a class="btn chip" href="./index-de.html">DE</a>
+      </nav>
     </div>
-    <p class="muted" style="margin-top:8px">Astuce : cliquer ou presser <kbd>Entrée</kbd> pour retourner une carte.</p>
+  </header>
+
+  <!-- HERO -->
+  <section class="container section">
+    <h1 class="title">Didactique de l’informatique & éducation avec IA</h1>
+    <p class="lead">
+      Apprentissages explicites, critères de réussite, et usage raisonné de l’IA — des gains concrets sans baisser les exigences.
+    </p>
+    <div class="row gap">
+      <a class="btn primary" href="./cv">Voir le CV</a>
+      <a class="btn linkish" href="./portfolio">Exemples</a>
+      <a class="btn linkish" href="./chatbot">💬 “Pourquoi m’embaucher ?”</a>
+    </div>
   </section>
 
-  <hr class="soft" />
+  <hr class="soft container" />
 
-  <section class="section">
-    <h2 class="h3">Mini-activité pédagogique (évaluation rapide de source)</h2>
-    <form id="factForm" class="stack">
-      <div class="row gap">
-        <label style="flex:2">Sujet ou URL
-          <input id="fTopic" placeholder="ex. L’IA à l’école… ou https://exemple.com/article" />
+  <!-- RUCHE PÉDAGOGIQUE (Beehive Simulator) -->
+  <section class="container section">
+    <h2 class="h3">Ruche pédagogique — <span class="muted">paramètre une ruche équilibrée pour “débloquer” un aperçu de mon CV</span></h2>
+
+    <div class="grid" style="grid-template-columns: 380px 1fr">
+      <!-- Panneau de contrôle -->
+      <div class="card pad stack">
+        <p class="muted" style="margin-top:0">
+          <strong>But :</strong> stabiliser la ruche <em>(santé ≥ 80 pendant 15 cycles)</em> en ajustant les paramètres.
+          Tu verras alors un résumé de mon CV.
+        </p>
+
+        <label>Fleurs à proximité (nectar)
+          <input type="range" id="bh_flowers" min="0" max="100" value="60">
         </label>
-        <label style="flex:1">Âge (optionnel)
-          <input id="fAge" inputmode="numeric" placeholder="ex. 12" />
+        <label>Ouvrières (récolte) — %
+          <input type="range" id="bh_workers" min="10" max="90" value="65">
         </label>
+        <label>Gardiennes (défense) — %
+          <input type="range" id="bh_guards" min="10" max="60" value="20">
+        </label>
+        <label>Météo (0=orage, 100=grand beau)
+          <input type="range" id="bh_weather" min="0" max="100" value="70">
+        </label>
+
+        <div class="row gap">
+          <button class="btn primary" id="bh_start" data-busy>▶ Lancer / Recaler</button>
+          <button class="btn" id="bh_step">⟳ +1 cycle</button>
+          <span class="muted" id="bh_status">Prêt.</span>
+        </div>
+
+        <div class="stack">
+          <div> Santé : <strong id="bh_health">0</strong> / 100</div>
+          <div> Production : <strong id="bh_prod">0</strong></div>
+          <div> Défense : <strong id="bh_def">0</strong></div>
+          <div> Cycles stables : <strong id="bh_streak">0</strong> / 15</div>
+        </div>
       </div>
-      <div class="row gap">
-        <label style="flex:1">Auteur / qualifications
-          <input id="fAuth" placeholder="ex. journaliste tech, enseignant·e…" />
-        </label>
-        <label style="flex:1">Date / sources
-          <input id="fDate" placeholder="ex. 2024, sources citées ?" />
-        </label>
+
+      <!-- Canvas + résultat -->
+      <div class="stack">
+        <div class="card" style="padding:0;overflow:hidden">
+          <canvas id="bh_canvas" width="900" height="420"
+            style="width:100%;height:auto;display:block;background:rgba(255,255,255,.03)"></canvas>
+        </div>
+
+        <div id="bh_unlock" class="card pad hidden">
+          <h3>🔓 Beehive OK — extrait rapide du CV</h3>
+          <div id="bh_cvExtract" class="stack"></div>
+          <div class="row gap">
+            <a class="btn linkish" href="./cv">Voir le CV complet</a>
+            <a class="btn" href="./cv#story">Version “timeline”</a>
+          </div>
+        </div>
       </div>
-      <label>Preuves / où as-tu trouvé ?
-        <textarea id="fProof" rows="3" placeholder="Notes, URLs, éléments concrets…"></textarea>
-      </label>
-      <div class="row gap">
-        <button class="btn primary" data-busy>Demander un feedback</button>
-      </div>
-      <pre id="factOut" class="output" aria-live="polite"></pre>
-    </form>
+    </div>
   </section>
-</main>
 
-<footer class="container section footer">
-  <div class="foot"><small>© Nicolas Tuor</small></div>
-</footer>
+  <footer class="container section footer">
+    <p class="foot">© Nicolas Tuor — Didactique, IA, éducation numérique.</p>
+  </footer>
 
-<script src="./site.js" defer></script>
-<script>
-  // flip des cartes
-  document.addEventListener('DOMContentLoaded', () => {
-    window.UI?.initFlipGrid?.('#skillsGrid');
-  });
-
-  // mini-activité (feedback avec spinner)
-  const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
-  F.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const btn = F.querySelector('[data-busy]');
-    OUT.textContent = "⏳ Analyse en cours…";
-    window.UI.setBusy(btn, true);
-    try{
-      const age   = document.getElementById('fAge').value.trim();
-      const topic = document.getElementById('fTopic').value.trim();
-      const notes = `Auteur:${document.getElementById('fAuth').value.trim()}
-Date/Sources:${document.getElementById('fDate').value.trim()}
-Preuves:${document.getElementById('fProof').value.trim()}`;
-      const urls  = (topic.startsWith('http') ? [topic] : []);
-      const r = await fetch('/api/factcheck',{method:'POST',headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ mode:'judge', lang:'fr', topic, age, notes, urls })});
-      const j = await r.json();
-      OUT.textContent = j.feedback || JSON.stringify(j,null,2);
-    } catch(err){
-      OUT.textContent = "❌ Erreur : " + (err?.message || err);
-    } finally {
-      window.UI.setBusy(btn, false);
-    }
-  });
-</script>
 </body>
 </html>
