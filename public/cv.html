@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CV — Nicolas Tuor</title><link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CV — Nicolas Tuor</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
 </head>
 <body>
-<header class="nav"><div class="container">
-  <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-  <nav class="nav-links"><a href="./index.html">Accueil</a><a href="./portfolio.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot.html">Chatbot</a><button id="dlCvBtn" class="btn linkish">Télécharger le PDF</button></nav>
-  <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button><a class="btn linkish" href="./cv.html">FR</a><a class="btn linkish" href="./cv-en.html">EN</a><a class="btn linkish" href="./cv-de.html">DE</a></div>
-</div></header>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span>Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./portfolio.html">Portfolio</a>
+      <a href="./ai-lab.html">Idées IA en éducation</a>
+      <a href="./chatbot.html">Chatbot</a>
+      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
+      <button class="btn linkish" data-toggle-theme>🌓</button>
+    </nav>
+  </div>
+</header>
 
-<main class="section container">
-  <h1 class="title">CV – Nicolas Tuor</h1>
-  <div class="cv-toolbar">
-    <label>Affichage :
-      <select id="viewMode" class="select">
-        <option value="pdf">PDF intégré</option>
-        <option value="constellation">Constellation de compétences (interactif)</option>
-        <option value="story">Storyboard “leçon” (interactif)</option>
-      </select>
-    </label>
+<main class="container section">
+  <h1 class="title">CV — Nicolas Tuor</h1>
+
+  <div class="row gap" style="align-items:center;margin-bottom:10px">
+    <label for="viewMode">Affichage :</label>
+    <select id="viewMode" class="select">
+      <option value="pdf" selected>PDF protégé</option>
+      <option value="constellation">Constellation</option>
+      <option value="story">Storyboard</option>
+    </select>
     <button id="printBtn" class="btn">Imprimer/PDF</button>
   </div>
+
   <div id="cvArea"></div>
 </main>
 
-<script src="./cv-data.js"></script>
-<script src="./cv.js"></script>
 <script src="./site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+<script src="./cv.js"></script>
 </body>
 </html>
