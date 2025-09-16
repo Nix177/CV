@@ -2,110 +2,148 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CV Nicolas Tuor – Enseignant & Didactique informatique</title>
-  <!-- Feuille de style CSS -->
-  <link rel="stylesheet" href="style.css" />
-  <!-- Police d'écriture moderne -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nicolas Tuor — Enseignant & Didactique informatique</title>
+  <meta name="description" content="CV interactif de Nicolas Tuor — enseignant diplômé, master en didactique de l’informatique. Pédagogie, éducation numérique, IA." />
+  <meta name="theme-color" content="#203A43" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+  <!-- JSON-LD Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Nicolas Tuor",
+    "jobTitle": "Enseignant & didactique de l’informatique",
+    "email": "mailto:nicolas.tuor@bluewin.ch",
+    "telephone": "+41797622667",
+    "address": { "@type": "PostalAddress", "addressLocality": "Fribourg", "addressCountry": "CH" }
+  }
+  </script>
 </head>
 <body>
 
-<!-- En-tête / Hero section avec nom, tagline et boutons -->
+<!-- HERO -->
 <header class="hero-section">
   <div class="container">
-    <!-- Lien vers la page du chatbot IA -->
-    <nav><a href="chatbot.html" class="nav-link">Chatbot IA</a></nav>
+    <nav>
+      <a href="./cv.html" class="nav-link">CV en ligne</a>
+      &nbsp;|&nbsp;
+      <a href="./chatbot.html" class="nav-link">Chatbot IA</a>
+    </nav>
+
     <div class="hero-content">
       <h1>Nicolas Tuor</h1>
-      <p class="tagline">Penseur critique & pédagogue passionné, toujours en quête d'apprentissage, adepte des technologies d'IA.</p>
+      <p class="tagline">
+        Penseur critique & pédagogue passionné, spécialisé en didactique de l’informatique.
+        Je rends les apprentissages clairs, progressifs et efficaces — avec un usage réfléchi des outils numériques et de l’IA.
+      </p>
       <div class="hero-buttons">
-        <a href="CV_Nicolas_Tuor.pdf" class="btn" target="_blank">Télécharger CV</a>
-        <a href="chatbot.html" class="btn primary-btn">💬 Chatbot IA</a>
+        <a href="./cv.html" class="btn primary-btn">Voir le CV en ligne</a>
+        <a href="#" id="dlCvBtn" class="btn" title="Téléchargement via code secret">Télécharger le CV (protégé)</a>
+        <a href="./chatbot.html" class="btn">💬 Chatbot IA</a>
       </div>
+      <noscript>
+        <p style="margin-top:8px;opacity:.9">Le téléchargement sécurisé nécessite JavaScript. Vous pouvez consulter <a href="./cv.html" style="color:#ffd866">le CV en ligne</a>.</p>
+      </noscript>
     </div>
-    <!-- Petite flèche incitant à faire défiler vers le bas -->
+
     <div class="arrow">↓</div>
   </div>
 </header>
 
-<!-- Section À propos -->
+<!-- À PROPOS -->
 <section class="about-section">
   <div class="container">
     <h2>À propos</h2>
-    <p>Nicolas Tuor est titulaire d’un Master en didactique de l’informatique (HEP Lausanne) et d’un Diplôme d’enseignement primaire (HEP Fribourg). Il a enseigné à différents degrés, du primaire à l’université, et s’est spécialisé dans la **pédagogie informatique**. Pédagogue passionné, il sait structurer les apprentissages pour les rendre clairs et progressifs, tout en accompagnant les apprenants avec méthode et bienveillance.</p>
-    <p>Grâce à son expérience en recherche éducative, Nicolas possède également de solides compétences en **analyse critique** et en **synthèse d’informations**. Curieux et adaptable, il intègre volontiers les nouvelles technologies et les outils d’IA dans ses projets afin d’innover dans ses pratiques. Travaillant aisément en français, anglais et allemand, il apprécie les environnements collaboratifs et multiculturels. Nicolas est constamment en quête de nouveaux apprentissages et met sa pensée critique au service de l’amélioration continue.</p>
+    <p>
+      Enseignant diplômé (HEP Fribourg) et titulaire d’un Master en didactique de l’informatique (HEP Lausanne),
+      j’ai enseigné du primaire à l’université. Je structure les apprentissages, explicite les attentes et documente les progrès.
+      Je m’appuie sur une pratique rigoureuse, une pensée critique solide et un intérêt fort pour l’éducation numérique et l’IA.
+    </p>
+    <p>
+      J’intègre les technologies de manière pragmatique (Python, HTML/CSS, notions C++ ; Moodle côté enseignant)
+      et je conçois des dispositifs sobres et efficaces (fiches pas-à-pas, critères partagés, évaluations formatives/sommatives).
+      Je travaille en français (natif), anglais (C2) et allemand (B2/C1).
+    </p>
   </div>
 </section>
 
-<!-- Section Compétences -->
+<!-- COMPÉTENCES -->
 <section class="skills-section">
   <div class="container">
     <h2>Compétences</h2>
     <ul class="skills-list">
-      <li>Méthodologie de recherche & analyse de données</li>
-      <li>Pédagogie, didactique et conception de formations</li>
-      <li>Maîtrise des outils numériques (programmation : Python, HTML/CSS, C++...)</li>
-      <li>Communication scientifique & vulgarisation</li>
-      <li>Travail en équipe & collaboration interdisciplinaire</li>
-      <li>Adaptabilité, esprit d’initiative & résolution de problèmes</li>
+      <li>Pédagogie, structuration d’objectifs & séquences</li>
+      <li>Évaluation formative/sommative & critères partagés</li>
+      <li>Méthodologie de recherche, analyse & synthèse</li>
+      <li>Éducation numérique & intégration d’outils d’IA</li>
+      <li>Programmation : Python, HTML/CSS (notions C++)</li>
+      <li>Communication claire, documentation & travail d’équipe</li>
     </ul>
+
     <h3>Langues</h3>
-    <p>Français (natif), Anglais (C2), Allemand (B2/C1)</p>
+    <p>Français (natif) · Anglais (C2) · Allemand (B2/C1)</p>
   </div>
 </section>
 
-<!-- Section Expériences -->
+<!-- EXPÉRIENCES -->
 <section class="experience-section">
   <div class="container">
-    <h2>Expériences professionnelles</h2>
+    <h2>Expériences</h2>
     <ul class="experience-list">
-      <li><strong>2019 – Présent :</strong> Enseignant primaire remplaçant, divers établissements (Fribourg).</li>
-      <li><strong>2020 – 2021 :</strong> Enseignant titulaire 5H, École primaire de Corminboeuf.</li>
-      <li><strong>2022 – 2023 :</strong> Stage de recherche (Master), HEP Fribourg – Projet en didactique de l'informatique (6 mois).</li>
-      <li><strong>2024 :</strong> Formateur, journée de formation en éducation numérique (HEP Fribourg).</li>
-      <li><strong>Autres expériences :</strong> Divers rôles développant adaptabilité et initiative (service civil auprès de réfugiés, réceptionniste d’hôtel, archiviste, agent de sécurité, etc.).</li>
+      <li><strong>2019 – présent</strong> : Enseignant primaire (remplacements), divers établissements (FR).</li>
+      <li><strong>2020 – 2021</strong> : Enseignant titulaire 5H, École de Corminboeuf.</li>
+      <li><strong>2024</strong> : Formateur (journée), éducation numérique (HEP Fribourg).</li>
+      <li><strong>2022 – 2023</strong> : Stage Master (CRE/ATE, HEP FR) — cloud de classe local (Nextcloud intranet), ressources & activités ; recherche de terrain.</li>
+      <li><strong>2017 – 2023</strong> : Service civil & expériences diverses (accompagnement, archivage, accueil, sécurité).</li>
     </ul>
   </div>
 </section>
 
-<!-- Section Formation -->
+<!-- FORMATION -->
 <section class="education-section">
   <div class="container">
     <h2>Formation</h2>
     <ul class="education-list">
-      <li><strong>2020 – 2024 :</strong> Master en didactique de l’informatique, HEP Lausanne (mention Bien).</li>
-      <li><strong>2015 – 2019 :</strong> Bachelor en enseignement primaire, HEP Fribourg.</li>
+      <li><strong>2020 – 2024</strong> : Master — Didactique de l’informatique, HEP Lausanne (TM : enseignement explicite du débogage & transfert de compétences).</li>
+      <li><strong>2015 – 2019</strong> : Bachelor — Enseignement préscolaire & primaire, HEP Fribourg.</li>
     </ul>
   </div>
 </section>
 
-<!-- Section Centres d'intérêt -->
+<!-- INTÉRÊTS -->
 <section class="interests-section">
   <div class="container">
     <h2>Centres d’intérêt</h2>
     <ul class="interests-list">
-      <li>Astronomie & Astrophotographie</li>
+      <li>Astronomie / Astrophotographie</li>
       <li>Aviron (compétition)</li>
       <li>Théâtre d’improvisation</li>
       <li>Vulgarisation scientifique & pensée critique</li>
-      <li>Nouvelles technologies & IA (images, vidéos, jeux vidéo, automatisation...)</li>
+      <li>Technologies & outils IA</li>
       <li>Arts martiaux</li>
     </ul>
   </div>
 </section>
 
-<!-- Section Contact (pied de page) -->
+<!-- CONTACT -->
 <footer class="contact-section">
   <div class="container">
     <h2>Contact</h2>
-    <p>📧 <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a><br/>
-       📱 +41 79 762 26 67<br/>
-       📍 Fribourg, Suisse
+    <p>
+      📧 <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a><br/>
+      📱 +41 79 762 26 67<br/>
+      📍 Fribourg, Suisse
     </p>
-    <p class="footnote">Ce site web interactif a été réalisé par Nicolas Tuor – incluant un chatbot IA démontrant ses compétences en technologies d'IA.</p>
+    <p class="footnote">
+      Site personnel — démonstrations IA : <a href="./chatbot.html">chatbot</a> · <a href="./cv.html">CV en ligne</a>.
+    </p>
   </div>
 </footer>
 
+<!-- Téléchargement CV protégé -->
+<script src="./site.js" defer></script>
 </body>
 </html>
