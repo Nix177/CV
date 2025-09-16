@@ -1,42 +1,31 @@
-// site.js
+// public/site.js
 (function () {
-  async function verify(code) {
-    try {
-      const r = await fetch(`/api/verify?code=${encodeURIComponent(code)}`);
-      const j = await r.json();
-      return !!j.ok;
-    } catch { return false; }
-  }
+  const KEY = 'theme';
+  const root = document.documentElement;
+  const saved = localStorage.getItem(KEY);
+  if (saved) root.setAttribute('data-theme', saved);
+  else { root.setAttribute('data-theme', 'dark'); localStorage.setItem(KEY, 'dark'); }
 
-  // Bouton "Télécharger le CV"
-  const dl = document.getElementById('dlCvBtn');
-  if (dl) {
-    dl.addEventListener('click', async () => {
-      const code = prompt('Entrez le code secret pour télécharger le CV :');
-      if (!code) return;
-      if (await verify(code)) {
-        window.location.href = `/api/cv?code=${encodeURIComponent(code)}`;
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-toggle-theme]');
+    if (!t) return;
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(KEY, next);
+  });
+
+  // petite API UI
+  window.UI = {
+    setBusy(btn, on=true) {
+      if (!btn) return;
+      if (on) {
+        btn.dataset._label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '⏳';
       } else {
-        alert('Code invalide.');
+        btn.disabled = false;
+        if (btn.dataset._label) btn.textContent = btn.dataset._label;
       }
-    });
-  }
-
-  // Protection de la page CV : si on est sur /cv*.html on demande le code si pas déjà validé
-  const isCV = /\/cv(-..)?\.html$/i.test(location.pathname);
-  if (isCV) {
-    const ok = sessionStorage.getItem('cv_ok') === '1';
-    if (!ok) {
-      (async () => {
-        let code = prompt('Cette page est protégée. Entrez le code :');
-        if (!code) return location.href = '/index.html';
-        if (await verify(code)) {
-          sessionStorage.setItem('cv_ok', '1');
-          location.reload();
-        } else {
-          alert('Code invalide.'); location.href = '/index.html';
-        }
-      })();
     }
-  }
+  };
 })();
