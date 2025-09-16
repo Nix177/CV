@@ -3,27 +3,202 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portfolio — Nicolas Tuor</title>
+  <title>Nicolas Tuor — Pédagogie, didactique de l’informatique & IA</title>
+  <meta name="description" content="CV de Nicolas Tuor — Enseignant primaire, didactique de l’informatique, éducation numérique et IA.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body>
-<header class="chat-header">
-  <h1>Portfolio</h1>
-  <nav>
-    <a href="./index.html">Accueil</a> |
-    <a href="./cv.html">CV en ligne</a> |
-    <a href="./chatbot.html">Chatbot IA</a>
-  </nav>
-</header>
+<body class="home">
 
-<main class="chat-container">
-  <p class="chat-description">Sélection de mini-projets et sites. Cliquez sur “Visiter” pour ouvrir, “Aperçu” tente un embed (si autorisé par le site).</p>
+  <!-- NAV -->
+  <header class="home-nav">
+    <div class="home-container">
+      <a class="brand" href="./index.html">
+        <span class="brand-logo" aria-hidden="true">NT</span>
+        <span class="brand-text">Nicolas Tuor</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="./cv.html">CV en ligne</a>
+        <a href="./portfolio.html">Portfolio</a>
+        <a href="./chatbot.html">Chatbot IA</a>
+        <button id="dlCvBtn" class="btn linkish" title="Téléchargement via code secret">Télécharger le CV</button>
+      </nav>
+    </div>
+  </header>
 
-  <div id="portfolioGrid" class="portfolio-grid"></div>
-</main>
+  <!-- HERO / CHALKBOARD -->
+  <section class="home-hero">
+    <div class="home-container hero-grid">
+      <div class="hero-left">
+        <h1>
+          Enseignant & didactique de l’informatique
+          <span class="underline">avec une approche claire & exigeante</span>
+        </h1>
+        <p class="lead">
+          Je conçois des <strong>séquences explicites</strong>, des <strong>critères partagés</strong> et des
+          <strong>évaluations formatives/sommatives</strong> qui rendent l’apprentissage visible — en intégrant l’<strong>IA</strong> quand elle est vraiment utile.
+        </p>
 
-<script src="./portfolio-data.js"></script>
-<script src="./portfolio.js"></script>
+        <div class="cta-row">
+          <a class="btn primary" href="./cv.html">Voir le CV</a>
+          <a class="btn" href="./portfolio.html">Voir le portfolio</a>
+          <a class="btn ghost" href="./chatbot.html">💬 Chatbot IA</a>
+        </div>
+
+        <ul class="kpi-list" aria-label="Points forts">
+          <li>🧠 Pensée critique</li>
+          <li>🧭 Didactique & structuration</li>
+          <li>📚 Enseignement primaire</li>
+          <li>🤖 Culture & outils IA</li>
+        </ul>
+      </div>
+
+      <!-- Flashcards interactives -->
+      <div class="hero-right">
+        <div class="flashcard" tabindex="0" aria-label="Pensée critique (retourner)">
+          <div class="face front">Pensée<br>critique</div>
+          <div class="face back">Doutes constructifs, repères & vérification des sources.</div>
+        </div>
+        <div class="flashcard" tabindex="0" aria-label="Didactique (retourner)">
+          <div class="face front">Didactique<br>informatique</div>
+          <div class="face back">Objectifs explicites, pas-à-pas, guidage & feedback.</div>
+        </div>
+        <div class="flashcard" tabindex="0" aria-label="IA & éducation (retourner)">
+          <div class="face front">IA × Éducation</div>
+          <div class="face back">Usage raisonné : gains concrets, préservation des exigences.</div>
+        </div>
+        <div class="flashcard" tabindex="0" aria-label="Enseignement (retourner)">
+          <div class="face front">Enseignant<br>primaire</div>
+          <div class="face back">Climat de classe, consignes claires, différenciation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- décor cahier -->
+    <div class="board-grid" aria-hidden="true"></div>
+  </section>
+
+  <!-- MICRO-DÉMO PÉDAGO -->
+  <section class="home-demo">
+    <div class="home-container">
+      <div class="demo-head">
+        <h2>Mini-démo pédagogique</h2>
+        <p class="muted">Un objectif flou ⟶ une version opérationnelle et évaluable.</p>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-toolbar">
+          <label class="switch">
+            <input id="modeToggle" type="checkbox" />
+            <span class="slider"></span>
+            <span class="switch-label"><b>Mode enseignant</b> / mode apprenant</span>
+          </label>
+        </div>
+
+        <div class="demo-content">
+          <div class="demo-col">
+            <h3>Objectif initial</h3>
+            <blockquote>« Les élèves comprennent les boucles. »</blockquote>
+          </div>
+          <div class="demo-col">
+            <h3>Objectif opérationnel</h3>
+            <div id="objectiveOut" class="objective-out">
+              À la fin, l’élève <u>écrit un programme</u> qui affiche les nombres de 1 à 10 <u>avec une boucle</u>,
+              et <u>explique à l’oral</u> la différence entre <em>while</em> et <em>for</em> sur un exemple.
+              <span class="chip">Critères</span> : code sans erreur, sortie correcte, explication avec vocabulaire attendu.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="chips-row">
+        <li class="chip">Guidage progressif</li>
+        <li class="chip">Critères de réussite</li>
+        <li class="chip">Transfert</li>
+        <li class="chip">Feedback</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TIMELINE / EXPÉRIENCES -->
+  <section class="home-timeline">
+    <div class="home-container">
+      <h2>Parcours en bref</h2>
+      <div class="tl">
+        <article class="tl-item">
+          <h4>2015–2019</h4>
+          <p>Bachelor — Enseignement préscolaire & primaire (HEP FR)</p>
+        </article>
+        <article class="tl-item">
+          <h4>2019–…</h4>
+          <p>Enseignant primaire — remplacements & titulariat 5H</p>
+        </article>
+        <article class="tl-item">
+          <h4>2020–2024</h4>
+          <p>Master — Didactique de l’informatique (HEP VD)</p>
+        </article>
+        <article class="tl-item">
+          <h4>2024</h4>
+          <p>Formation HEP FR — Éducation numérique (1 journée)</p>
+        </article>
+        <article class="tl-item">
+          <h4>Projets</h4>
+          <p>Cloud de classe local, ressources pas-à-pas, chatbot CV</p>
+        </article>
+      </div>
+
+      <div class="center-cta">
+        <a class="btn primary" href="./cv.html">Parcourir le CV complet</a>
+        <a class="btn" href="./portfolio.html">Exemples concrets</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="home-footer">
+    <div class="home-container foot-grid">
+      <div>
+        <p class="brand-line"><span class="brand-logo">NT</span> Nicolas Tuor</p>
+        <p class="muted">Fribourg (CH) · FR/EN/DE</p>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a>
+        <a href="./cv.html">CV</a>
+        <a href="./portfolio.html">Portfolio</a>
+        <a href="./chatbot.html">Chatbot</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactions locales -->
+  <script>
+    // flip sur les "flashcards"
+    document.querySelectorAll('.flashcard').forEach(el => {
+      const toggle = () => el.classList.toggle('flipped');
+      el.addEventListener('click', toggle);
+      el.addEventListener('keydown', e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), toggle()));
+    });
+
+    // mini-démo : bascule enseignant/apprenant
+    const out = document.getElementById('objectiveOut');
+    const toggle = document.getElementById('modeToggle');
+    if (toggle) {
+      toggle.addEventListener('change', () => {
+        if (toggle.checked) {
+          out.innerHTML = `À la fin, <u>vous codez</u> un programme qui affiche 1 à 10 <u>avec une boucle</u>,
+          puis <u>vous expliquez</u> la différence entre <em>while</em> et <em>for</em> sur votre exemple.
+          <span class="chip">À vérifier</span> : pas d’erreurs, sortie correcte, vocabulaire précis.`;
+        } else {
+          out.innerHTML = `À la fin, l’élève <u>écrit un programme</u> qui affiche les nombres de 1 à 10 <u>avec une boucle</u>,
+          et <u>explique à l’oral</u> la différence entre <em>while</em> et <em>for</em> sur un exemple.
+          <span class="chip">Critères</span> : code sans erreur, sortie correcte, explication avec vocabulaire attendu.`;
+        }
+      });
+    }
+  </script>
+
+  <!-- téléchargement protégé (reste géré par site.js) -->
+  <script src="./site.js" defer></script>
 </body>
 </html>
