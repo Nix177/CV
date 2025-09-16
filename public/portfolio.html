@@ -1,30 +1,47 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portfolio — Nicolas Tuor</title>
   <link rel="stylesheet" href="./style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<header class="chat-header">
-  <h1>Portfolio</h1>
-  <nav>
-    <a href="./index.html">Accueil</a> |
-    <a href="./cv.html">CV en ligne</a> |
-    <a href="./chatbot.html">Chatbot IA</a>
-  </nav>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./index.html">Accueil</a><a href="./cv.html">CV</a><a href="./chatbot.html">Chatbot</a>
+      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
+    </nav>
+    <div class="nav-links">
+      <button class="btn linkish" data-toggle-theme>🌓</button>
+    </div>
+  </div>
 </header>
 
-<main class="chat-container">
-  <p class="chat-description">
-    Sélection de mini-projets et sites. Cliquez sur “Visiter” pour ouvrir, “Aperçu” tente un embed (si autorisé par le site).
-  </p>
-  <div id="portfolioGrid" class="portfolio-grid"></div>
+<main class="section container">
+  <h1 class="title">Portfolio</h1>
+  <p class="lead">Sélection de mini-projets. “Visiter” ouvre dans un nouvel onglet. “Aperçu” tente un embed sécurisé (si autorisé par le site).</p>
+  <div id="portfolioGrid" class="grid"></div>
 </main>
+
+<!-- overlay preview -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="overlay-inner">
+    <div class="overlay-bar">
+      <strong id="overlayTitle">Aperçu</strong>
+      <button class="btn" id="overlayClose">Fermer</button>
+    </div>
+    <iframe id="overlayFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+</div>
 
 <script src="./portfolio-data.js"></script>
 <script src="./portfolio.js"></script>
+<script src="./site.js" defer></script>
+<script>
+(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
+</script>
 </body>
 </html>
