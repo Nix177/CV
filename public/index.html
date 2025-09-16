@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nicolas Tuor — Enseignement, didactique & IA</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nicolas Tuor — Didactique de l’informatique & IA</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
+
 <header class="nav">
   <div class="container">
-    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="./index.html">
+      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
+    </a>
     <nav class="nav-links">
-      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot.html">Chatbot IA</a>
+      <a href="./cv.html">CV</a>
+      <a href="./portfolio.html">Portfolio</a>
+      <a href="./ai-lab.html">Idées IA en éducation</a>
+      <a href="./chatbot.html">Chatbot</a>
       <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
     </nav>
-    <div class="nav-links">
-      <button class="btn linkish" data-toggle-theme>🌓</button>
-      <a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a>
-    </div>
+    <nav class="nav-links">
+      <button class="btn linkish" data-toggle-theme title="Basculer le thème">🌓</button>
+      <a class="btn linkish is-active" href="./index.html">FR</a>
+      <a class="btn linkish" href="./index-en.html">EN</a>
+      <a class="btn linkish" href="./index-de.html">DE</a>
+    </nav>
   </div>
 </header>
 
@@ -26,111 +34,120 @@
   <section class="hero">
     <div class="container hero-grid">
       <div>
-        <h1 class="title">Didactique de l’informatique & <span class="stroke">éducation avec IA</span></h1>
-        <p class="lead">Apprentissages explicites, critères de réussite et usage raisonné de l’IA — pour des gains concrets, sans baisser les exigences.</p>
-        <div class="buttons">
+        <h1 class="xxl">Didactique de l’informatique & <span class="accent">éducation avec IA</span></h1>
+        <p class="lead">Apprentissages explicites, critères de réussite et usage raisonné de l’IA — des gains concrets, sans baisser les exigences.</p>
+        <div class="row gap">
           <a class="btn primary" href="./cv.html">Voir le CV</a>
-          <a class="btn" href="./portfolio.html">Exemples</a>
-          <a class="btn ghost" href="./chatbot.html">💬 Chatbot “Pourquoi m’embaucher ?”</a>
+          <a class="btn ghost" href="./portfolio.html">Exemples</a>
+          <a class="btn ghost" href="./chatbot.html">💬 Chatbot « Pourquoi m’embaucher ? »</a>
         </div>
-        <ul class="kpis"><li>🧠 Pensée critique</li><li>🧭 Didactique</li><li>📚 Primaire</li><li>🤖 IA</li></ul>
+
+        <ul class="kpis">
+          <li>🧠 Pensée critique</li>
+          <li>🧭 Guidage</li>
+          <li>🏫 Primaire</li>
+          <li>🤖 IA</li>
+        </ul>
       </div>
-      <div class="cards">
-        <div class="card" tabindex="0">
-          <div class="face front">🧠</div>
-          <div class="face back"><strong>Pensée critique</strong><br>Vérifier, comparer, expliciter les critères.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face front">🧭</div>
-          <div class="face back"><strong>Guidage progressif</strong><br>Objectifs clairs, supports étagés, retours fréquents.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face front">🤖</div>
-          <div class="face back"><strong>IA responsable</strong><br>Gains mesurés, exigences maintenues, éthique.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face back"><strong>Hobbies</strong><br>bricolage numérique, veille techno, nature/sport.</div>
-          <div class="face front">🌿</div>
+
+      <div>
+        <!-- Petit rappel des forces sous forme de flip stable -->
+        <div class="cards">
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>🧭</span></div>
+            <div class="face back"><p>Objectifs clairs, supports étagés, retours fréquents.</p></div>
+          </article>
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>🤖</span></div>
+            <div class="face back"><p>IA comme outil : mesurée, transparente, didactique.</p></div>
+          </article>
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>🌿</span></div>
+            <div class="face back"><p>J’apprends vite, je connais mes limites et je progresse.</p></div>
+          </article>
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>✅</span></div>
+            <div class="face back"><p>Solutions simples, robustes et accessibles.</p></div>
+          </article>
         </div>
       </div>
-      <script>
-        document.querySelectorAll('.card').forEach(c=>{
-          const flip=()=>c.classList.toggle('flipped');
-          c.addEventListener('click', flip);
-          c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
-        });
-      </script>
     </div>
   </section>
 
-  <!-- Jeu éducatif : “Info ou Intox ?” -->
+  <!-- GUIDAGE CRITIQUE (mini-jeu pédagogique) -->
   <section class="section">
     <div class="container demo">
       <div class="toolbar">
-        <span class="muted">Mini-jeu : évaluer la fiabilité d’une info</span>
-        <span id="score">Score : 0/0</span>
+        <span class="muted">Vérifier une information en 3 questions</span>
+        <span class="muted">Adapté par âge · feedback instantané</span>
       </div>
-      <div class="demo-grid">
-        <div class="quiz">
-          <div class="q" id="qText">Chargement…</div>
-          <div class="choices" id="choices"></div>
-          <div id="explain" class="muted"></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Parcours (Projets en 1er, puis plus récent → plus ancien) -->
-  <section class="section">
-    <div class="container">
-      <h2>Parcours (instantané)</h2>
-      <div class="timeline">
-        <article class="tl-item"><h4>Projets</h4><p>Cloud local de classe, ressources pas-à-pas, chatbot CV</p></article>
-        <article class="tl-item"><h4>2024</h4><p>Formation HEP FR — Éducation numérique</p></article>
-        <article class="tl-item"><h4>2019–…</h4><p>Enseignant primaire — remplacements & titulariat 5H</p></article>
-        <article class="tl-item"><h4>2015–2019</h4><p>Bachelor — Enseignement préscolaire & primaire (HEP FR)</p></article>
-      </div>
-      <div class="buttons" style="justify-content:center;margin-top:12px">
-        <a class="btn primary" href="./cv.html">CV complet</a>
-        <a class="btn" href="./portfolio.html">Portfolio</a>
-      </div>
+      <form id="factForm" class="grid" style="grid-template-columns:1fr">
+        <label>Âge / niveau
+          <input id="fAge" placeholder="ex. 11–12 ans, 6H">
+        </label>
+        <label>Sujet / lien
+          <input id="fTopic" placeholder="ex. « Les écrans rendent myopes » — ou coller une URL">
+        </label>
+
+        <div class="cards">
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>👤</span></div>
+            <div class="face back"><p>L’auteur·rice a-t-il/elle des compétences reconnues sur ce sujet ?</p></div>
+          </article>
+          <textarea id="fAuth" rows="2" placeholder="Ce que j’ai trouvé (ou je ne sais pas)…"></textarea>
+
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>🗓️</span></div>
+            <div class="face back"><p>La date et les sources sont-elles claires et vérifiables ?</p></div>
+          </article>
+          <textarea id="fDate" rows="2" placeholder="Indices, captures, lien vers la source…"></textarea>
+
+          <article class="card3d" tabindex="0">
+            <div class="face front"><span>🧪</span></div>
+            <div class="face back"><p>Y a-t-il des preuves solides (étude, données, consensus) ?</p></div>
+          </article>
+          <textarea id="fProof" rows="2" placeholder="Preuves trouvées, contre-exemples…"></textarea>
+        </div>
+
+        <button class="btn primary" data-busy>Demander un feedback</button>
+      </form>
+
+      <pre id="factOut" class="code" style="margin-top:12px;white-space:pre-wrap"></pre>
     </div>
   </section>
 </main>
 
-<footer class="footer">
-  <div class="container foot">
-    <div><strong>NT</strong> — Nicolas Tuor · Fribourg (CH)</div>
-    <div class="nav-links"><a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a><a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a></div>
+<footer class="container section footer">
+  <div class="foot">
+    <small>© Nicolas Tuor</small>
   </div>
 </footer>
 
-<!-- flips + jeu + mode nuit + protections -->
-<script>
-  // mini-jeu : Info ou Intox (3 questions)
-  const QUESTIONS = [
-    { q: "Un article sans date ni source fiable est-il crédible ?", choices: ["Probablement oui", "Plutôt non"], ok: 1, why: "Absence de date/source = signal faible de fiabilité." },
-    { q: "Une capture d’écran seule suffit-elle comme preuve ?", choices: ["Oui", "Non, il faut la source originale"], ok: 1, why: "Toujours remonter à la source primaire." },
-    { q: "Une IA affirme un fait scientifique. Que faire ?", choices: ["Lui faire confiance", "Vérifier dans une source académique"], ok: 1, why: "Les modèles peuvent halluciner : on vérifie." }
-  ];
-  let i=0, right=0;
-  const qText=document.getElementById('qText'), choices=document.getElementById('choices'), explain=document.getElementById('explain'), score=document.getElementById('score');
-  function draw(){
-    score.textContent = `Score : ${right}/${i}`;
-    if(i>=QUESTIONS.length){ qText.textContent="Bravo !"; choices.innerHTML=""; explain.textContent=""; return;}
-    const Q=QUESTIONS[i];
-    qText.textContent=Q.q; explain.textContent="";
-    choices.innerHTML = Q.choices.map((c,idx)=>`<div class="choice" data-i="${idx}">${c}</div>`).join("");
-  }
-  choices.addEventListener('click', e=>{
-    const box=e.target.closest('.choice'); if(!box) return;
-    const idx=+box.dataset.i; const Q=QUESTIONS[i];
-    if(idx===Q.ok){ box.classList.add('correct'); right++; } else { box.classList.add('wrong'); }
-    explain.textContent = Q.why; i++; setTimeout(draw,600);
-  });
-  draw();
-</script>
 <script src="./site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+<script>
+  // Flip 3D au clic / Enter
+  document.addEventListener('click', e => { const c=e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); });
+  document.addEventListener('keydown', e => { if(e.key==='Enter'){ const c=document.activeElement?.closest?.('.card3d'); if(c) c.classList.toggle('is-flipped'); }});
+
+  // Formulaire : feedback IA
+  const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
+  F.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const btn = F.querySelector('[data-busy]'); window.UI.setBusy(btn,true);
+    try{
+      const age   = document.getElementById('fAge').value.trim();
+      const topic = document.getElementById('fTopic').value.trim();
+      const notes = `Auteur:${document.getElementById('fAuth').value.trim()}
+Date/Sources:${document.getElementById('fDate').value.trim()}
+Preuves:${document.getElementById('fProof').value.trim()}`;
+      const urls  = (topic.startsWith('http') ? [topic] : []);
+      const r = await fetch('/api/factcheck',{method:'POST',headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ mode:'judge', lang:'fr', topic, age, notes, urls })});
+      const j = await r.json();
+      OUT.textContent = j.feedback || JSON.stringify(j,null,2);
+    } finally { window.UI.setBusy(btn,false); }
+  });
+</script>
 </body>
 </html>
