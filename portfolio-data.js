@@ -14,7 +14,7 @@ window.portfolioItems = [
     id: "adwall",
     title: "AdWall",
     blurb: "Mur d’idées publicitaires : prompts, slogans, concepts visuels.",
-    url: "https://adwall.example",    // ← AJOUTE L’URL RÉELLE
+    url: "https://adwall.net",    // ← AJOUTE L’URL RÉELLE
     repo: null,
     image: "./assets/portfolio/adwall.jpg",
     tags: ["Idéation", "Génératif"],
@@ -24,7 +24,7 @@ window.portfolioItems = [
     id: "petnames",
     title: "Petnames API",
     blurb: "Générateur de noms d’animaux (API + petite UI).",
-    url: "https://petnames.example",  // ← AJOUTE L’URL RÉELLE
+    url: "https://nix177.github.io/petnames/fr/",  // ← AJOUTE L’URL RÉELLE
     repo: null,
     image: "./assets/portfolio/petnames.jpg",
     tags: ["API", "Front minimal"],
