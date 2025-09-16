@@ -2,7 +2,7 @@
 <html lang="de" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Informatikdidaktik & verantwortungsvolle KI</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -20,112 +20,107 @@
       <a href="./chatbot-de.html">Chatbot</a>
       <button id="dlCvBtn" class="btn linkish">PDF herunterladen</button>
     </nav>
-    <div class="nav-links">
-      <button class="btn linkish" data-toggle-theme>🌓</button>
+    <nav class="nav-links">
+      <button class="btn linkish" data-toggle-theme title="Theme umschalten">🌓</button>
       <a class="btn linkish" href="./index.html">FR</a>
       <a class="btn linkish" href="./index-en.html">EN</a>
       <a class="btn linkish is-active" href="./index-de.html">DE</a>
-    </div>
+    </nav>
   </div>
 </header>
 
 <main>
-  <!-- Hero -->
-  <section class="hero container section">
-    <h1 class="xxl">
-      Informatikdidaktik &amp; <span class="accent">verantwortungsvolle KI</span>
-    </h1>
-    <p class="lead">Klare Lernsequenzen, Erfolgskriterien und ein maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
-    <div class="row gap">
-      <a class="btn" href="./cv-de.html">Zum CV</a>
-      <a class="btn ghost" href="./portfolio-de.html">Projekte</a>
-      <a class="btn ghost" href="#ai-compass">„Warum mich einstellen?“</a>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1 class="xxl">Informatikdidaktik & <span class="accent">verantwortungsvolle KI</span></h1>
+        <p class="lead">Explizites Lernen, Erfolgskriterien und maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
+        <div class="row gap">
+          <a class="btn primary" href="./cv-de.html">Zum CV</a>
+          <a class="btn ghost" href="./portfolio-de.html">Projekte</a>
+          <a class="btn ghost" href="./chatbot-de.html">💬 „Warum mich einstellen?“</a>
+        </div>
+        <ul class="kpis">
+          <li>🧠 Kritisches Denken</li>
+          <li>🧭 Scaffolding</li>
+          <li>🏫 Primarstufe</li>
+          <li>🤖 KI</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="cards">
+          <article class="card3d" tabindex="0"><div class="face front"><span>🧭</span></div><div class="face back"><p>Klare Ziele, gestufte Unterstützung, häufiges Feedback.</p></div></article>
+          <article class="card3d" tabindex="0"><div class="face front"><span>🤖</span></div><div class="face back"><p>KI als Werkzeug: maßvoll, transparent, didaktisch begründet.</p></div></article>
+          <article class="card3d" tabindex="0"><div class="face front"><span>🌿</span></div><div class="face back"><p>Schnell lernend, kennt die eigenen Grenzen, wächst stetig.</p></div></article>
+          <article class="card3d" tabindex="0"><div class="face front"><span>✅</span></div><div class="face back"><p>Einfache, robuste und zugängliche Lösungen.</p></div></article>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Cartes forces/valeurs (flip) -->
-  <section class="container section">
-    <div class="cards">
-      <article class="card3d" tabindex="0">
-        <div class="face front"><span>🧭</span></div>
-        <div class="face back"><p>Struktur und Orientierung: klare Ziele, häufiges Feedback.</p></div>
-      </article>
-      <article class="card3d" tabindex="0">
-        <div class="face front"><span>🤖</span></div>
-        <div class="face back"><p>KI als Werkzeug: planbar, transparent, didaktisch begründet.</p></div>
-      </article>
-      <article class="card3d" tabindex="0">
-        <div class="face front"><span>🌿</span></div>
-        <div class="face back"><p>Wachstums-Mindset: schnell lernen, eigene Grenzen kennen.</p></div>
-      </article>
-      <article class="card3d" tabindex="0">
-        <div class="face front"><span>✅</span></div>
-        <div class="face back"><p>Verlässlichkeit und einfache, robuste Lösungen.</p></div>
-      </article>
-    </div>
-  </section>
+  <!-- Kritischer Leitfaden -->
+  <section class="section">
+    <div class="container demo">
+      <div class="toolbar">
+        <span class="muted">Eine Behauptung mit 3 Fragen prüfen</span>
+        <span class="muted">Altersangemessen · sofortiges Feedback</span>
+      </div>
 
-  <!-- AI Compass (mini-interactif) -->
-  <section id="ai-compass" class="container section">
-    <h2>AI-Kompass: Ideen in 30 Sekunden</h2>
-    <form id="compassForm" class="stack">
-      <label>Alter / Stufe
-        <input type="text" id="compassAge" placeholder="z.B. 11–12 Jahre, 6. Klasse" />
-      </label>
-      <label>Thema / Fach
-        <input type="text" id="compassTopic" placeholder="z.B. Brüche, Ökosysteme, Zeitformen" />
-      </label>
-      <button class="btn" data-busy>Ideen generieren</button>
-    </form>
-    <div id="compassOut" class="grid"></div>
+      <form id="factForm" class="grid" style="grid-template-columns:1fr">
+        <label>Alter / Stufe
+          <input id="fAge" placeholder="z. B. 11–12 Jahre, 6. Klasse">
+        </label>
+        <label>Thema / Link
+          <input id="fTopic" placeholder="z. B. „Bildschirmzeit macht kurzsichtig“ — oder URL einfügen">
+        </label>
+
+        <div class="cards">
+          <article class="card3d" tabindex="0"><div class="face front"><span>👤</span></div><div class="face back"><p>Hat die Autorin/der Autor anerkannte Expertise zum Thema?</p></div></article>
+          <textarea id="fAuth" rows="2" placeholder="Was ich gefunden habe (oder ich weiß es nicht)…"></textarea>
+
+          <article class="card3d" tabindex="0"><div class="face front"><span>🗓️</span></div><div class="face back"><p>Sind Datum und Quellen klar und überprüfbar?</p></div></article>
+          <textarea id="fDate" rows="2" placeholder="Hinweise, Screenshots, Link zur Quelle…"></textarea>
+
+          <article class="card3d" tabindex="0"><div class="face front"><span>🧪</span></div><div class="face back"><p>Gibt es belastbare Belege (Studie, Daten, Konsens)?</p></div></article>
+          <textarea id="fProof" rows="2" placeholder="Gefundene Belege, Gegenbeispiele…"></textarea>
+        </div>
+
+        <button class="btn primary" data-busy>Feedback anfordern</button>
+      </form>
+
+      <pre id="factOut" class="code" style="margin-top:12px;white-space:pre-wrap"></pre>
+    </div>
   </section>
 </main>
 
-<footer class="container section">
-  <small>© Nicolas Tuor</small>
+<footer class="container section footer">
+  <div class="foot">
+    <small>© Nicolas Tuor</small>
+  </div>
 </footer>
 
 <script src="./site.js" defer></script>
 <script>
-  // flips
-  document.addEventListener('click', e => {
-    const c = e.target.closest('.card3d'); if(!c) return;
-    c.classList.toggle('is-flipped');
-  });
-  document.addEventListener('keydown', e => {
-    if(e.key === 'Enter'){ const c = e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); }
-  });
+  document.addEventListener('click', e=>{ const c=e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const c=document.activeElement?.closest?.('.card3d'); if(c) c.classList.toggle('is-flipped'); }});
 
-  // AI Compass: utilise /api/factcheck en mode generate
-  const f = document.getElementById('compassForm');
-  const out = document.getElementById('compassOut');
-
-  f.addEventListener('submit', async (e) => {
+  const F=document.getElementById('factForm'), OUT=document.getElementById('factOut');
+  F.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const age = document.getElementById('compassAge').value.trim();
-    const topic = document.getElementById('compassTopic').value.trim();
-    const btn = f.querySelector('[data-busy]');
-    window.UI.setBusy(btn, true);
-
-    out.innerHTML = "";
+    const btn = F.querySelector('[data-busy]'); window.UI.setBusy(btn,true);
     try{
-      const r = await fetch('/api/factcheck', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ mode:'generate', lang:'de', topic, age })
-      });
-      const data = await r.json();
-      // attend une liste d'étapes/astuces
-      (data.steps || []).forEach(step => {
-        const card = document.createElement('article');
-        card.className = 'card3d';
-        card.innerHTML = `<div class="face front"><span>💡</span></div>
-                          <div class="face back"><p>${step}</p></div>`;
-        out.appendChild(card);
-      });
-    } finally {
-      window.UI.setBusy(btn, false);
-    }
+      const age=document.getElementById('fAge').value.trim();
+      const topic=document.getElementById('fTopic').value.trim();
+      const notes=`Autor: ${document.getElementById('fAuth').value.trim()}
+Datum/Quellen: ${document.getElementById('fDate').value.trim()}
+Belege: ${document.getElementById('fProof').value.trim()}`;
+      const urls=(topic.startsWith('http')?[topic]:[]);
+      const r=await fetch('/api/factcheck',{method:'POST',headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({mode:'judge',lang:'de',topic,age,notes,urls})});
+      const j=await r.json();
+      OUT.textContent=j.feedback||JSON.stringify(j,null,2);
+    } finally { window.UI.setBusy(btn,false); }
   });
 </script>
 </body>
