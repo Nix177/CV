@@ -3,29 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nicolas Tuor — Enseignant, didactique & IA</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>Nicolas Tuor — Enseignement, didactique & IA</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-
 <header class="nav">
   <div class="container">
     <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-
     <nav class="nav-links">
-      <a href="./cv.html">CV</a>
-      <a href="./portfolio.html">Portfolio</a>
-      <a href="./chatbot.html">Chatbot IA</a>
-      <button id="dlCvBtn" class="btn linkish" title="Téléchargement via code">Télécharger le CV</button>
+      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot IA</a>
+      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
     </nav>
-
     <div class="nav-links">
       <button class="btn linkish" data-toggle-theme>🌓</button>
-      <a class="btn linkish" href="./index.html">FR</a>
-      <a class="btn linkish" href="./index-en.html">EN</a>
-      <a class="btn linkish" href="./index-de.html">DE</a>
+      <a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a>
     </div>
   </div>
 </header>
@@ -36,79 +27,50 @@
     <div class="container hero-grid">
       <div>
         <h1 class="title">Didactique de l’informatique & <span class="stroke">éducation avec IA</span></h1>
-        <p class="lead">Je structure des apprentissages explicites, conçois des critères de réussite et j’intègre l’IA de façon raisonnée — pour des gains concrets, sans baisser les exigences.</p>
+        <p class="lead">Apprentissages explicites, critères de réussite et usage raisonné de l’IA — pour des gains concrets, sans baisser les exigences.</p>
         <div class="buttons">
           <a class="btn primary" href="./cv.html">Voir le CV</a>
           <a class="btn" href="./portfolio.html">Exemples</a>
           <a class="btn ghost" href="./chatbot.html">💬 Chatbot “Pourquoi m’embaucher ?”</a>
         </div>
-        <ul class="kpis">
-          <li>🧠 Pensée critique</li><li>🧭 Didactique</li><li>📚 Enseignement primaire</li><li>🤖 Culture IA</li>
-        </ul>
+        <ul class="kpis"><li>🧠 Pensée critique</li><li>🧭 Didactique</li><li>📚 Primaire</li><li>🤖 IA</li></ul>
       </div>
-
-      <!-- Flashcards -->
+      <!-- Cartes : icône devant, texte au dos -->
       <div class="cards">
-        <div class="card" tabindex="0">
-          <div class="face front">Guidage progressif</div>
-          <div class="face back">Objectifs clairs, étayage, feedback fréquent.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face front">Évaluer pour apprendre</div>
-          <div class="face back">Critères partagés, rubriques, micro-révisions.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face front">IA responsable</div>
-          <div class="face back">Gains mesurés, vigilance, respect des attendus.</div>
-        </div>
-        <div class="card" tabindex="0">
-          <div class="face front">Communication claire</div>
-          <div class="face back">Consignes narrées, exemples, reformulation.</div>
-        </div>
+        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🧭</div><div class="face back">Guidage progressif : objectifs clairs, étayage, feedback.</div></div>
+        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">✅</div><div class="face back">Évaluer pour apprendre : critères partagés, rubriques, micro-révisions.</div></div>
+        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🤖</div><div class="face back">IA responsable : gains mesurés, vigilance, respect des attendus.</div></div>
+        <div class="card" tabindex="0"><div class="face front" aria-hidden="true">🗣️</div><div class="face back">Communication claire : consignes narrées, exemples, reformulation.</div></div>
       </div>
     </div>
   </section>
 
-  <!-- MINI-DÉMO -->
+  <!-- Jeu éducatif : “Info ou Intox ?” -->
   <section class="section">
     <div class="container demo">
       <div class="toolbar">
-        <span class="muted">Mini-démo pédagogique : clarifier un objectif</span>
-        <label class="switch">
-          <input type="checkbox" id="modeToggle">
-          <span class="track"><span class="thumb"></span></span>
-        </label>
+        <span class="muted">Mini-jeu : évaluer la fiabilité d’une info</span>
+        <span id="score">Score : 0/0</span>
       </div>
       <div class="demo-grid">
-        <div>
-          <h3>Objectif initial</h3>
-          <blockquote>« Les élèves comprennent les boucles. »</blockquote>
-        </div>
-        <div>
-          <h3>Objectif opérationnel</h3>
-          <div id="objectiveOut" class="box">
-            À la fin, l’élève <u>écrit un programme</u> qui affiche 1 à 10 <u>avec une boucle</u>, puis
-            <u>explique</u> la différence entre <em>while</em> et <em>for</em> sur son exemple.
-            <span class="chip">Critères</span> : pas d’erreurs, sortie correcte, vocabulaire précis.
-          </div>
+        <div class="quiz">
+          <div class="q" id="qText">Chargement…</div>
+          <div class="choices" id="choices"></div>
+          <div id="explain" class="muted"></div>
         </div>
       </div>
-      <ul class="chips container" style="padding-bottom:12px">
-        <li class="chip">Guidage</li><li class="chip">Critères</li><li class="chip">Transfert</li><li class="chip">Feedback</li>
-      </ul>
     </div>
   </section>
 
-  <!-- TIMELINE -->
+  <!-- Parcours (Projets en 1er, puis plus récent → plus ancien) -->
   <section class="section">
     <div class="container">
       <h2>Parcours (instantané)</h2>
       <div class="timeline">
-        <article class="tl-item"><h4>2015–2019</h4><p>Bachelor — Enseignement préscolaire & primaire (HEP FR)</p></article>
-        <article class="tl-item"><h4>2019–…</h4><p>Enseignant primaire — remplacements & titulariat 5H</p></article>
-        <article class="tl-item"><h4>2020–2024</h4><p>Master — Didactique de l’informatique (HEP VD)</p></article>
+        <article class="tl-item"><h4>Projets</h4><p>Cloud local de classe, ressources pas-à-pas, chatbot CV</p></article>
         <article class="tl-item"><h4>2024</h4><p>Formation HEP FR — Éducation numérique</p></article>
-        <article class="tl-item"><h4>Projets</h4><p>Cloud local, ressources pas-à-pas, chatbot CV</p></article>
+        <article class="tl-item"><h4>2019–…</h4><p>Enseignant primaire — remplacements & titulariat 5H</p></article>
+        <article class="tl-item"><h4>2015–2019</h4><p>Bachelor — Enseignement préscolaire & primaire (HEP FR)</p></article>
       </div>
       <div class="buttons" style="justify-content:center;margin-top:12px">
         <a class="btn primary" href="./cv.html">CV complet</a>
@@ -121,14 +83,11 @@
 <footer class="footer">
   <div class="container foot">
     <div><strong>NT</strong> — Nicolas Tuor · Fribourg (CH)</div>
-    <div class="nav-links">
-      <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a>
-      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a>
-    </div>
+    <div class="nav-links"><a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a><a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a></div>
   </div>
 </footer>
 
-<!-- interactions de la page -->
+<!-- flips + jeu + mode nuit + protections -->
 <script>
   // flip cards
   document.querySelectorAll('.card').forEach(c => {
@@ -136,23 +95,33 @@
     c.addEventListener('click', flip);
     c.addEventListener('keydown', e => (e.key==='Enter'||e.key===' ') && (e.preventDefault(), flip()));
   });
-  // démo toggle
-  const out = document.getElementById('objectiveOut');
-  const toggle = document.getElementById('modeToggle');
-  toggle.addEventListener('change', () => {
-    out.innerHTML = toggle.checked
-      ? `À la fin, <u>vous codez</u> un programme qui affiche 1 à 10 <u>avec une boucle</u>,
-         puis <u>vous expliquez</u> la différence entre <em>while</em> et <em>for</em>.
-         <span class="chip">À vérifier</span> : pas d’erreurs, sortie correcte, vocabulaire précis.`
-      : `À la fin, l’élève <u>écrit un programme</u> qui affiche 1 à 10 <u>avec une boucle</u>,
-         et <u>explique</u> la différence entre <em>while</em> et <em>for</em> sur son exemple.
-         <span class="chip">Critères</span> : pas d’erreurs, sortie correcte, vocabulaire précis.`;
+
+  // mini-jeu : Info ou Intox (3 questions)
+  const QUESTIONS = [
+    { q: "Un article sans date ni source fiable est-il crédible ?", choices: ["Probablement oui", "Plutôt non"], ok: 1, why: "Absence de date/source = signal faible de fiabilité." },
+    { q: "Une capture d’écran seule suffit-elle comme preuve ?", choices: ["Oui", "Non, il faut la source originale"], ok: 1, why: "Toujours remonter à la source primaire." },
+    { q: "Une IA affirme un fait scientifique. Que faire ?", choices: ["Lui faire confiance", "Vérifier dans une source académique"], ok: 1, why: "Les modèles peuvent halluciner : on vérifie." }
+  ];
+  let i=0, right=0;
+  const qText=document.getElementById('qText'), choices=document.getElementById('choices'), explain=document.getElementById('explain'), score=document.getElementById('score');
+  function draw(){
+    score.textContent = `Score : ${right}/${i}`;
+    if(i>=QUESTIONS.length){ qText.textContent="Bravo !"; choices.innerHTML=""; explain.textContent=""; return;}
+    const Q=QUESTIONS[i];
+    qText.textContent=Q.q; explain.textContent="";
+    choices.innerHTML = Q.choices.map((c,idx)=>`<div class="choice" data-i="${idx}">${c}</div>`).join("");
+  }
+  choices.addEventListener('click', e=>{
+    const box=e.target.closest('.choice'); if(!box) return;
+    const idx=+box.dataset.i; const Q=QUESTIONS[i];
+    if(idx===Q.ok){ box.classList.add('correct'); right++; } else { box.classList.add('wrong'); }
+    explain.textContent = Q.why; i++; setTimeout(draw,600);
   });
+  draw();
 </script>
-<!-- téléchargement protégé -->
 <script src="./site.js" defer></script>
-<!-- mode nuit -->
 <script>
+  // mode nuit persisté
   (function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
 </script>
 </body>
