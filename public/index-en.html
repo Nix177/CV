@@ -21,26 +21,26 @@
       <ul class="kpis"><li>🧠 Critical thinking</li><li>🧭 Didactics</li><li>📚 Primary</li><li>🤖 AI</li></ul>
     </div>
     <div class="cards">
-      <div class="card" tabindex="0">
+      <div class="card card3d" tabindex="0">
         <div class="face front">🧠</div>
         <div class="face back"><strong>Critical thinking</strong><br>Verify, compare, make success criteria explicit.</div>
       </div>
-      <div class="card" tabindex="0">
+      <div class="card card3d" tabindex="0">
         <div class="face front">🧭</div>
         <div class="face back"><strong>Scaffolding</strong><br>Clear goals, layered supports, frequent feedback.</div>
       </div>
-      <div class="card" tabindex="0">
+      <div class="card card3d" tabindex="0">
         <div class="face front">🤖</div>
         <div class="face back"><strong>Responsible AI</strong><br>Measure gains, keep expectations high, stay ethical.</div>
       </div>
-      <div class="card" tabindex="0">
+      <div class="card card3d" tabindex="0">
         <div class="face back"><strong>Hobbies</strong><br>Creative coding, tech watch, outdoors & sport.</div>
         <div class="face front">🌿</div>
       </div>
     </div>
     <script>
-      document.querySelectorAll('.card').forEach(c=>{
-        const flip=()=>c.classList.toggle('flipped');
+      document.querySelectorAll('.card3d').forEach(c=>{
+        const flip=()=>c.classList.toggle('is-flipped');
         c.addEventListener('click', flip);
         c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
       });

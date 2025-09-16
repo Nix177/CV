@@ -25,26 +25,26 @@
   <p class="lead">Klare Lernsequenzen, Erfolgskriterien und ein maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
   <div class="buttons"><a class="btn primary" href="./cv-de.html">Zum CV</a><a class="btn" href="./portfolio-de.html">Projekte</a><a class="btn ghost" href="./chatbot-de.html">💬 „Warum mich einstellen?“</a></div>
   <div class="cards">
-    <div class="card" tabindex="0">
+    <div class="card card3d" tabindex="0">
       <div class="face front">🧠</div>
       <div class="face back"><strong>Kritisches Denken</strong><br>Prüfen, vergleichen, Kriterien offenlegen.</div>
     </div>
-    <div class="card" tabindex="0">
+    <div class="card card3d" tabindex="0">
       <div class="face front">🧭</div>
       <div class="face back"><strong>Gezielte Begleitung</strong><br>Klar formulierte Ziele, gestufte Hilfen, häufiges Feedback.</div>
     </div>
-    <div class="card" tabindex="0">
+    <div class="card card3d" tabindex="0">
       <div class="face front">🤖</div>
       <div class="face back"><strong>Verantwortungsvolle KI</strong><br>Nutzen messen, Ansprüche halten, ethisch bleiben.</div>
     </div>
-    <div class="card" tabindex="0">
+    <div class="card card3d" tabindex="0">
       <div class="face back"><strong>Hobbys</strong><br>Digitales Tüfteln, Tech-Scouting, Natur & Sport.</div>
       <div class="face front">🌿</div>
     </div>
   </div>
   <script>
-    document.querySelectorAll('.card').forEach(c=>{
-      const flip=()=>c.classList.toggle('flipped');
+    document.querySelectorAll('.card3d').forEach(c=>{
+      const flip=()=>c.classList.toggle('is-flipped');
       c.addEventListener('click', flip);
       c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
     });
