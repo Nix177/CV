@@ -1,84 +1,59 @@
-// /api/factcheck.js
+// api/factcheck.js
 export default async function handler(req, res) {
-  try {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
-    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY missing' });
-
-    const { mode, claim, topic, lang = 'fr', lab, answers, self } =
-      (await req.json?.()) || req.body || {};
-
-    if (mode === 'generate') {
-      const prompt = `
-Tu es un formateur en pensée critique. Pour l'affirmation ci-dessous,
-génère un petit "parcours de vérification" en JSON avec exactement 3 tâches.
-Chacune a: title, hint (1 phrase), options (3 choix concis), sources (2-3 types de sources).
-Ne fournis AUCUNE solution; c'est pour guider l'élève.
-
-Affirmation: "${claim}"
-Sujet (optionnel): "${topic || '—'}"
-
-Réponds en ${lang === 'de' ? 'allemand' : lang === 'en' ? 'anglais' : 'français'}.
-      `.trim();
-
-      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-        method:'POST',
-        headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},
-        body: JSON.stringify({ model:'gpt-4o-mini', temperature:0.5, messages:[{role:'user', content: prompt}] })
-      });
-      const j = await resp.json();
-      if (!resp.ok) return res.status(500).json({ error: j.error?.message || 'OpenAI error' });
-
-      // essaie d'attraper le JSON
-      let data = {};
-      try { data = JSON.parse(j.choices?.[0]?.message?.content || '{}'); }
-      catch { // fallback simple si le modèle a répondu en texte
-        data = { tasks: [
-          { title: "Chercher la source d'origine", hint: "Qui publie ? Quand ? Connu fiable ?", options:["Blog anonyme récent","Site officiel avec auteur","Post viral sans auteur"], sources:["Site officiel","Archive","À propos"] },
-          { title: "Comparer plusieurs sources", hint: "Y a-t-il consensus ?", options:["1 seule source","Plusieurs sources fiables","Réseaux sociaux uniquement"], sources:["Articles de presse","Synthèses","Revues"] },
-          { title: "Repérer indices d'intox", hint: "Langage, tonalité, appels à l'émotion", options:["Titres modérés","Beaucoup d'insultes","Aucune référence"], sources:["Guide d'évaluation","Décodage / fact-checkers","FAQ du site"] }
-        ]};
-      }
-
-      return res.status(200).json({ tasks: data.tasks || [] });
-    }
-
-    if (mode === 'judge') {
-      const judgePrompt = `
-Tu évalues un élève qui a suivi un parcours de vérification en ${lang}.
-Tu reçois :
-- l'affirmation de départ
-- la liste des tâches (title, hint, options, sources)
-- les réponses choisies (indices 0..2, ou null si sans réponse)
-- l'analyse rédigée par l'élève ("self")
-
-Donne un retour en 6–8 lignes : points positifs, angles manquants, propositions de vérification concrètes.
-Termine par une phrase d'encouragement. Pas de note chiffrée.
-
-JSON attendu:
-{ "summary": "texte", "tips": "2–3 pistes concrètes en une phrase" }
-      `.trim();
-
-      const content = JSON.stringify({ lab, answers, self });
-      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-        method:'POST',
-        headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},
-        body: JSON.stringify({
-          model:'gpt-4o-mini', temperature:0.4,
-          messages:[{ role:'system', content: judgePrompt }, { role:'user', content }]
-        })
-      });
-      const j = await resp.json();
-      if (!resp.ok) return res.status(500).json({ error: j.error?.message || 'OpenAI error' });
-
-      let out = {};
-      try { out = JSON.parse(j.choices?.[0]?.message?.content || '{}'); }
-      catch { out = { summary: j.choices?.[0]?.message?.content || '', tips:'' }; }
-
-      return res.status(200).json(out);
-    }
-
-    return res.status(400).json({ error: 'Invalid mode' });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'POST only' });
   }
+  const { mode = 'generate', lang = 'fr', topic = '', age = '', notes = '', urls = [] } =
+    (req.body || {});
+
+  // Petite fabrique de prompts multilingues.
+  const L = {
+    fr: {
+      generate: (t, a) => `Tu es un conseiller pédagogique. Sujet: "${t}". Public: "${a}".
+Propose 3 à 5 étapes brèves, concrètes, éthiques et faisables avec (ou sans) IA.
+Réponds sous forme de liste d’items, sans blabla.`,
+      judge: (t, a, n, u) => `Évalue le plan d’activité suivant (niveau: "${a}", sujet: "${t}").
+Notes de l'enseignant: """${n}"""
+Sources éventuelles: ${Array.isArray(u) && u.length ? u.join(', ') : 'aucune'}
+Analyse didactique concise: points forts, risques, ajustements concrets.`
+    },
+    en: {
+      generate: (t, a) => `You are an instructional coach. Topic: "${t}". Learners: "${a}".
+List 3–5 brief, doable, ethical AI-supported steps. Use bullet points.`,
+      judge: (t, a, n, u) => `Review the plan (level: "${a}", topic: "${t}").
+Teacher notes: """${n}"""
+Sources: ${Array.isArray(u)&&u.length?u.join(', '):'none'}
+Give concise strengths, risks, and concrete tweaks.`
+    },
+    de: {
+      generate: (t, a) => `Du bist Unterrichtscoach. Thema: "${t}". Lernende: "${a}".
+Nenne 3–5 kurze, machbare und verantwortungsvolle KI-Schritte (Stichpunkte).`,
+      judge: (t, a, n, u) => `Bewerte den Plan (Niveau: "${a}", Thema: "${t}").
+Notizen der Lehrperson: """${n}"""
+Quellen: ${Array.isArray(u)&&u.length?u.join(', '):'keine'}
+Gib Stärken, Risiken und konkrete Anpassungen.`
+    }
+  }[lang] || L_fr;
+
+  // --- Appel modèle (placeholder sans clé ici) ---
+  // Branchez votre fournisseur habituel. Pour la démo on renvoie des données “mock”.
+  if (mode === 'generate') {
+    const steps = [
+      `Activer les pré-requis avec 3 exemples/commentaires d’IA (niveau ${age}).`,
+      `Atelier guidé: élèves expliquent à l’IA puis comparent avec un pair.`,
+      `Mini-défi avec critères de succès affichés.`,
+      `Auto-évaluation rapide + trace écrite synthétique.`
+    ];
+    return res.json({ steps });
+  }
+  if (mode === 'judge') {
+    const feedback =
+`✓ Points forts: contexte précisé (${age}), intention claire.
+⚠ Risques: surcharge/outils non maîtrisés → prévoir démonstration courte.
+→ Ajustements: limiter à 2 prompts modèles, afficher 3 critères de réussite,
+prévoir 1 vérification de source par groupe (${(urls||[]).length ? 'sources fournies' : 'sources à ajouter'}).`;
+    return res.json({ feedback });
+  }
+
+  res.status(400).json({ error: 'Unknown mode' });
 }
