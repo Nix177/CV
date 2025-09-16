@@ -1,33 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nicolas Tuor — CS Education & AI</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nicolas Tuor — Teaching, CS Didactics & AI</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="./index-en.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-    <nav class="nav-links">
-      <a href="./cv.html">CV</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a>
-      <button id="dlCvBtn" class="btn linkish">Download PDF</button>
-    </nav>
-    <div class="nav-links">
-      <button class="btn linkish" data-toggle-theme>🌓</button>
-      <a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a>
+<header class="nav"><div class="container">
+  <a class="brand" href="./index-en.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+  <nav class="nav-links"><a href="./cv-en.html">CV</a><a href="./portfolio-en.html">Portfolio</a><a href="./chatbot-en.html">AI Chatbot</a><button id="dlCvBtn" class="btn linkish">Download CV</button></nav>
+  <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button><a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a></div>
+</div></header>
+
+<main>
+  <section class="hero"><div class="container hero-grid">
+    <div>
+      <h1 class="title">CS didactics & <span class="stroke">responsible AI</span></h1>
+      <p class="lead">Explicit learning sequences, clear success criteria and a measured use of AI — real gains without lowering expectations.</p>
+      <div class="buttons"><a class="btn primary" href="./cv-en.html">See CV</a><a class="btn" href="./portfolio-en.html">Work</a><a class="btn ghost" href="./chatbot-en.html">💬 “Why hire me?”</a></div>
+      <ul class="kpis"><li>🧠 Critical thinking</li><li>🧭 Didactics</li><li>📚 Primary</li><li>🤖 AI</li></ul>
     </div>
-  </div>
-</header>
-<main class="section container">
-  <h1 class="title">Computer Science Education & <span class="stroke">responsible AI</span></h1>
-  <p class="lead">I design explicit learning sequences, clear success criteria and use AI where it truly helps without lowering expectations.</p>
-  <div class="buttons"><a class="btn primary" href="./cv.html">See CV</a><a class="btn" href="./portfolio.html">Work</a></div>
+    <div class="cards">
+      <div class="card" tabindex="0"><div class="face front">🧭</div><div class="face back">Scaffolding: clear goals, support, frequent feedback.</div></div>
+      <div class="card" tabindex="0"><div class="face front">✅</div><div class="face back">Assess to learn: shared criteria, rubrics, micro-reviews.</div></div>
+      <div class="card" tabindex="0"><div class="face front">🤖</div><div class="face back">Responsible AI: measured gains, keep requirements.</div></div>
+      <div class="card" tabindex="0"><div class="face front">🗣️</div><div class="face back">Clear communication: narrated examples, reformulation.</div></div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container demo">
+    <div class="toolbar"><span class="muted">Mini-game: evaluate an online claim</span><span id="score">Score: 0/0</span></div>
+    <div class="demo-grid">
+      <div class="quiz">
+        <div class="q" id="qText">Loading…</div>
+        <div class="choices" id="choices"></div>
+        <div id="explain" class="muted"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <h2>Snapshot</h2>
+    <div class="timeline">
+      <article class="tl-item"><h4>Projects</h4><p>Local class cloud, step-by-step resources, CV chatbot</p></article>
+      <article class="tl-item"><h4>2024</h4><p>Digital education — HEP Fribourg</p></article>
+      <article class="tl-item"><h4>2019–…</h4><p>Primary teacher — substitutes & 5H class lead</p></article>
+      <article class="tl-item"><h4>2015–2019</h4><p>Bachelor — Preschool & Primary (HEP FR)</p></article>
+    </div>
+    <div class="buttons" style="justify-content:center;margin-top:12px"><a class="btn primary" href="./cv-en.html">Full CV</a><a class="btn" href="./portfolio-en.html">Portfolio</a></div>
+  </div></section>
 </main>
-<script src="./site.js" defer></script>
+
+<footer class="footer"><div class="container foot"><div><strong>NT</strong> — Nicolas Tuor · Fribourg (CH)</div><div class="nav-links"><a href="./cv-en.html">CV</a><a href="./portfolio-en.html">Portfolio</a><a href="./chatbot-en.html">Chatbot</a></div></div></footer>
+
 <script>
-(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
+// flip
+document.querySelectorAll('.card').forEach(c=>{const f=()=>c.classList.toggle('flipped');c.addEventListener('click',f);c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});});
+// IA quiz
+const qText=document.getElementById('qText'),choices=document.getElementById('choices'),explain=document.getElementById('explain'),score=document.getElementById('score');
+let i=0,right=0,Qs=[];
+async function loadQuiz(){qText.textContent="Generating quiz…";const r=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic:'checking information online',lang:'en'})});const j=await r.json();Qs=j.questions||[];i=0;right=0;draw();}
+function draw(){score.textContent=`Score: ${right}/${i}`;if(i>=Qs.length){qText.textContent="Well done!";choices.innerHTML="";explain.textContent="";return;}const Q=Qs[i];qText.textContent=Q.q;explain.textContent="";choices.innerHTML=Q.choices.map((c,idx)=>`<div class="choice" data-i="${idx}">${c}</div>`).join("");}
+choices.addEventListener('click',e=>{const box=e.target.closest('.choice');if(!box)return;const idx=+box.dataset.i;const Q=Qs[i];if(idx===Q.ok){box.classList.add('correct');right++;}else{box.classList.add('wrong');}explain.textContent=Q.why||"";i++;setTimeout(draw,650);});
+loadQuiz();
 </script>
+<script src="./site.js" defer></script>
+<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
 </body>
 </html>
