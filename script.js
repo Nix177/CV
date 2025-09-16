@@ -1,13 +1,10 @@
 /* =========================================================================
-   Chatbot IA – Nicolas Tuor (v1.1)
+   Chatbot IA – Nicolas Tuor (v1.2)
    - Appel à /api/chat (côté serveur), aucune clé en front.
-   - Détection FR/EN robuste (accents, mots fréquents, fallback navigateur).
-   - N'ajoute une consigne de langue que si on est sûr ; sinon on laisse le modèle
-     suivre la règle du contexte : "réponds dans la langue du dernier message".
+   - Pas d'indice de langue : le message système impose
+     "réponds dans la langue du dernier message utilisateur".
    - Historique persistant (localStorage), quick prompts, reset utilitaire.
    ========================================================================= */
-
-/* ----------------------------- Config ---------------------------------- */
 
 const API_ENDPOINT = "/api/chat";
 const STORAGE_KEY  = "nt_chat_history_v1";
@@ -15,7 +12,7 @@ const STORAGE_KEY  = "nt_chat_history_v1";
 const BASE_CONTEXT = `
 Tu es l'assistant de recrutement "IA" de Nicolas Tuor.
 Toujours répondre dans la langue du DERNIER message utilisateur.
-En cas d'ambiguïté, répondre en FR (fr-CH).
+En cas d'ambiguïté manifeste, répondre en FR (fr-CH).
 
 Profil (fidèle, sans invention) :
 - Enseignant diplômé (Bachelor HEP Fribourg) + Master en didactique de l’informatique (HEP Lausanne).
@@ -24,7 +21,8 @@ Profil (fidèle, sans invention) :
 - Travail de Master : enseignement explicite du débogage et transfert de compétences (élèves du primaire).
 - Compétences : pensée critique, structuration des apprentissages, conception de séquences, évaluation formative/sommative,
   analyse/synthèse opérationnelle, rédaction claire, Python/HTML-CSS (notions C++), curiosité et montée en compétence rapides.
-- Langues : FR natif, EN C2, DE B2/C1. Valeurs : pragmatisme bienveillant, explicitation des attentes, documentation, suivi rigoureux.
+- Langues : FR natif, EN C2, DE B2/C1.
+- Valeurs : pragmatisme bienveillant, explicitation des attentes, documentation, suivi rigoureux.
 
 Consignes :
 1) Réponses concises, structurées, professionnelles ; adapter le registre au recruteur.
@@ -32,14 +30,10 @@ Consignes :
 3) Pas d'inventions (pas de certificats non mentionnés). Si info manquante, le dire simplement.
 `;
 
-/* --------------------------- Sélecteurs DOM ---------------------------- */
-
 const chatLog   = document.getElementById("chatLog");
 const userInput = document.getElementById("userInput");
 const sendBtn   = document.getElementById("sendBtn");
 const quickZone = document.getElementById("quickPrompts");
-
-/* ------------------------ État & utilitaires --------------------------- */
 
 let messages = loadHistoryOrInit();
 
@@ -97,36 +91,6 @@ function renderQuickPrompts() {
   });
 }
 
-/* -------- Détection de langue (FR/EN) — robuste mais simple ----------- */
-
-function detectLangOrDefault(text) {
-  const s = ` ${text.toLowerCase()} `;
-  const hasAccent = /[àâäçéèêëîïôöùûüÿœ]/i.test(text);
-
-  const frWords = [
-    " est-ce ", " pourquoi ", " poste ", " conseiller ", " numérique ", " éducation ",
-    " bon ", " embaucher ", " candidat ", " mon ", " votre ", " vos ",
-    " le ", " la ", " les ", " des ", " du ", " un ", " une ", " au ", " aux ",
-    " que ", " qui ", " quoi ", " comment ", " avec ", " sans ", " dans ", " chez ",
-    " merci ", " bonjour "
-  ];
-  const enWords = [
-    " why ", " what ", " how ", " would ", " should ", " position ",
-    " advisor ", " digital ", " education ", " candidate ", " hire ", " good "
-  ];
-
-  const frScore = frWords.reduce((acc,w)=>acc + (s.includes(w)?1:0), 0) + (hasAccent?2:0);
-  const enScore = enWords.reduce((acc,w)=>acc + (s.includes(w)?1:0), 0);
-
-  if (frScore >= Math.max(2, enScore + 1)) return "fr";
-  if (enScore >= Math.max(2, frScore + 1)) return "en";
-
-  // Ambigu -> choisir la locale du navigateur
-  return (navigator.language || "").toLowerCase().startsWith("fr") ? "fr" : "en";
-}
-
-/* -------------------------- Envoi utilisateur -------------------------- */
-
 async function sendMessage() {
   const question = (userInput?.value || "").trim();
   if (!question) return;
@@ -137,17 +101,8 @@ async function sendMessage() {
   sendBtn.disabled = true;
   sendBtn.textContent = "En cours...";
 
-  // On laisse le contexte guider la langue, mais on ajoute un hint SI on est confiant
-  const lang = detectLangOrDefault(question);
-  const confident = true; // notre heuristique est suffisamment stricte
-  const langHint = lang === "fr" ? "Réponds en français." : "Answer in English.";
-
-  // Pousse le message utilisateur
+  // On n'ajoute AUCUN hint de langue : le system message suffit.
   messages.push({ role: "user", content: question });
-  // Ajoute une courte consigne de langue seulement si confiant
-  if (confident) {
-    messages.push({ role: "system", content: langHint });
-  }
 
   try {
     const res = await fetch(API_ENDPOINT, {
@@ -181,15 +136,12 @@ async function sendMessage() {
   }
 }
 
-/* ---------------------- Raccourcis & bindings UI ----------------------- */
-
 if (sendBtn && userInput && chatLog) {
   sendBtn.addEventListener("click", sendMessage);
   userInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
   });
 
-  // Rejoue l'historique (hors message système)
   messages.forEach(m => {
     if (m.role === "user") addMessageToUI(m.content, "user");
     if (m.role === "assistant") addMessageToUI(m.content, "bot");
@@ -198,7 +150,6 @@ if (sendBtn && userInput && chatLog) {
   renderQuickPrompts();
 }
 
-/* ------------------------- Outils développeur -------------------------- */
 window.resetChatHistory = function resetChatHistory() {
   messages = [{ role: "system", content: BASE_CONTEXT.trim() }];
   persistHistory();
