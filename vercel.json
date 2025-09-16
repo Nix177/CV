@@ -1,1 +1,6 @@
-{ "cleanUrls": true }
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/favicon.ico", "destination": "/favicon.svg" }
+  ]
+}
