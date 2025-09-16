@@ -8,7 +8,7 @@
 <body>
 <header class="nav"><div class="container">
   <a class="brand" href="./index-en.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-  <nav class="nav-links"><a href="./cv-en.html">CV</a><a href="./portfolio-en.html">Portfolio</a><a href="./chatbot-en.html">AI Chatbot</a><button id="dlCvBtn" class="btn linkish">Download CV</button></nav>
+  <nav class="nav-links"><a href="./cv-en.html">CV</a><a href="./portfolio-en.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot-en.html">AI Chatbot</a><button id="dlCvBtn" class="btn linkish">Download CV</button></nav>
   <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button><a class="btn linkish" href="./index.html">FR</a><a class="btn linkish" href="./index-en.html">EN</a><a class="btn linkish" href="./index-de.html">DE</a></div>
 </div></header>
 
@@ -21,11 +21,30 @@
       <ul class="kpis"><li>🧠 Critical thinking</li><li>🧭 Didactics</li><li>📚 Primary</li><li>🤖 AI</li></ul>
     </div>
     <div class="cards">
-      <div class="card" tabindex="0"><div class="face front">🧭</div><div class="face back">Scaffolding: clear goals, support, frequent feedback.</div></div>
-      <div class="card" tabindex="0"><div class="face front">✅</div><div class="face back">Assess to learn: shared criteria, rubrics, micro-reviews.</div></div>
-      <div class="card" tabindex="0"><div class="face front">🤖</div><div class="face back">Responsible AI: measured gains, keep requirements.</div></div>
-      <div class="card" tabindex="0"><div class="face front">🗣️</div><div class="face back">Clear communication: narrated examples, reformulation.</div></div>
+      <div class="card" tabindex="0">
+        <div class="face front">🧠</div>
+        <div class="face back"><strong>Critical thinking</strong><br>Verify, compare, make success criteria explicit.</div>
+      </div>
+      <div class="card" tabindex="0">
+        <div class="face front">🧭</div>
+        <div class="face back"><strong>Scaffolding</strong><br>Clear goals, layered supports, frequent feedback.</div>
+      </div>
+      <div class="card" tabindex="0">
+        <div class="face front">🤖</div>
+        <div class="face back"><strong>Responsible AI</strong><br>Measure gains, keep expectations high, stay ethical.</div>
+      </div>
+      <div class="card" tabindex="0">
+        <div class="face back"><strong>Hobbies</strong><br>Creative coding, tech watch, outdoors & sport.</div>
+        <div class="face front">🌿</div>
+      </div>
     </div>
+    <script>
+      document.querySelectorAll('.card').forEach(c=>{
+        const flip=()=>c.classList.toggle('flipped');
+        c.addEventListener('click', flip);
+        c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
+      });
+    </script>
   </div></section>
 
   <section class="section"><div class="container demo">
@@ -54,8 +73,6 @@
 <footer class="footer"><div class="container foot"><div><strong>NT</strong> — Nicolas Tuor · Fribourg (CH)</div><div class="nav-links"><a href="./cv-en.html">CV</a><a href="./portfolio-en.html">Portfolio</a><a href="./chatbot-en.html">Chatbot</a></div></div></footer>
 
 <script>
-// flip
-document.querySelectorAll('.card').forEach(c=>{const f=()=>c.classList.toggle('flipped');c.addEventListener('click',f);c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});});
 // IA quiz
 const qText=document.getElementById('qText'),choices=document.getElementById('choices'),explain=document.getElementById('explain'),score=document.getElementById('score');
 let i=0,right=0,Qs=[];

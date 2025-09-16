@@ -10,7 +10,7 @@
   <div class="container">
     <a class="brand" href="./index-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
     <nav class="nav-links">
-      <a href="./cv-de.html">CV</a><a href="./portfolio-de.html">Portfolio</a><a href="./chatbot-de.html">Chatbot</a>
+      <a href="./cv-de.html">CV</a><a href="./portfolio-de.html">Portfolio</a><a href="./ai-lab.html">AI Lab</a><a href="./chatbot-de.html">Chatbot</a>
       <button id="dlCvBtn" class="btn linkish">PDF herunterladen</button>
     </nav>
     <div class="nav-links">
@@ -24,9 +24,34 @@
   <h1 class="title">Informatikdidaktik & <span class="stroke">verantwortungsvolle KI</span></h1>
   <p class="lead">Klare Lernsequenzen, Erfolgskriterien und ein maßvoller KI-Einsatz — echte Fortschritte ohne die Ansprüche zu senken.</p>
   <div class="buttons"><a class="btn primary" href="./cv-de.html">Zum CV</a><a class="btn" href="./portfolio-de.html">Projekte</a><a class="btn ghost" href="./chatbot-de.html">💬 „Warum mich einstellen?“</a></div>
+  <div class="cards">
+    <div class="card" tabindex="0">
+      <div class="face front">🧠</div>
+      <div class="face back"><strong>Kritisches Denken</strong><br>Prüfen, vergleichen, Kriterien offenlegen.</div>
+    </div>
+    <div class="card" tabindex="0">
+      <div class="face front">🧭</div>
+      <div class="face back"><strong>Gezielte Begleitung</strong><br>Klar formulierte Ziele, gestufte Hilfen, häufiges Feedback.</div>
+    </div>
+    <div class="card" tabindex="0">
+      <div class="face front">🤖</div>
+      <div class="face back"><strong>Verantwortungsvolle KI</strong><br>Nutzen messen, Ansprüche halten, ethisch bleiben.</div>
+    </div>
+    <div class="card" tabindex="0">
+      <div class="face back"><strong>Hobbys</strong><br>Digitales Tüfteln, Tech-Scouting, Natur & Sport.</div>
+      <div class="face front">🌿</div>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.card').forEach(c=>{
+      const flip=()=>c.classList.toggle('flipped');
+      c.addEventListener('click', flip);
+      c.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(); }});
+    });
+  </script>
 </main>
 
 <script src="./site.js" defer></script>
-<script>(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();</script>
+<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
 </body>
 </html>
