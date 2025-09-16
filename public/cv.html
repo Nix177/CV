@@ -1,37 +1,45 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CV – Nicolas Tuor</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CV — Nicolas Tuor</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-
-<header class="chat-header">
-  <h1>CV – Nicolas Tuor</h1>
-  <nav>
-    <a href="index.html">Accueil</a> |
-    <a href="chatbot.html">Chatbot IA</a>
-  </nav>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="./index.html">Accueil</a><a href="./portfolio.html">Portfolio</a><a href="./chatbot.html">Chatbot</a>
+      <button id="dlCvBtn" class="btn linkish">Télécharger le PDF</button>
+    </nav>
+    <div class="nav-links">
+      <button class="btn linkish" data-toggle-theme>🌓</button>
+    </div>
+  </div>
 </header>
 
-<main class="chat-container">
-  <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-    <label for="viewMode"><strong>Affichage :</strong></label>
-    <select id="viewMode">
-      <option value="essentiel">Essentiel (1-page lisible)</option>
-      <option value="timeline">Timeline animée</option>
-      <option value="academique">Académique structuré</option>
-    </select>
+<main class="section container">
+  <h1 class="title">CV – Nicolas Tuor</h1>
+  <div class="cv-toolbar">
+    <label>Affichage :
+      <select id="viewMode" class="select">
+        <option value="pdf">PDF intégré</option>
+        <option value="constellation">Constellation de compétences (interactif)</option>
+        <option value="story">Storyboard “leçon” (interactif)</option>
+      </select>
+    </label>
     <button id="printBtn" class="btn">Imprimer/PDF</button>
   </div>
-
-  <div id="cvRoot"></div>
+  <div id="cvArea"></div>
 </main>
 
-<script src="cv-data.js"></script>
-<script src="cv.js"></script>
+<script src="./cv-data.js"></script>
+<script src="./cv.js"></script>
+<script src="./site.js" defer></script>
+<script>
+(function(){const k="theme",h=document.documentElement,s=localStorage.getItem(k);if(s)h.setAttribute("data-theme",s);function set(v){h.setAttribute("data-theme",v);localStorage.setItem(k,v);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(h.getAttribute("data-theme")==="light"?"dark":"light");});if(!s)set("dark");})();
+</script>
 </body>
 </html>
