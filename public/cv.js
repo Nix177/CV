@@ -1,83 +1,185 @@
-<script>
-(function(){
-  const modeSel = document.getElementById("viewMode");
-  const area    = document.getElementById("cvArea");
-  const printBtn= document.getElementById("printBtn");
-  const lang = document.documentElement.lang || "fr";
-  const L = {
-    fr:{ ask:"Entrer le code pour accéder au PDF :", bad:"Code invalide.", dl:"Télécharger le PDF" },
-    en:{ ask:"Enter the code to access the PDF:",    bad:"Invalid code.",   dl:"Download PDF" },
-    de:{ ask:"Code für den PDF-Zugriff eingeben:",   bad:"Ungültiger Code.",dl:"PDF herunterladen" }
-  }[lang] || L_fr;
+/* Porte d'accès + vues CV */
+(function () {
+  const SKEY = "CV_CODE";
+  const sel = document.getElementById("viewMode");
+  const area = document.getElementById("cvArea");
+  const printBtn = document.getElementById("printBtn");
+  const hasUI = typeof window.UI === "object" && window.UI && typeof window.UI.setBusy === "function";
 
-  function renderPDFLocked(){
-    area.innerHTML = `<form id="cvGate" class="stack" style="max-width:420px">
-        <label>${L.ask}<input id="cvCode" type="password" autocomplete="off"></label>
-        <button class="btn primary" data-busy>${L.dl}</button>
-      </form>
-      <p class="muted">${lang==="fr"?"Les autres vues restent accessibles ci-dessous.":"Other views remain available."}</p>`;
-    const form = document.getElementById("cvGate");
-    form.addEventListener("submit", async (e)=>{
-      e.preventDefault();
-      const btn = form.querySelector("[data-busy]"); window.UI.setBusy(btn,true);
-      try{
-        const code = document.getElementById("cvCode").value.trim();
-        const r = await fetch("/api/verify?code="+encodeURIComponent(code));
-        const { ok } = await r.json();
-        if(!ok) return alert(L.bad);
-        sessionStorage.setItem("CV_CODE", code);
-        const a=document.createElement("a"); a.href="/api/cv?code="+encodeURIComponent(code); a.click();
-      } finally { window.UI.setBusy(btn,false); }
+  async function verifyCode(code) {
+    const r = await fetch("/api/verify?code=" + encodeURIComponent(code));
+    const j = await r.json().catch(() => ({}));
+    return !!j.ok;
+  }
+
+  const getCode = () => sessionStorage.getItem(SKEY) || "";
+  const saveCode = (c) => sessionStorage.setItem(SKEY, c);
+  const mode = () => sel.value;
+
+  function setModeEnabled(enabled) {
+    [...sel.options].forEach((opt) => {
+      if (opt.value === "pdf") opt.disabled = false;
+      else opt.disabled = !enabled;
     });
   }
 
-  function renderConstellation(){
-    area.innerHTML = `<canvas id="cvCanvas" class="cv-canvas"></canvas>
-                      <div class="muted" style="margin-top:8px">${lang==='fr'?'Survolez un nœud':'Hover a node'}</div>`;
-    const DATA = (window.CV_I18N||{} )[lang] || (window.CV_I18N||{} ).fr;
-    const canvas = document.getElementById("cvCanvas"), ctx = canvas.getContext("2d");
-    function resize(){ canvas.width=area.clientWidth; canvas.height=540; } resize(); addEventListener("resize", resize);
-
-    const R = 220, cx = canvas.width/2, cy = canvas.height/2;
-    const nodes = DATA.skills.map((s,i)=>{ const a=(i/DATA.skills.length)*Math.PI*2; const r=R-(s.weight*16); return {...s,x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}; });
-
-    function draw(hi){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.strokeStyle="rgba(150,180,255,.35)"; ctx.lineWidth=1.2;
-      const links=[["didactique","eval"],["didactique","guidage"],["didactique","primaire"],["ia","python"],["ia","web"],["ia","moodle"],["critique","ia"],["primaire","com"],["eval","com"]];
-      links.forEach(([a,b])=>{ const A=nodes.find(n=>n.id===a), B=nodes.find(n=>n.id===b); if(!A||!B) return; ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke(); });
-      nodes.forEach(n=>{ const r=8+n.weight*2; const H=hi&&hi.id===n.id; ctx.beginPath(); ctx.fillStyle=H?"#00c2ff":"rgba(255,255,255,.85)"; ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fill();
-        ctx.font="700 14px Inter"; ctx.fillStyle=H?"#00c2ff":"rgba(220,235,255,.85)"; ctx.textAlign="center"; ctx.fillText(n.label,n.x,n.y-r-8); });
-    } draw(null);
-
-    canvas.addEventListener("mousemove",(e)=>{ const b=canvas.getBoundingClientRect(), mx=e.clientX-b.left, my=e.clientY-b.top;
-      draw(nodes.find(n=>Math.hypot(n.x-mx,n.y-my)<14)||null); });
+  function renderLocked(msg) {
+    setModeEnabled(false);
+    area.innerHTML = `
+      <div class="card pad">
+        <h3>Accès protégé</h3>
+        <p>Entre le code pour voir le PDF et débloquer les vues interactives du CV.</p>
+        <form id="gateForm" class="row gap" style="align-items:end;margin-top:8px">
+          <label style="flex:1">Code d’accès
+            <input id="cvCode" autocomplete="off" inputmode="text" placeholder="••••••" />
+          </label>
+          <button class="btn primary" data-busy>Débloquer</button>
+        </form>
+        ${msg ? `<p class="muted">${msg}</p>` : ""}
+      </div>
+    `;
+    const F = document.getElementById("gateForm");
+    const I = document.getElementById("cvCode");
+    F.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = F.querySelector("[data-busy]");
+      hasUI && window.UI.setBusy(btn, true);
+      try {
+        const code = (I.value || "").trim();
+        if (!code) return;
+        const ok = await verifyCode(code);
+        if (!ok) return renderLocked("❌ Code invalide. Réessaie.");
+        saveCode(code);
+        renderUnlocked();
+      } finally {
+        hasUI && window.UI.setBusy(btn, false);
+      }
+    });
   }
 
-  function renderStory(){
-    const DATA = (window.CV_I18N||{} )[lang] || (window.CV_I18N||{} ).fr;
-    let i=0;
-    area.innerHTML = `<div class="story" id="story"></div>
-      <div class="buttons" style="justify-content:center;margin-top:10px">
-        <button id="prev" class="btn">◀ ${lang==='fr'?'Précédent':lang==='de'?'Zurück':'Prev'}</button>
-        <button id="next" class="btn primary">${lang==='fr'?'Suivant':lang==='de'?'Weiter':'Next'} ▶</button>
-      </div>`;
+  function renderPDF() {
+    const code = getCode();
+    area.innerHTML = `
+      <div class="card" style="padding:0;overflow:hidden">
+        <iframe title="CV PDF"
+          class="pdf-frame"
+          style="width:100%;height:min(80vh,1000px);border:0"
+          src="/api/cv?code=${encodeURIComponent(code)}#toolbar=1&navpanes=0&statusbar=0">
+        </iframe>
+      </div>
+    `;
+  }
+
+  async function renderConstellation() {
+    area.innerHTML = `<div class="card pad"><h3>Constellation</h3><div id="constel"></div></div>`;
+    const box = document.getElementById("constel");
+    const data = await loadCvData();
+    box.innerHTML = nodesHTML(data);
+    attachCardFlip(box);
+  }
+
+  async function renderStory() {
+    area.innerHTML = `<div class="card pad"><h3>Storyboard</h3><div id="story"></div></div>`;
     const box = document.getElementById("story");
-    const draw=()=>{ box.innerHTML=`<div class="card-step"><h4>${DATA.steps[i].title}</h4><p>${DATA.steps[i].body}</p></div>
-                                     <div class="card-step"><h4>${lang==='fr'?'Évidence':lang==='de'?'Belege':'Evidence'}</h4>
-                                     <p>${lang==='fr'?'Exemples, captures, extraits.':'Examples, screenshots, snippets.'}</p></div>`; };
-    draw(); document.getElementById("prev").onclick=()=>{ i=(i-1+DATA.steps.length)%DATA.steps.length; draw(); };
-           document.getElementById("next").onclick=()=>{ i=(i+1)%DATA.steps.length; draw(); };
+    const data = await loadCvData();
+    box.innerHTML = timelineHTML(data);
   }
 
-  function render(){
-    const v = modeSel.value;
-    if(v==='pdf') renderPDFLocked();
-    else if(v==='constellation') renderConstellation();
-    else renderStory();
+  async function loadCvData() {
+    if (window.CV_DATA) return window.CV_DATA;
+    try {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = "./cv-data.js";
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      if (window.CV_DATA) return window.CV_DATA;
+    } catch {}
+    return [
+      { when: "2024–…", what: "Enseignant primaire (remplacements)", where: "FR", tags: ["primaire","didactique"] },
+      { when: "2022–2023", what: "Stage de master (CRE/ATE)", where: "HEP Fribourg", tags: ["didactique","ressources","IA"] },
+      { when: "2020–2021", what: "Enseignant titulaire 5H", where: "Corminboeuf", tags: ["différenciation"] }
+    ];
   }
-  modeSel.addEventListener("change", render);
-  printBtn.addEventListener("click", ()=>window.print());
-  render();
+
+  function nodesHTML(items) {
+    return `
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        ${items.map(i => `
+        <article class="card3d" tabindex="0">
+          <div class="inner">
+            <div class="face front"><span>🧩</span></div>
+            <div class="face back">
+              <strong>${esc(i.what)}</strong><br>
+              <small class="muted">${esc(i.when)} — ${esc(i.where||"")}</small><br>
+              <small>${(i.tags||[]).map(t=>`#${esc(t)}`).join(" ")}</small>
+            </div>
+          </div>
+        </article>`).join("")}
+      </div>
+    `;
+  }
+
+  function timelineHTML(items) {
+    return `
+      <ul class="timeline">
+        ${items.map(i => `
+          <li>
+            <div class="tl-dot"></div>
+            <div class="tl-body">
+              <div class="tl-when">${esc(i.when)}</div>
+              <div class="tl-what"><strong>${esc(i.what)}</strong></div>
+              <div class="tl-where muted">${esc(i.where||"")}</div>
+            </div>
+          </li>`).join("")}
+      </ul>
+    `;
+  }
+
+  function attachCardFlip(root) {
+    root.addEventListener("click", (e) => {
+      const c = e.target.closest(".card3d");
+      if (c) c.classList.toggle("is-flipped");
+    });
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const c = document.activeElement?.closest?.(".card3d");
+        if (c) c.classList.toggle("is-flipped");
+      }
+    });
+  }
+
+  const esc = (s) => (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  sel.addEventListener("change", () => {
+    const code = getCode();
+    if (!code && mode() !== "pdf") {
+      renderLocked("Cette vue nécessite le code d’accès.");
+      return;
+    }
+    renderUnlocked();
+  });
+
+  document.getElementById("printBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (mode() === "pdf") {
+      const code = getCode();
+      if (!code) return renderLocked("Code requis pour ouvrir le PDF.");
+      window.open("/api/cv?code=" + encodeURIComponent(code), "_blank", "noopener");
+    } else {
+      window.print();
+    }
+  });
+
+  (async function init() {
+    const saved = getCode();
+    if (saved) {
+      const ok = await verifyCode(saved).catch(() => false);
+      if (ok) return renderUnlocked();
+      sessionStorage.removeItem(SKEY);
+    }
+    renderLocked();
+  })();
 })();
-</script>
