@@ -2,6 +2,9 @@
   const grid = document.getElementById("portfolioGrid");
   if (!grid) return;
 
+  const lang = document.documentElement.lang || "fr";
+  const items = (PORTFOLIO_I18N[lang] || PORTFOLIO_I18N.fr);
+
   function card(item) {
     const img = item.image ? `<div class="site-thumb" style="background-image:url('${item.image}');background-size:cover;background-position:center"></div>` : `<div class="site-thumb"></div>`;
     return `
@@ -19,7 +22,7 @@
     `;
   }
 
-  grid.innerHTML = PORTFOLIO_ITEMS.map(card).join("");
+  grid.innerHTML = items.map(card).join("");
 
   // overlay
   const overlay = document.getElementById("overlay");
@@ -31,7 +34,7 @@
     const url = btn.getAttribute("data-preview");
     const card = btn.closest(".card-site");
     title.textContent = card.querySelector(".site-title").textContent;
-    frame.src = url; // si X-Frame-Options DENY, l’iframe restera vide
+    frame.src = url; // si X-Frame-Options bloque, l’iframe restera vide
     overlay.classList.add("open");
   });
   document.getElementById("overlayClose").addEventListener("click", () => {
