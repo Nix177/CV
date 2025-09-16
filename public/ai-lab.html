@@ -1,111 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Idées IA en éducation — Nicolas Tuor</title>
+  <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="./style.css" />
+  <script defer src="./site.js"></script>
+  <script defer src="./ai.js"></script>
 </head>
 <body>
+
 <header class="nav">
   <div class="container">
-    <a class="brand" href="./index.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="./"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
     <nav class="nav-links">
-      <a href="./cv.html">CV</a>
-      <a href="./portfolio.html">Portfolio</a>
-      <a class="is-active" href="./ai-lab.html">Idées IA en éducation</a>
-      <a href="./chatbot.html">Chatbot</a>
-      <button id="dlCvBtn" class="btn linkish">Télécharger le PDF</button>
+      <a href="./cv">CV</a>
+      <a href="./portfolio">Portfolio</a>
+      <a href="./ai" class="btn chip">Idées IA en éducation</a>
+      <a href="./chatbot">Chatbot</a>
+      <button id="themeBtn" class="btn chip">◐</button>
     </nav>
-    <div class="nav-links">
-      <button class="btn linkish" data-toggle-theme>🌓</button>
-      <a class="btn linkish" href="./ai-lab.html">FR</a>
-      <a class="btn linkish" href="./portfolio-en.html">EN</a>
-      <a class="btn linkish" href="./portfolio-de.html">DE</a>
-    </div>
   </div>
 </header>
 
-<main class="container section">
-  <h1>Idées IA en éducation</h1>
-  <p class="lead">Décris ton contexte ; l’IA propose des étapes, tu argumentes (texte/URL) et elle répond avec un feedback didactique.</p>
+<main class="container section stack">
 
-  <form id="labGen" class="stack">
-    <label>Âge / niveau
-      <input id="labAge" type="text" placeholder="ex. 10–11 ans, 6H" />
-    </label>
-    <label>Thème
-      <input id="labTopic" type="text" placeholder="ex. fractions, cycle de l’eau…" />
-    </label>
-    <button class="btn" data-busy>Générer des étapes</button>
-  </form>
+  <h1 class="title">Idées IA en éducation</h1>
+  <p class="lead">Des micro-outils IA pour la classe : quiz adaptés, répétiteur de vocabulaire…</p>
 
-  <div id="steps" class="stack"></div>
+  <div class="grid" style="grid-template-columns: repeat(auto-fit,minmax(320px,1fr));gap:16px">
+    <!-- Quiz generator -->
+    <section class="card pad stack" id="quizBox">
+      <h2 class="h3">🧠 Générateur de quiz</h2>
+      <form id="quizForm" class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+        <label style="grid-column:1/-1">Thématique / discipline
+          <input name="topic" placeholder="p.ex. électricité, analyse de texte, climat…" required />
+        </label>
+        <label>Âge (années)
+          <input name="age" type="number" min="5" max="99" value="12" />
+        </label>
+        <label>PER / Objectifs
+          <input name="per" placeholder="p.ex. MSN 21, FRAN 28…" />
+        </label>
+        <label>Nombre de questions
+          <input name="count" type="number" min="3" max="12" value="5" />
+        </label>
+        <div style="grid-column:1/-1" class="row gap">
+          <button class="btn primary" data-busy>Générer</button>
+        </div>
+      </form>
 
-  <section id="arg" class="stack" hidden>
-    <h2>Mes arguments / preuves</h2>
-    <label>Notes (libre)
-      <textarea id="labNotes" rows="4" placeholder="Que ferais-tu ? Pourquoi ?"></textarea>
-    </label>
-    <label>Sources / URLs (optionnel)
-      <textarea id="labUrls" rows="2" placeholder="Une URL par ligne"></textarea>
-    </label>
-    <button id="judgeBtn" class="btn" data-busy>Demander un feedback</button>
-    <pre id="judgeOut" class="code"></pre>
-  </section>
+      <div id="quizOut" class="stack"></div>
+    </section>
+
+    <!-- Vocab coach -->
+    <section class="card pad stack" id="vocabBox">
+      <h2 class="h3">🗣️ Coach de vocabulaire</h2>
+      <form id="vocabForm" class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+        <label>Langue cible
+          <input name="lang" placeholder="p.ex. anglais, allemand, italien…" required />
+        </label>
+        <label>Niveau (A1–C1)
+          <input name="level" placeholder="A1" value="A1" required />
+        </label>
+        <label style="grid-column:1/-1">Thème
+          <input name="topic" placeholder="p.ex. cuisine, sport, animaux…" required />
+        </label>
+        <div style="grid-column:1/-1" class="row gap">
+          <button class="btn primary" data-busy>Démarrer</button>
+        </div>
+      </form>
+
+      <div id="vocabOut" class="stack"></div>
+    </section>
+  </div>
+
 </main>
 
-<script src="./site.js" defer></script>
-<script>
-const $ = s => document.querySelector(s);
-const stepsBox = $('#steps');
-const arg = $('#arg');
-$('#labGen').addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = e.target.querySelector('[data-busy]');
-  window.UI.setBusy(btn, true);
-  stepsBox.innerHTML = "";
-  arg.hidden = true;
+<footer class="container section footer">
+  <p class="foot">© Nicolas Tuor — outils IA éducatifs.</p>
+</footer>
 
-  const age = $('#labAge').value.trim();
-  const topic = $('#labTopic').value.trim();
-
-  try{
-    const r = await fetch('/api/factcheck', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ mode:'generate', lang:'fr', topic, age })
-    });
-    const data = await r.json();
-    if(Array.isArray(data.steps)){
-      stepsBox.innerHTML = data.steps.map((s,i)=>`<div class="card3d">
-        <div class="face front"><span>${i+1}</span></div>
-        <div class="face back"><p>${s}</p></div>
-      </div>`).join('');
-      arg.hidden = false;
-    }
-  } finally { window.UI.setBusy(btn,false); }
-});
-
-document.addEventListener('click', e=>{
-  const c = e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped');
-});
-
-$('#judgeBtn').addEventListener('click', async ()=>{
-  const btn = $('#judgeBtn'); window.UI.setBusy(btn,true);
-  try{
-    const age = $('#labAge').value.trim();
-    const topic = $('#labTopic').value.trim();
-    const notes = $('#labNotes').value.trim();
-    const urls = $('#labUrls').value.trim().split(/\n+/).filter(Boolean);
-    const r = await fetch('/api/factcheck', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ mode:'judge', lang:'fr', topic, age, notes, urls })
-    });
-    const data = await r.json();
-    $('#judgeOut').textContent = data.feedback || JSON.stringify(data,null,2);
-  } finally { window.UI.setBusy(btn,false); }
-});
-</script>
 </body>
 </html>
