@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CV – Nicolas Tuor</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="chat-header">
+  <h1>CV – Nicolas Tuor</h1>
+  <nav>
+    <a href="index.html">Accueil</a> |
+    <a href="chatbot.html">Chatbot IA</a>
+  </nav>
+</header>
+
+<main class="chat-container">
+  <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+    <label for="viewMode"><strong>Affichage :</strong></label>
+    <select id="viewMode">
+      <option value="essentiel">Essentiel (1-page lisible)</option>
+      <option value="timeline">Timeline animée</option>
+      <option value="academique">Académique structuré</option>
+    </select>
+    <button id="printBtn" class="btn">Imprimer/PDF</button>
+  </div>
+
+  <div id="cvRoot"></div>
+</main>
+
+<script src="cv-data.js"></script>
+<script src="cv.js"></script>
+</body>
+</html>
