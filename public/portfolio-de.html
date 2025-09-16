@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio — Nicolas Tuor</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="nav"><div class="container">
+  <a class="brand" href="./index-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+  <nav class="nav-links"><a href="./index-de.html">Start</a><a href="./cv-de.html">CV</a><a href="./chatbot-de.html">Chatbot</a></nav>
+  <div class="nav-links"><button class="btn linkish" data-toggle-theme>🌓</button><a class="btn linkish" href="./portfolio.html">FR</a><a class="btn linkish" href="./portfolio-en.html">EN</a><a class="btn linkish" href="./portfolio-de.html">DE</a></div>
+</div></header>
+
+<main class="section container">
+  <h1 class="title">Portfolio</h1>
+  <p class="lead">„Besuchen“ öffnet einen neuen Tab. „Vorschau“ versucht eine eingebettete Ansicht (falls erlaubt).</p>
+  <div id="portfolioGrid" class="grid"></div>
+</main>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="overlay-inner">
+    <div class="overlay-bar"><strong id="overlayTitle">Vorschau</strong><button class="btn" id="overlayClose">Schließen</button></div>
+    <iframe id="overlayFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+</div>
+
+<script src="./portfolio-data.js"></script>
+<script src="./portfolio.js"></script>
+<script src="./site.js" defer></script>
+<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+</body>
+</html>
