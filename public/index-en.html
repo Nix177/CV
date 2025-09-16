@@ -102,26 +102,30 @@
 
 <script src="./site.js" defer></script>
 <script>
-  document.addEventListener('click', e=>{ const c=e.target.closest('.card3d'); if(c) c.classList.toggle('is-flipped'); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const c=document.activeElement?.closest?.('.card3d'); if(c) c.classList.toggle('is-flipped'); }});
-
-  const F=document.getElementById('factForm'), OUT=document.getElementById('factOut');
+  const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
   F.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const btn = F.querySelector('[data-busy]'); window.UI.setBusy(btn,true);
+    const btn = F.querySelector('[data-busy]');
+    OUT.textContent = "⏳ Working on it…";
+    window.UI.setBusy(btn, true);
     try{
-      const age=document.getElementById('fAge').value.trim();
-      const topic=document.getElementById('fTopic').value.trim();
-      const notes=`Author:${document.getElementById('fAuth').value.trim()}
+      const age   = document.getElementById('fAge').value.trim();
+      const topic = document.getElementById('fTopic').value.trim();
+      const notes = `Author:${document.getElementById('fAuth').value.trim()}
 Date/Sources:${document.getElementById('fDate').value.trim()}
 Evidence:${document.getElementById('fProof').value.trim()}`;
-      const urls=(topic.startsWith('http')?[topic]:[]);
-      const r=await fetch('/api/factcheck',{method:'POST',headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({mode:'judge',lang:'en',topic,age,notes,urls})});
-      const j=await r.json();
-      OUT.textContent=j.feedback||JSON.stringify(j,null,2);
-    } finally { window.UI.setBusy(btn,false); }
+      const urls  = (topic.startsWith('http') ? [topic] : []);
+      const r = await fetch('/api/factcheck',{method:'POST',headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ mode:'judge', lang:'en', topic, age, notes, urls })});
+      const j = await r.json();
+      OUT.textContent = j.feedback || JSON.stringify(j,null,2);
+    } catch(err){
+      OUT.textContent = "❌ Error: " + (err?.message || err);
+    } finally {
+      window.UI.setBusy(btn, false);
+    }
   });
 </script>
+
 </body>
 </html>
