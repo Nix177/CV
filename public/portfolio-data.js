@@ -1,33 +1,24 @@
-// portfolio-data.js
-window.portfolioItems = [
-  {
-    id: "documate",
-    title: "Documate",
-    blurb: "Assistant de documents : simplifier, expliquer, guider (multi-langues).",
-    url: "https://documate.work",     // ← vérifie/ajuste si besoin
-    repo: null,                       // ex: "https://github.com/…"
-    image: "./assets/portfolio/documate.jpg", // optionnel (screenshot)
-    tags: ["Site", "IA", "UX simple"],
-    allowEmbed: true                  // false si le site bloque l’iframe
-  },
+// Projets: images optionnelles (mettre vos propres .jpg dans /public/assets/ si dispo)
+const PORTFOLIO_ITEMS = [
   {
     id: "adwall",
-    title: "AdWall",
-    blurb: "Mur d’idées publicitaires : prompts, slogans, concepts visuels.",
-    url: "https://adwall.net",    // ← AJOUTE L’URL RÉELLE
-    repo: null,
-    image: "./assets/portfolio/adwall.jpg",
-    tags: ["Idéation", "Génératif"],
-    allowEmbed: false
+    title: "AdWall — mur d'affiches éducatives",
+    desc: "Mur numérique dynamique pour ressources, critères et rappels en classe.",
+    url: "https://adwall.example.com",
+    image: "./assets/adwall.jpg"
+  },
+  {
+    id: "documate",
+    title: "Documate — générateur de docs pédagogiques",
+    desc: "Modèles de séquences, grilles critériées, supports rapides.",
+    url: "https://documate.example.com",
+    image: "./assets/documate.jpg"
   },
   {
     id: "petnames",
-    title: "Petnames API",
-    blurb: "Générateur de noms d’animaux (API + petite UI).",
-    url: "https://nix177.github.io/petnames/fr/",  // ← AJOUTE L’URL RÉELLE
-    repo: null,
-    image: "./assets/portfolio/petnames.jpg",
-    tags: ["API", "Front minimal"],
-    allowEmbed: true
+    title: "PetNames — projet JS ludique",
+    desc: "Mini-app pour nommer des personnages / mascottes en classe.",
+    url: "https://petnames.example.com",
+    image: "./assets/petnames.jpg"
   }
 ];
