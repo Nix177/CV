@@ -1,75 +1,53 @@
 /* =========================================================================
-   Chatbot IA – Nicolas Tuor
-   Frontend minimal qui appelle une route serveur /api/chat (Vercel/Next API).
-   - Aucune clé OpenAI dans le client.
-   - Historique conservé dans localStorage (clé: "nt_chat_history_v1").
-   - Répond en français ou en anglais selon la langue de la question.
-   - Inclut des "quick prompts" cliquables si présents dans la page.
-   -------------------------------------------------------------------------
-   HTML attendu (extrait de chatbot.html) :
-     <div id="chatLog" class="chat-log"></div>
-     <div class="chat-input-area">
-       <input type="text" id="userInput" placeholder="Votre question..." />
-       <button id="sendBtn" class="btn primary-btn">Envoyer</button>
-     </div>
-     <!-- (optionnel) zone de chips -->
-     <div id="quickPrompts" class="quick-prompts"></div>
+   Chatbot IA – Nicolas Tuor (v1.1)
+   - Appel à /api/chat (côté serveur), aucune clé en front.
+   - Détection FR/EN robuste (accents, mots fréquents, fallback navigateur).
+   - N'ajoute une consigne de langue que si on est sûr ; sinon on laisse le modèle
+     suivre la règle du contexte : "réponds dans la langue du dernier message".
+   - Historique persistant (localStorage), quick prompts, reset utilitaire.
    ========================================================================= */
 
 /* ----------------------------- Config ---------------------------------- */
 
-// Point d’accès à la route serverless (Vercel / Next.js API Routes)
 const API_ENDPOINT = "/api/chat";
+const STORAGE_KEY  = "nt_chat_history_v1";
 
-// Nom de la clé de stockage local pour persister la conversation
-const STORAGE_KEY = "nt_chat_history_v1";
-
-// Contexte de base envoyé au modèle (résumé concis du CV + lettres)
 const BASE_CONTEXT = `
 Tu es l'assistant de recrutement "IA" de Nicolas Tuor.
-Objectif: répondre de manière convaincante et précise aux questions sur son profil,
-et formuler des arguments clairs "Pourquoi l'embaucher ?".
+Toujours répondre dans la langue du DERNIER message utilisateur.
+En cas d'ambiguïté, répondre en FR (fr-CH).
 
-Profil condensé (véridique, ne rien inventer) :
-- Enseignant diplômé (Bachelor HEP Fribourg) et Master en didactique de l’informatique (HEP Lausanne).
+Profil (fidèle, sans invention) :
+- Enseignant diplômé (Bachelor HEP Fribourg) + Master en didactique de l’informatique (HEP Lausanne).
 - Expérience d’enseignement du primaire à l’université (HEP FR, Unifr), remplacements, poste 5H.
-- Stage de master (CRE/ATE HEP FR) : projets d’intégration du numérique (cloud de classe local / Nextcloud, intranet),
-  activités pédagogiques, ressources associées au secondaire I ; initiation à la recherche de terrain.
-- Travail de master : enseignement explicite du débogage et transfert de compétences (élèves du primaire).
-- Compétences fortes : pensée critique, structuration des apprentissages, conception de séquences,
-  évaluation formative/sommative, analyse de corpus, synthèse opérationnelle, rédaction claire.
-- Techniques/numérique : Python, HTML/CSS, notions C++; Moodle côté enseignant; curiosité et montée en compétence rapides.
-- Langues : Français (natif), Anglais (C2), Allemand (B2/C1).
-- Valeurs : pragmatisme bienveillant, explicitation des attentes, documentation, suivi rigoureux.
-- Intérêts : éducation numérique, IA (agents/outils), pédagogie informatique, vulgarisation scientifique.
+- Stage Master (CRE/ATE) : intégration du numérique (cloud de classe local/Nextcloud intranet), activités pédagogiques, ressources S1.
+- Travail de Master : enseignement explicite du débogage et transfert de compétences (élèves du primaire).
+- Compétences : pensée critique, structuration des apprentissages, conception de séquences, évaluation formative/sommative,
+  analyse/synthèse opérationnelle, rédaction claire, Python/HTML-CSS (notions C++), curiosité et montée en compétence rapides.
+- Langues : FR natif, EN C2, DE B2/C1. Valeurs : pragmatisme bienveillant, explicitation des attentes, documentation, suivi rigoureux.
 
-Consignes de réponse :
-1) Utiliser la langue détectée dans la question (FR ou EN).
-2) Être concis, structuré, professionnel; mettre en avant adéquation poste-missions,
-   impact concret et fiabilité de la démarche (rigueur, documentation, clarté).
-3) Suggérer si pertinent un court call-to-action (ex: "Souhaitez-vous un court debrief projet ?").
-4) Ne pas inventer de certificats/diplômes; rester fidèle au profil ci-dessus.
+Consignes :
+1) Réponses concises, structurées, professionnelles ; adapter le registre au recruteur.
+2) Mettre en avant adéquation missions/profil, impact concret, fiabilité (rigueur, doc, clarté).
+3) Pas d'inventions (pas de certificats non mentionnés). Si info manquante, le dire simplement.
 `;
 
 /* --------------------------- Sélecteurs DOM ---------------------------- */
 
-const chatLog  = document.getElementById("chatLog");
+const chatLog   = document.getElementById("chatLog");
 const userInput = document.getElementById("userInput");
 const sendBtn   = document.getElementById("sendBtn");
 const quickZone = document.getElementById("quickPrompts");
 
 /* ------------------------ État & utilitaires --------------------------- */
 
-// Historique maintenu côté client et envoyé côté serveur à chaque tour.
 let messages = loadHistoryOrInit();
 
-/** Charge l'historique depuis localStorage ou initialise avec le message système. */
 function loadHistoryOrInit() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      // S'assure qu'il existe au moins un message système au début :
       if (!parsed.length || parsed[0]?.role !== "system") {
         parsed.unshift({ role: "system", content: BASE_CONTEXT.trim() });
       }
@@ -79,24 +57,18 @@ function loadHistoryOrInit() {
   return [{ role: "system", content: BASE_CONTEXT.trim() }];
 }
 
-/** Persiste l'historique dans localStorage (limité à ~30 tours pour rester léger). */
 function persistHistory() {
   try {
-    const capped = [...messages];
-    // Cap le nombre de tours (messages user/assistant) pour éviter un stockage trop lourd
-    const MAX_MSG = 60; // ~30 aller-retour
-    if (capped.length > MAX_MSG) {
-      // On garde le system + les X derniers messages
-      const system = capped[0];
-      const tail = capped.slice(capped.length - (MAX_MSG - 1));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([system, ...tail]));
-      return;
+    const MAX_MSG = 60; // ~30 tours
+    let arr = messages;
+    if (arr.length > MAX_MSG) {
+      const head = arr[0]; // system
+      arr = [head, ...arr.slice(arr.length - (MAX_MSG - 1))];
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(capped));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
   } catch {}
 }
 
-/** Ajoute un message dans l'UI. */
 function addMessageToUI(text, sender) {
   const div = document.createElement("div");
   div.className = "message " + (sender === "user" ? "user-message" : "bot-message");
@@ -105,38 +77,52 @@ function addMessageToUI(text, sender) {
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
-/** Petites suggestions cliquables pour accélérer le test. */
 function renderQuickPrompts() {
   if (!quickZone) return;
   const prompts = [
     "Pourquoi devrions-nous vous embaucher ?",
     "Quelles sont vos forces clés ?",
-    "Parlez-moi de vos projets d'éducation numérique.",
-    "How would you support a curriculum redesign?",
-    "Exemples concrets d'impact en classe ?"
+    "Des exemples d'impact concret en classe ?",
+    "Vos idées pour l'éducation numérique ?",
+    "How would you support a curriculum redesign?"
   ];
-  quickZone.innerHTML = ""; // reset
+  quickZone.innerHTML = "";
   prompts.forEach(p => {
     const b = document.createElement("button");
     b.className = "btn";
     b.style.margin = "0 8px 8px 0";
     b.textContent = p;
-    b.addEventListener("click", () => {
-      userInput.value = p;
-      sendMessage();
-    });
+    b.addEventListener("click", () => { userInput.value = p; sendMessage(); });
     quickZone.appendChild(b);
   });
 }
 
-/** (Optionnel) Détecte si le texte saisi est plutôt EN/FR — ici purement heuristique. */
-function detectLang(s) {
-  // simple heuristique : présence importante de mots vides FR
-  const frHints = [" le ", " la ", " les ", " des ", " pourquoi ", " expérience ", " compétences ", " projet "];
-  const lower = ` ${s.toLowerCase()} `;
-  let score = 0;
-  frHints.forEach(h => { if (lower.includes(h)) score++; });
-  return score >= 2 ? "fr" : "en";
+/* -------- Détection de langue (FR/EN) — robuste mais simple ----------- */
+
+function detectLangOrDefault(text) {
+  const s = ` ${text.toLowerCase()} `;
+  const hasAccent = /[àâäçéèêëîïôöùûüÿœ]/i.test(text);
+
+  const frWords = [
+    " est-ce ", " pourquoi ", " poste ", " conseiller ", " numérique ", " éducation ",
+    " bon ", " embaucher ", " candidat ", " mon ", " votre ", " vos ",
+    " le ", " la ", " les ", " des ", " du ", " un ", " une ", " au ", " aux ",
+    " que ", " qui ", " quoi ", " comment ", " avec ", " sans ", " dans ", " chez ",
+    " merci ", " bonjour "
+  ];
+  const enWords = [
+    " why ", " what ", " how ", " would ", " should ", " position ",
+    " advisor ", " digital ", " education ", " candidate ", " hire ", " good "
+  ];
+
+  const frScore = frWords.reduce((acc,w)=>acc + (s.includes(w)?1:0), 0) + (hasAccent?2:0);
+  const enScore = enWords.reduce((acc,w)=>acc + (s.includes(w)?1:0), 0);
+
+  if (frScore >= Math.max(2, enScore + 1)) return "fr";
+  if (enScore >= Math.max(2, frScore + 1)) return "en";
+
+  // Ambigu -> choisir la locale du navigateur
+  return (navigator.language || "").toLowerCase().startsWith("fr") ? "fr" : "en";
 }
 
 /* -------------------------- Envoi utilisateur -------------------------- */
@@ -145,21 +131,23 @@ async function sendMessage() {
   const question = (userInput?.value || "").trim();
   if (!question) return;
 
-  // UI utilisateur
   addMessageToUI(question, "user");
   userInput.value = "";
   userInput.disabled = true;
   sendBtn.disabled = true;
   sendBtn.textContent = "En cours...";
 
-  // Ajoute au contexte
-  // Petite consigne de langue injectée (sans refaire tout le système) :
-  const lang = detectLang(question);
-  const langHint = lang === "fr"
-    ? "Réponds en français."
-    : "Answer in English.";
+  // On laisse le contexte guider la langue, mais on ajoute un hint SI on est confiant
+  const lang = detectLangOrDefault(question);
+  const confident = true; // notre heuristique est suffisamment stricte
+  const langHint = lang === "fr" ? "Réponds en français." : "Answer in English.";
 
-  messages.push({ role: "user", content: `${question}\n\n${langHint}` });
+  // Pousse le message utilisateur
+  messages.push({ role: "user", content: question });
+  // Ajoute une courte consigne de langue seulement si confiant
+  if (confident) {
+    messages.push({ role: "system", content: langHint });
+  }
 
   try {
     const res = await fetch(API_ENDPOINT, {
@@ -171,22 +159,20 @@ async function sendMessage() {
     if (!res.ok) {
       const errText = await res.text();
       console.error("API error:", errText);
-      addMessageToUI("Désolé, une erreur est survenue côté serveur. Réessaie dans un instant.", "bot");
+      addMessageToUI("Désolé, une erreur s’est produite côté serveur. Réessaie dans un instant.", "bot");
       return;
     }
 
     const data = await res.json();
-    const aiReply =
-      (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content)
-        ? data.choices[0].message.content.trim()
-        : "Désolé, je n'ai pas pu générer de réponse.";
+    const aiReply = data?.choices?.[0]?.message?.content?.trim()
+      || "Désolé, je n'ai pas pu générer de réponse.";
 
     messages.push({ role: "assistant", content: aiReply });
     addMessageToUI(aiReply, "bot");
     persistHistory();
   } catch (e) {
     console.error(e);
-    addMessageToUI("Impossible de contacter le service pour le moment (réseau ou CORS).", "bot");
+    addMessageToUI("Impossible de contacter le service (réseau/CORS).", "bot");
   } finally {
     userInput.disabled = false;
     sendBtn.disabled = false;
@@ -200,24 +186,19 @@ async function sendMessage() {
 if (sendBtn && userInput && chatLog) {
   sendBtn.addEventListener("click", sendMessage);
   userInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
   });
 
-  // Au chargement, on ré-affiche l’historique (hors message system)
-  messages.forEach((m) => {
+  // Rejoue l'historique (hors message système)
+  messages.forEach(m => {
     if (m.role === "user") addMessageToUI(m.content, "user");
     if (m.role === "assistant") addMessageToUI(m.content, "bot");
   });
 
-  // Affiche des chips de questions rapides si zone présente
   renderQuickPrompts();
 }
 
 /* ------------------------- Outils développeur -------------------------- */
-// Réinitialiser l’historique depuis la console : window.resetChatHistory()
 window.resetChatHistory = function resetChatHistory() {
   messages = [{ role: "system", content: BASE_CONTEXT.trim() }];
   persistHistory();
