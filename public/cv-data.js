@@ -1,50 +1,28 @@
-// cv-data.js
-window.cvData = {
-  person: {
-    name: "Nicolas Tuor",
-    title: "Enseignant & didactique de l’informatique (Master HEP Lausanne)",
-    email: "nicolas.tuor@bluewin.ch",
-    phone: "+41 79 762 26 67",
-    location: "Fribourg, Suisse",
-    languages: [
-      { name: "Français", level: "Langue maternelle" },
-      { name: "Anglais", level: "C2" },
-      { name: "Allemand", level: "B2/C1" }
-    ],
-    strengths: [
-      "Pensée critique",
-      "Pédagogie & structuration des apprentissages",
-      "Éducation numérique & IA",
-      "Analyse & synthèse",
-      "Communication claire",
-      "Adaptabilité & initiative"
-    ],
-  },
-  education: [
-    { period: "2020–2024", school: "HEP Lausanne", degree: "Master – didactique de l’informatique", details: "Travail de Master : enseignement explicite du débogage et transfert de compétences." },
-    { period: "2015–2019", school: "HEP Fribourg", degree: "Bachelor – enseignement primaire", details: "" }
-  ],
-  experience: [
-    { period: "2019–présent", role: "Enseignant primaire (remplacements)", org: "Divers établissements (FR)", bullets: ["Planification, gestion de classe, évaluations formative/sommative", "Intégration d’outils numériques"] },
-    { period: "2020–2021", role: "Enseignant titulaire 5H", org: "École de Corminboeuf", bullets: ["Pilotage d’une classe complète, différenciation"] },
-    { period: "2024", role: "Formateur (journée)", org: "HEP Fribourg", bullets: ["Éducation numérique, usages responsables de l’IA"] },
-    { period: "2022–2023", role: "Stage de master (CRE/ATE)", org: "HEP Fribourg", bullets: ["Cloud de classe local (Nextcloud intranet), ressources et activités", "Recherche de terrain & documentation"] },
-    { period: "2017–2023", role: "Service civil & divers postes", org: "FR/NE", bullets: ["Accompagnement, archivage, soutien, sécurité, réception"] }
-  ],
-  skills: [
-    "Conception de séquences & supports",
-    "Évaluation formative/sommative",
-    "Python, HTML/CSS (notions C++)",
-    "Analyse de corpus & synthèse",
-    "Documentation & rigueur",
-    "Collaboration & communication"
-  ],
-  interests: [
-    "Astronomie / Astrophotographie",
-    "Aviron (compétition)",
-    "Théâtre d’impro",
-    "Vulgarisation scientifique",
-    "Technologies & IA",
-    "Arts martiaux"
-  ]
-};
+// Nœuds pour la constellation (compétences)
+const CV_SKILLS = [
+  { id: "critique", label: "Pensée critique", group: "méthodes", weight: 3 },
+  { id: "didactique", label: "Didactique info", group: "pédago", weight: 4 },
+  { id: "primaire", label: "Enseignement primaire", group: "exp", weight: 4 },
+  { id: "ia", label: "IA responsable", group: "tech", weight: 3 },
+  { id: "python", label: "Python", group: "tech", weight: 2 },
+  { id: "web", label: "HTML/CSS/JS", group: "tech", weight: 2 },
+  { id: "moodle", label: "Moodle", group: "tech", weight: 2 },
+  { id: "eval", label: "Évaluation", group: "pédago", weight: 3 },
+  { id: "guidage", label: "Guidage progressif", group: "pédago", weight: 3 },
+  { id: "com", label: "Communication claire", group: "méthodes", weight: 2 }
+];
+// Liens conceptuels
+const CV_LINKS = [
+  ["didactique","eval"],["didactique","guidage"],["didactique","primaire"],
+  ["ia","python"],["ia","web"],["ia","moodle"],["critique","ia"],
+  ["primaire","com"],["eval","com"]
+];
+
+// Étapes pour la vue “Story/Leçon”
+const CV_STEPS = [
+  { title:"Contexte", body:"Cycle 2 / 5H — initiation aux boucles en programmation." },
+  { title:"Objectif", body:"Écrire une boucle 1→10 et expliquer while vs for sur son propre exemple." },
+  { title:"Guidage", body:"Exemple narré, code modèle, puis défis gradués." },
+  { title:"Critères", body:"Sortie correcte, absence d'erreur, vocabulaire précis." },
+  { title:"Évaluation", body:"Mini-oral + test pratique court, feedback ciblé." }
+];
