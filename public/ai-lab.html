@@ -2,30 +2,27 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Idées IA en éducation — Lab</title>
-    <meta name="description" content="Générateur de quiz PER et mini-jeux pédagogiques (os­selets d’astragale)." />
+    <meta name="description" content="Générateur de quiz PER et mini-jeu pédagogique (osselets d’astragale)." />
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/style.css" />
     <script src="/site.js" defer></script>
-    <!-- Ton script de page si tu en as un -->
     <script src="/ai-lab.js" defer></script>
     <style>
-      .layout { display: grid; gap: 16px; grid-template-columns: 1fr; }
-      @media (min-width: 960px) { .layout { grid-template-columns: 1fr 1fr; } }
-      .muted { opacity: .85; }
-      .field { display: grid; gap: 6px; margin: 10px 0; }
-      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-      .grid { display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(0,1fr)); }
-      .card h3 { margin-top: 0; }
-      #qOutput pre { white-space: pre-wrap; word-break: break-word; }
-      #osselets-root { min-height: 320px; }
+      .layout{display:grid;gap:16px;grid-template-columns:1fr}
+      @media (min-width:960px){.layout{grid-template-columns:1fr 1fr}}
+      .muted{opacity:.85}
+      .field{display:grid;gap:6px;margin:10px 0}
+      .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+      .grid{display:grid;gap:8px;grid-template-columns:repeat(3,minmax(0,1fr))}
+      .card h3{margin-top:0}
+      #qOutput pre{white-space:pre-wrap;word-break:break-word}
+      #osselets-root{min-height:320px}
     </style>
   </head>
   <body>
+    <!-- NAV FR avec lien Idées IA corrigé -->
     <header class="site-header">
       <nav class="wrap row" aria-label="Navigation principale">
         <a href="/" class="btn ghost">Accueil</a>
@@ -35,7 +32,6 @@
         <a href="/ai-lab.html" class="btn ghost" aria-current="page">Idées IA</a>
         <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
         <span style="flex:1"></span>
-        <!-- language switch si tu as les pages -->
         <a href="/ai-lab.html" class="btn">FR</a>
         <a href="/ai-lab-en.html" class="btn ghost">EN</a>
         <a href="/ai-lab-de.html" class="btn ghost">DE</a>
@@ -53,6 +49,7 @@
         <!-- Colonne 1 : Générateur de quiz -->
         <div class="card">
           <h3>Générateur de quiz (aligné PER)</h3>
+
           <div class="field">
             <label for="qTheme">Thème</label>
             <select id="qTheme">
@@ -75,7 +72,7 @@
             </div>
             <div class="field">
               <label for="qCount">Nombre de questions</label>
-              <input id="qCount" type="number" min="1" max="20" value="6"/>
+              <input id="qCount" type="number" min="1" max="20" value="6" />
             </div>
             <div class="field">
               <label for="qLang">Langue</label>
@@ -97,7 +94,7 @@
             <small id="qStatus" class="muted"></small>
           </div>
 
-          <div id="qOutput" class="card" style="margin-top:10px; background:#ffffff10; border-color:#ffffff22;">
+          <div id="qOutput" class="card" style="margin-top:10px;background:#ffffff10;border-color:#ffffff22;">
             <pre>Le quiz généré apparaîtra ici…</pre>
           </div>
         </div>
@@ -109,43 +106,19 @@
             <div class="muted">Chargement du jeu…</div>
           </div>
           <p class="muted" style="margin-top:8px">
-            Commandes : ← → pour bouger · Espace pour sauter · P pause · M musique · H cours d’histoire.
+            Commandes : ← → bouger · Espace sauter · P pause · M musique · H cours d’histoire.
           </p>
         </div>
       </section>
-
-      <section class="card" style="margin-top:16px">
-        <h3>Notes pédagogiques</h3>
-        <ul>
-          <li>Les amulettes d’astragale (talus) sont évoquées comme <em>métaphores ludiques</em> et non prescriptions rituelles.</li>
-          <li>Le quiz cible des entrées PER ; adaptez <em>Thème/Âge/Objectifs</em> pour générer vos items.</li>
-        </ul>
-      </section>
     </main>
 
-    <footer class="wrap" style="margin:24px 0 40px; opacity:.8">
+    <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
       © Nicolas Tuor — Lab IA Éducation
     </footer>
 
-    <!-- === Montage du jeu JSX sans build (React UMD + Babel) === -->
+    <!-- === Jeu JSX sans build : React UMD + Babel (avec TypeScript) === -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Ton fichier du jeu (place-le dans /public/osselets-runner.jsx) -->
-    <script type="text/babel" data-presets="typescript,react" src="/osselets-runner.jsx"></script>
-
-    <!-- Boot : rend window.AstragalusRunner sur #osselets-root -->
-    <script type="text/babel" data-presets="react">
-      (function() {
-        const root = document.getElementById("osselets-root");
-        if (root && window.AstragalusRunner) {
-          const r = ReactDOM.createRoot(root);
-          r.render(React.createElement(window.AstragalusRunner));
-        } else {
-          console.warn("AstragalusRunner introuvable — ajoutez `window.AstragalusRunner = AstragalusRunner;` à la fin de votre JSX.");
-        }
-      })();
-    </script>
-  </body>
-</html>
+    <!-- IMPORTANT : ton fi
