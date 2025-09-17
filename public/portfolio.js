@@ -1,42 +1,45 @@
 // public/portfolio.js
-import { PORTFOLIO_ITEMS } from "./portfolio-data.js";
+(function(){
+  const items = window.PORTFOLIO_ITEMS || [];
+  const list  = document.getElementById('portfolio-list');
+  const modal = document.getElementById('preview-modal');
+  const frame = document.getElementById('preview-frame');
+  const close = document.getElementById('preview-close');
 
-(function () {
-  const grid = document.getElementById("portfolioGrid") || document.getElementById("portfolioList");
-  const overlay = document.getElementById("previewOverlay");
-  const frame = document.getElementById("previewFrame");
-  const closeBtn = document.getElementById("previewClose");
-
-  if (!grid) return;
-
-  function card(item) {
+  function cardHTML(it){
     return `
-    <article class="card">
-      <div class="card-body">
-        <h3>${item.title}</h3>
-        <p>${item.desc}</p>
-        <div class="card-actions">
-          <a class="btn" href="${item.url}" target="_blank" rel="noopener">Visiter</a>
-          ${item.embed ? `<button class="btn linkish" data-preview="${item.embed}">Aperçu</button>` : ""}
+      <div class="p-card">
+        <div class="p-head">
+          <div class="p-ico">${it.icon||'🧩'}</div>
+          <div class="p-title">${it.title}</div>
         </div>
-      </div>
-    </article>`;
+        <div class="p-desc">${it.desc||''}</div>
+        <div class="p-actions">
+          <a class="btn" href="${it.url}" target="_blank" rel="noopener">Visiter</a>
+          ${it.preview ? `<button class="btn btn-ghost" data-id="${it.id}">Aperçu</button>` : ''}
+        </div>
+      </div>`;
   }
 
-  grid.innerHTML = PORTFOLIO_ITEMS.map(card).join("");
+  function render(){
+    if(!list) return;
+    list.innerHTML = items.map(cardHTML).join('');
+    list.querySelectorAll('[data-id]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const it = items.find(i=>i.id===btn.dataset.id);
+        if(!it) return;
+        frame.src = it.url;
+        modal.classList.add('show');
+      });
+    });
+  }
 
-  grid.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-preview]");
-    if (!btn) return;
-    e.preventDefault();
-    const src = btn.getAttribute("data-preview");
-    if (!overlay || !frame) return;
-    overlay.style.display = "block";
-    frame.src = src;
-  });
+  if(close){
+    close.addEventListener('click', ()=>{
+      frame.src='about:blank';
+      modal.classList.remove('show');
+    });
+  }
 
-  closeBtn?.addEventListener("click", () => {
-    overlay.style.display = "none";
-    frame.src = "about:blank";
-  });
+  render();
 })();
