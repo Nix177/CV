@@ -1,27 +1,32 @@
 // public/portfolio-data.js
-window.PORTFOLIO_ITEMS = [
+// Unifie l’API attendue : on exporte à la fois window.portfolioData ET window.PORTFOLIO
+// (pour compatibilité avec d’anciens scripts).
+
+window.portfolioData = [
   {
-    id: 'adwall',
+    id: "adwall",
     title: "AdWall — mur d'affiches éducatives",
-    desc: "Mur numérique pour ressources, critères et rappels (classe et école).",
+    description: "Mur numérique pour ressources, critères et rappels (classe et école).",
     url: "https://adwall.net",
-    preview: false,       // X-Frame-Options probable → on évite l’embed
-    icon: "🧱"
+    tags: ["Outil", "Classe", "Web"]
   },
   {
-    id: 'documate',
+    id: "documate",
     title: "Documate — générateur de docs pédagogiques",
-    desc: "Séquences, rubriques et supports rapides.",
+    description: "Séquences, rubriques et supports rapides.",
     url: "https://documate.work",
-    preview: false,       // souvent no-embed → on ouvre dans un nouvel onglet
-    icon: "🧩"
+    tags: ["Générateur", "Docs", "Web"]
   },
   {
-    id: 'petnames',
+    id: "petnames",
     title: "PetNames — mini-app JS",
-    desc: "Nommer des personnages / mascottes en classe.",
+    description: "Nommer des personnages / mascottes en classe.",
     url: "https://nix177.github.io/petnames/",
-    preview: true,        // GitHub Pages autorise généralement l’embed
-    icon: "🐾"
+    tags: ["JS", "Demo", "GitHub Pages"]
   }
 ];
+
+// Compat primaire (si d’autres scripts s’attendent à .items)
+window.PORTFOLIO = { items: window.portfolioData };
+// Compat secondaire (si un ancien nommage traîne)
+window.PORTFOLIO_ITEMS = window.portfolioData;
