@@ -1,115 +1,151 @@
 <!doctype html>
-<html lang="fr" data-theme="dark">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Idées IA en éducation</title>
-  <link rel="stylesheet" href="/style.css" />
-  <style>
-    .card{background:#0a2036;border:1px solid #163b62;border-radius:14px;padding:16px;margin:16px 0}
-    .row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
-    @media(max-width:800px){.row{grid-template-columns:1fr}}
-    .btn{background:linear-gradient(180deg,#0b2a47,#093257);border:1px solid #185082;color:#daecff;border-radius:10px;padding:.55rem .9rem;font-weight:600}
-    .muted{color:#9bb2da}
-    .input,select,textarea{background:#0b2a47;border:1px solid #185082;color:#daecff;border-radius:10px;padding:.55rem .7rem}
-    .stack{display:flex;gap:10px;flex-wrap:wrap}
-    .quiz-item{border:1px solid #174064;background:#081a2d;border-radius:12px;padding:12px;margin:10px 0}
-    .choice{display:block;background:#12243b;border:1px solid #1a4573;color:#d3e6ff;border-radius:10px;padding:.5rem .7rem;margin:.35rem 0;text-align:left}
-    .choice:hover{background:#0f2a47}
-    .ok{color:#22c55e}.bad{color:#ef4444}
-    .loader{display:none;align-items:center;gap:10px}
-    .loader.show{display:flex}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:.25rem .6rem;border-radius:999px;border:1px solid #1a4573;background:#0b223a;color:#cfe4ff}
-  </style>
-</head>
-<body>
-  <header class="nav">
-    <div class="container">
-      <a class="brand" href="/ai">
-        <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-      </a>
-      <nav class="nav-links">
-        <a href="/">Accueil</a>
-        <a href="/portfolio">Portfolio</a>
-        <a href="/cv">CV</a>
-        <a href="/chatbot">Chatbot</a>
-        <a href="/ai" aria-current="page">Idées IA</a>
-        <a href="/fun-facts">Fun Facts</a>
-        <button id="dlCvBtn" class="btn chip" type="button">Télécharger le CV</button>
-        <button class="btn chip" type="button" data-toggle-theme aria-label="Basculer le thème">🌓</button>
-        <span class="lang-switch">
-          <a class="btn chip" href="/ai-lab.html" aria-current="page">FR</a>
-          <a class="btn chip" href="/ai-lab-en.html">EN</a>
-          <a class="btn chip" href="/ai-lab-de.html">DE</a>
-        </span>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Idées IA en éducation — Lab</title>
+    <meta name="description" content="Générateur de quiz PER et mini-jeux pédagogiques (os­selets d’astragale)." />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/site.js" defer></script>
+    <!-- Ton script de page si tu en as un -->
+    <script src="/ai-lab.js" defer></script>
+    <style>
+      .layout { display: grid; gap: 16px; grid-template-columns: 1fr; }
+      @media (min-width: 960px) { .layout { grid-template-columns: 1fr 1fr; } }
+      .muted { opacity: .85; }
+      .field { display: grid; gap: 6px; margin: 10px 0; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .grid { display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .card h3 { margin-top: 0; }
+      #qOutput pre { white-space: pre-wrap; word-break: break-word; }
+      #osselets-root { min-height: 320px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="wrap row" aria-label="Navigation principale">
+        <a href="/" class="btn ghost">Accueil</a>
+        <a href="/portfolio.html" class="btn ghost">Portfolio</a>
+        <a href="/cv.html" class="btn ghost">CV</a>
+        <a href="/chatbot.html" class="btn ghost">Chatbot</a>
+        <a href="/ai-lab.html" class="btn ghost" aria-current="page">Idées IA</a>
+        <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
+        <span style="flex:1"></span>
+        <!-- language switch si tu as les pages -->
+        <a href="/ai-lab.html" class="btn">FR</a>
+        <a href="/ai-lab-en.html" class="btn ghost">EN</a>
+        <a href="/ai-lab-de.html" class="btn ghost">DE</a>
       </nav>
-    </div>
-  </header>
-  <main class="container">
-    <h1>Idées IA en éducation</h1>
+    </header>
 
-    <section id="quiz-per" class="card">
-      <h2>🧠 Générateur de quiz aligné PER</h2>
-      <p class="muted">Entrez une <strong>thématique</strong>, choisissez une <strong>branche</strong>, indiquez l’<strong>âge</strong>, et l’IA génère des questions liées aux objectifs du PER. Si la réponse est incorrecte ou “Je ne sais pas”, l’IA explique au niveau de l’élève.</p>
+    <main class="wrap">
+      <h1>Idées IA en éducation — Lab</h1>
+      <p class="muted">
+        Un espace d’expérimentation : <strong>générateur de quiz PER</strong> et mini-jeu
+        « <strong>osselets d’astragale</strong> » façon runner 2D.
+      </p>
 
-      <div class="row">
-        <div class="stack">
-          <label>Branche</label>
-          <select id="q-branch" class="input">
-            <option>Français</option>
-            <option>Mathématiques</option>
-            <option>Sciences</option>
-            <option>Histoire</option>
-            <option>Géographie</option>
-            <option>Citoyenneté</option>
-            <option>Langues étrangères</option>
-          </select>
+      <section class="layout">
+        <!-- Colonne 1 : Générateur de quiz -->
+        <div class="card">
+          <h3>Générateur de quiz (aligné PER)</h3>
+          <div class="field">
+            <label for="qTheme">Thème</label>
+            <select id="qTheme">
+              <option value="histoire-antique">Histoire — Antiquité</option>
+              <option value="science">Sciences</option>
+              <option value="langue">Langue</option>
+              <option value="arts">Arts</option>
+            </select>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="qAge">Âge / Cycle</label>
+              <select id="qAge">
+                <option value="cycle1">Cycle 1</option>
+                <option value="cycle2">Cycle 2</option>
+                <option value="cycle3">Cycle 3</option>
+                <option value="postoblig">Post-obligatoire</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="qCount">Nombre de questions</label>
+              <input id="qCount" type="number" min="1" max="20" value="6"/>
+            </div>
+            <div class="field">
+              <label for="qLang">Langue</label>
+              <select id="qLang">
+                <option value="fr" selected>Français</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="qObjectives">Objectifs (mots-clés PER)</label>
+            <textarea id="qObjectives" rows="3" placeholder="Ex. : repérage d’objets archéologiques ; notions apotropaïques ; vocabulaire du tarse…"></textarea>
+          </div>
+
+          <div class="row">
+            <button id="qGen" class="btn primary">Générer</button>
+            <small id="qStatus" class="muted"></small>
+          </div>
+
+          <div id="qOutput" class="card" style="margin-top:10px; background:#ffffff10; border-color:#ffffff22;">
+            <pre>Le quiz généré apparaîtra ici…</pre>
+          </div>
         </div>
 
-        <div class="stack">
-          <label>Thématique / sous-thème</label>
-          <input id="q-theme" class="input" placeholder="ex. cycle de l’eau, fractions, climat, Moyen Âge…" />
+        <!-- Colonne 2 : Mini-jeu Osselets -->
+        <div class="card">
+          <h3>Mini-jeu — Osselets d’astragale (Runner 2D)</h3>
+          <div id="osselets-root" class="game-wrap">
+            <div class="muted">Chargement du jeu…</div>
+          </div>
+          <p class="muted" style="margin-top:8px">
+            Commandes : ← → pour bouger · Espace pour sauter · P pause · M musique · H cours d’histoire.
+          </p>
         </div>
+      </section>
 
-        <div class="stack">
-          <label>Âge (années)</label>
-          <input id="q-age" class="input" type="number" min="5" max="18" value="10" />
-        </div>
+      <section class="card" style="margin-top:16px">
+        <h3>Notes pédagogiques</h3>
+        <ul>
+          <li>Les amulettes d’astragale (talus) sont évoquées comme <em>métaphores ludiques</em> et non prescriptions rituelles.</li>
+          <li>Le quiz cible des entrées PER ; adaptez <em>Thème/Âge/Objectifs</em> pour générer vos items.</li>
+        </ul>
+      </section>
+    </main>
 
-        <div class="stack">
-          <label>Nombre de questions</label>
-          <input id="q-n" class="input" type="number" min="3" max="10" value="5" />
-        </div>
-      </div>
+    <footer class="wrap" style="margin:24px 0 40px; opacity:.8">
+      © Nicolas Tuor — Lab IA Éducation
+    </footer>
 
-      <div class="stack" style="margin-top:10px">
-        <button id="q-generate" class="btn">Générer</button>
-        <div class="loader" id="q-loader"><span class="pill">⏳ Génération en cours…</span></div>
-      </div>
+    <!-- === Montage du jeu JSX sans build (React UMD + Babel) === -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-      <div id="q-output" style="margin-top:14px"></div>
-    </section>
+    <!-- Ton fichier du jeu (place-le dans /public/osselets-runner.jsx) -->
+    <script type="text/babel" data-presets="typescript,react" src="/osselets-runner.jsx"></script>
 
-    <!-- conteneur de jeu osselets - on empêche tout scroll parasite -->
-    <section class="card">
-      <h2>🎮 Osselets — mini-jeu</h2>
-      <p class="muted">Démo jouable, intégrée dans un conteneur fixe.</p>
-      <div class="game-wrap">
-        <div id="osselets-root"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <style>
-    /* conteneur jeu osselets : pas de scroll, focus clavier OK */
-    .game-wrap{position:relative;height:560px;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62}
-    .game-wrap canvas{display:block;width:100%;height:100%}
-  </style>
-
-  <!-- Ton script d’osselets (celui que tu as joint) doit monter sur #osselets-root -->
-  <script src="/site.js" defer></script>
-  <script src="/ai-lab.js" defer></script>
-  <script type="module" src="/runner_2_d_amulettes_dastragale_grece_antique.jsx"></script>
-</body>
+    <!-- Boot : rend window.AstragalusRunner sur #osselets-root -->
+    <script type="text/babel" data-presets="react">
+      (function() {
+        const root = document.getElementById("osselets-root");
+        if (root && window.AstragalusRunner) {
+          const r = ReactDOM.createRoot(root);
+          r.render(React.createElement(window.AstragalusRunner));
+        } else {
+          console.warn("AstragalusRunner introuvable — ajoutez `window.AstragalusRunner = AstragalusRunner;` à la fin de votre JSX.");
+        }
+      })();
+    </script>
+  </body>
 </html>
