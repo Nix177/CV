@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+// Pas d'import : on utilise React chargé en <script> UMD
+const { useEffect, useRef, useState } = React;
 
 /**
  * Runner 2D – Amulettes d’astragale (Grèce antique)
@@ -90,7 +91,7 @@ class MusicEngine {
   }
 }
 
-export default function AstragalusRunner() {
+  function AstragalusRunner() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const reqRef = useRef<number | null>(null);
   const [paused, setPaused] = useState(false);
@@ -958,4 +959,7 @@ export default function AstragalusRunner() {
       </div>
     </div>
   );
+// À ajouter tout à la fin du fichier :
+window.AstragalusRunner = AstragalusRunner;
+
 }
