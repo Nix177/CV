@@ -1,39 +1,70 @@
-/* Fun Facts — version "no-DOM-mutation"
-   - N'utilise QUE les conteneurs existants:
-     * Cartes:   #cards (+ #btnNewSet, #btnOneFact, #btnOneMyth, #cardsFilter)
-     * Nuage:    #cloud (optionnel)
-   - Connexion: API /api/facts  -> sinon /facts-data.json  -> sinon seed local
-   - Sources: normalisées (string ou objet), clickables
+/* Fun Facts — cartes (flip) + nuage (tooltip) — no-DOM-mutation
+   - N'utilise que les conteneurs déjà présents:
+     Cartes: #cards (+ #btnNewSet, #btnOneFact, #btnOneMyth, #cardsFilter)
+     Nuage : #cloud (+ #btnShuffle)
+   - Fallback: API -> facts-data.json -> seed
 */
 (function () {
   "use strict";
 
-  // ----------------------- Utils & logs -----------------------
-  const log  = (...a) => console.log("%c[fun-facts]", "color:#08c", ...a);
-  const warn = (...a) => console.warn("%c[fun-facts]", "color:#e80", ...a);
-  const $  = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+  // ---------------------- Utils & logs ----------------------
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const log  = (...a)=>console.log("%c[fun-facts]","color:#08c",...a);
+  const warn = (...a)=>console.warn("%c[fun-facts]","color:#e80",...a);
+  const rand = (a,b)=>Math.random()*(b-a)+a;
+  const shuffle = (arr)=>arr.sort(()=>Math.random()-0.5);
+  const lang = (document.documentElement.lang||"fr").slice(0,2);
 
-  const lang = (document.documentElement.lang || "fr").slice(0, 2);
+  // CSS minimal pour le flip + tooltip (pas de layout)
+  (function injectCSS(){
+    const css = `
+      /* Flip */
+      .ff-flip{ perspective:1000px; cursor:pointer }
+      .ff-flip .ff-inner{ position:relative; transform-style:preserve-3d; transition:transform .35s ease }
+      .ff-flip.is-flipped .ff-inner{ transform:rotateY(180deg) }
+      .ff-flip .ff-face{ backface-visibility:hidden; position:relative }
+      .ff-flip .ff-back{ transform:rotateY(180deg) }
+      .ff-type{ font-size:.85rem; opacity:.9; margin-bottom:6px }
+      .ff-title{ font-size:1rem; line-height:1.25; margin:4px 0 6px }
+      .ff-body{ font-size:.95rem; line-height:1.35; opacity:.95 }
+      .ff-badge{ display:inline-block; font-size:.75rem; padding:.15rem .45rem; border-radius:999px;
+                 background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); margin-right:6px }
+      .ff-sources ul{ margin:.2rem 0 0 1rem }
+      .ff-sources a{ color:#93c5fd; text-decoration:none }
+      .ff-sources a:hover{ text-decoration:underline }
 
-  // ----------------------- Normalisation sources -----------------------
-  const toUrl = (x)=>{ try{return String(x||"").trim();}catch{return "";} };
-  const niceLabel = (u)=> u.replace(/^https?:\/\//,"").slice(0,95);
+      /* Tooltip nuage */
+      #ffTooltip{ position:absolute; z-index:9999; display:none;
+        max-width:min(560px,88vw); background:rgba(15,23,42,.98); color:#e5e7eb;
+        border:1px solid rgba(255,255,255,.15); border-radius:12px; padding:12px 14px;
+        box-shadow:0 14px 28px rgba(0,0,0,.45) }
+      #ffTooltip h4{ margin:0 0 6px 0; font-size:1rem }
+      #ffTooltip .meta{ margin-bottom:6px }
+      #ffTooltip .ff-badge{ margin-right:6px }
+      #ffTooltip p{ margin:6px 0; font-size:.95rem; line-height:1.35 }
+    `;
+    const st = document.createElement("style");
+    st.textContent = css; document.head.appendChild(st);
+  })();
+
+  // ---------------------- Sources normalisées ----------------------
+  const toStr = (x)=>{ try{return String(x||"").trim();}catch{return "";} };
+  const niceLabel = (u)=> u.replace(/^https?:\/\//,"").slice(0,90);
 
   function normOneSource(s){
     if (s==null) return null;
-    if (typeof s === "string"){
-      const href = toUrl(s); if (!href) return null;
+    if (typeof s==="string"){
+      const href = toStr(s); if(!href) return null;
       return { href, label:niceLabel(href) };
     }
-    if (typeof s === "object"){
-      const href = toUrl(s.url || s.href || s.link || "");
-      if (!href) return null;
-      const label = toUrl(s.label || s.title || s.name || "") || niceLabel(href);
+    if (typeof s==="object"){
+      const href = toStr(s.url || s.href || s.link || "");
+      if(!href) return null;
+      const label = toStr(s.label || s.title || s.name || "") || niceLabel(href);
       return { href, label };
     }
-    const href = toUrl(s); if (!href) return null;
+    const href = toStr(s); if(!href) return null;
     return { href, label:niceLabel(href) };
   }
   function normSources(arr){
@@ -43,7 +74,7 @@
     return out;
   }
 
-  // ----------------------- Fallback seed -----------------------
+  // ---------------------- Seed minimal ----------------------
   const SEED = [
     { id:"seed:brain10", type:"myth", category:"Science",
       title:"On n’utilise que 10 % de notre cerveau.",
@@ -55,22 +86,19 @@
       sources:["https://www.nationalgeographic.com/history/article/131219-ancient-egypt-honey-tombs-beekeeping"] }
   ];
 
-  // ----------------------- Fetch layer -----------------------
+  // ---------------------- Fetch layer ----------------------
   const API = "/api/facts";
   const LOCAL_JSON = "/facts-data.json";
 
   function normalizeList(list){
-    return (list||[]).map((it,i)=>{
-      const id = it.id || `tmp:${i}:${(it.title||"").slice(0,40)}`;
-      return ({
-        id,
-        type: it.type || "myth",
-        category: it.category || "Général",
-        title: it.title || (it.type==="fact"?"Fait":"Mythe"),
-        body: it.body || "",
-        sources: normSources(it.sources)
-      });
-    });
+    return (list||[]).map((it,i)=>({
+      id: it.id || `tmp:${i}:${(it.title||"").slice(0,40)}`,
+      type: it.type || "myth",
+      category: it.category || "Général",
+      title: it.title || (it.type==="fact"?"Fait":"Mythe"),
+      body: it.body || "",
+      sources: normSources(it.sources)
+    }));
   }
 
   async function tryAPI(params){
@@ -79,12 +107,11 @@
       const url = `${API}?${qs}`;
       log("Fetch API:", url);
       const r = await fetch(url, { headers:{ "x-ff":"1" }});
-      if (!r.ok) throw new Error(`API ${r.status}`);
+      if(!r.ok) throw new Error(`API ${r.status}`);
       const json = await r.json();
-      if (!Array.isArray(json)) throw new Error("API non-array");
+      if(!Array.isArray(json)) throw new Error("API non-array");
       const n = normalizeList(json);
-      log(`→ API OK (${n.length} items)`);
-      return n;
+      log(`→ API OK (${n.length} items)`); return n;
     }catch(e){ warn("API fallback:", e?.message||e); return []; }
   }
 
@@ -92,12 +119,11 @@
     try{
       log("Fetch JSON local:", LOCAL_JSON);
       const r = await fetch(LOCAL_JSON);
-      if (!r.ok) throw new Error(`JSON ${r.status}`);
+      if(!r.ok) throw new Error(`JSON ${r.status}`);
       const json = await r.json();
       const arr  = Array.isArray(json) ? json : (json.items||[]);
       const n    = normalizeList(arr);
-      log(`→ JSON local OK (${n.length} items)`);
-      return n;
+      log(`→ JSON local OK (${n.length} items)`); return n;
     }catch(e){ warn("JSON local fallback:", e?.message||e); return []; }
   }
 
@@ -108,8 +134,7 @@
     const seen = new Set((params.seen||"").split(",").filter(Boolean));
     if (kind) out = out.filter(x=>x.type===kind);
     if (seen.size) out = out.filter(x=>!seen.has(x.id));
-    shuffle(out);
-    if (n) out = out.slice(0,n);
+    shuffle(out); if (n) out = out.slice(0,n);
     return out;
   }
 
@@ -121,21 +146,21 @@
     return normalizeList(SEED);
   }
 
-  // ----------------------- Cartes (haut) -----------------------
-  const cardsWrap   = $("#cards");           // EXISTANT
-  const btnNewSet   = $("#btnNewSet");       // optionnel
-  const btnOneFact  = $("#btnOneFact");      // optionnel
-  const btnOneMyth  = $("#btnOneMyth");      // optionnel
-  const cardsFilter = $("#cardsFilter");     // optionnel (groupe de boutons data-filter)
+  // ---------------------- CARTES (haut) ----------------------
+  const cardsWrap   = $("#cards");
+  const btnNewSet   = $("#btnNewSet");
+  const btnOneFact  = $("#btnOneFact");
+  const btnOneMyth  = $("#btnOneMyth");
+  const cardsFilter = $("#cardsFilter");
 
   let CARDS = [];
   const seenCards = new Set();
   let FILTER = "all";
 
-  function passFilter(it){
+  const passFilter = (it)=>{
     const t = it.type||"unknown";
-    return FILTER==="all" || (FILTER==="fact" && t==="fact") || (FILTER==="myth" && t==="myth");
-  }
+    return FILTER==="all" || (FILTER==="fact"&&t==="fact") || (FILTER==="myth"&&t==="myth");
+  };
 
   function renderSources(container, sources){
     if (!container) return;
@@ -143,21 +168,19 @@
     if (!Array.isArray(sources) || !sources.length) return;
     const title = document.createElement("div");
     title.innerHTML = "<strong>Sources :</strong>";
-    const ul = document.createElement("ul");
-    ul.style.margin = ".2rem 0 0 1rem";
-    for (const s of sources){
+    const ul = document.createElement("ul"); ul.style.margin=".2rem 0 0 1rem";
+    for(const s of sources){
       const li = document.createElement("li");
       const a = document.createElement("a");
-      a.href = s.href; a.target = "_blank"; a.rel = "noopener";
-      a.textContent = s.label || s.href;
+      a.href=s.href; a.target="_blank"; a.rel="noopener"; a.textContent=s.label||s.href;
       li.appendChild(a); ul.appendChild(li);
     }
     container.appendChild(title); container.appendChild(ul);
   }
 
   function drawCards(list){
-    CARDS = list.slice();
     if (!cardsWrap) return;
+    CARDS = list.slice();
     cardsWrap.innerHTML = "";
     if (!CARDS.length){
       cardsWrap.innerHTML = `<div style="opacity:.7;padding:.6rem 0">Aucun élément à afficher.</div>`;
@@ -166,40 +189,51 @@
     for (const it of CARDS){
       if (!passFilter(it)) continue;
 
-      const wrap = document.createElement("article");
-      wrap.className = "flip";
-      wrap.dataset.id = it.id;
+      const art = document.createElement("article");
+      art.className = "ff-flip"; art.dataset.id = it.id;
 
-      const inner = document.createElement("div"); inner.className = "inner";
-      const front = document.createElement("div"); front.className = "face front";
-      const back  = document.createElement("div"); back.className  = "face back";
+      const inner = document.createElement("div");
+      inner.className = "ff-inner";
 
-      // FRONT
+      // FACE AVANT
+      const front = document.createElement("div");
+      front.className = "ff-face ff-front";
       const type = document.createElement("div");
-      type.className = "type";
-      type.textContent = it.type==="fact" ? "⭐ Fait avéré" : it.type==="myth" ? "❓ Mythe" : "💡 Indéterminé";
-      const meta = document.createElement("div"); meta.className="meta";
-      const cat = document.createElement("span"); cat.className="badge"; cat.textContent = it.category||"Catégorie";
+      type.className = "ff-type";
+      type.textContent = it.type==="fact"?"⭐ Fait avéré":it.type==="myth"?"❓ Mythe":"💡 Indéterminé";
+      const meta = document.createElement("div");
+      const cat  = document.createElement("span");
+      cat.className = "ff-badge"; cat.textContent = it.category||"Catégorie";
       meta.appendChild(cat);
-      const h = document.createElement("div"); h.className="title"; h.textContent=it.title||"(sans titre)";
+      const h = document.createElement("div");
+      h.className = "ff-title"; h.textContent = it.title || "(sans titre)";
       front.appendChild(type); front.appendChild(meta); front.appendChild(h);
 
-      // BACK
+      // FACE ARRIÈRE
+      const back = document.createElement("div");
+      back.className = "ff-face ff-back";
       const backTitle = document.createElement("div");
-      backTitle.className="title"; backTitle.textContent= it.type==="myth" ? "Explication" : "Détail";
-      const body = document.createElement("div"); body.className="body"; body.textContent = it.body||"";
-      const src  = document.createElement("div"); src.className="sources"; renderSources(src, it.sources);
+      backTitle.className = "ff-title";
+      backTitle.textContent = it.type==="myth" ? "Explication" : "Détail";
+      const body = document.createElement("div");
+      body.className = "ff-body"; body.textContent = it.body || "";
+      const src = document.createElement("div");
+      src.className = "ff-sources"; renderSources(src, it.sources);
       back.appendChild(backTitle); back.appendChild(body); back.appendChild(src);
 
-      inner.appendChild(front); inner.appendChild(back); wrap.appendChild(inner);
-      // clic = flip (utile mobile)
-      wrap.addEventListener("click", ()=> wrap.classList.toggle("is-flipped"));
-      cardsWrap.appendChild(wrap);
+      inner.appendChild(front); inner.appendChild(back); art.appendChild(inner);
+
+      // Interactions (hover + click)
+      art.addEventListener("mouseenter", ()=> art.classList.add("is-flipped"));
+      art.addEventListener("mouseleave", ()=> art.classList.remove("is-flipped"));
+      art.addEventListener("click", ()=> art.classList.toggle("is-flipped"));
+
+      cardsWrap.appendChild(art);
     }
   }
 
   async function loadInitialCards(){
-    if (!cardsWrap) return; // si pas de conteneur, on ne fait rien
+    if (!cardsWrap) return;
     const list = await fetchFacts({ lang, n: 8 });
     log("Cartes initiales reçues:", list.length);
     list.forEach(x=> seenCards.add(x.id));
@@ -231,15 +265,81 @@
     drawCards(CARDS);
   }
 
-  // ----------------------- Nuage (bas, EXISTANT) -----------------------
-  // On ne crée rien. Si #cloud existe, on l’alimente. Sinon on n’y touche pas.
-  const cloud = $("#cloud");
+  // ---------------------- NUAGE (bas) ----------------------
+  const cloud      = $("#cloud");
+  const btnShuffle = $("#btnShuffle");
   const bubbles = [];
   let running = true;
 
-  function labelForCategory(s){
+  // tooltip
+  let tooltip;
+  function ensureTooltip(){
+    if (tooltip) return tooltip;
+    tooltip = document.createElement("div");
+    tooltip.id = "ffTooltip";
+    tooltip.innerHTML = `
+      <h4 id="ttTitle">—</h4>
+      <div id="ttMeta" class="meta"></div>
+      <p id="ttBody"></p>
+      <div id="ttSources" class="ff-sources"></div>
+    `;
+    document.body.appendChild(tooltip);
+    return tooltip;
+  }
+  function truncateWords(s, max=50){
     const w = (s||"").split(/\s+/);
-    return (w[0]||"").slice(0,16) + (w[1] ? " " + w[1].slice(0,12) : "");
+    if (w.length<=max) return s||"";
+    return w.slice(0,max).join(" ")+"…";
+  }
+  function posTooltipAround(el){
+    const t = ensureTooltip();
+    const r = el.getBoundingClientRect();
+    const pad = 10;
+    const tw = t.offsetWidth || 360;
+    const th = t.offsetHeight|| 120;
+    let x = r.left + r.width/2 - tw/2;
+    x = Math.max(8, Math.min(window.innerWidth - tw - 8, x));
+    let y = r.top - th - pad;
+    if (y<6) y = r.bottom + pad;
+    t.style.left = `${x}px`;
+    t.style.top  = `${y + window.scrollY}px`;
+  }
+  function showTooltip(item, anchor){
+    const t = ensureTooltip();
+    const ttTitle   = $("#ttTitle", t);
+    const ttMeta    = $("#ttMeta", t);
+    const ttBody    = $("#ttBody", t);
+    const ttSources = $("#ttSources", t);
+
+    ttTitle.textContent = item.title || "(sans titre)";
+    ttMeta.innerHTML = "";
+    const c = document.createElement("span"); c.className="ff-badge"; c.textContent=item.category||"Catégorie";
+    ttMeta.appendChild(c);
+    const k = document.createElement("span"); k.className="ff-badge";
+    k.textContent = item.type==="fact"?"Fait":"Mythe"; ttMeta.appendChild(k);
+
+    ttBody.textContent = truncateWords(item.body||"", 50);
+
+    ttSources.innerHTML = "";
+    if (item.sources?.length){
+      const ul = document.createElement("ul"); ul.style.margin=".2rem 0 0 1rem";
+      for (const s of item.sources){
+        const li=document.createElement("li");
+        const a=document.createElement("a"); a.href=s.href; a.target="_blank"; a.rel="noopener";
+        a.textContent=s.label||niceLabel(s.href);
+        li.appendChild(a); ul.appendChild(li);
+      }
+      const h=document.createElement("div"); h.innerHTML="<strong>Sources :</strong>";
+      ttSources.appendChild(h); ttSources.appendChild(ul);
+    }
+
+    t.style.display="block"; posTooltipAround(anchor);
+  }
+  function hideTooltip(){ if(tooltip) tooltip.style.display="none"; }
+
+  function labelForCategory(s){
+    const w=(s||"").split(/\s+/);
+    return (w[0]||"").slice(0,16) + (w[1]?" "+w[1].slice(0,12):"");
   }
 
   function createBubble(item){
@@ -247,62 +347,84 @@
     const el = document.createElement("div");
     el.className="bubble";
     const r = Math.max(56, Math.min(110, 70 + ((item.title?.length||20)/4)));
-    el.style.width=el.style.height= r+"px";
-    el.style.left = Math.random()*(Math.max(12, cloud.clientWidth  - r - 10)) + "px";
-    el.style.top  = Math.random()*(Math.max(12, cloud.clientHeight - r - 10)) + "px";
+    el.style.width = el.style.height = r+"px";
+    el.style.left = rand(10, Math.max(12, cloud.clientWidth  - r - 10))+"px";
+    el.style.top  = rand(10, Math.max(12, cloud.clientHeight - r - 10))+"px";
 
-    const em = document.createElement("div"); em.className="emoji";
-    em.textContent = item.type==="fact"?"⭐":item.type==="myth"?"❓":"💡";
-    const lab = document.createElement("div"); lab.className="label"; lab.textContent = labelForCategory(item.category || (item.type==="fact"?"Fait":"Mythe"));
-    el.appendChild(em); el.appendChild(lab);
+    const emoji = document.createElement("div"); emoji.className="emoji";
+    emoji.textContent = item.type==="fact"?"⭐":item.type==="myth"?"❓":"💡";
+    const lab = document.createElement("div"); lab.className="label";
+    lab.textContent = labelForCategory(item.category || (item.type==="fact"?"Fait":"Mythe"));
+    el.appendChild(emoji); el.appendChild(lab);
     cloud.appendChild(el);
 
-    const bub = { el, r, x:parseFloat(el.style.left), y:parseFloat(el.style.top), vx:(Math.random()-.5)*0.8, vy:(Math.random()-.5)*0.7, paused:false };
-
-    const stop = ()=>{ bub.paused=true; el.classList.add("paused"); };
-    const go   = ()=>{ bub.paused=false; el.classList.remove("paused"); };
-
-    el.addEventListener("mouseenter", stop);
-    el.addEventListener("mouseleave", go);
-    el.addEventListener("click", stop);
-
+    const bub = { el, item, r,
+      x:parseFloat(el.style.left), y:parseFloat(el.style.top),
+      vx:rand(-0.4,0.4)||0.3, vy:rand(-0.35,0.35)||-0.25,
+      paused:false
+    };
+    const show = ()=>{ bub.paused=true; el.classList.add("paused"); showTooltip(item, el); };
+    const hide = ()=>{ bub.paused=false; el.classList.remove("paused"); hideTooltip(); };
+    el.addEventListener("mouseenter", show);
+    el.addEventListener("mouseleave", hide);
+    el.addEventListener("click", show);
     bubbles.push(bub);
   }
 
   function loop(){
     if (!cloud) return;
-    const W = cloud.clientWidth, H = cloud.clientHeight;
-    if (running){
-      for (const b of bubbles){
-        if (b.paused) continue;
-        b.x += b.vx; b.y += b.vy;
-        if (b.x <= 6 || b.x + b.r >= W-6) b.vx *= -1;
-        if (b.y <= 6 || b.y + b.r >= H-6) b.vy *= -1;
-        b.el.style.left = b.x+"px"; b.el.style.top = b.y+"px";
-      }
+    const W=cloud.clientWidth, H=cloud.clientHeight;
+    for (const b of bubbles){
+      if (b.paused) continue;
+      b.x += b.vx; b.y += b.vy;
+      if (b.x<=6 || b.x+b.r>=W-6) b.vx*=-1;
+      if (b.y<=6 || b.y+b.r>=H-6) b.vy*=-1;
+      b.el.style.left=b.x+"px"; b.el.style.top=b.y+"px";
     }
     requestAnimationFrame(loop);
   }
 
   async function loadInitialCloud(){
-    if (!cloud) return; // s'il n'existe pas, on ne fait rien
+    if (!cloud) return;
     const list = await fetchFacts({ lang, n: 18 });
     log("Nuage reçu:", list.length);
+    if (!list.length){ return; }
     list.forEach(createBubble);
   }
+  function shuffleCloud(){
+    if (!cloud) return;
+    const W=cloud.clientWidth, H=cloud.clientHeight;
+    bubbles.forEach(b=>{
+      b.x = rand(10, Math.max(12, W - b.r - 10));
+      b.y = rand(10, Math.max(12, H - b.r - 10));
+      b.vx = rand(-0.5,0.5)||0.35;
+      b.vy = rand(-0.45,0.45)||-0.25;
+      b.el.style.left=b.x+"px"; b.el.style.top=b.y+"px";
+    });
+    hideTooltip();
+  }
 
-  // ----------------------- Wiring -----------------------
+  // ---------------------- Wiring ----------------------
   (async function start(){
-    // Cartes (haut)
-    if (btnNewSet)  btnNewSet.addEventListener("click", newSet);
-    if (btnOneMyth) btnOneMyth.addEventListener("click", oneMyth);
-    if (btnOneFact) btnOneFact.addEventListener("click", oneFact);
-    if (cardsFilter) cardsFilter.addEventListener("click", onFilterClick);
-
     document.addEventListener("visibilitychange", ()=> (running = document.visibilityState==="visible"));
 
-    await loadInitialCards();  // n'agit que si #cards est présent
-    await loadInitialCloud();  // n'agit que si #cloud est présent
+    // Cartes
+    btnNewSet?.addEventListener("click", newSet);
+    btnOneFact?.addEventListener("click", oneFact);
+    btnOneMyth?.addEventListener("click", oneMyth);
+    cardsFilter?.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button"); if(!btn) return;
+      cardsFilter.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      FILTER = btn.dataset.filter || "all";
+      drawCards(CARDS);
+    });
+
+    // Nuage
+    btnShuffle?.addEventListener("click", shuffleCloud);
+
+    await loadInitialCards();
+    await loadInitialCloud();
     loop();
 
     log("Connectivité : API utilisée si elle renvoie >0 éléments ; sinon JSON local ; sinon seed.");
