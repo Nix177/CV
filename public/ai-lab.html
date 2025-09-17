@@ -1,86 +1,80 @@
 <!doctype html>
-<html lang="fr" data-theme="dark">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Idées IA en éducation — Nicolas Tuor</title>
-  <link rel="icon" href="/favicon.svg" />
-  <link rel="stylesheet" href="./style.css" />
-  <script defer src="./site.js"></script>
-  <script defer src="./ai.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Idées IA en éducation — Quiz & Osselets</title>
+  <link rel="stylesheet" href="./ai-lab.css" />
 </head>
 <body>
+  <main class="wrap">
+    <header class="page-head">
+      <h1>Idées IA en éducation</h1>
+      <p class="muted">Génération de quiz alignés PER + mini-jeu de plateforme “Osselets”.</p>
+    </header>
 
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="./"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-    <nav class="nav-links">
-      <a href="./cv">CV</a>
-      <a href="./portfolio">Portfolio</a>
-      <a href="./ai" class="btn chip">Idées IA en éducation</a>
-      <a href="./chatbot">Chatbot</a>
-      <button id="themeBtn" class="btn chip">◐</button>
-    </nav>
-  </div>
-</header>
+    <!-- ===================== QUIZ PER ===================== -->
+    <section class="card" id="quizSection">
+      <h2>🧠 Générateur de quiz</h2>
 
-<main class="container section stack">
-
-  <h1 class="title">Idées IA en éducation</h1>
-  <p class="lead">Des micro-outils IA pour la classe : quiz adaptés, répétiteur de vocabulaire…</p>
-
-  <div class="grid" style="grid-template-columns: repeat(auto-fit,minmax(320px,1fr));gap:16px">
-    <!-- Quiz generator -->
-    <section class="card pad stack" id="quizBox">
-      <h2 class="h3">🧠 Générateur de quiz</h2>
-      <form id="quizForm" class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
-        <label style="grid-column:1/-1">Thématique / discipline
-          <input name="topic" placeholder="p.ex. électricité, analyse de texte, climat…" required />
-        </label>
-        <label>Âge (années)
-          <input name="age" type="number" min="5" max="99" value="12" />
-        </label>
-        <label>PER / Objectifs
-          <input name="per" placeholder="p.ex. MSN 21, FRAN 28…" />
-        </label>
-        <label>Nombre de questions
-          <input name="count" type="number" min="3" max="12" value="5" />
-        </label>
-        <div style="grid-column:1/-1" class="row gap">
-          <button class="btn primary" data-busy>Générer</button>
+      <div class="grid2">
+        <div class="field">
+          <label for="qTheme">Thématique / discipline</label>
+          <input id="qTheme" type="text" placeholder="climat, histoire suisse, fractions, vocabulaire FR…" />
+          <small class="muted">Exemples : “climat”, “fractions”, “lecture”, “histoire suisse”.</small>
         </div>
-      </form>
+        <div class="field">
+          <label for="qObjectives">PER / Objectifs (optionnel)</label>
+          <input id="qObjectives" type="text" placeholder="p.ex. MSN 21, FRAN 28…" />
+          <small class="muted">Laisse vide pour auto-choix selon l’âge.</small>
+        </div>
 
-      <div id="quizOut" class="stack"></div>
+        <div class="field">
+          <label for="qAge">Âge (années)</label>
+          <input id="qAge" type="number" min="4" max="17" value="10" />
+        </div>
+        <div class="field">
+          <label for="qCount">Nombre de questions</label>
+          <input id="qCount" type="number" min="3" max="15" value="5" />
+        </div>
+
+        <div class="field">
+          <label for="qLang">Langue</label>
+          <select id="qLang">
+            <option value="fr" selected>Français</option>
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="field align-end">
+          <button id="qGen" class="btn primary">Générer</button>
+        </div>
+      </div>
+
+      <div id="qOut" class="answers empty">Aucune question reçue.</div>
     </section>
 
-    <!-- Vocab coach -->
-    <section class="card pad stack" id="vocabBox">
-      <h2 class="h3">🗣️ Coach de vocabulaire</h2>
-      <form id="vocabForm" class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
-        <label>Langue cible
-          <input name="lang" placeholder="p.ex. anglais, allemand, italien…" required />
-        </label>
-        <label>Niveau (A1–C1)
-          <input name="level" placeholder="A1" value="A1" required />
-        </label>
-        <label style="grid-column:1/-1">Thème
-          <input name="topic" placeholder="p.ex. cuisine, sport, animaux…" required />
-        </label>
-        <div style="grid-column:1/-1" class="row gap">
-          <button class="btn primary" data-busy>Démarrer</button>
+    <!-- ===================== PLATFORMER ===================== -->
+    <section class="card" id="gameSection">
+      <h2>🎮 Osselets — mini-jeu de plateforme</h2>
+      <p class="muted">Flèches gauche/droite pour bouger, <b>↑</b> ou <b>Espace</b> pour sauter. Sur mobile, utilisez les boutons.</p>
+
+      <div class="game-wrap">
+        <canvas id="game" width="800" height="420" aria-label="Jeu Osselets"></canvas>
+        <div class="hud">
+          <div>Osselets : <span id="score">0</span>/<span id="goal">0</span></div>
+          <div>Temps : <span id="time">0.0</span>s</div>
         </div>
-      </form>
 
-      <div id="vocabOut" class="stack"></div>
+        <div class="mobile-keys">
+          <button class="btn" data-left>◀︎</button>
+          <button class="btn" data-jump>⬆︎</button>
+          <button class="btn" data-right>▶︎</button>
+        </div>
+      </div>
     </section>
-  </div>
+  </main>
 
-</main>
-
-<footer class="container section footer">
-  <p class="foot">© Nicolas Tuor — outils IA éducatifs.</p>
-</footer>
-
+  <script src="./ai-lab.js" defer></script>
 </body>
 </html>
