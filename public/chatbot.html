@@ -14,112 +14,147 @@
     .chat { max-width: 920px; margin: 0 auto; padding: 16px; }
     .chat-box { background: var(--panel); border:1px solid color-mix(in oklab,var(--ink),transparent 85%); border-radius:16px; padding:16px; box-shadow:var(--shadow); min-height:260px; }
     .msg { background: var(--bg-soft); border:1px solid color-mix(in oklab,var(--ink),transparent 85%); padding:10px 12px; border-radius:12px; margin:10px 0; white-space:pre-wrap }
-    .me { border-color: color-mix(in oklab, var(--brand), transparent 70%); }
-    .row { display:flex; gap:10px; margin-top:10px; }
-    .row input { flex:1; padding:12px; border-radius:10px; border:1px solid color-mix(in oklab,var(--ink),transparent 80%); background: var(--bg-soft); color: var(--ink); }
+    .me  { border-color: color-mix(in oklab, var(--brand), transparent 70%) }
+    .row { display:flex; gap:10px; margin-top:10px }
+    .row input { flex:1; padding:12px; border-radius:10px; border:1px solid color-mix(in oklab,var(--ink),transparent 80%); background: var(--bg-soft); color: var(--ink) }
     .muted { opacity:.85 }
+    .tiny  { font-size:.85rem; opacity:.8 }
+    .status-dot{ display:inline-block; width:8px; height:8px; border-radius:999px; margin-right:6px; translate:0 -1px }
+    .ok { background:#16a34a }
+    .ko { background:#ef4444 }
   </style>
 
   <!-- PDF.js pour lire /CV_Nicolas_Tuor.pdf côté navigateur -->
   <script src="https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.min.js"></script>
 
-  <!-- Injection CV côté client (auto si la question concerne le CV, ou si l'utilisateur tape /cv ...) -->
-  <!-- Injection CV côté client (extrait ciblé + consigne forte) -->
-<script>
-(function () {
-  "use strict";
+  <!-- ======== Injection CV systématique (robuste & compacte) ======== -->
+  <script>
+  (function () {
+    "use strict";
 
-  // Limites de texte pour éviter de surcharger la requête
-  const PAGE_LIMIT   = 14000;  // combien de caractères on lit du PDF
-  const INJECT_LIMIT = 4500;   // combien on injecte max
+    const PDF_URL = "/CV_Nicolas_Tuor.pdf";          // ⚠️ nom exact dans /public
+    const PAGE_CHAR_LIMIT = 16000;                    // max caractères lus du PDF
+    const CONTEXT_MAX_CHARS = 3600;                   // max extrait injecté / requête
+    const CACHE_KEY = "cv_ctx_v3_fr";                 // cache session
 
-  const LABEL = {
-    fr: "Extrait du CV (à considérer comme partie intégrante du profil). Répondre uniquement à partir de cet extrait :",
-    en: "CV extract (treat as part of the profile). Answer using this extract only:",
-    de: "CV-Auszug (als Profilbestandteil behandeln). Antworte ausschließlich anhand dieses Auszugs:"
-  };
-
-  // ————— Utilitaires
-  function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
-  function i(label,lang){ return LABEL[lang] || LABEL.fr; }
-
-  // Détecte une question orientée CV
-  function looksLikeCvQuestion(q) {
-    const s = (q||"").toLowerCase();
-    if (s.startsWith("/cv ")) return true;                    // forcer
-    return /\b(cv|curriculum|résumé|resume|lebenslauf|parcours|expériences?|experience|skills?|compétences|dipl[oô]me|formation|linkedin|nicolas|tuor|hobbies?|loisirs|intérêts?)\b/.test(s);
-  }
-
-  // Lecture PDF -> texte brut (même origine : /CV_Nicolas_Tuor.pdf)
-  async function readCvText() {
-    if (!window.pdfjsLib) return "";
-    try {
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.js";
-      const doc = await pdfjsLib.getDocument("/CV_Nicolas_Tuor.pdf").promise;
-      let out = "";
-      for (let p=1; p<=doc.numPages; p++){
-        const page = await doc.getPage(p);
-        const c = await page.getTextContent();
-        out += c.items.map(i=>i.str).join(" ") + "\n";
-        if (out.length > PAGE_LIMIT) break;
-      }
-      return norm(out);
-    } catch(e) {
-      console.warn("Lecture CV échouée :", e);
-      return "";
+    // Elements status
+    let cvStatusEl = null;
+    function setCvStatus(ok){
+      if (!cvStatusEl) cvStatusEl = document.getElementById("cvStatus");
+      if (!cvStatusEl) return;
+      cvStatusEl.innerHTML = `<span class="status-dot ${ok?'ok':'ko'}"></span>${ok?'CV : chargé':'CV : indisponible'}`;
     }
-  }
 
-  // Extrait **ciblé** d’une section (Centres d’intérêt / Hobbies / Loisirs / Compétences)
-  function extractSection(text, pattern){
-    // coupe de pattern -> jusqu’au prochain titre en MAJ (grossier mais efficace sur PDF text)
-    const re = new RegExp(
-      "(" + pattern + ")[^\\n]*\\n?([\\s\\S]*?)(\\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'-]{6,}\\n|$)",
-      "i"
-    );
-    const m = text.match(re);
-    if (!m) return "";
-    return norm((m[2]||"").slice(0, 1800));
-  }
+    // Utilitaires
+    function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
+    function sliceLines(s, n){
+      // coupe proprement sur ~n caractères, en respectant les puces/retours
+      if (!s) return "";
+      if (s.length <= n) return s;
+      const cut = s.slice(0, n);
+      const lastBreak = Math.max(cut.lastIndexOf("\n"), cut.lastIndexOf(". "), cut.lastIndexOf("; "));
+      return (lastBreak>200? cut.slice(0, lastBreak) : cut) + " …";
+    }
+    const RGX = {
+      compet: /(COMP[ÉE]TENCES?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
+      exp:    /(EXP[ÉE]RIENCES?(?: DIVERSES?)?|PARCOURS|PROJETS)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
+      form:   /(FORMATIONS?|[ÉE]TUDES)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
+      inter:  /(CENTRES? D[’']INT[ÉE]R[ÊE]T|INT[ÉE]R[ÊE]TS|HOBBIES?|LOISIRS?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
+      langs:  /(LANGUES?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i
+    };
 
-  function buildFocusedExtract(full){
-    // Variantes courantes (apostrophes droites/typographiques)
-    const interets = extractSection(
-      full,
-      "CENTRES? D[’']?INT[ÉE]R[ÊE]T|INT[ÉE]R[ÊE]TS|HOBBIES?|LOISIRS?"
-    );
-    const compet   = extractSection(full, "COMP[ÉE]TENCES?");
-    const exp      = extractSection(full, "EXP[ÉE]RIENCES? (DIVERSES?|PROFESSIONNELLES?)");
+    // Lecture PDF -> texte brut
+    async function readPdfText() {
+      try {
+        if (!window.pdfjsLib) return "";
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.js";
+        const doc = await pdfjsLib.getDocument(PDF_URL).promise;
+        let out = "";
+        for (let p=1; p<=doc.numPages; p++){
+          const page = await doc.getPage(p);
+          const c = await page.getTextContent();
+          out += c.items.map(i=>i.str).join(" ") + "\n";
+          if (out.length > PAGE_CHAR_LIMIT) break;
+        }
+        return norm(out);
+      } catch (e) {
+        console.warn("Lecture CV échouée :", e);
+        return "";
+      }
+    }
 
-    // Priorité aux intérêts/hobbies ; si vide, on ajoute compétences/expériences pour donner du contexte.
-    let parts = [];
-    if (interets) parts.push("— Centres d’intérêt / Hobbies —\n" + interets);
-    if (compet)   parts.push("— Compétences —\n" + compet.slice(0, 1200));
-    if (exp)      parts.push("— Expériences (extrait) —\n" + exp.slice(0, 1000));
+    function pickSection(txt, re, label){
+      const m = txt.match(re);
+      if (!m) return "";
+      const body = norm(m[0].replace(/^[^\n]*\n?/,""));
+      const bulletified = body
+        .replace(/(?:•|\u2022)\s*/g, " • ")
+        .replace(/\s-\s/g, " • ")
+        .replace(/\s{2,}/g, " ");
+      return bulletified ? `- ${label}: ${bulletified}` : "";
+    }
 
-    const joined = parts.join("\n\n").slice(0, INJECT_LIMIT);
-    return joined || full.slice(0, INJECT_LIMIT);
-  }
+    function buildContext(full) {
+      // ordonne les sections (très court + puces conservées si présentes)
+      const parts = [];
+      const comp = pickSection(full, RGX.compet, "Compétences");
+      const exp  = pickSection(full, RGX.exp,    "Expérience");
+      const frm  = pickSection(full, RGX.form,   "Formation");
+      const hob  = pickSection(full, RGX.inter,  "Centres d’intérêt");
+      const lng  = pickSection(full, RGX.langs,  "Langues");
 
-  let CV_CACHE = "";  // on lit une fois
+      if (comp) parts.push(comp);
+      if (exp)  parts.push(exp);
+      if (frm)  parts.push(frm);
+      if (hob)  parts.push(hob);
+      if (lng)  parts.push(lng);
 
-  // API globale : on réécrit la question pour forcer l’IA à utiliser l’extrait CV
-  window.augmentWithCv = async function(question, lang="fr") {
-    if (!looksLikeCvQuestion(question)) return question;
-    if (!CV_CACHE) CV_CACHE = await readCvText();
-    if (!CV_CACHE) return question; // pas de CV dispo
+      let ctx = parts.join("\n");
+      if (!ctx) ctx = sliceLines(full, CONTEXT_MAX_CHARS);   // fallback
 
-    const focused = buildFocusedExtract(CV_CACHE);
-    const header  = i("header", lang);
+      return sliceLines(ctx, CONTEXT_MAX_CHARS);
+    }
 
-    // Consigne forte + extrait + question nettoyée (sans /cv)
-    const cleanQ = question.replace(/^\/cv\s*/i,"").trim();
-    return `${header}\n${focused}\n---\nQuestion (priorité à l’extrait ci-dessus) : ${cleanQ}`;
-  };
-})();
-</script>
+    async function ensureCvContext() {
+      // Cache sessionStorage pour accélérer
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) { setCvStatus(true); return cached; }
+      const raw = await readPdfText();
+      if (!raw) { setCvStatus(false); return ""; }
+      const ctx = buildContext(raw);
+      if (ctx) {
+        sessionStorage.setItem(CACHE_KEY, ctx);
+        setCvStatus(true);
+      } else {
+        setCvStatus(false);
+      }
+      return ctx;
+    }
 
+    // API globale : **toujours** injecter le contexte (si disponible)
+    window.prepareQuestionWithCv = async function(userQuestion, lang="fr") {
+      const cv = await ensureCvContext();
+      if (!cv) return userQuestion; // on n’empêche pas de répondre si CV KO
+      // Consigne forte + extrait. Important : rester court et explicite.
+      return [
+        "Contexte CV (utiliser si pertinent) :",
+        cv,
+        "---",
+        "Consigne : réponds à la question en t’appuyant sur le CV ci-dessus lorsqu’il est pertinent. " +
+        "S’il n’est pas pertinent, réponds normalement sans prétendre ne pas avoir accès au CV.",
+        `Question : ${userQuestion}`
+      ].join("\n");
+    };
+
+    // Expose aussi un indicateur initial (affiche « chargement… »)
+    document.addEventListener("DOMContentLoaded", () => {
+      setCvStatus(false);
+      // Pré-charger en arrière-plan pour gagner du temps à la 1re question
+      ensureCvContext();
+    });
+  })();
+  </script>
+  <!-- ======== /Injection CV ======== -->
 </head>
 <body>
 
@@ -132,6 +167,7 @@
     <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
     <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
     <span style="flex:1"></span>
+    <span id="cvStatus" class="tiny muted"><span class="status-dot ko"></span>CV : chargement…</span>
     <a href="/chatbot.html" class="btn">FR</a>
     <a href="/chatbot-en.html" class="btn ghost">EN</a>
     <a href="/chatbot-de.html" class="btn ghost">DE</a>
@@ -140,13 +176,13 @@
 
 <main class="section container chat">
   <h1 class="title">🤖 Chatbot IA</h1>
-  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot peut aussi se référer à mon CV si vous en parlez. <span class="muted">(Astuce : commencez par <code>/cv</code> pour forcer.)</span></p>
+  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot a accès à mon CV et peut s’y référer automatiquement.</p>
 
   <div id="chat" class="chat-box" aria-live="polite"></div>
 
   <div class="row">
     <input id="q" type="text"
-           placeholder="Exemple : « /cv Quelles compétences techniques ressortent dans le CV ? »" />
+           placeholder="Exemple : « Quelles compétences techniques ressortent dans le CV ? »" />
     <button id="send" class="btn primary">Envoyer</button>
   </div>
 </main>
@@ -162,7 +198,15 @@
   }
 
   // message d’accueil
-  add("Bonjour ! Posez une question sur le candidat.\n\nExemples :\n• /cv Quelles compétences techniques ressortent ?\n• /cv Parle-moi de ses expériences en enseignement.\n• A-t-il déjà fait des projets d’IA appliquée ?");
+  add(
+`Bonjour ! Posez une question sur le candidat.
+
+Exemples :
+• Quelles compétences techniques ressortent ?
+• Parle-moi d’une expérience marquante.
+• Quels sont ses centres d’intérêt ?
+(Le bot peut exploiter mon CV automatiquement.)`
+  );
 
   async function ask(){
     const q = document.getElementById('q');
@@ -173,18 +217,18 @@
     add("…");
 
     try {
-      // Injection CV côté client (si pertinent)
-      const lang = 'fr';
-      const question = window.augmentWithCv ? await window.augmentWithCv(raw, lang) : raw;
+      // 🔗 ALWAYS: question + extrait CV compact (si dispo)
+      const withCv = window.prepareQuestionWithCv
+        ? await window.prepareQuestionWithCv(raw, 'fr')
+        : raw;
 
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // L’API ne change pas. On envoie juste la question possiblement augmentée.
         body: JSON.stringify({
-          question,
-          lang,
-          // + petit hint facultatif (silencieux si ignoré par le backend)
+          question: withCv,
+          lang: 'fr',
+          // petit hint facultatif si ton backend le supporte :
           cv_url: '/CV_Nicolas_Tuor.pdf'
         })
       });
