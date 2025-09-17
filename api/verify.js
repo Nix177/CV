@@ -1,6 +1,13 @@
-// /api/verify.js
-export default async function handler(req, res) {
-  const code = (req.query.code || req.body?.code || "").trim();
-  const ok = !!process.env.CV_SECRET && code && code === process.env.CV_SECRET;
-  res.status(ok ? 200 : 401).json({ ok });
+// api/verify.js
+export default function handler(req, res) {
+  try {
+    const { code = "" } = req.query || {};
+    const list = (process.env.CV_ACCESS_CODE || "nicolastuorcv|nicolastuor")
+      .split("|")
+      .map(s => s.trim()).filter(Boolean);
+    if (!code || !list.includes(code)) return res.status(401).json({ ok: false });
+    return res.status(200).json({ ok: true });
+  } catch (e) {
+    return res.status(500).json({ ok: false, error: "verify-failed" });
+  }
 }
