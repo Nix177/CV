@@ -1,175 +1,215 @@
-/* Fun Facts — FR — cartes + nuage lisible */
-(function () {
+/* Fun Facts — Nuage avec panneau latéral lisible
+ * - Bubbles DOM animées (RAf) + collisions bord
+ * - Survol/Click -> panneau large (titre, détail, sources cliquables)
+ * - La bulle survolée est mise en pause (reprend à la sortie)
+ * - Bouton "Mélanger", filtre Fait/Mythe/Tout
+ */
+(function(){
   "use strict";
-  const $ = (s, r=document) => r.querySelector(s);
-  const el = (t,a={},kids=[])=>{const e=document.createElement(t);
-    for(const[k,v] of Object.entries(a||{})){
-      if(k==="class")e.className=v;
-      else if(k==="text")e.textContent=v;
-      else if(k.startsWith("on")&&typeof v==="function")e.addEventListener(k.slice(2),v);
-      else e.setAttribute(k,v);
+
+  const cloud = document.getElementById("cloud");
+  const panel = document.getElementById("factPanel");
+  const fpTitle = document.getElementById("fpTitle");
+  const fpMeta  = document.getElementById("fpMeta");
+  const fpBody  = document.getElementById("fpBody");
+  const fpSrc   = document.getElementById("fpSources");
+  const fpClose = document.getElementById("fpClose");
+  const btnShuffle = document.getElementById("btnShuffle");
+  const seg = document.querySelector(".seg");
+  const fpOpen = document.getElementById("fpOpen");
+
+  const FURL = "/facts-data.json";
+
+  // Fallback de démo au cas où
+  const FALLBACK = [
+    {
+      id:"brain10", type:"myth", category:"Science",
+      title:"On n’utilise que 10 % de notre cerveau",
+      body:"Faux : l’imagerie cérébrale montre une activation étendue selon les tâches ; le cerveau fonctionne en réseaux.",
+      sources:["https://www.scientificamerican.com/article/do-people-only-use-10-percent-of-their-brains/"]
+    },
+    {
+      id:"honey", type:"fact", category:"Alimentation",
+      title:"Le miel peut se conserver des millénaires",
+      body:"Des pots comestibles ont été retrouvés dans des tombes antiques.",
+      sources:["https://www.nationalgeographic.com/history/article/131219-ancient-egypt-honey-tombs-beekeeping"]
     }
-    for(const c of[].concat(kids)) if(c!=null) e.appendChild(typeof c==="string"?document.createTextNode(c):c);
-    return e;
-  };
-  const status = $("#ffStatus");
-  const grid = $("#factsGrid");
-  const cloud = $("#factsCloud");
+  ];
 
-  const STOP = new Set("le la les un une des du de d’ d' et ou en au aux avec pour par dans sur sous entre vers chez comme selon que qui quoi est sont était étaient peut peuvent".split(/\s+/));
+  /** @type {Array<{id:string,type:'fact'|'myth'|'unknown',category:string,title:string,body:string,sources?:string[]}>} */
+  let DATA = [];
 
-  function setStatus(t){ if(status) status.textContent=t||""; }
-
-  // ---------- Normalisation
-  function normalize(list){
-    return (list||[]).map(it=>{
-      const kind=(it.kind||it.type||"fact").toLowerCase();
-      const title=String(it.title||it.claim||"").trim();
-      const summary=String(it.summary||it.truth||it.explain||"").trim();
-      const tag=String(it.tag||it.category||"").trim();
-      const sources=Array.isArray(it.sources)? it.sources.map(s=>typeof s==="string"?{title:s,url:s}:{title:s.title||s.name||"↗",url:s.url||""}).filter(s=>!!s.url) : [];
-      return {kind,title,summary,tag,sources};
-    }).filter(x=>x.title && x.summary);
-  }
-
-  // ---------- Cartes recto/verso
-  function card(item){
-    const head = el("div",{},[
-      el("h3",{text:(item.kind==="myth"?"❓ ":"⭐ ")+item.title}),
-      item.tag ? el("span",{class:"badge",text:item.tag}) : null
-    ]);
-    const face = el("div",{class:"face"},[ head, el("p",{class:"muted",text:"Survolez / touchez pour retourner"}) ]);
-    const back = el("div",{class:"back"},[
-      el("p",{text:item.summary}),
-      el("div",{class:"sources"},[
-        el("strong",{text:"Sources : "}),
-        ...item.sources.map((s,i)=> el("a",{href:s.url,target:"_blank",rel:"noopener"},[s.title || ("↗ "+(i+1))]))
-      ])
-    ]);
-    const inner = el("div",{class:"inner"},[face,back]);
-    return el("div",{class:"card flip"},[inner]);
-  }
-
-  function render(list){
-    if(!grid) return;
-    grid.innerHTML = "";
-    const data = normalize(list);
-    if(!data.length){ grid.appendChild(el("p",{class:"muted",text:"— Rien à afficher"})); return; }
-    const f=document.createDocumentFragment();
-    data.forEach(x=>f.appendChild(card(x)));
-    grid.appendChild(f);
-  }
-
-  // ---------- IA
-  async function askAI(kind="mixed", count=3){
-    setStatus("… génération IA");
-    const prompts = {
-      mixed: `Génère ${count} éléments JSON STRICT, rien d'autre que du JSON.
-Chaque item: { "kind":"fact|myth", "title":"court", "summary":"expliqué en 2-3 phrases", "tag":"mot-clé", "sources":[{"title":"...","url":"https://..."}] }.
-Thème: culture générale/éducation/sciences. Sources fiables. Réponds UNIQUEMENT avec un tableau JSON.`,
-      fact: `Génère 1 JSON STRICT pour un "fact" (structure identique).`,
-      myth: `Génère 1 JSON STRICT pour un "myth" (summary corrige le mythe).`
-    };
-    const question = prompts[kind] || prompts.mixed;
-    try{
-      const r = await fetch("/api/chat", {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ question, lang:"fr" })
-      });
-      const j = await r.json().catch(()=>({}));
-      const raw = j.answer || "";
-      const jsonText = (raw.match(/\[[\s\S]*\]|\{[\s\S]*\}/) || [raw])[0];
-      const data = JSON.parse(jsonText);
-      const items = Array.isArray(data) ? data : [data];
-      const norm = normalize(items);
-      if (!norm.length) throw 0;
-      render(norm);
-      setStatus("ok");
-      FACTS_CACHE = norm.concat(FACTS_CACHE).slice(0, 80);
-      buildCloudSample();
-    }catch(e){
-      console.warn("AI facts failed, fallback", e);
-      setStatus("IA indisponible — fallback local");
-      const three = (await loadLocalAll()).sort(()=>Math.random()-0.5).slice(0,3);
-      render(three);
-    }
-  }
-
-  // ---------- Local
-  let FACTS_CACHE = [];
-  async function loadLocalAll(){
-    try{
-      const r = await fetch("/facts-data.json", { cache:"no-store" });
-      const payload = await r.json().catch(()=>[]);
-      const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.items) ? payload.items : []);
-      const norm = normalize(arr);
-      FACTS_CACHE = FACTS_CACHE.length ? FACTS_CACHE : norm.slice();
-      return norm;
-    }catch{ return []; }
-  }
-
-  // ---------- Helpers nuage
-  function keyword(item){
-    if (item.tag) return item.tag;
-    const words = (item.title||"")
-      .replace(/[^\p{L}\p{N}\s'-]/gu," ")
-      .split(/\s+/)
-      .filter(w=>w && w.length>=4 && !STOP.has(w.toLowerCase()));
-    return (words[0] || (item.title||"").split(/\s+/)[0] || "Info").slice(0,18);
-  }
-  function shorten(s,n){ s=String(s||""); return s.length>n? s.slice(0,n-1)+"…" : s; }
-
-  // ---------- Nuage de bulles (lisible)
-  function buildCloudSample(){
-    if(!cloud) return;
-    cloud.innerHTML = "";
-    const src = FACTS_CACHE.length ? FACTS_CACHE : [];
-    const pick = src.slice().sort(()=>Math.random()-0.5).slice(0, 16); // 16 bulles
-
-    const w = cloud.clientWidth, h = cloud.clientHeight;
-    pick.forEach((it)=>{
-      const size = Math.floor(90 + Math.random()*60);     // 90–150px
-      const fs = Math.max(12, Math.min(18, Math.round(size*0.16)));
-      const x = Math.max(6, Math.floor(Math.random()*(w - size - 6)));
-      const y = Math.max(6, Math.floor(Math.random()*(h - size - 6)));
-      const dx = (Math.random()<.5?-1:1)*Math.floor(12 + Math.random()*40);
-      const dy = (Math.random()<.5?-1:1)*Math.floor(10 + Math.random()*28);
-      const dur = (12 + Math.random()*10).toFixed(1)+"s";
-      const label = (it.kind==="myth"?"❓ ":"⭐ ") + keyword(it);
-
-      const b = el("div",{class:"bubble",
-        style:`left:${x}px;top:${y}px;width:${size}px;height:${size}px;--dx:${dx}px;--dy:${dy}px;animation-duration:${dur};--fs:${fs}px`},[
-        el("div",{class:"title",text: label }),
-        el("div",{class:"details"},[
-          el("div",{text: shorten(it.title, 120)}),
-          el("div",{style:"margin:.35rem 0", text: it.summary }),
-          el("div",{class:"sources"},[
-            el("strong",{text:"Sources : "}),
-            ...it.sources.slice(0,2).map((s,i)=> el("a",{href:s.url,target:"_blank",rel:"noopener"},[s.title || ("↗ "+(i+1))]))
-          ])
-        ])
-      ]);
-
-      // Survol : premier plan (pause gérée en CSS)
-      b.addEventListener("mouseenter", ()=> b.style.zIndex = 30);
-      b.addEventListener("mouseleave", ()=> b.style.zIndex = "");
-
-      cloud.appendChild(b);
+  // Chargement des données
+  fetch(FURL)
+    .then(r=> r.ok ? r.json() : FALLBACK)
+    .catch(()=>FALLBACK)
+    .then(json=>{
+      // json peut être { items: [...] } ou un tableau direct
+      DATA = Array.isArray(json) ? json : (json.items || FALLBACK);
+      initCloud();
     });
+
+  // ---------- Nuage ----------
+  const bubbles = [];
+  let running = true;
+  let filter = "all";
+
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+
+  function colorForType(t){
+    if (t==="fact") return "#22c55e";
+    if (t==="myth") return "#ef4444";
+    return "#f59e0b";
   }
 
-  // ---------- Bootstrap
-  document.addEventListener("DOMContentLoaded", async ()=>{
-    const all = await loadLocalAll();
-    render(all.sort(()=>Math.random()-0.5).slice(0,3));
-    buildCloudSample();
+  function labelForCategory(s){
+    // raccourci visuel : un mot (ou 2) max
+    const w = (s||"").split(/\s+/);
+    return (w[0]||"").slice(0,16) + (w[1] ? " " + w[1].slice(0,12) : "");
+  }
 
-    $("#btnRandomBatch")?.addEventListener("click", ()=> askAI("mixed",3));
-    $("#btnOneFact")?.addEventListener("click", ()=> askAI("fact",1));
-    $("#btnOneMyth")?.addEventListener("click", ()=> askAI("myth",1));
-    $("#cloudShuffle")?.addEventListener("click", buildCloudSample);
+  function createBubble(item, i){
+    const el = document.createElement("div");
+    el.className = "bubble";
+    const r = Math.max(56, Math.min(110, 70 + (item.title?.length||20)/4));
+    el.style.width = el.style.height = r + "px";
+    el.style.left = rand(10, cloud.clientWidth - r - 10) + "px";
+    el.style.top  = rand(10, cloud.clientHeight - r - 10) + "px";
 
-    let raf=null;
-    window.addEventListener("resize", ()=>{ cancelAnimationFrame(raf); raf=requestAnimationFrame(buildCloudSample); });
+    // mini-emoji selon type
+    const em = document.createElement("div");
+    em.className = "emoji";
+    em.textContent = item.type==="fact" ? "⭐" : (item.type==="myth" ? "❓" : "💡");
+    el.appendChild(em);
+
+    const lab = document.createElement("div");
+    lab.className = "label";
+    lab.textContent = labelForCategory(item.category || (item.type==="fact"?"Fait":"Mythe"));
+    el.appendChild(lab);
+
+    cloud.appendChild(el);
+
+    const bub = {
+      el, item,
+      r,
+      x: parseFloat(el.style.left),
+      y: parseFloat(el.style.top),
+      vx: rand(-0.4,0.4) || 0.3,
+      vy: rand(-0.35,0.35) || -0.25,
+      paused:false
+    };
+    // Interactions
+    const open = ()=> openPanel(bub);
+    el.addEventListener("mouseenter", ()=>{ bub.paused = true; el.classList.add("paused"); open(); });
+    el.addEventListener("mouseleave", ()=>{ bub.paused = false; el.classList.remove("paused"); /* on ne ferme pas le panneau */ });
+    el.addEventListener("click", open);
+
+    bubbles.push(bub);
+  }
+
+  function applyFilter(){
+    for (const b of bubbles){
+      const t = b.item.type || "unknown";
+      const show = (filter==="all") || (filter==="fact" && t==="fact") || (filter==="myth" && t==="myth");
+      b.el.style.display = show ? "" : "none";
+    }
+  }
+
+  function initCloud(){
+    cloud.style.position = "relative";
+    cloud.style.userSelect = "none";
+
+    // créer les bulles
+    bubbles.splice(0,bubbles.length);
+    cloud.querySelectorAll(".bubble").forEach(n=>n.remove());
+
+    for (let i=0;i<DATA.length;i++){
+      // on ne montre qu'un résumé sur la bulle → la fiche longue est dans le panneau
+      createBubble(DATA[i], i);
+    }
+    applyFilter();
+    loop();
+  }
+
+  function loop(){
+    const W = cloud.clientWidth;
+    const H = cloud.clientHeight;
+    if (running){
+      for (const b of bubbles){
+        if (b.paused || b.el.style.display==="none") continue;
+        b.x += b.vx;
+        b.y += b.vy;
+        // rebond bord
+        if (b.x <= 6 || b.x + b.r >= W-6) b.vx *= -1;
+        if (b.y <= 6 || b.y + b.r >= H-6) b.vy *= -1;
+        b.el.style.left = b.x + "px";
+        b.el.style.top  = b.y + "px";
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- Panneau détaillé ----------
+  function openPanel(b){
+    const it = b.item;
+    panel.style.display = "block";
+    fpTitle.textContent = it.title || "(sans titre)";
+    fpBody.textContent  = it.body || "";
+    // meta badges
+    fpMeta.innerHTML = "";
+    const cat = document.createElement("span");
+    cat.className = "badge";
+    cat.textContent = it.category || "Catégorie";
+    fpMeta.appendChild(cat);
+    const kind = document.createElement("span");
+    kind.className = "badge " + (it.type==="fact" ? "t-true" : it.type==="myth" ? "t-myth" : "t-unknown");
+    kind.textContent = it.type==="fact" ? "Fait" : it.type==="myth" ? "Mythe" : "Indéterminé";
+    fpMeta.appendChild(kind);
+
+    // sources
+    fpSrc.innerHTML = "";
+    if (Array.isArray(it.sources) && it.sources.length){
+      const h = document.createElement("div");
+      h.innerHTML = "<strong>Sources :</strong>";
+      fpSrc.appendChild(h);
+      const ul = document.createElement("ul");
+      ul.style.margin = ".3rem 0 0 .9rem";
+      for (const s of it.sources){
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = s; a.target="_blank"; a.rel="noopener";
+        a.textContent = s.replace(/^https?:\/\//,"").slice(0,70);
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+      fpSrc.appendChild(ul);
+    }
+
+    // lien "ouvrir"
+    if (fpOpen) fpOpen.href = "/fun-facts";
+  }
+  fpClose.addEventListener("click", ()=> panel.style.display="none");
+
+  // ---------- UI ----------
+  btnShuffle?.addEventListener("click", ()=>{
+    const W = cloud.clientWidth, H = cloud.clientHeight;
+    bubbles.forEach(b=>{
+      b.x = rand(10, W - b.r - 10);
+      b.y = rand(10, H - b.r - 10);
+      b.vx = rand(-0.5,0.5)||0.35;
+      b.vy = rand(-0.45,0.45)||-0.25;
+    });
   });
+
+  seg?.addEventListener("click", (e)=>{
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    seg.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    filter = btn.dataset.filter || "all";
+    applyFilter();
+  });
+
+  // pause quand l’onglet est masqué
+  document.addEventListener("visibilitychange", ()=> (running = document.visibilityState==="visible"));
 })();
