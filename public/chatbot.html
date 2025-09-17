@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chatbot IA — Nicolas Tuor</title>
 
-  <!-- Favicon inline -->
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y="50%" x="50%" dominant-baseline="middle" text-anchor="middle" font-size="52">🤖</text></svg>'>
   <link rel="stylesheet" href="/style.css">
 
@@ -16,27 +15,23 @@
     .me  { border-color: color-mix(in oklab, var(--brand), transparent 70%) }
     .row { display:flex; gap:10px; margin-top:10px }
     .row input { flex:1; padding:12px; border-radius:10px; border:1px solid color-mix(in oklab,var(--ink),transparent 80%); background: var(--bg-soft); color: var(--ink) }
-    .muted { opacity:.85 }
     .tiny  { font-size:.85rem; opacity:.85 }
     .status-dot{ display:inline-block; width:8px; height:8px; border-radius:999px; margin-right:6px; translate:0 -1px }
     .ok { background:#16a34a }
   </style>
 
-  <!-- =================== CONTEXTE HARDCODÉ (CV + PROFIL) =================== -->
+  <!-- =================== CONTEXTE (CV hardcodé + PROFILE via /profile.json) =================== -->
   <script>
-  // ——— CV synthétique (extrait) ———
+  // ——— CV (extrait hardcodé, sûr et stable) ———
   const CV_HARDCODED = {
-    identite: {
-      nom: "Nicolas Tuor",
-      localisation: "Fribourg (CH)"
-    },
+    identite: { nom: "Nicolas Tuor", localisation: "Fribourg (CH)" },
     diplomes: [
-      { titre: "Master en didactique disciplinaire (orientation informatique)", etab: "HEP Lausanne", periodes: "2020–2024",
-        focus: ["Python", "HTML/CSS", "C++", "enseignement explicite du débogage (travail de master)"] },
-      { titre: "Bachelor enseignement préscolaire & primaire", etab: "HEP Fribourg", periodes: "2015–2019",
-        focus: ["didactique", "philosophie pour enfants (travail de bachelor)"] }
+      { titre:"Master en didactique disciplinaire (orientation informatique)", etab:"HEP Lausanne", periodes:"2020–2024",
+        focus:["Python","HTML/CSS","C++","enseignement explicite du débogage (mémoire)"] },
+      { titre:"Bachelor enseignement préscolaire & primaire", etab:"HEP Fribourg", periodes:"2015–2019",
+        focus:["didactique","philosophie pour enfants (travail de bachelor)"] }
     ],
-    competences: [
+    competences:[
       "Méthodologie de recherche et analyse de données",
       "Pédagogie, didactique et formation",
       "Maîtrise des outils numériques",
@@ -44,20 +39,20 @@
       "Travail d’équipe interdisciplinaire",
       "Adaptabilité, initiative, résolution de problèmes"
     ],
-    tech: ["Python","HTML/CSS/JS","C++","Moodle","Nextcloud","Outils IA (création d’images/vidéos, Copilot, Unity, n8n)"],
-    experience: [
+    tech:["Python","HTML/CSS/JS","C++","Moodle","Nextcloud","Outils IA (images/vidéos), Copilot, Unity, n8n"],
+    experience:[
       { periode:"2019–…", role:"Enseignant primaire (remplacements)", contexte:"plusieurs degrés / FR" },
       { periode:"2020–2021", role:"Enseignant titulaire 5H", contexte:"École de Corminboeuf" },
       { periode:"2022–2023", role:"Stage de master (recherche/formation)", contexte:"HEP Fribourg (CRE/ATE)" },
       { periode:"2024", role:"Formateur (journée)", contexte:"HEP Fribourg — éducation numérique & IA responsable" },
       { periode:"2017–2023", role:"Divers (service civil, soutien scolaire, archiviste, réception, sécurité)", contexte:"FR/NE" }
     ],
-    langues: [
+    langues:[
       { langue:"Français", niveau:"langue maternelle" },
-      { langue:"Anglais", niveau:"C2" },
+      { langue:"Anglais",  niveau:"C2" },
       { langue:"Allemand", niveau:"B2/C1" }
     ],
-    interets: [
+    interets:[
       "Vulgarisation scientifique, pensée critique",
       "Astronomie / Astrophotographie",
       "Aviron (compétition 2005–2011)",
@@ -68,46 +63,74 @@
     ]
   };
 
-  // ——— PROFIL / TONALITÉ (nuances) ———
-  // Tu peux enrichir librement ce bloc avec d’autres infos de “profile.json”.
-  const PROFILE_GUIDE = {
+  // ——— Defaults profil (si /profile.json absent) ———
+  let PROFILE_GUIDE = {
     resume: "Enseignant primaire suisse, orienté didactique de l’informatique et usages responsables de l’IA.",
-    valeurs: ["bienveillance pragmatique","communication claire","suivi rigoureux","curiosité","apprentissage rapide"],
+    valeurs: ["bienveillance pragmatique","communication claire","rigueur","curiosité","apprentissage rapide"],
+    nuances: {
+      general: "S’il manque une info précise, l’indiquer simplement.",
+      langues: "Il apprend vite et se met à niveau rapidement si nécessaire.",
+      technologies: "Il apprend vite et s’auto-forme si besoin.",
+      management: "Capable de structurer, coordonner et documenter ; transparent sur ce qu’il ne sait pas encore."
+    },
     regles: [
-      "Toujours rester factuel et sourcer dans le CV quand c’est pertinent.",
-      "Ne pas inventer de diplômes ou responsabilités non listés.",
-      "S’il manque une info, le dire simplement.",
-      "Mentionner que Nicolas apprend vite et se met à niveau rapidement quand la question touche aux langues, technologies ou nouvelles exigences."
+      "Toujours rester factuel et s’appuyer sur le CV quand c’est pertinent.",
+      "Ne pas inventer d’éléments absents du CV.",
+      "Si l’information n’est pas disponible, le dire simplement.",
+      "Pour langues/technologies/nouvelles exigences : rappeler qu’il apprend vite et se met à niveau rapidement."
     ]
   };
 
-  // ——— Sélection contextuelle : on compose un extrait court pertinent pour la question ———
+  // ——— Chargement optionnel de /profile.json (si présent) ———
+  const STATE = { profile:null };
+  async function loadProfileJson(){
+    try{
+      const r = await fetch('/profile.json', {cache:'no-store'});
+      if (!r.ok) return;
+      const data = await r.json();
+      // Autorise soit {profileGuide:{...}} soit un gros objet libre (lettres, nuances, etc.)
+      const incoming = data.profileGuide ? data.profileGuide : data;
+      // Fusion simple (shallow) — si tu veux je peux pousser une deep-merge.
+      PROFILE_GUIDE = { ...PROFILE_GUIDE, ...incoming,
+        nuances: { ...(PROFILE_GUIDE.nuances||{}), ...(incoming.nuances||{}) }
+      };
+      STATE.profile = data; // on garde tout le JSON brut pour piocher dedans si besoin
+    }catch(e){ /* ignore: fallback sur defaults */ }
+  }
+  document.addEventListener('DOMContentLoaded', loadProfileJson);
+
+  // ——— Helpers ———
+  const J = (x)=>Array.isArray(x)?x: (x? [x] : []);
+  const join = (a,sep=", ")=>J(a).filter(Boolean).join(sep);
+  const cut = (s,n)=> (s && s.length>n) ? (s.slice(0,n-1)+"…") : (s||"");
+
+  // ——— Contexte ciblé en fonction de la question ———
   function pickContextFor(question){
     const q = (question||"").toLowerCase();
     const ctx = [];
 
-    // Bloc identité + pitch
-    ctx.push(`Profil: ${CV_HARDCODED.identite.nom}, ${CV_HARDCODÉD?.identite?.localisation || CV_HARDCODED.identite.localisation}. ${PROFILE_GUIDE.resume}`);
+    ctx.push(`Profil: ${CV_HARDCODED.identite.nom}, ${CV_HARDCODED.identite.localisation}. ${PROFILE_GUIDE.resume}`);
 
-    // Filtres grossiers par mots-clés
     const wantsLang   = /langue|language|spra|english|allemand|anglais|fran|niveau/.test(q);
     const wantsHobby  = /hobb|loisir|int[ée]r[ée]t|passion|centre/.test(q);
     const wantsTech   = /tech|python|html|css|c\+\+|outil|num[ée]rique|ia|ai|unity|copilot|n8n|moodle|nextcloud/.test(q);
     const wantsExp    = /exp[ée]rience|poste|mission|remplacement|enseign|stage|projet/.test(q);
     const wantsComp   = /comp[ée]tence|skill/.test(q);
     const wantsForm   = /dipl[oô]me|formation|master|bachelor|[ée]tude/.test(q);
+    const wantsMgmt   = /manager|encadrer|diriger|chef|lead|équipe|team/.test(q);
 
     if (wantsLang){
       const langs = CV_HARDCODED.langues.map(l=>`${l.langue} (${l.niveau})`).join(", ");
       ctx.push(`Langues: ${langs}.`);
-      ctx.push("Nuance: il aime apprendre et se met à niveau rapidement si nécessaire.");
+      ctx.push(`Nuance: ${PROFILE_GUIDE.nuances.langues}`);
     }
     if (wantsHobby){
-      ctx.push("Centres d’intérêt: " + CV_HARDCODED.interets.join("; ") + ".");
+      ctx.push("Centres d’intérêt: " + join(CV_HARDCODED.interets, "; ") + ".");
     }
     if (wantsTech || wantsComp){
-      ctx.push("Compétences clés: " + CV_HARDCODED.competences.join("; ") + ".");
-      ctx.push("Technologies/outils: " + CV_HARDCODED.tech.join(", ") + ".");
+      ctx.push("Compétences clés: " + join(CV_HARDCODED.competences, "; ") + ".");
+      ctx.push("Technologies/outils: " + join(CV_HARDCODED.tech) + ".");
+      ctx.push(`Nuance: ${PROFILE_GUIDE.nuances.technologies}`);
     }
     if (wantsExp){
       ctx.push("Expérience (sélection): " + CV_HARDCODED.experience.map(e=>`${e.periode}: ${e.role}`).join(" | ") + ".");
@@ -115,8 +138,19 @@
     if (wantsForm){
       ctx.push("Formations: " + CV_HARDCODED.diplomes.map(d=>`${d.titre} (${d.etab}, ${d.periodes})`).join(" | ") + ".");
     }
+    if (wantsMgmt){
+      ctx.push(`Management/équipe — nuance: ${PROFILE_GUIDE.nuances.management}`);
+    }
 
-    // Par défaut, donner un petit socle générique
+    // Ajout optionnel d’extraits narratifs depuis profile.json (si tu en mets)
+    if (STATE.profile?.narrative) {
+      ctx.push("Narratif: " + cut(STATE.profile.narrative, 800));
+    }
+    if (STATE.profile?.achievements) {
+      ctx.push("Réalisations: " + cut(join(STATE.profile.achievements, " | "), 800));
+    }
+
+    // Socle par défaut si contexte trop court
     if (ctx.length <= 2){
       ctx.push("Résumé compétences: " + CV_HARDCODED.competences.slice(0,4).join("; ") + " …");
     }
@@ -124,27 +158,27 @@
     // Règles de ton
     ctx.push("Directives de style: " + PROFILE_GUIDE.regles.join(" | "));
 
-    // Compactage (éviter un pavé)
     let joined = ctx.join("\n");
-    if (joined.length > 3600) joined = joined.slice(0, 3600) + " …";
+    if (joined.length > 3600) joined = joined.slice(0,3600) + " …";
     return joined;
   }
 
-  // ——— Construction du prompt envoyé à l’API ———
+  // ——— Construction du prompt ———
   async function prepareQuestion(question){
     const ctx = pickContextFor(question);
     return [
-      "Contexte—CV (données fiables) et profil:", ctx,
+      "Contexte—CV et profil (fiables):", ctx,
       "---",
-      "Consigne:", 
-      "• Réponds de manière concise et précise en t’appuyant sur le contexte ci-dessus quand il est pertinent.",
-      "• Si le CV ne comporte pas l’info, dis-le simplement (sans inventer),",
-      "  et si c’est lié aux langues/tech/exigences, ajoute qu’il apprend vite et se met à niveau rapidement.",
+      "Consignes:",
+      "• Réponds en t’appuyant sur le contexte ci-dessus quand il est pertinent.",
+      "• Si l’info n’est pas disponible, dis-le simplement (sans inventer).",
+      "• Pour langues/technologies/exigences: rappeler qu’il apprend vite et se met à niveau rapidement.",
+      "• Interpréter légèrement au-delà du texte quand c’est raisonnable, sans exagérer.",
       `Question: ${question}`
     ].join("\n");
   }
   </script>
-  <!-- =================== /CONTEXTE HARDCODÉ =================== -->
+  <!-- =================== /CONTEXTE =================== -->
 </head>
 
 <body>
@@ -157,7 +191,7 @@
     <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
     <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
     <span style="flex:1"></span>
-    <span class="tiny"><span class="status-dot ok"></span>Contexte CV intégré</span>
+    <span class="tiny"><span class="status-dot ok"></span>Contexte chargé</span>
     <a href="/chatbot.html" class="btn">FR</a>
     <a href="/chatbot-en.html" class="btn ghost">EN</a>
     <a href="/chatbot-de.html" class="btn ghost">DE</a>
@@ -166,13 +200,12 @@
 
 <main class="section container chat">
   <h1 class="title">🤖 Chatbot IA</h1>
-  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot s’appuie en continu sur mon CV (intégré) et mon profil.</p>
+  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot utilise un extrait intégré de mon CV et charge mon profil si disponible.</p>
 
   <div id="chat" class="chat-box" aria-live="polite"></div>
 
   <div class="row">
-    <input id="q" type="text"
-           placeholder="Exemple : « Quelles compétences techniques ressortent dans le CV ? »" />
+    <input id="q" type="text" placeholder="Exemple : « Quelles langues parle-t-il ? »" />
     <button id="send" class="btn primary">Envoyer</button>
   </div>
 </main>
@@ -195,7 +228,7 @@ Exemples :
 • Quelles compétences techniques ressortent ?
 • Parle-moi d’une expérience marquante.
 • Quelles langues parle-t-il ? (il apprend vite et se met à niveau si besoin)
-(Le bot s’appuie automatiquement sur un extrait intégré du CV.)`
+(Le bot s’appuie automatiquement sur un extrait intégré du CV et, si présent, sur /profile.json.)`
   );
 
   async function ask(){
@@ -207,15 +240,11 @@ Exemples :
     add("…");
 
     try {
-      const withCtx = await prepareQuestion(raw);   // ⬅️ injection systématique du contexte
-
+      const withCtx = await prepareQuestion(raw);
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: withCtx,
-          lang: 'fr'
-        })
+        body: JSON.stringify({ question: withCtx, lang: 'fr' })
       });
       const j = await r.json().catch(()=>({}));
       chat.lastChild.textContent = j && j.answer ? j.answer : "D’accord. Pouvez-vous préciser ?";
