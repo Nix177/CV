@@ -1,6 +1,7 @@
-/* Fun Facts — Cartes + Nuage (debug + fallback garanti)
+/* Fun Facts — Cartes + Nuage (debug + fallback garanti + sources robustes)
    - Log détaillé (API / JSON / seed)
    - Affiche toujours quelque chose (seed embarqué si besoin)
+   - Accepte sources en string ou object ({url|href|link, label|title|name})
    - Cartes (haut) + Nuage (bas) + panneau latéral lisible
 */
 (function(){
@@ -11,9 +12,53 @@
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const rand = (a,b)=> Math.random()*(b-a)+a;
 
-  const log = (...args)=> console.log("%c[fun-facts]", "color:#08c", ...args);
+  const log  = (...args)=> console.log("%c[fun-facts]", "color:#08c", ...args);
   const warn = (...args)=> console.warn("%c[fun-facts]", "color:#e80", ...args);
-  const err = (...args)=> console.error("%c[fun-facts]", "color:#f44", ...args);
+  const err  = (...args)=> console.error("%c[fun-facts]", "color:#f44", ...args);
+
+  // --- URL helpers ---
+  function toUrlString(x){
+    try { return String(x || "").trim(); } catch { return ""; }
+  }
+  function niceLabelFromUrl(u){
+    if (!u) return "";
+    return u.replace(/^https?:\/\//, "").slice(0, 95);
+  }
+
+  // Normalise une entrée de source quelconque vers { href, label }
+  function normalizeOneSource(s){
+    if (!s && s !== 0) return null;
+
+    if (typeof s === "string"){
+      const href = toUrlString(s);
+      if (!href) return null;
+      return { href, label: niceLabelFromUrl(href) };
+    }
+
+    // objet
+    if (typeof s === "object"){
+      const href = toUrlString(s.url || s.href || s.link || "");
+      if (!href) return null;
+      const label = toUrlString(s.label || s.title || s.name || "") || niceLabelFromUrl(href);
+      return { href, label };
+    }
+
+    // nombre/bool -> string
+    const href = toUrlString(s);
+    if (!href) return null;
+    return { href, label: niceLabelFromUrl(href) };
+  }
+
+  function normalizeSources(arr){
+    if (!arr) return [];
+    if (!Array.isArray(arr)) arr = [arr];
+    const out = [];
+    for (const s of arr){
+      const v = normalizeOneSource(s);
+      if (v && v.href) out.push(v);
+    }
+    return out;
+  }
 
   // ---------- Seed embarqué (toujours dispo) ----------
   const SEED = [
@@ -45,7 +90,7 @@
 
   // ---------- Config requêtes ----------
   const API = "/api/facts";
-  const LOCAL_JSON = "/facts-data.json";  // mets bien ce fichier dans /public
+  const LOCAL_JSON = "/facts-data.json";  // place-le bien dans /public
   const lang = (document.documentElement.lang || "fr").slice(0,2);
 
   function normalizeList(list){
@@ -55,14 +100,14 @@
       const category = it.category || "Général";
       const title = it.title || (type==="fact"?"Fait":"Mythe");
       const body  = it.body  || "";
-      const sources = Array.isArray(it.sources) ? it.sources : [];
+      const sources = normalizeSources(it.sources);
       return { id, type, category, title, body, sources };
     });
   }
 
   async function tryAPI(params){
     try{
-      const qs = new URLSearchParams(params||{}).toString();
+      const qs  = new URLSearchParams(params||{}).toString();
       const url = `${API}?${qs}`;
       log("Fetch API:", url);
       const r = await fetch(url, { headers:{ "x-ff": "1" }});
@@ -102,7 +147,7 @@
     if (loc.length) return loc;
 
     log("→ Seed embarqué utilisé");
-    return SEED.slice();
+    return normalizeList(SEED);
   }
 
   // ---------- DOM (auto-crée si manquant) ----------
@@ -199,6 +244,31 @@
     target.innerHTML = `<div style="opacity:.7;padding:1rem 0">${msg}</div>`;
   }
 
+  function renderSources(container, sources){
+    if (!container) return;
+    container.innerHTML = "";
+    if (!Array.isArray(sources) || !sources.length) return;
+
+    const title = document.createElement("div");
+    title.innerHTML = "<strong>Sources :</strong>";
+    container.appendChild(title);
+
+    const ul = document.createElement("ul");
+    ul.style.margin = ".3rem 0 0 .9rem";
+
+    for (const s of sources){
+      // s = {href, label}
+      if (!s || !s.href) continue;
+      const li = document.createElement("li");
+      const a  = document.createElement("a");
+      a.href = s.href; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = s.label || niceLabelFromUrl(s.href);
+      li.appendChild(a);
+      ul.appendChild(li);
+    }
+    container.appendChild(ul);
+  }
+
   function drawCards(list){
     CARDS = list.slice();
     if (!cardsWrap) return;
@@ -241,18 +311,7 @@
       if (Array.isArray(item.sources) && item.sources.length){
         const s = document.createElement("div");
         s.className="sources";
-        const ul = document.createElement("ul");
-        ul.style.margin = ".3rem 0 0 .9rem";
-        item.sources.forEach(url=>{
-          const li = document.createElement("li");
-          const a = document.createElement("a");
-          a.href = url; a.target="_blank"; a.rel="noopener";
-          a.textContent = url.replace(/^https?:\/\//,"").slice(0,95);
-          li.appendChild(a); ul.appendChild(li);
-        });
-        const title = document.createElement("div");
-        title.innerHTML = "<strong>Sources :</strong>";
-        s.appendChild(title); s.appendChild(ul);
+        renderSources(s, item.sources);
         card.appendChild(s);
       }
 
@@ -324,20 +383,7 @@
 
     if (fpSources){
       fpSources.innerHTML = "";
-      if (Array.isArray(it.sources) && it.sources.length){
-        const h = document.createElement("div");
-        h.innerHTML = "<strong>Sources :</strong>";
-        fpSources.appendChild(h);
-        const ul = document.createElement("ul");
-        ul.style.margin = ".3rem 0 0 .9rem";
-        for (const s of it.sources){
-          const li = document.createElement("li");
-          const a = document.createElement("a"); a.href=s; a.target="_blank"; a.rel="noopener";
-          a.textContent = s.replace(/^https?:\/\//,"").slice(0,90);
-          li.appendChild(a); ul.appendChild(li);
-        }
-        fpSources.appendChild(ul);
-      }
+      renderSources(fpSources, it.sources);
     }
   }
 
@@ -399,12 +445,15 @@
   async function loadInitialCloud(){
     const list = await fetchFacts({ lang, n: 20, seen: Array.from(seenCloud).join(",") });
     log("Nuage reçu:", list.length);
-    const subset = (list.length ? list : SEED).slice(0,18);
+    const subset = (list.length ? list : normalizeList(SEED)).slice(0,18);
     subset.forEach(x=> seenCloud.add(x.id));
     CLOUD = subset;
-    cloud.innerHTML = cloud.innerHTML; // garde le panel
+    cloud.innerHTML = cloud.innerHTML; // conserve le panel
     if (!subset.length){
-      drawEmpty(cloud, "Aucun élément pour le nuage.");
+      const empty = document.createElement("div");
+      empty.style.opacity = ".7"; empty.style.padding = "1rem 0";
+      empty.textContent = "Aucun élément pour le nuage.";
+      cloud.appendChild(empty);
       return;
     }
     subset.forEach(createBubble);
