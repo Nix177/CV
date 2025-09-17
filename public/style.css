@@ -406,3 +406,10 @@ a:focus-visible {
   outline-offset: 2px;
   border-color: var(--accent);
 }
+/* Chat input emphasis */
+.chat .row input#q {
+  outline: 2px solid color-mix(in oklab, var(--brand), transparent 70%);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand), transparent 85%);
+}
+.chat .row input#q::placeholder { opacity: .8; }
+
