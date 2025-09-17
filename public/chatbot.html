@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chatbot IA — Nicolas Tuor</title>
 
-  <!-- Favicon inline pour éviter le 404 -->
+  <!-- Favicon inline -->
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y="50%" x="50%" dominant-baseline="middle" text-anchor="middle" font-size="52">🤖</text></svg>'>
-
   <link rel="stylesheet" href="/style.css">
 
   <style>
@@ -18,146 +17,137 @@
     .row { display:flex; gap:10px; margin-top:10px }
     .row input { flex:1; padding:12px; border-radius:10px; border:1px solid color-mix(in oklab,var(--ink),transparent 80%); background: var(--bg-soft); color: var(--ink) }
     .muted { opacity:.85 }
-    .tiny  { font-size:.85rem; opacity:.8 }
+    .tiny  { font-size:.85rem; opacity:.85 }
     .status-dot{ display:inline-block; width:8px; height:8px; border-radius:999px; margin-right:6px; translate:0 -1px }
     .ok { background:#16a34a }
-    .ko { background:#ef4444 }
   </style>
 
-  <!-- PDF.js pour lire /CV_Nicolas_Tuor.pdf côté navigateur -->
-  <script src="https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.min.js"></script>
-
-  <!-- ======== Injection CV systématique (robuste & compacte) ======== -->
+  <!-- =================== CONTEXTE HARDCODÉ (CV + PROFIL) =================== -->
   <script>
-  (function () {
-    "use strict";
+  // ——— CV synthétique (extrait) ———
+  const CV_HARDCODED = {
+    identite: {
+      nom: "Nicolas Tuor",
+      localisation: "Fribourg (CH)"
+    },
+    diplomes: [
+      { titre: "Master en didactique disciplinaire (orientation informatique)", etab: "HEP Lausanne", periodes: "2020–2024",
+        focus: ["Python", "HTML/CSS", "C++", "enseignement explicite du débogage (travail de master)"] },
+      { titre: "Bachelor enseignement préscolaire & primaire", etab: "HEP Fribourg", periodes: "2015–2019",
+        focus: ["didactique", "philosophie pour enfants (travail de bachelor)"] }
+    ],
+    competences: [
+      "Méthodologie de recherche et analyse de données",
+      "Pédagogie, didactique et formation",
+      "Maîtrise des outils numériques",
+      "Communication scientifique et vulgarisation",
+      "Travail d’équipe interdisciplinaire",
+      "Adaptabilité, initiative, résolution de problèmes"
+    ],
+    tech: ["Python","HTML/CSS/JS","C++","Moodle","Nextcloud","Outils IA (création d’images/vidéos, Copilot, Unity, n8n)"],
+    experience: [
+      { periode:"2019–…", role:"Enseignant primaire (remplacements)", contexte:"plusieurs degrés / FR" },
+      { periode:"2020–2021", role:"Enseignant titulaire 5H", contexte:"École de Corminboeuf" },
+      { periode:"2022–2023", role:"Stage de master (recherche/formation)", contexte:"HEP Fribourg (CRE/ATE)" },
+      { periode:"2024", role:"Formateur (journée)", contexte:"HEP Fribourg — éducation numérique & IA responsable" },
+      { periode:"2017–2023", role:"Divers (service civil, soutien scolaire, archiviste, réception, sécurité)", contexte:"FR/NE" }
+    ],
+    langues: [
+      { langue:"Français", niveau:"langue maternelle" },
+      { langue:"Anglais", niveau:"C2" },
+      { langue:"Allemand", niveau:"B2/C1" }
+    ],
+    interets: [
+      "Vulgarisation scientifique, pensée critique",
+      "Astronomie / Astrophotographie",
+      "Aviron (compétition 2005–2011)",
+      "Théâtre d’improvisation",
+      "Apprentissage en continu",
+      "Technologies & IA (création, jeux vidéo, automatisation n8n)",
+      "Arts martiaux"
+    ]
+  };
 
-    const PDF_URL = "/CV_Nicolas_Tuor.pdf";          // ⚠️ nom exact dans /public
-    const PAGE_CHAR_LIMIT = 16000;                    // max caractères lus du PDF
-    const CONTEXT_MAX_CHARS = 3600;                   // max extrait injecté / requête
-    const CACHE_KEY = "cv_ctx_v3_fr";                 // cache session
+  // ——— PROFIL / TONALITÉ (nuances) ———
+  // Tu peux enrichir librement ce bloc avec d’autres infos de “profile.json”.
+  const PROFILE_GUIDE = {
+    resume: "Enseignant primaire suisse, orienté didactique de l’informatique et usages responsables de l’IA.",
+    valeurs: ["bienveillance pragmatique","communication claire","suivi rigoureux","curiosité","apprentissage rapide"],
+    regles: [
+      "Toujours rester factuel et sourcer dans le CV quand c’est pertinent.",
+      "Ne pas inventer de diplômes ou responsabilités non listés.",
+      "S’il manque une info, le dire simplement.",
+      "Mentionner que Nicolas apprend vite et se met à niveau rapidement quand la question touche aux langues, technologies ou nouvelles exigences."
+    ]
+  };
 
-    // Elements status
-    let cvStatusEl = null;
-    function setCvStatus(ok){
-      if (!cvStatusEl) cvStatusEl = document.getElementById("cvStatus");
-      if (!cvStatusEl) return;
-      cvStatusEl.innerHTML = `<span class="status-dot ${ok?'ok':'ko'}"></span>${ok?'CV : chargé':'CV : indisponible'}`;
+  // ——— Sélection contextuelle : on compose un extrait court pertinent pour la question ———
+  function pickContextFor(question){
+    const q = (question||"").toLowerCase();
+    const ctx = [];
+
+    // Bloc identité + pitch
+    ctx.push(`Profil: ${CV_HARDCODED.identite.nom}, ${CV_HARDCODÉD?.identite?.localisation || CV_HARDCODED.identite.localisation}. ${PROFILE_GUIDE.resume}`);
+
+    // Filtres grossiers par mots-clés
+    const wantsLang   = /langue|language|spra|english|allemand|anglais|fran|niveau/.test(q);
+    const wantsHobby  = /hobb|loisir|int[ée]r[ée]t|passion|centre/.test(q);
+    const wantsTech   = /tech|python|html|css|c\+\+|outil|num[ée]rique|ia|ai|unity|copilot|n8n|moodle|nextcloud/.test(q);
+    const wantsExp    = /exp[ée]rience|poste|mission|remplacement|enseign|stage|projet/.test(q);
+    const wantsComp   = /comp[ée]tence|skill/.test(q);
+    const wantsForm   = /dipl[oô]me|formation|master|bachelor|[ée]tude/.test(q);
+
+    if (wantsLang){
+      const langs = CV_HARDCODED.langues.map(l=>`${l.langue} (${l.niveau})`).join(", ");
+      ctx.push(`Langues: ${langs}.`);
+      ctx.push("Nuance: il aime apprendre et se met à niveau rapidement si nécessaire.");
+    }
+    if (wantsHobby){
+      ctx.push("Centres d’intérêt: " + CV_HARDCODED.interets.join("; ") + ".");
+    }
+    if (wantsTech || wantsComp){
+      ctx.push("Compétences clés: " + CV_HARDCODED.competences.join("; ") + ".");
+      ctx.push("Technologies/outils: " + CV_HARDCODED.tech.join(", ") + ".");
+    }
+    if (wantsExp){
+      ctx.push("Expérience (sélection): " + CV_HARDCODED.experience.map(e=>`${e.periode}: ${e.role}`).join(" | ") + ".");
+    }
+    if (wantsForm){
+      ctx.push("Formations: " + CV_HARDCODED.diplomes.map(d=>`${d.titre} (${d.etab}, ${d.periodes})`).join(" | ") + ".");
     }
 
-    // Utilitaires
-    function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
-    function sliceLines(s, n){
-      // coupe proprement sur ~n caractères, en respectant les puces/retours
-      if (!s) return "";
-      if (s.length <= n) return s;
-      const cut = s.slice(0, n);
-      const lastBreak = Math.max(cut.lastIndexOf("\n"), cut.lastIndexOf(". "), cut.lastIndexOf("; "));
-      return (lastBreak>200? cut.slice(0, lastBreak) : cut) + " …";
-    }
-    const RGX = {
-      compet: /(COMP[ÉE]TENCES?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
-      exp:    /(EXP[ÉE]RIENCES?(?: DIVERSES?)?|PARCOURS|PROJETS)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
-      form:   /(FORMATIONS?|[ÉE]TUDES)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
-      inter:  /(CENTRES? D[’']INT[ÉE]R[ÊE]T|INT[ÉE]R[ÊE]TS|HOBBIES?|LOISIRS?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i,
-      langs:  /(LANGUES?)[\s\S]*?(?=\n[A-ZÉÈÀÂÊÎÔÛÄÖÜ0-9 ,.'’\-]{5,}\n|$)/i
-    };
-
-    // Lecture PDF -> texte brut
-    async function readPdfText() {
-      try {
-        if (!window.pdfjsLib) return "";
-        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.js";
-        const doc = await pdfjsLib.getDocument(PDF_URL).promise;
-        let out = "";
-        for (let p=1; p<=doc.numPages; p++){
-          const page = await doc.getPage(p);
-          const c = await page.getTextContent();
-          out += c.items.map(i=>i.str).join(" ") + "\n";
-          if (out.length > PAGE_CHAR_LIMIT) break;
-        }
-        return norm(out);
-      } catch (e) {
-        console.warn("Lecture CV échouée :", e);
-        return "";
-      }
+    // Par défaut, donner un petit socle générique
+    if (ctx.length <= 2){
+      ctx.push("Résumé compétences: " + CV_HARDCODED.competences.slice(0,4).join("; ") + " …");
     }
 
-    function pickSection(txt, re, label){
-      const m = txt.match(re);
-      if (!m) return "";
-      const body = norm(m[0].replace(/^[^\n]*\n?/,""));
-      const bulletified = body
-        .replace(/(?:•|\u2022)\s*/g, " • ")
-        .replace(/\s-\s/g, " • ")
-        .replace(/\s{2,}/g, " ");
-      return bulletified ? `- ${label}: ${bulletified}` : "";
-    }
+    // Règles de ton
+    ctx.push("Directives de style: " + PROFILE_GUIDE.regles.join(" | "));
 
-    function buildContext(full) {
-      // ordonne les sections (très court + puces conservées si présentes)
-      const parts = [];
-      const comp = pickSection(full, RGX.compet, "Compétences");
-      const exp  = pickSection(full, RGX.exp,    "Expérience");
-      const frm  = pickSection(full, RGX.form,   "Formation");
-      const hob  = pickSection(full, RGX.inter,  "Centres d’intérêt");
-      const lng  = pickSection(full, RGX.langs,  "Langues");
+    // Compactage (éviter un pavé)
+    let joined = ctx.join("\n");
+    if (joined.length > 3600) joined = joined.slice(0, 3600) + " …";
+    return joined;
+  }
 
-      if (comp) parts.push(comp);
-      if (exp)  parts.push(exp);
-      if (frm)  parts.push(frm);
-      if (hob)  parts.push(hob);
-      if (lng)  parts.push(lng);
-
-      let ctx = parts.join("\n");
-      if (!ctx) ctx = sliceLines(full, CONTEXT_MAX_CHARS);   // fallback
-
-      return sliceLines(ctx, CONTEXT_MAX_CHARS);
-    }
-
-    async function ensureCvContext() {
-      // Cache sessionStorage pour accélérer
-      const cached = sessionStorage.getItem(CACHE_KEY);
-      if (cached) { setCvStatus(true); return cached; }
-      const raw = await readPdfText();
-      if (!raw) { setCvStatus(false); return ""; }
-      const ctx = buildContext(raw);
-      if (ctx) {
-        sessionStorage.setItem(CACHE_KEY, ctx);
-        setCvStatus(true);
-      } else {
-        setCvStatus(false);
-      }
-      return ctx;
-    }
-
-    // API globale : **toujours** injecter le contexte (si disponible)
-    window.prepareQuestionWithCv = async function(userQuestion, lang="fr") {
-      const cv = await ensureCvContext();
-      if (!cv) return userQuestion; // on n’empêche pas de répondre si CV KO
-      // Consigne forte + extrait. Important : rester court et explicite.
-      return [
-        "Contexte CV (utiliser si pertinent) :",
-        cv,
-        "---",
-        "Consigne : réponds à la question en t’appuyant sur le CV ci-dessus lorsqu’il est pertinent. " +
-        "S’il n’est pas pertinent, réponds normalement sans prétendre ne pas avoir accès au CV.",
-        `Question : ${userQuestion}`
-      ].join("\n");
-    };
-
-    // Expose aussi un indicateur initial (affiche « chargement… »)
-    document.addEventListener("DOMContentLoaded", () => {
-      setCvStatus(false);
-      // Pré-charger en arrière-plan pour gagner du temps à la 1re question
-      ensureCvContext();
-    });
-  })();
+  // ——— Construction du prompt envoyé à l’API ———
+  async function prepareQuestion(question){
+    const ctx = pickContextFor(question);
+    return [
+      "Contexte—CV (données fiables) et profil:", ctx,
+      "---",
+      "Consigne:", 
+      "• Réponds de manière concise et précise en t’appuyant sur le contexte ci-dessus quand il est pertinent.",
+      "• Si le CV ne comporte pas l’info, dis-le simplement (sans inventer),",
+      "  et si c’est lié aux langues/tech/exigences, ajoute qu’il apprend vite et se met à niveau rapidement.",
+      `Question: ${question}`
+    ].join("\n");
+  }
   </script>
-  <!-- ======== /Injection CV ======== -->
+  <!-- =================== /CONTEXTE HARDCODÉ =================== -->
 </head>
-<body>
 
+<body>
 <header class="site-header">
   <nav class="wrap row" aria-label="Navigation principale" style="padding:10px 16px">
     <a href="/" class="btn ghost">Accueil</a>
@@ -167,7 +157,7 @@
     <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
     <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
     <span style="flex:1"></span>
-    <span id="cvStatus" class="tiny muted"><span class="status-dot ko"></span>CV : chargement…</span>
+    <span class="tiny"><span class="status-dot ok"></span>Contexte CV intégré</span>
     <a href="/chatbot.html" class="btn">FR</a>
     <a href="/chatbot-en.html" class="btn ghost">EN</a>
     <a href="/chatbot-de.html" class="btn ghost">DE</a>
@@ -176,7 +166,7 @@
 
 <main class="section container chat">
   <h1 class="title">🤖 Chatbot IA</h1>
-  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot a accès à mon CV et peut s’y référer automatiquement.</p>
+  <p class="lead">Posez vos questions — pédagogie, IA, expérience. Le bot s’appuie en continu sur mon CV (intégré) et mon profil.</p>
 
   <div id="chat" class="chat-box" aria-live="polite"></div>
 
@@ -197,15 +187,15 @@
     chat.scrollTop = chat.scrollHeight;
   }
 
-  // message d’accueil
+  // Message d’accueil
   add(
 `Bonjour ! Posez une question sur le candidat.
 
 Exemples :
 • Quelles compétences techniques ressortent ?
 • Parle-moi d’une expérience marquante.
-• Quels sont ses centres d’intérêt ?
-(Le bot peut exploiter mon CV automatiquement.)`
+• Quelles langues parle-t-il ? (il apprend vite et se met à niveau si besoin)
+(Le bot s’appuie automatiquement sur un extrait intégré du CV.)`
   );
 
   async function ask(){
@@ -217,19 +207,14 @@ Exemples :
     add("…");
 
     try {
-      // 🔗 ALWAYS: question + extrait CV compact (si dispo)
-      const withCv = window.prepareQuestionWithCv
-        ? await window.prepareQuestionWithCv(raw, 'fr')
-        : raw;
+      const withCtx = await prepareQuestion(raw);   // ⬅️ injection systématique du contexte
 
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          question: withCv,
-          lang: 'fr',
-          // petit hint facultatif si ton backend le supporte :
-          cv_url: '/CV_Nicolas_Tuor.pdf'
+          question: withCtx,
+          lang: 'fr'
         })
       });
       const j = await r.json().catch(()=>({}));
