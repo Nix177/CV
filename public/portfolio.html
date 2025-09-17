@@ -8,27 +8,21 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="/portfolio">
-      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/">Accueil</a>
-      <a href="/portfolio" aria-current="page">Portfolio</a>
-      <a href="/cv">CV</a>
-      <a href="/chatbot">Chatbot</a>
-      <a href="/ai">Idées IA</a>
-      <a href="/fun-facts">Fun Facts</a>
-      <button id="dlCvBtn" class="btn chip" type="button">Télécharger le CV</button>
-      <button class="btn chip" type="button" data-toggle-theme aria-label="Basculer le thème">🌓</button>
-      <span class="lang-switch">
-        <a class="btn chip" href="/portfolio.html" aria-current="page">FR</a>
-        <a class="btn chip" href="/portfolio-en.html">EN</a>
-        <a class="btn chip" href="/portfolio-de.html">DE</a>
-      </span>
-    </nav>
-  </div>
+<header class="site-header">
+  <nav class="wrap row" aria-label="Navigation principale">
+    <a href="/" class="btn ghost">Accueil</a>
+    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
+    <a href="/cv.html" class="btn ghost">CV</a>
+    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
+    <!-- lien corrigé -->
+    <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
+    <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
+    <span style="flex:1"></span>
+    <!-- switch langues (même contenu dans EN/DE, libellés traduits) -->
+    <a href="#" class="btn">FR</a>
+    <a href="/portfolio-en.html" class="btn ghost">EN</a>
+    <a href="/portfolio-de.html" class="btn ghost">DE</a>
+  </nav>
 </header>
 
 <main class="section container">
