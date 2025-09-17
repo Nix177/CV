@@ -1,98 +1,133 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Chatbot — Nicolas Tuor</title>
-  <meta name="description" content="Assistant pédagogique avec accès optionnel au CV de Nicolas Tuor."/>
-  <link rel="icon" href="/favicon.ico"/>
-  <link rel="stylesheet" href="/style.css"/>
-  <script src="/site.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Chatbot</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/style.css" />
 
-  <!-- PDF.js pour lecture de /CV_Nicolas_Tuor.pdf (optionnel mais recommandé) -->
+  <!-- PDF.js pour lire /CV_Nicolas_Tuor.pdf côté navigateur (optionnel, auto-détecté) -->
   <script src="https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.min.js"></script>
 
+  <!-- Contexte CV côté client (ne montre rien à l’écran) -->
+  <script>
+  // Injecte un extrait du CV dans la question SI celle-ci parle du CV (ou commence par /cv ...)
+  (function () {
+    "use strict";
+    const PAGE_LIMIT = 12000, INJECT_LIMIT = 8000;
+    const LBL = { fr:"Contexte CV — extrait (utile seulement si pertinent) :", en:"CV context — extract (use only if relevant):", de:"CV-Kontext — Auszug (nur verwenden, wenn relevant):" };
+    let CV_TEXT = "";
+    async function loadCv() {
+      if (!window.pdfjsLib) return "";
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.js";
+        const doc = await pdfjsLib.getDocument("/CV_Nicolas_Tuor.pdf").promise;
+        let out = "";
+        for (let p = 1; p <= doc.numPages; p++) {
+          const page = await doc.getPage(p);
+          const c = await page.getTextContent();
+          out += c.items.map(i=>i.str).join(" ") + "\n";
+          if (out.length > PAGE_LIMIT) break;
+        }
+        return out.replace(/\s+/g," ").trim();
+      } catch { return ""; }
+    }
+    function looksLikeCvQuestion(q) {
+      const s = (q||"").toLowerCase();
+      if (s.startsWith("/cv ")) return true;
+      return /\b(cv|curriculum|résumé|resume|lebenslauf|parcours|expériences?|experience|skills?|compétences|dipl[oô]me|formation|linkedin|nicolas|tuor)\b/.test(s);
+    }
+    window.augmentWithCv = async function (question, lang) {
+      if (!looksLikeCvQuestion(question)) return question;
+      if (!CV_TEXT) CV_TEXT = await loadCv();
+      if (!CV_TEXT) return question;
+      const t = (LBL[lang] || LBL.fr) + "\n" + CV_TEXT.slice(0, INJECT_LIMIT) + "\n---\nQuestion: " + question.replace(/^\/cv\s*/i,"");
+      return t;
+    };
+  })();
+  </script>
+
   <style>
-    main.wrap { max-width: 980px }
-    .chat-shell{display:grid;grid-template-rows:auto 1fr auto;gap:12px;min-height:60vh}
-    .chat-log{background:#0b2237cc;border:1px solid #ffffff22;border-radius:14px;padding:12px;overflow:auto;min-height:320px}
-    .msg{padding:10px 12px;margin:8px 0;border-radius:12px;border:1px solid #ffffff22;white-space:pre-wrap;word-break:break-word}
-    .msg.user{background:#0f2d4a}
-    .msg.assistant{background:#0b1f33}
-    .chat-form textarea{width:100%;border-radius:10px;border:1px solid #ffffff22;padding:10px;background:#07192a;color:#e6f1ff}
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    details.adv > summary{cursor:pointer;opacity:.9}
-    .muted{opacity:.85}
+    body { margin:0 }
+    main.wrap { max-width: 900px; }
+    .chat-shell { display:grid; grid-template-rows: 1fr auto; gap: 12px; min-height: 70vh; }
+    .chat-log { background:#0b2237cc; border:1px solid #ffffff22; border-radius:14px; padding:12px; overflow:auto; min-height:60vh }
+    .msg { padding:10px 12px; margin:8px 0; border-radius:12px; border:1px solid #ffffff22; white-space:pre-wrap; word-break:break-word }
+    .msg.user { background:#0f2d4a }
+    .msg.assistant { background:#0b1f33 }
+    .chat-form { display:flex; gap:8px; align-items:stretch }
+    .chat-form textarea { flex:1; border-radius:10px; border:1px solid #ffffff22; padding:10px; background:#07192a; color:#e6f1ff; min-height:56px }
+    .btn { padding:10px 14px; border-radius:10px; border:1px solid #ffffff22; background:#0b1f33; color:#e6f1ff; cursor:pointer }
+    .btn.primary { background:#0e3b63 }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="wrap row" aria-label="Navigation principale">
-      <a href="/" class="btn ghost">Accueil</a>
-      <a href="/portfolio.html" class="btn ghost">Portfolio</a>
-      <a href="/cv.html" class="btn ghost">CV</a>
-      <a href="/chatbot.html" class="btn" aria-current="page">Chatbot</a>
-      <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
-      <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
-      <span style="flex:1"></span>
-      <a href="/chatbot.html" class="btn">FR</a>
-      <a href="/chatbot-en.html" class="btn ghost">EN</a>
-      <a href="/chatbot-de.html" class="btn ghost">DE</a>
-    </nav>
-  </header>
-
-  <main class="wrap">
-    <h1>Chatbot</h1>
-    <p class="muted">Assistant pédagogique. Cochez l’option « Inclure le CV » pour autoriser le bot à utiliser des extraits de <code>CV_Nicolas_Tuor.pdf</code> si la question s’y prête.</p>
+  <main class="wrap" style="padding:16px">
+    <h1 style="margin:6px 0 12px">Chatbot</h1>
 
     <section class="chat-shell">
-      <!-- Journal -->
-      <div id="chatLog" class="chat-log" aria-live="polite" aria-busy="false"></div>
+      <div id="chatLog" class="chat-log" aria-live="polite"></div>
 
-      <!-- Paramètres rapides -->
-      <div class="row">
-        <label><input type="checkbox" id="chatUseCv"> Inclure le CV si pertinent</label>
-        <label>Modèle
-          <select id="chatModel">
-            <option value="gpt-4o-mini">gpt-4o-mini</option>
-            <option value="gpt-4o">gpt-4o</option>
-          </select>
-        </label>
-        <label>Langue
-          <select id="chatLang">
-            <option value="fr" selected>Français</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-          </select>
-        </label>
-
-        <details class="adv">
-          <summary>Paramètres avancés</summary>
-          <div class="field" style="margin-top:8px;max-width:880px">
-            <label for="chatSystem" class="muted">Message système (facultatif)</label>
-            <textarea id="chatSystem" rows="3" placeholder="Style / règles / rôle du bot…"></textarea>
-          </div>
-        </details>
-      </div>
-
-      <!-- Formulaire -->
       <form id="chatForm" class="chat-form" autocomplete="off">
-        <label for="chatInput" class="muted">Votre message</label>
-        <textarea id="chatInput" rows="3" placeholder="Posez votre question… (Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne)"></textarea>
-        <div class="row" style="margin-top:8px">
-          <button id="chatSend" type="submit" class="btn primary">Envoyer</button>
-          <button id="chatClear" type="button" class="btn">Effacer</button>
-          <small id="chatTyping" class="muted" style="display:none">…</small>
-        </div>
+        <textarea id="chatInput" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne)"></textarea>
+        <button id="chatSend" type="submit" class="btn primary">Envoyer</button>
       </form>
     </section>
   </main>
 
-  <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
-    © Nicolas Tuor — Chatbot éducatif
-  </footer>
+  <!-- Script inline : POST vers /api/chat (inchangé), avec injection CV si pertinent -->
+  <script>
+  (function () {
+    "use strict";
+    const log = document.getElementById("chatLog");
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("chatInput");
 
-  <!-- Logique du chatbot (utilise PDF.js si présent) -->
-  <script src="/chatbot.js" defer></script>
+    const lang =
+      (document.documentElement.lang || "fr").toLowerCase().startsWith("de") ? "de" :
+      (document.documentElement.lang || "fr").toLowerCase().startsWith("en") ? "en" : "fr";
+
+    function add(role, text) {
+      const wrap = document.createElement("div");
+      wrap.className = "msg " + role;
+      wrap.textContent = text;
+      log.appendChild(wrap);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function ask(e) {
+      if (e) e.preventDefault();
+      const text = (input.value || "").trim();
+      if (!text) return;
+      add("user", text);
+      input.value = "";
+      const thinking = document.createElement("div");
+      thinking.className = "msg assistant";
+      thinking.textContent = "…";
+      log.appendChild(thinking);
+      log.scrollTop = log.scrollHeight;
+
+      try {
+        const question = window.augmentWithCv ? await window.augmentWithCv(text, lang) : text;
+        const r = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, lang })
+        });
+        const j = await r.json().catch(()=>({}));
+        thinking.textContent = j.answer || "(aucune réponse)";
+      } catch (err) {
+        thinking.textContent = "Erreur réseau. Réessayez.";
+        console.error(err);
+      }
+    }
+
+    form.addEventListener("submit", ask);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); }
+    });
+  })();
+  </script>
 </body>
 </html>
