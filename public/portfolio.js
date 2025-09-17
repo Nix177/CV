@@ -1,69 +1,42 @@
-// Rendu des cartes Portfolio + Aperçu sécurisé dans un overlay (iframe).
-(function(){
-  const lang = document.documentElement.lang || "fr";
-  const T = {
-    fr: { visit: "Visiter", preview: "Aperçu", title: "Portfolio" },
-    en: { visit: "Visit",  preview: "Preview", title: "Portfolio" },
-    de: { visit: "Besuchen", preview: "Vorschau", title: "Portfolio" }
-  }[lang] || T_fr;
+// public/portfolio.js
+import { PORTFOLIO_ITEMS } from "./portfolio-data.js";
 
-  const list = (window.PORTFOLIO && window.PORTFOLIO[lang]) || [];
-  const mount = document.getElementById("portfolioList");
-  if (!mount) return;
+(function () {
+  const grid = document.getElementById("portfolioGrid") || document.getElementById("portfolioList");
+  const overlay = document.getElementById("previewOverlay");
+  const frame = document.getElementById("previewFrame");
+  const closeBtn = document.getElementById("previewClose");
 
-  // Build overlay once
-  const overlay = document.createElement("div");
-  overlay.className = "overlay";
-  overlay.innerHTML = `
-    <div class="overlay-inner">
-      <div class="overlay-bar">
-        <strong>${T.title}</strong>
-        <div class="row gap">
-          <button class="btn" data-overlay-close>✕</button>
+  if (!grid) return;
+
+  function card(item) {
+    return `
+    <article class="card">
+      <div class="card-body">
+        <h3>${item.title}</h3>
+        <p>${item.desc}</p>
+        <div class="card-actions">
+          <a class="btn" href="${item.url}" target="_blank" rel="noopener">Visiter</a>
+          ${item.embed ? `<button class="btn linkish" data-preview="${item.embed}">Aperçu</button>` : ""}
         </div>
       </div>
-      <iframe id="previewFrame" referrerpolicy="no-referrer"></iframe>
-    </div>`;
-  document.body.appendChild(overlay);
-  const frame = overlay.querySelector("#previewFrame");
+    </article>`;
+  }
 
-  function openPreview(url){
-    frame.src = url;
-    overlay.classList.add("show");
-  }
-  function closePreview(){
-    frame.src = "about:blank";
-    overlay.classList.remove("show");
-  }
-  overlay.addEventListener("click", e=>{
-    if (e.target.hasAttribute("data-overlay-close") || e.target === overlay) closePreview();
+  grid.innerHTML = PORTFOLIO_ITEMS.map(card).join("");
+
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-preview]");
+    if (!btn) return;
+    e.preventDefault();
+    const src = btn.getAttribute("data-preview");
+    if (!overlay || !frame) return;
+    overlay.style.display = "block";
+    frame.src = src;
   });
 
-  // Render cards
-  mount.innerHTML = list.map(p => `
-    <article class="port-card">
-      <div class="port-meta">
-        ${p.icon ? `<img class="port-icon" src="${p.icon}" alt="">` : ""}
-        <h3>${p.title}</h3>
-      </div>
-      <p class="muted">${p.desc||""}</p>
-      <div class="row gap">
-        <button class="btn" data-visit="${encodeURIComponent(p.url)}">${T.visit}</button>
-        <button class="btn ghost" data-preview="${encodeURIComponent(p.url)}">${T.preview}</button>
-      </div>
-    </article>
-  `).join("");
-
-  // Delegated actions
-  mount.addEventListener("click", e=>{
-    const v = e.target.closest("[data-visit]"); if (v) {
-      const url = decodeURIComponent(v.getAttribute("data-visit"));
-      window.open(url, "_blank", "noopener");
-      return;
-    }
-    const p = e.target.closest("[data-preview]"); if (p) {
-      const url = decodeURIComponent(p.getAttribute("data-preview"));
-      openPreview(url);
-    }
+  closeBtn?.addEventListener("click", () => {
+    overlay.style.display = "none";
+    frame.src = "about:blank";
   });
 })();
