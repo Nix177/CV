@@ -121,4 +121,20 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- IMPORTANT : ton fi
+    <!-- IMPORTANT : ton fichier dans /public et adapté (voir note ci-dessous) -->
+    <script type="text/babel" data-presets="react,typescript" data-plugins="transform-typescript" src="/osselets-runner.jsx"></script>
+
+    <!-- Boot : rend window.AstragalusRunner sur #osselets-root -->
+    <script type="text/babel" data-presets="react">
+      (function () {
+        const root = document.getElementById("osselets-root");
+        if (root && window.AstragalusRunner) {
+          const r = ReactDOM.createRoot(root);
+          r.render(React.createElement(window.AstragalusRunner));
+        } else {
+          console.warn("AstragalusRunner introuvable — ajoutez `window.AstragalusRunner = AstragalusRunner;` à la fin de votre JSX.");
+        }
+      })();
+    </script>
+  </body>
+</html>
