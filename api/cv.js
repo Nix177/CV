@@ -1,12 +1,10 @@
+// api/cv.js
 import fs from "fs";
 import path from "path";
 
 function isAllowed(code) {
-  const list =
-    (process.env.CV_ACCESS_CODE || "nicolastuorcv|nicolastuor")
-      .split("|")
-      .map((s) => s.trim())
-      .filter(Boolean);
+  const list = (process.env.CV_ACCESS_CODE || "nicolastuorcv|nicolastuor")
+    .split("|").map(s => s.trim()).filter(Boolean);
   return !!code && list.includes(code);
 }
 
@@ -20,8 +18,6 @@ export default async function handler(req, res) {
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="CV_Nicolas_Tuor.pdf"');
-    res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=600");
-
     const stream = fs.createReadStream(pdfPath);
     stream.pipe(res);
   } catch (err) {
