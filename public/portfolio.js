@@ -1,9 +1,7 @@
 /* public/portfolio.js
-   - Boutons « Aperçu » et « Visiter ».
-   - Overlay sécurisé (pas de allow-same-origin).
-   - Lit les données depuis:
-     window.portfolioData  OU  window.PORTFOLIO.items  OU  window.PORTFOLIO_ITEMS
-   - Fallback d'exemple si aucune donnée n'est disponible (pour éviter une page vide).
+   - Boutons « Aperçu » et « Visiter » fonctionnels
+   - Overlay sécurisé (pas de allow-same-origin)
+   - Tolère plusieurs formats de données (portfolioData / PORTFOLIO.items / PORTFOLIO_ITEMS)
 */
 (function () {
   "use strict";
@@ -21,8 +19,10 @@
     for (const [k,v] of Object.entries(a)) {
       if (k === "class") e.className = v;
       else if (k === "text") e.textContent = v;
-      else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
-      else e.setAttribute(k, v);
+      else if (k.startsWith("on") && typeof v === "function") {
+        // ⚠️ correctif : normaliser en lowercase (ex. onClick -> 'click')
+        e.addEventListener(k.slice(2).toLowerCase(), v);
+      } else e.setAttribute(k, v);
     }
     for (const k of [].concat(kids)) if (k != null) e.appendChild(typeof k === "string" ? document.createTextNode(k) : k);
     return e;
@@ -41,7 +41,6 @@
   function ensureFallbackDataOnce() {
     const data = getData();
     if (data.length) return;
-    // Petit échantillon par défaut si rien n'est fourni
     window.portfolioData = [
       { title: "Jeu Osselets", url: "/ai-lab.html", description: "Runner 2D pédagogique", tags: ["JS","Éducation"] },
       { title: "Chatbot", url: "/chatbot.html", description: "Assistant pédagogique", tags: ["IA"] }
@@ -83,7 +82,6 @@
     const grid = $("#portfolioGrid");
     if (!grid) return;
     grid.innerHTML = "";
-
     if (!list.length) {
       grid.appendChild(el("p", { class:"muted", text:"— (aucun élément)" }));
       return;
@@ -98,7 +96,7 @@
     const overlay = $("#overlay");
     const frame   = $("#overlayFrame");
     const close   = $("#overlayClose");
-    const heading = $("#ovlTitle");
+    const heading = $("#ovlTitle") || $("#overlayTitle");
     if (!overlay || !frame || !close || !url) return;
 
     if (heading) heading.textContent = title || "Aperçu";
@@ -109,12 +107,12 @@
     if (!blockMsg) {
       blockMsg = el("div", { id:"overlayBlocked", class:"muted",
         style:"position:absolute;top:54px;left:12px;right:12px;display:none;color:#fff" });
-      overlay.querySelector(".panel").appendChild(blockMsg);
+      (overlay.querySelector(".panel") || overlay.querySelector(".overlay-inner") || overlay).appendChild(blockMsg);
     }
     blockMsg.style.display = "none";
     blockMsg.textContent = "";
 
-    // PAS de allow-same-origin (évite l’avertissement et les risques)
+    // PAS de allow-same-origin (évite l’avertissement et réduit les risques)
     frame.setAttribute("sandbox", "allow-scripts allow-popups");
     overlay.style.display = "flex";
     document.body.style.overflow = "hidden";
@@ -132,7 +130,7 @@
         blockMsg.textContent = T.blocked;
         blockMsg.style.display = "block";
       }
-    }, 1200);
+    }, 900);
 
     const closeOverlay = () => {
       overlay.style.display = "none";
