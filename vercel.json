@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/favicon.ico", "destination": "/favicon.svg" }
+    { "source": "/ai", "destination": "/ai-lab.html" },
+    { "source": "/portfolio", "destination": "/portfolio.html" },
+    { "source": "/cv", "destination": "/cv.html" },
+    { "source": "/chatbot", "destination": "/chatbot.html" },
+    { "source": "/fun-facts", "destination": "/fun-facts.html" }
   ]
 }
