@@ -1,4 +1,4 @@
-/* Fun Facts — Cartes + Nuage (sources Wikipedia via /api/facts)
+/* Fun Facts — Cartes + Nuage (robuste : auto-crée les sections si absentes)
    - Cartes (haut) : nouveau lot, "Un fait", "Un mythe", filtre fact/myth/tout
    - Nuage (bas) : bulles animées, pause au survol, panneau latéral lisible
    - Anti-doublon : paramètre `seen` et Set côté client
@@ -11,27 +11,6 @@
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
   const rand = (a,b)=> Math.random()*(b-a)+a;
-  const pick = arr => arr[(Math.random()*arr.length)|0];
-
-  // ---------- DOM ----------
-  const cardsWrap   = $("#cards");
-  const segFilter   = $(".seg");
-  const btnNewSet   = $("#btnNewSet");
-  const btnOneFact  = $("#btnOneFact");
-  const btnOneMyth  = $("#btnOneMyth");
-
-  const cloud       = $("#cloud");
-  const btnShuffle  = $("#btnShuffle");
-  const panel       = $("#factPanel");
-  const fpTitle     = $("#fpTitle");
-  const fpMeta      = $("#fpMeta");
-  const fpBody      = $("#fpBody");
-  const fpSources   = $("#fpSources");
-  const fpClose     = $("#fpClose");
-
-  // ---------- API & Fallbacks ----------
-  const API = "/api/facts";
-  const LOCAL_JSON = "/facts-data.json";
 
   // mini-fallback en dernier recours
   const TINY_FALLBACK = [
@@ -49,6 +28,9 @@
     }
   ];
 
+  // ---------- API & Fallbacks ----------
+  const API = "/api/facts";
+  const LOCAL_JSON = "/facts-data.json";
   const lang = (document.documentElement.lang || "fr").slice(0,2);
 
   async function fetchFacts(params){
@@ -85,6 +67,124 @@
     });
   }
 
+  // ---------- DOM (auto-injection si nécessaire) ----------
+  function ensureDOM(){
+    const root = $(".container") || $("main") || document.body;
+
+    // ====== Cartes ======
+    let cardsSection = $("#ff-cards-section");
+    let cards = $("#cards");
+    let controls = $("#ff-cards-controls");
+    let seg = $(".seg");
+
+    if (!cards || !controls){
+      // crée la section Cartes complète
+      cardsSection = cardsSection || document.createElement("section");
+      cardsSection.id = "ff-cards-section";
+
+      // titre
+      if (!cardsSection.querySelector("h2")){
+        const h2 = document.createElement("h2");
+        h2.textContent = "Cartes";
+        cardsSection.appendChild(h2);
+      }
+
+      // contrôles
+      controls = document.createElement("div");
+      controls.className = "controls";
+      controls.id = "ff-cards-controls";
+      controls.innerHTML = `
+        <button id="btnNewSet" class="btn">Nouveau lot aléatoire</button>
+        <button id="btnOneFact" class="btn ghost">Un fait</button>
+        <button id="btnOneMyth" class="btn ghost">Un mythe</button>
+        <div class="seg" role="tablist" aria-label="Filtre type">
+          <button class="active" data-filter="all" aria-selected="true">Tout</button>
+          <button data-filter="fact">Fait avéré</button>
+          <button data-filter="myth">Mythe</button>
+        </div>
+        <span style="opacity:.75">Sources toujours cliquables.</span>
+      `;
+      cardsSection.appendChild(controls);
+
+      // grille cartes
+      cards = document.createElement("div");
+      cards.id = "cards";
+      cards.className = "cards";
+      cardsSection.appendChild(cards);
+
+      // insère au début du root (avant le nuage si possible)
+      const cloudSection = $("#ff-cloud-section");
+      root.insertBefore(cardsSection, cloudSection || root.firstChild);
+    }
+
+    // ====== Nuage ======
+    let cloudSection = $("#ff-cloud-section");
+    let cloud = $("#cloud");
+    let panel = $("#factPanel");
+    let shuffleBtn = $("#btnShuffle");
+
+    if (!cloud){
+      cloudSection = cloudSection || document.createElement("section");
+      cloudSection.id = "ff-cloud-section";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = "Nuage de Fun Facts";
+      cloudSection.appendChild(h2);
+
+      const controls2 = document.createElement("div");
+      controls2.className = "controls";
+      controls2.innerHTML = `
+        <button id="btnShuffle" class="btn">Mélanger le nuage</button>
+        <span style="opacity:.75">Survolez / cliquez une bulle pour voir le détail.</span>
+      `;
+      cloudSection.appendChild(controls2);
+
+      cloud = document.createElement("div");
+      cloud.id = "cloud";
+      cloud.className = "cloud-wrap";
+      cloudSection.appendChild(cloud);
+
+      panel = document.createElement("aside");
+      panel.id = "factPanel";
+      panel.className = "fact-panel";
+      panel.setAttribute("role","dialog");
+      panel.setAttribute("aria-modal","false");
+      panel.innerHTML = `
+        <div style="display:flex;gap:8px;align-items:center">
+          <h3 id="fpTitle">—</h3>
+          <button id="fpClose" class="btn close-x">✕</button>
+        </div>
+        <div id="fpMeta" class="meta"></div>
+        <p id="fpBody"></p>
+        <div id="fpSources" class="sources"></div>
+      `;
+      cloud.appendChild(panel);
+
+      root.appendChild(cloudSection);
+    }
+
+    // retourne les références (toujours valides après injection)
+    return {
+      cardsWrap: $("#cards"),
+      segFilter: $(".seg"),
+      btnNewSet: $("#btnNewSet"),
+      btnOneFact: $("#btnOneFact"),
+      btnOneMyth: $("#btnOneMyth"),
+      cloud: $("#cloud"),
+      btnShuffle: $("#btnShuffle"),
+      panel: $("#factPanel"),
+      fpTitle: $("#fpTitle"),
+      fpMeta: $("#fpMeta"),
+      fpBody: $("#fpBody"),
+      fpSources: $("#fpSources"),
+      fpClose: $("#fpClose")
+    };
+  }
+
+  // références DOM (remplies dans start())
+  let cardsWrap, segFilter, btnNewSet, btnOneFact, btnOneMyth;
+  let cloud, btnShuffle, panel, fpTitle, fpMeta, fpBody, fpSources, fpClose;
+
   // ---------- State ----------
   let FILTER = "all";            // cards filter
   let CARDS = [];                // cartes actuellement affichées
@@ -101,10 +201,12 @@
   }
 
   function drawCards(list){
-    CARDS = list.slice(); // keep copy (pour réfiltrer plus tard)
-    cardsWrap.innerHTML = "";
+    if (!cardsWrap) return;               // sécurité
+    CARDS = list.slice();                 // copie pour re-filtrer
+    cardsWrap.innerHTML = "";             // <-- ne plantera plus
     for(const item of CARDS){
       if(!passFilter(item)) continue;
+
       const card = document.createElement("article");
       card.className = "card";
       card.dataset.id = item.id;
@@ -155,7 +257,6 @@
   }
 
   async function loadInitialCards(){
-    // 1er lot
     const list = await fetchFacts({ lang, n: 8 });
     list.forEach(x=> seenCards.add(x.id));
     drawCards(list);
@@ -174,7 +275,6 @@
   }
 
   async function oneFact(){
-    // kind=fact + withLocal=1 → l'API mélange quelques "faits" sûrs (local) avec le pool
     const list = await fetchFacts({ lang, kind:"fact", withLocal:"1", n: 1, seen: Array.from(seenCards).join(",") });
     list.forEach(x=> seenCards.add(x.id));
     drawCards(list);
@@ -183,10 +283,10 @@
   function onFilterClick(e){
     const btn = e.target.closest("button");
     if(!btn) return;
-    segFilter.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    segFilter?.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     FILTER = btn.dataset.filter || "all";
-    drawCards(CARDS); // re-filtre depuis l'état courant
+    drawCards(CARDS);
   }
 
   // ---------- Nuage ----------
@@ -196,6 +296,7 @@
   }
 
   function createBubble(item){
+    if (!cloud) return;
     const el = document.createElement("div");
     el.className = "bubble";
     el.setAttribute("role","button");
@@ -235,40 +336,44 @@
   }
 
   function openPanel(b){
+    if (!panel) return;
     const it = b.item;
     panel.style.display = "block";
-    fpTitle.textContent = it.title || "(sans titre)";
-    fpBody.textContent  = it.body || "";
+    if (fpTitle) fpTitle.textContent = it.title || "(sans titre)";
+    if (fpBody)  fpBody.textContent  = it.body || "";
 
-    // meta
-    fpMeta.innerHTML = "";
-    const cat = document.createElement("span");
-    cat.className = "badge"; cat.textContent = it.category || "Catégorie";
-    fpMeta.appendChild(cat);
-    const kind = document.createElement("span");
-    kind.className = "badge " + (it.type==="fact" ? "t-true" : it.type==="myth" ? "t-myth" : "t-unknown");
-    kind.textContent = it.type==="fact" ? "Fait" : it.type==="myth" ? "Mythe" : "Indéterminé";
-    fpMeta.appendChild(kind);
+    if (fpMeta){
+      fpMeta.innerHTML = "";
+      const cat = document.createElement("span");
+      cat.className = "badge"; cat.textContent = it.category || "Catégorie";
+      fpMeta.appendChild(cat);
+      const kind = document.createElement("span");
+      kind.className = "badge " + (it.type==="fact" ? "t-true" : it.type==="myth" ? "t-myth" : "t-unknown");
+      kind.textContent = it.type==="fact" ? "Fait" : it.type==="myth" ? "Mythe" : "Indéterminé";
+      fpMeta.appendChild(kind);
+    }
 
-    // sources
-    fpSources.innerHTML = "";
-    if (Array.isArray(it.sources) && it.sources.length){
-      const h = document.createElement("div");
-      h.innerHTML = "<strong>Sources :</strong>";
-      fpSources.appendChild(h);
-      const ul = document.createElement("ul");
-      ul.style.margin = ".3rem 0 0 .9rem";
-      for (const s of it.sources){
-        const li = document.createElement("li");
-        const a = document.createElement("a"); a.href=s; a.target="_blank"; a.rel="noopener";
-        a.textContent = s.replace(/^https?:\/\//,"").slice(0,90);
-        li.appendChild(a); ul.appendChild(li);
+    if (fpSources){
+      fpSources.innerHTML = "";
+      if (Array.isArray(it.sources) && it.sources.length){
+        const h = document.createElement("div");
+        h.innerHTML = "<strong>Sources :</strong>";
+        fpSources.appendChild(h);
+        const ul = document.createElement("ul");
+        ul.style.margin = ".3rem 0 0 .9rem";
+        for (const s of it.sources){
+          const li = document.createElement("li");
+          const a = document.createElement("a"); a.href=s; a.target="_blank"; a.rel="noopener";
+          a.textContent = s.replace(/^https?:\/\//,"").slice(0,90);
+          li.appendChild(a); ul.appendChild(li);
+        }
+        fpSources.appendChild(ul);
       }
-      fpSources.appendChild(ul);
     }
   }
 
   function loop(){
+    if (!cloud) return;
     const W = cloud.clientWidth, H = cloud.clientHeight;
     if (running){
       for (const b of bubbles){
@@ -283,16 +388,15 @@
   }
 
   async function loadInitialCloud(){
-    // un lot à part pour le nuage (18 env.)
     const list = await fetchFacts({ lang, n: 20, seen: Array.from(seenCloud).join(",") });
     const subset = list.slice(0,18);
     subset.forEach(x=> seenCloud.add(x.id));
     CLOUD = subset;
-    // draw
     subset.forEach(createBubble);
   }
 
   function shuffleCloud(){
+    if (!cloud) return;
     const W = cloud.clientWidth, H = cloud.clientHeight;
     bubbles.forEach(b=>{
       b.x = rand(10, W - b.r - 10);
@@ -304,19 +408,35 @@
     });
   }
 
-  // ---------- Events ----------
-  fpClose?.addEventListener("click", ()=> panel.style.display = "none");
-  btnNewSet?.addEventListener("click", newSet);
-  btnOneMyth?.addEventListener("click", oneMyth);
-  btnOneFact?.addEventListener("click", oneFact);
-  segFilter?.addEventListener("click", onFilterClick);
-  btnShuffle?.addEventListener("click", shuffleCloud);
-
-  // pause quand l’onglet est masqué
-  document.addEventListener("visibilitychange", ()=> (running = document.visibilityState==="visible"));
-
   // ---------- Start ----------
   (async function start(){
+    // 1) S'assure que la page a les bons conteneurs
+    const refs = ensureDOM();
+    cardsWrap  = refs.cardsWrap;
+    segFilter  = refs.segFilter;
+    btnNewSet  = refs.btnNewSet;
+    btnOneFact = refs.btnOneFact;
+    btnOneMyth = refs.btnOneMyth;
+
+    cloud      = refs.cloud;
+    btnShuffle = refs.btnShuffle;
+    panel      = refs.panel;
+    fpTitle    = refs.fpTitle;
+    fpMeta     = refs.fpMeta;
+    fpBody     = refs.fpBody;
+    fpSources  = refs.fpSources;
+    fpClose    = refs.fpClose;
+
+    // 2) Brancher les événements (si les éléments existent)
+    fpClose?.addEventListener("click", ()=> panel.style.display = "none");
+    btnNewSet?.addEventListener("click", newSet);
+    btnOneMyth?.addEventListener("click", oneMyth);
+    btnOneFact?.addEventListener("click", oneFact);
+    segFilter?.addEventListener("click", onFilterClick);
+    btnShuffle?.addEventListener("click", shuffleCloud);
+    document.addEventListener("visibilitychange", ()=> (running = document.visibilityState==="visible"));
+
+    // 3) Charger les données initiales
     await loadInitialCards();
     await loadInitialCloud();
     loop();
