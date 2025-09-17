@@ -1,114 +1,220 @@
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const STORAGE_KEY = 'cv_access_ok_v1';
-  // Option pour tests en local si ton /api/verify n’est pas prêt :
-  const FALLBACK_TEST_CODE = window.__CV_TEST_CODE || null; // ex: dans index: <script>window.__CV_TEST_CODE="nicolastuorcv";</script>
+/* CV — accès protégé (FR/EN/DE)
+   - Affiche un panneau de déverrouillage (code d’accès) si l’accès n’est pas validé
+   - Vérifie via /api/verify?code=... (GET) → { ok: true/false }
+   - Une fois validé, embarque le PDF via /api/cv?code=...
+   - Persiste l’accès en localStorage (STORAGE_KEY)
+   - S’adapte à la page (crée les conteneurs si absents)
+*/
 
-  // ---- helpers
-  const $ = (sel, root=document) => root.querySelector(sel);
+(function () {
+  "use strict";
 
-  // ---- récupérer/ créer les conteneurs
-  const main = $('main') || document.body;
+  const STORAGE_KEY = "cv_access_ok_v1";
 
-  // zone "contenu du CV"
-  let unlocked = $('#cv-unlocked') || $('#cv-views');
-  if (!unlocked) {
-    // on ne force pas la structure, mais on prépare un placeholder si rien n’existe
-    unlocked = document.createElement('section');
-    unlocked.id = 'cv-unlocked';
-    unlocked.hidden = true;
-    unlocked.innerHTML = `<div style="padding:16px;border:1px solid #1b3f66;border-radius:12px;background:#0a2138;color:#cfe4ff">
-      <strong>CV</strong> — contenu visible après déverrouillage.</div>`;
-    main.prepend(unlocked);
+  const LANG = (document.documentElement.getAttribute("lang") || "fr")
+    .toLowerCase()
+    .slice(0, 2);
+
+  const T = {
+    fr: {
+      title: "CV — Nicolas Tuor",
+      label: "Code d’accès",
+      placeholder: "Saisissez le code…",
+      unlock: "Déverrouiller",
+      wrong: "Code invalide.",
+      ok: "Accès accordé.",
+      printing: "Imprimer/PDF",
+      pdfMode: "PDF protégé",
+      loading: "Chargement du PDF…",
+    },
+    en: {
+      title: "CV — Nicolas Tuor",
+      label: "Access code",
+      placeholder: "Enter the code…",
+      unlock: "Unlock",
+      wrong: "Invalid code.",
+      ok: "Access granted.",
+      printing: "Print/PDF",
+      pdfMode: "Protected PDF",
+      loading: "Loading PDF…",
+    },
+    de: {
+      title: "Lebenslauf — Nicolas Tuor",
+      label: "Zugangscode",
+      placeholder: "Code eingeben…",
+      unlock: "Entsperren",
+      wrong: "Ungültiger Code.",
+      ok: "Zugang gewährt.",
+      printing: "Drucken/PDF",
+      pdfMode: "Geschütztes PDF",
+      loading: "PDF wird geladen…",
+    },
+  }[LANG] || T_fr();
+
+  function T_fr() {
+    return T.fr;
   }
 
-  // zone "verrouillée" + formulaire
-  let locked = $('#cv-locked');
-  if (!locked) {
-    locked = document.createElement('section');
-    locked.id = 'cv-locked';
-    locked.innerHTML = `
-      <form id="cv-unlock-form" class="cv-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px;background:#0a2036;border:1px solid #163b62;border-radius:12px;">
-        <label for="cv-code" style="color:#cfe4ff;">Code d’accès&nbsp;:</label>
-        <input id="cv-code" type="password" placeholder="••••••" 
-               style="background:#0b2a47;border:1px solid #185082;color:#daecff;border-radius:10px;padding:.5rem .7rem;min-width:220px;">
-        <button id="cv-submit" type="submit"
-                style="background:linear-gradient(180deg,#0b2a47,#093257);color:#daecff;border:1px solid #185082;border-radius:10px;padding:.5rem .9rem;font-weight:600;">
-          Déverrouiller
-        </button>
-        <small id="cv-help" style="color:#9bb2da;"></small>
-      </form>`;
-    // Si tu as déjà une zone d’entête, on insère juste après. Sinon on met au début de main.
-    main.prepend(locked);
+  // ------- DOM helpers -------
+  const $ = (sel, root = document) => root.querySelector(sel);
+
+  function createEl(tag, attrs = {}, children = []) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") el.className = v;
+      else if (k === "text") el.textContent = v;
+      else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v);
+    }
+    for (const c of [].concat(children)) {
+      if (c == null) continue;
+      el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    }
+    return el;
   }
 
-  const form   = $('#cv-unlock-form', locked);
-  const input  = $('#cv-code', locked);
-  const help   = $('#cv-help', locked);
-  const submit = $('#cv-submit', locked);
+  // ------- UI scaffolding -------
+  function ensureScaffolding() {
+    // zone principale (au début du <main> si présent)
+    const main = $("main") || document.body;
 
-  // ---- affichage
-  function unlock(){
+    // Panneau "verrouillé" (formulaire)
+    let locked = $("#cv-locked");
+    if (!locked) {
+      locked = createEl("section", { id: "cv-locked", style: "margin: 16px 0;" }, [
+        createEl("div", { class: "card", style: "max-width:560px" }, [
+          createEl("h2", { text: T.title, style: "margin-top:0" }),
+          createEl("label", { for: "cv-code", text: T.label }),
+          createEl("div", { style: "display:flex; gap:8px; margin:.4rem 0 0" }, [
+            createEl("input", {
+              id: "cv-code",
+              type: "password",
+              autocomplete: "off",
+              placeholder: T.placeholder,
+              style:
+                "flex:1; padding:.6rem .8rem; border-radius:10px; border:1px solid #ffffff25; background:#ffffff10; color:inherit; outline:none;",
+            }),
+            createEl("button", { id: "cv-unlock", class: "btn primary", text: T.unlock }),
+          ]),
+          createEl("small", { id: "cv-msg", style: "display:block; margin-top:.6rem; opacity:.9" }),
+        ]),
+      ]);
+      main.insertBefore(locked, main.firstChild);
+    }
+
+    // Zone "déverrouillée" (PDF embarqué)
+    let unlocked = $("#cv-unlocked");
+    if (!unlocked) {
+      unlocked = createEl("section", { id: "cv-unlocked", style: "display:none; margin:16px 0" }, [
+        createEl("div", { class: "card" }, [
+          createEl("div", { id: "cv-viewbar", style: "display:flex; gap:8px; align-items:center; margin-bottom:8px" }, [
+            createEl("span", { text: T.pdfMode }),
+            createEl("span", { id: "cv-loading", text: " · " + T.loading, style: "opacity:.8" }),
+          ]),
+          createEl("iframe", {
+            id: "cv-frame",
+            title: "CV PDF",
+            style:
+              "width:100%; height:75vh; border:1px solid #ffffff22; border-radius:12px; background:#0b2237",
+            sandbox: "allow-same-origin allow-scripts allow-forms",
+          }),
+        ]),
+      ]);
+      main.insertBefore(unlocked, locked.nextSibling);
+    }
+  }
+
+  // ------- Logic -------
+  async function verifyCode(code) {
     try {
-      locked.hidden = true;
-      unlocked.hidden = false;
-      localStorage.setItem(STORAGE_KEY, '1');
-      document.body.classList.add('cv-unlocked');
-    } catch {}
-  }
-  function lock(){
-    try {
-      locked.hidden = false;
-      unlocked.hidden = true;
-      localStorage.removeItem(STORAGE_KEY);
-      document.body.classList.remove('cv-unlocked');
-    } catch {}
+      const r = await fetch(`/api/verify?code=${encodeURIComponent(code)}`, { method: "GET" });
+      if (!r.ok) return false;
+      const j = await r.json().catch(() => ({}));
+      return !!j.ok;
+    } catch {
+      return false;
+    }
   }
 
-  // état initial
-  if (localStorage.getItem(STORAGE_KEY) === '1') {
-    unlock();
-  } else {
-    lock();
+  function setLockedUI(state, msg, ok = false) {
+    const m = $("#cv-msg");
+    if (!m) return;
+    m.textContent = msg || "";
+    m.style.color = ok ? "#48e39f" : "";
   }
 
-  // ---- UX
-  function setBusy(b){
-    if(!submit) return;
-    submit.disabled = b;
-    submit.textContent = b ? 'Vérification…' : 'Déverrouiller';
-  }
-  function setHelp(msg, ok=false){
-    if(help){ help.textContent = msg || ''; help.style.color = ok ? '#22c55e' : '#ffb4b4'; }
-  }
+  function revealPDF(code) {
+    const locked = $("#cv-locked");
+    const unlocked = $("#cv-unlocked");
+    if (locked) locked.style.display = "none";
+    if (unlocked) unlocked.style.display = "";
 
-  // ---- vérification
-  async function verify(code){
-    // Try API first if it exists:
-    try {
-      const res = await fetch(`/api/verify?code=${encodeURIComponent(code)}`, { method:'GET' });
-      if (res.ok) return true;
-    } catch { /* pas d’API, on tente le fallback */ }
+    const iframe = $("#cv-frame");
+    const loading = $("#cv-loading");
+    if (loading) loading.style.display = "";
 
-    // Fallback pour tests / simple partage (tu envoies toi-même ce code au recruteur)
-    if (FALLBACK_TEST_CODE && code === FALLBACK_TEST_CODE) return true;
-
-    return false;
-  }
-
-  // ---- submit
-  if (form) {
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const code = (input?.value || '').trim();
-      if (!code){ setHelp('Entrez votre code.'); return; }
-      setBusy(true); setHelp('');
-      const ok = await verify(code);
-      setBusy(false);
-      if (ok){ setHelp('Accès accordé.', true); unlock(); }
-      else   { setHelp('Code invalide.'); lock(); }
-    });
+    if (iframe) {
+      // charge via l’API protégée
+      iframe.src = `/api/cv?code=${encodeURIComponent(code)}`;
+      iframe.addEventListener(
+        "load",
+        () => {
+          if (loading) loading.style.display = "none";
+        },
+        { once: true }
+      );
+    }
   }
 
-});
-</script>
+  async function handleUnlock(code) {
+    if (!code || code.trim().length < 3) {
+      setLockedUI(false, T.wrong);
+      return;
+    }
+    const ok = await verifyCode(code.trim());
+    if (!ok) {
+      setLockedUI(false, T.wrong);
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, "1");
+    setLockedUI(true, T.ok, true);
+    revealPDF(code.trim());
+  }
+
+  function hookEvents() {
+    const btn = $("#cv-unlock");
+    const inp = $("#cv-code");
+    if (btn) btn.addEventListener("click", () => handleUnlock(inp && inp.value));
+    if (inp)
+      inp.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") handleUnlock(inp.value);
+      });
+  }
+
+  function initFromStorageOrQuery() {
+    const hasOk = localStorage.getItem(STORAGE_KEY) === "1";
+    const q = new URLSearchParams(location.search);
+    const codeQ = q.get("code");
+
+    if (hasOk && codeQ) {
+      revealPDF(codeQ);
+      return;
+    }
+    if (hasOk && !codeQ) {
+      // Si déjà validé mais pas de code dans l’URL, on affiche l’UI déverrouillée
+      // avec une tentative de chargement par défaut (l’API refusera sans code, mais l’UI est visible).
+      revealPDF("");
+      return;
+    }
+    // Sinon, formulaire visible
+    const locked = $("#cv-locked");
+    if (locked) locked.style.display = "";
+  }
+
+  // ------- Boot -------
+  document.addEventListener("DOMContentLoaded", () => {
+    ensureScaffolding();
+    hookEvents();
+    initFromStorageOrQuery();
+  });
+})();
