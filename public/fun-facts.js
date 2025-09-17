@@ -1,47 +1,20 @@
-/* Fun Facts / Myths (FR/EN/DE)
-   - Charge /facts-data.json (ou <script id="facts-data" type="application/json">)
-   - Affiche cartes, filtres All/Facts/Myths
-   - Liens sources cliquables (target=_blank rel=noopener)
-   - Plus aucun "TODO"
+/* Fun Facts & Myths (FR/EN/DE)
+   - Accepte /facts-data.json sous forme {items:[...]} OU [...]
+   - Mappe automatiquement: type→kind, category→tag, truth→summary, claim conservé pour l’aperçu
+   - Liens Sources cliquables, filtres All/Facts/Myths
 */
 (function () {
   "use strict";
 
   const LANG = (document.documentElement.getAttribute("lang") || "fr").slice(0, 2).toLowerCase();
-
-  const LMAP = {
-    fr: {
-      title: "Fun Facts",
-      lead: "Sélection de faits et de mythes triés par thème. Cliquez une carte pour voir les sources.",
-      filterAll: "Tous",
-      filterFacts: "Faits",
-      filterMyths: "Mythes",
-      sources: "Sources",
-      more: "En savoir plus",
-      empty: "Aucun élément à afficher.",
-    },
-    en: {
-      title: "Fun Facts",
-      lead: "A selection of facts and myths by theme. Click a card to view sources.",
-      filterAll: "All",
-      filterFacts: "Facts",
-      filterMyths: "Myths",
-      sources: "Sources",
-      more: "Learn more",
-      empty: "Nothing to display.",
-    },
-    de: {
-      title: "Fun Facts",
-      lead: "Ausgewählte Fakten und Mythen nach Thema. Klicken Sie auf eine Karte, um die Quellen zu sehen.",
-      filterAll: "Alle",
-      filterFacts: "Fakten",
-      filterMyths: "Mythen",
-      sources: "Quellen",
-      more: "Mehr erfahren",
-      empty: "Keine Einträge vorhanden.",
-    },
-  };
-  const L = LMAP[LANG] || LMAP.fr;
+  const L = {
+    fr: { title:"Fun Facts", lead:"Sélection de faits et de mythes. Cliquez une carte pour les détails et les sources.",
+          filterAll:"Tous", filterFacts:"Faits", filterMyths:"Mythes", sources:"Sources", more:"En savoir plus", empty:"Aucun élément à afficher." },
+    en: { title:"Fun Facts", lead:"A selection of facts and myths. Click a card for details and sources.",
+          filterAll:"All", filterFacts:"Facts", filterMyths:"Myths", sources:"Sources", more:"Learn more", empty:"Nothing to display." },
+    de: { title:"Fun Facts", lead:"Ausgewählte Fakten und Mythen. Karte anklicken für Details und Quellen.",
+          filterAll:"Alle", filterFacts:"Fakten", filterMyths:"Mythen", sources:"Quellen", more:"Mehr erfahren", empty:"Keine Einträge vorhanden." },
+  }[LANG];
 
   const $ = (s, r = document) => r.querySelector(s);
   const el = (t, a = {}, k = []) => {
@@ -59,27 +32,34 @@
   let DATA = [];
   let FILTER = "all";
 
+  function coerceArray(payload) {
+    if (!payload) return [];
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload.items)) return payload.items;
+    return [];
+  }
+
   function normalize(raw) {
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((it) => ({
-        kind: (it.kind || it.type || "").toString().toLowerCase() || "fact",
-        title: it.title || it.claim || "",
-        summary: it.summary || it.explain || it.text || "",
-        tag: it.tag || it.domain || it.topic || "",
-        score: typeof it.score === "number" ? it.score : null,
-        sources: Array.isArray(it.sources)
-          ? it.sources
-              .map((s) => (typeof s === "string" ? { title: s, url: s } : { title: s.title || s.name || "↗", url: s.url || "" }))
-              .filter((s) => !!s.url)
-          : [],
-      }))
+    return coerceArray(raw)
+      .map((it) => {
+        const kind = (it.kind || it.type || "").toString().toLowerCase() || "fact";
+        const title = it.title || it.claim || "";
+        // IMPORTANT : on affiche par défaut la "truth" comme résumé
+        const summary = it.summary || it.truth || it.explain || it.text || "";
+        const tag = it.tag || it.category || it.domain || it.topic || "";
+        const score = typeof it.wow_rating === "number" ? it.wow_rating
+                    : typeof it.score === "number" ? it.score
+                    : null;
+        const sources = Array.isArray(it.sources)
+          ? it.sources.map((s) => (typeof s === "string" ? { title: s, url: s } : { title: s.title || s.name || "↗", url: s.url || "" }))
+                      .filter((s) => !!s.url)
+          : [];
+        return { kind, title, summary, claim: it.claim || "", tag, score, sources };
+      })
       .filter((x) => x.title && x.summary);
   }
 
-  function badge(text) {
-    return el("span", { class: "badge", text });
-  }
+  function badge(text) { return el("span", { class: "badge", text }); }
 
   function card(item) {
     const icon = item.kind === "myth" ? "❓" : "⭐";
@@ -90,36 +70,26 @@
       item.score != null ? badge("★ " + item.score.toFixed(2)) : null,
     ]);
 
-    const srcs =
-      item.sources.length > 0
-        ? el(
-            "div",
-            {},
-            [
-              el("strong", { text: L.sources + " : " }),
-              ...item.sources.map((s, i) =>
-                el(
-                  "a",
-                  { href: s.url, target: "_blank", rel: "noopener", style: "margin-right:8px" },
-                  [s.title || L.more + " " + (i + 1)]
-                )
-              ),
-            ]
-          )
-        : null;
-
-    const back = el("div", { class: "q-exp" }, [el("p", { text: item.summary }), el("div", { class: "sep" }), srcs]);
-
-    const card = el("div", { class: "q-item", style: "cursor:pointer" }, [
-      head,
-      el("div", {}, [back]),
+    // Face arrière : on affiche la "truth" (summary) et les sources
+    const back = el("div", { class: "q-exp" }, [
+      item.claim ? el("p", { class: "muted", text: "• Affirmation : " + item.claim }) : null,
+      el("p", { text: item.summary }),
+      el("div", { class: "sep" }),
+      el("div", {}, [
+        el("strong", { text: L.sources + " : " }),
+        ...item.sources.map((s, i) =>
+          el("a", { href: s.url, target: "_blank", rel: "noopener", style: "margin-right:8px" }, [s.title || L.more + " " + (i + 1)])
+        ),
+      ]),
     ]);
+
+    const card = el("div", { class: "q-item", style: "cursor:pointer" }, [head, el("div", {}, [back])]);
     card.addEventListener("click", () => card.classList.toggle("flipped"));
     return card;
   }
 
   function render() {
-    const root = $("#factsGrid") || $("#funfacts-root") || $(".answers") || $("main") || document.body;
+    const root = $("#factsGrid") || $("#funfacts-root") || $(".answers") || $("main");
     if (!root) return;
     root.innerHTML = "";
 
@@ -140,24 +110,9 @@
       const parent = $("main") || document.body;
       parent.insertBefore(bar, parent.firstChild);
     }
-    const mk = (key, label) =>
-      el(
-        "button",
-        {
-          class: "btn",
-          type: "button",
-          onClick: () => {
-            FILTER = key;
-            render();
-            markActive();
-          },
-        },
-        [label]
-      );
+    const mk = (key, label) => el("button", { class: "btn", type: "button", onClick: () => { FILTER = key; render(); markActive(); }}, [label]);
     bar.innerHTML = "";
-    bar.appendChild(el("div", { style: "display:flex;gap:8px;flex-wrap:wrap" }, [
-      mk("all", L.filterAll), mk("fact", L.filterFacts), mk("myth", L.filterMyths)
-    ]));
+    bar.appendChild(el("div", { style: "display:flex;gap:8px;flex-wrap:wrap" }, [ mk("all", L.filterAll), mk("fact", L.filterFacts), mk("myth", L.filterMyths) ]));
 
     function markActive() {
       bar.querySelectorAll("button").forEach((b) => b.classList.remove("primary"));
@@ -168,49 +123,23 @@
     markActive();
   }
 
-  function parseInlineJson() {
-    try {
-      const tag = document.getElementById("facts-data");
-      if (!tag) return null;
-      const j = JSON.parse(tag.textContent || "null");
-      return j;
-    } catch {
-      return null;
-    }
-  }
-
-  async function loadData() {
-    // 1) via fichier
-    try {
-      const r = await fetch("/facts-data.json", { cache: "no-store" });
-      if (r.ok) {
-        const j = await r.json();
-        if (Array.isArray(j)) return j;
-        if (j && Array.isArray(j.items)) return j.items;
-      }
-    } catch {}
-    // 2) via <script id="facts-data">
-    const inline = parseInlineJson();
-    if (inline) return inline;
-    return [];
-  }
-
-  function attachEvents() {
-    // placeholder (conserve le nom pour éviter ReferenceError)
-  }
-
   async function init() {
-    // titre / lead si vides
+    // titre/lead si vides
     const h1 = document.querySelector("main h1, .page-head h1, h1");
     if (h1 && !h1.textContent.trim()) h1.textContent = L.title;
     const lead = document.querySelector("#factsLead") || document.querySelector(".muted");
-    if (lead && !lead.textContent.trim()) lead.textContent = L.lead;
+    if (lead && !lead.dataset.ffInit) { lead.textContent = L.lead; lead.dataset.ffInit = "1"; }
 
-    const raw = await loadData();
-    DATA = normalize(raw);
+    try {
+      const r = await fetch("/facts-data.json", { cache: "no-store" });
+      const payload = await r.json().catch(() => []);
+      DATA = normalize(payload);
+    } catch (e) {
+      console.error("facts load error:", e);
+      DATA = [];
+    }
     renderFilters();
     render();
-    attachEvents();
   }
 
   document.addEventListener("DOMContentLoaded", init);
