@@ -3,49 +3,42 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Fun Facts — Nicolas Tuor</title>
-  <meta name="description" content="Faits et idées reçues, avec sources vérifiables."/>
+  <title>Fun Facts</title>
   <link rel="icon" href="/favicon.ico"/>
   <link rel="stylesheet" href="/style.css"/>
-  <script src="/site.js" defer></script>
   <style>
     main.wrap { max-width: 980px }
-    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-    .q-item{padding:14px 16px;border-radius:14px;border:1px solid #ffffff22;background:#0b2237cc;margin:10px 0}
-    .q-item h3{margin:0 0 6px 0}
-    .q-item .muted{opacity:.9}
-    .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #ffffff33;margin-left:8px;font-size:.85em;opacity:.9}
-    .q-item a{color:#9dd1ff;text-decoration:underline}
+    .bar { display:flex; gap:8px; flex-wrap:wrap; margin: 12px 0 }
+    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer }
+    .btn.primary { background:#0e3b63 }
+    .grid { display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media (min-width:900px){ .grid { grid-template-columns: 1fr 1fr; } }
+    .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px; position:relative }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; margin-left:8px; font-size:.85em; opacity:.9 }
+    .muted { opacity:.9 }
+    .sources a { color:#9dd1ff; text-decoration:underline; margin-right:10px }
+    .flip { perspective: 800px; }
+    .flip .inner { transition: transform .6s; transform-style: preserve-3d; position:relative; }
+    .flip:hover .inner { transform: rotateY(180deg); }
+    .flip .face, .flip .back { backface-visibility: hidden; position:absolute; inset:0; padding:14px 16px }
+    .flip .back { transform: rotateY(180deg); }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <nav class="wrap row" aria-label="Navigation principale">
-    <a href="/" class="btn ghost">Accueil</a>
-    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
-    <a href="/cv.html" class="btn ghost">CV</a>
-    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
-    <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
-    <a href="/fun-facts.html" class="btn" aria-current="page">Fun Facts</a>
-    <span style="flex:1"></span>
-    <a href="/fun-facts.html" class="btn">FR</a>
-    <a href="/fun-facts-en.html" class="btn ghost">EN</a>
-    <a href="/fun-facts-de.html" class="btn ghost">DE</a>
-  </nav>
-</header>
+  <main class="wrap" style="padding:16px">
+    <h1>Fun Facts</h1>
+    <p class="muted">Cliquez une carte pour la retourner. Les sources sont toujours affichées.</p>
 
-<main class="wrap">
-  <h1>Fun Facts</h1>
-  <p id="factsLead" class="muted">Sélection de faits et de mythes. Cliquez une carte pour les sources.</p>
+    <div class="bar">
+      <button id="btnRandomBatch" class="btn primary">Nouveau lot aléatoire</button>
+      <button id="btnOneFact" class="btn">Un fait</button>
+      <button id="btnOneMyth" class="btn">Un mythe</button>
+      <small id="ffStatus" class="muted"></small>
+    </div>
 
-  <div id="factsFilters" class="filters"></div>
-  <div id="factsGrid"></div>
-</main>
+    <div id="factsGrid" class="grid"></div>
+  </main>
 
-<footer class="wrap" style="margin:24px 0 40px;opacity:.8">
-  © Nicolas Tuor — Fun Facts éducatifs
-</footer>
-
-<script src="/fun-facts.js" defer></script>
+  <script src="/fun-facts.js" defer></script>
 </body>
 </html>
