@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="fr" data-theme="dark">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Fun Facts — Idées reçues & faits étonnants</title>
+  <title>Fun Facts — Irrtümer & bewiesene Fakten</title>
   <link rel="icon" href="/favicon.svg"/>
   <link rel="stylesheet" href="/style.css"/>
   <style>
-    /* Spécifique Fun Facts (léger ; s’appuie sur style.css global) */
+    /* Fun-Facts-spezifisch (leicht, basiert auf style.css) */
     .ff-wrap{display:grid;gap:16px}
     .ff-controls{position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--border)}
     .ff-toolbar{display:grid;gap:10px;grid-template-columns:1.4fr 0.9fr 0.9fr 0.9fr auto}
@@ -24,7 +24,7 @@
     .ff-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .ff-pager{display:flex;gap:8px;align-items:center;justify-content:flex-end}
     .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
-    /* Random bubbles */
+    /* Zufällige Bubbles */
     .ff-random-wrap{display:grid;gap:10px}
     .ff-canvas-box{position:relative;overflow:hidden;border:1px dashed var(--border);border-radius:var(--radius);background:rgba(255,255,255,.02)}
     #ff_canvas{width:100%;height:auto;display:block}
@@ -42,71 +42,71 @@
 
 <header class="nav">
   <div class="container">
-    <a class="brand" href="/fun-facts"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="/fun-facts-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
     <nav class="nav-links">
-      <a href="/">Accueil</a>
-      <a href="/portfolio">Portfolio</a>
-      <a href="/cv">CV</a>
-      <a href="/chatbot">Chatbot</a>
-      <a href="/ai">Idées IA</a>
-      <a href="/fun-facts" aria-current="page">Fun Facts</a>
-      <button id="dlCvBtn" class="btn chip" type="button">Télécharger le CV</button>
-      <button class="btn chip" type="button" data-toggle-theme aria-label="Basculer le thème">🌓</button>
+      <a href="/index-de.html">Start</a>
+      <a href="/portfolio-de.html">Portfolio</a>
+      <a href="/cv-de.html">CV</a>
+      <a href="/chatbot-de.html">Chatbot</a>
+      <a href="/ai-lab-de.html">KI-Ideen</a>
+      <a href="/fun-facts-de.html" aria-current="page">Fun Facts</a>
+      <button id="dlCvBtn" class="btn chip" type="button">PDF herunterladen</button>
+      <button class="btn chip" type="button" data-toggle-theme aria-label="Thema wechseln">🌓</button>
       <span class="lang-switch">
-        <a class="btn chip" href="/fun-facts.html" aria-current="page">FR</a>
+        <a class="btn chip" href="/fun-facts.html">FR</a>
         <a class="btn chip" href="/fun-facts-en.html">EN</a>
-        <a class="btn chip" href="/fun-facts-de.html">DE</a>
+        <a class="btn chip" href="/fun-facts-de.html" aria-current="page">DE</a>
       </span>
     </nav>
   </div>
 </header>
 
 <main class="container section ff-wrap">
-  <h1 class="title" id="ff_title">Fun Facts — <span class="muted">Idées reçues & faits avérés</span></h1>
-  <p class="lead" id="ff_lead">Une sélection ludique pour rappeler qu’il y a toujours quelque chose à apprendre.</p>
+  <h1 class="title" id="ff_title">Fun Facts — <span class="muted">Irrtümer & bewiesene Fakten</span></h1>
+  <p class="lead" id="ff_lead">Eine spielerische Auswahl – man lernt nie aus.</p>
 
-  <!-- Contrôles -->
+  <!-- Steuerung -->
   <section class="ff-controls ff-section">
     <form id="ff_form" class="ff-toolbar" role="search">
-      <label><span id="lbl_search">Recherche</span>
-        <input id="q" name="q" placeholder="Tapez pour filtrer…"/>
+      <label><span id="lbl_search">Suche</span>
+        <input id="q" name="q" placeholder="Zum Filtern tippen…"/>
       </label>
-      <label><span id="lbl_type">Type</span>
+      <label><span id="lbl_type">Typ</span>
         <select id="type" name="type">
-          <option value="all">Tous</option>
-          <option value="myth">Idées reçues</option>
-          <option value="fact">Faits avérés</option>
+          <option value="all">Alle</option>
+          <option value="myth">Irrtümer</option>
+          <option value="fact">Fakten</option>
         </select>
       </label>
-      <label><span id="lbl_cat">Catégorie</span>
+      <label><span id="lbl_cat">Kategorie</span>
         <select id="cat" name="cat">
-          <option value="all">Toutes</option>
-          <option>Science</option><option>Histoire</option><option>Santé</option>
-          <option>Langue</option><option>Culture</option><option>Technologie</option>
-          <option>Nature</option><option>Géographie</option>
+          <option value="all">Alle</option>
+          <option>Science</option><option>History</option><option>Health</option>
+          <option>Language</option><option>Culture</option><option>Technology</option>
+          <option>Nature</option><option>Geography</option>
         </select>
       </label>
-      <label><span id="lbl_sort">Trier</span>
+      <label><span id="lbl_sort">Sortieren</span>
         <select id="sort" name="sort">
-          <option value="pop_desc">Popularité ↓</option>
-          <option value="pop_asc">Popularité ↑</option>
+          <option value="pop_desc">Popularität ↓</option>
+          <option value="pop_asc">Popularität ↑</option>
           <option value="wow_desc">Wow ↓</option>
           <option value="wow_asc">Wow ↑</option>
         </select>
       </label>
       <div class="ff-actions">
-        <label><span id="lbl_n">Aléatoire : N</span>
+        <label><span id="lbl_n">Zufall: N</span>
           <input id="n" name="n" type="range" min="3" max="12" value="6"/>
         </label>
-        <button class="btn primary" id="btn_random" type="button" data-busy>🎲 Surprenez-moi</button>
+        <button class="btn primary" id="btn_random" type="button" data-busy>🎲 Überraschen Sie mich</button>
       </div>
     </form>
   </section>
 
-  <!-- Top myths -->
+  <!-- Top-Irrtümer -->
   <section class="ff-section">
     <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_top_myths">Top 50 — Idées reçues</h2>
+      <h2 id="h_top_myths">Top 50 — Weitverbreitete Irrtümer</h2>
       <div class="ff-pager">
         <button class="btn chip" id="pgm_prev">◀</button>
         <span id="pgm_lbl" class="muted">1/5</span>
@@ -116,10 +116,10 @@
     <div class="ff-grid" id="grid_myths" aria-live="polite"></div>
   </section>
 
-  <!-- Top facts -->
+  <!-- Top-Fakten -->
   <section class="ff-section">
     <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_top_facts">50 faits avérés</h2>
+      <h2 id="h_top_facts">50 bewiesene Fakten</h2>
       <div class="ff-pager">
         <button class="btn chip" id="pgf_prev">◀</button>
         <span id="pgf_lbl" class="muted">1/5</span>
@@ -129,28 +129,28 @@
     <div class="ff-grid" id="grid_facts" aria-live="polite"></div>
   </section>
 
-  <!-- Random bubbles -->
+  <!-- Zufallsblasen -->
   <section class="ff-section ff-random-wrap">
     <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_random">Sélection aléatoire — Visualisation</h2>
+      <h2 id="h_random">Zufallsauswahl — Visualisierung</h2>
       <div class="row gap"><span id="seed_lbl" class="muted"></span></div>
     </div>
     <div class="ff-canvas-box">
-      <canvas id="ff_canvas" width="1200" height="540" aria-label="Visualisation aléatoire"></canvas>
+      <canvas id="ff_canvas" width="1200" height="540" aria-label="Zufallsvisualisierung"></canvas>
     </div>
     <div id="ff_announce" class="ff-aria" aria-live="polite"></div>
   </section>
 </main>
 
 <footer class="container section footer">
-  <p class="foot">© Nicolas Tuor — Fun Facts éducatifs</p>
+  <p class="foot">© Nicolas Tuor — Bildungsorientierte Fun Facts</p>
 </footer>
 
 <!-- Popover -->
 <div id="ff_pop" class="ff-popover" role="dialog" aria-modal="true" aria-labelledby="pop_title">
   <div class="ff-pop-card card pad">
     <div class="row gap" style="align-items:flex-start;justify-content:space-between">
-      <h3 id="pop_title">Détail</h3>
+      <h3 id="pop_title">Details</h3>
       <button id="pop_close" class="btn chip">✕</button>
     </div>
     <p id="pop_claim" class="muted"></p>
@@ -160,7 +160,7 @@
 </div>
 
 <noscript>
-  <p class="container">Cette page interactive nécessite JavaScript pour fonctionner.</p>
+  <p class="container">Für diese interaktive Seite ist JavaScript erforderlich.</p>
 </noscript>
 
 </body>

@@ -5,27 +5,29 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Computer Science Didactics & Education with AI</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 
 <header class="nav">
   <div class="container">
-    <a class="brand" href="/">
+    <a class="brand" href="/index-en.html">
       <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
     </a>
     <nav class="nav-links">
-      <a href="/" aria-current="page">Home</a>
-      <a href="/portfolio">Portfolio</a>
-      <a href="/cv">CV</a>
-      <a href="/chatbot">Chatbot</a>
-      <a href="/ai">AI Ideas</a>
-      <a href="/fun-facts">Fun Facts</a>
-      <button id="dlCvBtn" class="btn linkish">Download PDF</button>
-      <button class="btn linkish" data-toggle-theme title="Toggle theme">🌓</button>
-      <a class="btn linkish" href="./index.html">FR</a>
-      <a class="btn linkish is-active" href="./index-en.html">EN</a>
-      <a class="btn linkish" href="./index-de.html">DE</a>
+      <a href="/index-en.html" aria-current="page">Home</a>
+      <a href="/portfolio-en.html">Portfolio</a>
+      <a href="/cv-en.html">CV</a>
+      <a href="/chatbot-en.html">Chatbot</a>
+      <a href="/ai-lab-en.html">AI Ideas</a>
+      <a href="/fun-facts-en.html">Fun Facts</a>
+      <button id="dlCvBtn" class="btn chip" type="button">Download PDF</button>
+      <button class="btn chip" type="button" data-toggle-theme aria-label="Toggle theme">🌓</button>
+      <span class="lang-switch">
+        <a class="btn chip" href="/index.html">FR</a>
+        <a class="btn chip" href="/index-en.html" aria-current="page">EN</a>
+        <a class="btn chip" href="/index-de.html">DE</a>
+      </span>
     </nav>
   </div>
 </header>
@@ -37,9 +39,9 @@
         <h1 class="xxl">Computer Science Didactics & <span class="accent">Education with AI</span></h1>
         <p class="lead">Explicit teaching, success criteria and thoughtful AI — concrete gains without lowering expectations.</p>
         <div class="row gap">
-          <a class="btn primary" href="./cv-en.html">View CV</a>
-          <a class="btn ghost" href="./portfolio-en.html">Examples</a>
-          <a class="btn ghost" href="./chatbot-en.html">💬 “Why hire me?”</a>
+          <a class="btn primary" href="/cv-en.html">View CV</a>
+          <a class="btn ghost" href="/portfolio-en.html">Examples</a>
+          <a class="btn ghost" href="/chatbot-en.html">💬 “Why hire me?”</a>
         </div>
         <ul class="kpis">
           <li>🧠 Critical thinking</li>
@@ -101,7 +103,7 @@
   </div>
 </footer>
 
-<script src="./site.js" defer></script>
+<script src="/site.js" defer></script>
 <script>
   const F = document.getElementById('factForm'), OUT = document.getElementById('factOut');
   F.addEventListener('submit', async (e)=>{

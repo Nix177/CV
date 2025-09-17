@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Histoire Aventure — Platformer IA</title>
   <link rel="icon" href="/favicon.svg" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="/style.css" />
   <style>
     /* Styles spécifiques au jeu (légers) */
     .gh-wrap { display:grid; gap:14px; }
@@ -34,14 +34,16 @@
     .gh-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius: 999px; border:1px solid var(--border); background:var(--surface);}
     @media (max-width: 840px){ .gh-toolbar{ grid-template-columns:1fr; } }
   </style>
-  <script defer src="./site.js"></script>
-  <script defer src="./game-history.js"></script>
+  <script defer src="/site.js"></script>
+  <script defer src="/game-history.js"></script>
 </head>
 <body>
 
 <header class="nav">
   <div class="container">
-    <a class="brand" href="/"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="/">
+      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
+    </a>
     <nav class="nav-links">
       <a href="/">Accueil</a>
       <a href="/portfolio">Portfolio</a>
@@ -49,7 +51,13 @@
       <a href="/chatbot">Chatbot</a>
       <a href="/ai">Idées IA</a>
       <a href="/fun-facts">Fun Facts</a>
-      <button class="btn chip" data-toggle-theme title="Thème">◐</button>
+      <button id="dlCvBtn" class="btn chip" type="button">Télécharger le CV</button>
+      <button class="btn chip" type="button" data-toggle-theme aria-label="Basculer le thème">🌓</button>
+      <span class="lang-switch">
+        <a class="btn chip" href="/game-history.html" aria-current="page">FR</a>
+        <a class="btn chip" href="/game-history.html">EN</a>
+        <a class="btn chip" href="/game-history.html">DE</a>
+      </span>
     </nav>
   </div>
 </header>
