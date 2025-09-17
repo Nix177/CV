@@ -1,21 +1,21 @@
 /* CV — accès protégé (FR/EN/DE)
-   - Affiche un panneau de déverrouillage (code d’accès) si l’accès n’est pas validé
-   - Vérifie via /api/verify?code=... (GET) → { ok: true/false }
-   - Une fois validé, embarque le PDF via /api/cv?code=...
-   - Persiste l’accès en localStorage (STORAGE_KEY)
-   - S’adapte à la page (crée les conteneurs si absents)
+   - Formulaire code d’accès
+   - Vérifie /api/verify (GET ?code=... puis POST {code} si besoin)
+   - Si OK, embarque /api/cv?code=...
+   - Mémorise l’accès + le code pour rechargements (localStorage)
+   - Évite l’avertissement sandbox (pas de allow-scripts + allow-same-origin)
 */
-
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "cv_access_ok_v1";
+  const LS_OK   = "cv_access_ok_v1";
+  const LS_CODE = "cv_access_code_v1";
 
   const LANG = (document.documentElement.getAttribute("lang") || "fr")
     .toLowerCase()
     .slice(0, 2);
 
-  const T = {
+  const TMAP = {
     fr: {
       title: "CV — Nicolas Tuor",
       label: "Code d’accès",
@@ -49,114 +49,121 @@
       pdfMode: "Geschütztes PDF",
       loading: "PDF wird geladen…",
     },
-  }[LANG] || T_fr();
+  };
+  const T = TMAP[LANG] || TMAP.fr;
 
-  function T_fr() {
-    return T.fr;
-  }
-
-  // ------- DOM helpers -------
-  const $ = (sel, root = document) => root.querySelector(sel);
-
-  function createEl(tag, attrs = {}, children = []) {
-    const el = document.createElement(tag);
-    for (const [k, v] of Object.entries(attrs || {})) {
-      if (k === "class") el.className = v;
-      else if (k === "text") el.textContent = v;
-      else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
-      else el.setAttribute(k, v);
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, kids = []) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") e.className = v;
+      else if (k === "text") e.textContent = v;
+      else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
     }
-    for (const c of [].concat(children)) {
-      if (c == null) continue;
-      el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-    }
-    return el;
-  }
+    for (const k of [].concat(kids)) e.appendChild(typeof k === "string" ? document.createTextNode(k) : k);
+    return e;
+  };
 
-  // ------- UI scaffolding -------
-  function ensureScaffolding() {
-    // zone principale (au début du <main> si présent)
+  function ensureUI() {
     const main = $("main") || document.body;
 
-    // Panneau "verrouillé" (formulaire)
-    let locked = $("#cv-locked");
-    if (!locked) {
-      locked = createEl("section", { id: "cv-locked", style: "margin: 16px 0;" }, [
-        createEl("div", { class: "card", style: "max-width:560px" }, [
-          createEl("h2", { text: T.title, style: "margin-top:0" }),
-          createEl("label", { for: "cv-code", text: T.label }),
-          createEl("div", { style: "display:flex; gap:8px; margin:.4rem 0 0" }, [
-            createEl("input", {
+    // panneau verrouillé
+    if (!$("#cv-locked")) {
+      const panel = el("section", { id: "cv-locked", style: "margin:16px 0" }, [
+        el("div", { class: "card", style: "max-width:560px" }, [
+          el("h2", { text: T.title, style: "margin-top:0" }),
+          el("label", { for: "cv-code", text: T.label }),
+          el("div", { style: "display:flex;gap:8px;margin-top:.4rem" }, [
+            el("input", {
               id: "cv-code",
               type: "password",
-              autocomplete: "off",
               placeholder: T.placeholder,
+              autocomplete: "off",
               style:
-                "flex:1; padding:.6rem .8rem; border-radius:10px; border:1px solid #ffffff25; background:#ffffff10; color:inherit; outline:none;",
+                "flex:1;padding:.6rem .8rem;border-radius:10px;border:1px solid #ffffff25;background:#ffffff10;color:inherit;outline:none;",
             }),
-            createEl("button", { id: "cv-unlock", class: "btn primary", text: T.unlock }),
+            el("button", { id: "cv-unlock", class: "btn primary", text: T.unlock }),
           ]),
-          createEl("small", { id: "cv-msg", style: "display:block; margin-top:.6rem; opacity:.9" }),
+          el("small", { id: "cv-msg", style: "display:block;margin-top:.6rem;opacity:.9" }),
         ]),
       ]);
-      main.insertBefore(locked, main.firstChild);
+      main.insertBefore(panel, main.firstChild);
     }
 
-    // Zone "déverrouillée" (PDF embarqué)
-    let unlocked = $("#cv-unlocked");
-    if (!unlocked) {
-      unlocked = createEl("section", { id: "cv-unlocked", style: "display:none; margin:16px 0" }, [
-        createEl("div", { class: "card" }, [
-          createEl("div", { id: "cv-viewbar", style: "display:flex; gap:8px; align-items:center; margin-bottom:8px" }, [
-            createEl("span", { text: T.pdfMode }),
-            createEl("span", { id: "cv-loading", text: " · " + T.loading, style: "opacity:.8" }),
+    // panneau déverrouillé
+    if (!$("#cv-unlocked")) {
+      const unlocked = el("section", { id: "cv-unlocked", style: "display:none;margin:16px 0" }, [
+        el("div", { class: "card" }, [
+          el("div", { id: "cv-viewbar", style: "display:flex;gap:8px;align-items:center;margin-bottom:8px" }, [
+            el("span", { text: T.pdfMode }),
+            el("span", { id: "cv-loading", text: " · " + T.loading, style: "opacity:.8" }),
           ]),
-          createEl("iframe", {
+          el("iframe", {
             id: "cv-frame",
             title: "CV PDF",
-            style:
-              "width:100%; height:75vh; border:1px solid #ffffff22; border-radius:12px; background:#0b2237",
-            sandbox: "allow-same-origin allow-scripts allow-forms",
+            // ⚠️ pas de allow-scripts + allow-same-origin en même temps
+            sandbox: "allow-same-origin", // suffisant pour un PDF
+            style: "width:100%;height:75vh;border:1px solid #ffffff22;border-radius:12px;background:#0b2237",
           }),
         ]),
       ]);
-      main.insertBefore(unlocked, locked.nextSibling);
+      const locked = $("#cv-locked");
+      (locked?.parentNode || document.body).insertBefore(unlocked, locked?.nextSibling || null);
     }
   }
 
-  // ------- Logic -------
-  async function verifyCode(code) {
-    try {
-      const r = await fetch(`/api/verify?code=${encodeURIComponent(code)}`, { method: "GET" });
-      if (!r.ok) return false;
-      const j = await r.json().catch(() => ({}));
-      return !!j.ok;
-    } catch {
-      return false;
-    }
-  }
-
-  function setLockedUI(state, msg, ok = false) {
+  function setMsg(msg, ok = false) {
     const m = $("#cv-msg");
     if (!m) return;
     m.textContent = msg || "";
     m.style.color = ok ? "#48e39f" : "";
   }
 
-  function revealPDF(code) {
+  async function verifyCode(code) {
+    // 1) GET ?code
+    try {
+      const r = await fetch(`/api/verify?code=${encodeURIComponent(code)}`, { method: "GET" });
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        if (j && (j.ok === true || j.status === "ok")) return true;
+      }
+    } catch {}
+    // 2) POST {code}
+    try {
+      const r = await fetch(`/api/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        if (j && (j.ok === true || j.status === "ok")) return true;
+      }
+    } catch {}
+    // 3) GET avec header alternatif (au cas où l’API l’attend)
+    try {
+      const r = await fetch(`/api/verify`, { headers: { "x-cv-code": code } });
+      if (r.ok) {
+        const j = await r.json().catch(() => ({}));
+        if (j && (j.ok === true || j.status === "ok")) return true;
+      }
+    } catch {}
+    return false;
+  }
+
+  function showUnlocked(code) {
     const locked = $("#cv-locked");
     const unlocked = $("#cv-unlocked");
     if (locked) locked.style.display = "none";
     if (unlocked) unlocked.style.display = "";
 
-    const iframe = $("#cv-frame");
+    const i = $("#cv-frame");
     const loading = $("#cv-loading");
     if (loading) loading.style.display = "";
-
-    if (iframe) {
-      // charge via l’API protégée
-      iframe.src = `/api/cv?code=${encodeURIComponent(code)}`;
-      iframe.addEventListener(
+    if (i) {
+      i.src = `/api/cv?code=${encodeURIComponent(code)}`;
+      i.addEventListener(
         "load",
         () => {
           if (loading) loading.style.display = "none";
@@ -168,53 +175,43 @@
 
   async function handleUnlock(code) {
     if (!code || code.trim().length < 3) {
-      setLockedUI(false, T.wrong);
+      setMsg(T.wrong);
       return;
     }
     const ok = await verifyCode(code.trim());
     if (!ok) {
-      setLockedUI(false, T.wrong);
+      setMsg(T.wrong);
       return;
     }
-    localStorage.setItem(STORAGE_KEY, "1");
-    setLockedUI(true, T.ok, true);
-    revealPDF(code.trim());
+    localStorage.setItem(LS_OK, "1");
+    localStorage.setItem(LS_CODE, code.trim());
+    setMsg(T.ok, true);
+    showUnlocked(code.trim());
   }
 
-  function hookEvents() {
+  function wire() {
     const btn = $("#cv-unlock");
     const inp = $("#cv-code");
     if (btn) btn.addEventListener("click", () => handleUnlock(inp && inp.value));
-    if (inp)
-      inp.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") handleUnlock(inp.value);
-      });
+    if (inp) inp.addEventListener("keydown", (e) => e.key === "Enter" && handleUnlock(inp.value));
   }
 
-  function initFromStorageOrQuery() {
-    const hasOk = localStorage.getItem(STORAGE_KEY) === "1";
-    const q = new URLSearchParams(location.search);
-    const codeQ = q.get("code");
+  function boot() {
+    ensureUI();
+    wire();
 
-    if (hasOk && codeQ) {
-      revealPDF(codeQ);
-      return;
+    const ok = localStorage.getItem(LS_OK) === "1";
+    const codeStored = localStorage.getItem(LS_CODE) || "";
+    const qs = new URLSearchParams(location.search);
+    const codeQ = (qs.get("code") || "").trim();
+
+    if (ok && (codeQ || codeStored)) {
+      showUnlocked(codeQ || codeStored);
+    } else {
+      const locked = $("#cv-locked");
+      if (locked) locked.style.display = "";
     }
-    if (hasOk && !codeQ) {
-      // Si déjà validé mais pas de code dans l’URL, on affiche l’UI déverrouillée
-      // avec une tentative de chargement par défaut (l’API refusera sans code, mais l’UI est visible).
-      revealPDF("");
-      return;
-    }
-    // Sinon, formulaire visible
-    const locked = $("#cv-locked");
-    if (locked) locked.style.display = "";
   }
 
-  // ------- Boot -------
-  document.addEventListener("DOMContentLoaded", () => {
-    ensureScaffolding();
-    hookEvents();
-    initFromStorageOrQuery();
-  });
+  document.addEventListener("DOMContentLoaded", boot);
 })();
