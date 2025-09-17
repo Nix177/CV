@@ -9,60 +9,60 @@
 
   <style>
     :root{
-      --card: #0b2237cc;
-      --bd:   #ffffff22;
-      --ink:  #e6f1ff;
+      --card:#0b2237cc; --bd:#ffffff22; --ink:#e6f1ff;
     }
     body{ margin:0 }
-    main.wrap{ max-width: 1080px; padding: 16px; margin: 0 auto; }
+    main.wrap{ max-width:1080px; padding:16px; margin:0 auto }
 
-    /* Barre d’actions */
     .bar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:12px 0 16px }
     .btn{ padding:8px 12px; border:1px solid var(--bd); border-radius:10px; background:#0b1f33; color:var(--ink); cursor:pointer }
     .btn.primary{ background:#0e3b63 }
     .muted{ opacity:.9 }
 
-    /* Grille cartes recto/verso */
-    .grid{ display:grid; gap:12px; grid-template-columns: 1fr; }
-    @media (min-width:900px){ .grid{ grid-template-columns: 1fr 1fr; } }
-    .card{ border:1px solid var(--bd); border-radius:14px; background:var(--card); padding:0; overflow:hidden }
-    .flip{ height: 170px; perspective: 900px; }               /* hauteur fixe → plus de “barres vides” */
-    .flip .inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition: transform .6s; }
-    .flip:hover .inner{ transform: rotateY(180deg); }
-    .face,.back{ position:absolute; inset:0; padding:14px 16px; backface-visibility: hidden; }
-    .back{ transform: rotateY(180deg); }
+    .grid{ display:grid; gap:12px; grid-template-columns:1fr }
+    @media (min-width:900px){ .grid{ grid-template-columns:1fr 1fr } }
+    .card{ border:1px solid var(--bd); border-radius:14px; background:var(--card); overflow:hidden }
+    .flip{ height:170px; perspective:900px }
+    .flip .inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .6s }
+    .flip:hover .inner{ transform:rotateY(180deg) }
+    .face,.back{ position:absolute; inset:0; padding:14px 16px; backface-visibility:hidden }
+    .back{ transform:rotateY(180deg) }
     .badge{ display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; font-size:.85em; opacity:.95; margin-left:8px }
-
     .sources{ margin-top:8px }
     .sources a{ color:#9dd1ff; text-decoration:underline; margin-right:10px; word-break:break-all }
 
     /* Nuage de bulles */
-    .cloud-wrap{ margin-top:28px; }
+    .cloud-wrap{ margin-top:28px }
     .cloud-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px }
-    #factsCloud{ position:relative; height: 380px; border:1px solid var(--bd); border-radius:14px; background: radial-gradient(1200px 600px at 20% 0%, rgba(255,255,255,.035), transparent); overflow:hidden }
+    #factsCloud{ position:relative; height:380px; border:1px solid var(--bd); border-radius:14px;
+                 background: radial-gradient(1200px 600px at 20% 0%, rgba(255,255,255,.035), transparent);
+                 overflow:hidden }
+
     .bubble{
       position:absolute; display:flex; align-items:center; justify-content:center; text-align:center;
-      border-radius:9999px; padding:10px; color:#102033; cursor:pointer;
+      border-radius:9999px; padding:8px; color:#0b1f33; cursor:pointer;
       background: radial-gradient(120px 60px at 30% 35%, #ffffffee, #c6e6ffcc);
-      border:1px solid #cde3ff;
-      box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      transform: translate(0,0);
-      animation-name: drift; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: alternate;
-      transition: transform .15s ease, box-shadow .15s ease, z-index .05s;
+      border:1px solid #cde3ff; box-shadow:0 6px 16px rgba(0,0,0,.25);
+      transform:translate(0,0);
+      animation-name: drift; animation-timing-function:ease-in-out;
+      animation-iteration-count: infinite; animation-direction: alternate;
+      transition: transform .12s ease, box-shadow .12s ease, z-index .05s;
+      will-change: transform;
     }
-    .bubble .title{ font-weight:600; line-height:1.15 }
-    .bubble .details{
-      position:absolute; inset:auto 8px 8px 8px; background:#07192add; color:var(--ink);
-      border:1px solid var(--bd); border-radius:12px; padding:10px; font-size:.9rem; opacity:0; pointer-events:none; transition:opacity .2s;
-    }
-    .bubble .details .sources a{ color:#bfe1ff }
-    .bubble:hover{ z-index:30; transform: scale(1.08); box-shadow: 0 10px 24px rgba(0,0,0,.45) }
-    .bubble:hover .details{ opacity:1 }
+    .bubble:hover{ z-index:30; transform:scale(1.06); box-shadow:0 10px 24px rgba(0,0,0,.45);
+                   animation-play-state: paused; } /* ⛳ pause au survol */
 
-    @keyframes drift{
-      from{ transform: translate(0,0) }
-      to  { transform: translate(var(--dx), var(--dy)) }
+    .bubble .title{ font-weight:700; line-height:1.1; font-size:var(--fs,14px); letter-spacing:.2px; }
+    .bubble .details{
+      position:absolute; left:8px; right:8px; bottom:8px;
+      background:#07192add; color:var(--ink);
+      border:1px solid var(--bd); border-radius:12px; padding:10px;
+      font-size:.9rem; opacity:0; pointer-events:none; transition:opacity .15s;
     }
+    .bubble:hover .details{ opacity:1; pointer-events:auto } /* clic sources actif */
+    .bubble .details .sources a{ color:#bfe1ff }
+
+    @keyframes drift{ from{ transform:translate(0,0) } to{ transform:translate(var(--dx), var(--dy)) } }
   </style>
 </head>
 <body>
@@ -79,13 +79,12 @@
 
     <div id="factsGrid" class="grid"></div>
 
-    <!-- Nuage -->
     <section class="cloud-wrap">
       <div class="cloud-head">
         <h2 style="margin:6px 0">Nuage de Fun Facts</h2>
         <div>
           <button id="cloudShuffle" class="btn">Mélanger le nuage</button>
-          <small class="muted">Survolez une bulle pour voir les détails</small>
+          <small class="muted">Survolez une bulle pour voir le détail</small>
         </div>
       </div>
       <div id="factsCloud" aria-label="Nuage de fun facts"></div>
