@@ -7,7 +7,6 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <script defer src="/site.js"></script>
-  <script defer src="/beehive.js"></script>
 </head>
 <body>
 
@@ -44,63 +43,315 @@
 
   <hr class="soft container" />
 
-  <!-- RUCHE PÉDAGOGIQUE (Beehive Simulator) -->
-  <section class="container section">
-    <h2 class="h3">Ruche pédagogique — <span class="muted">paramétrez une ruche équilibrée pour “débloquer” un aperçu de mon CV</span></h2>
+ <!-- === METRO-CV (Drop-in) =============================================== -->
+<section id="metrocv" class="metrocv">
+  <style>
+    /* ===== Metro-CV — styles namespacés ===== */
+    .metrocv{--ink:#e6f1ff; --panel:#0b2237; --bd:#ffffff22; --muted:rgba(230,241,255,.85);
+      color:var(--ink); background:linear-gradient(180deg,#061423 0%,#0b2237 60%,#0b2237 100%);
+      border:1px solid var(--bd); border-radius:16px; padding:18px; margin:16px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .metrocv .head{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px }
+    .metrocv .title{ font-size:1.3rem; font-weight:700; margin:0 }
+    .metrocv .muted{ color:var(--muted) }
+    .metrocv .controls{ margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    .metrocv .btn, .metrocv label{
+      background:#0e3b63; color:#e6f1ff; border:1px solid #ffffff26; padding:8px 10px; border-radius:10px; cursor:pointer; user-select:none;
+    }
+    .metrocv .btn.ghost{ background:#0b1f33 }
+    .metrocv .check{ display:inline-flex; align-items:center; gap:6px; padding:6px 8px; background:#0b1f33; border-radius:10px; border:1px solid #ffffff26 }
+    .metrocv .check input{ accent-color:currentColor }
+    .metrocv .wrap{ position:relative; width:100%; aspect-ratio: 16 / 9; min-height: 380px; border:1px solid var(--bd); border-radius:12px; overflow:hidden; background: radial-gradient(1200px 600px at 20% 0%, rgba(255,255,255,.06), transparent) }
+    .metrocv svg{ width:100%; height:100%; display:block }
+    .metrocv .line{ fill:none; stroke-width:7; stroke-linecap:round; opacity:.95; filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)) }
+    .metrocv .station{ cursor:pointer }
+    .metrocv .station circle{ fill:#0b2237; stroke-width:3; }
+    .metrocv .station text{ font: 12px ui-sans-serif,system-ui; fill:#e6f1ff; paint-order: stroke; stroke:#0b2237; stroke-width:3px; stroke-opacity:.6 }
+    .metrocv .train{ r:6; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45)); }
+    .metrocv .legend{ position:absolute; left:10px; bottom:10px; font-size:.85rem; opacity:.8 }
+    .metrocv .legend .dot{ display:inline-block; width:10px; height:10px; border-radius:99px; margin:0 6px 0 12px }
+    /* Popover */
+    .metrocv .pop{ position:absolute; inset:auto auto 12px 12px; max-width:min(560px, 94%); background:#07192add; border:1px solid var(--bd);
+      color:var(--ink); border-radius:12px; padding:12px 12px 10px; box-shadow:0 10px 28px rgba(0,0,0,.45); display:none; z-index:5 }
+    .metrocv .pop h3{ margin:.1rem 0 .3rem; font-size:1.05rem }
+    .metrocv .pop p{ margin:.25rem 0 .25rem; line-height:1.35 }
+    .metrocv .pop .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px }
+    .metrocv .link{ display:inline-flex; gap:6px; align-items:center; padding:6px 10px; border-radius:8px; border:1px solid #ffffff22; background:#0b1f33; color:#e6f1ff; text-decoration:none }
+    .metrocv .close{ margin-left:auto; background:#14324e }
+    @media (max-width:720px){
+      .metrocv .station text{ display:none } /* labels au survol sur mobile */
+      .metrocv .wrap{ min-height: 320px }
+    }
+  </style>
 
-    <div class="grid" style="grid-template-columns: 380px 1fr">
-      <!-- Panneau de contrôle -->
-      <div class="card pad stack">
-        <p class="muted" style="margin-top:0">
-          <strong>But :</strong> stabiliser la ruche <em>(santé ≥ 80 pendant 15 cycles)</em> en ajustant les paramètres.
-          Vous verrez alors un résumé de mon CV.
-        </p>
-
-        <label>Fleurs à proximité (nectar)
-          <input type="range" id="bh_flowers" min="0" max="100" value="60">
-        </label>
-        <label>Ouvrières (récolte) — %
-          <input type="range" id="bh_workers" min="10" max="90" value="65">
-        </label>
-        <label>Gardiennes (défense) — %
-          <input type="range" id="bh_guards" min="10" max="60" value="20">
-        </label>
-        <label>Météo (0=orage, 100=grand beau)
-          <input type="range" id="bh_weather" min="0" max="100" value="70">
-        </label>
-
-        <div class="row gap">
-          <button class="btn primary" id="bh_start" data-busy>▶ Lancer / Recaler</button>
-          <button class="btn" id="bh_step">⟳ +1 cycle</button>
-          <span class="muted" id="bh_status">Prêt.</span>
-        </div>
-
-        <div class="stack">
-          <div> Santé : <strong id="bh_health">0</strong> / 100</div>
-          <div> Production : <strong id="bh_prod">0</strong></div>
-          <div> Défense : <strong id="bh_def">0</strong></div>
-          <div> Cycles stables : <strong id="bh_streak">0</strong> / 15</div>
-        </div>
-      </div>
-
-      <!-- Canvas + résultat -->
-      <div class="stack">
-        <div class="card" style="padding:0;overflow:hidden">
-          <canvas id="bh_canvas" width="900" height="420"
-            style="width:100%;height:auto;display:block;background:rgba(255,255,255,.03)"></canvas>
-        </div>
-
-        <div id="bh_unlock" class="card pad hidden">
-          <h3>🔓 Beehive OK — extrait rapide du CV</h3>
-          <div id="bh_cvExtract" class="stack"></div>
-          <div class="row gap">
-            <a class="btn linkish" href="/cv">Voir le CV complet</a>
-            <a class="btn" href="/cv#story">Version “timeline”</a>
-          </div>
-        </div>
-      </div>
+  <div class="head">
+    <h2 class="title" data-i18n="title">Plan de métro du CV</h2>
+    <span class="muted" data-i18n="subtitle">Survolez/cliquez une station pour les détails</span>
+    <div class="controls">
+      <label class="check" style="--c:#60a5fa"><input id="ck-pedago" type="checkbox" checked><span data-i18n="pedago">Pédagogie</span></label>
+      <label class="check" style="--c:#34d399"><input id="ck-ia" type="checkbox" checked><span data-i18n="ia">Informatique & IA</span></label>
+      <label class="check" style="--c:#f59e0b"><input id="ck-vulg" type="checkbox" checked><span data-i18n="vulg">Vulgarisation</span></label>
+      <button id="btnPlay" class="btn ghost" aria-pressed="false" data-i18n="pause">Pause</button>
     </div>
-  </section>
+  </div>
+
+  <div class="wrap" role="group" aria-label="Metro CV">
+    <svg viewBox="0 0 1200 675" aria-hidden="true">
+      <!-- Lignes (paths) -->
+      <defs>
+        <linearGradient id="glow" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity=".08"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity=".0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- PÉDAGOGIE -->
+      <path id="path-pedago" class="line" stroke="#60a5fa"
+            d="M60,540 C280,520 300,360 470,340 C640,320 680,500 860,480 C1020,462 1060,360 1140,320" />
+      <!-- IA -->
+      <path id="path-ia" class="line" stroke="#34d399"
+            d="M60,420 C240,380 340,260 520,260 C700,260 820,400 980,400 C1100,402 1140,380 1140,380" />
+      <!-- VULG -->
+      <path id="path-vulg" class="line" stroke="#f59e0b"
+            d="M60,300 C220,320 320,180 520,170 C740,160 860,260 1040,240 C1120,232 1140,220 1140,220" />
+
+      <!-- Trains (positions MAJ via JS avec getPointAtLength) -->
+      <circle id="train-pedago" class="train" fill="#60a5fa" cx="0" cy="0" />
+      <circle id="train-ia" class="train" fill="#34d399" cx="0" cy="0" />
+      <circle id="train-vulg" class="train" fill="#f59e0b" cx="0" cy="0" />
+
+      <!-- Stations : créées par JS pour s’aligner exactement sur les chemins -->
+      <g id="stations"></g>
+    </svg>
+
+    <!-- Légende -->
+    <div class="legend">
+      <span class="dot" style="background:#60a5fa"></span><span data-i18n="pedago">Pédagogie</span>
+      <span class="dot" style="background:#34d399"></span><span data-i18n="ia">Informatique & IA</span>
+      <span class="dot" style="background:#f59e0b"></span><span data-i18n="vulg">Vulgarisation</span>
+    </div>
+
+    <!-- Popover -->
+    <div id="metrocv-pop" class="pop" role="dialog" aria-modal="false" aria-live="polite">
+      <div style="display:flex;gap:8px;align-items:center">
+        <h3 id="pop-title">—</h3>
+        <button id="pop-close" class="btn close">✕</button>
+      </div>
+      <p id="pop-desc" class="muted"></p>
+      <div id="pop-actions" class="actions"></div>
+    </div>
+  </div>
+
+  <script>
+    (function MetroCV(){
+      "use strict";
+      const LANG = (document.documentElement.lang||"fr").slice(0,2).toLowerCase();
+
+      const I18N = {
+        title:{fr:"Plan de métro du CV", en:"CV Metro Map", de:"Metro-Plan des Lebenslaufs"},
+        subtitle:{fr:"Survolez/cliquez une station pour les détails", en:"Hover/click a station for details", de:"Fahren/Klicken Sie über eine Station für Details"},
+        pedago:{fr:"Pédagogie", en:"Pedagogy", de:"Pädagogik"},
+        ia:{fr:"Informatique & IA", en:"Computing & AI", de:"Informatik & KI"},
+        vulg:{fr:"Vulgarisation", en:"Science Outreach", de:"Wissens­vermittlung"},
+        pause:{fr:"Pause", en:"Pause", de:"Pause"},
+        play:{fr:"Lecture", en:"Play", de:"Start"},
+        viewCv:{fr:"Voir le CV", en:"View CV", de:"CV ansehen"},
+        visit:{fr:"Visiter", en:"Visit", de:"Besuchen"},
+      };
+      const t=(k)=> (I18N[k]&&I18N[k][LANG])||I18N[k]?.fr||k;
+      document.querySelectorAll("[data-i18n]").forEach(n=>n.textContent=t(n.dataset.i18n));
+
+      // === Données (extraits du CV) ===
+      // Chaque station est positionnée par un "t" (0..1) le long du path de sa ligne
+      const DATA = {
+        pedago: {
+          color:"#60a5fa", path:"#path-pedago", train:"#train-pedago", speed: 36, // px/s
+          stations: [
+            { id:"bachelor", t:0.15,
+              label:{fr:"Bachelor HEP FR", en:"Bachelor HEP FR", de:"Bachelor PH FR"},
+              desc:{fr:"Enseignement préscolaire & primaire. Travail: philosophie pour enfants.",
+                    en:"Early & primary teaching. Thesis: Philosophy for children.",
+                    de:"Vorschul- & Primarstufe. Arbeit: Philosophie für Kinder."},
+              link:{ href:"/cv.html", text:{fr:"Détails", en:"Details", de:"Details"} }
+            },
+            { id:"titulaire", t:0.44,
+              label:{fr:"Titulaire 5H", en:"Homeroom 5H", de:"Klassenlehrer 5H"},
+              desc:{fr:"École de Corminboeuf (2020–2021), gestion de classe & suivi pédagogique.",
+                    en:"Corminboeuf school (2020–2021), class management & pedagogy.",
+                    de:"Schule Corminboeuf (2020–2021), Klassenführung & Pädagogik."},
+              link:{ href:"/CV_Nicolas_Tuor.pdf", text:{fr:"Voir le CV",en:"View CV",de:"CV ansehen"} }
+            },
+            { id:"remplacements", t:0.78,
+              label:{fr:"Remplacements", en:"Substitute teaching", de:"Stellvertretungen"},
+              desc:{fr:"Depuis 2019 — multi-degrés, adaptation & inclusion, collaboration d’équipe.",
+                    en:"Since 2019 — multi-grades, inclusion, teamwork.",
+                    de:"Seit 2019 — mehrere Stufen, Inklusion, Teamarbeit."},
+              link:{ href:"/portfolio.html", text:{fr:"Voir le portfolio",en:"Open portfolio",de:"Portfolio öffnen"} }
+            }
+          ]
+        },
+        ia: {
+          color:"#34d399", path:"#path-ia", train:"#train-ia", speed: 44,
+          stations: [
+            { id:"master", t:0.12,
+              label:{fr:"Master HEP VD", en:"Master HEP VD", de:"Master PH Waadt"},
+              desc:{fr:"Didactique (informatique). Mémoire: enseignement explicite du débogage.",
+                    en:"Didactics (CS). Thesis: explicit teaching of debugging.",
+                    de:"Didaktik (Informatik). Arbeit: explizites Debugging-Lernen."},
+              link:{ href:"/CV_Nicolas_Tuor.pdf", text:{fr:"Voir le CV",en:"View CV",de:"CV ansehen"} }
+            },
+            { id:"atelier-ia", t:0.52,
+              label:{fr:"Atelier IA responsable", en:"Responsible AI workshop", de:"Workshop Verantwortungsvolle KI"},
+              desc:{fr:"HEP Fribourg (2024) — usages scolaires, données, biais, création éthique.",
+                    en:"HEP Fribourg (2024) — school uses, data, bias, ethical creation.",
+                    de:"PH Freiburg (2024) — Schuleinsatz, Daten, Bias, ethische Erzeugung."},
+              link:{ href:"/ai-lab.html", text:{fr:"Idées IA",en:"AI ideas",de:"KI-Ideen"} }
+            },
+            { id:"projets-ia", t:0.85,
+              label:{fr:"Projets/outils IA", en:"AI tools & projects", de:"KI-Werkzeuge & Projekte"},
+              desc:{fr:"Images/vidéos, Copilot, Unity, n8n — prototypage & pédagogie.",
+                    en:"Images/videos, Copilot, Unity, n8n — prototyping & teaching.",
+                    de:"Bilder/Videos, Copilot, Unity, n8n — Prototyping & Lehre."},
+              link:{ href:"/portfolio.html", text:{fr:"Portfolio",en:"Portfolio",de:"Portfolio"} }
+            }
+          ]
+        },
+        vulg: {
+          color:"#f59e0b", path:"#path-vulg", train:"#train-vulg", speed: 40,
+          stations: [
+            { id:"funfacts", t:0.20,
+              label:{fr:"Fun Facts", en:"Fun Facts", de:"Fun Facts"},
+              desc:{fr:"Mythes & faits sourcés. Lecture ludique et critique.",
+                    en:"Sourced myths & facts. Playful critical reading.",
+                    de:"Quellenbasierte Mythen & Fakten. Spielerisches, kritisches Lesen."},
+              link:{ href:"/fun-facts.html", text:{fr:"Découvrir",en:"Discover",de:"Entdecken"} }
+            },
+            { id:"chatbot", t:0.58,
+              label:{fr:"Chatbot CV-aware", en:"CV-aware Chatbot", de:"CV-bewusster Chatbot"},
+              desc:{fr:"Répond avec contexte CV + profil. Démo pédagogique.",
+                    en:"Answers with CV context & profile. Pedagogic demo.",
+                    de:"Antwortet mit CV-Kontext & Profil. Pädagogische Demo."},
+              link:{ href:"/chatbot.html", text:{fr:"Essayer",en:"Try",de:"Testen"} }
+            },
+            { id:"jeu", t:0.88,
+              label:{fr:"Jeu Osselets", en:"Astragalus game", de:"Astragalus-Spiel"},
+              desc:{fr:"Runner 2D — amulettes d’astragale (histoire & symbolique).",
+                    en:"2D runner — astragalus amulets (history & symbolism).",
+                    de:"2D-Runner — Astragalus-Amulette (Geschichte & Symbolik)."},
+              link:{ href:"/ai-lab.html", text:{fr:"Jouer",en:"Play",de:"Spielen"} }
+            }
+          ]
+        }
+      };
+
+      // === Création des stations ===
+      const $ = (s,r=document)=>r.querySelector(s);
+      const stationsGroup = $("#stations");
+      const pop = $("#metrocv-pop");
+      const popTitle=$("#pop-title"), popDesc=$("#pop-desc"), popAct=$("#pop-actions");
+      const btnClose=$("#pop-close");
+      function i18nText(obj){ return (obj && (obj[LANG]||obj.fr)) || "" }
+
+      const lines = Object.keys(DATA).map(k=>{
+        const L = DATA[k];
+        const path = $(L.path);
+        const train = $(L.train);
+        const len = path.getTotalLength();
+        L._path=path; L._train=train; L._len=len; L._t=Math.random(); // départ aléatoire
+        // stations
+        L._stations = L.stations.map(s=>{
+          const pt = path.getPointAtLength(s.t * len);
+          const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+          g.setAttribute("class","station");
+          g.setAttribute("tabindex","0");
+          g.setAttribute("role","button");
+          g.setAttribute("aria-label", i18nText(s.label));
+          const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+          c.setAttribute("cx", pt.x); c.setAttribute("cy", pt.y);
+          c.setAttribute("r","8"); c.setAttribute("stroke", L.color);
+          const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+          txt.setAttribute("x", pt.x + 12); txt.setAttribute("y", pt.y - 12);
+          txt.textContent = i18nText(s.label);
+          g.appendChild(c); g.appendChild(txt);
+          g.addEventListener("click", (ev)=> openPop(s, ev.currentTarget.getBoundingClientRect()));
+          g.addEventListener("keydown", (ev)=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); openPop(s, ev.currentTarget.getBoundingClientRect()); }});
+          stationsGroup.appendChild(g);
+          return {node:g, data:s};
+        });
+        return L;
+      });
+
+      function openPop(s, rect){
+        popTitle.textContent = i18nText(s.label);
+        popDesc.textContent  = i18nText(s.desc);
+        popAct.innerHTML = "";
+        if (s.link?.href){
+          const a = document.createElement("a");
+          a.className="link"; a.href = s.link.href; a.target="_blank"; a.rel="noopener";
+          a.textContent = i18nText(s.link.text) || t("visit");
+          popAct.appendChild(a);
+        }
+        // positionner pop (coin bas-gauche, évite de couvrir le plan)
+        pop.style.display="block";
+        // focus sur le bouton fermer pour accessibilité
+        btnClose.focus();
+      }
+      btnClose.addEventListener("click", ()=> pop.style.display="none");
+      document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") pop.style.display="none"; });
+
+      // === Animation des trains ===
+      let running = true, lastTs = performance.now();
+      function tick(ts){
+        const dt = Math.min(60, ts-lastTs)/1000; lastTs=ts;
+        if (running){
+          lines.forEach(L=>{
+            // si masqué → ne pas bouger
+            const visible = isLineEnabled(L);
+            L._train.style.display = visible ? "block" : "none";
+            if (!visible) return;
+            L._t += (L.speed * dt) / L._len; // avance
+            if (L._t>1) L._t -= 1;
+            const pt = L._path.getPointAtLength(L._t * L._len);
+            L._train.setAttribute("cx", pt.x); L._train.setAttribute("cy", pt.y);
+          });
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      // === Filtres lignes ===
+      const ckPed=$("#ck-pedago"), ckIa=$("#ck-ia"), ckVg=$("#ck-vulg");
+      ckPed?.addEventListener("change", ()=> setLineVisibility("pedago", ckPed.checked));
+      ckIa?.addEventListener("change", ()=> setLineVisibility("ia", ckIa.checked));
+      ckVg?.addEventListener("change", ()=> setLineVisibility("vulg", ckVg.checked));
+      function setLineVisibility(key, on){
+        const L = DATA[key];
+        if (!L) return;
+        // path
+        L._path.style.opacity = on ? .95 : .08;
+        // stations
+        L._stations.forEach(s=> s.node.style.display = on? "":"none");
+      }
+      function isLineEnabled(L){
+        if (L===DATA.pedago) return ckPed?.checked!==false;
+        if (L===DATA.ia) return ckIa?.checked!==false;
+        if (L===DATA.vulg) return ckVg?.checked!==false;
+        return true;
+      }
+
+      // === Play/Pause ===
+      const btnPlay = $("#btnPlay");
+      btnPlay?.addEventListener("click", ()=>{
+        running = !running;
+        btnPlay.setAttribute("aria-pressed", String(!running));
+        btnPlay.textContent = running ? t("pause") : t("play");
+      });
+    })();
+  </script>
+</section>
+<!-- === /METRO-CV ======================================================== -->
+
 
   <footer class="container section footer">
     <p class="foot">© Nicolas Tuor — Didactique, IA, éducation numérique.</p>
