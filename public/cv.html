@@ -5,12 +5,14 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CV — Nicolas Tuor</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <header class="nav">
   <div class="container">
-    <a class="brand" href="/"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <a class="brand" href="/">
+      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
+    </a>
     <nav class="nav-links">
       <a href="/">Accueil</a>
       <a href="/portfolio">Portfolio</a>
@@ -18,8 +20,13 @@
       <a href="/chatbot">Chatbot</a>
       <a href="/ai">Idées IA</a>
       <a href="/fun-facts">Fun Facts</a>
-      <button id="dlCvBtn" class="btn linkish">Télécharger le CV</button>
-      <button class="btn linkish" data-toggle-theme>🌓</button>
+      <button id="dlCvBtn" class="btn chip" type="button">Télécharger le CV</button>
+      <button class="btn chip" type="button" data-toggle-theme aria-label="Basculer le thème">🌓</button>
+      <span class="lang-switch">
+        <a class="btn chip" href="/cv.html" aria-current="page">FR</a>
+        <a class="btn chip" href="/cv-en.html">EN</a>
+        <a class="btn chip" href="/cv-de.html">DE</a>
+      </span>
     </nav>
   </div>
 </header>
@@ -40,7 +47,7 @@
   <div id="cvArea"></div>
 </main>
 
-<script src="./site.js" defer></script>
-<script src="./cv.js"></script>
+<script src="/site.js" defer></script>
+<script src="/cv.js"></script>
 </body>
 </html>

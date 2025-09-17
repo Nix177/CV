@@ -5,7 +5,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KI-Chatbot — Nicolas Tuor</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/style.css">
   <style>
     .chat{max-width:820px;margin:0 auto}
     .chat-box{background:var(--panel);border:1px solid color-mix(in oklab,var(--ink),transparent 85%);border-radius:16px;padding:14px;box-shadow:var(--shadow);min-height:260px}
@@ -16,19 +16,26 @@
   </style>
 </head>
 <body>
-<header class="nav"><div class="container">
-  <a class="brand" href="/"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-  <nav class="nav-links">
-    <a href="/">Startseite</a>
-    <a href="/portfolio">Portfolio</a>
-    <a href="/cv">Lebenslauf</a>
-    <a href="/chatbot" aria-current="page">Chatbot</a>
-    <a href="/ai">KI-Ideen</a>
-    <a href="/fun-facts">Fun Facts</a>
-    <button class="btn linkish" data-toggle-theme>🌓</button>
-    <a class="btn linkish" href="./chatbot.html">FR</a><a class="btn linkish" href="./chatbot-en.html">EN</a><a class="btn linkish" href="./chatbot-de.html">DE</a>
-  </nav>
-</div></header>
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="/chatbot-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
+    <nav class="nav-links">
+      <a href="/index-de.html">Start</a>
+      <a href="/portfolio-de.html">Portfolio</a>
+      <a href="/cv-de.html">CV</a>
+      <a href="/chatbot-de.html" aria-current="page">Chatbot</a>
+      <a href="/ai-lab-de.html">KI-Ideen</a>
+      <a href="/fun-facts-de.html">Fun Facts</a>
+      <button id="dlCvBtn" class="btn chip" type="button">PDF herunterladen</button>
+      <button class="btn chip" type="button" data-toggle-theme aria-label="Thema wechseln">🌓</button>
+      <span class="lang-switch">
+        <a class="btn chip" href="/chatbot.html">FR</a>
+        <a class="btn chip" href="/chatbot-en.html">EN</a>
+        <a class="btn chip" href="/chatbot-de.html" aria-current="page">DE</a>
+      </span>
+    </nav>
+  </div>
+</header>
 
 <main class="section container chat">
   <h1 class="title">🤖 KI-Chatbot</h1>
@@ -44,7 +51,7 @@ async function ask(){const q=document.getElementById('q');const text=q.value.tri
 document.getElementById('send').onclick=ask;
 document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')ask();});
 </script>
-<script src="./site.js" defer></script>
+<script src="/site.js" defer></script>
 <script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
 </body>
 </html>
