@@ -5,20 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chatbot — Nicolas Tuor</title>
 
-  <!-- Favicon inline pour éviter 404 -->
+  <!-- Favicon inline (évite le 404) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50%25' x='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
+    /* Barre de navigation */
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #ffffff22}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #ffffff22;background:#0d2a45;border-radius:12px;color:#e6f1ff;text-decoration:none}
     .chip:hover{background:#103258}
 
+    /* Mise en page */
     main.container{max-width:1100px;margin:0 auto;padding:20px}
     .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
     .panel{background:rgba(255,255,255,.04);border:1px solid #ffffff22;border-radius:12px;padding:12px}
+    h1{font-size:2rem;margin:14px 0 4px}
 
+    /* Curseur Liberté + repères */
+    #liberty{width:200px}
+    .ticks{display:flex;gap:10px;align-items:center}
+    .tickbtn{padding:4px 8px;border-radius:8px;border:1px solid #ffffff22;background:#0b1f33;color:#e6f1ff;cursor:pointer}
+    .tickbtn.active{background:#0e3b63;border-color:#2a5b88}
+
+    /* Zone de chat */
     #chatArea{height:min(62vh,560px);overflow:auto;padding:12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid #ffffff22}
     .bubble{max-width:80%;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.38;white-space:pre-wrap}
     .bubble.bot{background:rgba(255,255,255,.08);border:1px solid #ffffff22;color:#e6f1ff}
@@ -32,11 +42,9 @@
     .btn{padding:10px 14px;border-radius:10px;border:1px solid #ffffff22;background:#0e3b63;color:#e6f1ff;cursor:pointer}
     .btn:hover{filter:brightness(1.05)}
     .btn.xs{padding:4px 8px;border-radius:8px;font-size:.85rem}
+
+    .hint{opacity:.85;margin-top:6px;font-size:.95rem}
     .libSmall{opacity:.75}
-    .hint{opacity:.8;margin-top:6px;font-size:.95rem}
-    h1{font-size:2rem;margin:14px 0 4px}
-    label.inline{display:inline-flex;align-items:center;gap:8px}
-    select, input[type="checkbox"]{cursor:pointer}
   </style>
 </head>
 <body>
@@ -60,32 +68,29 @@
   <main class="container">
     <h1>Chatbot IA</h1>
 
-    <!-- Contrôles haut -->
+    <!-- Contrôles -->
     <div class="row panel">
-      <strong>Liberté :</strong>
-      <input id="liberty" type="range" min="0" max="2" step="1" value="1" />
+      <strong>Liberté</strong>
+      <input id="liberty" type="range" min="0" max="2" step="1" value="1" list="lib-ticks" />
+      <datalist id="lib-ticks"><option value="0"></option><option value="1"></option><option value="2"></option></datalist>
       <span id="libLabel" class="chip" style="padding:4px 10px">1</span>
       <span id="libInfo" class="libSmall">1 : prudent — petites inférences, signalées.</span>
 
+      <div class="ticks" style="margin-left:10px">
+        <button class="tickbtn" data-v="0">0</button>
+        <button class="tickbtn active" data-v="1">1</button>
+        <button class="tickbtn" data-v="2">2</button>
+      </div>
+
       <span style="flex:1"></span>
 
-      <label class="inline chip">
+      <label class="chip" style="display:inline-flex;align-items:center;gap:8px">
         <input id="conciseToggle" type="checkbox" checked />
         Réponses concises
       </label>
-
-      <label class="inline chip">
-        Max phrases
-        <select id="maxSentences">
-          <option value="2">2</option>
-          <option value="3" selected>3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
-      </label>
     </div>
 
+    <!-- Chat -->
     <div id="chatWrap" class="panel">
       <div id="chatArea">
         <div class="bubble bot">Bonjour ! Posez une question sur le candidat.</div>
@@ -114,31 +119,25 @@
       const slider  = $("#liberty");
       const libLbl  = $("#libLabel");
       const libInfo = $("#libInfo");
-
       const conciseToggle = $("#conciseToggle");
-      const maxSentencesSel = $("#maxSentences");
+      const tickBtns = Array.from(document.querySelectorAll(".tickbtn"));
 
       const HISTORY = [];
+      const MAX_SENTENCES = 3; // concision fixe
 
       function addBubble(text, who="bot", opts={}){
         const div = document.createElement("div");
         div.className = "bubble " + (who==="user" ? "user" : "bot");
 
-        if(opts.asHTML){
-          div.innerHTML = text;
-        }else{
-          div.textContent = String(text || "");
-        }
+        if(opts.asHTML){ div.innerHTML = text; }
+        else           { div.textContent = String(text || ""); }
 
-        // “Afficher tout”
         if(opts.moreText){
           const btn = document.createElement("button");
           btn.className = "btn xs more";
           btn.textContent = "Afficher tout";
           btn.addEventListener("click", ()=>{
-            // Remplace le contenu abrégé par le texte complet formaté
-            const full = buildFormattedHTML(opts.moreText);
-            div.innerHTML = full;
+            div.innerHTML = buildFormattedHTML(opts.moreText);
             btn.remove();
             chatArea.scrollTop = chatArea.scrollHeight;
           });
@@ -150,7 +149,6 @@
         chatArea.scrollTop = chatArea.scrollHeight;
       }
 
-      // Règle le texte d’info du curseur
       function libText(v){
         switch(Number(v)){
           case 0: return "0 : strict — pas d’inférence.";
@@ -161,9 +159,10 @@
       function updateLibUI(){
         libLbl.textContent = slider.value;
         libInfo.textContent = libText(slider.value);
+        tickBtns.forEach(b => b.classList.toggle("active", b.dataset.v === slider.value));
       }
 
-      // --------- Mise en forme “anti-pavés” ----------
+      // ======= Mise en forme “anti-pavés” =======
       function normalizeSpaces(s){
         return String(s||"")
           .replace(/\r/g, "")
@@ -171,85 +170,62 @@
           .replace(/\n{3,}/g, "\n\n")
           .trim();
       }
-      function splitSentences(s){
-        // Découpe simple en phrases (FR approximatif)
-        return s.split(/(?<=[\.\!\?])\s+(?=[A-ZÉÈÊÀÂÎÔÙÇa-z0-9])/u);
+      function escapeHTML(s){
+        return String(s).replace(/[&<>"']/g, c=>({
+          "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+        }[c]));
       }
       function bulletize(text){
-        // Transforme “1. … 2. …” en puces
-        let t = text;
-        // sur plusieurs lignes
-        t = t.replace(/(^|\n)\s*\d+\.\s+/g, "$1• ");
-        // Unifie les espaces
+        // Transforme 1. … / 2. … en puces
+        let t = text.replace(/(^|\n)\s*\d+\.\s+/g, "$1• ");
         t = t.replace(/[ \t]+/g, " ");
         return t;
       }
       function buildFormattedHTML(text){
-        // Convertit les lignes en <p> + <ul> si “• ”
         const safe = normalizeSpaces(text);
         const lines = safe.split("\n");
-        const frag = [];
-
-        let inList = false;
+        const out = [];
         let ul = [];
 
-        const flushList = ()=>{
-          if(ul.length){
-            frag.push("<ul>" + ul.map(li=>"<li>"+escapeHTML(li.replace(/^•\s*/, ""))+"</li>").join("") + "</ul>");
-            ul = [];
-          }
-        };
+        const flush = ()=>{ if(ul.length){ out.push("<ul>"+ul.map(li=>"<li>"+escapeHTML(li.replace(/^•\s*/, ""))+"</li>").join("")+"</ul>"); ul=[]; } };
 
         for(const line of lines){
-          if(line.trim().startsWith("• ")){
-            inList = true;
-            ul.push(line.trim());
-          }else if(line.trim().length===0){
-            flushList();
-            // paragraphe vide -> saut
-            frag.push("<p></p>");
-          }else{
-            flushList();
-            frag.push("<p>"+escapeHTML(line.trim())+"</p>");
-          }
+          if(line.trim().startsWith("• ")){ ul.push(line.trim()); }
+          else if(line.trim()===""){ flush(); out.push("<p></p>"); }
+          else { flush(); out.push("<p>"+escapeHTML(line.trim())+"</p>"); }
         }
-        flushList();
-        return frag.join("");
+        flush();
+        return out.join("");
       }
-      function escapeHTML(s){
-        return s.replace(/[&<>"']/g, c=>({
-          "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-        }[c]));
+      // Découpage sans look-behind (compat large)
+      function splitSentences(text){
+        const t = text.replace(/\s+/g," ").trim();
+        const matches = t.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g);
+        return matches ? matches.map(s=>s.trim()) : [t];
       }
-
       function formatAnswerForDisplay(raw){
         const concis = !!conciseToggle.checked;
-        const maxS = parseInt(maxSentencesSel.value, 10) || 3;
-
         let text = normalizeSpaces(raw);
-        // Puces si listes numérotées
         text = bulletize(text);
 
-        if(!concis) {
+        if(!concis){
           return { html: buildFormattedHTML(text) };
         }
-
-        // Mode “concis” : coupe aux X phrases (et laisse “Afficher tout”)
         const sents = splitSentences(text);
-        if(sents.length <= maxS){
+        if(sents.length <= MAX_SENTENCES){
           return { html: buildFormattedHTML(text) };
         }else{
-          const abr = sents.slice(0, maxS).join(" ") + " …";
+          const abr = sents.slice(0, MAX_SENTENCES).join(" ") + " …";
           return { html: buildFormattedHTML(abr), moreText: text };
         }
       }
-      // ------------------------------------------------
+      // ==========================================
 
       async function ask(){
         const q = (input.value || "").trim();
         if(!q) return;
-        input.value = "";
         addBubble(q, "user");
+        input.value = "";
         HISTORY.push({ role:"user", content:q });
 
         try{
@@ -260,15 +236,11 @@
               message: q,
               liberty: Number(slider.value || 1),
               history: HISTORY.slice(-8)
-              // NOTE: si tu veux que le backend écrive déjà en concis:
-              // concise: !!conciseToggle.checked,
-              // maxSentences: parseInt(maxSentencesSel.value, 10)
             })
           });
           const json = await r.json();
           const content = (json && json.answer && (json.answer.content || json.answer)) || "(Réponse vide)";
 
-          // Mise en forme anti-pavés
           const { html, moreText } = formatAnswerForDisplay(content);
           addBubble(html, "bot", { asHTML:true, moreText });
 
@@ -281,12 +253,18 @@
       sendBtn.addEventListener("click", ask);
       input.addEventListener("keydown", (e)=>{
         if(e.key === "Enter" && !e.shiftKey){
-          e.preventDefault(); ask();
+          e.preventDefault();
+          ask();
         }
       });
+
       slider.addEventListener("input", updateLibUI);
-      conciseToggle.addEventListener("change", ()=>{}); // (placeholder si besoin)
-      maxSentencesSel.addEventListener("change", ()=>{});
+      tickBtns.forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          slider.value = btn.dataset.v;
+          updateLibUI();
+        });
+      });
 
       updateLibUI();
     })();
