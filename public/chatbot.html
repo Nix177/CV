@@ -4,52 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chatbot — Nicolas Tuor</title>
+
+  <!-- Favicon en data-URL pour éviter le 404 -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50%25' x='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E" />
+
+  <!-- Ta feuille globale -->
   <link rel="stylesheet" href="/style.css" />
-  <!-- Si tu as un favicon, garde la ligne ci-dessous. Sinon supprime-la pour éviter le 404. -->
-  <link rel="icon" href="/favicon.ico" />
+
   <style>
-    :root {
-      --bg:#0b1f33; --panel:#0b2237; --ink:#e6f1ff; --bd:#ffffff22; --muted:#b8d1ff;
-      --chip:#0c2b4a; --chipbd:#ffffff22; --accent:#1e90ff; --ok:#22c55e; --warn:#f59e0b;
-    }
-    body { background: var(--bg); color: var(--ink); }
-    .container { max-width: 1100px; margin: 0 auto; padding: 18px; }
-
-    /* Nav */
-    .navbar{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd)}
+    /* Habillage léger (complète /style.css) */
+    .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #ffffff22}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--chipbd);background:var(--chip);
-      border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{background:#10335a}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #ffffff22;background:#0d2a45;border-radius:12px;color:#e6f1ff;text-decoration:none}
+    .chip:hover{background:#103258}
 
-    h1{font-size:2rem;margin:16px 0}
-    .modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0 12px}
-    .range{appearance:none;width:240px;height:6px;background:#123456;border-radius:999px;outline:none}
-    .range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #0b2b55}
-    .badge{display:inline-block;font-size:.8rem;padding:.1rem .5rem;border-radius:999px;border:1px solid var(--bd);background:#0a2340;margin-left:6px}
+    main.container{max-width:1100px;margin:0 auto;padding:20px}
+    .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
 
-    .panel{background:rgba(8,18,35,.7);border:1px solid var(--bd);border-radius:12px;padding:14px}
-    .log{height:min(58vh,560px);overflow:auto;display:flex;flex-direction:column;gap:10px}
-    .bubble{max-width:92%;padding:10px 12px;border-radius:12px;border:1px solid var(--bd)}
-    .bot{background:#0c2a4b}
-    .user{background:#0f3a65;margin-left:auto}
-    .meta{font-size:.9rem;color:var(--muted)}
-    .composer{display:flex;gap:10px;margin-top:10px}
-    textarea{flex:1;min-height:100px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#0b2237;color:var(--ink)}
-    button.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:#0e3b63;color:#fff;cursor:pointer}
-    button.btn:hover{background:#104570}
-
-    .legend{font-size:.95rem;opacity:.9;margin:.2rem 0 1rem}
-    .tag{display:inline-block;border:1px solid var(--bd);border-radius:8px;padding:2px 6px;margin-left:4px}
-    .t-cv{color:#a7f3d0;border-color:#065f46}
-    .t-pro{color:#bfdbfe;border-color:#1d4ed8}
-    .t-ded{color:#fde68a;border-color:#b45309}
+    .panel{background:rgba(255,255,255,.04);border:1px solid #ffffff22;border-radius:12px;padding:12px}
+    #chatArea{height:min(62vh,560px);overflow:auto;padding:12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid #ffffff22}
+    .bubble{max-width:80%;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.35}
+    .bubble.bot{background:rgba(255,255,255,.08);border:1px solid #ffffff22;color:#e6f1ff}
+    .bubble.user{background:#0e3b63;border:1px solid #2a5b88;color:#e6f1ff;margin-left:auto}
+    .ask{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .ask textarea{flex:1;min-height:58px;padding:10px;border-radius:12px;border:1px solid #ffffff22;background:#0b1f33;color:#e6f1ff}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid #ffffff22;background:#0e3b63;color:#e6f1ff;cursor:pointer}
+    .btn:hover{filter:brightness(1.05)}
+    .libSmall{opacity:.75}
+    .hint{opacity:.8;margin-top:6px;font-size:.95rem}
+    h1{font-size:2rem;margin:14px 0 4px}
   </style>
-
-  <!-- pdf.js (CDN) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- Ton script -->
-  <script defer src="/chatbot.js"></script>
 </head>
 <body>
   <!-- NAV -->
@@ -72,30 +56,99 @@
   <main class="container">
     <h1>Chatbot IA</h1>
 
-    <div class="modebar">
-      <label for="freedom">Liberté</label>
-      <input id="freedom" class="range" type="range" min="0" max="2" step="1" value="2" />
-      <span id="freedomLabel" class="badge">2</span>
-      <span class="legend">
-        <strong>0</strong> = strict/factuel • <strong>1</strong> = prudent • <strong>2</strong> = interprétatif <em>(les ajouts sont marqués <span class="tag t-ded">[Déduit]</span>)</em>.
-      </span>
+    <div class="row panel">
+      <strong>Liberté :</strong>
+      <input id="liberty" type="range" min="0" max="2" step="1" value="1" />
+      <span id="libLabel" class="chip" style="padding:4px 10px">1</span>
+      <span id="libInfo" class="libSmall">1 : prudent — petites inférences annoncées.</span>
     </div>
 
-    <p class="meta">
-      Le bot s’appuie sur <code>/profile.json</code> (si présent), puis <code>/cv-text.json</code> ou <code>/CV_Nicolas_Tuor.pdf</code>.
-      Il annote ses sources&nbsp;: <span class="tag t-cv">[CV]</span>, <span class="tag t-pro">[Profil]</span>, <span class="tag t-ded">[Déduit]</span>.
-    </p>
+    <div id="chatWrap" class="panel">
+      <div id="chatArea">
+        <div class="bubble bot">Bonjour ! Posez une question sur le candidat.</div>
+      </div>
 
-    <section class="panel">
-      <div id="chatLog" class="log" aria-live="polite"></div>
-      <div class="composer">
+      <div class="ask">
         <textarea id="chatInput" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne)"></textarea>
         <button id="chatSend" class="btn">Envoyer</button>
       </div>
-      <p class="meta" style="margin-top:6px">
-        Exemples : • « Quelles compétences techniques ressortent ? » • « Parle-moi d’une expérience marquante. » • « Quelles langues parle-t-il ? » • « Ses passions ? » • « Est-il à l’aise pour coordonner une équipe ? »
-      </p>
-    </section>
+
+      <div class="hint">
+        Astuce : essayez « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quelles langues parle-t-il ? ».
+      </div>
+    </div>
   </main>
+
+  <!-- Front-end du bot : envoie à /api/chat (backend dans api/chat.js) -->
+  <script>
+    (function(){
+      "use strict";
+      const $ = (s, r=document)=>r.querySelector(s);
+
+      const chatArea = $("#chatArea");
+      const input   = $("#chatInput");
+      const sendBtn = $("#chatSend");
+      const slider  = $("#liberty");
+      const libLbl  = $("#libLabel");
+      const libInfo = $("#libInfo");
+
+      const HISTORY = [];
+
+      function addBubble(text, who="bot"){
+        const div = document.createElement("div");
+        div.className = "bubble " + (who==="user" ? "user" : "bot");
+        div.textContent = String(text || "");
+        chatArea.appendChild(div);
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+
+      function libText(v){
+        switch(Number(v)){
+          case 0: return "0 : strict — pas d’inférence.";
+          case 1: return "1 : prudent — petites inférences, signalées.";
+          default: return "2 : interprétatif — rapprochements, explications, déductions annoncées.";
+        }
+      }
+      function updateLibUI(){
+        libLbl.textContent = slider.value;
+        libInfo.textContent = libText(slider.value);
+      }
+
+      async function ask(){
+        const q = (input.value || "").trim();
+        if(!q) return;
+        input.value = "";
+        addBubble(q, "user");
+        HISTORY.push({ role:"user", content:q });
+
+        try{
+          const r = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "content-type":"application/json" },
+            body: JSON.stringify({
+              message: q,
+              liberty: Number(slider.value || 1),
+              history: HISTORY.slice(-8)  // petit contexte
+            })
+          });
+          const json = await r.json();
+          const content = (json && json.answer && (json.answer.content || json.answer)) || "(Réponse vide)";
+          addBubble(content, "bot");
+          HISTORY.push({ role:"assistant", content: String(content) });
+        }catch(e){
+          addBubble("Désolé, une erreur est survenue : " + (e?.message || e), "bot");
+        }
+      }
+
+      sendBtn.addEventListener("click", ask);
+      input.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" && !e.shiftKey){
+          e.preventDefault(); ask();
+        }
+      });
+      slider.addEventListener("input", updateLibUI);
+      updateLibUI();
+    })();
+  </script>
 </body>
 </html>
