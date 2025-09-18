@@ -1,28 +1,26 @@
 // public/chatbot.js — client léger pour /api/chat
-
 (function(){
   "use strict";
   const $  = (s,r=document)=>r.querySelector(s);
   const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s,r));
   const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
 
-  // ---- UI ----
-  const logEl   = $("#chatLog");
-  const input   = $("#chatInput");
-  const sendBtn = $("#chatSend");
-  const conciseCb = $("#concise");        // par défaut décoché (HTML)
-  const libRadios = $$("#liberty input[type=radio]"); // 0 / 1 / 2
+  // ---- refs
+  const logEl    = $("#chatLog");
+  const input    = $("#chatInput");
+  const sendBtn  = $("#chatSend");
+  const conciseCb= $("#concise");
+  const radios   = $$("#liberty input[type=radio]");
+  const range    = $("#libertySlider"); // legacy éventuel
 
-  // Valeurs par défaut souhaitées
-  // -> Liberté = 2 (interprétatif), Réponses concises décoché
+  // ---- défauts souhaités : liberté=2, concis décoché
   function setDefaults(){
-    const r2 = $("#lib2");
-    if (r2) r2.checked = true;
+    const r2 = $("#lib2"); if (r2) r2.checked = true;
     if (conciseCb) conciseCb.checked = false;
   }
   setDefaults();
 
-  // ---- rendu bulles ----
+  // ---- rendu bulles
   function addBubble(text, who="bot"){
     const line = document.createElement("div");
     line.className = "bubble " + who;
@@ -31,22 +29,22 @@
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  // ---- lecture liberté ----
+  // ---- lecture liberté (radios → sinon slider legacy → sinon 2)
   function getLiberty(){
-    const r = libRadios.find(x=>x.checked);
-    return r ? Number(r.value) : 2;
+    const r = radios.find(x=>x.checked);
+    if (r) return Number(r.value);
+    if (range) return Number(range.value || 2);
+    return 2;
   }
 
-  // ---- post-traitement concis ----
+  // ---- post-traitement concis (coupe à ~2 phrases)
   function concise(text){
     if (!conciseCb?.checked) return text;
     const s = String(text || "").replace(/\s+/g," ").trim();
-    // coupe grossièrement à deux phrases
     const m = s.match(/^(.+?[\.!?])\s+(.+?[\.!?]).*$/);
     return m ? (m[1] + " " + m[2]) : s;
   }
 
-  // ---- appel API ----
   async function ask(){
     const q = input.value.trim();
     if (!q) return;
@@ -56,26 +54,30 @@
     const body = {
       message: q,
       liberty: getLiberty(),
-      history: [] // on peut pousser l'historique si besoin
+      history: []  // tu peux pousser ici le mini historique si besoin
     };
+    log("[payload]", body);
 
     try{
-      const r = await fetch("/api/chat", {
+      const r = await fetch("/api/chat",{
         method:"POST",
         headers:{ "content-type":"application/json" },
         body: JSON.stringify(body)
       });
       const data = await r.json();
+      log("[used]", data.used);
+
       if (!data?.ok){
         addBubble("Désolé, le service est momentanément indisponible.", "bot");
         return;
       }
+      // Certaines réponses “génériques” du modèle peuvent survenir
+      // si liberty=1 et contexte faible ; ici on affiche le contenu uniquement.
       const content = (typeof data.answer === "string")
         ? data.answer
-        : (data.answer?.content || "");
+        : (data.answer?.content || "(réponse vide)");
 
       addBubble(concise(content), "bot");
-      log("[chatbot] used:", data.used);
     }catch(e){
       console.error(e);
       addBubble("Erreur réseau. Réessayez dans un instant.", "bot");
@@ -90,6 +92,5 @@
     }
   });
 
-  // message d’accueil
   addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
 })();
