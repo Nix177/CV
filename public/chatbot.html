@@ -6,31 +6,37 @@
   <title>Chatbot IA — Nicolas Tuor</title>
   <link rel="icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/style.css" />
+  <!-- PDF.js (uniquement si pas de /cv-text.json) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     :root{
       --bg:#0b1f33; --panel:#0b2237; --ink:#e6f1ff; --muted:#cfe2ff;
       --bd:#ffffff22; --chip:#0d2a45; --chip2:#103258; --btn:#0e3b63;
-      --accent:#60a5fa;
+      --accent:#60a5fa; --ok:#22c55e; --warn:#f59e0b;
     }
     body{background:radial-gradient(1200px 600px at 20% -10%,rgba(255,255,255,.06),transparent),var(--bg);color:var(--ink);margin:0}
     a{color:#9ecbff}
     .container{max-width:1100px;margin:0 auto;padding:20px}
+
     /* Navbar */
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd);background:#071a2c;position:sticky;top:0;z-index:10}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none}
     .chip:hover{background:var(--chip2)}
+
     h1{font-size:2.1rem;margin:18px 0}
+
     /* Slider liberté */
     .slider-row{display:flex;align-items:center;gap:12px;margin:.3rem 0 1rem}
     .slider-row label{opacity:.9}
     input[type="range"]{appearance:none;width:280px;height:10px;border-radius:999px;background:linear-gradient(90deg,#5bb1ff,var(--bd));outline:none}
     input[type="range"]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #3182ce;box-shadow:0 0 0 2px #0b2237}
-    /* Chat panel */
+
+    .muted{opacity:.85}
+
+    /* Chat board */
     .board{background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:14px;padding:16px 16px 10px}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:.2rem 0 .8rem}
-    .prompt{opacity:.8}
     #chatLog{max-height:min(66vh,620px);overflow:auto;border:1px solid var(--bd);border-radius:12px;padding:8px;background:#051422}
     .bubble{max-width:85%;padding:12px 14px;border-radius:12px;margin:8px 10px;white-space:pre-wrap;line-height:1.42;border:1px solid var(--bd);background:#0d2945}
     .bubble.user{margin-left:auto;background:#0f3558}
@@ -38,7 +44,13 @@
     textarea{flex:1;min-height:74px;border:1px solid var(--bd);border-radius:12px;background:#0a2036;color:var(--ink);padding:12px;resize:vertical}
     .btn{padding:10px 16px;border-radius:12px;border:1px solid var(--bd);background:var(--btn);color:var(--ink);cursor:pointer;white-space:nowrap}
     .btn:hover{filter:brightness(1.08)}
-    .muted{opacity:.8}
+
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;font-size:.78rem;border:1px solid var(--bd);background:#0b1f33;margin-right:6px}
+    .b-cv{border-color:#6ee7b7;color:#6ee7b7}
+    .b-prof{border-color:#93c5fd;color:#93c5fd}
+    .b-ded{border-color:#fbbf24;color:#fbbf24}
+
+    .small{font-size:.92rem;opacity:.9}
   </style>
 </head>
 <body>
@@ -68,9 +80,9 @@
       <span id="libVal">2</span>
     </div>
 
-    <p class="muted">
-      Posez vos questions — pédagogie, IA, expérience. Le bot charge <code>/profile.json</code> si présent, sinon il s’appuie sur un extrait intégré de mon CV.<br/>
-      Astuce : essayez « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quels sont ses centres d’intérêt ? ».
+    <p class="muted small">
+      Le bot lit <code>/profile.json</code> s’il existe et essaie de lire <code>/cv-text.json</code> (ou à défaut <code>/CV_Nicolas_Tuor.pdf</code>).  
+      Il distingue ce qui vient du <span class="badge b-cv">CV</span>, du <span class="badge b-prof">Profil</span> et ce qui est <span class="badge b-ded">Déduit</span> quand la liberté = 2.
     </p>
 
     <section class="board">
@@ -81,8 +93,8 @@
         <button id="chatSend" class="btn">Envoyer</button>
       </div>
 
-      <p class="muted" style="margin:.6rem 0 0">
-        Exemples : • Quelles compétences techniques ressortent ? • Parle-moi d’une expérience marquante. • Quelles langues parle-t-il ?
+      <p class="muted small" style="margin:.6rem 0 0">
+        Exemples : • Quelles compétences techniques ressortent ? • Parle-moi d’une expérience marquante. • Quelles langues parle-t-il ? • Ses passions ? • Est-il à l’aise pour coordonner une équipe ?
       </p>
     </section>
 
@@ -90,14 +102,16 @@
   </main>
 
   <script>
-  /* ================== CONFIG GLOBALE ================== */
-  const FREEDOM_DEFAULT = 2;       // 0 = strict / factuel, 1 = souple, 2 = interprétatif (conclut prudemment)
-  const MIN_CONF_FOR_STRICT = 0.35; // confiance mini (0..1) pour répondre en mode 0
+  /* ================== CONFIG ================== */
+  const FREEDOM_DEFAULT = 2;       // 0 strict, 1 souple, 2 interprétatif
+  const MIN_CONF_STRICT  = 0.35;   // confiance mini pour répondre en mode 0
+  const CV_PDF_PATH      = "/CV_Nicolas_Tuor.pdf"; // chemin du PDF
+  const CV_TEXT_JSON     = "/cv-text.json";        // option: { "text": "..." }
 
-  // ---------- Fallback CV (si /profile.json n'est pas présent) ----------
+  /* ====== FALLBACK PROFILE (si pas de /profile.json) ====== */
   const CV_FALLBACK = {
     nom: "Nicolas Tuor",
-    resume: "Enseignant & ingénieur pédagogique (didactique de l’informatique, IA responsable). Expérience: formation, accompagnement, projets numériques éducatifs, pensée critique. Dév web (HTML/CSS/JS), Python (data/IA), prompt-engineering.",
+    resume: "Enseignant & ingénieur pédagogique (didactique de l’informatique, IA responsable). Expérience: formation, accompagnement, projets numériques éducatifs, pensée critique. Dev web (HTML/CSS/JS), Python (data/IA), prompt-engineering. Gestion de projet, vulgarisation.",
     langues: [
       { langue: "Français", niveau: "C2 (natif)" },
       { langue: "Allemand", niveau: "B2" },
@@ -128,136 +142,151 @@
   };
 
   /* ================== UTILITAIRES ================== */
-  const $ = (s, r=document)=>r.querySelector(s);
+  const $ = (s,r=document)=>r.querySelector(s);
   const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
   const toStr = (x)=> (x==null ? "" : String(x)).trim();
-
   function norm(s){ return toStr(s).toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
   function tokenSet(s){ return new Set(norm(s).split(/[^a-z0-9]+/).filter(Boolean)); }
   function jaccard(a,b){ const A=tokenSet(a), B=tokenSet(b); const inter=[...A].filter(x=>B.has(x)).length; const uni=new Set([...A,...B]).size; return uni? inter/uni : 0; }
+  function splitSentences(t){ return toStr(t).split(/(?<=[\.\!\?])\s+/).map(x=>x.trim()).filter(Boolean); }
 
-  function bulletList(arr){ return (arr||[]).map(v=>"• "+v).join("  "); }
+  /* ================== DONNÉES ================== */
+  let PROFILE=null, CV_TEXT="";
 
-  /* ================== PROFIL ================== */
-  let PROFILE = null;
   async function loadProfile(){
     try{
       const r = await fetch("/profile.json",{cache:"no-store"});
       if(!r.ok) throw new Error("no profile.json");
       const j = await r.json();
-      log("profile.json chargé");
+      log("profile.json OK");
       return j;
     }catch(e){
-      log("profile.json indisponible → fallback");
+      log("profile.json fallback");
       return CV_FALLBACK;
     }
   }
 
-  /* ================== CONNAISSANCE RULE-BASED ================== */
-  function extractIndex(p){
-    const parts=[];
-    parts.push(p.resume);
-    (p.langues||[]).forEach(l=>parts.push(`${l.langue} ${l.niveau}`));
-    (p.interets||[]).forEach(v=>parts.push(v));
-    (p.competences||[]).forEach(v=>parts.push(v));
-    (p.projetsIA||[]).forEach(v=>parts.push(v));
-    (p.qualites||[]).forEach(v=>parts.push(v));
-    return parts.filter(Boolean).join(" • ");
+  async function loadCvText(){
+    // 1) cv-text.json si dispo (plus rapide, pas de CDN)
+    try{
+      const r = await fetch(CV_TEXT_JSON,{cache:"no-store"});
+      if(r.ok){
+        const j = await r.json();
+        if (j && j.text) { log("cv-text.json OK"); return String(j.text); }
+      }
+    }catch(e){}
+
+    // 2) Sinon, PDF.js sur CV_Nicolas_Tuor.pdf
+    try{
+      if (!window['pdfjsLib']) throw new Error("pdfjs non dispo");
+      const pdf = await pdfjsLib.getDocument(CV_PDF_PATH).promise;
+      let text = "";
+      for (let p=1;p<=pdf.numPages;p++){
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        text += content.items.map(i=>i.str).join(" ") + "\n";
+      }
+      log("CV PDF extrait");
+      return text;
+    }catch(e){
+      log("PDF non lisible, pas de CV-text", e?.message||e);
+      return "";
+    }
   }
 
-  function answerFromRules(q, p, freedom){
-    const qn = norm(q);
+  /* ================== MOTEUR QA SIMPLE ================== */
+  function evidenceFromCv(q, cvText){
+    const sents = splitSentences(cvText).slice(0,2000); // sécurité
+    const scored = sents.map(s=>({s,score:jaccard(q,s)}))
+                        .filter(x=>x.score>0.12)
+                        .sort((a,b)=>b.score-a.score)
+                        .slice(0,3);
+    return scored.map(x=>x.s);
+  }
 
-    // Règles spécifiques (ajoute/édite librement pour ajuster)
-    const KB_RULES = [
-      {
-        when: /(langue|parle|idiome)/,
-        reply: () => (p.langues||[]).map(l=>`${l.langue} — ${l.niveau}`).join("; ")
-          || "Français natif, bon niveau en anglais et allemand."
-      },
-      {
-        when: /(hobbi|interet|loisir)/,
-        reply: () => (p.interets && p.interets.length)
-          ? `Centres d’intérêt : ${p.interets.join(", ")}.`
-          : "Rien de listé précisément ; il est curieux et apprend vite."
-      },
-      {
-        when: /(competenc|techniq|skill)/,
-        reply: () => (p.competences && p.competences.length)
-          ? `Compétences clés : ${p.competences.join(", ")}.`
-          : "Compétences pédagogie / numérique / IA indiquées de manière générale."
-      },
-      {
-        when: /(projet.*ia|ia appliquee|prompt|automati(s|z))/,
-        reply: () => (p.projetsIA && p.projetsIA.length)
-          ? `Projets IA : ${p.projetsIA.join("; ")}.`
-          : "Expériences autour de l’IA responsable, du prototypage front et de l’automatisation légère."
-      },
-      {
-        when: /(astro(photo)?|astronomie)/,
-        reply: () => "Astrophotographie : prise d’images du ciel profond / planétaire ; suppose patience, technique (poses longues, calibration) et traitement d’images."
-      },
-      {
-        when: /(atout|distingu|point fort|force|qualit)/,
-        reply: () => (p.qualites?.length)
-          ? `Forces perçues : ${p.qualites.join(", ")}.`
-          : "Approche pragmatique, rigoureuse, goût pour relier pédagogie et usages concrets."
-      },
-      {
-        when: /(equipe|manager|mener).*(recherch|projet|groupe)/,
-        reply: () => "Habitué à coordonner de petites initiatives pédagogiques ; en contexte plus large, il s’aligne au cadre et apprend vite."
-      }
+  function evidenceFromProfile(q, p){
+    const bag=[];
+    if (p.resume) bag.push(p.resume);
+    (p.langues||[]).forEach(l=>bag.push(`${l.langue} ${l.niveau}`));
+    (p.interets||[]).forEach(v=>bag.push(v));
+    (p.competences||[]).forEach(v=>bag.push(v));
+    (p.projetsIA||[]).forEach(v=>bag.push(v));
+    (p.qualites||[]).forEach(v=>bag.push(v));
+    const top = bag.map(s=>({s,score:jaccard(q,s)}))
+                   .filter(x=>x.score>0.18)
+                   .sort((a,b)=>b.score-a.score)
+                   .slice(0,3);
+    return top.map(x=>x.s);
+  }
+
+  // Petites explications de termes fréquents
+  function glossaryExplain(qn){
+    const rules = [
+      {re:/didactique de linformatique|didactique/ , exp:"La didactique de l’informatique relie contenus informatiques et méthodes d’enseignement pour favoriser compréhension et transfert."},
+      {re:/astrophotograph/ , exp:"L’astrophotographie implique prises longues, calibration et traitement d’images ; c’est une pratique technique et patiente."},
+      {re:/sphair/ , exp:"SPHAIR est un programme suisse d’initiation aux métiers de l’aviation (cours de pilotage, deux semaines)."}
     ];
-
-    for(const rule of KB_RULES){
-      if(rule.when.test(qn)){
-        const txt = rule.reply();
-        return { text: txt, conf: 0.9 };
-      }
+    for (const r of rules){
+      if (r.re.test(qn)) return r.exp;
     }
     return null;
   }
 
-  function softSynthesis(q, p, freedom){
-    // Recherche “floue” dans l’index pour donner une piste quand on est sur 1 ou 2
-    const idx = extractIndex(p);
-    const conf = jaccard(q, idx); // 0..1
-    if (conf < (freedom === 0 ? MIN_CONF_FOR_STRICT : 0.05)) return null;
+  function synthesizeAnswer(q, p, cvText, freedom){
+    const qn = norm(q);
 
-    if (freedom === 2) {
-      return {
-        text: "Voici une réponse synthétique basée sur son profil : " +
-              "il relie pédagogie, pensée critique et outils numériques/IA. " +
-              "Curieux et rapide à se mettre à niveau, il privilégie l’impact concret.",
-        conf
-      };
+    // Raccourcis thématiques simples
+    if (/langue|parle|idiome/.test(qn) && p.langues?.length){
+      const base = p.langues.map(l=>`${l.langue} — ${l.niveau}`).join("; ");
+      const add = (freedom>=1) ? " [Déduit] Utilise l’anglais et l’allemand surtout en lecture/échanges pros légers." : "";
+      return `[Profil] ${base}${freedom>=2? add:""}`;
     }
-    return {
-      text: "Éléments pertinents issus du profil : " +
-            bulletList([...(p.competences||[]).slice(0,3), ...(p.interets||[]).slice(0,2)]),
-      conf
-    };
-  }
-
-  function finalAnswer(q, p, freedom){
-    const hit = answerFromRules(q, p, freedom);
-    if (hit) return hit.text;
-
-    const soft = softSynthesis(q, p, freedom);
-    if (soft) return soft.text;
-
-    if (freedom > 0){
-      return "Je peux préciser ses compétences, langues, expériences, centres d’intérêt, projets IA ou qualités. Donne-moi l’axe exact à couvrir.";
+    if (/(hobbi|interet|passion|loisir)/.test(qn) && p.interets?.length){
+      const base = p.interets.join(", ");
+      const add = (freedom>=2) ? " [Déduit] Ses intérêts suggèrent curiosité, rigueur et goût du concret." : "";
+      return `[Profil] Centres d’intérêt : ${base}.${add}`;
     }
-    return "Je réponds avec prudence aux informations explicites du profil. Demande par exemple : « Quelles compétences techniques ressortent ? »";
+    if (/(competenc|skill|point fort)/.test(qn) && p.competences?.length){
+      const base = p.competences.join(", ");
+      const add = (freedom>=2) ? " [Déduit] Capable de relier pédagogie, pensée critique et outils IA, avec une approche pragmatique." : "";
+      return `[Profil] Compétences clés : ${base}.${add}`;
+    }
+
+    // Cherche des preuves dans CV + Profil
+    const evCv  = cvText ? evidenceFromCv(q, cvText) : [];
+    const evPro = evidenceFromProfile(q, p);
+
+    const pieces = [];
+    evCv.forEach(s=>pieces.push(`• [CV] ${s}`));
+    evPro.forEach(s=>pieces.push(`• [Profil] ${s}`));
+
+    // Glossaire si pertinent
+    const gloss = glossaryExplain(qn);
+    if (gloss && freedom>=1) pieces.unshift(`• [Définition] ${gloss}`);
+
+    // Déduction prudente si liberté=2
+    if (freedom===2){
+      if (/(equipe|manager|mener|coordon|lead)/.test(qn)){
+        pieces.unshift("• [Déduction] Vu son rôle d’accompagnement et de formation, il semble à l’aise pour coordonner de petites équipes ou ateliers.");
+      }
+      if (/(terrain|pratique|concret)/.test(qn)){
+        pieces.unshift("• [Déduction] Son intérêt pour l’IA appliquée et la vulgarisation indique un souci de résultats concrets et mesurables.");
+      }
+    }
+
+    if (!pieces.length){
+      if (freedom===0) return "Je réponds uniquement aux éléments explicitement présents dans le profil/CV.";
+      return "Je peux rapprocher pédagogie, IA, expériences ou intérêts. Précise l’axe pour une réponse plus ciblée.";
+    }
+    return pieces.join("\n");
   }
 
   /* ================== UI ================== */
-  const logEl  = ()=>$("#chatLog");
-  const input  = ()=>$("#chatInput");
-  const sendBt = ()=>$("#chatSend");
-  const slider = ()=>$("#libSlider");
-  const libVal = ()=>$("#libVal");
+  const logEl = ()=>$("#chatLog");
+  const input = ()=>$("#chatInput");
+  const sendBt= ()=>$("#chatSend");
+  const slider= ()=>$("#libSlider");
+  const libVal= ()=>$("#libVal");
 
   function addBubble(text, who="bot"){
     const line = document.createElement("div");
@@ -270,23 +299,24 @@
   async function ask(){
     const q = input().value.trim();
     if(!q) return;
-    addBubble(q, "user");
+    addBubble(q,"user");
     input().value = "";
 
     const freedom = Number(slider().value||FREEDOM_DEFAULT);
-    const a = finalAnswer(q, PROFILE||{}, freedom);
-    addBubble(a, "bot");
+    const a = synthesizeAnswer(q, PROFILE||{}, CV_TEXT||"", freedom);
+    addBubble(a,"bot");
   }
 
   /* ================== INIT ================== */
   (async function init(){
     slider().value = FREEDOM_DEFAULT;
     libVal().textContent = FREEDOM_DEFAULT;
-    slider().addEventListener("input", ()=>{ libVal().textContent = slider().value; });
+    slider().addEventListener("input", ()=>libVal().textContent = slider().value);
 
     PROFILE = await loadProfile();
+    CV_TEXT = await loadCvText();
 
-    addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
+    addBubble("Bonjour ! Pose une question sur le candidat. Le curseur « Liberté » règle le niveau d’interprétation (0 factuel → 2 interprétatif).","bot");
   })();
 
   sendBt().addEventListener("click", ask);
