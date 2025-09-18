@@ -1,54 +1,79 @@
 {
-  "profileGuide": {
-    "resume": "Enseignant primaire (CH), didactique de l’informatique, IA responsable. Forte culture numérique, pédagogie explicite et esprit critique.",
-    "valeurs": ["bienveillance pragmatique", "communication claire", "rigueur", "curiosité", "apprentissage rapide"],
-    "nuances": {
-      "general": "S’il manque une info précise, le dire simplement.",
-      "langues": "Il apprend vite et se met à niveau rapidement si nécessaire.",
-      "technologies": "Curieux et autonome ; se forme efficacement pour répondre aux besoins.",
-      "management": "Structuré, transparent, documente les décisions. Fait remonter les risques."
-    },
-    "regles": [
-      "Toujours s’appuyer sur le CV quand c’est pertinent.",
-      "Ne rien inventer ; contextualiser honnêtement les limites.",
-      "Mentionner la capacité d’apprentissage rapide pour langues/technos/exigences."
+  "name": "Nicolas Tuor",
+  "title": "Enseignant & ingénieur pédagogique (informatique / IA responsable)",
+  "cv_link": "/CV_Nicolas_Tuor.pdf",
+
+  "summary": "Enseignant formé à la didactique de l’informatique (Python, web) avec intérêt fort pour l’IA responsable, la pensée critique et la médiation scientifique. Approche pragmatique, structurée et orientée apprentissages.",
+  "contact": {
+    "email": "nicolas.tuor@example.com",
+    "site": "https://www.nicolastuor.ch"
+  },
+
+  "skills": {
+    "techniques": [
+      "Python (bases, scripts, data de base)",
+      "HTML/CSS, notions JS",
+      "Outils IA (prompting, évaluation simple, gouvernance basique)",
+      "Analyse de données (niveau débutant à intermédiaire)",
+      "Rédaction et synthèse"
+    ],
+    "pedagogiques": [
+      "Conception de séquences d’enseignement en informatique",
+      "Vulgarisation / médiation",
+      "Pensée critique (évaluation d’allégations et de sources)",
+      "Évaluation formative"
+    ],
+    "outils": [
+      "Git/GitHub (usages simples)",
+      "Outils bureautiques",
+      "Gestion de projet léger"
     ]
   },
 
-  "narrative": "Résumé libre (1500–3000 caractères). Tu peux coller ici des passages de lettres de motivation, ta philosophie d’enseignement, tes objectifs, etc.",
-
-  "achievements": [
-    "Ex: Animation d’un atelier IA responsable pour enseignants (HEP FR, 2024)",
-    "Ex: Mémoire sur l’enseignement explicite du débogage, mise en pratique en classe"
+  "languages": [
+    { "lang": "Français", "level": "C2 (natif)", "notes": "Très à l’aise pour l’enseignement et la rédaction." },
+    { "lang": "Anglais",  "level": "B2/C1 (professionnel)", "notes": "Lecture/écriture fréquentes ; conversation autonome." },
+    { "lang": "Allemand", "level": "B1 (intermédiaire)", "notes": "Compétences actives en progression ; apprend rapidement si besoin." }
   ],
 
-  "philosophy": "Ta posture pédagogique, gestion de classe, approche de l’évaluation, inclusion, etc.",
-
-  "strengths": ["Synthèse claire", "Pédagogie explicite", "Capacité à vulgariser", "Esprit d’équipe"],
-  "interests_extra": ["Ex: Histoire des sciences", "Ex: Luthérie numérique"],
-
-  "langs_detail": [
-    {"name":"français","level":"natif","evidence":"scolarité et enseignement en FR"},
-    {"name":"anglais","level":"C2","evidence":"usage académique/professionnel"},
-    {"name":"allemand","level":"B2/C1","evidence":"cours, échanges, documentation technique"}
+  "interests": [
+    "Vulgarisation scientifique",
+    "Astronomie/Astrophotographie",
+    "Technologies & IA (usage responsable)",
+    "Théâtre d’improvisation",
+    "Sport (aviron, arts martiaux)"
   ],
 
-  "tech_detail": [
-    {"stack":"Python","use":"pédagogie et petits outils"},
-    {"stack":"HTML/CSS/JS","use":"sites pédagogiques et prototypes"},
-    {"stack":"C++","use":"bases académiques"},
-    {"stack":"IA outillage","use":"images/vidéos, Copilot, n8n (automation)"},
-    {"stack":"Unity","use":"projets ludiques / pédagogiques"}
-  ],
-
-  "letters": [
+  "teaching_experience": [
     {
-      "target":"poste A",
-      "highlights":[
-        "Ex: intérêt fort pour l’interdisciplinarité et l’IA responsable",
-        "Ex: expérience d’animation d’ateliers pour enseignants"
-      ],
-      "tone":"calme, concret, orienté résultats"
+      "period": "2020-2021",
+      "role": "Enseignant primaire (5H)",
+      "notes": "Conduite de classe, différenciation, projets interdisciplinaires."
+    },
+    {
+      "period": "Master (Hep Fribourg)",
+      "role": "Didactique de l’informatique",
+      "notes": "Explicitation des stratégies de débogage ; transfert de compétences."
     }
+  ],
+
+  "projects": [
+    {
+      "name": "Fun Facts éducatifs",
+      "tags": ["Pensée critique", "IA (génération contrôlée)"],
+      "summary": "Interface ludique (cartes + nuage) ; sélection de faits et démystifications sourcées (Wikipedia, sources fiables)."
+    },
+    {
+      "name": "Jeu pédagogique « Astragale Runner »",
+      "tags": ["Histoire/Archéo", "Canvas 2D"],
+      "summary": "Mini runner 2D expliquant la transformation d’osselets en amulettes (mécanismes non violents)."
+    }
+  ],
+
+  "values": [
+    "Rigueur et esprit critique",
+    "Pédagogie explicite",
+    "Éthique et transparence avec l’IA",
+    "Apprentissage continu"
   ]
 }
