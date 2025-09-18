@@ -15,11 +15,13 @@
     }
     body{background:radial-gradient(1200px 600px at 20% -10%,rgba(255,255,255,.06),transparent),var(--bg);color:var(--ink)}
     .container{max-width:1100px;margin:0 auto;padding:20px}
+
     /* NAV */
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd)}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none}
     .chip:hover{background:var(--chip-h)}
+
     /* HERO */
     .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center;margin:24px 0 10px}
     .hero h1{font-size:2.1rem;line-height:1.15;margin:.2rem 0}
@@ -28,15 +30,31 @@
     .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:#0f3760;color:var(--ink);text-decoration:none}
     .btn:hover{background:#134a7e}
     .btn.ghost{background:transparent}
+
     /* METRO */
     .metro{border:1px solid var(--bd);border-radius:14px;background:#07192a;padding:16px;margin-top:12px}
     .metro h2{font-size:1.2rem;margin:0 0 8px}
     .map{position:relative;aspect-ratio:16/9;min-height:360px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.05));overflow:hidden}
+
     .line{position:absolute;height:6px;border-radius:6px;opacity:.9}
     .l-ia{background:linear-gradient(90deg,#22c55e,#86efac)}
     .l-web{background:linear-gradient(90deg,#60a5fa,#93c5fd)}
     .l-pedago{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
     .l-data{background:linear-gradient(90deg,#a78bfa,#c4b5fd)}
+
+    /* petit train */
+    .train{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;
+           box-shadow:0 0 0 4px rgba(255,255,255,.15), 0 6px 16px rgba(0,0,0,.35)}
+    .l-ia  .train{background:#16a34a; animation:ride 14s linear infinite}
+    .l-web .train{background:#3b82f6; animation:ride 12s linear infinite reverse}
+    .l-pedago .train{background:#f59e0b; animation:ride 15s linear infinite}
+    .l-data .train{background:#8b5cf6; animation:ride 13s linear infinite reverse}
+
+    @keyframes ride{
+      0%   { left:0% }
+      100% { left:calc(100% - 7px) } /* - rayon visuel */
+    }
+
     /* stations */
     .station{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border:3px solid #0b1f33;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35)}
     .station:hover{transform:translate(-50%,-50%) scale(1.08)}
@@ -44,15 +62,16 @@
     .station[data-cat="web"]{border-color:#60a5fa}
     .station[data-cat="pedago"]{border-color:#f59e0b}
     .station[data-cat="data"]{border-color:#a78bfa}
-    /* tags */
-    .tag{position:absolute;transform:translate(-50%,-120%);white-space:nowrap;background:#061425;border:1px solid var(--bd);border-radius:10px;padding:4px 8px;font-size:.85rem;opacity:.96}
-    .tag b{opacity:.95}
-    /* pulse sur stations clés */
     .station.pulse::after{
       content:"";position:absolute;inset:-6px;border-radius:50%;
       border:2px solid currentColor;opacity:.45;animation:pulse 2s infinite;
     }
     @keyframes pulse{0%{transform:scale(.7);opacity:.45}70%{transform:scale(1.2);opacity:0}100%{opacity:0}}
+
+    /* tags sur la carte */
+    .tag{position:absolute;transform:translate(-50%,-120%);white-space:nowrap;background:#061425;border:1px solid var(--bd);border-radius:10px;padding:4px 8px;font-size:.85rem;opacity:.96}
+    .tag b{opacity:.95}
+
     /* tooltip */
     .tip{position:absolute;z-index:5;display:none;max-width:min(360px,90vw);background:#0b2136;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;box-shadow:0 16px 40px rgba(0,0,0,.5)}
     .tip h4{margin:0 0 6px 0;font-size:1rem}
@@ -65,6 +84,7 @@
     .links{margin-top:6px}
     .links a{color:#93c5fd;text-decoration:none}
     .links a:hover{text-decoration:underline}
+
     @media (max-width:920px){.hero{grid-template-columns:1fr}}
   </style>
 </head>
@@ -98,56 +118,58 @@
           <a class="btn ghost" href="/chatbot">Parler au Chatbot</a>
         </div>
       </div>
+
+      <!-- METRO -->
       <div class="metro">
         <h2>Le « métro » de mon CV</h2>
         <div class="map" id="map">
           <!-- lignes -->
-          <div class="line l-ia"     style="left:6%;  top:28%; width:70%"></div>
-          <div class="line l-web"    style="left:10%; top:60%; width:78%"></div>
-          <div class="line l-pedago" style="left:18%; top:42%; width:64%"></div>
-          <div class="line l-data"   style="left:24%; top:76%; width:54%"></div>
+          <div class="line l-ia"     style="left:6%;  top:28%; width:70%"><span class="train" aria-hidden="true"></span></div>
+          <div class="line l-web"    style="left:10%; top:60%; width:78%"><span class="train" aria-hidden="true"></span></div>
+          <div class="line l-pedago" style="left:18%; top:42%; width:64%"><span class="train" aria-hidden="true"></span></div>
+          <div class="line l-data"   style="left:24%; top:76%; width:54%"><span class="train" aria-hidden="true"></span></div>
 
           <!-- stations (x%, y%) -->
           <button class="station pulse" data-cat="ia"     style="left:10%; top:28%" aria-label="IA responsable"
                   data-title="IA responsable"
                   data-tags="Expérimentation, Outils éducatifs"
                   data-desc="Prototypage rapide d’outils IA (classes, évaluation formative, explications) avec souci d’éthique et d’accessibilité."
-                  data-links="/ai-lab"> </button>
+                  data-links="/ai-lab"></button>
           <span class="tag" style="left:10%; top:28%"><b>IA responsable</b></span>
 
           <button class="station" data-cat="pedago" style="left:30%; top:42%" aria-label="Ingénierie pédagogique"
                   data-title="Ingénierie pédagogique"
                   data-tags="Didactique info, Pensée critique"
                   data-desc="Conception de séquences, activités et supports; transfert de compétences (master), analyse de pratiques."
-                  data-links="/portfolio"> </button>
+                  data-links="/portfolio"></button>
           <span class="tag" style="left:30%; top:42%"><b>Ingénierie pédagogique</b></span>
 
           <button class="station" data-cat="web"    style="left:24%; top:60%" aria-label="Web & Visualisations"
                   data-title="Web & Visualisations"
                   data-tags="HTML/CSS/JS, D3/Canvas"
                   data-desc="Dév web front avec visualisations interactives pour expliquer et apprendre (projets, jeux sérieux, outils de classe)."
-                  data-links="/portfolio"> </button>
+                  data-links="/portfolio"></button>
           <span class="tag" style="left:24%; top:60%"><b>Web & visualisations</b></span>
 
           <button class="station" data-cat="data"   style="left:36%; top:76%" aria-label="Données & analyse"
                   data-title="Données & analyse"
                   data-tags="Méthodo, Tableaux de bord"
                   data-desc="Collecte simple et analyses descriptives pour l’évaluation et le pilotage pédagogique; visualisation claire et actionnable."
-                  data-links="/portfolio"> </button>
+                  data-links="/portfolio"></button>
           <span class="tag" style="left:36%; top:76%"><b>Données & analyse</b></span>
 
           <button class="station" data-cat="web"    style="left:58%; top:60%" aria-label="Projets web éducatifs"
                   data-title="Projets web éducatifs"
                   data-tags="Apps légères, Accessibilité"
                   data-desc="Petites apps/jeux éducatifs (Canvas) utilisables en classe; sans dépendances lourdes, pensés pour la diffusion."
-                  data-links="/portfolio"> </button>
+                  data-links="/portfolio"></button>
           <span class="tag" style="left:58%; top:60%"><b>Projets éducatifs</b></span>
 
           <button class="station pulse" data-cat="pedago" style="left:78%; top:42%" aria-label="Formation & accompagnement"
                   data-title="Formation & accompagnement"
                   data-tags="Conseil, Ateliers"
                   data-desc="Accompagnement d’équipes sur l’usage d’outils numériques et IA; ateliers, supports pragmatiques et reproductibles."
-                  data-links="/portfolio"> </button>
+                  data-links="/portfolio"></button>
           <span class="tag" style="left:78%; top:42%"><b>Formation & appui</b></span>
 
           <!-- tooltip -->
@@ -161,38 +183,38 @@
       </div>
     </section>
 
-    <!-- petits liens rapides -->
+    <!-- liens rapides -->
     <section style="margin-top:18px">
       <div class="cta">
         <a class="btn" href="/fun-facts">Fun Facts éducatifs</a>
         <a class="btn ghost" href="/ai-lab">Laboratoire d’idées IA</a>
       </div>
     </section>
-
   </main>
 
   <script>
-    // petit tooltip pour le "métro"
-    const tip = document.getElementById('tip');
-    const tTitle = document.getElementById('tTitle');
-    const tMeta  = document.getElementById('tMeta');
-    const tDesc  = document.getElementById('tDesc');
-    const tLinks = document.getElementById('tLinks');
+    // Tooltip du métro
+    const tip   = document.getElementById('tip');
+    const tTitle= document.getElementById('tTitle');
+    const tMeta = document.getElementById('tMeta');
+    const tDesc = document.getElementById('tDesc');
+    const tLinks= document.getElementById('tLinks');
 
     function showTip(btn){
       tTitle.textContent = btn.dataset.title || '—';
       tMeta.innerHTML = '';
-      const tag = (btn.dataset.tags || '').split(',').map(s=>s.trim()).filter(Boolean);
       const cat = btn.dataset.cat;
-      const b1 = document.createElement('span'); b1.className='badge ' + (cat==='ia'?'ok':cat==='web'?'sky':cat==='pedago'?'warn':'vio'); b1.textContent = ({ia:'IA', web:'Web', pedago:'Pédagogie', data:'Données'})[cat] || 'Compétence';
-      tMeta.appendChild(b1);
-      tag.forEach(x=>{ const s=document.createElement('span'); s.className='badge'; s.textContent=x; tMeta.appendChild(s); });
+      const colorClass = cat==='ia'?'ok':cat==='web'?'sky':cat==='pedago'?'warn':'vio';
+      const bcat = document.createElement('span'); bcat.className = 'badge ' + colorClass;
+      bcat.textContent = ({ia:'IA',web:'Web',pedago:'Pédagogie',data:'Données'})[cat] || 'Compétence';
+      tMeta.appendChild(bcat);
+      (btn.dataset.tags||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(x=>{
+        const s=document.createElement('span'); s.className='badge'; s.textContent=x; tMeta.appendChild(s);
+      });
       tDesc.textContent = btn.dataset.desc || '';
       tLinks.innerHTML = '';
       if(btn.dataset.links){
-        const a = document.createElement('a');
-        a.href = btn.dataset.links; a.target='_blank'; a.rel='noopener';
-        a.textContent = 'Voir un exemple →';
+        const a = document.createElement('a'); a.href=btn.dataset.links; a.target='_blank'; a.rel='noopener'; a.textContent='Voir un exemple →';
         tLinks.appendChild(a);
       }
       const r = btn.getBoundingClientRect();
