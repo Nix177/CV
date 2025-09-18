@@ -4,88 +4,112 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chatbot IA — Nicolas Tuor</title>
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/style.css" />
+
+  <!-- Favicon inline pour éviter le 404 ; remplace par ton fichier si tu veux -->
+  <link rel="icon" type="image/svg+xml"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="%230e3b63"/><text x="16" y="22" font-size="16" text-anchor="middle" fill="white">🤖</text></svg>' />
+
   <style>
-    /* Styles locaux légers pour le chat */
-    :root{ --bd:#ffffff22; --bg:#081a2d; --ink:#e6f1ff; }
-    body{ background:var(--bg); color:var(--ink); }
-    .container{ max-width:1100px; margin:0 auto; padding:24px; }
-    .panel{ border:1px solid var(--bd); border-radius:14px; padding:16px; background:rgba(255,255,255,.04); }
-    .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .chip{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--bd); border-radius:12px; background:rgba(255,255,255,.06); }
-    .slider{ display:flex; align-items:center; gap:8px; }
-    .slider input{ width:160px; }
-    #chatLog{ height:420px; overflow:auto; padding:12px; border:1px solid var(--bd); border-radius:12px; background:rgba(0,0,0,.25); }
-    .bubble{ max-width:80%; padding:10px 12px; margin:8px 0; border:1px solid var(--bd); border-radius:12px; background:rgba(255,255,255,.06); }
-    .bubble.user{ margin-left:auto; background:rgba(72,135,200,.25); }
-    .bubble.bot { margin-right:auto; }
-    #askRow{ display:flex; gap:8px; margin-top:10px; }
-    #chatInput{ flex:1; min-height:64px; padding:10px; border:1px solid var(--bd); border-radius:10px; background:#0b1f33; color:var(--ink); }
-    button.btn{ padding:10px 14px; border-radius:10px; border:1px solid var(--bd); background:#0e3b63; color:var(--ink); cursor:pointer; }
-    button.btn:hover{ filter:brightness(1.1); }
+    :root{
+      --bg:#081a2d; --panel:#0c1e37; --bd:#ffffff22; --ink:#e6f1ff; --muted:#bcd3ff;
+      --accent:#0e7dd8; --bubble:#0e2f55; --bubble-user:#0d3e6e; --btn:#0e3b63;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
+      line-height:1.45;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    h1{margin:.2rem 0 .5rem}
+    .hint{opacity:.8;margin:.5rem 0 1rem}
+
+    /* Slider liberté */
+    .libre-row{display:flex;align-items:center;gap:14px;margin:8px 0 12px}
+    .libre-label{white-space:nowrap}
+    .slider{
+      --pos: 0%; /* rempli via JS */
+      appearance:none;width:320px;height:8px;border-radius:999px;
+      background:linear-gradient(to right,#2aa3ff,var(--accent)) no-repeat;
+      background-size:var(--pos) 100%;
+      background-color:#0a1a30;border:1px solid var(--bd);outline:0;cursor:pointer;
+    }
+    .slider::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+    .slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+    .libre-val{width:2ch;text-align:right}
+
+    /* Chat */
+    .chatbox{background:var(--panel);border:1px solid var(--bd);border-radius:10px;padding:12px}
+    .log{max-height:min(60vh,560px);overflow:auto;padding:6px}
+    .bubble{
+      background:var(--bubble); border:1px solid var(--bd); color:var(--ink);
+      padding:10px 12px; border-radius:12px; margin:10px 0; max-width:900px;
+      white-space:pre-wrap;
+    }
+    .bubble.user{background:var(--bubble-user); margin-left:auto}
+    .typing{opacity:.8}
+    .input-row{display:flex;gap:8px;align-items:stretch;margin-top:10px}
+    textarea{
+      flex:1; min-height:52px; max-height:220px; resize:vertical;
+      background:#0b223f; color:var(--ink);
+      border:1px solid var(--bd); border-radius:10px; padding:12px; line-height:1.35;
+    }
+    button{
+      background:var(--btn); color:var(--ink); border:1px solid var(--bd); border-radius:10px;
+      padding:10px 14px; cursor:pointer;
+    }
+    button:hover{filter:brightness(1.05)}
+    .examples{opacity:.8;margin:.5rem 0}
   </style>
 </head>
 <body>
-  <main class="container">
+  <main class="wrap">
     <h1>Chatbot IA</h1>
-    <p>Posez vos questions — pédagogie, IA, expérience. Le bot charge <code>/profile.json</code> si présent ; sinon il s’appuie sur un extrait intégré de mon CV.</p>
 
-    <div class="row" style="margin:10px 0 14px">
-      <div class="chip slider">
-        <strong>Liberté</strong>
-        <input type="range" id="creativity" min="0" max="2" step="0.1" value="1.0" />
-        <span id="creativityVal">1.0</span>
-      </div>
-      <div class="chip">Astuce : essayez « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quels sont ses centres d’intérêt ? ».</div>
+    <div class="libre-row">
+      <div class="libre-label">Liberté</div>
+      <input id="freedom" class="slider" type="range" min="0" max="2" step="1" value="1" />
+      <strong class="libre-val" id="freedomVal">1</strong>
     </div>
 
-    <div class="panel">
-      <div id="chatLog" aria-live="polite"></div>
-      <div id="askRow">
+    <div class="hint">
+      Posez vos questions — pédagogie, IA, expérience. Le bot charge <code>/profile.json</code> si présent, sinon il s’appuie sur un extrait intégré de mon CV.  
+      <br/>Astuce : essayez « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quels sont ses centres d’intérêt ? ».
+    </div>
+
+    <section id="chatBox" class="chatbox" aria-live="polite">
+      <div id="chatLog" class="log"></div>
+      <div class="input-row">
         <textarea id="chatInput" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne)"></textarea>
-        <button id="chatSend" class="btn">Envoyer</button>
+        <button id="chatSend">Envoyer</button>
       </div>
-    </div>
+      <div class="examples">Exemples : • Quelles compétences techniques ressortent ? • Parle-moi d’une expérience marquante. • Quelles langues parle-t-il ?</div>
+    </section>
   </main>
 
   <script>
-  /* Chatbot FR (front-only) — profil JSON + CV embarqué — avec « Liberté » réglable */
   (function(){
     "use strict";
+    const $ = (s,r=document)=>r.querySelector(s);
+    const logEl = $("#chatLog"), input = $("#chatInput"), sendBt = $("#chatSend");
+    const freedom = $("#freedom"), freedomVal = $("#freedomVal");
 
-    // ---------- DOM ----------
-    const logEl   = document.getElementById("chatLog");
-    const inputEl = document.getElementById("chatInput");
-    const sendBtn = document.getElementById("chatSend");
-    const slider  = document.getElementById("creativity");
-    const sVal    = document.getElementById("creativityVal");
-
-    let FLEX = parseFloat(localStorage.getItem("nt_chat_flex") || slider.value) || 1.0;
-    slider.value = FLEX.toFixed(1);
-    sVal.textContent = slider.value;
-
-    slider.addEventListener("input", () => {
-      FLEX = parseFloat(slider.value) || 1.0;
-      sVal.textContent = slider.value;
-      localStorage.setItem("nt_chat_flex", FLEX);
-    });
-
-    function addBubble(text, who="bot"){
-      const line = document.createElement("div");
-      line.className = "bubble " + who;
-      line.textContent = String(text || "");
-      logEl.appendChild(line);
-      logEl.scrollTop = logEl.scrollHeight;
+    // -------- Slider visuel (remplissage total à 2/2)
+    function updateSliderFill(){
+      const p = (freedom.value - freedom.min) / (freedom.max - freedom.min) * 100;
+      freedom.style.setProperty("--pos", p + "%");
+      freedomVal.textContent = freedom.value;
     }
+    freedom.addEventListener("input", updateSliderFill);
+    updateSliderFill();
 
-    // ---------- Profil : /profile.json ou fallback ----------
+    // -------- CV/Profil embarqué (fallback)
     const CV_FALLBACK = {
       nom: "Nicolas Tuor",
-      resume: "Enseignant & ingénieur pédagogique (didactique de l’informatique, IA responsable). Formation, accompagnement, projets numériques éducatifs, pensée critique. Dev web (HTML/CSS/JS), Python (data/IA), prompt-engineering.",
+      resume: "Enseignant & ingénieur pédagogique (didactique de l’informatique, IA responsable). Expérience : formation, accompagnement, projets numériques éducatifs, pensée critique. Dev web (HTML/CSS/JS), Python (data/IA), prompt-engineering. Gestion de projet, vulgarisation.",
       langues: [
         { langue: "Français", niveau: "C2 (natif)" },
-        { langue: "Allemand", niveau: "B2 (scolaire/pro)" },
+        { langue: "Allemand", niveau: "B2 (bon niveau scolaire/pro)" },
         { langue: "Anglais",  niveau: "B2–C1 (travail/lecture)" }
       ],
       competences: [
@@ -93,189 +117,217 @@
         "Intégration responsable de l’IA en éducation",
         "Conception de formations, accompagnement d’enseignants",
         "Analyse de données (Python), visualisation simple",
-        "Développement web (HTML/CSS/JS)",
+        "Dév web de base (HTML/CSS/JS)",
         "Gestion de projet, communication scientifique"
       ],
       interets: [
-        "Vulgarisation scientifique, pensée critique",
+        "Vulgarisation scientifique & pensée critique",
         "Astronomie / Astrophotographie",
         "Aviron (2005–2011)",
-        "Théâtre d’improvisation",
-        "Technologies, outils IA (création/automatisation)",
+        "Théâtre d’impro",
+        "Technologies & outils IA (créations, automatisations d’équipe IA)",
         "Arts martiaux"
       ],
-      points: [
-        "Curieux, apprend vite et s’adapte",
-        "Esprit d’équipe, approche rigoureuse",
-        "Sens pédagogique et éthique"
-      ],
       projetsIA: [
-        "Ateliers d’IA responsable (limites/biais)",
-        "Prototypage d’outils pédagogiques (quiz/facts)",
-        "Automatisations légères (scripts, prompts)"
+        "Ateliers IA responsable (explicabilité, limites, biais)",
+        "Outils d’aide à l’enseignement (quiz/facts, protos front-end)",
+        "Automatisations simples (scripts, prompts, pipelines légers)"
+      ],
+      pointsForts: [
+        "Approche pragmatique, rigoureuse et éthique",
+        "Esprit d’équipe et coordination",
+        "Capacité d’apprentissage rapide & adaptabilité"
+      ],
+      stylePedago: [
+        "Pratique, fondé sur l’explicitation, le feedback, et la pensée critique",
+        "Passerelle théorie → usages concrets en classe"
       ]
     };
 
+    // -------- merge utile
+    function uniq(arr){ return Array.from(new Set(arr)); }
+    function mergeProfile(base, extra){
+      const out = JSON.parse(JSON.stringify(base));
+      const keysList = ["langues","competences","interets","projetsIA","pointsForts","stylePedago"];
+      for(const k of keysList){
+        const a = (base[k]||[]), b = (extra[k]||[]);
+        if(Array.isArray(a) && Array.isArray(b)){
+          if(typeof a[0]==="object"){ // langues
+            const map = new Map();
+            [...a, ...b].forEach(x=>map.set((x.langue||x.name||JSON.stringify(x)).toLowerCase(), x));
+            out[k] = Array.from(map.values());
+          } else {
+            out[k] = uniq([...a, ...b]);
+          }
+        }
+      }
+      for(const k of ["resume","nom"]) out[k] = extra[k] || out[k];
+      return out;
+    }
+
     async function loadProfile(){
       try{
-        const r = await fetch("/profile.json", { cache:"no-store" });
+        const r = await fetch("/profile.json",{cache:"no-store"});
         if(!r.ok) throw new Error("no profile.json");
         const j = await r.json();
-        return j && typeof j === "object" ? j : CV_FALLBACK;
-      }catch{ return CV_FALLBACK; }
-    }
-
-    // ---------- Boîte à outils « conversationnelles » ----------
-    const pick = (arr)=>arr[Math.floor(Math.random()*arr.length)];
-    const joinList = (arr)=> arr.length <= 1 ? (arr[0]||"") :
-                       arr.length === 2 ? `${arr[0]} et ${arr[1]}` :
-                       `${arr.slice(0,-1).join(", ")} et ${arr[arr.length-1]}`;
-
-    function hedge(level=FLEX){
-      const base = [
-        "À ma connaissance, ",
-        "D’après son profil, ",
-        "Selon son CV, ",
-        "D’après les éléments fournis, "
-      ];
-      const freer = [
-        "Tout porte à penser que ",
-        "On peut raisonnablement dire que ",
-      ];
-      return (level >= 1.4) ? pick(base.concat(freer)) : pick(base);
-    }
-    function closing(level=FLEX){
-      const lines = [
-        "Souhaitez-vous un exemple concret ?",
-        "Je peux détailler si besoin.",
-        "On peut creuser un point précis si vous voulez."
-      ];
-      return (level >= .8) ? " " + pick(lines) : "";
-    }
-
-    function find(words, text){
-      const t = (text||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-      return words.some(w => t.includes(w));
-    }
-
-    // ---------- Intentions & réponses ----------
-    function ansHobbies(p){
-      const hob = (p.interets||[]).slice(0,6);
-      if (hob.length){
-        const phr = [
-          `Côté centres d’intérêt, ${joinList(hob)}.`,
-          `Il s’intéresse notamment à ${joinList(hob)}.`
-        ];
-        const intro = FLEX >= .9 ? hedge() : "";
-        return intro + pick(phr);
+        return mergeProfile(CV_FALLBACK, j||{});
+      }catch(e){
+        return CV_FALLBACK;
       }
-      // pas listé → petite interprétation si FLEX>0.6
-      if (FLEX > .6){
-        return hedge() + "rien n’est listé explicitement, mais il est curieux et se met rapidement à niveau.";
+    }
+
+    // -------- Chat UI helpers
+    function addBubble(text, who="bot"){
+      const div=document.createElement("div");
+      div.className="bubble " + who;
+      div.textContent=String(text||"");
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+      return div;
+    }
+    function addTyping(){
+      const div=document.createElement("div");
+      div.className="bubble typing";
+      let i=0, base="…";
+      const tick=()=>{ i=(i+1)%4; div.textContent="Je réfléchis"+(".".repeat(i)); t= setTimeout(tick, 400); };
+      let t=setTimeout(tick, 200);
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+      return ()=>{ clearTimeout(t); div.remove(); };
+    }
+    function latency(ms){
+      return new Promise(res=>setTimeout(res, ms));
+    }
+
+    // -------- NLP léger & intents
+    function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
+    function includesAny(s, arr){ s=norm(s); return arr.some(k=>s.includes(norm(k))); }
+
+    function classify(q){
+      const s=norm(q);
+      if(includesAny(s,["langue","parle","idiome","anglais","allemand","francais"])) return "langues";
+      if(includesAny(s,["hobby","hobbie","loisir","interet","centre d interet","passe-temps"])) return "hobbies";
+      if(includesAny(s,["competenc","skill","points forts","point fort","qualite"])) return "competences";
+      if(includesAny(s,["experience","parle moi d une experience","parcours","projet marquant"])) return "experience";
+      if(includesAny(s,["projet ia","ia appliquee","prompt","automati","assistant","bot"])) return "projetsIA";
+      if(includesAny(s,["equipe","manager","leader","coordination","mener une equipe"])) return "equipe";
+      if(includesAny(s,["style pedag","enseigne","approche pedagog","didactique"])) return "pedagogie";
+      if(includesAny(s,["distingue","unique","avantage","atout"])) return "distinctif";
+      if(includesAny(s,["recette","cuisine","gateau","tarte"])) return "horssujet";
+      return "general";
+    }
+
+    function textList(arr, sep=", "){ return (arr||[]).join(sep); }
+    function langList(arr){
+      return (arr||[]).map(l=>`${l.langue||l.name} — ${l.niveau||l.level||"niveau non précisé"}`).join("; ");
+    }
+
+    function softAssertProfile(prof, field, def){
+      return (Array.isArray(prof[field]) && prof[field].length)? prof[field] : (def||[]);
+    }
+
+    function answer(q, prof, free){
+      const intent = classify(q);
+
+      // Réponses par intent — modulées par "free"
+      if(intent==="horssujet"){
+        return "Je peux répondre au sujet du candidat (compétences, langues, pédagogie, IA, expériences). Sur une recette de tarte, je n’ai pas d’infos utiles ici 🙂.";
       }
-      return "Les centres d’intérêt ne sont pas détaillés ici.";
-    }
 
-    function ansLangues(p){
-      const ls = (p.langues||[]).map(l => `${l.langue}: ${l.niveau}`);
-      if (ls.length){
-        return hedge() + joinList(ls) + ".";
+      if(intent==="langues"){
+        const txt = langList(prof.langues)||"Principalement français, anglais et allemand avec un bon niveau de travail.";
+        if(free==0) return txt;
+        if(free==1) return txt + " — Il peut aussi s’adapter rapidement à d’autres contextes linguistiques si besoin.";
+        return txt + " — Approche pragmatique : lorsqu’une langue est nécessaire, il se met à niveau efficacement.";
       }
-      return "Langues non précisées ; à minima français courant, et anglais/allemand utilisables.";
-    }
 
-    function ansCompetences(p){
-      const c = (p.competences||[]).slice(0,10);
-      if (c.length){
-        const openers = [
-          "Compétences clés : ",
-          "Ce qui ressort techniquement : ",
-          "Sur le plan pratique : "
-        ];
-        return pick(openers) + joinList(c) + ".";
+      if(intent==="hobbies"){
+        const ints = textList(prof.interets) || null;
+        if(free==0) return ints? `Centres d’intérêt : ${ints}.` : "Rien de listé précisément.";
+        if(free==1) return ints? `Centres d’intérêt : ${ints}.` : "Rien de listé précisément ; il apprend vite et sait s’approprier un nouveau sujet.";
+        return ints? `On retrouve notamment : ${ints}.` : "Pas d’éléments listés ; curieux et adaptable, il s’implique volontiers sur un thème nouveau.";
       }
-      return hedge() + "les compétences sont indiquées de manière générale (pédagogie, numérique, IA).";
-    }
 
-    function ansExperience(p){
-      const lines = [
-        "Didactique de l’informatique, intégration d’outils numériques/IA, accompagnement d’enseignants.",
-        "Conception et animation de formations, projets orientés impact et usages responsables.",
-      ];
-      return hedge() + pick(lines) + closing();
-    }
-
-    function ansLeadership(p){
-      const hints = p.points || [];
-      const likely = find(["equipe","collabor","projet"], (p.points||[]).join(" ").toLowerCase());
-      if (likely || FLEX >= 1.2){
-        return hedge() + "à l’aise en coordination d’initiatives pédagogiques et travail d’équipe ; style pragmatique et rigoureux." + closing();
+      if(intent==="competences"){
+        const comps = textList(prof.competences);
+        if(free==0) return comps || "Compétences pédagogie/numérique/IA indiquées de manière générale.";
+        if(free==1) return (comps? `Compétences clés : ${comps}. `:"") + "Points forts : " + textList(prof.pointsForts||[]) + ".";
+        return (comps? `Compétences clés : ${comps}. `:"") + "Il relie théorie et usages concrets, avec une démarche rigoureuse et orientée impact.";
       }
-      return "Pas d’expérience managériale explicite dans l’extrait, mais il collabore facilement.";
-    }
 
-    function ansUnique(p){
-      const facets = [
-        "sens critique et éthique autour de l’IA",
-        "double culture pédagogie ↔ technique",
-        "capacité à prototyper rapidement",
-        "vulgarisation claire et orientée usages"
-      ];
-      const plus = (p.points||[]).slice(0,2);
-      return hedge() + `ce qui le distingue : ${joinList(facets.concat(plus).slice(0,4))}.`;
-    }
-
-    const INTENTS = [
-      {name:"hobbies",     test:q=>/\b(hobbi|loisir|centre.s?\s+d[’' ]?int[eé]r[eê]t|passion|activit[eé]s?)\b/i.test(q), fn:ansHobbies},
-      {name:"langues",     test:q=>/(langue|idiome|parle(r)?)/i.test(q), fn:ansLangues},
-      {name:"skills",      test:q=>/(comp[eé]tenc|skill|techn|stack|outil)/i.test(q), fn:ansCompetences},
-      {name:"experience",  test:q=>/(exp[eé]rience|enseignement|former|formation|accompagn|p[eé]dagog)/i.test(q), fn:ansExperience},
-      {name:"leadership",  test:q=>/(diriger|g[eé]rer une ?e?quipe|lead|manager)/i.test(q), fn:ansLeadership},
-      {name:"unique",      test:q=>/(distingu|atout|point fort|force)/i.test(q), fn:ansUnique},
-    ];
-
-    // ---------- Moteur ----------
-    let PROFILE = null;
-
-    function answer(q){
-      const msg = (q||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-      for (const it of INTENTS){
-        if (it.test(msg)) return it.fn(PROFILE||{});
+      if(intent==="experience"){
+        if(free==0) return "Expérience en didactique de l’informatique, accompagnement d’enseignants et intégration d’outils numériques/IA.";
+        if(free==1) return "Expérience en formation et projets numériques éducatifs ; focus IA responsable et transposition en classe.";
+        return "Expérience : formations, accompagnement, projets pédagogiques où l’IA est utilisée de manière explicite, critique et utile.";
       }
-      // fallback conversationnel : petite synthèse prudente
-      const base = [
-        "Je peux répondre sur ses compétences, langues, centres d’intérêt, projets IA, qualités pédagogiques.",
-        "Dites-moi si vous préférez un exemple d’atelier, un détail technique ou un point fort."
-      ];
-      if (FLEX >= 1.3){
-        const plus = pick([
-          "Il est curieux, apprend vite et aime relier pédagogie et usages concrets.",
-          "Il essaie de rendre l’IA utile, sûre et compréhensible pour les apprenants."
-        ]);
-        return plus + " " + base[1];
+
+      if(intent==="projetsIA"){
+        const p = textList(prof.projetsIA);
+        if(free==0) return p || "Expériences variées en IA responsable et outillage pédagogique.";
+        if(free==1) return (p? `Exemples : ${p}. `:"") + "Il vise des usages robustes, lisibles et reproductibles.";
+        return (p? `Exemples : ${p}. `:"") + "Approche : clarté des limites, prise en compte des biais, utilité pédagogique concrète.";
       }
-      return base[0];
+
+      if(intent==="equipe"){
+        if(free==0) return "À l’aise en équipe et en coordination de petites initiatives pédagogiques.";
+        if(free==1) return "À l’aise en équipe, coordination pragmatique et rigoureuse ; sait cadrer des tâches pédagogiques.";
+        return "Il fédère autour d’objectifs clairs et mesurables, en reliant contraintes du terrain et résultats attendus.";
+      }
+
+      if(intent==="pedagogie"){
+        const s = textList(prof.stylePedago||[]);
+        if(free==0) return s || "Approche pédagogique pratique et explicite.";
+        if(free==1) return (s? s+". ":"") + "Valorise l’explicitation, la pensée critique et l’alignement objectifs-activités-évaluation.";
+        return (s? s+". ":"") + "L’idée : rendre les outils intelligibles, transférables et éthiques pour les apprenants.";
+      }
+
+      if(intent==="distinctif"){
+        if(free==0) return "Didactique + IA responsable + vulgarisation : un profil qui relie technique, pédagogie et sens critique.";
+        if(free==1) return "Il relie IA responsable, pédagogie et outillage simple, en gardant un regard critique sur l’efficacité réelle.";
+        return "Point distinctif : rendre l’IA compréhensible et utile, sans surpromesse ; focus impact pédagogique mesurable.";
+      }
+
+      // Général
+      if(free==0){
+        return "Je peux répondre sur ses compétences, langues, expériences, centres d’intérêt, projets IA, qualités pédagogiques.";
+      }else if(free==1){
+        return "Ok. Précisez un angle (compétences techniques, langues, projet marquant, style pédagogique, points forts) et je détaille.";
+      }else{
+        return "Dites-moi l’objectif (ex : « quel atout pour un poste X »). Je synthétise en reliant compétences, pédagogie et IA responsable.";
+      }
     }
+
+    // -------- envoi
+    let PROFILE=null;
 
     async function ask(){
-      const q = inputEl.value.trim();
+      const q = input.value.trim();
       if(!q) return;
-      addBubble(q, "user");
-      inputEl.value = "";
-      const a = answer(q);
-      addBubble(a, "bot");
+      addBubble(q,"user");
+      input.value="";
+      const stopTyping = addTyping();
+
+      // petite latence variable “IA-like”
+      const base = Math.min(700, 200 + q.length*4);
+      await latency(base + Math.random()*200);
+
+      const free = Number(freedom.value||1);
+      const a = answer(q, PROFILE||CV_FALLBACK, free);
+
+      stopTyping();
+      addBubble(a,"bot");
     }
 
-    // ---------- Init ----------
-    (async function init(){
-      PROFILE = await loadProfile();
-      addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
-    })();
-
-    sendBtn.addEventListener("click", ask);
-    inputEl.addEventListener("keydown", (e)=>{
+    sendBt.addEventListener("click", ask);
+    input.addEventListener("keydown", (e)=>{
       if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }
     });
+
+    // -------- init
+    (async function init(){
+      PROFILE = await loadProfile();
+      addBubble("Bonjour ! Posez une question sur le candidat.","bot");
+    })();
   })();
   </script>
 </body>
