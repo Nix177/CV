@@ -187,13 +187,13 @@
     }
 
     async function loadProfile(){
-      PROFILE = await getJSON("/profile.json");
+      PROFILE = await getJSON("public/profile.json");
       if(!PROFILE) PROFILE = await getJSON("/profile%20(1).json"); // secours si fichier mal nommé
       log(PROFILE ? "profile.json OK" : "profile.json absent (fallback)");
     }
 
     async function loadCVText(){
-      const j = await getJSON("/cv-text.json");
+      const j = await getJSON("/cv-text.txt");
       if(j && (typeof j==="string" || Array.isArray(j))){
         CVTEXT = Array.isArray(j) ? j.join("\n") : j;
         log("cv-text.json OK");
