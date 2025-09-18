@@ -1,73 +1,95 @@
-/* public/js/chatbot.js
-   Front-end du chatbot : envoie les requêtes à /api/chat et gère le slider "Liberté". */
+// public/chatbot.js — client léger pour /api/chat
+
 (function(){
   "use strict";
-  const $ = (s, r=document)=>r.querySelector(s);
-  const logBox = $("#chatBox");
-  const input  = $("#chatInput");
-  const sendBt = $("#chatSend");
-  const slider = $("#liberty");
-  const libLbl = $("#libLabel");
-  const libInfo = $("#libInfo");
+  const $  = (s,r=document)=>r.querySelector(s);
+  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s,r));
+  const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
 
-  const HISTORY = []; // contexte léger côté client
+  // ---- UI ----
+  const logEl   = $("#chatLog");
+  const input   = $("#chatInput");
+  const sendBtn = $("#chatSend");
+  const conciseCb = $("#concise");        // par défaut décoché (HTML)
+  const libRadios = $$("#liberty input[type=radio]"); // 0 / 1 / 2
 
+  // Valeurs par défaut souhaitées
+  // -> Liberté = 2 (interprétatif), Réponses concises décoché
+  function setDefaults(){
+    const r2 = $("#lib2");
+    if (r2) r2.checked = true;
+    if (conciseCb) conciseCb.checked = false;
+  }
+  setDefaults();
+
+  // ---- rendu bulles ----
   function addBubble(text, who="bot"){
-    const b = document.createElement("div");
-    b.className = "bubble " + (who==="user"?"user":"bot");
-    b.textContent = String(text || "");
-    logBox.appendChild(b);
-    logBox.scrollTop = logBox.scrollHeight;
+    const line = document.createElement("div");
+    line.className = "bubble " + who;
+    line.textContent = String(text || "");
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
   }
 
-  function libText(v){
-    return (v==0)
-      ? "0 : strict et factuel — aucune supposition."
-      : (v==1)
-      ? "1 : prudent — petites inférences, indiquées comme déduites."
-      : "2 : interprétatif responsable — rapproche, explicite, indique clairement les déductions.";
-  }
-  function updateLibUI(){
-    const v = Number(slider.value || 1);
-    libLbl.textContent = v;
-    libInfo.textContent = libText(v);
+  // ---- lecture liberté ----
+  function getLiberty(){
+    const r = libRadios.find(x=>x.checked);
+    return r ? Number(r.value) : 2;
   }
 
+  // ---- post-traitement concis ----
+  function concise(text){
+    if (!conciseCb?.checked) return text;
+    const s = String(text || "").replace(/\s+/g," ").trim();
+    // coupe grossièrement à deux phrases
+    const m = s.match(/^(.+?[\.!?])\s+(.+?[\.!?]).*$/);
+    return m ? (m[1] + " " + m[2]) : s;
+  }
+
+  // ---- appel API ----
   async function ask(){
     const q = input.value.trim();
-    if(!q) return;
-    input.value = "";
+    if (!q) return;
     addBubble(q, "user");
-    HISTORY.push({ role:"user", content:q });
+    input.value = "";
+
+    const body = {
+      message: q,
+      liberty: getLiberty(),
+      history: [] // on peut pousser l'historique si besoin
+    };
 
     try{
-      const liberty = Number(slider.value || 1);
       const r = await fetch("/api/chat", {
         method:"POST",
         headers:{ "content-type":"application/json" },
-        body: JSON.stringify({
-          message: q,
-          liberty,
-          history: HISTORY.slice(-8) // petit contexte
-        })
+        body: JSON.stringify(body)
       });
-      const json = await r.json();
-      const content = (json && json.answer && (json.answer.content || json.answer)) || "(Réponse vide)";
-      addBubble(content, "bot");
-      HISTORY.push({ role:"assistant", content: String(content) });
+      const data = await r.json();
+      if (!data?.ok){
+        addBubble("Désolé, le service est momentanément indisponible.", "bot");
+        return;
+      }
+      const content = (typeof data.answer === "string")
+        ? data.answer
+        : (data.answer?.content || "");
+
+      addBubble(concise(content), "bot");
+      log("[chatbot] used:", data.used);
     }catch(e){
-      addBubble("Désolé, une erreur est survenue : " + (e?.message || e), "bot");
+      console.error(e);
+      addBubble("Erreur réseau. Réessayez dans un instant.", "bot");
     }
   }
 
-  sendBt.addEventListener("click", ask);
-  input.addEventListener("keydown", (e)=>{
-    if(e.key==="Enter" && !e.shiftKey){
-      e.preventDefault(); ask();
+  sendBtn?.addEventListener("click", ask);
+  input?.addEventListener("keydown", (e)=>{
+    if (e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      ask();
     }
   });
-  slider.addEventListener("input", updateLibUI);
 
-  updateLibUI();
+  // message d’accueil
   addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
 })();
