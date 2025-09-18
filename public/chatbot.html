@@ -80,11 +80,13 @@
     <div class="controls">
       <div class="range-wrap">
         <label for="lib">Liberté</label>
-        <input id="lib" type="range" min="0" max="2" step="1" value="1" />
-        <output id="libVal">1</output>
+        <!-- Par défaut = 2 -->
+        <input id="lib" type="range" min="0" max="2" step="1" value="2" />
+        <output id="libVal">2</output>
         <div class="ticks"><span>0</span><span>1</span><span>2</span></div>
       </div>
-      <label class="badge"><input id="concise" type="checkbox" checked style="margin-right:8px"/> Réponses concises</label>
+      <!-- Décoché par défaut -->
+      <label class="badge"><input id="concise" type="checkbox" style="margin-right:8px"/> Réponses concises</label>
     </div>
 
     <div class="box">
@@ -117,7 +119,7 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    const STATE = { freedom:1, concise:true, profile:null, cvtext:"" };
+    const STATE = { freedom:2, concise:false, profile:null, cvtext:"" };
 
     lib.addEventListener("input", ()=>{ libVal.textContent = lib.value; STATE.freedom = Number(lib.value); });
     conc.addEventListener("change", ()=>STATE.concise = conc.checked);
@@ -138,42 +140,52 @@
       if(STATE.cvtext) info("cv-text.txt OK");
     }
 
-    // -------- extraction tolérante des formats LLM --------
+    // ---------- extraction tolérante (corrigée) ----------
     function extractTextFromLLMPayload(js){
-      if(typeof js === "string") return js;
-
-      // { answer: "..." }
-      if(js && typeof js.answer === "string") return js.answer;
-
-      // { content: "..." }  ou {message:{content:"..."}}
-      if(js && typeof js.content === "string") return js.content;
-      if(js && js.message && typeof js.message.content === "string") return js.message.content;
-
-      // { output_text: "..." } (certains frameworks)
-      if(js && typeof js.output_text === "string") return js.output_text;
-
-      // OpenAI-like { choices:[{message:{content:"..."}}] }
-      if(js && Array.isArray(js.choices) && js.choices[0]){
-        const c = js.choices[0];
-        if(c.message && typeof c.message.content === "string") return c.message.content;
-        if(typeof c.text === "string") return c.text;
+      // Si le backend renvoie une CHAÎNE qui contient du JSON -> on parse
+      if (typeof js === "string"){
+        const t = js.trim();
+        if (t.startsWith("{") || t.startsWith("[")){
+          try { return extractTextFromLLMPayload(JSON.parse(t)); } catch {}
+        }
+        return t; // chaîne simple
       }
 
-      // { messages:[{role, content}, ...] } => prendre dernier assistant
-      if(js && Array.isArray(js.messages)){
-        for(let i=js.messages.length-1;i>=0;i--){
-          const m=js.messages[i];
-          if(m && (m.role==="assistant" || !m.role) && typeof m.content==="string") return m.content;
+      if (!js || typeof js !== "object") return "";
+
+      // { answer: "..." }
+      if (typeof js.answer === "string") return js.answer;
+
+      // { content: "..." }  ou {message:{content:"..."}}
+      if (typeof js.content === "string") return js.content;
+      if (js.message && typeof js.message.content === "string") return js.message.content;
+
+      // format assistant simple: { role:"assistant", content:"..." }
+      if (typeof js.role === "string" && typeof js.content === "string") return js.content;
+
+      // { output_text: "..." }
+      if (typeof js.output_text === "string") return js.output_text;
+
+      // OpenAI-like { choices:[{message:{content:"..."}}] } ou {choices:[{text:"..."}]}
+      if (Array.isArray(js.choices) && js.choices[0]){
+        const c = js.choices[0];
+        if (c.message && typeof c.message.content === "string") return c.message.content;
+        if (typeof c.text === "string") return c.text;
+      }
+
+      // { messages:[{role, content}, ...] } => dernier assistant
+      if (Array.isArray(js.messages)){
+        for (let i = js.messages.length - 1; i >= 0; i--){
+          const m = js.messages[i];
+          if (m && (m.role==="assistant" || !m.role) && typeof m.content==="string") return m.content;
         }
       }
 
-      // { result: { ... } } récurrent
-      if(js && js.result) return extractTextFromLLMPayload(js.result);
+      // { result: {…}} / { data: {…}} / { assistant: {...} }
+      if (js.result) return extractTextFromLLMPayload(js.result);
+      if (js.data) return extractTextFromLLMPayload(js.data);
+      if (js.assistant) return extractTextFromLLMPayload(js.assistant);
 
-      // { data: { answer / content / output_text } }
-      if(js && js.data) return extractTextFromLLMPayload(js.data);
-
-      // rien d'exploitable
       try{ return JSON.stringify(js); }catch{ return ""; }
     }
 
@@ -194,9 +206,14 @@
           })
         });
         if(!r.ok) return null;
-        const js = await r.json();
-        const text = extractTextFromLLMPayload(js);
-        return text && text.trim() ? text : null;
+
+        // Le backend peut répondre "application/json" ou "text/plain" JSON-string → on tente les deux
+        let js;
+        const ct = r.headers.get("content-type") || "";
+        if (ct.includes("application/json")) js = await r.json();
+        else js = await r.text();
+
+        return extractTextFromLLMPayload(js);
       }catch{ return null; }
     }
 
@@ -284,8 +301,14 @@
     }
 
     (async function init(){
-      await loadKnowledge();
+      // défauts : liberté=2, concision=false
+      STATE.freedom = 2;
+      lib.value = "2";
       lib.dispatchEvent(new Event("input"));
+      STATE.concise = false;
+      conc.checked = false;
+
+      await loadKnowledge();
       addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
       input.addEventListener("keydown", (e)=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }});
       btn.addEventListener("click", ask);
