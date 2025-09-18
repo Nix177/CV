@@ -5,63 +5,46 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chatbot — Nicolas Tuor</title>
 
-  <!-- Favicon embarqué (évite 404 si /favicon.ico absent) -->
+  <!-- Favicon embarqué pour éviter un 404 -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='12' width='64' height='64' fill='%230b1f33'/%3E%3Ctext x='50%25' y='53%25' font-family='system-ui,Segoe UI,Roboto' font-size='28' text-anchor='middle' fill='%23cfe2ff'%3ENT%3C/text%3E%3C/svg%3E" />
 
   <link rel="stylesheet" href="/style.css" />
   <style>
     :root{
-      --bg:#081725;
-      --panel:#0d2237;
-      --ink:#e7f1ff;
-      --muted:#bcd3f0;
-      --bd:#ffffff22;
-      --gold:#a0891f;
-      --chip:#0b1f33;
+      --bg:#081725; --panel:#0d2237; --ink:#e7f1ff; --muted:#bcd3f0; --bd:#ffffff22;
+      --gold:#a0891f; --chip:#0b1f33;
     }
     body{background:var(--bg);color:var(--ink);margin:0}
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
 
     /* NAV */
     .navbar{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--bd);
+      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;border-bottom:1px solid var(--bd);
       background:linear-gradient(180deg,#0a1d30,#071320);
     }
     .chips{display:flex;gap:8px;flex-wrap:wrap}
     .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border:1px solid var(--bd);
-      background:var(--chip);border-radius:12px;color:var(--ink);
-      text-decoration:none;font-weight:600
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);
+      background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none;font-weight:600
     }
     .chip:hover{background:#103155}
 
-    /* UI */
-    .controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0 16px}
-    .badge{display:inline-flex;align-items:center;justify-content:center;
-      min-width:24px;height:24px;padding:0 8px;border-radius:999px;
-      background:#0e355b;border:1px solid var(--bd);font-weight:700}
+    /* Cartes */
+    .compact-card{padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:#0c1e33}
+    .check{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;
+      padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:#0c1e33}
+    .badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;border-radius:999px;background:#0e355b;border:1px solid var(--bd);font-weight:700}
     .pct-note{opacity:.75}
-    .compact-card{
-      padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:#0c1e33
-    }
-    .check{
-      display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;
-      padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:#0c1e33
-    }
 
-    /* slider 0/50/100 propre */
+    /* Slider 0/1/2 avec remplissage 0/50/100% */
     #liberty{
       --pct: 50%;
-      appearance:none;width:220px;height:12px;border-radius:999px;outline:none;
-      background:transparent;
+      appearance:none;width:220px;height:12px;border-radius:999px;outline:none;background:transparent
     }
     #liberty::-webkit-slider-runnable-track{
       height:12px;border-radius:999px;
-      background:
-        linear-gradient(var(--gold) 0 0) 0/var(--pct) 100% no-repeat,
-        #0b1f33;
+      background:linear-gradient(var(--gold) 0 0) 0/var(--pct) 100% no-repeat,#0b1f33
     }
     #liberty::-webkit-slider-thumb{
       appearance:none;width:16px;height:16px;margin-top:-2px;border-radius:50%;
@@ -72,14 +55,9 @@
     #liberty:focus-visible{outline:2px solid #2a5b88;outline-offset:4px}
 
     /* CHAT */
-    .chat{
-      border:1px solid var(--bd);border-radius:14px;background:var(--panel);
-      min-height:320px;display:flex;flex-direction:column
-    }
+    .chat{border:1px solid var(--bd);border-radius:14px;background:var(--panel);min-height:320px;display:flex;flex-direction:column}
     .log{padding:14px;display:flex;flex-direction:column;gap:10px;overflow:auto}
-    .bubble{
-      max-width:820px;padding:12px 14px;border-radius:12px;line-height:1.45
-    }
+    .bubble{max-width:820px;padding:12px 14px;border-radius:12px;line-height:1.45}
     .user{margin-left:auto;background:#0b3458;border:1px solid var(--bd)}
     .bot{margin-right:auto;background:#0a2744;border:1px solid var(--bd)}
     .composer{display:flex;gap:10px;align-items:flex-end;padding:12px;border-top:1px solid var(--bd);background:#0b2035;border-radius:0 0 14px 14px}
@@ -118,27 +96,23 @@
   <main class="wrap">
     <h1 style="margin:.2rem 0 0.8rem">Chatbot IA</h1>
 
-    <div class="controls">
-      <div class="compact-card" style="display:flex;align-items:center;gap:12px">
-        <label for="liberty" style="font-weight:700">Liberté</label>
-        <input id="liberty" type="range" min="0" max="2" step="1" value="1" />
-        <span id="libVal" class="badge">1</span>
-        <span id="libInfo" class="pct-note">1 : prudent — un peu d’interprétation</span>
-      </div>
+    <div class="compact-card" style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <label for="liberty" style="font-weight:700">Liberté</label>
+      <input id="liberty" type="range" min="0" max="2" step="1" value="1" />
+      <span id="libVal" class="badge">1</span>
+      <span id="libInfo" class="pct-note">1 : prudent — un peu d’interprétation</span>
+    </div>
 
-      <label class="check" title="Réponses plus courtes">
-        <input id="concise" type="checkbox" checked />
-        <div>
-          <div style="font-weight:700">Réponses concises</div>
-        </div>
-      </label>
+    <div class="check" title="Réponses plus courtes" style="max-width:280px;margin-bottom:12px">
+      <input id="concise" type="checkbox" checked />
+      <div><div style="font-weight:700">Réponses concises</div></div>
     </div>
 
     <div class="compact-card" style="margin:-4px 0 14px">
       <span style="opacity:.85">Astuce :</span>
       <span class="pct-note">« Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quelles langues parle-t-il ? »</span>
       <div class="pct-note" style="margin-top:6px">
-        Niveaux : <strong>0</strong> factuel (profil/CV seulement) — <strong>1</strong> prudent — <strong>2</strong> interprétatif (le bot peut déduire et le signale).
+        Niveaux : <strong>0</strong> factuel (profil/CV) — <strong>1</strong> prudent — <strong>2</strong> interprétatif (le bot peut déduire et le précise).
       </div>
     </div>
 
@@ -167,8 +141,8 @@
     const msgEl  = $("#msg");
     const sendBt = $("#send");
 
-    /* === UI slider 0/50/100 === */
-    function textForLib(v){
+    /* Slider 0/1/2 avec remplissage 0/50/100 */
+    function labelFor(v){
       switch(+v){
         case 0: return "0 : factuel — profil/CV uniquement";
         case 1: return "1 : prudent — un peu d’interprétation";
@@ -176,184 +150,209 @@
       }
     }
     function updateLibUI(){
-      libVal.textContent = slider.value;
-      libInfo.textContent = textForLib(slider.value);
       const pct = (Number(slider.value) / Number(slider.max)) * 100;
       slider.style.setProperty('--pct', pct + '%');
+      libVal.textContent = slider.value;
+      libInfo.textContent = labelFor(slider.value);
     }
     updateLibUI();
     slider.addEventListener("input", updateLibUI);
 
-    /* === Chargement optionnel de pdf.js (évite 404 s’il n’existe pas) === */
-    async function resourceExists(url){
-      try{
-        const r = await fetch(url,{method:"HEAD",cache:"no-store"});
-        return r.ok;
-      }catch{ return false; }
+    /* Chargement optionnel de pdf.js (évite 404 si absent) */
+    async function exists(url){
+      try{ const r = await fetch(url,{method:"HEAD",cache:"no-store"}); return r.ok; }catch{ return false; }
     }
     async function maybeLoadPdfJs(){
-      if(!(await resourceExists("/pdf.min.js"))) return false;
+      if(!(await exists("/pdf.min.js"))) return false;
       await new Promise((resolve)=>{
-        const s = document.createElement("script");
-        s.src = "/pdf.min.js";
-        s.onload = ()=>{ try{
-          if(window.pdfjsLib){ pdfjsLib.GlobalWorkerOptions.workerSrc="/pdf.worker.min.js"; }
-        }catch{} resolve(); };
-        s.onerror = ()=>resolve();
+        const s=document.createElement("script");
+        s.src="/pdf.min.js";
+        s.onload=()=>{ try{ if(window.pdfjsLib){ pdfjsLib.GlobalWorkerOptions.workerSrc="/pdf.worker.min.js"; } }catch{} resolve(); };
+        s.onerror=resolve;
         document.head.appendChild(s);
       });
       return !!window.pdfjsLib;
     }
 
-    /* === Sources === */
-    let PROFILE = null;
-    let CVTEXT  = "";
+    /* Données */
+    let PROFILE=null;
+    let CVTEXT="";
 
-    async function tryFetchJSON(url){
+    async function getJSON(url){
       try{
-        const r = await fetch(url,{cache:"no-store"});
+        const r=await fetch(url,{cache:"no-store"});
         if(!r.ok) throw 0;
         return await r.json();
       }catch{ return null; }
     }
 
     async function loadProfile(){
-      PROFILE = await tryFetchJSON("/profile.json");
-      log(PROFILE ? "profile.json chargé" : "profile.json absent (fallback ok)");
+      PROFILE = await getJSON("/profile.json");
+      if(!PROFILE) PROFILE = await getJSON("/profile%20(1).json"); // secours si fichier mal nommé
+      log(PROFILE ? "profile.json OK" : "profile.json absent (fallback)");
     }
 
     async function loadCVText(){
-      const j = await tryFetchJSON("/cv-text.json");
+      const j = await getJSON("/cv-text.json");
       if(j && (typeof j==="string" || Array.isArray(j))){
         CVTEXT = Array.isArray(j) ? j.join("\n") : j;
-        log("cv-text.json chargé");
+        log("cv-text.json OK");
         return;
       }
       if(await maybeLoadPdfJs()){
         try{
           const pdf = await pdfjsLib.getDocument("/CV_Nicolas_Tuor.pdf").promise;
-          let all = "";
+          let all="";
           for(let p=1;p<=pdf.numPages;p++){
-            const pg = await pdf.getPage(p);
-            const txt = await pg.getTextContent();
-            all += txt.items.map(x=>x.str).join(" ") + "\n";
+            const pg=await pdf.getPage(p);
+            const t=await pg.getTextContent();
+            all += t.items.map(x=>x.str).join(" ") + "\n";
           }
-          CVTEXT = all;
-          log("CV PDF extrait");
-        }catch{
-          log("PDF non lu (ok)");
-        }
+          CVTEXT=all; log("CV PDF extrait");
+        }catch{ log("PDF non lu (ok)"); }
       }
     }
 
-    /* === Chat === */
-    function addBubble(t, who="bot"){
-      const div = document.createElement("div");
-      div.className = "bubble " + (who==="user"?"user":"bot");
-      div.innerHTML = String(t||"").replace(/\n/g,"<br>");
+    /* UI Chat */
+    function addBubble(t,who="bot",replaceEl=null){
+      const html = String(t||"").replace(/\n/g,"<br>");
+      if(replaceEl){ replaceEl.innerHTML = html; return replaceEl; }
+      const div=document.createElement("div");
+      div.className="bubble " + (who==="user"?"user":"bot");
+      div.innerHTML=html;
       logEl.appendChild(div);
       logEl.scrollTop = logEl.scrollHeight;
+      return div;
     }
 
-    const norm = s => (s||"").toLowerCase()
-      .normalize("NFD").replace(/\p{Diacritic}/gu,"");
-    const has = (s, ...keys)=> {
-      const m = norm(s);
-      return keys.some(k => m.includes(norm(k)));
-    };
-    function list(items, max=8){
+    /* Helpers */
+    const norm=s=>(s||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+    const has=(s,...k)=>{const m=norm(s);return k.some(x=>m.includes(norm(x)));};
+    function splitSentences(text){
+      const out=[]; let cur="";
+      for(const ch of String(text||"")){
+        cur += ch;
+        if(".!?".includes(ch)){ out.push(cur.trim()); cur=""; }
+      }
+      if(cur.trim()) out.push(cur.trim());
+      return out;
+    }
+    function conciseify(text){
+      if(!concise.checked) return text;
+      const parts = splitSentences(text).slice(0,3);
+      return parts.join(" ");
+    }
+    function list(items,max=8){
       if(!items) return "";
       if(Array.isArray(items)) return items.slice(0,max).join(", ");
       return String(items);
     }
-    function conciseify(text){
-      if(!concise.checked) return text;
-      const parts = String(text).split(/[.!?]\s+/u).slice(0,3);
-      return parts.join(". ").replace(/\.\s*$/,".") ;
-    }
 
-    function answer(q){
-      const L = +slider.value;
-      const P = PROFILE||{};
-      const txt = (CVTEXT||"");
+    /* Heuristique locale (fallback) */
+    function localAnswer(q){
+      const L=+slider.value, P=PROFILE||{}, txt=(CVTEXT||"");
 
       if(has(q,"hobby","hobbies","loisir","interet","passion")){
-        let ints = list(P.interets,12);
+        let ints = list(P.interests||P.interets,12);
         if(!ints && /CENTRES D.?INT.?RET/i.test(txt)){
           const m = txt.match(/CENTRES D.?INT.?RET[:\s\-]*([^\n]+)/i);
           if(m) ints = m[1];
         }
         if(ints){
-          let base = `Centres d’intérêt : ${ints}.`;
-          if(L===2) base += ` (Déduction possible.)`;
+          let base=`Centres d’intérêt : ${ints}.`;
+          if(L===2) base+=" (Déduction possible.)";
           return conciseify(base);
         }
-        return conciseify(`Rien de listé précisément ; il est curieux, apprend vite et aime se mettre à niveau. ${L===2?"(Déduction prudente.)":""}`);
+        return conciseify(`Rien de listé précisément ; il est curieux, apprend vite et se met à niveau. ${L===2?"(Déduction prudente.)":""}`);
       }
 
       if(has(q,"langue","parle","idiome")){
-        let langs = (P.langues||[]).map(l=>`${l.langue} — ${l.niveau}`).join("; ");
-        if(!langs) langs = "Français (natif), Anglais et Allemand (niveau professionnel/lecture).";
-        const extra = L===2 ? " Il apprend vite et s’adapte (déduit)." : "";
-        return conciseify(langs + extra);
+        let langs="";
+        if(P.languages){ langs = (P.languages||[]).map(l=>`${l.name} — ${l.level||l.niveau||""}`.trim()).join("; "); }
+        else if(P.langues){ langs = (P.langues||[]).map(l=>`${l.langue} — ${l.niveau||""}`.trim()).join("; "); }
+        if(!langs) langs="Français (natif), Anglais et Allemand (niveau pro/lecture).";
+        return conciseify(langs + (L===2?" (apprentissage rapide déduit)":""));
       }
 
       if(has(q,"competence","skills","technique","techniques")){
-        let comp = list(P.competences,14);
+        let comp = list((P.skills && (P.skills.tech||P.skills.pedagogy)) || P.competences,14);
         if(!comp && txt) comp = "Didactique de l’informatique, pensée critique, intégration IA responsable, formation/accompagnement, HTML/CSS/JS, Python (data/IA), gestion de projet, vulgarisation.";
         return conciseify(`Compétences clés : ${comp}.`);
       }
 
       if(has(q,"projet ia","ia appliquee","automatis","prompt","generative")){
         let pr = list(P.projetsIA,12);
-        if(!pr) pr = "Ateliers IA responsable (limites/biais), quiz/fun-facts, prototypage front, automatisations légères (prompts/scripts).";
-        return conciseify(`Projets/IA : ${pr}${L===2?" (quelques éléments déduits)":"."}`);
+        if(!pr) pr = "Ateliers IA responsable (limites/biais), fun-facts/quiz, prototypage front, automatisations légères (prompts/scripts).";
+        return conciseify(`Projets IA : ${pr}${L===2?" (quelques éléments déduits)":"."}`);
       }
 
-      if(has(q,"mener une equipe","lead","manager","diriger","chef de projet","gérer une equipe")){
+      if(has(q,"mener une equipe","lead","manager","diriger","chef de projet","gérer une equipe","coordonner")){
         let base = "Le CV ne cite pas de poste explicite de direction. ";
-        if(L===0){
-          base += "Il met en avant pédagogie, coordination et rigueur documentaire.";
-        }else if(L===1){
-          base += "Ses expériences en formation/coordination suggèrent une aisance pour encadrer des travaux.";
-        }else{
-          base += "Déduction : formation/coordination interdisciplinaire + communication claire → apte à encadrer une petite équipe avec un appui initial.";
-        }
+        if(L===0) base += "Points forts : pédagogie, coordination et rigueur documentaire.";
+        else if(L===1) base += "Les expériences de formation/coordination suggèrent une aisance pour encadrer des travaux.";
+        else base += "Déduction : interdisciplinaire + communication claire → apte à encadrer une petite équipe avec un appui initial.";
         return conciseify(base);
       }
 
       if(has(q,"distingue","spécifique","différent","atout unique")){
-        const s = "Croisement rare : didactique de l’informatique + pensée critique + intégration responsable de l’IA, avec vulgarisation et prototypage rapide. Orientation impact, transparence sur limites/biais.";
-        return conciseify(L===2 ? s : s.replace(/, transparence.*$/, "."));
+        const s="Croisement rare : didactique de l’informatique + pensée critique + intégration responsable de l’IA, avec vulgarisation et prototypage rapide. Orientation impact, transparence sur limites/biais.";
+        return conciseify(L===2?s:s.replace(/, transparence.*$/,"."));
       }
 
-      if(L===0){
-        return conciseify("Je réponds strictement sur profil/CV : compétences, langues, expériences, centres d’intérêt, projets IA.");
-      }
-      if(L===1){
-        return conciseify("Je peux rapprocher pédagogie, IA, expériences ou intérêts. Précisez l’axe pour une réponse ciblée.");
-      }
-      return conciseify("Je relie compétences, pédagogie et usages concrets. Dites si vous préférez un exemple d’atelier, un détail technique ou un point fort (déductions possibles).");
+      if(L===0) return conciseify("Je réponds strictement à partir du profil/CV : compétences, langues, expériences, centres d’intérêt, projets IA.");
+      if(L===1) return conciseify("Je peux rapprocher pédagogie, IA, expériences ou intérêts. Précisez l’axe pour cibler la réponse.");
+      return conciseify("Je relie compétences, pédagogie et usages concrets. Vous préférez un exemple d’atelier, un détail technique ou un point fort (déductions possibles) ?");
+    }
+
+    /* LLM : POST /api/chat (si dispo), sinon fallback */
+    async function callLLM(question){
+      // Compose un prompt compact côté API
+      const system = [
+        "Tu es un assistant de screening candidat.",
+        "Réponds en français. Mets en avant : pédagogie, didactique de l’info, IA responsable.",
+        "Niveaux de liberté : 0=factuel (uniquement profil/CV), 1=prudent, 2=interprétatif (préciser « Déduction »).",
+        "Format : réponse directe, 1-4 phrases (si mode Réponses concises)."
+      ].join(" ");
+      const payload = {
+        messages: [
+          { role:"system", content: system },
+          { role:"system", content: `Profil JSON (résumé): ${JSON.stringify(PROFILE||{},null,0).slice(0,4000)}` },
+          { role:"system", content: `Extrait CV (texte): ${(CVTEXT||"").slice(0,6000)}` },
+          { role:"user", content: `Liberté=${slider.value} Concis=${concise.checked}. Question: ${question}` }
+        ]
+      };
+      const r = await fetch("/api/chat",{ method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      if(!r.ok) throw new Error("LLM non dispo");
+      const data = await r.json();
+      // Compat : accepte .text || .message || .choices[0].message.content
+      const text = data.text || data.message || (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || "";
+      return conciseify(text || "");
     }
 
     async function ask(){
       const q = msgEl.value.trim();
       if(!q) return;
       addBubble(q,"user");
-      msgEl.value = "";
-      const a = answer(q);
-      addBubble(a,"bot");
-    }
-    sendBt.addEventListener("click", ask);
-    msgEl.addEventListener("keydown", (e)=>{
-      if(e.key==="Enter" && !e.shiftKey){
-        e.preventDefault(); ask();
+      msgEl.value="";
+      const thinking = addBubble("…","bot"); // placeholder
+
+      // essaie LLM, sinon local
+      try{
+        const a = await callLLM(q);
+        return addBubble(a,"bot",thinking);
+      }catch{
+        const a = localAnswer(q);
+        return addBubble(a,"bot",thinking);
       }
+    }
+
+    sendBt.addEventListener("click", ask);
+    msgEl.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }
     });
 
     (async function init(){
       await Promise.all([loadProfile(), loadCVText()]);
-      // Maj visuelle du slider à l’arrivée
       updateLibUI();
       addBubble("Bonjour ! Posez une question sur le candidat.","bot");
     })();
