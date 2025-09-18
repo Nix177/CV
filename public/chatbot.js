@@ -4,17 +4,60 @@
 
   // ---------- utils ----------
   const $  = (s,r=document)=>r.querySelector(s);
-  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s,r));
+  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
   const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
 
-  // Détection de langue UI (forçage de la langue de réponse)
-  const uiLang = (window.__CHATBOT_LANG || document.documentElement.lang || "fr").slice(0,2).toLowerCase();
-  function langHintFor(l){
+  // ---------- langue : auto-détection + overrides ----------
+  const URL_LANG = new URLSearchParams(location.search).get("lang");
+  const PAGE_LANG = (document.documentElement.lang || "fr").slice(0,2).toLowerCase();
+  const PRESET_LANG = (window.__CHATBOT_LANG || "").slice(0,2).toLowerCase();
+
+  // Dictionnaires ultra-légers pour heuristique
+  const EN_WORDS = ["what","who","which","how","his","her","their","can","could","does","do","tell","about","strength","strengths","talent","talents","experience","skills"];
+  const DE_WORDS = ["was","wer","wie","welche","welcher","welches","seine","ihre","deren","kann","können","stärken","talent","talente","erfahrung","fähigkeiten","kompetenzen"];
+  const FR_WORDS = ["quel","quelle","quels","quelles","est-ce","peut","peut-il","ses","compétences","atouts","forces","talent","talents","expérience"];
+
+  function countMatches(words, text){
+    const t = " " + text.toLowerCase() + " ";
+    let n = 0;
+    for (const w of words){
+      if (t.includes(" " + w + " ")) n++;
+    }
+    return n;
+  }
+
+  function detectLangFromInput(q){
+    const s = String(q || "").trim();
+    if (!s) return null;
+
+    // Indices simples : caractères spécifiques DE/FR
+    if (/[äöüß]/i.test(s)) return "de";
+    if (/[àâçéèêëîïôûùüÿœ]/i.test(s)) return "fr";
+
+    // Scores mots-clés
+    const en = countMatches(EN_WORDS, s);
+    const de = countMatches(DE_WORDS, s);
+    const fr = countMatches(FR_WORDS, s);
+
+    if (en > de && en > fr) return "en";
+    if (de > en && de > fr) return "de";
+    if (fr > en && fr > de) return "fr";
+    return null;
+  }
+
+  function resolveLang(q){
+    // 1) URL ?lang=  2) variable globale  3) auto-détection du message  4) <html lang>  5) fr
+    return (URL_LANG && URL_LANG.match(/^(fr|en|de)$/)?.[0])
+        || (PRESET_LANG && PRESET_LANG.match(/^(fr|en|de)$/)?.[0])
+        || detectLangFromInput(q)
+        || (PAGE_LANG.match(/^(fr|en|de)$/)?.[0] || "fr");
+  }
+
+  function langHint(l){
     if (l === "en") return "[Please answer in English.] ";
     if (l === "de") return "[Bitte antworte auf Deutsch.] ";
     return "[Réponds en français.] ";
   }
-  const LANG_HINT = langHintFor(uiLang);
 
   // ---------- refs UI ----------
   const logEl     = $("#chatLog");
@@ -22,7 +65,7 @@
   const sendBtn   = $("#chatSend");
   const conciseCb = $("#concise");
   const radios    = $$("#liberty input[type=radio]");
-  const legacyRange = $("#libertySlider"); // au cas où il existe encore
+  const legacyRange = $("#libertySlider"); // s'il existe encore
 
   // Valeurs par défaut souhaitées : liberté=2, concis décoché
   function setDefaults(){
@@ -75,11 +118,15 @@
     addBubble(q, "user");
     input.value = "";
 
+    // langue choisie pour CETTE question
+    const lang = resolveLang(q);
+    const hint = langHint(lang);
+
     const body = {
-      // on injecte un "hint langue" en tête du message => force la langue de réponse
-      message: LANG_HINT + q,
+      message: hint + q,
       liberty: getLiberty(),
-      history: [] // à étendre si tu veux garder un petit historique côté client
+      history: [],
+      lang // si ton backend veut aussi en tenir compte
     };
     log("[payload]", body);
 
@@ -94,15 +141,14 @@
 
       if (!data?.ok){
         addBubble(
-          uiLang==="de" ? "Der Dienst ist vorübergehend nicht verfügbar."
-          : uiLang==="en" ? "The service is temporarily unavailable."
+          lang==="de" ? "Der Dienst ist vorübergehend nicht verfügbar."
+          : lang==="en" ? "The service is temporarily unavailable."
           : "Désolé, le service est momentanément indisponible.",
           "bot"
         );
         return;
       }
 
-      // Affiche uniquement le contenu textuel du modèle
       const content = (typeof data.answer === "string")
         ? data.answer
         : (data.answer?.content || "");
@@ -111,9 +157,9 @@
     }catch(e){
       console.error(e);
       addBubble(
-        uiLang==="de" ? "Netzwerkfehler. Bitte versuchen Sie es gleich noch einmal."
-        : uiLang==="en" ? "Network error. Please try again in a moment."
-        : "Erreur réseau. Réessayez dans un instant.",
+        "fr"===resolveLang("") ? "Erreur réseau. Réessayez dans un instant."
+        : "de"===resolveLang("") ? "Netzwerkfehler. Bitte versuchen Sie es gleich noch einmal."
+        : "Network error. Please try again in a moment.",
         "bot"
       );
     }
@@ -129,9 +175,10 @@
   });
 
   // ---------- message d’accueil ----------
+  const helloLang = resolveLang("");
   const hello =
-    uiLang==="de" ? "Hallo! Stellen Sie eine Frage zum Kandidaten."
-    : uiLang==="en" ? "Hello! Ask a question about the candidate."
+    helloLang==="de" ? "Hallo! Stellen Sie eine Frage zum Kandidaten."
+    : helloLang==="en" ? "Hello! Ask a question about the candidate."
     : "Bonjour ! Posez une question sur le candidat.";
   addBubble(hello, "bot");
 })();
