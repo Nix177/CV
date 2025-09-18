@@ -6,25 +6,27 @@
   <title>Fun Facts — Nicolas Tuor</title>
   <link rel="icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/style.css" />
+
   <style>
-    /* Thème léger pour rester cohérent avec le site */
     :root{
-      --bg:#0b1f33; --panel:#0b2237; --ink:#e6f1ff; --muted:#cfe2ff;
-      --bd:#ffffff22;
+      --ink:#e6f1ff; --muted:#cfe2ff; --bd:#ffffff22;
+      --panel:#0b2237; --panel2:#081a2d;
+      --chip:#0d2a45; --chip2:#103258;
+      --ok:#22c55e; --ko:#ef4444; --unk:#f59e0b;
     }
-    body{
-      background:radial-gradient(1200px 600px at 20% -10%,rgba(255,255,255,.06),transparent),var(--bg);
-      color:var(--ink);
-    }
+    body{color:var(--ink);}
     .container{max-width:1100px;margin:0 auto;padding:20px}
+
+    /* NAV minimal */
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd)}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:#0d2a45;border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{background:#103258}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none}
+    .chip:hover{background:var(--chip2)}
 
-    h1{font-size:2rem;margin:18px 0}
-    h2{font-size:1.4rem;margin:20px 0 8px}
+    h1{font-size:2.0rem;margin:18px 0}
+    h2{font-size:1.2rem;margin:18px 0 10px}
 
+    /* Boutons & segments */
     .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}
     .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--bd);background:#0e3b63;color:var(--ink);cursor:pointer}
     .btn.ghost{background:#0b1f33}
@@ -32,25 +34,46 @@
     .seg button{background:#0b1f33;border:0;padding:8px 10px;color:var(--ink);cursor:pointer}
     .seg button.active{background:#133a61}
 
-    /* Grille de cartes (le JS ajoute le style flip) */
-    #cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+    /* CARTES (grille + flip) */
+    #ff-cards-section .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+    .ff-card{position:relative;perspective:1000px}
+    .ff-card .inner{position:relative;transition:transform .6s;transform-style:preserve-3d;min-height:168px}
+    .ff-card.flipped .inner{transform:rotateY(180deg)}
+    .ff-face{position:absolute;inset:0;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;backface-visibility:hidden}
+    .ff-face.back{transform:rotateY(180deg)}
+    .type{font-size:.85rem;margin-bottom:6px}
+    .type.fact{color:var(--ok)} .type.myth{color:var(--ko)} .type.unknown{color:var(--unk)}
+    .title{font-size:1.05rem;line-height:1.3;margin:2px 0 6px}
+    .body{font-size:.95rem;line-height:1.35;opacity:.95}
+    .badge{display:inline-block;font-size:.75rem;padding:.15rem .45rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-right:6px}
+    .sources ul{margin:.25rem 0 0 1rem}
+    .sources a{color:#93c5fd;text-decoration:none}
+    .sources a:hover{text-decoration:underline}
+    .card-actions{display:flex;gap:8px;margin-top:8px}
+    .flip{margin-left:auto}
 
-    /* Nuage */
-    .cloud-wrap{
-      position:relative;border:1px solid var(--bd);border-radius:14px;padding:12px;
-      background:#081a2d;min-height:420px;overflow:hidden
-    }
-    .bubble{
-      position:absolute;display:flex;align-items:center;justify-content:center;border-radius:999px;
-      background:radial-gradient(120px 100px at 30% 30%,rgba(255,255,255,.85),rgba(255,255,255,.65));
-      color:#0b2237;border:1px solid #ffffff66;box-shadow:0 10px 30px rgba(0,0,0,.3);user-select:none;
-      transition:transform .15s ease
-    }
-    .bubble .emoji{position:absolute;left:10px;top:10px;opacity:.8}
-    .bubble:hover{transform:scale(1.04)}
-    .bubble.paused{outline:2px solid #7dd3fc}
-    .bubble .label{font-weight:800;text-align:center;pointer-events:none;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+    /* NUAGE */
+    #ff-cloud-section .cloud-wrap{position:relative;min-height:420px;border:1px dashed var(--bd);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.02),var(--panel2))}
+    .bubble{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:999px;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.85),rgba(255,255,255,.6));border:1px solid rgba(255,255,255,.4);box-shadow:0 8px 18px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease}
+    .bubble .emoji{position:absolute;top:6px;left:8px;font-size:16px;opacity:.9}
+    .bubble .label{font-weight:700;opacity:.9;text-align:center;padding:0 10px}
+    .bubble.paused{outline:2px solid rgba(255,255,255,.35);z-index:3}
+
+    /* TOOLTIP (nuage) */
+    #ffTooltip{position:absolute;max-width:min(520px,85vw);z-index:9999;background:rgba(15,23,42,.98);color:#e5e7eb;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px 14px;box-shadow:0 12px 28px rgba(0,0,0,.45);display:none}
+    #ffTooltip h4{margin:0 0 6px 0;font-size:1rem}
+    #ffTooltip .meta{margin-bottom:6px}
+    #ffTooltip .badge{display:inline-block;font-size:.7rem;padding:.1rem .4rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-right:6px}
+    #ffTooltip p{margin:6px 0 6px 0;font-size:.9rem;line-height:1.3}
+    #ffTooltip .sources ul{margin:.2rem 0 0 1rem}
+    #ffTooltip .sources a{color:#93c5fd;text-decoration:none}
+    #ffTooltip .sources a:hover{text-decoration:underline}
+
+    /* Confettis canvas */
+    #confetti{position:fixed;inset:0;pointer-events:none;display:none}
   </style>
+
+  <script defer src="/confetti.js"></script>
   <script defer src="/fun-facts.js"></script>
 </head>
 <body>
@@ -74,33 +97,36 @@
   <main class="container">
     <h1>Fun Facts</h1>
 
-    <!-- Section CARTES (utilisée par le JS : #cards, #btnNewSet, #btnOneFact, #btnOneMyth, #cardsFilter) -->
-    <section id="cards-section" class="mb-6">
+    <!-- CARTES -->
+    <section id="ff-cards-section">
       <h2>Cartes</h2>
-      <div class="controls" id="cardsFilter" role="tablist" aria-label="Filtre type">
-        <button class="active" data-filter="all" aria-selected="true">Tout</button>
-        <button data-filter="fact">Fait avéré</button>
-        <button data-filter="myth">Mythe</button>
-      </div>
-      <div class="controls">
+      <div class="controls" id="ff-cards-controls">
+        <div class="seg" role="tablist" aria-label="Filtre type">
+          <button class="active" data-filter="all" aria-selected="true">Tout</button>
+          <button data-filter="fact">Fait avéré</button>
+          <button data-filter="myth">Mythe</button>
+        </div>
         <button id="btnNewSet" class="btn">Nouveau lot aléatoire</button>
         <button id="btnOneFact" class="btn ghost">Un fait</button>
         <button id="btnOneMyth" class="btn ghost">Un mythe</button>
+        <span style="opacity:.75">Cliquer sur “Retourner” pour voir la réponse + sources.</span>
       </div>
-      <div id="cards"></div>
+      <div id="cards" class="cards" aria-live="polite"></div>
     </section>
 
-    <!-- Section NUAGE (utilisée par le JS : #cloud, #btnShuffle) -->
-    <section id="cloud-section">
+    <!-- NUAGE -->
+    <section id="ff-cloud-section" style="margin-top:22px">
       <h2>Nuage de Fun Facts</h2>
       <div class="controls">
-        <button id="btnShuffle" class="btn">Mélanger le nuage</button>
+        <button id="btnShuffle" class="btn">Nouveau nuage (random)</button>
         <span style="opacity:.75">Survolez / cliquez une bulle pour voir le détail (tooltip avec sources).</span>
       </div>
-      <div id="cloud" class="cloud-wrap" aria-live="polite"></div>
+      <div id="cloud" class="cloud-wrap"></div>
     </section>
 
     <p style="margin-top:10px;opacity:.8">© Nicolas Tuor — Fun Facts éducatifs.</p>
   </main>
+
+  <canvas id="confetti"></canvas>
 </body>
 </html>
