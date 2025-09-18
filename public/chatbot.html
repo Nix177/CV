@@ -1,319 +1,82 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Chatbot — Nicolas Tuor</title>
-  <link rel="stylesheet" href="/style.css"/>
-  <!-- Favicon inline pour éviter tout 404 -->
-  <link rel="icon" type="image/svg+xml"
-    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%230b2237"/><text x="50%" y="58%" text-anchor="middle" font-family="Arial" font-size="34" fill="%23cfe2ff">NT</text></svg>'/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chatbot IA — Nicolas Tuor</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
   <style>
-    :root{
-      --bg:#0b1f33;--panel:#0b2237;--ink:#e6f1ff;--muted:#cfe2ff;
-      --glass:rgba(255,255,255,.08);--bd:#ffffff22;--brand:#93c5fd;
-    }
-    body{background:var(--bg);color:var(--ink);margin:0}
-    .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;
-      padding:14px 20px;border-bottom:1px solid var(--bd);background:#081c30}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);
-      background:#0d2a45;border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{background:#12345f}
-    .container{max-width:1100px;margin:0 auto;padding:20px}
-    h1{margin:8px 0 14px 0}
-    .help{opacity:.8;margin:4px 0 16px}
-
-    /* Controls */
-    .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
-    .range-wrap{display:flex;align-items:center;gap:10px;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;background:#0d2a45}
-    .range-wrap label{opacity:.9}
-    .range-wrap output{min-width:2ch;text-align:center;background:#12345f;border:1px solid var(--bd);border-radius:8px;padding:4px 8px}
-    input[type=range]{appearance:none;width:220px;height:8px;border-radius:10px;background:#2a3b55;outline:none}
-    input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#b3e5ff;border:2px solid #0b192a;cursor:pointer}
-    input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#b3e5ff;border:2px solid #0b192a;cursor:pointer}
-    .ticks{display:flex;justify-content:space-between;width:220px;margin-top:2px;font-size:.8rem;opacity:.6}
-    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:12px;padding:8px 12px;background:#0d2a45}
-
-    /* Chat */
-    .box{border:1px solid var(--bd);border-radius:14px;padding:12px;background:#081a2d}
-    .log{height:min(60vh,560px);overflow:auto;display:flex;flex-direction:column;gap:10px;padding:10px;background:#071629;border-radius:10px;border:1px solid var(--bd)}
-    .row{display:flex}
-    .bubble{max-width:86%;padding:10px 12px;border-radius:12px;line-height:1.4}
-    .me{margin-left:auto;background:linear-gradient(180deg,#0f2b46,#0b1f33);border:1px solid var(--bd)}
-    .bot{margin-right:auto;background:rgba(255,255,255,.06);border:1px solid var(--bd)}
-    .inputs{display:flex;gap:8px;margin-top:10px}
-    textarea{flex:1;min-height:64px;max-height:180px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#0b2237;color:var(--ink)}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:#0e3b63;color:var(--ink);cursor:pointer}
-    .btn:hover{background:#0f4a7f}
+    :root{--bg:#081521;--panel:#0b2237;--ink:#e6f1ff;--muted:#cfe2ff;--bd:#ffffff22;--accent:#3aa7ff;}
+    body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;}
+    .container{max-width:1000px;margin:0 auto;padding:18px;}
+    h1{font-size:2rem;margin:0 0 10px}
+    .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}
+    fieldset{border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
+    legend{padding:0 6px;color:var(--muted)}
+    .seg{display:flex;gap:10px;align-items:center}
+    .seg label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+    .card{background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}
+    #chatBox{border:1px solid var(--bd);border-radius:12px;background:#0a1c2e}
+    #chatLog{height:56vh;min-height:360px;max-height:70vh;overflow:auto;padding:12px 12px}
+    .inputBar{display:flex;gap:10px;padding:10px;border-top:1px solid var(--bd)}
+    textarea{flex:1;resize:vertical;min-height:52px;max-height:35vh;background:#0b2237;color:var(--ink);border:1px solid var(--bd);border-radius:10px;padding:10px}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:#103258;color:var(--ink);cursor:pointer}
+    .btn:hover{background:#14406f}
+    .bubble{max-width:75%;padding:10px 12px;margin:6px 0;border-radius:12px;line-height:1.35}
+    .bubble.user{margin-left:auto;background:#073155;border:1px solid #195a8d}
+    .bubble.bot{margin-right:auto;background:#0f2741;border:1px solid #1a446e}
+    /* legacy slider (si tu veux garder l’ancien) */
+    .legacy{display:none}
     @media (max-width:720px){
-      .navbar{gap:6px;padding:10px}
-      .chip{padding:6px 10px}
-      .controls{gap:8px}
-      input[type=range]{width:180px}
-      .ticks{width:180px}
-      .bubble{max-width:92%}
+      #chatLog{height:52vh}
+      .controls{gap:10px}
     }
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <header class="navbar">
-    <div class="nav-left">
-      <a class="chip" href="/">Accueil</a>
-      <a class="chip" href="/portfolio">Portfolio</a>
-      <a class="chip" href="/cv">CV</a>
-      <a class="chip" href="/chatbot">Chatbot</a>
-      <a class="chip" href="/ai-lab">Idées IA</a>
-      <a class="chip" href="/fun-facts">Fun Facts</a>
-    </div>
-    <div class="nav-right">
-      <a class="chip" href="/chatbot">FR</a>
-      <a class="chip" href="/chatbot-en">EN</a>
-      <a class="chip" href="/chatbot-de">DE</a>
-    </div>
-  </header>
-
   <main class="container">
     <h1>Chatbot IA</h1>
-    <div class="help">Réglez la <strong>liberté</strong> pour ajuster l’interprétation : <strong>0</strong> = factuel (uniquement CV/profil) • <strong>1</strong> = prudent • <strong>2</strong> = interprétatif (extrapolations signalées).</div>
+
+    <p class="card" style="margin-bottom:10px">
+      Réglez la <strong>liberté</strong> pour ajuster l’interprétation :
+      <strong>0</strong> = factuel (uniquement CV/profil) •
+      <strong>1</strong> = prudent •
+      <strong>2</strong> = interprétatif (extrapolations signalées).
+    </p>
 
     <div class="controls">
-      <div class="range-wrap">
-        <label for="lib">Liberté</label>
-        <!-- Par défaut = 2 -->
-        <input id="lib" type="range" min="0" max="2" step="1" value="2" />
-        <output id="libVal">2</output>
-        <div class="ticks"><span>0</span><span>1</span><span>2</span></div>
+      <fieldset id="liberty">
+        <legend>Liberté</legend>
+        <div class="seg">
+          <label><input type="radio" name="lib" id="lib0" value="0"> 0</label>
+          <label><input type="radio" name="lib" id="lib1" value="1"> 1</label>
+          <label><input type="radio" name="lib" id="lib2" value="2"> 2</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Options</legend>
+        <label style="display:inline-flex;gap:6px;align-items:center">
+          <input type="checkbox" id="concise"> Réponses concises
+        </label>
+      </fieldset>
+
+      <!-- ancien slider (si tu en avais un) — laissé en “legacy” pour compat -->
+      <div class="legacy">
+        <input type="range" id="libertySlider" min="0" max="2" step="1" value="2">
       </div>
-      <!-- Décoché par défaut -->
-      <label class="badge"><input id="concise" type="checkbox" style="margin-right:8px"/> Réponses concises</label>
     </div>
 
-    <div class="box">
-      <div id="log" class="log" aria-live="polite"></div>
-      <div class="inputs">
-        <textarea id="msg" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"></textarea>
-        <button id="send" class="btn">Envoyer</button>
+    <section id="chatBox">
+      <div id="chatLog" aria-live="polite"></div>
+      <div class="inputBar">
+        <textarea id="chatInput" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)" autocomplete="off"></textarea>
+        <button id="chatSend" class="btn">Envoyer</button>
       </div>
-    </div>
+    </section>
   </main>
 
-  <script>
-  (function(){
-    "use strict";
-
-    const $ = (s,r=document)=>r.querySelector(s);
-    const logEl = $("#log"), input=$("#msg"), btn=$("#send");
-    const lib = $("#lib"), libVal=$("#libVal"), conc=$("#concise");
-    const info = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
-    const warn = (...a)=>console.warn("%c[chatbot]","color:#fa0",...a);
-
-    function addBubble(text, who="bot"){
-      const row = document.createElement("div");
-      row.className = "row";
-      const b = document.createElement("div");
-      b.className = "bubble " + (who==="me"?"me":"bot");
-      b.textContent = String(text || "");
-      row.appendChild(b);
-      logEl.appendChild(row);
-      logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    const STATE = { freedom:2, concise:false, profile:null, cvtext:"" };
-
-    lib.addEventListener("input", ()=>{ libVal.textContent = lib.value; STATE.freedom = Number(lib.value); });
-    conc.addEventListener("change", ()=>STATE.concise = conc.checked);
-
-    async function fetchText(url){
-      try{ const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw 0; return await r.text(); }
-      catch{ return null; }
-    }
-    async function fetchJSON(url){
-      try{ const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw 0; return await r.json(); }
-      catch(e){ warn("fetch error", url, e); return null; }
-    }
-
-    async function loadKnowledge(){
-      STATE.profile = await fetchJSON("/profile.json");
-      if(!STATE.profile) info("profile.json absent (fallback ok)"); else info("profile.json OK");
-      STATE.cvtext = (await fetchText("/cv-text.txt")) || "";
-      if(STATE.cvtext) info("cv-text.txt OK");
-    }
-
-    // ---------- extraction tolérante (corrigée) ----------
-    function extractTextFromLLMPayload(js){
-      // Si le backend renvoie une CHAÎNE qui contient du JSON -> on parse
-      if (typeof js === "string"){
-        const t = js.trim();
-        if (t.startsWith("{") || t.startsWith("[")){
-          try { return extractTextFromLLMPayload(JSON.parse(t)); } catch {}
-        }
-        return t; // chaîne simple
-      }
-
-      if (!js || typeof js !== "object") return "";
-
-      // { answer: "..." }
-      if (typeof js.answer === "string") return js.answer;
-
-      // { content: "..." }  ou {message:{content:"..."}}
-      if (typeof js.content === "string") return js.content;
-      if (js.message && typeof js.message.content === "string") return js.message.content;
-
-      // format assistant simple: { role:"assistant", content:"..." }
-      if (typeof js.role === "string" && typeof js.content === "string") return js.content;
-
-      // { output_text: "..." }
-      if (typeof js.output_text === "string") return js.output_text;
-
-      // OpenAI-like { choices:[{message:{content:"..."}}] } ou {choices:[{text:"..."}]}
-      if (Array.isArray(js.choices) && js.choices[0]){
-        const c = js.choices[0];
-        if (c.message && typeof c.message.content === "string") return c.message.content;
-        if (typeof c.text === "string") return c.text;
-      }
-
-      // { messages:[{role, content}, ...] } => dernier assistant
-      if (Array.isArray(js.messages)){
-        for (let i = js.messages.length - 1; i >= 0; i--){
-          const m = js.messages[i];
-          if (m && (m.role==="assistant" || !m.role) && typeof m.content==="string") return m.content;
-        }
-      }
-
-      // { result: {…}} / { data: {…}} / { assistant: {...} }
-      if (js.result) return extractTextFromLLMPayload(js.result);
-      if (js.data) return extractTextFromLLMPayload(js.data);
-      if (js.assistant) return extractTextFromLLMPayload(js.assistant);
-
-      try{ return JSON.stringify(js); }catch{ return ""; }
-    }
-
-    async function tryLLM(question, knowledge, freedom){
-      try{
-        const r = await fetch("/api/chat", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
-            system:
-`Tu es un assistant de recrutement.
-- Base-toi d'abord sur le CV/profil remis ci-dessous.
-- Liberté ${freedom} : 0 factuel, 1 prudent, 2 interprétatif (signale quand c'est déduit).
-- Réponds en français, clairement, sans prétendre connaître plus que les données.`,
-            profile: knowledge,
-            freedom,
-            question
-          })
-        });
-        if(!r.ok) return null;
-
-        // Le backend peut répondre "application/json" ou "text/plain" JSON-string → on tente les deux
-        let js;
-        const ct = r.headers.get("content-type") || "";
-        if (ct.includes("application/json")) js = await r.json();
-        else js = await r.text();
-
-        return extractTextFromLLMPayload(js);
-      }catch{ return null; }
-    }
-
-    function textList(arr, n=8){
-      return (arr||[]).map(x=>typeof x==="string"?x:(x.name||x.langue||x.title||x.detail||x.level||JSON.stringify(x))).slice(0,n).join(", ");
-    }
-
-    function normalizeAnswer(ans){
-      if(ans == null) return "";
-      if(typeof ans === "string") return ans;
-      if(Array.isArray(ans)) return ans.map(x=>normalizeAnswer(x)).join("\n");
-      if(typeof ans === "object"){
-        if(typeof ans.answer === "string") return ans.answer;
-        if(typeof ans.content === "string") return ans.content;
-        try{ return JSON.stringify(ans); }catch{ return String(ans); }
-      }
-      return String(ans);
-    }
-
-    function firstSentences(t, n){
-      const re = /[^.!?]+[.!?]?/g;
-      const out = [];
-      const txt = String(t||"").replace(/\s+/g," ").trim();
-      let m; while((m=re.exec(txt)) && out.length<n){ out.push(m[0].trim()); }
-      return out.join(" ");
-    }
-
-    function makeConcise(s){
-      s = normalizeAnswer(s);
-      if(!s) return "";
-      if (/^\s*[-–•]/m.test(s)){
-        return s.split(/\n+/).slice(0,6).join("\n");
-      }
-      return firstSentences(s, 3);
-    }
-
-    function ruleBasedAnswer(q, P){
-      const msg = q.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-      const langs = (P.languages||[]).map(l=>`${l.name} — ${l.level}`).join("; ");
-      const inter = textList(P.interests, 10);
-      const skills = P.skills||{};
-      const ped = textList(skills.pedagogy, 8);
-      const tech = textList(skills.tech, 8);
-      const proj = textList(skills.project, 6);
-
-      if(/langue|parle|idiome/.test(msg)) return langs || "Le CV mentionne surtout le français, avec un bon niveau d’anglais et d’allemand.";
-      if(/hobbi|loisir|interet|passion/.test(msg)) return inter ? `Centres d’intérêt : ${inter}.` : "Centres d’intérêt non détaillés ici.";
-      if(/competenc|skill/.test(msg)) return `Compétences pédagogiques : ${ped}. Compétences techniques : ${tech}. Gestion/coordination : ${proj}.`;
-      if(/equipe|diriger|leader|manager|chercheur/.test(msg)) return "Le CV n’indique pas un poste de direction explicite ; toutefois la coordination, la formation et la documentation soutiennent un rôle d’équipe solide. (DÉDUIT)";
-      if(/ia|numeriqu|edtech|automatis/.test(msg)) return "Intérêt pour l’éducation numérique et l’IA responsable, ateliers modulables et intégration d’outils simples (automatisations légères).";
-      return "Je peux préciser langues, compétences, expériences, centres d’intérêt ou projets IA. Indiquez l’axe souhaité.";
-    }
-
-    async function ask(){
-      const q = input.value.trim();
-      if(!q) return;
-      input.value = "";
-      addBubble(q, "me");
-
-      const P = STATE.profile || {};
-      const knowledge = {
-        summary: P.summary || "",
-        education: P.education || [],
-        languages: P.languages || [],
-        values: P.values || [],
-        skills: P.skills || {},
-        experience: P.experience || [],
-        interests: P.interests || [],
-        talking_points: P.talking_points || [],
-        notes: P.notes || [],
-        chatgpt_additions: P.chatgpt_additions || {}
-      };
-      if(STATE.cvtext) knowledge.cvtext = STATE.cvtext;
-
-      let ans = await tryLLM(q, knowledge, STATE.freedom);
-      if(!ans) ans = ruleBasedAnswer(q, P);
-
-      ans = normalizeAnswer(ans);
-      if(STATE.freedom === 2 && /deduit|déduit/i.test(ans) === false){
-        if(/peut|pourrait|laisser penser|suggere|suggère/i.test(ans)) ans += " (DÉDUIT)";
-      }
-      if(STATE.concise) ans = makeConcise(ans);
-
-      addBubble(ans, "bot");
-    }
-
-    (async function init(){
-      // défauts : liberté=2, concision=false
-      STATE.freedom = 2;
-      lib.value = "2";
-      lib.dispatchEvent(new Event("input"));
-      STATE.concise = false;
-      conc.checked = false;
-
-      await loadKnowledge();
-      addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
-      input.addEventListener("keydown", (e)=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }});
-      btn.addEventListener("click", ask);
-    })();
-  })();
-  </script>
+  <script src="/chatbot.js"></script>
 </body>
 </html>
