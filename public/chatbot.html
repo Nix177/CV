@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Chatbot — Nicolas Tuor</title>
   <link rel="stylesheet" href="/style.css"/>
+  <!-- Favicon inline pour éviter tout 404 -->
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%230b2237"/><text x="50%" y="58%" text-anchor="middle" font-family="Arial" font-size="34" fill="%23cfe2ff">NT</text></svg>'/>
   <style>
     :root{
       --bg:#0b1f33;--panel:#0b2237;--ink:#e6f1ff;--muted:#cfe2ff;
       --glass:rgba(255,255,255,.08);--bd:#ffffff22;--brand:#93c5fd;
-      --accent:#6ee7b7;--danger:#fda4af;--ok:#22c55e;
     }
     body{background:var(--bg);color:var(--ink);margin:0}
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;
@@ -82,7 +84,6 @@
         <output id="libVal">1</output>
         <div class="ticks"><span>0</span><span>1</span><span>2</span></div>
       </div>
-
       <label class="badge"><input id="concise" type="checkbox" checked style="margin-right:8px"/> Réponses concises</label>
     </div>
 
@@ -99,7 +100,6 @@
   (function(){
     "use strict";
 
-    // ---------- helpers ----------
     const $ = (s,r=document)=>r.querySelector(s);
     const logEl = $("#log"), input=$("#msg"), btn=$("#send");
     const lib = $("#lib"), libVal=$("#libVal"), conc=$("#concise");
@@ -117,60 +117,77 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // ---------- state ----------
-    const STATE = {
-      freedom: 1,          // 0..2
-      concise: true,       // cut answer
-      profile: null,       // /profile.json
-      cvtext: ""           // /cv-text.txt (si dispo)
-    };
+    const STATE = { freedom:1, concise:true, profile:null, cvtext:"" };
 
-    lib.addEventListener("input", ()=>{
-      libVal.textContent = lib.value;
-      STATE.freedom = Number(lib.value);
-    });
+    lib.addEventListener("input", ()=>{ libVal.textContent = lib.value; STATE.freedom = Number(lib.value); });
     conc.addEventListener("change", ()=>STATE.concise = conc.checked);
 
-    // ---------- loaders ----------
     async function fetchText(url){
-      try{
-        const r = await fetch(url, {cache:"no-store"});
-        if(!r.ok) throw new Error(r.status+" "+r.statusText);
-        return await r.text();
-      }catch(e){ return null; }
+      try{ const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw 0; return await r.text(); }
+      catch{ return null; }
     }
     async function fetchJSON(url){
-      try{
-        const r = await fetch(url, {cache:"no-store"});
-        if(!r.ok) throw new Error(r.status+" "+r.statusText);
-        return await r.json();
-      }catch(e){ warn("fetch error", url, e); return null; }
+      try{ const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw 0; return await r.json(); }
+      catch(e){ warn("fetch error", url, e); return null; }
     }
 
     async function loadKnowledge(){
-      // 1) profile.json
       STATE.profile = await fetchJSON("/profile.json");
-      if(!STATE.profile) info("profile.json absent (fallback ok)");
-      else info("profile.json OK");
-
-      // 2) cv-text.txt (texte brut extrait)
+      if(!STATE.profile) info("profile.json absent (fallback ok)"); else info("profile.json OK");
       STATE.cvtext = (await fetchText("/cv-text.txt")) || "";
       if(STATE.cvtext) info("cv-text.txt OK");
     }
 
-    // ---------- LLM (optionnel) ----------
+    // -------- extraction tolérante des formats LLM --------
+    function extractTextFromLLMPayload(js){
+      if(typeof js === "string") return js;
+
+      // { answer: "..." }
+      if(js && typeof js.answer === "string") return js.answer;
+
+      // { content: "..." }  ou {message:{content:"..."}}
+      if(js && typeof js.content === "string") return js.content;
+      if(js && js.message && typeof js.message.content === "string") return js.message.content;
+
+      // { output_text: "..." } (certains frameworks)
+      if(js && typeof js.output_text === "string") return js.output_text;
+
+      // OpenAI-like { choices:[{message:{content:"..."}}] }
+      if(js && Array.isArray(js.choices) && js.choices[0]){
+        const c = js.choices[0];
+        if(c.message && typeof c.message.content === "string") return c.message.content;
+        if(typeof c.text === "string") return c.text;
+      }
+
+      // { messages:[{role, content}, ...] } => prendre dernier assistant
+      if(js && Array.isArray(js.messages)){
+        for(let i=js.messages.length-1;i>=0;i--){
+          const m=js.messages[i];
+          if(m && (m.role==="assistant" || !m.role) && typeof m.content==="string") return m.content;
+        }
+      }
+
+      // { result: { ... } } récurrent
+      if(js && js.result) return extractTextFromLLMPayload(js.result);
+
+      // { data: { answer / content / output_text } }
+      if(js && js.data) return extractTextFromLLMPayload(js.data);
+
+      // rien d'exploitable
+      try{ return JSON.stringify(js); }catch{ return ""; }
+    }
+
     async function tryLLM(question, knowledge, freedom){
-      // si ton endpoint existe, on l'utilise, sinon on renvoie null
       try{
         const r = await fetch("/api/chat", {
           method:"POST",
-          headers:{"Content-Type":"application/json"},
+          headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({
-            system: `Tu es un assistant qui répond au sujet d'un candidat.
-- Base-toi d'abord sur le CV/profil ci-dessous.
+            system:
+`Tu es un assistant de recrutement.
+- Base-toi d'abord sur le CV/profil remis ci-dessous.
 - Liberté ${freedom} : 0 factuel, 1 prudent, 2 interprétatif (signale quand c'est déduit).
-- Réponds en français, clair et honnête.
-`,
+- Réponds en français, clairement, sans prétendre connaître plus que les données.`,
             profile: knowledge,
             freedom,
             question
@@ -178,25 +195,27 @@
         });
         if(!r.ok) return null;
         const js = await r.json();
-        // attendu: { answer: "..." } ou string
-        return (typeof js === "string") ? js : (js && js.answer) ? js.answer : JSON.stringify(js);
-      }catch(e){
-        return null;
-      }
+        const text = extractTextFromLLMPayload(js);
+        return text && text.trim() ? text : null;
+      }catch{ return null; }
     }
 
-    // ---------- fallback (heuristique légère) ----------
-    function textList(arr, n=8){ return (arr||[]).map(x=>typeof x==="string"?x:(x.name||x.langue||x.title||x.detail||x.level||JSON.stringify(x))).slice(0,n).join(", "); }
+    function textList(arr, n=8){
+      return (arr||[]).map(x=>typeof x==="string"?x:(x.name||x.langue||x.title||x.detail||x.level||JSON.stringify(x))).slice(0,n).join(", ");
+    }
+
     function normalizeAnswer(ans){
       if(ans == null) return "";
       if(typeof ans === "string") return ans;
       if(Array.isArray(ans)) return ans.map(x=>normalizeAnswer(x)).join("\n");
       if(typeof ans === "object"){
         if(typeof ans.answer === "string") return ans.answer;
+        if(typeof ans.content === "string") return ans.content;
         try{ return JSON.stringify(ans); }catch{ return String(ans); }
       }
       return String(ans);
     }
+
     function firstSentences(t, n){
       const re = /[^.!?]+[.!?]?/g;
       const out = [];
@@ -204,10 +223,10 @@
       let m; while((m=re.exec(txt)) && out.length<n){ out.push(m[0].trim()); }
       return out.join(" ");
     }
+
     function makeConcise(s){
       s = normalizeAnswer(s);
       if(!s) return "";
-      // si bullet points, tronque à 6 lignes
       if (/^\s*[-–•]/m.test(s)){
         return s.split(/\n+/).slice(0,6).join("\n");
       }
@@ -223,38 +242,20 @@
       const tech = textList(skills.tech, 8);
       const proj = textList(skills.project, 6);
 
-      // Langues
-      if(/langue|parle|idiome/.test(msg)){
-        return langs || "Le CV mentionne surtout le français, avec un bon niveau d’anglais et d’allemand.";
-      }
-      // Hobbies / intérêts
-      if(/hobbi|loisir|interet|passion/.test(msg)){
-        return inter ? `Centres d’intérêt : ${inter}.` : "Centres d’intérêt non détaillés ici.";
-      }
-      // Compétences
-      if(/competenc|skill/.test(msg)){
-        return `Compétences pédagogiques : ${ped}. Compétences techniques : ${tech}. Gestion/coordination : ${proj}.`;
-      }
-      // Leadership / équipe
-      if(/equipe|diriger|leader|manager|chercheur/.test(msg)){
-        return "Le CV n’indique pas formellement un poste de direction, mais la coordination pluridisciplinaire, la formation et la documentation laissent penser qu’il peut contribuer efficacement à la dynamique d’équipe. (DÉDUIT)";
-      }
-      // IA / numérique
-      if(/ia|numeriqu|edtech|automatis/.test(msg)){
-        return "Intérêt pour l’éducation numérique et l’IA responsable, ateliers modulables et intégration d’outils simples (automatisations légères).";
-      }
-      // fallback
-      return "Je peux préciser ses compétences, langues, expériences, centres d’intérêt ou projets IA. Indiquez l’axe souhaité.";
+      if(/langue|parle|idiome/.test(msg)) return langs || "Le CV mentionne surtout le français, avec un bon niveau d’anglais et d’allemand.";
+      if(/hobbi|loisir|interet|passion/.test(msg)) return inter ? `Centres d’intérêt : ${inter}.` : "Centres d’intérêt non détaillés ici.";
+      if(/competenc|skill/.test(msg)) return `Compétences pédagogiques : ${ped}. Compétences techniques : ${tech}. Gestion/coordination : ${proj}.`;
+      if(/equipe|diriger|leader|manager|chercheur/.test(msg)) return "Le CV n’indique pas un poste de direction explicite ; toutefois la coordination, la formation et la documentation soutiennent un rôle d’équipe solide. (DÉDUIT)";
+      if(/ia|numeriqu|edtech|automatis/.test(msg)) return "Intérêt pour l’éducation numérique et l’IA responsable, ateliers modulables et intégration d’outils simples (automatisations légères).";
+      return "Je peux préciser langues, compétences, expériences, centres d’intérêt ou projets IA. Indiquez l’axe souhaité.";
     }
 
-    // ---------- ask ----------
     async function ask(){
       const q = input.value.trim();
       if(!q) return;
       input.value = "";
       addBubble(q, "me");
 
-      // assemble knowledge
       const P = STATE.profile || {};
       const knowledge = {
         summary: P.summary || "",
@@ -270,15 +271,11 @@
       };
       if(STATE.cvtext) knowledge.cvtext = STATE.cvtext;
 
-      // 1) tente LLM si /api/chat existe
       let ans = await tryLLM(q, knowledge, STATE.freedom);
-
-      // 2) sinon règles
       if(!ans) ans = ruleBasedAnswer(q, P);
 
       ans = normalizeAnswer(ans);
       if(STATE.freedom === 2 && /deduit|déduit/i.test(ans) === false){
-        // on peut marquer l'interprétation quand c'est nécessaire (léger)
         if(/peut|pourrait|laisser penser|suggere|suggère/i.test(ans)) ans += " (DÉDUIT)";
       }
       if(STATE.concise) ans = makeConcise(ans);
@@ -286,14 +283,11 @@
       addBubble(ans, "bot");
     }
 
-    // ---------- init ----------
     (async function init(){
       await loadKnowledge();
       lib.dispatchEvent(new Event("input"));
       addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
-      input.addEventListener("keydown", (e)=>{
-        if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }
-      });
+      input.addEventListener("keydown", (e)=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }});
       btn.addEventListener("click", ask);
     })();
   })();
