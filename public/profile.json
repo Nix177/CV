@@ -1,79 +1,171 @@
 {
   "name": "Nicolas Tuor",
-  "title": "Enseignant & ingénieur pédagogique (informatique / IA responsable)",
+  "location": "Fribourg (CH)",
   "cv_link": "/CV_Nicolas_Tuor.pdf",
 
-  "summary": "Enseignant formé à la didactique de l’informatique (Python, web) avec intérêt fort pour l’IA responsable, la pensée critique et la médiation scientifique. Approche pragmatique, structurée et orientée apprentissages.",
+  "summary": "Enseignant et concepteur pédagogique, formé en didactique de l’informatique (HEP Lausanne) et enseignement primaire (HEP Fribourg). Intérêt fort pour l’éducation numérique, l’IA responsable et la conception de dispositifs simples, utiles et transférables.",
   "contact": {
-    "email": "nicolas.tuor@example.com",
+    "email": "nicolas.tuor@bluewin.ch",
+    "phone": "+41 79 762 26 67",
+    "cv_pdf": "/CV_Nicolas_Tuor.pdf",
     "site": "https://www.nicolastuor.ch"
   },
 
-  "skills": {
-    "techniques": [
-      "Python (bases, scripts, data de base)",
-      "HTML/CSS, notions JS",
-      "Outils IA (prompting, évaluation simple, gouvernance basique)",
-      "Analyse de données (niveau débutant à intermédiaire)",
-      "Rédaction et synthèse"
-    ],
-    "pedagogiques": [
-      "Conception de séquences d’enseignement en informatique",
-      "Vulgarisation / médiation",
-      "Pensée critique (évaluation d’allégations et de sources)",
-      "Évaluation formative"
-    ],
-    "outils": [
-      "Git/GitHub (usages simples)",
-      "Outils bureautiques",
-      "Gestion de projet léger"
-    ]
-  },
+  "education": [
+    {
+      "title": "Master en didactique disciplinaire – orientation informatique",
+      "school": "HEP Lausanne",
+      "years": "2020–2024",
+      "highlights": [
+        "Enseignement explicite du débogage et transfert de compétences",
+        "Bases Python / HTML-CSS / C++"
+      ]
+    },
+    {
+      "title": "Bachelor en enseignement préscolaire & primaire",
+      "school": "HEP Fribourg",
+      "years": "2015–2019",
+      "highlights": [
+        "Philosophie pour enfants (travail de bachelor)",
+        "Pratiques de classe et gestion pédagogique"
+      ]
+    }
+  ],
 
   "languages": [
-    { "lang": "Français", "level": "C2 (natif)", "notes": "Très à l’aise pour l’enseignement et la rédaction." },
-    { "lang": "Anglais",  "level": "B2/C1 (professionnel)", "notes": "Lecture/écriture fréquentes ; conversation autonome." },
-    { "lang": "Allemand", "level": "B1 (intermédiaire)", "notes": "Compétences actives en progression ; apprend rapidement si besoin." }
-  ],
-
-  "interests": [
-    "Vulgarisation scientifique",
-    "Astronomie/Astrophotographie",
-    "Technologies & IA (usage responsable)",
-    "Théâtre d’improvisation",
-    "Sport (aviron, arts martiaux)"
-  ],
-
-  "teaching_experience": [
-    {
-      "period": "2020-2021",
-      "role": "Enseignant primaire (5H)",
-      "notes": "Conduite de classe, différenciation, projets interdisciplinaires."
-    },
-    {
-      "period": "Master (Hep Fribourg)",
-      "role": "Didactique de l’informatique",
-      "notes": "Explicitation des stratégies de débogage ; transfert de compétences."
-    }
-  ],
-
-  "projects": [
-    {
-      "name": "Fun Facts éducatifs",
-      "tags": ["Pensée critique", "IA (génération contrôlée)"],
-      "summary": "Interface ludique (cartes + nuage) ; sélection de faits et démystifications sourcées (Wikipedia, sources fiables)."
-    },
-    {
-      "name": "Jeu pédagogique « Astragale Runner »",
-      "tags": ["Histoire/Archéo", "Canvas 2D"],
-      "summary": "Mini runner 2D expliquant la transformation d’osselets en amulettes (mécanismes non violents)."
-    }
+    { "name": "français", "level": "natif" },
+    { "name": "anglais",  "level": "C2 (professionnel)" },
+    { "name": "allemand", "level": "B2/C1 (intermédiaire avancé)" }
   ],
 
   "values": [
-    "Rigueur et esprit critique",
-    "Pédagogie explicite",
-    "Éthique et transparence avec l’IA",
-    "Apprentissage continu"
+    "bienveillance pragmatique",
+    "clarté et sobriété des supports",
+    "rigueur et suivi mesurable",
+    "curiosité et apprentissage rapide",
+    "éthique & protection des données (IA responsable)"
+  ],
+
+  "skills": {
+    "pedagogy": [
+      "pédagogie explicite et guidage progressif",
+      "conception de séquences et critères de réussite",
+      "évaluation formative/sommative",
+      "vulgarisation et structuration claire"
+    ],
+    "project": [
+      "analyse de besoin et cadrage",
+      "objectifs atteignables et itérations",
+      "coordination pluridisciplinaire",
+      "documentation et traçabilité"
+    ],
+    "research": [
+      "méthodologie et lecture critique",
+      "analyse simple de données d’apprentissage",
+      "synthèse opérationnelle"
+    ],
+    "tech": [
+      "Python",
+      "HTML/CSS/JS (bases)",
+      "C++ (bases)",
+      "Moodle, Nextcloud",
+      "Outils IA (images/vidéos), Copilot, Unity, n8n"
+    ]
+  },
+
+  "role_aligned_competencies": [
+    {
+      "name": "Conception & pilotage de séquences",
+      "detail": "Planifie des séquences alignées PER, conçoit supports/critères, teste en classe et ajuste en fonction des retours et hétérogénéités."
+    },
+    {
+      "name": "Évaluation & mesure d’impact",
+      "detail": "Met en place des pré/mid/post-tests, observe les progrès et communique les limites de manière prudente et transparente."
+    },
+    {
+      "name": "Transfert de compétences",
+      "detail": "Conçoit des activités qui favorisent la réutilisation de stratégies (ex. débogage) entre outils/environnements différents."
+    },
+    {
+      "name": "Ingénierie EdTech légère & intégration",
+      "detail": "Monte des dispositifs simples et pédagogiques (p. ex. Nextcloud de classe sur Raspberry Pi, Docker), avec gestion d’accès et accompagnement."
+    },
+    {
+      "name": "Résolution de problèmes & autonomie technique",
+      "detail": "Diagnostique des contraintes matérielles/logiciels, cherche des solutions, documente les étapes et assure la continuité pédagogique."
+    },
+    {
+      "name": "Éducation au numérique & pensée critique",
+      "detail": "Conçoit des ateliers modulables (IA, deepfakes, qualité des sources) avec ressources sourcées et activités transférables."
+    },
+    {
+      "name": "Formation d’adultes / intervention",
+      "detail": "Anime des séances pour collègues/étudiants HEP, structure des apports ‘juste ce qu’il faut’ et capitalise dans des supports réutilisables."
+    },
+    {
+      "name": "Documentation & reproductibilité",
+      "detail": "Produit des annexes, fiches et modes d’emploi pour favoriser la reprise autonome par d’autres enseignants."
+    }
+  ],
+
+  "experience": [
+    { "period": "2019–…", "role": "Enseignant primaire (remplacements)", "org": "Divers établissements FR", "focus": "multi-degrés, inclusion, travail d’équipe" },
+    { "period": "2020–2021", "role": "Enseignant titulaire 5H", "org": "École de Corminboeuf", "focus": "pilotage de classe complète" },
+    { "period": "2022–2023", "role": "Stage de master (recherche/formation)", "org": "HEP Fribourg – CRE/ATE", "focus": "intégration du numérique & formation" },
+    { "period": "2024", "role": "Formateur (journée)", "org": "HEP Fribourg", "focus": "éducation numérique & IA responsable" },
+    { "period": "Divers", "role": "Service civil et postes variés", "org": "FR/NE", "focus": "organisation, relationnel, rigueur (archivage, accueil, sécurité, soutien scolaire)" }
+  ],
+
+  "target_roles": [
+    "Conseiller numérique / collaborateur pédagogique",
+    "Maître d’enseignement HES / conseiller pédagogique",
+    "Chargé d’enseignement (éducation numérique)",
+    "Formateur responsable (laboratoire école informatique)",
+    "Responsable de projet (politiques/stratégie éducatives)",
+    "Spécialiste formation & développement du personnel",
+    "Education specialist (instructional support)"
+  ],
+
+  "narrative": "Approche concrète et outillée : écouter le besoin réel, fixer des objectifs atteignables, proposer des activités claires et évaluables, documenter les progrès. Démarche critique sur l’IA générative (fiabilité, éthique, données), avec l’ambition d’en faire un levier au service des apprentissages et non une fin en soi. Intérêt pour les environnements capacitants et l’automatisation raisonnée pour libérer du temps pédagogique.",
+
+  "ai_policy": {
+    "stance": "pragmatique et responsable",
+    "guardrails": [
+      "ne pas surestimer l’IA",
+      "citer les limites et sources",
+      "protéger les données",
+      "préserver l’exigence académique"
+    ]
+  },
+
+  "talking_points": [
+    "Apprend vite et se met à niveau si nécessaire",
+    "Traduire un sujet complexe en parcours actionnable",
+    "Sens de la synthèse et de la priorisation",
+    "Cadrage clair et critères visibles"
+    ],
+  
+  "notes": [
+    "Ne pas inventer d’éléments non listés (diplômes, niveaux, responsabilités).",
+    "Si une info manque, l’indiquer simplement.",
+    "Rappeler avec mesure la capacité d’apprentissage rapide."
+  ],
+
+  "allowed_topics": [
+    "profil et parcours",
+    "compétences et expériences",
+    "valeurs et posture pédagogique",
+    "éducation numérique et IA responsable",
+    "projets présentés dans le portfolio/CV"
+  ],
+
+  "interests": [
+    "vulgarisation scientifique et pensée critique",
+    "astronomie / astrophotographie",
+    "aviron (ancien compétiteur)",
+    "théâtre d’improvisation",
+    "apprentissages continus",
+    "technologies, jeux vidéo et automatisation n8n",
+    "arts martiaux"
   ]
 }
