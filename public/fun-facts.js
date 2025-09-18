@@ -14,7 +14,7 @@
   const lang = (document.documentElement.lang || "fr").slice(0, 2);
   const API = "/api/facts";
   const LOCAL_JSON = "/facts-data.json";
-  const MAX_TOOLTIP_WORDS = 30; // <= 30 mots demandé
+  const MAX_TOOLTIP_WORDS = 30; // ≤ 30 mots pour le nuage
 
   const toStr = (x) => (x == null ? "" : String(x)).trim();
   const niceLabelFromUrl = (u) => (u || "").replace(/^https?:\/\//, "").slice(0, 95);
@@ -52,7 +52,7 @@
       const type = it.type || "myth";
       const category = it.category || "Général";
       const title = it.title || (type === "fact" ? "Fait" : "Mythe");
-      const body = it.body || "";
+      const body = it.body || it.explain || it.explanation || it.answer || ""; // on tente plusieurs champs
       const sources = normalizeSources(it.sources);
       return { id, type, category, title, body, sources };
     });
@@ -110,6 +110,27 @@
     return [];
   }
 
+  // ---------- Texte d’explication (fallbacks) ----------
+  function explainRaw(item) {
+    const txt = toStr(item.body || item.explain || item.explanation || item.answer || "");
+    if (txt) return txt;
+    if (item.type === "myth") {
+      return "Mythe réfuté : les observations et sources contredisent cette affirmation. Voir sources pour le détail.";
+    }
+    if (item.type === "fact") {
+      return "Fait avéré : constat documenté par des études ou observations. Voir sources pour le détail.";
+    }
+    return "Explication succincte indisponible. Les sources apportent le détail.";
+  }
+  function truncateWords(s, maxW) {
+    const words = (s||"").split(/\s+/).filter(Boolean);
+    if (words.length <= maxW) return s;
+    return words.slice(0, maxW).join(" ") + "…";
+  }
+  function explainShort(item, maxWords) {
+    return truncateWords(explainRaw(item), maxWords);
+  }
+
   // ---------- Tooltip ----------
   function ensureTooltip() {
     let t = $("#ffTooltip");
@@ -126,12 +147,6 @@
     return t;
   }
   function hideTooltip(){ const t=$("#ffTooltip"); if(t) t.style.display="none"; }
-
-  function truncateWords(s, maxW) {
-    const words = (s||"").split(/\s+/).filter(Boolean);
-    if (words.length <= maxW) return s;
-    return words.slice(0, maxW).join(" ") + "…";
-  }
 
   // ---------- CARTES ----------
   let cardsWrap, segFilter, btnNewSet, btnOneFact, btnOneMyth;
@@ -173,8 +188,7 @@
             <div class="type ${typeClass}">${typeLabel}</div>
             <div class="meta"><span class="badge">${item.category||"Catégorie"}</span></div>
             <div class="title">${item.title||"(sans titre)"}</div>
-            <div class="body" style="min-height:56px">${truncateWords(item.body||"", 35)}</div>
-            <div class="card-actions"><button class="btn ghost flip" aria-label="Retourner la carte">Retourner</button></div>
+            <div class="body" style="min-height:56px">${truncateWords(toStr(item.body||item.title||""), 35)}</div>
           </div>
           <div class="ff-face back">
             <div class="type ${typeClass}">Réponse</div>
@@ -182,25 +196,17 @@
               <span class="badge">${item.category||"Catégorie"}</span>
               <span class="badge">${typeLabel.replace(/^[^ ]+ /,'')}</span>
             </div>
-            <div class="body">${item.body||""}</div>
+            <div class="body">${explainShort(item, 50)}</div>
             ${sourcesBlock(item.sources)}
-            <div class="card-actions"><button class="btn ghost flip" aria-label="Revenir au recto">Retourner</button></div>
           </div>
         </div>
       `;
 
-      // Flip en cliquant sur la carte (mais pas sur un lien)
+      // Flip en cliquant (sauf liens)
       card.addEventListener("click",(e)=>{
-        if (e.target.closest("a")) return; // laisser les liens
-        if (!e.target.closest(".flip") && !e.currentTarget.contains(e.target)) return;
+        if (e.target.closest("a")) return;
         card.classList.toggle("flipped");
       });
-
-      // Bouton flip (optionnel, on garde)
-      card.querySelectorAll(".flip").forEach(b=>b.addEventListener("click",(e)=>{
-        e.stopPropagation();
-        card.classList.toggle("flipped");
-      }));
 
       cardsWrap.appendChild(card);
     }
@@ -246,10 +252,6 @@
   const bubbles = [];
   let running = true;
 
-  function labelForCategory(s) {
-    const w = (s || "").split(/\s+/);
-    return (w[0] || "").slice(0, 16) + (w[1] ? " " + w[1].slice(0, 12) : "");
-  }
   function positionTooltipAround(el, preferTop = true) {
     const t = ensureTooltip();
     const r = el.getBoundingClientRect();
@@ -267,6 +269,7 @@
     t.style.left = `${x}px`;
     t.style.top = `${y + window.scrollY}px`;
   }
+
   function showTooltipFor(item, anchorEl) {
     const t = ensureTooltip();
     const ttTitle = $("#ttTitle", t);
@@ -286,7 +289,7 @@
     k.textContent = item.type === "fact" ? "Fait" : item.type === "myth" ? "Mythe" : "Indéterminé";
     ttMeta.appendChild(k);
 
-    ttBody.textContent = truncateWords(item.body || "", MAX_TOOLTIP_WORDS);
+    ttBody.textContent = explainShort(item, MAX_TOOLTIP_WORDS);
 
     ttSources.innerHTML = "";
     if (item.sources?.length) {
@@ -310,6 +313,11 @@
 
     t.style.display = "block";
     positionTooltipAround(anchorEl, true);
+  }
+
+  function labelForCategory(s) {
+    const w = (s || "").split(/\s+/);
+    return (w[0] || "").slice(0, 16) + (w[1] ? " " + w[1].slice(0, 12) : "");
   }
 
   function createBubble(item) {
