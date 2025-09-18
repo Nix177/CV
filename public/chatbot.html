@@ -1,76 +1,55 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Chatbot IA — Nicolas Tuor</title>
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Chatbot — Nicolas Tuor</title>
+  <link rel="stylesheet" href="/style.css"/>
   <style>
     :root{
-      --bg:#0b1f33; --panel:#0b2237; --ink:#e6f1ff; --muted:#cfe2ff;
-      --bd:#ffffff22; --accent:#89c2ff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
-      --chip:#0e3b63; --chip2:#0b1f33;
+      --bg:#0b1f33;--panel:#0b2237;--ink:#e6f1ff;--muted:#cfe2ff;
+      --glass:rgba(255,255,255,.08);--bd:#ffffff22;--brand:#93c5fd;
+      --accent:#6ee7b7;--danger:#fda4af;--ok:#22c55e;
     }
-    body{background:var(--bg);color:var(--ink);margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
-    a{color:#9dd0ff;text-decoration:none}
-    a:hover{text-decoration:underline}
-    .container{max-width:1100px;margin:0 auto;padding:16px}
-    /* NAV */
-    .navbar{display:flex;gap:10px;align-items:center;justify-content:space-between;
-      padding:12px 16px;border-bottom:1px solid var(--bd);background:linear-gradient(180deg,#0b2136,#081a2d)}
-    .nav-left,.nav-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    body{background:var(--bg);color:var(--ink);margin:0}
+    .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:14px 20px;border-bottom:1px solid var(--bd);background:#081c30}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);
-      background:#0d2a45;border-radius:12px;color:var(--ink)}
-    .chip:hover{background:#103258}
-    /* HEADER */
-    h1{font-size:1.9rem;margin:18px 0 10px}
-    .sub{opacity:.85;margin:0 0 14px}
-    .note{font-size:.95rem;opacity:.85;margin:8px 0 14px}
+      background:#0d2a45;border-radius:12px;color:var(--ink);text-decoration:none}
+    .chip:hover{background:#12345f}
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    h1{margin:8px 0 14px 0}
+    .help{opacity:.8;margin:4px 0 16px}
+
     /* Controls */
-    .controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0 14px}
-    .card{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:14px;padding:12px}
-    /* Slider 3 positions */
-    .slider-wrap{display:flex;align-items:center;gap:10px}
-    .range3{appearance:none;width:220px;height:18px;border:1px solid var(--bd);border-radius:10px;
-      background:linear-gradient(90deg,#243b55,#1a2d45);position:relative;outline:none}
-    .range3::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;
-      background:#bbaa33;border:2px solid #fff;cursor:pointer}
-    .ticks{position:relative;height:0;width:220px;margin-top:-6px}
-    .ticks::before,.ticks::after{content:"";position:absolute;top:0;width:2px;height:10px;background:#d8e7ff44}
-    .ticks::before{left:0}
-    .ticks::after{right:0}
-    .ticks span{position:absolute;top:0;width:2px;height:10px;background:#d8e7ff44;left:50%;transform:translateX(-1px)}
-    .pill{min-width:26px;height:26px;border-radius:999px;background:#12345a;border:1px solid var(--bd);
-      display:inline-flex;justify-content:center;align-items:center}
-    .toggle{user-select:none;display:flex;align-items:center;gap:10px}
-    .toggle input{width:18px;height:18px}
-    /* Status */
-    .status{display:flex;gap:8px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:999px;font-size:.85rem;
-      border:1px solid var(--bd);background:#0b1f33}
-    .ok{color:var(--ok);border-color:#1f9e58}
-    .ko{color:#ffa56a;border-color:#9a6f2c}
+    .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:12px}
+    .range-wrap{display:flex;align-items:center;gap:10px;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;background:#0d2a45}
+    .range-wrap label{opacity:.9}
+    .range-wrap output{min-width:2ch;text-align:center;background:#12345f;border:1px solid var(--bd);border-radius:8px;padding:4px 8px}
+    input[type=range]{appearance:none;width:220px;height:8px;border-radius:10px;background:#2a3b55;outline:none}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#b3e5ff;border:2px solid #0b192a;cursor:pointer}
+    input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#b3e5ff;border:2px solid #0b192a;cursor:pointer}
+    .ticks{display:flex;justify-content:space-between;width:220px;margin-top:2px;font-size:.8rem;opacity:.6}
+    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:12px;padding:8px 12px;background:#0d2a45}
+
     /* Chat */
-    .chat{display:flex;flex-direction:column;gap:10px}
-    .log{height:48vh;min-height:280px;border:1px solid var(--bd);border-radius:12px;padding:10px;overflow:auto;
-      background:rgba(0,0,0,.15)}
-    .row{display:flex;align-items:flex-start;gap:8px}
-    .bubble{max-width:min(800px,84%);padding:10px 12px;border-radius:14px;border:1px solid var(--bd);line-height:1.45}
-    .me{margin-left:auto;background:rgba(60,120,200,.18)}
-    .bot{background:rgba(255,255,255,.04)}
-    .compose{display:flex;gap:10px;align-items:flex-end}
-    textarea{flex:1;min-height:56px;max-height:160px;resize:vertical;border:1px solid var(--bd);border-radius:12px;
-      padding:10px 12px;background:#0d2a45;color:var(--ink);outline:none}
-    button.btn{padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:#0e3b63;color:#e6f1ff;cursor:pointer}
-    button.btn:hover{background:#164b7e}
-    /* Mobile */
+    .box{border:1px solid var(--bd);border-radius:14px;padding:12px;background:#081a2d}
+    .log{height:min(60vh,560px);overflow:auto;display:flex;flex-direction:column;gap:10px;padding:10px;background:#071629;border-radius:10px;border:1px solid var(--bd)}
+    .row{display:flex}
+    .bubble{max-width:86%;padding:10px 12px;border-radius:12px;line-height:1.4}
+    .me{margin-left:auto;background:linear-gradient(180deg,#0f2b46,#0b1f33);border:1px solid var(--bd)}
+    .bot{margin-right:auto;background:rgba(255,255,255,.06);border:1px solid var(--bd)}
+    .inputs{display:flex;gap:8px;margin-top:10px}
+    textarea{flex:1;min-height:64px;max-height:180px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:#0b2237;color:var(--ink)}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:#0e3b63;color:var(--ink);cursor:pointer}
+    .btn:hover{background:#0f4a7f}
     @media (max-width:720px){
-      .log{height:52vh}
-      .range3, .ticks{width:180px}
-      .toggle{width:100%}
-      .compose{flex-direction:column}
-      button.btn{align-self:flex-end}
+      .navbar{gap:6px;padding:10px}
+      .chip{padding:6px 10px}
+      .controls{gap:8px}
+      input[type=range]{width:180px}
+      .ticks{width:180px}
+      .bubble{max-width:92%}
     }
   </style>
 </head>
@@ -86,300 +65,237 @@
       <a class="chip" href="/fun-facts">Fun Facts</a>
     </div>
     <div class="nav-right">
-      <span style="opacity:.75">FR</span>
+      <a class="chip" href="/chatbot">FR</a>
+      <a class="chip" href="/chatbot-en">EN</a>
+      <a class="chip" href="/chatbot-de">DE</a>
     </div>
   </header>
 
   <main class="container">
     <h1>Chatbot IA</h1>
-    <p class="sub">Posez vos questions — pédagogie, IA, expérience. Le curseur « Liberté » règle le niveau d’interprétation : 
-      <strong>0</strong> strict/factuel · <strong>1</strong> prudent · <strong>2</strong> interprétatif (le bot explique ce qui est déduit).</p>
+    <div class="help">Réglez la <strong>liberté</strong> pour ajuster l’interprétation : <strong>0</strong> = factuel (uniquement CV/profil) • <strong>1</strong> = prudent • <strong>2</strong> = interprétatif (extrapolations signalées).</div>
 
-    <!-- Controls -->
-    <section class="controls">
-      <div class="card">
-        <div class="slider-wrap">
-          <label style="min-width:68px">Liberté</label>
-          <input id="libSlider" class="range3" type="range" min="0" max="2" step="1" value="1" />
-          <div class="ticks"><span></span></div>
-          <div id="libPill" class="pill">1</div>
-        </div>
-        <div class="note" id="libNote" style="margin-top:8px;opacity:.8">1 : prudent — synthèse sur base CV/Profil.</div>
+    <div class="controls">
+      <div class="range-wrap">
+        <label for="lib">Liberté</label>
+        <input id="lib" type="range" min="0" max="2" step="1" value="1" />
+        <output id="libVal">1</output>
+        <div class="ticks"><span>0</span><span>1</span><span>2</span></div>
       </div>
 
-      <label class="card toggle" title="Réduire la longueur des réponses">
-        <input id="concise" type="checkbox" checked />
-        <div>Réponses concises</div>
-      </label>
+      <label class="badge"><input id="concise" type="checkbox" checked style="margin-right:8px"/> Réponses concises</label>
+    </div>
 
-      <div class="status">
-        <div id="stProfile" class="badge ko">Profil</div>
-        <div id="stCV" class="badge ko">CV</div>
-        <div id="stIA" class="badge ko">IA</div>
+    <div class="box">
+      <div id="log" class="log" aria-live="polite"></div>
+      <div class="inputs">
+        <textarea id="msg" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"></textarea>
+        <button id="send" class="btn">Envoyer</button>
       </div>
-    </section>
-
-    <!-- Chat -->
-    <section class="chat">
-      <div id="chatLog" class="log card" aria-live="polite"></div>
-      <div class="compose">
-        <textarea id="chatInput" placeholder="Écrivez votre message… (Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne)"></textarea>
-        <button id="chatSend" class="btn">Envoyer</button>
-      </div>
-      <p class="note">Exemples : « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quelles langues parle-t-il ? ».</p>
-    </section>
+    </div>
   </main>
 
   <script>
-  /* ---------- Utils DOM ---------- */
-  const $ = (s,r=document)=>r.querySelector(s);
-  const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
+  (function(){
+    "use strict";
 
-  /* ---------- Robust fetch helpers ---------- */
-  async function fetchTextOne(url){
-    try{
-      const r = await fetch(url,{cache:"no-store"});
-      if(r.ok) return await r.text();
-      console.warn("[chatbot] fetch",url,"→",r.status);
-    }catch(e){ console.warn("[chatbot] fetch error",url,e); }
-    return null;
-  }
-  async function fetchJSON(url){
-    try{
-      const r = await fetch(url,{cache:"no-store"});
-      if(r.ok) return await r.json();
-      console.warn("[chatbot] fetch",url,"→",r.status);
-    }catch(e){ console.warn("[chatbot] fetch error",url,e); }
-    return null;
-  }
+    // ---------- helpers ----------
+    const $ = (s,r=document)=>r.querySelector(s);
+    const logEl = $("#log"), input=$("#msg"), btn=$("#send");
+    const lib = $("#lib"), libVal=$("#libVal"), conc=$("#concise");
+    const info = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
+    const warn = (...a)=>console.warn("%c[chatbot]","color:#fa0",...a);
 
-  /* ---------- Data loaders (robustes) ---------- */
-  async function loadProfile(){
-    const p1 = await fetchJSON("./profile.json");
-    if(p1){ log("profile.json OK (./)"); return p1; }
-    const p2 = await fetchJSON("/profile.json");
-    if(p2){ log("profile.json OK (/root)"); return p2; }
-    log("profile.json absent (fallback ok)");
-    return null;
-  }
-
-  async function loadCVText(){
-    // txt relatif puis absolu
-    let t = await fetchTextOne("./cv-text.txt");
-    if(t){ log("cv-text.txt OK (./)"); return t; }
-    t = await fetchTextOne("/cv-text.txt");
-    if(t){ log("cv-text.txt OK (/root)"); return t; }
-
-    // json relatif puis absolu
-    let j = await fetchJSON("./cv-text.json");
-    if(j){ log("cv-text.json OK (./)"); return Array.isArray(j)?j.join("\n"):String(j); }
-    j = await fetchJSON("/cv-text.json");
-    if(j){ log("cv-text.json OK (/root)"); return Array.isArray(j)?j.join("\n"):String(j); }
-
-    // Fallback PDF uniquement si pdfjsLib est déjà là (aucune inclusion)
-    if(window.pdfjsLib){
-      try{
-        const pdf = await pdfjsLib.getDocument("/CV_Nicolas_Tuor.pdf").promise;
-        let all = "";
-        for(let p=1;p<=pdf.numPages;p++){
-          const pg = await pdf.getPage(p);
-          const ct = await pg.getTextContent();
-          all += ct.items.map(x=>x.str).join(" ") + "\n";
-        }
-        log("CV PDF extrait");
-        return all;
-      }catch(e){
-        console.warn("[chatbot] PDF non lu",e);
-      }
+    function addBubble(text, who="bot"){
+      const row = document.createElement("div");
+      row.className = "row";
+      const b = document.createElement("div");
+      b.className = "bubble " + (who==="me"?"me":"bot");
+      b.textContent = String(text || "");
+      row.appendChild(b);
+      logEl.appendChild(row);
+      logEl.scrollTop = logEl.scrollHeight;
     }
-    console.warn("[chatbot] Aucun CV texte trouvé (txt/json/pdf)");
-    return "";
-  }
 
-  /* ---------- Chat rendering ---------- */
-  const chatLog = $("#chatLog");
-  const input   = $("#chatInput");
-  const sendBtn = $("#chatSend");
-  function addBubble(text, who="bot"){
-    const row = document.createElement("div");
-    row.className = "row";
-    const bub = document.createElement("div");
-    bub.className = "bubble " + (who==="me"?"me":"bot");
-    bub.innerHTML = formatText(text);
-    row.appendChild(bub);
-    chatLog.appendChild(row);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  }
-  function formatText(s=""){
-    // Mise en forme légère : listes, paragraphes, suppression espaces multiples
-    if(!s) return "";
-    const cleaned = s.replace(/\n{3,}/g,"\n\n").trim();
-    const parts = cleaned.split(/\n\n+/);
-    return parts.map(block=>{
-      if (/^\s*[-–•]/m.test(block)) {
-        const lis = block.split(/\n+/).map(l=>l.replace(/^\s*[-–•]\s*/,'').trim()).filter(Boolean);
-        return "<ul>"+lis.map(x=>"<li>"+escapeHtml(x)+"</li>").join("")+"</ul>";
-      } else {
-        return "<p>"+escapeHtml(block)+"</p>";
-      }
-    }).join("");
-  }
-  function escapeHtml(s){return s.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]))}
+    // ---------- state ----------
+    const STATE = {
+      freedom: 1,          // 0..2
+      concise: true,       // cut answer
+      profile: null,       // /profile.json
+      cvtext: ""           // /cv-text.txt (si dispo)
+    };
 
-  /* ---------- IA call (server) + heuristique fallback ---------- */
-  async function callLLM(question, ctx){
-    try{
-      const r = await fetch("/api/chat",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          question,
-          liberte: ctx.liberte,
-          concise: ctx.concise,
-          profile: ctx.profile || {},
-          cv_text: ctx.cvText || ""
-        })
-      });
-      if(!r.ok) throw new Error("HTTP "+r.status);
-      const j = await r.json();
-      return j?.answer || "Désolé, je n’ai pas de réponse pour le moment.";
-    }catch(e){
-      console.warn("[chatbot] /api/chat indisponible, heuristique locale", e);
-      return heuristicAnswer(question, ctx);
-    }
-  }
-
-  function heuristicAnswer(q,ctx){
-    // Mini heuristique locale si l’API est absente : utilise PROFILE/CVTEXT
-    const msg = q.toLowerCase();
-    const P = ctx.profile || {};
-    const langs = (P.langues||[]).map(l=>`${l.langue} — ${l.niveau}`).join("; ");
-    if (/\b(langue|parle|idiome)\b/.test(msg)) {
-      if (langs) return "Langues : " + langs + ".";
-      return "Français (natif), bon niveau anglais et allemand. (déduction prudente)";
-    }
-    if (/\b(hobbi|loisir|int[eé]r[eê]t)\b/.test(msg)) {
-      const h = (P.interets||[]).slice(0,6).join(", ");
-      if (h) return "Centres d’intérêt : " + h + ".";
-      return "Curieux et apprenant rapide ; centres d’intérêt non détaillés ici.";
-    }
-    if (/\b(comp[eé]tence|skill)\b/.test(msg)) {
-      const c = (P.competences||[]).slice(0,10).join(", ");
-      if (c) return "Compétences clés : " + c + ".";
-      return "Compétences pédagogie/numérique/IA indiquées au global.";
-    }
-    if (/\b(exp[eé]rience|p[eé]dagog|former|formation|accompagn)\b/.test(msg)){
-      return "Expérience en didactique de l’informatique, accompagnement d’enseignants, conception de formations, et intégration d’outils numériques/IA en contexte éducatif.";
-    }
-    if (/\b(projet.*ia|automati|prompt)\b/.test(msg)){
-      const p = (P.projetsIA||[]).slice(0,6).join(", ");
-      return p ? ("Projets IA : " + p + ".")
-               : "Expériences autour de l’IA responsable, du prototypage et d’automatisations légères.";
-    }
-    if (ctx.liberte===2){
-      return "Réponse interprétative : je peux rapprocher pédagogie, IA et expérience pour éclairer ce point. Peux-tu préciser l’axe le plus important ? (ex : technique, formation, conduite d’équipe)";
-    }
-    return "Je peux répondre sur ses compétences, langues, expériences, centres d’intérêt ou projets IA. Donne-moi l’axe exact à couvrir.";
-  }
-
-  /* ---------- State ---------- */
-  let STATE = {
-    liberte: 1,
-    concise: true,
-    profile: null,
-    cvText: "",
-    readyIA: false
-  };
-
-  /* ---------- UI wiring ---------- */
-  const libSlider = $("#libSlider");
-  const libPill   = $("#libPill");
-  const libNote   = $("#libNote");
-  const conciseCb = $("#concise");
-  const stProfile = $("#stProfile");
-  const stCV      = $("#stCV");
-  const stIA      = $("#stIA");
-
-  function refreshLib(){
-    const v = Number(libSlider.value||1);
-    STATE.liberte = v;
-    libPill.textContent = String(v);
-    if(v===0) libNote.textContent = "0 : strict — factuel, sans extrapolation.";
-    else if(v===1) libNote.textContent = "1 : prudent — synthèse sur base CV/Profil.";
-    else libNote.textContent = "2 : interprétatif — extrapolations annoncées comme « déduction ».";
-
-    // Ticks visuels (pleine / moitié / vide) : rien d’autre à faire car step=1
-  }
-
-  function mark(el, ok){
-    el.classList.remove("ok","ko");
-    el.classList.add(ok ? "ok":"ko");
-  }
-
-  function onConcise(){
-    STATE.concise = !!conciseCb.checked;
-  }
-
-  async function ask(){
-    const q = input.value.trim();
-    if(!q) return;
-    input.value = "";
-    addBubble(q, "me");
-
-    const ans = await callLLM(q, STATE);
-    addBubble((STATE.concise? makeConcise(ans) : ans), "bot");
-  }
-
-  function makeConcise(s){
-    // simplification légère (garde 2-3 phrases ou 6 points max)
-    const paras = s.split(/\n{2,}/);
-    const out = [];
-    for(const p of paras){
-      if (/^\s*[-–•]/m.test(p)) {
-        const li = p.split(/\n+/).filter(Boolean).slice(0,6).join("\n");
-        out.push(li);
-      } else {
-        // coupe à ~3 phrases
-        const sent = p.split(/(?<=[\.\!\?])\s+/).slice(0,3).join(" ");
-        out.push(sent);
-      }
-    }
-    return out.join("\n\n");
-  }
-
-  /* ---------- Init ---------- */
-  (async function init(){
-    // Listeners
-    libSlider.addEventListener("input", refreshLib);
-    conciseCb.addEventListener("change", onConcise);
-    sendBtn.addEventListener("click", ask);
-    input.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter" && !e.shiftKey){
-        e.preventDefault();
-        ask();
-      }
+    lib.addEventListener("input", ()=>{
+      libVal.textContent = lib.value;
+      STATE.freedom = Number(lib.value);
     });
+    conc.addEventListener("change", ()=>STATE.concise = conc.checked);
 
-    // Load data
-    STATE.profile = await loadProfile();
-    mark(stProfile, !!STATE.profile);
+    // ---------- loaders ----------
+    async function fetchText(url){
+      try{
+        const r = await fetch(url, {cache:"no-store"});
+        if(!r.ok) throw new Error(r.status+" "+r.statusText);
+        return await r.text();
+      }catch(e){ return null; }
+    }
+    async function fetchJSON(url){
+      try{
+        const r = await fetch(url, {cache:"no-store"});
+        if(!r.ok) throw new Error(r.status+" "+r.statusText);
+        return await r.json();
+      }catch(e){ warn("fetch error", url, e); return null; }
+    }
 
-    STATE.cvText = await loadCVText();
-    mark(stCV, !!STATE.cvText);
+    async function loadKnowledge(){
+      // 1) profile.json
+      STATE.profile = await fetchJSON("/profile.json");
+      if(!STATE.profile) info("profile.json absent (fallback ok)");
+      else info("profile.json OK");
 
-    // IA status: on considère "OK" si /api/chat répond une fois, sinon heuristique
-    try{
-      const ping = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({question:"ping",liberte:0,concise:true,profile:{},cv_text:""})});
-      STATE.readyIA = ping.ok;
-    }catch(e){ STATE.readyIA = false; }
-    mark(stIA, STATE.readyIA);
+      // 2) cv-text.txt (texte brut extrait)
+      STATE.cvtext = (await fetchText("/cv-text.txt")) || "";
+      if(STATE.cvtext) info("cv-text.txt OK");
+    }
 
-    refreshLib();
-    onConcise();
+    // ---------- LLM (optionnel) ----------
+    async function tryLLM(question, knowledge, freedom){
+      // si ton endpoint existe, on l'utilise, sinon on renvoie null
+      try{
+        const r = await fetch("/api/chat", {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            system: `Tu es un assistant qui répond au sujet d'un candidat.
+- Base-toi d'abord sur le CV/profil ci-dessous.
+- Liberté ${freedom} : 0 factuel, 1 prudent, 2 interprétatif (signale quand c'est déduit).
+- Réponds en français, clair et honnête.
+`,
+            profile: knowledge,
+            freedom,
+            question
+          })
+        });
+        if(!r.ok) return null;
+        const js = await r.json();
+        // attendu: { answer: "..." } ou string
+        return (typeof js === "string") ? js : (js && js.answer) ? js.answer : JSON.stringify(js);
+      }catch(e){
+        return null;
+      }
+    }
 
-    // Message d’accueil
-    addBubble("Bonjour ! Posez une question sur le candidat. Le curseur « Liberté » règle le niveau d’interprétation (0 factuel → 2 interprétatif).");
+    // ---------- fallback (heuristique légère) ----------
+    function textList(arr, n=8){ return (arr||[]).map(x=>typeof x==="string"?x:(x.name||x.langue||x.title||x.detail||x.level||JSON.stringify(x))).slice(0,n).join(", "); }
+    function normalizeAnswer(ans){
+      if(ans == null) return "";
+      if(typeof ans === "string") return ans;
+      if(Array.isArray(ans)) return ans.map(x=>normalizeAnswer(x)).join("\n");
+      if(typeof ans === "object"){
+        if(typeof ans.answer === "string") return ans.answer;
+        try{ return JSON.stringify(ans); }catch{ return String(ans); }
+      }
+      return String(ans);
+    }
+    function firstSentences(t, n){
+      const re = /[^.!?]+[.!?]?/g;
+      const out = [];
+      const txt = String(t||"").replace(/\s+/g," ").trim();
+      let m; while((m=re.exec(txt)) && out.length<n){ out.push(m[0].trim()); }
+      return out.join(" ");
+    }
+    function makeConcise(s){
+      s = normalizeAnswer(s);
+      if(!s) return "";
+      // si bullet points, tronque à 6 lignes
+      if (/^\s*[-–•]/m.test(s)){
+        return s.split(/\n+/).slice(0,6).join("\n");
+      }
+      return firstSentences(s, 3);
+    }
+
+    function ruleBasedAnswer(q, P){
+      const msg = q.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+      const langs = (P.languages||[]).map(l=>`${l.name} — ${l.level}`).join("; ");
+      const inter = textList(P.interests, 10);
+      const skills = P.skills||{};
+      const ped = textList(skills.pedagogy, 8);
+      const tech = textList(skills.tech, 8);
+      const proj = textList(skills.project, 6);
+
+      // Langues
+      if(/langue|parle|idiome/.test(msg)){
+        return langs || "Le CV mentionne surtout le français, avec un bon niveau d’anglais et d’allemand.";
+      }
+      // Hobbies / intérêts
+      if(/hobbi|loisir|interet|passion/.test(msg)){
+        return inter ? `Centres d’intérêt : ${inter}.` : "Centres d’intérêt non détaillés ici.";
+      }
+      // Compétences
+      if(/competenc|skill/.test(msg)){
+        return `Compétences pédagogiques : ${ped}. Compétences techniques : ${tech}. Gestion/coordination : ${proj}.`;
+      }
+      // Leadership / équipe
+      if(/equipe|diriger|leader|manager|chercheur/.test(msg)){
+        return "Le CV n’indique pas formellement un poste de direction, mais la coordination pluridisciplinaire, la formation et la documentation laissent penser qu’il peut contribuer efficacement à la dynamique d’équipe. (DÉDUIT)";
+      }
+      // IA / numérique
+      if(/ia|numeriqu|edtech|automatis/.test(msg)){
+        return "Intérêt pour l’éducation numérique et l’IA responsable, ateliers modulables et intégration d’outils simples (automatisations légères).";
+      }
+      // fallback
+      return "Je peux préciser ses compétences, langues, expériences, centres d’intérêt ou projets IA. Indiquez l’axe souhaité.";
+    }
+
+    // ---------- ask ----------
+    async function ask(){
+      const q = input.value.trim();
+      if(!q) return;
+      input.value = "";
+      addBubble(q, "me");
+
+      // assemble knowledge
+      const P = STATE.profile || {};
+      const knowledge = {
+        summary: P.summary || "",
+        education: P.education || [],
+        languages: P.languages || [],
+        values: P.values || [],
+        skills: P.skills || {},
+        experience: P.experience || [],
+        interests: P.interests || [],
+        talking_points: P.talking_points || [],
+        notes: P.notes || [],
+        chatgpt_additions: P.chatgpt_additions || {}
+      };
+      if(STATE.cvtext) knowledge.cvtext = STATE.cvtext;
+
+      // 1) tente LLM si /api/chat existe
+      let ans = await tryLLM(q, knowledge, STATE.freedom);
+
+      // 2) sinon règles
+      if(!ans) ans = ruleBasedAnswer(q, P);
+
+      ans = normalizeAnswer(ans);
+      if(STATE.freedom === 2 && /deduit|déduit/i.test(ans) === false){
+        // on peut marquer l'interprétation quand c'est nécessaire (léger)
+        if(/peut|pourrait|laisser penser|suggere|suggère/i.test(ans)) ans += " (DÉDUIT)";
+      }
+      if(STATE.concise) ans = makeConcise(ans);
+
+      addBubble(ans, "bot");
+    }
+
+    // ---------- init ----------
+    (async function init(){
+      await loadKnowledge();
+      lib.dispatchEvent(new Event("input"));
+      addBubble("Bonjour ! Posez une question sur le candidat.", "bot");
+      input.addEventListener("keydown", (e)=>{
+        if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask(); }
+      });
+      btn.addEventListener("click", ask);
+    })();
   })();
   </script>
 </body>
