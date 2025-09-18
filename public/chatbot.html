@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chatbot — Nicolas Tuor</title>
 
-  <!-- Favicon en data-URL pour éviter le 404 -->
+  <!-- Favicon inline pour éviter 404 -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50%25' x='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E" />
-
-  <!-- Ta feuille globale -->
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    /* Habillage léger (complète /style.css) */
     .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #ffffff22}
     .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #ffffff22;background:#0d2a45;border-radius:12px;color:#e6f1ff;text-decoration:none}
@@ -20,19 +17,26 @@
 
     main.container{max-width:1100px;margin:0 auto;padding:20px}
     .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
-
     .panel{background:rgba(255,255,255,.04);border:1px solid #ffffff22;border-radius:12px;padding:12px}
+
     #chatArea{height:min(62vh,560px);overflow:auto;padding:12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid #ffffff22}
-    .bubble{max-width:80%;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.35}
+    .bubble{max-width:80%;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.38;white-space:pre-wrap}
     .bubble.bot{background:rgba(255,255,255,.08);border:1px solid #ffffff22;color:#e6f1ff}
     .bubble.user{background:#0e3b63;border:1px solid #2a5b88;color:#e6f1ff;margin-left:auto}
+    .bubble .more{display:inline-block;margin-top:6px}
+    .bubble ul{margin:.25rem 0 .25rem 1.2rem;padding:0}
+    .bubble li{margin:.1rem 0}
+
     .ask{display:flex;gap:10px;align-items:center;margin-top:10px}
     .ask textarea{flex:1;min-height:58px;padding:10px;border-radius:12px;border:1px solid #ffffff22;background:#0b1f33;color:#e6f1ff}
     .btn{padding:10px 14px;border-radius:10px;border:1px solid #ffffff22;background:#0e3b63;color:#e6f1ff;cursor:pointer}
     .btn:hover{filter:brightness(1.05)}
+    .btn.xs{padding:4px 8px;border-radius:8px;font-size:.85rem}
     .libSmall{opacity:.75}
     .hint{opacity:.8;margin-top:6px;font-size:.95rem}
     h1{font-size:2rem;margin:14px 0 4px}
+    label.inline{display:inline-flex;align-items:center;gap:8px}
+    select, input[type="checkbox"]{cursor:pointer}
   </style>
 </head>
 <body>
@@ -56,11 +60,30 @@
   <main class="container">
     <h1>Chatbot IA</h1>
 
+    <!-- Contrôles haut -->
     <div class="row panel">
       <strong>Liberté :</strong>
       <input id="liberty" type="range" min="0" max="2" step="1" value="1" />
       <span id="libLabel" class="chip" style="padding:4px 10px">1</span>
-      <span id="libInfo" class="libSmall">1 : prudent — petites inférences annoncées.</span>
+      <span id="libInfo" class="libSmall">1 : prudent — petites inférences, signalées.</span>
+
+      <span style="flex:1"></span>
+
+      <label class="inline chip">
+        <input id="conciseToggle" type="checkbox" checked />
+        Réponses concises
+      </label>
+
+      <label class="inline chip">
+        Max phrases
+        <select id="maxSentences">
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </label>
     </div>
 
     <div id="chatWrap" class="panel">
@@ -74,12 +97,12 @@
       </div>
 
       <div class="hint">
-        Astuce : essayez « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quelles langues parle-t-il ? ».
+        <strong>Liberté :</strong> 0 = strict (pas d’inférence) · 1 = prudent (petites déductions annoncées) · 2 = interprétatif (rapprochements/explications annoncées).  
+        Astuce : « Quelles compétences techniques ressortent ? », « Parle-moi d’une expérience marquante. », « Quelles langues parle-t-il ? ».
       </div>
     </div>
   </main>
 
-  <!-- Front-end du bot : envoie à /api/chat (backend dans api/chat.js) -->
   <script>
     (function(){
       "use strict";
@@ -92,27 +115,135 @@
       const libLbl  = $("#libLabel");
       const libInfo = $("#libInfo");
 
+      const conciseToggle = $("#conciseToggle");
+      const maxSentencesSel = $("#maxSentences");
+
       const HISTORY = [];
 
-      function addBubble(text, who="bot"){
+      function addBubble(text, who="bot", opts={}){
         const div = document.createElement("div");
         div.className = "bubble " + (who==="user" ? "user" : "bot");
-        div.textContent = String(text || "");
+
+        if(opts.asHTML){
+          div.innerHTML = text;
+        }else{
+          div.textContent = String(text || "");
+        }
+
+        // “Afficher tout”
+        if(opts.moreText){
+          const btn = document.createElement("button");
+          btn.className = "btn xs more";
+          btn.textContent = "Afficher tout";
+          btn.addEventListener("click", ()=>{
+            // Remplace le contenu abrégé par le texte complet formaté
+            const full = buildFormattedHTML(opts.moreText);
+            div.innerHTML = full;
+            btn.remove();
+            chatArea.scrollTop = chatArea.scrollHeight;
+          });
+          div.appendChild(document.createElement("br"));
+          div.appendChild(btn);
+        }
+
         chatArea.appendChild(div);
         chatArea.scrollTop = chatArea.scrollHeight;
       }
 
+      // Règle le texte d’info du curseur
       function libText(v){
         switch(Number(v)){
           case 0: return "0 : strict — pas d’inférence.";
           case 1: return "1 : prudent — petites inférences, signalées.";
-          default: return "2 : interprétatif — rapprochements, explications, déductions annoncées.";
+          default: return "2 : interprétatif — rapprochements et explications, annoncés.";
         }
       }
       function updateLibUI(){
         libLbl.textContent = slider.value;
         libInfo.textContent = libText(slider.value);
       }
+
+      // --------- Mise en forme “anti-pavés” ----------
+      function normalizeSpaces(s){
+        return String(s||"")
+          .replace(/\r/g, "")
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      }
+      function splitSentences(s){
+        // Découpe simple en phrases (FR approximatif)
+        return s.split(/(?<=[\.\!\?])\s+(?=[A-ZÉÈÊÀÂÎÔÙÇa-z0-9])/u);
+      }
+      function bulletize(text){
+        // Transforme “1. … 2. …” en puces
+        let t = text;
+        // sur plusieurs lignes
+        t = t.replace(/(^|\n)\s*\d+\.\s+/g, "$1• ");
+        // Unifie les espaces
+        t = t.replace(/[ \t]+/g, " ");
+        return t;
+      }
+      function buildFormattedHTML(text){
+        // Convertit les lignes en <p> + <ul> si “• ”
+        const safe = normalizeSpaces(text);
+        const lines = safe.split("\n");
+        const frag = [];
+
+        let inList = false;
+        let ul = [];
+
+        const flushList = ()=>{
+          if(ul.length){
+            frag.push("<ul>" + ul.map(li=>"<li>"+escapeHTML(li.replace(/^•\s*/, ""))+"</li>").join("") + "</ul>");
+            ul = [];
+          }
+        };
+
+        for(const line of lines){
+          if(line.trim().startsWith("• ")){
+            inList = true;
+            ul.push(line.trim());
+          }else if(line.trim().length===0){
+            flushList();
+            // paragraphe vide -> saut
+            frag.push("<p></p>");
+          }else{
+            flushList();
+            frag.push("<p>"+escapeHTML(line.trim())+"</p>");
+          }
+        }
+        flushList();
+        return frag.join("");
+      }
+      function escapeHTML(s){
+        return s.replace(/[&<>"']/g, c=>({
+          "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+        }[c]));
+      }
+
+      function formatAnswerForDisplay(raw){
+        const concis = !!conciseToggle.checked;
+        const maxS = parseInt(maxSentencesSel.value, 10) || 3;
+
+        let text = normalizeSpaces(raw);
+        // Puces si listes numérotées
+        text = bulletize(text);
+
+        if(!concis) {
+          return { html: buildFormattedHTML(text) };
+        }
+
+        // Mode “concis” : coupe aux X phrases (et laisse “Afficher tout”)
+        const sents = splitSentences(text);
+        if(sents.length <= maxS){
+          return { html: buildFormattedHTML(text) };
+        }else{
+          const abr = sents.slice(0, maxS).join(" ") + " …";
+          return { html: buildFormattedHTML(abr), moreText: text };
+        }
+      }
+      // ------------------------------------------------
 
       async function ask(){
         const q = (input.value || "").trim();
@@ -128,12 +259,19 @@
             body: JSON.stringify({
               message: q,
               liberty: Number(slider.value || 1),
-              history: HISTORY.slice(-8)  // petit contexte
+              history: HISTORY.slice(-8)
+              // NOTE: si tu veux que le backend écrive déjà en concis:
+              // concise: !!conciseToggle.checked,
+              // maxSentences: parseInt(maxSentencesSel.value, 10)
             })
           });
           const json = await r.json();
           const content = (json && json.answer && (json.answer.content || json.answer)) || "(Réponse vide)";
-          addBubble(content, "bot");
+
+          // Mise en forme anti-pavés
+          const { html, moreText } = formatAnswerForDisplay(content);
+          addBubble(html, "bot", { asHTML:true, moreText });
+
           HISTORY.push({ role:"assistant", content: String(content) });
         }catch(e){
           addBubble("Désolé, une erreur est survenue : " + (e?.message || e), "bot");
@@ -147,6 +285,9 @@
         }
       });
       slider.addEventListener("input", updateLibUI);
+      conciseToggle.addEventListener("change", ()=>{}); // (placeholder si besoin)
+      maxSentencesSel.addEventListener("change", ()=>{});
+
       updateLibUI();
     })();
   </script>
