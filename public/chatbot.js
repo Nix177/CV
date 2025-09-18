@@ -1,83 +1,129 @@
-// public/chatbot.js — client léger pour /api/chat
-(function(){
+<script>
+/* Chatbot front — FR/EN/DE + liberté + concision
+   - Fige la langue de session (sessionStorage.botLang) si l’utilisateur écrit en EN/DE
+     ou si un bouton data-force-lang est cliqué (FR | EN | DE).
+   - Envoie liberty (0/1/2), concise (bool), lang ("fr"|"en"|"de") au backend.
+   - Enter envoie (Shift+Enter = nouvelle ligne).
+*/
+
+(() => {
   "use strict";
 
-  // ---------- utils ----------
-  const $  = (s,r=document)=>r.querySelector(s);
-  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-  const log = (...a)=>console.log("%c[chatbot]","color:#0af",...a);
+  // ------- Helpers -------
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  // ---------- langue : auto-détection + overrides ----------
-  const URL_LANG = new URLSearchParams(location.search).get("lang");
-  const PAGE_LANG = (document.documentElement.lang || "fr").slice(0,2).toLowerCase();
-  const PRESET_LANG = (window.__CHATBOT_LANG || "").slice(0,2).toLowerCase();
+  const log = (...a) => console.log("%c[chatbot]", "color:#0af", ...a);
+  const warn = (...a) => console.warn("%c[chatbot]", "color:#fa0", ...a);
 
-  // Dictionnaires ultra-légers pour heuristique
-  const EN_WORDS = ["what","who","which","how","his","her","their","can","could","does","do","tell","about","strength","strengths","talent","talents","experience","skills"];
-  const DE_WORDS = ["was","wer","wie","welche","welcher","welches","seine","ihre","deren","kann","können","stärken","talent","talente","erfahrung","fähigkeiten","kompetenzen"];
-  const FR_WORDS = ["quel","quelle","quels","quelles","est-ce","peut","peut-il","ses","compétences","atouts","forces","talent","talents","expérience"];
+  // ------- UI refs -------
+  const logEl = $("#chatLog");
+  const input = $("#chatInput");
+  const sendBt = $("#chatSend");
+  const libertyRange = $("#liberty");            // <input type="range" id="liberty" min="0" max="2">
+  const conciseCk = $("#concise");               // <input type="checkbox" id="concise">
+  const libertyBadge = $("#libertyBadge");       // petit badge 0/1/2 à côté du slider
+  const langBtns = $$("[data-force-lang]");      // boutons FR/EN/DE éventuels
 
-  function countMatches(words, text){
-    const t = " " + text.toLowerCase() + " ";
-    let n = 0;
-    for (const w of words){
-      if (t.includes(" " + w + " ")) n++;
+  // ------- State -------
+  // Langue par défaut : sessionStorage ? HTML lang ? "fr"
+  const pageLang = (document.documentElement.lang || "fr").slice(0,2).toLowerCase();
+  if (!sessionStorage.getItem("botLang")) {
+    sessionStorage.setItem("botLang", pageLang);
+  }
+  // Par défaut : liberté=2, concision décochée
+  if (!localStorage.getItem("botLiberty")) {
+    localStorage.setItem("botLiberty", "2");
+  }
+  if (!localStorage.getItem("botConcise")) {
+    localStorage.setItem("botConcise", "0");
+  }
+
+  // ------- UI init -------
+  function uiInit() {
+    // Slider
+    if (libertyRange) {
+      libertyRange.min = "0";
+      libertyRange.max = "2";
+      libertyRange.step = "1";
+      libertyRange.value = localStorage.getItem("botLiberty") || "2";
+      updateLibertyBadge();
+      libertyRange.addEventListener("input", () => {
+        localStorage.setItem("botLiberty", libertyRange.value);
+        updateLibertyBadge();
+      });
     }
-    return n;
+    // Concision
+    if (conciseCk) {
+      conciseCk.checked = localStorage.getItem("botConcise") === "1" ? true : false;
+      conciseCk.addEventListener("change", () => {
+        localStorage.setItem("botConcise", conciseCk.checked ? "1" : "0");
+      });
+    }
+    // Boutons de langue
+    langBtns.forEach(b => {
+      b.addEventListener("click", () => {
+        const L = (b.getAttribute("data-force-lang") || "").toLowerCase();
+        if (["fr","en","de"].includes(L)) {
+          sessionStorage.setItem("botLang", L);
+          addBubble(
+            L === "fr" ? "✅ Langue fixée sur français." :
+            L === "en" ? "✅ Language set to English." :
+                         "✅ Sprache auf Deutsch gesetzt.",
+            "sys"
+          );
+        }
+      });
+    });
+    // Envoyer : bouton + Enter
+    sendBt?.addEventListener("click", ask);
+    input?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); }
+    });
+
+    // Message d’intro
+    addBubble(
+      sessionLang() === "en" ? 
+      "Hello! Ask a question about the candidate. (Liberty: 0 factual, 1 prudent, 2 interpretative with marked deductions.)"
+      : sessionLang() === "de" ?
+      "Hallo! Stellen Sie eine Frage zum Kandidaten. (Freiheit: 0 faktisch, 1 vorsichtig, 2 interpretativ mit gekennzeichneten Schlussfolgerungen.)"
+      :
+      "Bonjour ! Posez une question sur le candidat. (Liberté : 0 factuel, 1 prudent, 2 interprétatif avec déductions signalées.)",
+      "bot"
+    );
   }
 
-  function detectLangFromInput(q){
-    const s = String(q || "").trim();
-    if (!s) return null;
-
-    // Indices simples : caractères spécifiques DE/FR
-    if (/[äöüß]/i.test(s)) return "de";
-    if (/[àâçéèêëîïôûùüÿœ]/i.test(s)) return "fr";
-
-    // Scores mots-clés
-    const en = countMatches(EN_WORDS, s);
-    const de = countMatches(DE_WORDS, s);
-    const fr = countMatches(FR_WORDS, s);
-
-    if (en > de && en > fr) return "en";
-    if (de > en && de > fr) return "de";
-    if (fr > en && fr > de) return "fr";
-    return null;
+  function sessionLang() {
+    return (sessionStorage.getItem("botLang") || pageLang || "fr").slice(0,2);
   }
 
-  function resolveLang(q){
-    // 1) URL ?lang=  2) variable globale  3) auto-détection du message  4) <html lang>  5) fr
-    return (URL_LANG && URL_LANG.match(/^(fr|en|de)$/)?.[0])
-        || (PRESET_LANG && PRESET_LANG.match(/^(fr|en|de)$/)?.[0])
-        || detectLangFromInput(q)
-        || (PAGE_LANG.match(/^(fr|en|de)$/)?.[0] || "fr");
+  function updateLibertyBadge() {
+    if (!libertyBadge) return;
+    const v = libertyRange ? Number(libertyRange.value) : 2;
+    libertyBadge.textContent = String(v);
+    libertyBadge.setAttribute("data-level", String(v));
   }
 
-  function langHint(l){
-    if (l === "en") return "[Please answer in English.] ";
-    if (l === "de") return "[Bitte antworte auf Deutsch.] ";
-    return "[Réponds en français.] ";
+  // ------- Langue : heuristique légère (une fois) -------
+  function resolveLang(text) {
+    if (!text || text.length < 2) return sessionLang();
+    const t = text.trim();
+    // très simple : si présence de ' der die das ' etc.
+    const deck = /(^|\s)(der|die|das|und|ist|im|mit|eine|einen|nicht)(\s|[,.!?;:])/i;
+    const enck = /(^|\s)(the|and|is|in|with|can|what|which|does)(\s|[,.!?;:])/i;
+    const frck = /(^|\s)(le|la|les|est|avec|peut|quoi|quelles|des)(\s|[,.!?;:])/i;
+
+    if (enck.test(t)) return "en";
+    if (deck.test(t)) return "de";
+    if (frck.test(t)) return "fr";
+
+    // sinon on garde la session
+    return sessionLang();
   }
 
-  // ---------- refs UI ----------
-  const logEl     = $("#chatLog");
-  const input     = $("#chatInput");
-  const sendBtn   = $("#chatSend");
-  const conciseCb = $("#concise");
-  const radios    = $$("#liberty input[type=radio]");
-  const legacyRange = $("#libertySlider"); // s'il existe encore
-
-  // Valeurs par défaut souhaitées : liberté=2, concis décoché
-  function setDefaults(){
-    const r2 = $("#lib2");
-    if (r2) r2.checked = true;
-    if (legacyRange) legacyRange.value = "2";
-    if (conciseCb) conciseCb.checked = false;
-  }
-  setDefaults();
-
-  // ---------- rendu bulles ----------
-  function addBubble(text, who="bot"){
+  // ------- Chat UI -------
+  function addBubble(text, who = "bot") {
+    if (!logEl) return;
     const line = document.createElement("div");
     line.className = "bubble " + who;
     line.textContent = String(text || "");
@@ -85,100 +131,47 @@
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  // ---------- lecture liberté ----------
-  function getLiberty(){
-    const r = radios.find(x=>x && x.checked);
-    if (r) return Number(r.value);
-    if (legacyRange) return Number(legacyRange.value || 2);
-    return 2;
-  }
-
-  // ---------- “réponses concises” (2 phrases max, sans lookbehind) ----------
-  function makeConcise(s){
-    if (!conciseCb?.checked) return s;
-    const str = String(s || "").replace(/\s+/g," ").trim();
-    if (!str) return str;
-    let count = 0;
-    let out = "";
-    for (let i = 0; i < str.length; i++){
-      const ch = str[i];
-      out += ch;
-      if (ch === "." || ch === "!" || ch === "?"){
-        count++;
-        if (count >= 2) return out.trim();
-      }
-    }
-    return out.trim();
-  }
-
-  // ---------- appel API ----------
-  async function ask(){
-    const q = input.value.trim();
+  // ------- ASK -------
+  async function ask() {
+    const q = input?.value?.trim();
     if (!q) return;
     addBubble(q, "user");
     input.value = "";
 
-    // langue choisie pour CETTE question
-    const lang = resolveLang(q);
-    const hint = langHint(lang);
+    // figer la langue de la session si rien de fixé
+    const L = sessionStorage.getItem("botLang") || resolveLang(q);
+    sessionStorage.setItem("botLang", L);
 
-    const body = {
-      message: hint + q,
-      liberty: getLiberty(),
-      history: [],
-      lang // si ton backend veut aussi en tenir compte
-    };
-    log("[payload]", body);
+    const liberty = Number(localStorage.getItem("botLiberty") || (libertyRange ? libertyRange.value : 2)) || 2;
+    const concise = localStorage.getItem("botConcise") === "1" ? true : false;
 
-    try{
-      const r = await fetch("/api/chat",{
-        method:"POST",
-        headers:{ "content-type":"application/json" },
-        body: JSON.stringify(body)
+    try {
+      const r = await fetch("/api/chat", {
+        method: "POST",
+        headers: {"content-type":"application/json"},
+        body: JSON.stringify({
+          message: q,
+          liberty,
+          concise,
+          lang: L
+        })
       });
-      const data = await r.json();
-      log("[used]", data.used);
-
-      if (!data?.ok){
-        addBubble(
-          lang==="de" ? "Der Dienst ist vorübergehend nicht verfügbar."
-          : lang==="en" ? "The service is temporarily unavailable."
-          : "Désolé, le service est momentanément indisponible.",
-          "bot"
-        );
+      const json = await r.json();
+      if (!json?.ok) {
+        warn("server error", json);
+        addBubble("— erreur serveur —", "sys");
         return;
       }
-
-      const content = (typeof data.answer === "string")
-        ? data.answer
-        : (data.answer?.content || "");
-
-      addBubble(makeConcise(content), "bot");
-    }catch(e){
-      console.error(e);
-      addBubble(
-        "fr"===resolveLang("") ? "Erreur réseau. Réessayez dans un instant."
-        : "de"===resolveLang("") ? "Netzwerkfehler. Bitte versuchen Sie es gleich noch einmal."
-        : "Network error. Please try again in a moment.",
-        "bot"
-      );
+      const content = json?.answer?.content || "(no content)";
+      addBubble(content, "bot");
+    } catch(e) {
+      warn("fetch error", e);
+      addBubble("— connexion impossible —", "sys");
     }
   }
 
-  // ---------- events ----------
-  sendBtn?.addEventListener("click", ask);
-  input?.addEventListener("keydown", (e)=>{
-    if (e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      ask();
-    }
-  });
+  // ------- LET’S GO -------
+  uiInit();
 
-  // ---------- message d’accueil ----------
-  const helloLang = resolveLang("");
-  const hello =
-    helloLang==="de" ? "Hallo! Stellen Sie eine Frage zum Kandidaten."
-    : helloLang==="en" ? "Hello! Ask a question about the candidate."
-    : "Bonjour ! Posez une question sur le candidat.";
-  addBubble(hello, "bot");
 })();
+</script>
