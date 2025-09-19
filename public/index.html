@@ -98,7 +98,6 @@
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
-    /* hit-area large (inclut le label) */
     .hit-rect{ fill:transparent; pointer-events:all; }
 
     /* ===== Train ===== */
@@ -114,8 +113,11 @@
       border:1px solid var(--card-border);
       border-radius:14px; padding:12px 14px; color:var(--text);
       box-shadow: var(--shadow);
-      animation: pop .18s ease-out forwards;
       z-index:5;
+
+      /* origine & animation paramétrables par variables (calées sur la station) */
+      transform-origin: var(--origin-x, 0%) var(--origin-y, 50%);
+      animation: pop-from-station .18s ease-out forwards;
     }
     .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
     .idea p{ margin:0; font-size:13px; color:var(--muted) }
@@ -127,12 +129,13 @@
     }
     .idea.right::after{ left:-7px; border-right:none; border-top:none; }
     .idea.left::after{  right:-7px; border-left:none;  border-bottom:none; }
-    .idea.sticky{ pointer-events:none; } /* le calque carte est de toute façon non bloquant */
-
-    /* le calque d'idées ne bloque jamais la souris */
+    .idea.sticky{ pointer-events:none; }
     #idea-layer{ position:absolute; inset:0; z-index:4; pointer-events:none; }
 
-    @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
+    @keyframes pop-from-station{
+      from{ opacity:0; transform: translate(var(--pop-x,0px), var(--pop-y,0px)) scale(.72); }
+      to  { opacity:1; transform: translate(0,0) scale(1); }
+    }
 
     /* ===== Panneau détails ===== */
     aside{
@@ -332,7 +335,7 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
-        /* zone de hit généreuse : ~200x70 autour du point (couvre le label) */
+        /* hit rectangle généreux : couvre le label pour un hover fiable */
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
         hitRect.setAttribute('x', -100);
@@ -402,18 +405,17 @@
       card.className = 'idea' + (sticky ? ' sticky' : '');
       card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
 
-      /* ancrage serré à la station, flip si bord */
       const vw = window.innerWidth, vh = window.innerHeight;
       const CARD_W = 340, CARD_H = 140;
       const margin = 16, offsetX = 22, offsetY = 14;
 
-      let placeRight = (pt.x + offsetX + CARD_W + margin <= vw);
-      let placeBelow = (pt.y + offsetY + CARD_H + margin <= vh);
+      // placement proche de la station + flip si bord
+      const placeRight = (pt.x + offsetX + CARD_W + margin <= vw);
+      const placeBelow = (pt.y + offsetY + CARD_H + margin <= vh);
 
       let left = placeRight ? pt.x + offsetX : pt.x - CARD_W - offsetX;
       let top  = placeBelow ? pt.y + offsetY : pt.y - CARD_H - offsetY;
 
-      /* clamp doux pour rester visible, mais rester proche */
       left = Math.max(margin, Math.min(left, vw - margin - CARD_W));
       top  = Math.max(margin, Math.min(top,  vh - margin - CARD_H));
 
@@ -421,14 +423,30 @@
       card.style.top  = top  + 'px';
       card.classList.add(placeRight ? 'right' : 'left');
 
-      /* position de la flèche alignée vers la station */
+      // flèche alignée exactement vers la station
       const arrowTop = Math.max(8, Math.min(pt.y - top - 7, CARD_H - 22));
       card.style.setProperty('--arrow-top', arrowTop + 'px');
+
+      // origine d'animation = côté proche de la station + la hauteur du tip
+      const originX = placeRight ? '0%' : '100%';
+      const originY = (arrowTop + 7) / CARD_H * 100 + '%';
+      card.style.setProperty('--origin-x', originX);
+      card.style.setProperty('--origin-y', originY);
+
+      // petite translation depuis la station pour l'effet "pop de la station"
+      const attachX = placeRight ? left : left + CARD_W;
+      const attachY = top + arrowTop + 7;
+      const dx = attachX - pt.x;
+      const dy = attachY - pt.y;
+      // vecteur réduit (clampé) en direction opposée, pour une impression de jaillissement
+      const popX = Math.max(-14, Math.min(14, -dx * 0.35));
+      const popY = Math.max(-12, Math.min(12, -dy * 0.35));
+      card.style.setProperty('--pop-x', popX + 'px');
+      card.style.setProperty('--pop-y', popY + 'px');
 
       ideaLayer.appendChild(card);
       currentCard = card; currentCardIdx = s.idx;
 
-      /* cartes auto : pas besoin d’être cliquables, on clique la station */
       if(!sticky){
         const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
         card._timeout = t;
@@ -441,7 +459,7 @@
       if(hoverLockIdx===i && currentCardIdx===i && currentCard) return;
       hoverLockIdx = i;
       const s = stationPositions.find(p => p.idx===i);
-      if(s) spawnIdeaCard(s, true); // sticky : layer non-bloquant, pas de flicker
+      if(s) spawnIdeaCard(s, true);
     }
     function onLeaveStation(i){
       if(hoverLockIdx===i) hoverLockIdx = null;
