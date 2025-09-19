@@ -9,22 +9,21 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#0a1220" />
 
-  <!-- Optionnel : clé API YouTube pour vignettes "vidéo la plus vue" des chaînes -->
-  <!-- <meta name="yt-api-key" content="XXXX"> -->
-
   <style>
     :root{
       --bg:#0a1220; --panel:#0b1323; --card:#0d1524; --border:#152238;
       --text:#eef3f8; --muted:#9fb2c8; --accent:#14b8a6;
       --shadow:0 10px 30px rgba(0,0,0,.35); --maxw:1200px;
     }
-    *{box-sizing:border-box} html,body{height:100%}
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0; color:var(--text);
       font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
       background:radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
     }
 
+    /* Header */
     header{
       position:sticky; top:0; z-index:20;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
@@ -45,6 +44,7 @@
 
     main{max-width:var(--maxw); margin:18px auto 80px; padding:0 16px}
 
+    /* Anchors */
     .anchors{
       position:sticky; top:68px; z-index:15; background:rgba(10,18,32,.75); backdrop-filter:blur(6px);
       border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px; box-shadow:var(--shadow);
@@ -53,12 +53,12 @@
     .chip{padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.12);
       color:var(--text); text-decoration:none; background:#0c1728; font-weight:600; font-size:14px;}
     .chip:hover{background:#0e1b2f}
-    html{scroll-behavior:smooth}
 
     .section{margin:28px 0 14px}
     .section h2{margin:0 0 8px 0; font-size:24px}
     .section p.lead{margin:0 0 12px 0; color:var(--muted)}
 
+    /* Cards grid */
     .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:12px}
     .card{grid-column:span 4; background:var(--card); border:1px solid var(--border);
       border-radius:14px; box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column}
@@ -67,7 +67,7 @@
 
     .thumb{position:relative; width:100%; aspect-ratio:16/9; background:#0a1220;
       display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border);
-      color:var(--muted); font-size:12px; text-align:center; padding:6px}
+      color:var(--muted); font-size:12px}
     .thumb img{width:100%; height:100%; object-fit:cover; display:none}
     .thumb.has-img img{display:block}
     .thumb .fav{position:absolute; left:10px; bottom:10px; width:24px; height:24px;
@@ -84,6 +84,7 @@
     .link:hover{background:#0e1b2f}
     .note{color:var(--muted); font-size:12px; margin-top:2px}
 
+    /* Media placeholders */
     .media-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px 12px 12px}
     .media-slot{aspect-ratio:16/9; background:#0a1220; border:1px dashed rgba(255,255,255,.12);
       border-radius:10px; display:grid; place-items:center; color:var(--muted); font-size:12px}
@@ -137,6 +138,7 @@
       <p class="lead">Images libres, données brutes et communautés pour explorer le ciel.</p>
 
       <div class="grid">
+        <!-- Bloc enrichi Astronomie -->
         <article class="card large">
           <div class="thumb" data-cover="">
             <span>Galerie perso (ajouter images/vidéos)</span>
@@ -159,6 +161,7 @@
           <div class="video-grid"><div class="video-slot"></div><div class="video-slot"></div><div class="video-slot"></div></div>
         </article>
 
+        <!-- Ressources astro -->
         <article class="card">
           <div class="thumb" data-url="https://www.youtube.com/watch?v=DVuonz26P0w"><span>Miniature YouTube</span></div>
           <div class="content">
@@ -416,6 +419,7 @@
       <p class="lead">Apprendre à coder, créer des jeux, pensée informatique.</p>
 
       <div class="grid">
+        <!-- (cartes uniformes, mêmes que version précédente, toutes avec data-url) -->
         <article class="card"><div class="thumb" data-url="https://scratch.mit.edu/"><span>Scratch</span></div>
           <div class="content"><h3>Scratch</h3><p>Initiation visuelle au code (MIT).</p><div class="links"><a class="link" href="https://scratch.mit.edu/" target="_blank" rel="noopener">Essayer</a></div></div></article>
 
@@ -479,10 +483,6 @@
         <article class="card"><div class="thumb" data-url="https://cand.li/index-fr.html"><span>Candli</span></div>
           <div class="content"><h3>Candli</h3><p>Crée ton jeu vidéo simplement.</p><div class="links"><a class="link" href="https://cand.li/index-fr.html" target="_blank" rel="noopener">Essayer</a></div></div></article>
 
-        <article class="card"><div class="thumb" data-url="https://humanornot.ai/"><span>Human or Not</span></div>
-          <div class="content"><h3>Human or Not (IA)</h3><p>Jeu type Turing : discuter et deviner si humain ou IA.</p>
-            <div class="links"><a class="link" href="https://humanornot.ai/" target="_blank" rel="noopener">Jouer</a></div></div></article>
-
         <article class="card"><div class="thumb" data-url="https://www.hepfr.ch/formationcontinue/forms/inscriptions-cas-ednum"><span>EduNum</span></div>
           <div class="content"><h3>Formation continue — EduNum</h3><p>Programme en éducation numérique (HEP FR).</p><div class="links"><a class="link" href="https://www.hepfr.ch/formationcontinue/forms/inscriptions-cas-ednum" target="_blank" rel="noopener">Infos</a></div></div></article>
       </div>
@@ -494,6 +494,7 @@
       <p class="lead">IA créative, utilitaires web, données ouvertes, vie privée, fun.</p>
 
       <div class="grid">
+        <!-- (extraits — tous avec data-url pour vignettes auto) -->
         <article class="card"><div class="thumb" data-url="https://fakeyou.com/"><span>FakeYou</span></div>
           <div class="content"><h3>FakeYou</h3><p>Génération de voix (clonage).</p><div class="links"><a class="link" href="https://fakeyou.com/" target="_blank" rel="noopener">Visiter</a></div></div></article>
 
@@ -596,6 +597,15 @@
         <article class="card"><div class="thumb" data-url="https://docs.sketchware.io/"><span>Sketchware Docs</span></div>
           <div class="content"><h3>Sketchware Docs</h3><p>Docs pour apps Android par blocs.</p><div class="links"><a class="link" href="https://docs.sketchware.io/" target="_blank" rel="noopener">Lire</a></div></div></article>
 
+        <article class="card"><div class="thumb" data-url="https://www.sciencedirect.com/science/article/pii/S1872497313001130"><span>ScienceDirect</span></div>
+          <div class="content"><h3>Serious Games (article)</h3><p>Étude 2013 sur jeux sérieux & apprentissages.</p><div class="links"><a class="link" href="https://www.sciencedirect.com/science/article/pii/S1872497313001130" target="_blank" rel="noopener">Lire</a></div></div></article>
+
+        <article class="card"><div class="thumb" data-url="https://wave.webaim.org/"><span>WAVE</span></div>
+          <div class="content"><h3>WAVE — WebAIM</h3><p>Audit d’accessibilité web.</p><div class="links"><a class="link" href="https://wave.webaim.org/" target="_blank" rel="noopener">Analyser</a></div></div></article>
+
+        <article class="card"><div class="thumb" data-url="https://www.kiwico.com/"><span>KiwiCo</span></div>
+          <div class="content"><h3>KiwiCo</h3><p>Kits STEM créatifs.</p><div class="links"><a class="link" href="https://www.kiwico.com/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
+
         <article class="card"><div class="thumb" data-url="http://giza.fas.harvard.edu/giza3d/"><span>Giza 3D</span></div>
           <div class="content"><h3>Giza 3D (Harvard)</h3><p>Exploration 3D de Gizeh.</p><div class="links"><a class="link" href="http://giza.fas.harvard.edu/giza3d/" target="_blank" rel="noopener">Visiter</a></div></div></article>
 
@@ -637,6 +647,7 @@
           </div>
         </article>
 
+        <!-- Cartes rapides titres -->
         <article class="card"><div class="thumb" data-url=""><span>Star Citizen</span></div><div class="content"><h3>Star Citizen</h3><p>Simulation spatiale persistante.</p></div></article>
         <article class="card"><div class="thumb" data-url=""><span>Heroes of the Storm</span></div><div class="content"><h3>Heroes of the Storm</h3><p>MOBA dynamique.</p></div></article>
         <article class="card"><div class="thumb" data-url=""><span>World of Warcraft</span></div><div class="content"><h3>World of Warcraft</h3><p>MMORPG emblématique.</p></div></article>
@@ -655,12 +666,10 @@
   </main>
 
   <script>
-    // === Helpers ===========================================================
-    function getMeta(name){ const m=document.querySelector(`meta[name="${name}"]`); return m?m.content.trim():""; }
-    const YT_API_KEY = getMeta('yt-api-key') || (window.YT_API_KEY||"");
-
-    function getDomain(url){ try{ return new URL(url).hostname; }catch{ return ""; } }
-    function isYouTube(url){ try{ return new URL(url).hostname.includes('youtube.com') || new URL(url).hostname.includes('youtu.be'); }catch{ return false; } }
+    // --- Auto-vignettes: YouTube -> miniature ; sinon favicon du domaine ---
+    function getDomain(url){
+      try{ return new URL(url).hostname; }catch{ return ""; }
+    }
     function getYouTubeId(url){
       try{
         const u=new URL(url);
@@ -670,146 +679,32 @@
         return m ? m[2] : "";
       }catch{ return ""; }
     }
-    function getYTChannelIdFromUrl(url){
-      try{
-        const u=new URL(url);
-        // /channel/UCxxxx
-        const m = u.pathname.match(/\/channel\/(UC[^\/?#]+)/);
-        if(m) return m[1];
-        return "";
-      }catch{ return ""; }
-    }
-    function getYTHandle(url){
-      try{
-        const u=new URL(url);
-        const m = u.pathname.match(/^\/@([^\/?#]+)/);
-        return (u.hostname.includes('youtube.com') && m) ? m[1] : "";
-      }catch{ return ""; }
-    }
-
-    // Cache simple pour éviter les appels répétés
-    const cache = {
-      get(key){ try{ return JSON.parse(sessionStorage.getItem(key) || "null"); }catch{ return null; } },
-      set(key,val){ try{ sessionStorage.setItem(key, JSON.stringify(val)); }catch{} }
-    };
-
-    async function resolveTopVideoThumbForChannel(url){
-      // 1) cache
-      const ck = "yt:topvid:" + url;
-      const cached = cache.get(ck);
-      if(cached) return cached;
-
-      if(!YT_API_KEY) return ""; // pas de clé => caller fera un fallback
-
-      // 2) récupérer channelId
-      let channelId = getYTChannelIdFromUrl(url);
-      const handle = getYTHandle(url);
-
-      try{
-        if(!channelId){
-          let q = handle || url; // au pire on cherche par handle/nom
-          const srch = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(q)}&maxResults=1&key=${YT_API_KEY}`);
-          const sj = await srch.json();
-          if(sj.items && sj.items[0]) channelId = sj.items[0].id.channelId;
-        }
-        if(!channelId) return "";
-
-        // 3) vidéo la plus vue
-        const v = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&order=viewCount&maxResults=1&key=${YT_API_KEY}`);
-        const vj = await v.json();
-        const id = vj.items && vj.items[0] && vj.items[0].id && vj.items[0].id.videoId;
-        if(!id) return "";
-
-        const thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-        cache.set(ck, thumb);
-        return thumb;
-      }catch(e){
-        return "";
-      }
-    }
-
-    function setScreenshot(el, url){
-      const img = document.createElement('img'); img.loading='lazy'; img.alt="aperçu du site"; img.referrerPolicy="no-referrer";
-      // mShots de WordPress : rapide et cache CDN
-      img.src = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=960`;
-      img.onerror = ()=>{ img.remove(); };
-      img.onload  = ()=>{ el.classList.add('has-img'); };
-      el.appendChild(img);
-    }
-
-    function setFavBadge(el, url){
+    function setThumb(el, url){
+      const img = document.createElement('img'); img.loading='lazy'; img.alt="";
       const favWrap = document.createElement('div'); favWrap.className='fav';
       const fav = document.createElement('img'); fav.alt=""; fav.loading='lazy';
-      fav.src = `https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(getDomain(url))}`;
-      fav.onerror = ()=> fav.remove();
-      favWrap.appendChild(fav);
-      el.appendChild(favWrap);
-      el.classList.add('has-fav');
-    }
+      favWrap.appendChild(fav); el.appendChild(img); el.appendChild(favWrap);
 
-    async function setThumb(el, url){
-      // priorités : 1) vidéo YouTube -> miniature
-      const ytVid = getYouTubeId(url);
-      if(ytVid){
-        const img = document.createElement('img'); img.loading='lazy'; img.alt="";
-        img.src = `https://img.youtube.com/vi/${ytVid}/hqdefault.jpg`;
+      let src = ""; const yt = getYouTubeId(url);
+      if(yt) src = `https://img.youtube.com/vi/${yt}/hqdefault.jpg`;
+      else if(el.dataset.cover) src = el.dataset.cover;
+
+      if(src){
+        img.src = src;
         img.onerror = ()=>{ img.remove(); };
         img.onload  = ()=>{ el.classList.add('has-img'); };
-        el.appendChild(img);
-        setFavBadge(el, url);
-        return;
       }
 
-      // 2) chaîne YouTube -> miniature de la vidéo la plus vue (si clé) sinon avatar
-      if(isYouTube(url) && getYTHandle(url) || getYTChannelIdFromUrl(url)){
-        let src = await resolveTopVideoThumbForChannel(url);
-        if(!src){
-          const handle = getYTHandle(url);
-          if(handle){ src = `https://unavatar.io/youtube/${encodeURIComponent(handle)}`; }
-        }
-        if(src){
-          const img = document.createElement('img'); img.loading='lazy'; img.alt="";
-          img.src = src;
-          img.onerror = ()=>{ img.remove(); };
-          img.onload  = ()=>{ el.classList.add('has-img'); };
-          el.appendChild(img);
-        }else{
-          // dernier recours : screenshot de la page chaîne
-          setScreenshot(el, url);
-        }
-        setFavBadge(el, url);
-        return;
+      const domain = getDomain(url);
+      if(domain){
+        fav.src = `https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(domain)}`;
+        fav.onerror = ()=> fav.remove();
+        el.classList.add('has-fav');
       }
-
-      // 3) data-cover explicite
-      if(el.dataset.cover){
-        const img = document.createElement('img'); img.loading='lazy'; img.alt="";
-        img.src = el.dataset.cover;
-        img.onerror = ()=>{ img.remove(); };
-        img.onload  = ()=>{ el.classList.add('has-img'); };
-        el.appendChild(img);
-        setFavBadge(el, url);
-        return;
-      }
-
-      // 4) sites : screenshot mShots (fallback unavatar, puis favicon)
-      setScreenshot(el, url);
-
-      // badge + fallback image si mShots indispo
-      setFavBadge(el, url);
-
-      // fallback image domaine si le screenshot tombe en erreur (ex: sites qui bloquent)
-      el.querySelector('img')?.addEventListener('error', ()=>{
-        const img2 = document.createElement('img'); img2.loading='lazy'; img2.alt="";
-        img2.src = `https://unavatar.io/${encodeURIComponent(getDomain(url))}`;
-        img2.onerror = ()=>{ img2.remove(); };
-        img2.onload  = ()=>{ el.classList.add('has-img'); };
-        el.appendChild(img2);
-      }, {once:true});
     }
 
-    // Boot : associe une vignette à chaque .thumb
     document.querySelectorAll('.card .thumb').forEach(th=>{
+      // priorité: data-url sur le thumb, sinon premier lien de la carte
       const url = th.dataset.url || (th.closest('.card')?.querySelector('.links a')?.href) || "";
       if(url) setThumb(th, url);
     });
