@@ -35,7 +35,7 @@
       overflow:hidden;
     }
 
-    /* Header : brand | boutons séparés */
+    /* ===== Header : brand | boutons ===== */
     header{
       position:fixed; inset:18px 18px auto 18px; z-index:10;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
@@ -71,6 +71,7 @@
     .btn:hover{ background:#0e1b2f }
     .btn:active{ transform: translateY(1px) }
 
+    /* ===== Layout ===== */
     main{
       height:100%;
       display:grid;
@@ -80,6 +81,7 @@
       transition: grid-template-columns .25s ease;
     }
 
+    /* ===== Scène rail ===== */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
@@ -91,21 +93,21 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* Stations */
-    .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; transition: transform .12s ease; }
-    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); }
+    /* ===== Stations (sans scale sur hover) ===== */
+    .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
+    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
-    .station:hover{ transform: scale(1.12); }
-    /* hit-area pour stabiliser le hover */
+    .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
+    /* hit-area large pour stabiliser le hover */
     .hit{ fill:transparent; pointer-events:all; }
 
-    /* Train */
+    /* ===== Train ===== */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
     .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* Carte idée */
+    /* ===== Carte idée ===== */
     .idea{
       position:absolute; min-width: 260px; max-width: 380px;
       background: rgba(13,21,36,.96);
@@ -124,10 +126,13 @@
     }
     .idea.right::after{ left:-7px; top:22px; border-right:none; border-top:none; }
     .idea.left::after{  right:-7px; top:22px; border-left:none;  border-bottom:none; }
-    .idea.sticky{ pointer-events:none; } /* <- clé anti-flicker */
+    .idea.sticky{ pointer-events:none; } /* carte non interactive en mode hover */
+
+    #idea-layer{ position:absolute; inset:0; z-index:4; } /* on pilote pointer-events en JS */
+
     @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
 
-    /* Panneau détails */
+    /* ===== Panneau détails ===== */
     aside{
       position:relative;
       border-left:1px solid rgba(255,255,255,.07);
@@ -263,10 +268,8 @@
 
     function buildZigZagPath(preserve=true){
       const {width:W, height:H} = svg.viewBox.baseVal;
-      const topY = H*0.28;
-      const botY = H*0.72;
-      const left = 80, right = W-80;
-      const segs = 8;
+      const topY = H*0.28, botY = H*0.72;
+      const left = 80, right = W-80, segs = 8;
 
       const dx = (right-left)/segs;
       let d = `M ${left},${topY}`;
@@ -330,7 +333,7 @@
 
         // hit-area invisible (stabilise le hover)
         const hit = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        hit.setAttribute('class','hit'); hit.setAttribute('r', 16);
+        hit.setAttribute('class','hit'); hit.setAttribute('r', 18);
 
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
@@ -354,6 +357,7 @@
       return {x: cx, y: cy};
     }
 
+    // === Cartes idées (1 seule) ===
     let currentCard = null;
     let currentCardIdx = null;
     let lastShownIdx = -1;
@@ -382,11 +386,14 @@
     }
 
     function spawnIdeaCard(s, sticky){
-      if(currentCardIdx === s.idx && currentCard) return;
+      if(currentCardIdx === s.idx && currentCard) return; // évite recréations
       const data = STATIONS[s.idx];
       const pt = svgPointToPage(s.x, s.y);
 
       clearCard();
+
+      // pointer-events du layer : none pendant hover (sticky), auto sinon
+      ideaLayer.style.pointerEvents = sticky ? 'none' : 'auto';
 
       const card = document.createElement('div');
       card.className = 'idea' + (sticky ? ' sticky' : '');
@@ -420,15 +427,20 @@
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
     function onHoverStation(i){
+      // si on est déjà verrouillé sur cette station, ne rien refaire
+      if(hoverLockIdx===i && currentCardIdx===i && currentCard) return;
       hoverLockIdx = i;
       const s = stationPositions.find(p => p.idx===i);
-      if(s) spawnIdeaCard(s, true); // sticky + pointer-events:none (anti-flicker)
+      if(s) spawnIdeaCard(s, true); // carte non interactive, layer non bloquant
     }
     function onLeaveStation(i){
       if(hoverLockIdx===i) hoverLockIdx = null;
-      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 200); // délai plus long
+      // on rend cliquable à nouveau quand le hover s'en va
+      ideaLayer.style.pointerEvents = 'auto';
+      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 220);
     }
 
+    // === Panneau détails ===
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -440,7 +452,6 @@
         detailList.appendChild(item);
       });
     }
-
     function openDetail(i){
       document.body.classList.remove('panel-collapsed');
       panelToggle.setAttribute('aria-pressed','true');
@@ -455,10 +466,16 @@
     function focusStation(i){
       const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
       if(!node) return;
-      node.animate([{ transform:'scale(1.22)' },{ transform:'scale(1)' }], { duration:360, easing:'ease-out' });
+      // petit feedback sans changer la géométrie (pas de scale)
+      const dot = node.querySelector('.dot');
+      if(!dot) return;
+      dot.animate([{ filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
+                   { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
+                   { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }],
+                   { duration:500, easing:'ease-out' });
     }
 
-    // Animation
+    // === Animation du train ===
     let pos = 0, speed = 50, lastT = performance.now();
     function tick(now){
       const dt = Math.min(40, now - lastT) / 1000; lastT = now;
@@ -474,6 +491,7 @@
       requestAnimationFrame(tick);
     }
 
+    // === Init & resize ===
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
@@ -482,6 +500,7 @@
       lastT = performance.now();
       requestAnimationFrame(tick);
 
+      // Toggle panneau
       panelToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('panel-collapsed');
         panelToggle.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
@@ -490,6 +509,7 @@
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); panelToggle.click(); }
       });
 
+      // Rebuild on resize (debounce)
       let to=null;
       window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
         buildZigZagPath(); placeStations();
