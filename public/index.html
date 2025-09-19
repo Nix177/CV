@@ -93,12 +93,13 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations (sans scale sur hover) ===== */
+    /* ===== Stations (sans scale) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
-    .hit{ fill:transparent; pointer-events:all; } /* hit-area large */
+    /* hit-area large (inclut le label) */
+    .hit-rect{ fill:transparent; pointer-events:all; }
 
     /* ===== Train ===== */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
@@ -108,7 +109,7 @@
 
     /* ===== Carte idée ===== */
     .idea{
-      position:absolute; min-width: 260px; max-width: 340px; /* largeur contrôlée */
+      position:absolute; min-width: 260px; max-width: 340px;
       background: rgba(13,21,36,.96);
       border:1px solid var(--card-border);
       border-radius:14px; padding:12px 14px; color:var(--text);
@@ -122,12 +123,15 @@
       content:""; position:absolute; width:14px; height:14px; transform: rotate(45deg);
       background: rgba(13,21,36,.96); border:1px solid var(--card-border);
       box-shadow: 0 6px 10px rgba(0,0,0,.25);
+      top: var(--arrow-top, 22px);
     }
-    .idea.right::after{ left:-7px; top:22px; border-right:none; border-top:none; }
-    .idea.left::after{  right:-7px; top:22px; border-left:none;  border-bottom:none; }
-    .idea.sticky{ pointer-events:none; } /* carte non interactive en mode hover */
+    .idea.right::after{ left:-7px; border-right:none; border-top:none; }
+    .idea.left::after{  right:-7px; border-left:none;  border-bottom:none; }
+    .idea.sticky{ pointer-events:none; } /* le calque carte est de toute façon non bloquant */
 
-    #idea-layer{ position:absolute; inset:0; z-index:4; } /* pointer-events piloté en JS */
+    /* le calque d'idées ne bloque jamais la souris */
+    #idea-layer{ position:absolute; inset:0; z-index:4; pointer-events:none; }
+
     @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
 
     /* ===== Panneau détails ===== */
@@ -152,7 +156,6 @@
     .panel .card p{ margin:0; color:var(--muted); font-size:14px }
     .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
-    /* GROS bouton de toggle */
     .panel-toggle-btn{
       position:absolute; inset:auto auto 18px -12px;
       display:flex; align-items:center; gap:.5rem;
@@ -329,8 +332,14 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
-        const hit = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        hit.setAttribute('class','hit'); hit.setAttribute('r', 18);
+        /* zone de hit généreuse : ~200x70 autour du point (couvre le label) */
+        const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+        hitRect.setAttribute('class','hit-rect');
+        hitRect.setAttribute('x', -100);
+        hitRect.setAttribute('y', -50);
+        hitRect.setAttribute('width', 200);
+        hitRect.setAttribute('height', 80);
+        hitRect.setAttribute('rx', 14);
 
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
@@ -339,7 +348,7 @@
         label.setAttribute('y', -16);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hit); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -359,7 +368,7 @@
     let currentCardIdx = null;
     let lastShownIdx = -1;
     let hoverLockIdx = null;
-    const showRadius = 28;
+    const showRadius = 32;
     const cardLinger = 4200;
     let cooldownUntil = 0;
 
@@ -389,28 +398,22 @@
       const pt = svgPointToPage(s.x, s.y);
       clearCard();
 
-      // pointer-events du layer : none par défaut ; auto seulement pour les cartes auto
-      ideaLayer.style.pointerEvents = sticky ? 'none' : 'auto';
-
       const card = document.createElement('div');
       card.className = 'idea' + (sticky ? ' sticky' : '');
       card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
 
+      /* ancrage serré à la station, flip si bord */
       const vw = window.innerWidth, vh = window.innerHeight;
       const CARD_W = 340, CARD_H = 140;
-      const margin = 16, offsetX = 24, offsetY = 16;
+      const margin = 16, offsetX = 22, offsetY = 14;
 
-      // Choix gauche/droite uniquement si débordement
-      const canPlaceRight = pt.x + offsetX + CARD_W + margin <= vw;
-      const placeRight = canPlaceRight;
-
-      const canPlaceBelow = pt.y + offsetY + CARD_H + margin <= vh;
-      const placeBelow = canPlaceBelow;
+      let placeRight = (pt.x + offsetX + CARD_W + margin <= vw);
+      let placeBelow = (pt.y + offsetY + CARD_H + margin <= vh);
 
       let left = placeRight ? pt.x + offsetX : pt.x - CARD_W - offsetX;
       let top  = placeBelow ? pt.y + offsetY : pt.y - CARD_H - offsetY;
 
-      // Clamp doux (évite recentrage)
+      /* clamp doux pour rester visible, mais rester proche */
       left = Math.max(margin, Math.min(left, vw - margin - CARD_W));
       top  = Math.max(margin, Math.min(top,  vh - margin - CARD_H));
 
@@ -418,13 +421,17 @@
       card.style.top  = top  + 'px';
       card.classList.add(placeRight ? 'right' : 'left');
 
+      /* position de la flèche alignée vers la station */
+      const arrowTop = Math.max(8, Math.min(pt.y - top - 7, CARD_H - 22));
+      card.style.setProperty('--arrow-top', arrowTop + 'px');
+
       ideaLayer.appendChild(card);
       currentCard = card; currentCardIdx = s.idx;
 
+      /* cartes auto : pas besoin d’être cliquables, on clique la station */
       if(!sticky){
         const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
         card._timeout = t;
-        card.addEventListener('click', () => openDetail(s.idx));
       }
     }
 
@@ -434,12 +441,10 @@
       if(hoverLockIdx===i && currentCardIdx===i && currentCard) return;
       hoverLockIdx = i;
       const s = stationPositions.find(p => p.idx===i);
-      if(s) spawnIdeaCard(s, true);
+      if(s) spawnIdeaCard(s, true); // sticky : layer non-bloquant, pas de flicker
     }
     function onLeaveStation(i){
       if(hoverLockIdx===i) hoverLockIdx = null;
-      // réactive le clic sur les cartes auto
-      ideaLayer.style.pointerEvents = 'auto';
       setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 220);
     }
 
@@ -500,8 +505,6 @@
       placeStations();
       renderDetailList();
       lastT = performance.now();
-      // IMPORTANT : le layer d'idées ne doit pas bloquer la souris
-      ideaLayer.style.pointerEvents = 'none';
       requestAnimationFrame(tick);
 
       panelToggle.addEventListener('click', () => {
