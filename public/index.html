@@ -14,13 +14,14 @@
       --bg:#0a1220;
       --track:#23334a;
       --station:#14b8a6;
+      --card-bg:#0d1524;
+      --card-border:#1a2d49;
       --text:#eef3f8;
       --muted:#9fb2c8;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
-      --accent:#14b8a6;
     }
     body.panel-collapsed{ --asideCurrent: var(--asideCollapsed); }
 
@@ -30,11 +31,11 @@
       margin:0;
       background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
       color:var(--text);
-      font: 16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
       overflow:hidden;
     }
 
-    /* ===== Header ===== */
+    /* ===== Header : brand | boutons ===== */
     header{
       position:fixed; inset:18px 18px auto 18px; z-index:10;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
@@ -92,19 +93,12 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations (hover stable) ===== */
+    /* ===== Stations (sans scale) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
     .hit-rect{ fill:transparent; pointer-events:all; }
-
-    /* Halo discret sur station active (conservé) */
-    .pulse{ fill:none; stroke:var(--accent); stroke-width:2; opacity:0; }
-    .station.active .pulse{ opacity:.5; animation: pulse 1.6s ease-out infinite; }
-    @keyframes pulse{
-      0%{ r:6; opacity:.5 } 100%{ r:18; opacity:0 }
-    }
 
     /* ===== Train ===== */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
@@ -112,47 +106,21 @@
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* ===== Carte centrée (sobre) ===== */
+    /* ===== Carte centrée sobre ===== */
     .spotlight{
-      position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.98);
-      width:min(560px, 74vw); max-width:560px;
-      background: rgba(12,18,30,.96);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px; padding:16px 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.96);
+      width:min(620px, 76vw); max-width:620px;
+      background: rgba(13,21,36,.96);
+      border:1px solid var(--card-border);
+      border-radius:16px; padding:16px 18px;
+      box-shadow: var(--shadow);
       opacity:0; pointer-events:none;
-      transition: opacity .16s ease, transform .16s ease;
+      transition: opacity .18s ease, transform .18s ease;
       z-index:6;
     }
     .spotlight.visible{ opacity:1; transform: translate(-50%,-50%) scale(1); pointer-events:auto; }
-    .spotlight h4{ margin:.1rem 0 .25rem 0; font-size:20px }
+    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:20px }
     .spotlight p{ margin:0; color:var(--muted) }
-
-    /* ===== Effet "tour complet" ===== */
-    #lapGlow{
-      position:absolute; inset:0; pointer-events:none; z-index:5;
-      opacity:0; transform: translateX(-60%);
-      background:
-        radial-gradient(320px 320px at 30% 50%, rgba(20,184,166,.12), rgba(20,184,166,0) 60%),
-        linear-gradient(90deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,.08) 70%, rgba(255,255,255,0) 100%);
-      filter: blur(2px);
-      mix-blend-mode: screen;
-    }
-    #lapGlow.run{ animation: lapSweep 1400ms ease-out forwards; }
-    @keyframes lapSweep{
-      0%{ opacity:0; transform: translateX(-60%);}
-      10%{ opacity:.45;}
-      50%{ opacity:.30;}
-      100%{ opacity:0; transform: translateX(60%);}
-    }
-    /* scintillement ponctuel des stations (sans changer la géométrie) */
-    .dot.twinkle{ animation: twinkle 1.2s ease-in-out 1; }
-    @keyframes twinkle{
-      0%{ filter: drop-shadow(0 0 8px rgba(20,184,166,.45)) brightness(1); }
-      35%{ filter: drop-shadow(0 0 16px rgba(20,184,166,1)) brightness(1.55); }
-      70%{ filter: drop-shadow(0 0 12px rgba(20,184,166,.8)) brightness(1.35); }
-      100%{ filter: drop-shadow(0 0 8px rgba(20,184,166,.45)) brightness(1); }
-    }
 
     /* ===== Panneau détails ===== */
     aside{
@@ -234,10 +202,7 @@
         </g>
       </svg>
 
-      <!-- Effet tour complet -->
-      <div id="lapGlow"></div>
-
-      <!-- Carte centrée -->
+      <!-- Carte centrée (sobre) -->
       <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Idée sélectionnée">
         <h4 id="spotTitle"></h4>
         <p id="spotText"></p>
@@ -261,7 +226,7 @@
   </main>
 
   <script>
-    /* ===== Données ===== */
+    /* ===== Données des stations ===== */
     const STATIONS = [
       { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
       { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
@@ -283,21 +248,21 @@
       { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
     ];
 
-    /* ===== Refs ===== */
+    /* ===== Refs DOM ===== */
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
     const stationLayer = document.getElementById('stations');
     const train = document.getElementById('train');
+
     const panelToggle = document.getElementById('panelToggle');
     const detailList = document.getElementById('detail-list');
 
     const spotlight = document.getElementById('spotlight');
     const spotTitle = document.getElementById('spotTitle');
     const spotText  = document.getElementById('spotText');
-    const lapGlow   = document.getElementById('lapGlow');
 
-    /* ===== Ligne ===== */
+    /* ===== Géométrie & ligne ===== */
     let totalLen = 0;
     let stationPositions = [];
     const sleeperStep = 46;
@@ -368,6 +333,7 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
+        /* zone de hit large qui couvre le label (hover stable) */
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
         hitRect.setAttribute('x', -100);
@@ -376,9 +342,6 @@
         hitRect.setAttribute('height', 80);
         hitRect.setAttribute('rx', 14);
 
-        const pulse = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        pulse.setAttribute('class','pulse'); pulse.setAttribute('r', 6);
-
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
 
@@ -386,7 +349,7 @@
         label.setAttribute('y', -16);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hitRect); g.appendChild(pulse); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -394,40 +357,34 @@
       }
     }
 
-    /* ===== Carte centrée ===== */
+    /* ===== Spotlight (centre, sobre) ===== */
     let currentIdx = null;
     let hoverLockIdx = null;
     let autoHide = null;
     const lingerAuto = 4200;   // auto (train)
-    const lingerHover = 160;   // délai mini au leave
-
-    function setActiveStation(i){
-      stationLayer.querySelectorAll('.station.active').forEach(n=>n.classList.remove('active'));
-      const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
-      if(node) node.classList.add('active');
-    }
+    const lingerHover = 160;   // petit délai au leave
 
     function showSpotlight(i, source){
       currentIdx = i;
       const st = STATIONS[i];
       spotTitle.textContent = st.title;
-      spotText.textContent  = st.short;
-
-      setActiveStation(i);
+      spotText.textContent = st.short;
 
       spotlight.classList.add('visible');
+
       clearTimeout(autoHide);
       if(source === 'auto'){
         autoHide = setTimeout(()=> hideSpotlight(), lingerAuto);
       }
     }
+
     function hideSpotlight(){
       clearTimeout(autoHide);
       spotlight.classList.remove('visible');
-      stationLayer.querySelectorAll('.station.active').forEach(n=>n.classList.remove('active'));
       currentIdx = null;
     }
 
+    /* ===== Survol station ===== */
     function onHoverStation(i){
       hoverLockIdx = i;
       showSpotlight(i,'hover');
@@ -469,34 +426,23 @@
       if(!node) return;
       const dot = node.querySelector('.dot');
       if(!dot) return;
-      dot.animate([{ filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
-                   { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
-                   { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }],
-                   { duration:500, easing:'ease-out' });
+      dot.animate(
+        [
+          { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
+          { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
+          { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }
+        ],
+        { duration:500, easing:'ease-out' }
+      );
     }
+
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-    /* ===== Animation du train + tour complet ===== */
+    /* ===== Animation du train + auto spotlight ===== */
     let pos = 0, speed = 50, lastT = performance.now();
     const showRadius = 32;
     let lastShownIdx = -1;
     let cooldownUntil = 0;
-    let prevPos = 0;
-    let lastLapAt = 0;
-
-    function triggerLapCelebration(){
-      // balayage lumineux
-      lapGlow.classList.remove('run'); // reset
-      void lapGlow.offsetWidth;        // reflow
-      lapGlow.classList.add('run');
-
-      // scintillement court sur toutes les stations (sans toucher la géométrie)
-      stationLayer.querySelectorAll('.dot').forEach(d=>{
-        d.classList.remove('twinkle');
-        void d.offsetWidth;
-        d.classList.add('twinkle');
-      });
-    }
 
     function tick(now){
       const dt = Math.min(40, now - lastT) / 1000; lastT = now;
@@ -509,5 +455,47 @@
       const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
 
-      // tour complet ?
-      if(pos < prev
+      // auto spotlight quand le train passe sur une station
+      if(now >= cooldownUntil){
+        for(const s of stationPositions){
+          const delta = Math.abs(((pos - s.len + totalLen) % totalLen));
+          const near = Math.min(delta, totalLen - delta);
+          if(near < showRadius && s.idx !== lastShownIdx && hoverLockIdx===null){
+            lastShownIdx = s.idx;
+            showSpotlight(s.idx,'auto');
+            cooldownUntil = now + 900;
+            break;
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    /* ===== Init ===== */
+    function init(){
+      buildZigZagPath(false);
+      totalLen = track.getTotalLength();
+      placeStations();
+      renderDetailList();
+      lastT = performance.now();
+      requestAnimationFrame(tick);
+
+      // Toggle panneau
+      panelToggle.addEventListener('click', () => {
+        const collapsed = document.body.classList.toggle('panel-collapsed');
+        panelToggle.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
+      });
+      panelToggle.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); panelToggle.click(); }
+      });
+
+      // Resize
+      let to=null;
+      window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
+        buildZigZagPath(); placeStations();
+      }, 120); });
+    }
+    init();
+  </script>
+</body>
+</html>
