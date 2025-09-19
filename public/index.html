@@ -5,17 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Accueil</title>
 
-  <!-- Icônes -->
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#0a1220" />
 
   <style>
     :root{
-      --bg:#0a1220;            /* bleu-noir */
+      --bg:#0a1220;
       --track:#23334a;
       --station:#14b8a6;
-      --card-bg:#0d1524;       /* plus opaque */
+      --card-bg:#0d1524;
       --card-border:#1a2d49;
       --text:#eef3f8;
       --muted:#9fb2c8;
@@ -23,7 +22,6 @@
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
-      --teal:#14b8a6;
     }
     body.panel-collapsed{ --asideCurrent: var(--asideCollapsed); }
 
@@ -37,11 +35,10 @@
       overflow:hidden;
     }
 
-    /* ===== Header ===== */
+    /* Header : brand | boutons séparés */
     header{
       position:fixed; inset:18px 18px auto 18px; z-index:10;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:1rem;
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
     }
     .brand{
       display:flex; align-items:center; gap:.75rem;
@@ -74,7 +71,6 @@
     .btn:hover{ background:#0e1b2f }
     .btn:active{ transform: translateY(1px) }
 
-    /* ===== Layout ===== */
     main{
       height:100%;
       display:grid;
@@ -84,7 +80,6 @@
       transition: grid-template-columns .25s ease;
     }
 
-    /* ===== Scène rail ===== */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
@@ -96,44 +91,43 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations ===== */
-    .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; transition: transform .15s ease; }
+    /* Stations */
+    .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; transition: transform .12s ease; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
-    .station:hover{ transform: scale(1.14); }
+    .station:hover{ transform: scale(1.12); }
+    /* hit-area pour stabiliser le hover */
+    .hit{ fill:transparent; pointer-events:all; }
 
-    /* ===== Train ===== */
+    /* Train */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
     .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* ===== Carte idée (1 seule) ===== */
+    /* Carte idée */
     .idea{
       position:absolute; min-width: 260px; max-width: 380px;
-      background: rgba(13,21,36,.92);  /* beaucoup plus opaque */
+      background: rgba(13,21,36,.96);
       border:1px solid var(--card-border);
       border-radius:14px; padding:12px 14px; color:var(--text);
       box-shadow: var(--shadow);
       animation: pop .18s ease-out forwards;
       z-index:5;
-      pointer-events:auto; /* cliquable */
     }
     .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
     .idea p{ margin:0; font-size:13px; color:var(--muted) }
-    /* flèches directionnelles */
     .idea::after{
       content:""; position:absolute; width:14px; height:14px; transform: rotate(45deg);
-      background: rgba(13,21,36,.92); border:1px solid var(--card-border);
+      background: rgba(13,21,36,.96); border:1px solid var(--card-border);
       box-shadow: 0 6px 10px rgba(0,0,0,.25);
     }
     .idea.right::after{ left:-7px; top:22px; border-right:none; border-top:none; }
-    .idea.left::after{ right:-7px; top:22px; border-left:none; border-bottom:none; }
-    .idea.top    { transform-origin: 50% 100%; }
-    .idea.bottom { transform-origin: 50% 0%; }
+    .idea.left::after{  right:-7px; top:22px; border-left:none;  border-bottom:none; }
+    .idea.sticky{ pointer-events:none; } /* <- clé anti-flicker */
     @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
 
-    /* ===== Panneau détails (collapsible) ===== */
+    /* Panneau détails */
     aside{
       position:relative;
       border-left:1px solid rgba(255,255,255,.07);
@@ -165,16 +159,13 @@
       color:#052023; font-weight:800; letter-spacing:.3px;
       border:1px solid rgba(255,255,255,.25); border-right:none;
       box-shadow: var(--shadow);
-      cursor:pointer; z-index:6;
-      user-select:none;
+      cursor:pointer; z-index:6; user-select:none;
     }
     .panel-toggle-btn .chev{ font-size:18px; line-height:1; }
     .panel-toggle-btn .txt{ font-size:13px; }
-    body.panel-collapsed .panel-toggle-btn{ inset:auto auto 18px -12px; }
     body.panel-collapsed .panel-toggle-btn .txt::after{ content:" Tout voir"; }
     body:not(.panel-collapsed) .panel-toggle-btn .txt::after{ content:" Replier"; }
 
-    /* ===== Mobile ===== */
     @media (max-width: 880px){
       main{ grid-template-columns: 1fr; padding-right:12px; padding-left:12px }
       aside{ order:-1; height: var(--asideCollapsed); }
@@ -185,13 +176,11 @@
 </head>
 <body class="panel-collapsed">
   <header aria-label="En-tête">
-    <!-- Bloc titre/brand -->
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
       <div>Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies</span></div>
     </div>
 
-    <!-- Bloc boutons -->
     <nav class="top-actions" aria-label="Navigation">
       <a class="btn" href="/cv.html">CV</a>
       <a class="btn" href="/portfolio.html">Portfolio</a>
@@ -201,16 +190,11 @@
   </header>
 
   <main>
-    <!-- Scène principale -->
     <section class="scene" aria-label="Ligne principale — stations de convictions">
-      <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animation du métro">
-        <!-- Rail -->
+      <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img">
         <path id="track" class="track" d="" />
-        <!-- Traverses -->
         <g id="sleepers" class="sleepers"></g>
-        <!-- Stations -->
         <g id="stations"></g>
-        <!-- Train -->
         <g id="train" class="train">
           <g transform="translate(-22,-12)">
             <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
@@ -223,12 +207,9 @@
           </g>
         </g>
       </svg>
-
-      <!-- Carte idée (layer unique) -->
       <div id="idea-layer" aria-live="polite"></div>
     </section>
 
-    <!-- Panneau de détails (collapsible) -->
     <aside>
       <div role="button" aria-pressed="false" tabindex="0" class="panel-toggle-btn" id="panelToggle">
         <span class="chev">❯</span><span class="txt"></span>
@@ -246,7 +227,6 @@
   </main>
 
   <script>
-    // === Données stations ===
     const STATIONS = [
       { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
       { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
@@ -268,7 +248,6 @@
       { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
     ];
 
-    // === Réfs DOM ===
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
@@ -278,13 +257,12 @@
     const detailList = document.getElementById('detail-list');
     const panelToggle = document.getElementById('panelToggle');
 
-    // === Géométrie & positions ===
     let totalLen = 0;
-    let stationPositions = []; // [{len, x, y, idx}]
+    let stationPositions = [];
     const sleeperStep = 46;
 
     function buildZigZagPath(preserve=true){
-      const {width:W, height:H} = svg.viewBox.baseVal; // 1600 x 900
+      const {width:W, height:H} = svg.viewBox.baseVal;
       const topY = H*0.28;
       const botY = H*0.72;
       const left = 80, right = W-80;
@@ -350,6 +328,10 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
+        // hit-area invisible (stabilise le hover)
+        const hit = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        hit.setAttribute('class','hit'); hit.setAttribute('r', 16);
+
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
 
@@ -357,7 +339,7 @@
         label.setAttribute('y', -16);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hit); g.appendChild(dot); g.appendChild(label);
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -372,109 +354,81 @@
       return {x: cx, y: cy};
     }
 
-    // === Cartes idées (1 seule) ===
     let currentCard = null;
     let currentCardIdx = null;
     let lastShownIdx = -1;
-    let hoverLockIdx = null;     // si ≠ null, on ne montre que celle-là
-    const showRadius = 28;       // seuil d’apparition auto
-    const cardLinger = 4200;     // durée d’affichage auto (ms)
-    let cooldownUntil = 0;       // anti-spam d’apparition
+    let hoverLockIdx = null;
+    const showRadius = 28;
+    const cardLinger = 4200;
+    let cooldownUntil = 0;
 
     function clearCard(){
       if(currentCard){ currentCard.remove(); currentCard = null; currentCardIdx = null; }
     }
 
     function maybeShowIdea(trainLen, now){
-      if(hoverLockIdx !== null) return; // priorité au hover
-      if(now < cooldownUntil) return;   // cooldown
+      if(hoverLockIdx !== null) return;
+      if(now < cooldownUntil) return;
       for(const s of stationPositions){
         const delta = Math.abs(((trainLen - s.len + totalLen) % totalLen));
         const near = Math.min(delta, totalLen - delta);
         if(near < showRadius && s.idx !== lastShownIdx){
           lastShownIdx = s.idx;
-          spawnIdeaCard(s, /*sticky*/false);
+          spawnIdeaCard(s, false);
           cooldownUntil = now + 900;
           break;
         }
       }
     }
 
-    function spawnIdeaCard(s, sticky=false){
-      if(currentCardIdx === s.idx && currentCard) return; // évite clignotement
+    function spawnIdeaCard(s, sticky){
+      if(currentCardIdx === s.idx && currentCard) return;
       const data = STATIONS[s.idx];
       const pt = svgPointToPage(s.x, s.y);
 
-      clearCard(); // 1 seule carte
-
-      // calcul de direction en fonction des bords de l'écran
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const margin = 16;
-      const preferRight = pt.x < vw * 0.55;     // si à gauche de l'écran -> carte à droite
-      const preferDown  = pt.y < vh * 0.55;     // si en haut -> carte dessous
+      clearCard();
 
       const card = document.createElement('div');
-      card.className = 'idea';
+      card.className = 'idea' + (sticky ? ' sticky' : '');
       card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
 
-      // Positionnement latéral
-      const offsetX = 24;
-      const offsetY = 16;
-      let left, top;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const margin = 16, offsetX = 24, offsetY = 16;
+      const preferRight = pt.x < vw * 0.55;
+      const preferDown  = pt.y < vh * 0.55;
 
-      if(preferRight){
-        // carte à droite de la station
-        left = pt.x + offsetX;
-        card.classList.add('right');
-      }else{
-        // carte à gauche
-        left = pt.x - Math.min(360, 380) - offsetX; // aire max 380
-        card.classList.add('left');
-      }
+      let left = preferRight ? pt.x + offsetX : pt.x - 380 - offsetX;
+      let top  = preferDown  ? pt.y + offsetY : pt.y - 140;
 
-      // Position verticale
-      if(preferDown){
-        top = pt.y + offsetY;
-        card.classList.add('bottom');
-      }else{
-        top = pt.y - 140; // au-dessus
-        card.classList.add('top');
-      }
-
-      // Clamp dans l'écran
       left = Math.max(margin, Math.min(left, vw - margin - 380));
       top  = Math.max(margin, Math.min(top,  vh - margin - 160));
 
       card.style.left = left + 'px';
       card.style.top  = top  + 'px';
+      card.classList.add(preferRight ? 'right' : 'left');
 
       ideaLayer.appendChild(card);
-      currentCard = card;
-      currentCardIdx = s.idx;
+      currentCard = card; currentCardIdx = s.idx;
 
       if(!sticky){
         const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
         card._timeout = t;
+        card.addEventListener('click', () => openDetail(s.idx));
       }
-
-      card.addEventListener('click', () => openDetail(s.idx));
     }
 
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-    // Hover management (pas de clignotement)
     function onHoverStation(i){
       hoverLockIdx = i;
       const s = stationPositions.find(p => p.idx===i);
-      if(s) spawnIdeaCard(s, /*sticky*/true);
+      if(s) spawnIdeaCard(s, true); // sticky + pointer-events:none (anti-flicker)
     }
     function onLeaveStation(i){
       if(hoverLockIdx===i) hoverLockIdx = null;
-      // on garde la carte un petit peu pour permettre lecture si sortie involontaire
-      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 80);
+      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 200); // délai plus long
     }
 
-    // === Panneau détails ===
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -498,37 +452,28 @@
       panel.scrollTo({ top:0, behavior:'smooth' });
       focusStation(i);
     }
-
     function focusStation(i){
       const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
       if(!node) return;
-      node.animate([{ transform:'scale(1.25)' },{ transform:'scale(1)' }], { duration:380, easing:'ease-out' });
+      node.animate([{ transform:'scale(1.22)' },{ transform:'scale(1)' }], { duration:360, easing:'ease-out' });
     }
 
-    // === Animation du train ===
-    let pos = 0;                 // longueur courante
-    let speed = 50;              // px/s (plus lent)
-    let lastT = performance.now();
-
+    // Animation
+    let pos = 0, speed = 50, lastT = performance.now();
     function tick(now){
-      const dt = Math.min(40, now - lastT) / 1000;
-      lastT = now;
+      const dt = Math.min(40, now - lastT) / 1000; lastT = now;
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       const effectiveSpeed = mq.matches ? 0 : speed;
-
       pos = (pos + effectiveSpeed * dt) % totalLen;
 
       const p = track.getPointAtLength(pos);
       const p2 = track.getPointAtLength((pos + 1) % totalLen);
       const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
-
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
       maybeShowIdea(pos, now);
-
       requestAnimationFrame(tick);
     }
 
-    // === Init & resize ===
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
@@ -537,7 +482,6 @@
       lastT = performance.now();
       requestAnimationFrame(tick);
 
-      // Toggle panneau (gros bouton)
       panelToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('panel-collapsed');
         panelToggle.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
@@ -546,7 +490,6 @@
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); panelToggle.click(); }
       });
 
-      // Rebuild on resize (debounce)
       let to=null;
       window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
         buildZigZagPath(); placeStations();
