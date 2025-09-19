@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Accueil</title>
 
-  <!-- Icônes (si déjà déposées) -->
+  <!-- Icônes -->
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#0a1220" />
 
   <style>
     :root{
-      --bg:#0a1220;          /* bleu-noir */
-      --track:#23334a;       /* rail */
-      --rail-glow:#1a344f;
-      --station:#14b8a6;     /* teal accent */
-      --station-dim:#0e7c71;
+      --bg:#0a1220;            /* bleu-noir */
+      --track:#23334a;
+      --station:#14b8a6;
       --card-bg:#0e182a;
       --card-border:#1a2d49;
       --text:#eef3f8;
       --muted:#9fb2c8;
-      --panel-bg:#0b1323;
-      --panel-border:#152238;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --asideW: clamp(280px, 28vw, 420px);
+      --asideCollapsed: 56px;
+      --asideCurrent: var(--asideW);
     }
+    body.panel-collapsed{ --asideCurrent: var(--asideCollapsed); }
 
     *{ box-sizing:border-box }
     html,body{ height:100% }
@@ -33,7 +33,7 @@
       background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
       color:var(--text);
       font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      overflow:hidden; /* focus visuel plein écran */
+      overflow:hidden;
     }
 
     header{
@@ -43,96 +43,60 @@
       border:1px solid rgba(255,255,255,.06); border-radius:14px;
       box-shadow: var(--shadow);
     }
-    header .brand{
-      font-weight:800; letter-spacing:.5px;
-      display:flex; align-items:center; gap:.5rem;
-    }
+    header .brand{ font-weight:800; letter-spacing:.5px; display:flex; align-items:center; gap:.5rem; }
     header .logo{
       width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
       background:linear-gradient(135deg,#0a1220,#00060d);
       border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
     }
-    header nav a{
-      color:var(--muted); text-decoration:none; padding:.25rem .5rem; border-radius:8px;
-    }
+    header nav a{ color:var(--muted); text-decoration:none; padding:.25rem .5rem; border-radius:8px; }
     header nav a:hover{ color:var(--text); background:rgba(255,255,255,.05) }
 
     main{
       height:100%;
       display:grid;
-      grid-template-columns: 1fr clamp(280px, 28vw, 420px);
+      grid-template-columns: 1fr var(--asideCurrent);
       gap:18px;
       padding:90px 22px 22px 22px;
+      transition: grid-template-columns .25s ease;
     }
 
     /* Scène rail */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
-      background:
-        radial-gradient(900px 640px at 80% 10%, rgba(20,184,166,.08) 0%, transparent 60%) ,
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
       border:1px solid rgba(255,255,255,.06);
       box-shadow: var(--shadow);
       min-height: 480px;
     }
-    svg{ width:100%; height:100% ; display:block }
+    svg{ width:100%; height:100%; display:block }
 
-    /* rail et traverses */
-    .track{
-      stroke:var(--track); stroke-width:8; fill:none;
-      filter: drop-shadow(0 0 8px rgba(20,184,166,.08));
-    }
-    .sleepers{
-      stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round;
-    }
+    /* rail & traverses */
+    .track{ stroke:var(--track); stroke-width:8; fill:none; }
+    .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* stations */
-    .station{
-      cursor:pointer;
-      transform-box: fill-box;
-      transform-origin: center;
-      transition: transform .2s ease;
-    }
-    .station .dot{
-      fill:var(--station);
-      filter: drop-shadow(0 0 10px rgba(20,184,166,.55));
-    }
-    .station .ring{
-      fill:none; stroke:var(--station); opacity:.5; stroke-width:3;
-      animation: pulse 2.8s ease-out infinite;
-      transform-origin:center;
-    }
-    .station:hover{ transform: scale(1.12) }
-    .station text{
-      fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none;
-    }
-    @keyframes pulse{
-      0%{ transform:scale(.8); opacity:.7 }
-      70%{ transform:scale(1.25); opacity:0 }
-      100%{ transform:scale(1.25); opacity:0 }
-    }
+    /* stations (pas d'effets de fond superflus) */
+    .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; transition: transform .15s ease; }
+    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); }
+    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
+    .station:hover{ transform: scale(1.14); }
 
     /* train */
-    .train{
-      filter: drop-shadow(0 6px 14px rgba(0,0,0,.45));
-    }
-    .train-body{
-      fill:#e8eef6; stroke:#c9d5e6; stroke-width:2;
-    }
+    .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
+    .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* Carte idée (pop près de la station) */
+    /* Carte idée (1 seule à l'écran) */
     .idea{
-      position:absolute; min-width: 220px; max-width: 320px;
+      position:absolute; min-width: 240px; max-width: 360px;
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid var(--card-border);
-      border-radius:14px; padding:12px 14px;
-      color:var(--text);
+      border-radius:14px; padding:12px 14px; color:var(--text);
       box-shadow: var(--shadow);
       transform-origin: 20px 120%;
-      animation: pop .28s ease-out forwards;
+      animation: pop .22s ease-out forwards;
     }
     .idea::after{
       content:""; position:absolute; left:18px; bottom:-8px; width:14px; height:14px;
@@ -142,62 +106,61 @@
     }
     .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
     .idea p{ margin:0; font-size:13px; color:var(--muted) }
-    .idea a{ color:#7bdceb; text-decoration:none }
-    .idea a:hover{ text-decoration:underline }
-    @keyframes pop{
-      from{ opacity:0; transform: scale(.85) rotate(-2deg) }
-      to  { opacity:1; transform: scale(1) rotate(0) }
-    }
+    @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
 
-    /* Panneau détails */
+    /* Panneau détails (collapsible) */
     aside{
       position:relative;
-      border-left:1px solid var(--panel-border);
+      border-left:1px solid rgba(255,255,255,.07);
       background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-      border-radius:18px; padding:16px 16px 12px 16px;
+      border-radius:18px; padding:16px 14px 12px 14px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      overflow:hidden;
     }
     .panel{
       position:sticky; top:90px; max-height: calc(100vh - 120px);
       display:flex; flex-direction:column; gap:10px; overflow:auto;
       scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent;
+      opacity:1; transition: opacity .2s ease;
     }
-    .panel h3{ margin:.2rem 0 .2rem 0; font-size:18px }
-    .panel .meta{ color:var(--muted); font-size:12px }
-    .panel .card{
-      background:var(--panel-bg);
-      border:1px solid var(--panel-border);
-      border-radius:14px; padding:12px; box-shadow: var(--shadow);
-    }
+    body.panel-collapsed .panel{ pointer-events:none; opacity:0; }
+
+    .panel .card{ background:#0b1323; border:1px solid #152238; border-radius:14px; padding:12px; box-shadow: var(--shadow); }
     .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:15px }
     .panel .card p{ margin:0; color:var(--muted); font-size:14px }
-    .panel .list{
-      display:grid; grid-template-columns: 1fr; gap:10px;
-    }
+    .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
-    /* Accessibilité motions */
-    @media (prefers-reduced-motion: reduce){
-      .station .ring{ animation:none }
-      .idea{ animation:none }
+    /* Onglet de toggle */
+    .panel-toggle{
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      display:flex; align-items:center; justify-content:flex-start;
+      pointer-events:none; /* contenu clic désactivé — on met un vrai onglet séparé */
     }
+    .panel-tab{
+      position:absolute; inset:0 auto 0 -12px; margin:auto 0; width:22px; height:68px;
+      border-radius:8px 0 0 8px; background:rgba(10,18,32,.75); backdrop-filter: blur(4px);
+      border:1px solid rgba(255,255,255,.08); border-right:none;
+      display:grid; place-items:center; color:var(--muted); cursor:pointer; z-index:5;
+      box-shadow: var(--shadow);
+    }
+    .panel-tab:hover{ color:var(--text); }
 
     /* Mobile */
     @media (max-width: 880px){
       main{ grid-template-columns: 1fr; padding-right:12px; padding-left:12px }
-      aside{ order:-1 }
+      aside{ order:-1; height: var(--asideCollapsed); }
+      body:not(.panel-collapsed) aside{ height:auto; }
+      .panel-tab{ inset:-12px auto auto 0; width:68px; height:22px; border-radius:8px 8px 0 0; }
     }
   </style>
 </head>
-<body>
+<body class="panel-collapsed">
   <header aria-label="En-tête">
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
-      <div>
-        Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies</span>
-      </div>
+      <div>Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies</span></div>
     </div>
     <nav aria-label="Navigation rapide">
-      <!-- Liens internes (on branchera plus tard proprement) -->
       <a href="/cv.html">CV</a>
       <a href="/portfolio.html">Portfolio</a>
       <a href="/chatbot.html">Chatbot</a>
@@ -208,171 +171,92 @@
   <main>
     <!-- Scène principale -->
     <section class="scene" aria-label="Ligne principale — stations de convictions">
-      <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animation du métro sur une ligne en zigzag">
-        <defs>
-          <linearGradient id="railGrad" x1="0" x2="1">
-            <stop offset="0%" stop-color="var(--rail-glow)" stop-opacity=".25"/>
-            <stop offset="100%" stop-color="var(--rail-glow)" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-
+      <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animation du métro">
         <!-- Rail -->
         <path id="track" class="track" d="" />
-        <!-- Traverses (petits segments perpendiculaires) -->
+        <!-- Traverses -->
         <g id="sleepers" class="sleepers"></g>
-
         <!-- Stations -->
         <g id="stations"></g>
-
         <!-- Train -->
         <g id="train" class="train">
-          <!-- corps du train -->
           <g transform="translate(-22,-12)">
             <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
             <rect class="train-nose" x="30" y="2" rx="5" ry="5" width="12" height="20"/>
             <circle class="headlight" cx="40" cy="12" r="3"/>
-            <rect x="5" y="4" width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="16" y="4" width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="5" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
+            <rect x="5"  y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
+            <rect x="16" y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
+            <rect x="5"  y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
             <rect x="16" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
           </g>
         </g>
       </svg>
 
-      <!-- Cartes idées dynamiques -->
+      <!-- Carte idée (layer unique) -->
       <div id="idea-layer" aria-live="polite"></div>
     </section>
 
-    <!-- Panneau de détails -->
+    <!-- Panneau de détails (collapsible) -->
     <aside>
+      <div class="panel-tab" id="panelTab" title="Afficher/masquer la liste">≡</div>
       <div class="panel" id="panel">
         <div class="card">
           <h3>Convictions & lignes directrices</h3>
-          <div class="meta">Clique une station sur la ligne pour les détails. Les cartes s’affichent automatiquement quand le métro passe.</div>
+          <div class="meta" style="color:var(--muted);font-size:12px">
+            Ouvre/ferme avec l’onglet latéral. Clique une station sur la ligne pour les détails.
+          </div>
         </div>
         <div class="list" id="detail-list"></div>
       </div>
+      <div class="panel-toggle" aria-hidden="true"></div>
     </aside>
   </main>
 
   <script>
-    // --- Données des stations (titre + description courte + détail long) ---
+    // --- Données stations ---
     const STATIONS = [
-      {
-        title: "Pensée critique",
-        short: "Cultiver l’analyse, la preuve et le doute méthodique dans chaque activité.",
-        detail: "J’aide à formuler des questions testables, à comparer des sources et à argumenter avec des évidences — en classe comme en organisation."
-      },
-      {
-        title: "Apprentissage tout au long de la vie",
-        short: "Autodidacticité outillée : apprendre vite, apprendre mieux, toute sa vie.",
-        detail: "Je conçois des routines, ressources et micro-projets pour développer l’autonomie d’apprentissage et la mise à jour continue des compétences."
-      },
-      {
-        title: "Goût de l’apprentissage",
-        short: "Du plaisir à comprendre : curiosité, flow, petits défis fréquents.",
-        detail: "On apprend durablement quand c’est signifiant et gratifiant. Je structure les tâches pour nourrir la curiosité et mesurer les progrès."
-      },
-      {
-        title: "Pédagogie par projets",
-        short: "Des problèmes réels, des livrables concrets, de vraies audiences.",
-        detail: "De la définition du besoin à la restitution publique, les projets articulent contenus, méthodes et collaboration."
-      },
-      {
-        title: "Émerveillement",
-        short: "Créer des moments ‘wow’ qui déclenchent l’envie d’aller plus loin.",
-        detail: "Je scénarise l’étonnement pour ouvrir une porte cognitive vers des notions complexes, sans sacrifier la rigueur."
-      },
-      {
-        title: "Médiation & vulgarisation",
-        short: "Traduire la science et la culture en expériences accessibles.",
-        detail: "Montrer, raconter, faire : je transforme des savoirs en formats clairs, inclusifs et actionnables."
-      },
-      {
-        title: "Communautés de pratiques",
-        short: "Apprendre entre pairs, partager les tactiques qui marchent.",
-        detail: "J’outille des espaces de mutualisation : cercles, check-ins, canevas, bibliothèques de cas, et capitalisation continue."
-      },
-      {
-        title: "Apprendre par l’erreur",
-        short: "Boucles rapides essai-feedback-amélioration, en sécurité psychologique.",
-        detail: "L’erreur est un signal d’information : on la rend observable, réparable et utile, avec des itérations courtes."
-      },
-      {
-        title: "Open science / open education",
-        short: "Ouvrir les données, les méthodes et les ressources quand c’est possible.",
-        detail: "Je privilégie la réutilisabilité (licences ouvertes, dépôts, gabarits) pour accélérer la diffusion et l’équité d’accès."
-      },
-      {
-        title: "Environnements capacitants",
-        short: "Concevoir des milieux qui rendent capables d’agir et d’apprendre.",
-        detail: "On ajuste outils, contraintes et soutiens pour que chacun puisse développer ses capabilités et sa marge d’initiative."
-      },
-      {
-        title: "Cours de technologie",
-        short: "Construire, coder, documenter : apprendre la tech en la faisant.",
-        detail: "Des séquences concrètes (robots, capteurs, web) où la technique sert des objectifs pédagogiques clairs et évaluables."
-      },
-      {
-        title: "Méthodologie scientifique",
-        short: "Hypothèses, protocoles, mesures, interprétation : la colonne vertébrale.",
-        detail: "Je rends visibles les étapes et les critères de qualité pour renforcer la rigueur et l’esprit de vérification."
-      },
-      {
-        title: "Populariser pour tous",
-        short: "Former aussi les adultes : formats courts, utiles, respectueux du temps.",
-        detail: "Je conçois des parcours modulaires, clés en main, pour des publics variés — sans jargon inutile."
-      },
-      {
-        title: "Extended mind",
-        short: "Les outils prolongent notre cognition : apprenons à les dompter.",
-        detail: "Cadre ‘extended mind’ : choisir, évaluer et intégrer des artefacts qui augmentent mémoire, attention et jugement."
-      },
-      {
-        title: "Évaluation : changer de paradigme",
-        short: "Évaluer pour apprendre : authenticité, critères explicites, feedbacks.",
-        detail: "Je bascule d’un tri sélectif vers des preuves de compétence situées, appuyées par des rubriques claires."
-      },
-      {
-        title: "YouTube & ressources utiles",
-        short: "Des contenus pragmatiques, vraiment actionnables pour enseignants.",
-        detail: "Sélection, scénarisation et outils ‘clé en main’ —  moins de bruit, plus de valeur transférable en classe."
-      },
-      {
-        title: "On ne peut pas être expert en tout",
-        short: "Savoir s’entourer, relier les expertises, curer l’essentiel.",
-        detail: "Je tisse des ponts entre disciplines et acteurs, et je priorise la valeur/apprentissage sur la perfection technique."
-      },
-      {
-        title: "Consulting scientifique",
-        short: "Relier recherche, terrain et décision.",
-        detail: "J’apporte une lecture méthodique, des critères de preuve et des recommandations opérantes pour avancer lucidement."
-      }
+      { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
+      { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
+      { title:"Goût de l’apprentissage", short:"Curiosité + petits défis fréquents.", detail:"Structuration des tâches pour nourrir le plaisir de comprendre et mesurer les progrès." },
+      { title:"Pédagogie par projets", short:"Problèmes réels, livrables concrets.", detail:"De la définition du besoin à la restitution, projets ancrés et collaboratifs." },
+      { title:"Émerveillement", short:"Moments ‘wow’ déclencheurs.", detail:"Scénariser l’étonnement pour ouvrir vers des notions exigeantes sans perdre la rigueur." },
+      { title:"Médiation & vulgarisation", short:"Traduire science & culture.", detail:"Formats clairs, inclusifs, actionnables — montrer, raconter, faire." },
+      { title:"Communautés de pratiques", short:"Apprendre entre pairs.", detail:"Espaces de mutualisation, canevas, cas, capitalisation continue." },
+      { title:"Apprendre par l’erreur", short:"Essai→feedback→amélioration.", detail:"Erreur = signal d’info ; itérations courtes en sécurité psychologique." },
+      { title:"Open science / open education", short:"Ouvrir quand c’est possible.", detail:"Réutilisabilité (licences, dépôts, gabarits) pour diffuser et équiper équitablement." },
+      { title:"Environnements capacitants", short:"Rendre capables d’agir.", detail:"Ajuster outils, contraintes et soutiens pour développer capabilités et initiative." },
+      { title:"Cours de technologie", short:"Construire, coder, documenter.", detail:"Robots, capteurs, web : la technique au service d’objectifs pédagogiques clairs." },
+      { title:"Méthodologie scientifique", short:"Hypothèses, protocoles, mesures.", detail:"Rendre visibles étapes et critères pour renforcer la rigueur et la vérification." },
+      { title:"Populariser pour tous", short:"Formations utiles aux adultes.", detail:"Parcours modulaires, clés en main, sans jargon inutile." },
+      { title:"Extended mind", short:"Outiller la cognition.", detail:"Évaluer et intégrer les artefacts qui augmentent mémoire, attention, jugement." },
+      { title:"Évaluation : changer de paradigme", short:"Évaluer pour apprendre.", detail:"Preuves authentiques, critères explicites, feedbacks exploitables." },
+      { title:"YouTube & ressources utiles", short:"Contenus réellement actionnables.", detail:"Sélection et scénarisation pour profs — moins de bruit, plus de valeur." },
+      { title:"On ne peut pas être expert en tout", short:"Relier les expertises.", detail:"Tisser des ponts et curer l’essentiel selon la valeur d’usage." },
+      { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
     ];
 
-    // --- Construction de la géométrie du rail (zigzag qui revient) ---
+    // --- Réfs DOM ---
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
     const stationLayer = document.getElementById('stations');
     const ideaLayer = document.getElementById('idea-layer');
     const train = document.getElementById('train');
+    const panelTab = document.getElementById('panelTab');
     const detailList = document.getElementById('detail-list');
 
+    // --- Géométrie & positions ---
     let totalLen = 0;
     let stationPositions = []; // [{len, x, y, idx}]
-    const sleeperStep = 46;    // distance entre traverses
-    const showRadius = 32;     // seuil de déclenchement d'une carte
-    const cardLinger = 4200;   // ms d'affichage par défaut
+    const sleeperStep = 46;
 
-    function buildZigZagPath(){
+    function buildZigZagPath(preserveRatio=true){
       const {width:W, height:H} = svg.viewBox.baseVal; // 1600 x 900
       const topY = H*0.28;
       const botY = H*0.72;
       const left = 80, right = W-80;
       const segs = 8;
 
-      // zigzag aller (haut)
       const dx = (right-left)/segs;
       let d = `M ${left},${topY}`;
       for(let i=1;i<=segs;i++){
@@ -381,25 +265,24 @@
         d += ` L ${x},${y}`;
       }
       d += ` L ${right},${topY}`;
-      // descente
       d += ` L ${right},${botY}`;
-      // zigzag retour (bas)
       for(let i=segs-1;i>=0;i--){
         const x = left + i*dx;
         const y = ((i%2)===0)? botY+60 : botY-60;
         d += ` L ${x},${y}`;
       }
       d += ` L ${left},${botY}`;
-      // remontée vers le départ (boucle fermée)
       d += ` L ${left},${topY}`;
 
-      track.setAttribute('d', d);
+      // mémoriser ratio de progression si demandé
+      let ratio = 0;
+      if(preserveRatio && totalLen>0) ratio = pos / totalLen;
 
-      // traverses
+      track.setAttribute('d', d);
       sleeperRender();
 
-      // longueur
       totalLen = track.getTotalLength();
+      pos = ratio * totalLen;
     }
 
     function sleeperRender(){
@@ -408,7 +291,7 @@
       for(let s = 0; s < L; s += sleeperStep){
         const p = track.getPointAtLength(s);
         const prev = track.getPointAtLength(Math.max(0, s - 1));
-        const angle = Math.atan2(p.y - prev.y, p.x - prev.x) + Math.PI/2; // perpendiculaire
+        const angle = Math.atan2(p.y - prev.y, p.x - prev.x) + Math.PI/2;
         const len = 16;
         const x1 = p.x - Math.cos(angle)*len;
         const y1 = p.y - Math.sin(angle)*len;
@@ -435,8 +318,6 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
-        const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        ring.setAttribute('class','ring'); ring.setAttribute('r', 14);
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
 
@@ -444,7 +325,9 @@
         label.setAttribute('y', -16);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(ring); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(dot); g.appendChild(label);
+        g.addEventListener('mouseenter', () => onHoverStation(i));
+        g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
         stationLayer.appendChild(g);
       }
@@ -457,40 +340,69 @@
       return {x: cx, y: cy};
     }
 
-    // --- Idées contextuelles (cartes pop) ---
+    // --- Cartes idées (1 seule) ---
+    let currentCard = null;
     let lastShownIdx = -1;
-    function maybeShowIdea(trainLen){
+    let hoverLockIdx = null;     // si ≠ null, on ne montre que celle-là
+    const showRadius = 28;       // seuil d’apparition auto
+    const cardLinger = 4200;     // durée d’affichage (ms)
+    let cooldownUntil = 0;       // anti-spam d’apparition
+
+    function clearCard(){
+      if(currentCard){ currentCard.remove(); currentCard = null; }
+    }
+
+    function maybeShowIdea(trainLen, now){
+      if(hoverLockIdx !== null) return; // priorité au hover
+      if(now < cooldownUntil) return;   // cooldown
       for(const s of stationPositions){
         const delta = Math.abs(((trainLen - s.len + totalLen) % totalLen));
         const near = Math.min(delta, totalLen - delta);
         if(near < showRadius && s.idx !== lastShownIdx){
           lastShownIdx = s.idx;
-          spawnIdeaCard(s);
+          spawnIdeaCard(s, /*sticky*/false);
+          cooldownUntil = now + 900; // petit cooldown entre cartes auto
           break;
         }
       }
     }
 
-    function spawnIdeaCard(s){
+    function spawnIdeaCard(s, sticky=false){
       const data = STATIONS[s.idx];
       const pt = svgPointToPage(s.x, s.y);
+
+      // Supprimer la précédente (max 1 carte)
+      clearCard();
+
       const card = document.createElement('div');
       card.className = 'idea';
       card.style.left = Math.max(12, pt.x - 18) + 'px';
       card.style.top  = Math.max(12, pt.y - 110) + 'px';
-      card.innerHTML = `
-        <h4>${escapeHtml(data.title)}</h4>
-        <p>${escapeHtml(data.short)}</p>
-      `;
+      card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
       ideaLayer.appendChild(card);
-      // auto remove
-      setTimeout(() => card.remove(), cardLinger);
-      // clic ouvre les détails
+      currentCard = card;
+
+      if(!sticky){
+        const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
+        card._timeout = t;
+      }else{
+        // si sticky (hover), on ne met pas de timeout
+      }
+
       card.addEventListener('click', () => openDetail(s.idx));
     }
 
-    function escapeHtml(str){
-      return str.replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    // Hover management
+    function onHoverStation(i){
+      hoverLockIdx = i;
+      const s = stationPositions.find(p => p.idx===i);
+      if(s) spawnIdeaCard(s, /*sticky*/true);
+    }
+    function onLeaveStation(i){
+      if(hoverLockIdx===i) hoverLockIdx = null;
+      clearCard();
     }
 
     // --- Panneau de détails ---
@@ -499,10 +411,7 @@
       STATIONS.forEach((st, i) => {
         const item = document.createElement('div');
         item.className = 'card';
-        item.innerHTML = `
-          <h4>${escapeHtml(st.title)}</h4>
-          <p>${escapeHtml(st.detail)}</p>
-        `;
+        item.innerHTML = `<h4>${esc(st.title)}</h4><p>${esc(st.detail)}</p>`;
         item.style.cursor = 'pointer';
         item.addEventListener('click', () => focusStation(i));
         detailList.appendChild(item);
@@ -510,35 +419,32 @@
     }
 
     function openDetail(i){
-      // met en tête de panneau (option visuelle simple)
+      // on ouvre le panneau si fermé
+      document.body.classList.remove('panel-collapsed');
+      // on met en tête
+      const panel = document.getElementById('panel');
       const head = document.createElement('div');
       head.className = 'card';
-      head.innerHTML = `<h4>➜ ${escapeHtml(STATIONS[i].title)}</h4><p>${escapeHtml(STATIONS[i].detail)}</p>`;
-      const panel = document.getElementById('panel');
+      head.innerHTML = `<h4>➜ ${esc(STATIONS[i].title)}</h4><p>${esc(STATIONS[i].detail)}</p>`;
       panel.prepend(head);
-      // scroll en haut
       panel.scrollTo({ top:0, behavior:'smooth' });
-      // petit highlight
-      head.animate([{ backgroundColor:'rgba(20,184,166,.12)' }, { backgroundColor:'transparent' }], { duration:1200 });
       focusStation(i);
     }
 
     function focusStation(i){
-      // courte mise en avant de la station sur le SVG
       const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
       if(!node) return;
-      node.animate([{ transform:'scale(1.3)' },{ transform:'scale(1)' }], { duration:400, easing:'ease-out' });
+      node.animate([{ transform:'scale(1.25)' },{ transform:'scale(1)' }], { duration:380, easing:'ease-out' });
     }
 
-    // --- Animation du train le long du chemin ---
+    // --- Animation du train ---
     let pos = 0;                 // longueur courante
-    let speed = 120;             // px/s le long du path
+    let speed = 58;              // px/s (RALENTI)
     let lastT = performance.now();
 
     function tick(now){
       const dt = Math.min(40, now - lastT) / 1000; // clamp
       lastT = now;
-      // pause si réduit-mouvements ?
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       const effectiveSpeed = mq.matches ? 0 : speed;
 
@@ -549,26 +455,31 @@
       const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
 
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
-      maybeShowIdea(pos);
+      maybeShowIdea(pos, now);
 
       requestAnimationFrame(tick);
     }
 
-    // --- Init ---
+    // --- Init & resize ---
     function init(){
-      buildZigZagPath();
+      buildZigZagPath(false);
+      totalLen = track.getTotalLength();
       placeStations();
       renderDetailList();
       lastT = performance.now();
       requestAnimationFrame(tick);
 
-      // Rebuild on resize (debounced)
+      // Toggle panneau
+      panelTab.addEventListener('click', () => {
+        document.body.classList.toggle('panel-collapsed');
+      });
+
+      // Rebuild on resize (debounce)
       let to=null;
       window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
         buildZigZagPath(); placeStations();
       }, 120); });
     }
-
     init();
   </script>
 </body>
