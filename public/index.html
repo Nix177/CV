@@ -3,236 +3,573 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Portfolio, IA & pédagogie</title>
-  <meta name="description" content="Portfolio de Nicolas Tuor — pédagogie, IA responsable, web et visualisations.">
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="/style.css" />
+  <title>Nicolas Tuor — Accueil</title>
+
+  <!-- Icônes (si déjà déposées) -->
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#0a1220" />
+
   <style>
     :root{
-      --bg:#081726; --panel:#0d2236; --ink:#e6f1ff; --muted:#cfe2ff;
-      --bd:#ffffff1c; --chip:#10314f; --chip-h:#134166;
-      --accent:#60a5fa; --ok:#22c55e; --warn:#f59e0b; --rose:#f43f5e; --vio:#a78bfa;
+      --bg:#0a1220;          /* bleu-noir */
+      --track:#23334a;       /* rail */
+      --rail-glow:#1a344f;
+      --station:#14b8a6;     /* teal accent */
+      --station-dim:#0e7c71;
+      --card-bg:#0e182a;
+      --card-border:#1a2d49;
+      --text:#eef3f8;
+      --muted:#9fb2c8;
+      --panel-bg:#0b1323;
+      --panel-border:#152238;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    body{background:radial-gradient(1200px 600px at 20% -10%,rgba(255,255,255,.06),transparent),var(--bg);color:var(--ink)}
-    .container{max-width:1100px;margin:0 auto;padding:20px}
 
-    /* NAV */
-    .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd)}
-    .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{background:var(--chip-h)}
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      color:var(--text);
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      overflow:hidden; /* focus visuel plein écran */
+    }
 
-    /* HERO */
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center;margin:24px 0 10px}
-    .hero h1{font-size:2.1rem;line-height:1.15;margin:.2rem 0}
-    .hero p{opacity:.9}
-    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:#0f3760;color:var(--ink);text-decoration:none}
-    .btn:hover{background:#134a7e}
-    .btn.ghost{background:transparent}
+    header{
+      position:fixed; inset:20px auto auto 20px; z-index:10;
+      display:flex; gap:.75rem; align-items:center; padding:.6rem .8rem;
+      background:rgba(10,18,32,.65); backdrop-filter: blur(6px);
+      border:1px solid rgba(255,255,255,.06); border-radius:14px;
+      box-shadow: var(--shadow);
+    }
+    header .brand{
+      font-weight:800; letter-spacing:.5px;
+      display:flex; align-items:center; gap:.5rem;
+    }
+    header .logo{
+      width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
+      background:linear-gradient(135deg,#0a1220,#00060d);
+      border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    header nav a{
+      color:var(--muted); text-decoration:none; padding:.25rem .5rem; border-radius:8px;
+    }
+    header nav a:hover{ color:var(--text); background:rgba(255,255,255,.05) }
 
-    /* METRO */
-    .metro{border:1px solid var(--bd);border-radius:14px;background:#07192a;padding:16px;margin-top:12px}
-    .metro h2{font-size:1.2rem;margin:0 0 8px}
-    .map{position:relative;aspect-ratio:16/9;min-height:360px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.05));overflow:hidden}
+    main{
+      height:100%;
+      display:grid;
+      grid-template-columns: 1fr clamp(280px, 28vw, 420px);
+      gap:18px;
+      padding:90px 22px 22px 22px;
+    }
 
-    .line{position:absolute;height:6px;border-radius:6px;opacity:.9}
-    .l-ia{background:linear-gradient(90deg,#22c55e,#86efac)}
-    .l-web{background:linear-gradient(90deg,#60a5fa,#93c5fd)}
-    .l-pedago{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
-    .l-data{background:linear-gradient(90deg,#a78bfa,#c4b5fd)}
+    /* Scène rail */
+    .scene{
+      position:relative; border-radius:18px; overflow:hidden;
+      background:
+        radial-gradient(900px 640px at 80% 10%, rgba(20,184,166,.08) 0%, transparent 60%) ,
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      min-height: 480px;
+    }
+    svg{ width:100%; height:100% ; display:block }
 
-    /* petit train */
-    .train{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;
-           box-shadow:0 0 0 4px rgba(255,255,255,.15), 0 6px 16px rgba(0,0,0,.35)}
-    .l-ia  .train{background:#16a34a; animation:ride 14s linear infinite}
-    .l-web .train{background:#3b82f6; animation:ride 12s linear infinite reverse}
-    .l-pedago .train{background:#f59e0b; animation:ride 15s linear infinite}
-    .l-data .train{background:#8b5cf6; animation:ride 13s linear infinite reverse}
-
-    @keyframes ride{
-      0%   { left:0% }
-      100% { left:calc(100% - 7px) } /* - rayon visuel */
+    /* rail et traverses */
+    .track{
+      stroke:var(--track); stroke-width:8; fill:none;
+      filter: drop-shadow(0 0 8px rgba(20,184,166,.08));
+    }
+    .sleepers{
+      stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round;
     }
 
     /* stations */
-    .station{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border:3px solid #0b1f33;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-    .station:hover{transform:translate(-50%,-50%) scale(1.08)}
-    .station[data-cat="ia"]{border-color:#22c55e}
-    .station[data-cat="web"]{border-color:#60a5fa}
-    .station[data-cat="pedago"]{border-color:#f59e0b}
-    .station[data-cat="data"]{border-color:#a78bfa}
-    .station.pulse::after{
-      content:"";position:absolute;inset:-6px;border-radius:50%;
-      border:2px solid currentColor;opacity:.45;animation:pulse 2s infinite;
+    .station{
+      cursor:pointer;
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform .2s ease;
     }
-    @keyframes pulse{0%{transform:scale(.7);opacity:.45}70%{transform:scale(1.2);opacity:0}100%{opacity:0}}
+    .station .dot{
+      fill:var(--station);
+      filter: drop-shadow(0 0 10px rgba(20,184,166,.55));
+    }
+    .station .ring{
+      fill:none; stroke:var(--station); opacity:.5; stroke-width:3;
+      animation: pulse 2.8s ease-out infinite;
+      transform-origin:center;
+    }
+    .station:hover{ transform: scale(1.12) }
+    .station text{
+      fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none;
+    }
+    @keyframes pulse{
+      0%{ transform:scale(.8); opacity:.7 }
+      70%{ transform:scale(1.25); opacity:0 }
+      100%{ transform:scale(1.25); opacity:0 }
+    }
 
-    /* tags sur la carte */
-    .tag{position:absolute;transform:translate(-50%,-120%);white-space:nowrap;background:#061425;border:1px solid var(--bd);border-radius:10px;padding:4px 8px;font-size:.85rem;opacity:.96}
-    .tag b{opacity:.95}
+    /* train */
+    .train{
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.45));
+    }
+    .train-body{
+      fill:#e8eef6; stroke:#c9d5e6; stroke-width:2;
+    }
+    .train-nose{ fill:#d0dcef }
+    .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* tooltip */
-    .tip{position:absolute;z-index:5;display:none;max-width:min(360px,90vw);background:#0b2136;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;box-shadow:0 16px 40px rgba(0,0,0,.5)}
-    .tip h4{margin:0 0 6px 0;font-size:1rem}
-    .tip .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--bd);background:#0b1f33}
-    .badge.ok{border-color:#22c55e;color:#22c55e;background:rgba(34,197,94,.12)}
-    .badge.sky{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,.12)}
-    .badge.warn{border-color:#f59e0b;color:#f59e0b;background:rgba(245,158,11,.12)}
-    .badge.vio{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.12)}
-    .links{margin-top:6px}
-    .links a{color:#93c5fd;text-decoration:none}
-    .links a:hover{text-decoration:underline}
+    /* Carte idée (pop près de la station) */
+    .idea{
+      position:absolute; min-width: 220px; max-width: 320px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--card-border);
+      border-radius:14px; padding:12px 14px;
+      color:var(--text);
+      box-shadow: var(--shadow);
+      transform-origin: 20px 120%;
+      animation: pop .28s ease-out forwards;
+    }
+    .idea::after{
+      content:""; position:absolute; left:18px; bottom:-8px; width:14px; height:14px;
+      background: inherit; border-left:1px solid var(--card-border); border-bottom:1px solid var(--card-border);
+      transform: rotate(45deg);
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+    }
+    .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
+    .idea p{ margin:0; font-size:13px; color:var(--muted) }
+    .idea a{ color:#7bdceb; text-decoration:none }
+    .idea a:hover{ text-decoration:underline }
+    @keyframes pop{
+      from{ opacity:0; transform: scale(.85) rotate(-2deg) }
+      to  { opacity:1; transform: scale(1) rotate(0) }
+    }
 
-    @media (max-width:920px){.hero{grid-template-columns:1fr}}
+    /* Panneau détails */
+    aside{
+      position:relative;
+      border-left:1px solid var(--panel-border);
+      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+      border-radius:18px; padding:16px 16px 12px 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .panel{
+      position:sticky; top:90px; max-height: calc(100vh - 120px);
+      display:flex; flex-direction:column; gap:10px; overflow:auto;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent;
+    }
+    .panel h3{ margin:.2rem 0 .2rem 0; font-size:18px }
+    .panel .meta{ color:var(--muted); font-size:12px }
+    .panel .card{
+      background:var(--panel-bg);
+      border:1px solid var(--panel-border);
+      border-radius:14px; padding:12px; box-shadow: var(--shadow);
+    }
+    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:15px }
+    .panel .card p{ margin:0; color:var(--muted); font-size:14px }
+    .panel .list{
+      display:grid; grid-template-columns: 1fr; gap:10px;
+    }
+
+    /* Accessibilité motions */
+    @media (prefers-reduced-motion: reduce){
+      .station .ring{ animation:none }
+      .idea{ animation:none }
+    }
+
+    /* Mobile */
+    @media (max-width: 880px){
+      main{ grid-template-columns: 1fr; padding-right:12px; padding-left:12px }
+      aside{ order:-1 }
+    }
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <header class="navbar">
-    <div class="nav-left">
-      <a class="chip" href="/">Accueil</a>
-      <a class="chip" href="/portfolio">Portfolio</a>
-      <a class="chip" href="/cv">CV</a>
-      <a class="chip" href="/chatbot">Chatbot</a>
-      <a class="chip" href="/ai-lab">Idées IA</a>
-      <a class="chip" href="/fun-facts">Fun Facts</a>
+  <header aria-label="En-tête">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">N·T</div>
+      <div>
+        Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies</span>
+      </div>
     </div>
-    <div class="nav-right">
-      <a class="chip" href="/">FR</a>
-      <a class="chip" href="/index-en.html">EN</a>
-      <a class="chip" href="/index-de.html">DE</a>
-    </div>
+    <nav aria-label="Navigation rapide">
+      <!-- Liens internes (on branchera plus tard proprement) -->
+      <a href="/cv.html">CV</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/chatbot.html">Chatbot</a>
+      <a href="/fun-facts.html">Fun Facts</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <!-- HERO -->
-    <section class="hero">
-      <div>
-        <h1>Nicolas Tuor</h1>
-        <p>Enseignement & ingénierie pédagogique • IA responsable & outils d’aide • Web/visualisations orientés apprentissages.</p>
-        <div class="cta">
-          <a class="btn" href="/portfolio">Voir le portfolio</a>
-          <a class="btn" href="/CV_Nicolas_Tuor.pdf" target="_blank" rel="noopener">Télécharger le CV (PDF)</a>
-          <a class="btn ghost" href="/chatbot">Parler au Chatbot</a>
-        </div>
-      </div>
+  <main>
+    <!-- Scène principale -->
+    <section class="scene" aria-label="Ligne principale — stations de convictions">
+      <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animation du métro sur une ligne en zigzag">
+        <defs>
+          <linearGradient id="railGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="var(--rail-glow)" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="var(--rail-glow)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
 
-      <!-- METRO -->
-      <div class="metro">
-        <h2>Le « métro » de mon CV</h2>
-        <div class="map" id="map">
-          <!-- lignes -->
-          <div class="line l-ia"     style="left:6%;  top:28%; width:70%"><span class="train" aria-hidden="true"></span></div>
-          <div class="line l-web"    style="left:10%; top:60%; width:78%"><span class="train" aria-hidden="true"></span></div>
-          <div class="line l-pedago" style="left:18%; top:42%; width:64%"><span class="train" aria-hidden="true"></span></div>
-          <div class="line l-data"   style="left:24%; top:76%; width:54%"><span class="train" aria-hidden="true"></span></div>
+        <!-- Rail -->
+        <path id="track" class="track" d="" />
+        <!-- Traverses (petits segments perpendiculaires) -->
+        <g id="sleepers" class="sleepers"></g>
 
-          <!-- stations (x%, y%) -->
-          <button class="station pulse" data-cat="ia"     style="left:10%; top:28%" aria-label="IA responsable"
-                  data-title="IA responsable"
-                  data-tags="Expérimentation, Outils éducatifs"
-                  data-desc="Prototypage rapide d’outils IA (classes, évaluation formative, explications) avec souci d’éthique et d’accessibilité."
-                  data-links="/ai-lab"></button>
-          <span class="tag" style="left:10%; top:28%"><b>IA responsable</b></span>
+        <!-- Stations -->
+        <g id="stations"></g>
 
-          <button class="station" data-cat="pedago" style="left:30%; top:42%" aria-label="Ingénierie pédagogique"
-                  data-title="Ingénierie pédagogique"
-                  data-tags="Didactique info, Pensée critique"
-                  data-desc="Conception de séquences, activités et supports; transfert de compétences (master), analyse de pratiques."
-                  data-links="/portfolio"></button>
-          <span class="tag" style="left:30%; top:42%"><b>Ingénierie pédagogique</b></span>
+        <!-- Train -->
+        <g id="train" class="train">
+          <!-- corps du train -->
+          <g transform="translate(-22,-12)">
+            <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
+            <rect class="train-nose" x="30" y="2" rx="5" ry="5" width="12" height="20"/>
+            <circle class="headlight" cx="40" cy="12" r="3"/>
+            <rect x="5" y="4" width="8" height="8" fill="#6f87a9" rx="1"/>
+            <rect x="16" y="4" width="8" height="8" fill="#6f87a9" rx="1"/>
+            <rect x="5" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
+            <rect x="16" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
+          </g>
+        </g>
+      </svg>
 
-          <button class="station" data-cat="web"    style="left:24%; top:60%" aria-label="Web & Visualisations"
-                  data-title="Web & Visualisations"
-                  data-tags="HTML/CSS/JS, D3/Canvas"
-                  data-desc="Dév web front avec visualisations interactives pour expliquer et apprendre (projets, jeux sérieux, outils de classe)."
-                  data-links="/portfolio"></button>
-          <span class="tag" style="left:24%; top:60%"><b>Web & visualisations</b></span>
-
-          <button class="station" data-cat="data"   style="left:36%; top:76%" aria-label="Données & analyse"
-                  data-title="Données & analyse"
-                  data-tags="Méthodo, Tableaux de bord"
-                  data-desc="Collecte simple et analyses descriptives pour l’évaluation et le pilotage pédagogique; visualisation claire et actionnable."
-                  data-links="/portfolio"></button>
-          <span class="tag" style="left:36%; top:76%"><b>Données & analyse</b></span>
-
-          <button class="station" data-cat="web"    style="left:58%; top:60%" aria-label="Projets web éducatifs"
-                  data-title="Projets web éducatifs"
-                  data-tags="Apps légères, Accessibilité"
-                  data-desc="Petites apps/jeux éducatifs (Canvas) utilisables en classe; sans dépendances lourdes, pensés pour la diffusion."
-                  data-links="/portfolio"></button>
-          <span class="tag" style="left:58%; top:60%"><b>Projets éducatifs</b></span>
-
-          <button class="station pulse" data-cat="pedago" style="left:78%; top:42%" aria-label="Formation & accompagnement"
-                  data-title="Formation & accompagnement"
-                  data-tags="Conseil, Ateliers"
-                  data-desc="Accompagnement d’équipes sur l’usage d’outils numériques et IA; ateliers, supports pragmatiques et reproductibles."
-                  data-links="/portfolio"></button>
-          <span class="tag" style="left:78%; top:42%"><b>Formation & appui</b></span>
-
-          <!-- tooltip -->
-          <div id="tip" class="tip" role="dialog" aria-hidden="true">
-            <h4 id="tTitle">—</h4>
-            <div id="tMeta" class="meta"></div>
-            <p id="tDesc" style="margin:.2rem 0 .4rem"></p>
-            <div class="links" id="tLinks"></div>
-          </div>
-        </div>
-      </div>
+      <!-- Cartes idées dynamiques -->
+      <div id="idea-layer" aria-live="polite"></div>
     </section>
 
-    <!-- liens rapides -->
-    <section style="margin-top:18px">
-      <div class="cta">
-        <a class="btn" href="/fun-facts">Fun Facts éducatifs</a>
-        <a class="btn ghost" href="/ai-lab">Laboratoire d’idées IA</a>
+    <!-- Panneau de détails -->
+    <aside>
+      <div class="panel" id="panel">
+        <div class="card">
+          <h3>Convictions & lignes directrices</h3>
+          <div class="meta">Clique une station sur la ligne pour les détails. Les cartes s’affichent automatiquement quand le métro passe.</div>
+        </div>
+        <div class="list" id="detail-list"></div>
       </div>
-    </section>
+    </aside>
   </main>
 
   <script>
-    // Tooltip du métro
-    const tip   = document.getElementById('tip');
-    const tTitle= document.getElementById('tTitle');
-    const tMeta = document.getElementById('tMeta');
-    const tDesc = document.getElementById('tDesc');
-    const tLinks= document.getElementById('tLinks');
-
-    function showTip(btn){
-      tTitle.textContent = btn.dataset.title || '—';
-      tMeta.innerHTML = '';
-      const cat = btn.dataset.cat;
-      const colorClass = cat==='ia'?'ok':cat==='web'?'sky':cat==='pedago'?'warn':'vio';
-      const bcat = document.createElement('span'); bcat.className = 'badge ' + colorClass;
-      bcat.textContent = ({ia:'IA',web:'Web',pedago:'Pédagogie',data:'Données'})[cat] || 'Compétence';
-      tMeta.appendChild(bcat);
-      (btn.dataset.tags||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(x=>{
-        const s=document.createElement('span'); s.className='badge'; s.textContent=x; tMeta.appendChild(s);
-      });
-      tDesc.textContent = btn.dataset.desc || '';
-      tLinks.innerHTML = '';
-      if(btn.dataset.links){
-        const a = document.createElement('a'); a.href=btn.dataset.links; a.target='_blank'; a.rel='noopener'; a.textContent='Voir un exemple →';
-        tLinks.appendChild(a);
+    // --- Données des stations (titre + description courte + détail long) ---
+    const STATIONS = [
+      {
+        title: "Pensée critique",
+        short: "Cultiver l’analyse, la preuve et le doute méthodique dans chaque activité.",
+        detail: "J’aide à formuler des questions testables, à comparer des sources et à argumenter avec des évidences — en classe comme en organisation."
+      },
+      {
+        title: "Apprentissage tout au long de la vie",
+        short: "Autodidacticité outillée : apprendre vite, apprendre mieux, toute sa vie.",
+        detail: "Je conçois des routines, ressources et micro-projets pour développer l’autonomie d’apprentissage et la mise à jour continue des compétences."
+      },
+      {
+        title: "Goût de l’apprentissage",
+        short: "Du plaisir à comprendre : curiosité, flow, petits défis fréquents.",
+        detail: "On apprend durablement quand c’est signifiant et gratifiant. Je structure les tâches pour nourrir la curiosité et mesurer les progrès."
+      },
+      {
+        title: "Pédagogie par projets",
+        short: "Des problèmes réels, des livrables concrets, de vraies audiences.",
+        detail: "De la définition du besoin à la restitution publique, les projets articulent contenus, méthodes et collaboration."
+      },
+      {
+        title: "Émerveillement",
+        short: "Créer des moments ‘wow’ qui déclenchent l’envie d’aller plus loin.",
+        detail: "Je scénarise l’étonnement pour ouvrir une porte cognitive vers des notions complexes, sans sacrifier la rigueur."
+      },
+      {
+        title: "Médiation & vulgarisation",
+        short: "Traduire la science et la culture en expériences accessibles.",
+        detail: "Montrer, raconter, faire : je transforme des savoirs en formats clairs, inclusifs et actionnables."
+      },
+      {
+        title: "Communautés de pratiques",
+        short: "Apprendre entre pairs, partager les tactiques qui marchent.",
+        detail: "J’outille des espaces de mutualisation : cercles, check-ins, canevas, bibliothèques de cas, et capitalisation continue."
+      },
+      {
+        title: "Apprendre par l’erreur",
+        short: "Boucles rapides essai-feedback-amélioration, en sécurité psychologique.",
+        detail: "L’erreur est un signal d’information : on la rend observable, réparable et utile, avec des itérations courtes."
+      },
+      {
+        title: "Open science / open education",
+        short: "Ouvrir les données, les méthodes et les ressources quand c’est possible.",
+        detail: "Je privilégie la réutilisabilité (licences ouvertes, dépôts, gabarits) pour accélérer la diffusion et l’équité d’accès."
+      },
+      {
+        title: "Environnements capacitants",
+        short: "Concevoir des milieux qui rendent capables d’agir et d’apprendre.",
+        detail: "On ajuste outils, contraintes et soutiens pour que chacun puisse développer ses capabilités et sa marge d’initiative."
+      },
+      {
+        title: "Cours de technologie",
+        short: "Construire, coder, documenter : apprendre la tech en la faisant.",
+        detail: "Des séquences concrètes (robots, capteurs, web) où la technique sert des objectifs pédagogiques clairs et évaluables."
+      },
+      {
+        title: "Méthodologie scientifique",
+        short: "Hypothèses, protocoles, mesures, interprétation : la colonne vertébrale.",
+        detail: "Je rends visibles les étapes et les critères de qualité pour renforcer la rigueur et l’esprit de vérification."
+      },
+      {
+        title: "Populariser pour tous",
+        short: "Former aussi les adultes : formats courts, utiles, respectueux du temps.",
+        detail: "Je conçois des parcours modulaires, clés en main, pour des publics variés — sans jargon inutile."
+      },
+      {
+        title: "Extended mind",
+        short: "Les outils prolongent notre cognition : apprenons à les dompter.",
+        detail: "Cadre ‘extended mind’ : choisir, évaluer et intégrer des artefacts qui augmentent mémoire, attention et jugement."
+      },
+      {
+        title: "Évaluation : changer de paradigme",
+        short: "Évaluer pour apprendre : authenticité, critères explicites, feedbacks.",
+        detail: "Je bascule d’un tri sélectif vers des preuves de compétence situées, appuyées par des rubriques claires."
+      },
+      {
+        title: "YouTube & ressources utiles",
+        short: "Des contenus pragmatiques, vraiment actionnables pour enseignants.",
+        detail: "Sélection, scénarisation et outils ‘clé en main’ —  moins de bruit, plus de valeur transférable en classe."
+      },
+      {
+        title: "On ne peut pas être expert en tout",
+        short: "Savoir s’entourer, relier les expertises, curer l’essentiel.",
+        detail: "Je tisse des ponts entre disciplines et acteurs, et je priorise la valeur/apprentissage sur la perfection technique."
+      },
+      {
+        title: "Consulting scientifique",
+        short: "Relier recherche, terrain et décision.",
+        detail: "J’apporte une lecture méthodique, des critères de preuve et des recommandations opérantes pour avancer lucidement."
       }
-      const r = btn.getBoundingClientRect();
-      tip.style.left = (r.left + r.width/2 - (tip.offsetWidth||320)/2) + 'px';
-      const above = r.top > window.innerHeight/2;
-      tip.style.top  = (above ? r.top - (tip.offsetHeight||140) - 10 : r.bottom + 10) + window.scrollY + 'px';
-      tip.style.display='block';
-      tip.setAttribute('aria-hidden','false');
-    }
-    function hideTip(){ tip.style.display='none'; tip.setAttribute('aria-hidden','true'); }
+    ];
 
-    document.querySelectorAll('.station').forEach(btn=>{
-      btn.addEventListener('mouseenter',()=>showTip(btn));
-      btn.addEventListener('mouseleave',hideTip);
-      btn.addEventListener('click',()=>showTip(btn));
-    });
-    window.addEventListener('scroll', hideTip);
-    window.addEventListener('resize', hideTip);
+    // --- Construction de la géométrie du rail (zigzag qui revient) ---
+    const svg = document.getElementById('metro');
+    const track = document.getElementById('track');
+    const sleepers = document.getElementById('sleepers');
+    const stationLayer = document.getElementById('stations');
+    const ideaLayer = document.getElementById('idea-layer');
+    const train = document.getElementById('train');
+    const detailList = document.getElementById('detail-list');
+
+    let totalLen = 0;
+    let stationPositions = []; // [{len, x, y, idx}]
+    const sleeperStep = 46;    // distance entre traverses
+    const showRadius = 32;     // seuil de déclenchement d'une carte
+    const cardLinger = 4200;   // ms d'affichage par défaut
+
+    function buildZigZagPath(){
+      const {width:W, height:H} = svg.viewBox.baseVal; // 1600 x 900
+      const topY = H*0.28;
+      const botY = H*0.72;
+      const left = 80, right = W-80;
+      const segs = 8;
+
+      // zigzag aller (haut)
+      const dx = (right-left)/segs;
+      let d = `M ${left},${topY}`;
+      for(let i=1;i<=segs;i++){
+        const x = left + i*dx;
+        const y = (i%2===0)? topY-60 : topY+60;
+        d += ` L ${x},${y}`;
+      }
+      d += ` L ${right},${topY}`;
+      // descente
+      d += ` L ${right},${botY}`;
+      // zigzag retour (bas)
+      for(let i=segs-1;i>=0;i--){
+        const x = left + i*dx;
+        const y = ((i%2)===0)? botY+60 : botY-60;
+        d += ` L ${x},${y}`;
+      }
+      d += ` L ${left},${botY}`;
+      // remontée vers le départ (boucle fermée)
+      d += ` L ${left},${topY}`;
+
+      track.setAttribute('d', d);
+
+      // traverses
+      sleeperRender();
+
+      // longueur
+      totalLen = track.getTotalLength();
+    }
+
+    function sleeperRender(){
+      sleepers.innerHTML = '';
+      const L = track.getTotalLength();
+      for(let s = 0; s < L; s += sleeperStep){
+        const p = track.getPointAtLength(s);
+        const prev = track.getPointAtLength(Math.max(0, s - 1));
+        const angle = Math.atan2(p.y - prev.y, p.x - prev.x) + Math.PI/2; // perpendiculaire
+        const len = 16;
+        const x1 = p.x - Math.cos(angle)*len;
+        const y1 = p.y - Math.sin(angle)*len;
+        const x2 = p.x + Math.cos(angle)*len;
+        const y2 = p.y + Math.sin(angle)*len;
+        const seg = document.createElementNS('http://www.w3.org/2000/svg','line');
+        seg.setAttribute('x1', x1); seg.setAttribute('y1', y1);
+        seg.setAttribute('x2', x2); seg.setAttribute('y2', y2);
+        sleepers.appendChild(seg);
+      }
+    }
+
+    function placeStations(){
+      stationLayer.innerHTML = '';
+      stationPositions = [];
+      const N = STATIONS.length;
+      for(let i=0;i<N;i++){
+        const len = (i+0.5) * (totalLen / N);
+        const p = track.getPointAtLength(len);
+        stationPositions.push({ len, x:p.x, y:p.y, idx:i });
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+        g.setAttribute('class','station');
+        g.setAttribute('data-idx', i);
+        g.setAttribute('transform', `translate(${p.x},${p.y})`);
+
+        const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        ring.setAttribute('class','ring'); ring.setAttribute('r', 14);
+        const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
+
+        const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+        label.setAttribute('y', -16);
+        label.textContent = STATIONS[i].title;
+
+        g.appendChild(ring); g.appendChild(dot); g.appendChild(label);
+        g.addEventListener('click', () => openDetail(i));
+        stationLayer.appendChild(g);
+      }
+    }
+
+    function svgPointToPage(x,y){
+      const pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
+      const ctm = svg.getScreenCTM();
+      const {x:cx, y:cy} = pt.matrixTransform(ctm);
+      return {x: cx, y: cy};
+    }
+
+    // --- Idées contextuelles (cartes pop) ---
+    let lastShownIdx = -1;
+    function maybeShowIdea(trainLen){
+      for(const s of stationPositions){
+        const delta = Math.abs(((trainLen - s.len + totalLen) % totalLen));
+        const near = Math.min(delta, totalLen - delta);
+        if(near < showRadius && s.idx !== lastShownIdx){
+          lastShownIdx = s.idx;
+          spawnIdeaCard(s);
+          break;
+        }
+      }
+    }
+
+    function spawnIdeaCard(s){
+      const data = STATIONS[s.idx];
+      const pt = svgPointToPage(s.x, s.y);
+      const card = document.createElement('div');
+      card.className = 'idea';
+      card.style.left = Math.max(12, pt.x - 18) + 'px';
+      card.style.top  = Math.max(12, pt.y - 110) + 'px';
+      card.innerHTML = `
+        <h4>${escapeHtml(data.title)}</h4>
+        <p>${escapeHtml(data.short)}</p>
+      `;
+      ideaLayer.appendChild(card);
+      // auto remove
+      setTimeout(() => card.remove(), cardLinger);
+      // clic ouvre les détails
+      card.addEventListener('click', () => openDetail(s.idx));
+    }
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    // --- Panneau de détails ---
+    function renderDetailList(){
+      detailList.innerHTML = '';
+      STATIONS.forEach((st, i) => {
+        const item = document.createElement('div');
+        item.className = 'card';
+        item.innerHTML = `
+          <h4>${escapeHtml(st.title)}</h4>
+          <p>${escapeHtml(st.detail)}</p>
+        `;
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', () => focusStation(i));
+        detailList.appendChild(item);
+      });
+    }
+
+    function openDetail(i){
+      // met en tête de panneau (option visuelle simple)
+      const head = document.createElement('div');
+      head.className = 'card';
+      head.innerHTML = `<h4>➜ ${escapeHtml(STATIONS[i].title)}</h4><p>${escapeHtml(STATIONS[i].detail)}</p>`;
+      const panel = document.getElementById('panel');
+      panel.prepend(head);
+      // scroll en haut
+      panel.scrollTo({ top:0, behavior:'smooth' });
+      // petit highlight
+      head.animate([{ backgroundColor:'rgba(20,184,166,.12)' }, { backgroundColor:'transparent' }], { duration:1200 });
+      focusStation(i);
+    }
+
+    function focusStation(i){
+      // courte mise en avant de la station sur le SVG
+      const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
+      if(!node) return;
+      node.animate([{ transform:'scale(1.3)' },{ transform:'scale(1)' }], { duration:400, easing:'ease-out' });
+    }
+
+    // --- Animation du train le long du chemin ---
+    let pos = 0;                 // longueur courante
+    let speed = 120;             // px/s le long du path
+    let lastT = performance.now();
+
+    function tick(now){
+      const dt = Math.min(40, now - lastT) / 1000; // clamp
+      lastT = now;
+      // pause si réduit-mouvements ?
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const effectiveSpeed = mq.matches ? 0 : speed;
+
+      pos = (pos + effectiveSpeed * dt) % totalLen;
+
+      const p = track.getPointAtLength(pos);
+      const p2 = track.getPointAtLength((pos + 1) % totalLen);
+      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
+
+      train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
+      maybeShowIdea(pos);
+
+      requestAnimationFrame(tick);
+    }
+
+    // --- Init ---
+    function init(){
+      buildZigZagPath();
+      placeStations();
+      renderDetailList();
+      lastT = performance.now();
+      requestAnimationFrame(tick);
+
+      // Rebuild on resize (debounced)
+      let to=null;
+      window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
+        buildZigZagPath(); placeStations();
+      }, 120); });
+    }
+
+    init();
   </script>
 </body>
 </html>
