@@ -22,6 +22,7 @@
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
+      --accent:#14b8a6;
     }
     body.panel-collapsed{ --asideCurrent: var(--asideCollapsed); }
 
@@ -35,7 +36,7 @@
       overflow:hidden;
     }
 
-    /* ===== Header ===== */
+    /* ===== Header : brand | boutons ===== */
     header{
       position:fixed; inset:18px 18px auto 18px; z-index:10;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
@@ -93,12 +94,20 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations ===== */
+    /* ===== Stations (sans scale) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
     .hit-rect{ fill:transparent; pointer-events:all; }
+
+    /* Halo pulsant pour la station active */
+    .pulse{ fill:none; stroke:var(--accent); stroke-width:2; opacity:0; }
+    .station.active .pulse{ opacity:.5; animation: pulse 1.6s ease-out infinite; }
+    @keyframes pulse{
+      0%{ r:6; opacity:.5 }
+      100%{ r:18; opacity:0 }
+    }
 
     /* ===== Train ===== */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
@@ -106,42 +115,43 @@
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* ===== Carte idée ===== */
-    .idea{
-      position:absolute; min-width: 260px; max-width: 340px;
+    /* ===== Spotlight centré ===== */
+    .spotlight{
+      position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.96);
+      width:min(620px, 76vw); max-width:620px;
       background: rgba(13,21,36,.96);
       border:1px solid var(--card-border);
-      border-radius:14px; padding:12px 14px; color:var(--text);
+      border-radius:16px; padding:16px 18px;
       box-shadow: var(--shadow);
-      z-index:5;
-
-      /* Anim: depuis le point de la station (calcul JS via --from-x/y) */
-      transform-origin: var(--origin-x, 0%) var(--origin-y, 50%);
-      animation: pop-from-station .18s ease-out forwards;
+      display:grid; gap:8px;
+      opacity:0; pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index:6;
     }
-    .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
-    .idea p{ margin:0; font-size:13px; color:var(--muted) }
+    .spotlight.visible{ opacity:1; transform: translate(-50%,-50%) scale(1); pointer-events:auto; }
+    .spot-kicker{ font-size:12px; color:var(--muted); letter-spacing:.3px; text-transform:uppercase }
+    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:20px }
+    .spotlight p{ margin:0; color:var(--muted) }
 
-    /* Flèches (gauche/droite) + top/bottom si besoin */
-    .idea::after{
-      content:""; position:absolute; width:14px; height:14px; transform: rotate(45deg);
-      background: rgba(13,21,36,.96); border:1px solid var(--card-border);
-      box-shadow: 0 6px 10px rgba(0,0,0,.25);
+    .spot-actions{
+      display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:4px;
     }
-    /* gauche/droite (par défaut) */
-    .idea.right::after{ left:-7px; top: var(--arrow-top, 22px); border-right:none; border-top:none; }
-    .idea.left::after{  right:-7px; top: var(--arrow-top, 22px); border-left:none;  border-bottom:none; }
-    /* top/bottom (optionnel si la carte est pile au-dessus/au-dessous) */
-    .idea.up::after{ bottom:-7px; left: var(--arrow-left, 22px); border-left:none; border-bottom:none; }
-    .idea.down::after{ top:-7px; left: var(--arrow-left, 22px); border-right:none; border-top:none; }
-
-    .idea.sticky{ pointer-events:none; }
-    #idea-layer{ position:absolute; inset:0; z-index:4; pointer-events:none; }
-
-    @keyframes pop-from-station{
-      from{ opacity:0; transform: translate(var(--from-x,0px), var(--from-y,0px)) scale(.86); }
-      to  { opacity:1; transform: translate(0,0) scale(1); }
+    .sbtn{
+      appearance:none; border:1px solid rgba(255,255,255,.08);
+      background:#0c1728; color:var(--text);
+      padding:.35rem .6rem; border-radius:10px; font-weight:600; font-size:14px;
+      display:inline-flex; align-items:center; gap:.4rem; cursor:pointer;
     }
+    .sbtn:hover{ background:#0e1b2f }
+    .sbtn.primary{ background:linear-gradient(135deg, rgba(20,184,166,.96), rgba(15,130,120,.96)); color:#052023; border-color:rgba(255,255,255,.25) }
+
+    .dots{ display:flex; gap:6px; flex:1; justify-content:center; }
+    .dotNav{
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.1); cursor:pointer;
+      transform: scale(1); transition: transform .12s ease, background .12s ease;
+    }
+    .dotNav.active{ background:var(--accent); transform: scale(1.2) }
 
     /* ===== Panneau détails ===== */
     aside{
@@ -222,7 +232,19 @@
           </g>
         </g>
       </svg>
-      <div id="idea-layer" aria-live="polite"></div>
+
+      <!-- Spotlight centré -->
+      <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Idée sélectionnée">
+        <div class="spot-kicker" id="spotKicker">Conviction</div>
+        <h4 id="spotTitle"></h4>
+        <p id="spotText"></p>
+        <div class="spot-actions">
+          <button class="sbtn" id="prevBtn" title="Précédent">◀</button>
+          <div class="dots" id="dotNav"></div>
+          <button class="sbtn" id="nextBtn" title="Suivant">▶</button>
+          <button class="sbtn primary" id="openBtn" title="Ouvrir dans le panneau">Détails</button>
+        </div>
+      </div>
     </section>
 
     <aside>
@@ -242,6 +264,7 @@
   </main>
 
   <script>
+    /* ===== Données des stations ===== */
     const STATIONS = [
       { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
       { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
@@ -263,17 +286,26 @@
       { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
     ];
 
-    // Refs
+    /* ===== Refs DOM ===== */
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
     const stationLayer = document.getElementById('stations');
-    const ideaLayer = document.getElementById('idea-layer');
     const train = document.getElementById('train');
-    const detailList = document.getElementById('detail-list');
-    const panelToggle = document.getElementById('panelToggle');
 
-    // Geometry
+    const panelToggle = document.getElementById('panelToggle');
+    const detailList = document.getElementById('detail-list');
+
+    const spotlight = document.getElementById('spotlight');
+    const spotTitle = document.getElementById('spotTitle');
+    const spotText  = document.getElementById('spotText');
+    const spotKicker= document.getElementById('spotKicker');
+    const dotNav    = document.getElementById('dotNav');
+    const prevBtn   = document.getElementById('prevBtn');
+    const nextBtn   = document.getElementById('nextBtn');
+    const openBtn   = document.getElementById('openBtn');
+
+    /* ===== Géométrie & ligne ===== */
     let totalLen = 0;
     let stationPositions = [];
     const sleeperStep = 46;
@@ -304,13 +336,13 @@
       if(preserve && totalLen>0) ratio = pos / totalLen;
 
       track.setAttribute('d', d);
-      sleeperRender();
+      renderSleepers();
 
       totalLen = track.getTotalLength();
       pos = ratio * totalLen;
     }
 
-    function sleeperRender(){
+    function renderSleepers(){
       sleepers.innerHTML = '';
       const L = track.getTotalLength();
       for(let s = 0; s < L; s += sleeperStep){
@@ -333,6 +365,7 @@
       stationLayer.innerHTML = '';
       stationPositions = [];
       const N = STATIONS.length;
+
       for(let i=0;i<N;i++){
         const len = (i+0.5) * (totalLen / N);
         const p = track.getPointAtLength(len);
@@ -343,7 +376,7 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
-        // hit rectangle large (couvre label)
+        /* zone de hit large qui couvre le label (hover stable) */
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
         hitRect.setAttribute('x', -100);
@@ -352,6 +385,9 @@
         hitRect.setAttribute('height', 80);
         hitRect.setAttribute('rx', 14);
 
+        const pulse = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        pulse.setAttribute('class','pulse'); pulse.setAttribute('r', 6);
+
         const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
         dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
 
@@ -359,7 +395,7 @@
         label.setAttribute('y', -16);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); g.appendChild(pulse); g.appendChild(dot); g.appendChild(label);
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -367,116 +403,83 @@
       }
     }
 
-    function svgPointToPage(x,y){
-      const pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
-      const ctm = svg.getScreenCTM();
-      const {x:cx, y:cy} = pt.matrixTransform(ctm);
-      return {x: cx, y: cy};
-    }
-
-    // === Cartes idées ===
-    let currentCard = null;
-    let currentCardIdx = null;
-    let lastShownIdx = -1;
+    /* ===== Spotlight (centre) ===== */
+    let currentIdx = null;
     let hoverLockIdx = null;
-    const showRadius = 32;
-    const cardLinger = 4200;
-    let cooldownUntil = 0;
+    let autoHide = null;
+    const lingerAuto = 4200;   // auto (train)
+    const lingerHover = 160;   // délai mini avant disparition au leave
 
-    function clearCard(){
-      if(currentCard){ currentCard.remove(); currentCard = null; currentCardIdx = null; }
+    function setActiveStation(i){
+      stationLayer.querySelectorAll('.station.active').forEach(n=>n.classList.remove('active'));
+      const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
+      if(node) node.classList.add('active');
     }
 
-    function maybeShowIdea(trainLen, now){
-      if(hoverLockIdx !== null) return;
-      if(now < cooldownUntil) return;
-      for(const s of stationPositions){
-        const delta = Math.abs(((trainLen - s.len + totalLen) % totalLen));
-        const near = Math.min(delta, totalLen - delta);
-        if(near < showRadius && s.idx !== lastShownIdx){
-          lastShownIdx = s.idx;
-          spawnIdeaCard(s, false);
-          cooldownUntil = now + 900;
-          break;
-        }
+    function showSpotlight(i, source){
+      currentIdx = i;
+      const st = STATIONS[i];
+      spotTitle.textContent = st.title;
+      spotText.textContent = st.short;
+      spotKicker.textContent = `Conviction — ${i+1}/${STATIONS.length}`;
+
+      setActiveStation(i);
+      updateDots(i);
+
+      spotlight.classList.add('visible');
+
+      clearTimeout(autoHide);
+      if(source === 'auto'){
+        autoHide = setTimeout(()=> hideSpotlight(), lingerAuto);
       }
     }
 
-    function spawnIdeaCard(s, sticky){
-      if(currentCardIdx === s.idx && currentCard) return;
-
-      const data = STATIONS[s.idx];
-      const pt = svgPointToPage(s.x, s.y);
-      clearCard();
-
-      const card = document.createElement('div');
-      card.className = 'idea' + (sticky ? ' sticky' : '');
-      card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
-
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const CARD_W = 340, CARD_H = 140;
-      const margin = 16, offsetX = 22, offsetY = 14;
-
-      // Choix latéral/vertical en fonction des bords (et position station)
-      const placeRight = (pt.x + offsetX + CARD_W + margin <= vw);
-      const placeBelow = (pt.y + offsetY + CARD_H + margin <= vh);
-
-      let left = placeRight ? pt.x + offsetX : pt.x - CARD_W - offsetX;
-      let top  = placeBelow ? pt.y + offsetY : pt.y - CARD_H - offsetY;
-
-      // Clamp léger pour rester visible tout en restant proche
-      left = Math.max(margin, Math.min(left, vw - margin - CARD_W));
-      top  = Math.max(margin, Math.min(top,  vh - margin - CARD_H));
-
-      // Position finale
-      card.style.left = left + 'px';
-      card.style.top  = top  + 'px';
-
-      // Orientation (flèche)
-      if(placeRight) card.classList.add('right'); else card.classList.add('left');
-
-      // Flèche alignée verticalement sur la station
-      const arrowTop = Math.max(8, Math.min(pt.y - top - 7, CARD_H - 22));
-      card.style.setProperty('--arrow-top', arrowTop + 'px');
-
-      // Origine d'anim sur le bord près de la station
-      const originX = placeRight ? '0%' : '100%';
-      const originY = (arrowTop + 7) / CARD_H * 100 + '%';
-      card.style.setProperty('--origin-x', originX);
-      card.style.setProperty('--origin-y', originY);
-
-      // Calcul EXACT du vecteur station -> point d'attache de la carte
-      const attachX = placeRight ? left : left + CARD_W;
-      const attachY = top + arrowTop + 7;
-      const fromX = pt.x - attachX;
-      const fromY = pt.y - attachY;
-      card.style.setProperty('--from-x', fromX + 'px');
-      card.style.setProperty('--from-y', fromY + 'px');
-
-      ideaLayer.appendChild(card);
-      currentCard = card; currentCardIdx = s.idx;
-
-      if(!sticky){
-        const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
-        card._timeout = t;
-      }
+    function hideSpotlight(){
+      clearTimeout(autoHide);
+      spotlight.classList.remove('visible');
+      stationLayer.querySelectorAll('.station.active').forEach(n=>n.classList.remove('active'));
+      currentIdx = null;
     }
 
-    function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+    function updateDots(active){
+      dotNav.innerHTML = '';
+      STATIONS.forEach((_, idx)=>{
+        const d = document.createElement('div');
+        d.className = 'dotNav' + (idx===active ? ' active':'');
+        d.title = STATIONS[idx].title;
+        d.addEventListener('click', ()=> showSpotlight(idx,'manual'));
+        dotNav.appendChild(d);
+      });
+    }
 
-    // Hover stable
+    prevBtn.addEventListener('click', ()=>{
+      if(currentIdx===null) return showSpotlight(0,'manual');
+      const i = (currentIdx - 1 + STATIONS.length) % STATIONS.length;
+      showSpotlight(i,'manual');
+    });
+    nextBtn.addEventListener('click', ()=>{
+      if(currentIdx===null) return showSpotlight(0,'manual');
+      const i = (currentIdx + 1) % STATIONS.length;
+      showSpotlight(i,'manual');
+    });
+    openBtn.addEventListener('click', ()=>{
+      if(currentIdx===null) return;
+      openDetail(currentIdx);
+    });
+
+    /* ===== Survol station ===== */
     function onHoverStation(i){
-      if(hoverLockIdx===i && currentCardIdx===i && currentCard) return;
       hoverLockIdx = i;
-      const s = stationPositions.find(p => p.idx===i);
-      if(s) spawnIdeaCard(s, true);
+      showSpotlight(i,'hover');
     }
     function onLeaveStation(i){
-      if(hoverLockIdx===i) hoverLockIdx = null;
-      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 220);
+      if(hoverLockIdx!==i) return;
+      hoverLockIdx = null;
+      // laisse une petite latence pour éviter les micro-coupures
+      setTimeout(()=>{ if(hoverLockIdx===null) hideSpotlight(); }, lingerHover);
     }
 
-    // Panneau détails
+    /* ===== Panneau détails ===== */
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -484,7 +487,10 @@
         item.className = 'card';
         item.innerHTML = `<h4>${esc(st.title)}</h4><p>${esc(st.detail)}</p>`;
         item.style.cursor = 'pointer';
-        item.addEventListener('click', () => focusStation(i));
+        item.addEventListener('click', () => {
+          showSpotlight(i,'manual');
+          focusStation(i);
+        });
         detailList.appendChild(item);
       });
     }
@@ -510,8 +516,14 @@
                    { duration:500, easing:'ease-out' });
     }
 
-    // Animation du train
+    function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    /* ===== Animation du train + auto spotlight ===== */
     let pos = 0, speed = 50, lastT = performance.now();
+    const showRadius = 32;
+    let lastShownIdx = -1;
+    let cooldownUntil = 0;
+
     function tick(now){
       const dt = Math.min(40, now - lastT) / 1000; lastT = now;
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -522,19 +534,34 @@
       const p2 = track.getPointAtLength((pos + 1) % totalLen);
       const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
-      maybeShowIdea(pos, now);
+
+      // auto spotlight quand le train passe sur une station
+      if(now >= cooldownUntil){
+        for(const s of stationPositions){
+          const delta = Math.abs(((pos - s.len + totalLen) % totalLen));
+          const near = Math.min(delta, totalLen - delta);
+          if(near < showRadius && s.idx !== lastShownIdx && hoverLockIdx===null){
+            lastShownIdx = s.idx;
+            showSpotlight(s.idx,'auto');
+            cooldownUntil = now + 900;
+            break;
+          }
+        }
+      }
       requestAnimationFrame(tick);
     }
 
-    // Init & resize
+    /* ===== Init ===== */
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
       placeStations();
       renderDetailList();
+      updateDots(0);
       lastT = performance.now();
       requestAnimationFrame(tick);
 
+      // Toggle panneau
       panelToggle.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('panel-collapsed');
         panelToggle.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
@@ -543,6 +570,7 @@
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); panelToggle.click(); }
       });
 
+      // Resize
       let to=null;
       window.addEventListener('resize', ()=>{ clearTimeout(to); to=setTimeout(()=>{
         buildZigZagPath(); placeStations();
