@@ -15,14 +15,15 @@
       --bg:#0a1220;            /* bleu-noir */
       --track:#23334a;
       --station:#14b8a6;
-      --card-bg:#0e182a;
+      --card-bg:#0d1524;       /* plus opaque */
       --card-border:#1a2d49;
       --text:#eef3f8;
       --muted:#9fb2c8;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --asideW: clamp(280px, 28vw, 420px);
-      --asideCollapsed: 56px;
+      --asideW: clamp(300px, 28vw, 420px);
+      --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
+      --teal:#14b8a6;
     }
     body.panel-collapsed{ --asideCurrent: var(--asideCollapsed); }
 
@@ -36,23 +37,44 @@
       overflow:hidden;
     }
 
+    /* ===== Header ===== */
     header{
-      position:fixed; inset:20px auto auto 20px; z-index:10;
-      display:flex; gap:.75rem; align-items:center; padding:.6rem .8rem;
-      background:rgba(10,18,32,.65); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.06); border-radius:14px;
-      box-shadow: var(--shadow);
+      position:fixed; inset:18px 18px auto 18px; z-index:10;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:1rem;
     }
-    header .brand{ font-weight:800; letter-spacing:.5px; display:flex; align-items:center; gap:.5rem; }
-    header .logo{
+    .brand{
+      display:flex; align-items:center; gap:.75rem;
+      padding:.6rem .8rem; border-radius:14px;
+      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      font-weight:800; letter-spacing:.5px;
+    }
+    .logo{
       width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
       background:linear-gradient(135deg,#0a1220,#00060d);
       border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      flex:0 0 32px;
     }
-    header nav a{ color:var(--muted); text-decoration:none; padding:.25rem .5rem; border-radius:8px; }
-    header nav a:hover{ color:var(--text); background:rgba(255,255,255,.05) }
+    nav.top-actions{
+      display:flex; gap:.5rem; flex-wrap:wrap;
+      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px; padding:.45rem;
+      box-shadow: var(--shadow);
+    }
+    .btn{
+      appearance:none; border:1px solid rgba(255,255,255,.08);
+      background:#0c1728; color:var(--text); text-decoration:none;
+      padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+      display:inline-flex; align-items:center; gap:.4rem;
+    }
+    .btn:hover{ background:#0e1b2f }
+    .btn:active{ transform: translateY(1px) }
 
+    /* ===== Layout ===== */
     main{
       height:100%;
       display:grid;
@@ -62,7 +84,7 @@
       transition: grid-template-columns .25s ease;
     }
 
-    /* Scène rail */
+    /* ===== Scène rail ===== */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
@@ -71,44 +93,47 @@
       min-height: 480px;
     }
     svg{ width:100%; height:100%; display:block }
-
-    /* rail & traverses */
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* stations (pas d'effets de fond superflus) */
+    /* ===== Stations ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; transition: transform .15s ease; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover{ transform: scale(1.14); }
 
-    /* train */
+    /* ===== Train ===== */
     .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
     .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
     .train-nose{ fill:#d0dcef }
     .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
-    /* Carte idée (1 seule à l'écran) */
+    /* ===== Carte idée (1 seule) ===== */
     .idea{
-      position:absolute; min-width: 240px; max-width: 360px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      position:absolute; min-width: 260px; max-width: 380px;
+      background: rgba(13,21,36,.92);  /* beaucoup plus opaque */
       border:1px solid var(--card-border);
       border-radius:14px; padding:12px 14px; color:var(--text);
       box-shadow: var(--shadow);
-      transform-origin: 20px 120%;
-      animation: pop .22s ease-out forwards;
-    }
-    .idea::after{
-      content:""; position:absolute; left:18px; bottom:-8px; width:14px; height:14px;
-      background: inherit; border-left:1px solid var(--card-border); border-bottom:1px solid var(--card-border);
-      transform: rotate(45deg);
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+      animation: pop .18s ease-out forwards;
+      z-index:5;
+      pointer-events:auto; /* cliquable */
     }
     .idea h4{ margin:.1rem 0 .35rem 0; font-size:15px; letter-spacing:.2px }
     .idea p{ margin:0; font-size:13px; color:var(--muted) }
+    /* flèches directionnelles */
+    .idea::after{
+      content:""; position:absolute; width:14px; height:14px; transform: rotate(45deg);
+      background: rgba(13,21,36,.92); border:1px solid var(--card-border);
+      box-shadow: 0 6px 10px rgba(0,0,0,.25);
+    }
+    .idea.right::after{ left:-7px; top:22px; border-right:none; border-top:none; }
+    .idea.left::after{ right:-7px; top:22px; border-left:none; border-bottom:none; }
+    .idea.top    { transform-origin: 50% 100%; }
+    .idea.bottom { transform-origin: 50% 0%; }
     @keyframes pop{ from{ opacity:0; transform: scale(.9) } to{ opacity:1; transform: scale(1) } }
 
-    /* Panneau détails (collapsible) */
+    /* ===== Panneau détails (collapsible) ===== */
     aside{
       position:relative;
       border-left:1px solid rgba(255,255,255,.07);
@@ -130,41 +155,48 @@
     .panel .card p{ margin:0; color:var(--muted); font-size:14px }
     .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
-    /* Onglet de toggle */
-    .panel-toggle{
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      display:flex; align-items:center; justify-content:flex-start;
-      pointer-events:none; /* contenu clic désactivé — on met un vrai onglet séparé */
-    }
-    .panel-tab{
-      position:absolute; inset:0 auto 0 -12px; margin:auto 0; width:22px; height:68px;
-      border-radius:8px 0 0 8px; background:rgba(10,18,32,.75); backdrop-filter: blur(4px);
-      border:1px solid rgba(255,255,255,.08); border-right:none;
-      display:grid; place-items:center; color:var(--muted); cursor:pointer; z-index:5;
+    /* GROS bouton de toggle */
+    .panel-toggle-btn{
+      position:absolute; inset:auto auto 18px -12px;
+      display:flex; align-items:center; gap:.5rem;
+      padding:.5rem .7rem .5rem 1.1rem;
+      border-radius:12px 0 0 12px;
+      background:linear-gradient(135deg, rgba(20,184,166,.96), rgba(15,130,120,.96));
+      color:#052023; font-weight:800; letter-spacing:.3px;
+      border:1px solid rgba(255,255,255,.25); border-right:none;
       box-shadow: var(--shadow);
+      cursor:pointer; z-index:6;
+      user-select:none;
     }
-    .panel-tab:hover{ color:var(--text); }
+    .panel-toggle-btn .chev{ font-size:18px; line-height:1; }
+    .panel-toggle-btn .txt{ font-size:13px; }
+    body.panel-collapsed .panel-toggle-btn{ inset:auto auto 18px -12px; }
+    body.panel-collapsed .panel-toggle-btn .txt::after{ content:" Tout voir"; }
+    body:not(.panel-collapsed) .panel-toggle-btn .txt::after{ content:" Replier"; }
 
-    /* Mobile */
+    /* ===== Mobile ===== */
     @media (max-width: 880px){
       main{ grid-template-columns: 1fr; padding-right:12px; padding-left:12px }
       aside{ order:-1; height: var(--asideCollapsed); }
       body:not(.panel-collapsed) aside{ height:auto; }
-      .panel-tab{ inset:-12px auto auto 0; width:68px; height:22px; border-radius:8px 8px 0 0; }
+      .panel-toggle-btn{ inset:-12px auto auto 18px; border-radius:12px; }
     }
   </style>
 </head>
 <body class="panel-collapsed">
   <header aria-label="En-tête">
+    <!-- Bloc titre/brand -->
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
       <div>Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies</span></div>
     </div>
-    <nav aria-label="Navigation rapide">
-      <a href="/cv.html">CV</a>
-      <a href="/portfolio.html">Portfolio</a>
-      <a href="/chatbot.html">Chatbot</a>
-      <a href="/fun-facts.html">Fun Facts</a>
+
+    <!-- Bloc boutons -->
+    <nav class="top-actions" aria-label="Navigation">
+      <a class="btn" href="/cv.html">CV</a>
+      <a class="btn" href="/portfolio.html">Portfolio</a>
+      <a class="btn" href="/chatbot.html">Chatbot</a>
+      <a class="btn" href="/fun-facts.html">Fun Facts</a>
     </nav>
   </header>
 
@@ -198,22 +230,23 @@
 
     <!-- Panneau de détails (collapsible) -->
     <aside>
-      <div class="panel-tab" id="panelTab" title="Afficher/masquer la liste">≡</div>
+      <div role="button" aria-pressed="false" tabindex="0" class="panel-toggle-btn" id="panelToggle">
+        <span class="chev">❯</span><span class="txt"></span>
+      </div>
       <div class="panel" id="panel">
         <div class="card">
           <h3>Convictions & lignes directrices</h3>
           <div class="meta" style="color:var(--muted);font-size:12px">
-            Ouvre/ferme avec l’onglet latéral. Clique une station sur la ligne pour les détails.
+            Utilise le bouton teal pour ouvrir/fermer. Clique une station pour les détails.
           </div>
         </div>
         <div class="list" id="detail-list"></div>
       </div>
-      <div class="panel-toggle" aria-hidden="true"></div>
     </aside>
   </main>
 
   <script>
-    // --- Données stations ---
+    // === Données stations ===
     const STATIONS = [
       { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
       { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
@@ -235,22 +268,22 @@
       { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
     ];
 
-    // --- Réfs DOM ---
+    // === Réfs DOM ===
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
     const stationLayer = document.getElementById('stations');
     const ideaLayer = document.getElementById('idea-layer');
     const train = document.getElementById('train');
-    const panelTab = document.getElementById('panelTab');
     const detailList = document.getElementById('detail-list');
+    const panelToggle = document.getElementById('panelToggle');
 
-    // --- Géométrie & positions ---
+    // === Géométrie & positions ===
     let totalLen = 0;
     let stationPositions = []; // [{len, x, y, idx}]
     const sleeperStep = 46;
 
-    function buildZigZagPath(preserveRatio=true){
+    function buildZigZagPath(preserve=true){
       const {width:W, height:H} = svg.viewBox.baseVal; // 1600 x 900
       const topY = H*0.28;
       const botY = H*0.72;
@@ -274,9 +307,8 @@
       d += ` L ${left},${botY}`;
       d += ` L ${left},${topY}`;
 
-      // mémoriser ratio de progression si demandé
       let ratio = 0;
-      if(preserveRatio && totalLen>0) ratio = pos / totalLen;
+      if(preserve && totalLen>0) ratio = pos / totalLen;
 
       track.setAttribute('d', d);
       sleeperRender();
@@ -340,16 +372,17 @@
       return {x: cx, y: cy};
     }
 
-    // --- Cartes idées (1 seule) ---
+    // === Cartes idées (1 seule) ===
     let currentCard = null;
+    let currentCardIdx = null;
     let lastShownIdx = -1;
     let hoverLockIdx = null;     // si ≠ null, on ne montre que celle-là
     const showRadius = 28;       // seuil d’apparition auto
-    const cardLinger = 4200;     // durée d’affichage (ms)
+    const cardLinger = 4200;     // durée d’affichage auto (ms)
     let cooldownUntil = 0;       // anti-spam d’apparition
 
     function clearCard(){
-      if(currentCard){ currentCard.remove(); currentCard = null; }
+      if(currentCard){ currentCard.remove(); currentCard = null; currentCardIdx = null; }
     }
 
     function maybeShowIdea(trainLen, now){
@@ -361,32 +394,67 @@
         if(near < showRadius && s.idx !== lastShownIdx){
           lastShownIdx = s.idx;
           spawnIdeaCard(s, /*sticky*/false);
-          cooldownUntil = now + 900; // petit cooldown entre cartes auto
+          cooldownUntil = now + 900;
           break;
         }
       }
     }
 
     function spawnIdeaCard(s, sticky=false){
+      if(currentCardIdx === s.idx && currentCard) return; // évite clignotement
       const data = STATIONS[s.idx];
       const pt = svgPointToPage(s.x, s.y);
 
-      // Supprimer la précédente (max 1 carte)
-      clearCard();
+      clearCard(); // 1 seule carte
+
+      // calcul de direction en fonction des bords de l'écran
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const margin = 16;
+      const preferRight = pt.x < vw * 0.55;     // si à gauche de l'écran -> carte à droite
+      const preferDown  = pt.y < vh * 0.55;     // si en haut -> carte dessous
 
       const card = document.createElement('div');
       card.className = 'idea';
-      card.style.left = Math.max(12, pt.x - 18) + 'px';
-      card.style.top  = Math.max(12, pt.y - 110) + 'px';
       card.innerHTML = `<h4>${esc(data.title)}</h4><p>${esc(data.short)}</p>`;
+
+      // Positionnement latéral
+      const offsetX = 24;
+      const offsetY = 16;
+      let left, top;
+
+      if(preferRight){
+        // carte à droite de la station
+        left = pt.x + offsetX;
+        card.classList.add('right');
+      }else{
+        // carte à gauche
+        left = pt.x - Math.min(360, 380) - offsetX; // aire max 380
+        card.classList.add('left');
+      }
+
+      // Position verticale
+      if(preferDown){
+        top = pt.y + offsetY;
+        card.classList.add('bottom');
+      }else{
+        top = pt.y - 140; // au-dessus
+        card.classList.add('top');
+      }
+
+      // Clamp dans l'écran
+      left = Math.max(margin, Math.min(left, vw - margin - 380));
+      top  = Math.max(margin, Math.min(top,  vh - margin - 160));
+
+      card.style.left = left + 'px';
+      card.style.top  = top  + 'px';
+
       ideaLayer.appendChild(card);
       currentCard = card;
+      currentCardIdx = s.idx;
 
       if(!sticky){
         const t = setTimeout(() => { if(currentCard===card) clearCard(); }, cardLinger);
         card._timeout = t;
-      }else{
-        // si sticky (hover), on ne met pas de timeout
       }
 
       card.addEventListener('click', () => openDetail(s.idx));
@@ -394,7 +462,7 @@
 
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-    // Hover management
+    // Hover management (pas de clignotement)
     function onHoverStation(i){
       hoverLockIdx = i;
       const s = stationPositions.find(p => p.idx===i);
@@ -402,10 +470,11 @@
     }
     function onLeaveStation(i){
       if(hoverLockIdx===i) hoverLockIdx = null;
-      clearCard();
+      // on garde la carte un petit peu pour permettre lecture si sortie involontaire
+      setTimeout(() => { if(hoverLockIdx===null) clearCard(); }, 80);
     }
 
-    // --- Panneau de détails ---
+    // === Panneau détails ===
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -419,9 +488,8 @@
     }
 
     function openDetail(i){
-      // on ouvre le panneau si fermé
       document.body.classList.remove('panel-collapsed');
-      // on met en tête
+      panelToggle.setAttribute('aria-pressed','true');
       const panel = document.getElementById('panel');
       const head = document.createElement('div');
       head.className = 'card';
@@ -437,13 +505,13 @@
       node.animate([{ transform:'scale(1.25)' },{ transform:'scale(1)' }], { duration:380, easing:'ease-out' });
     }
 
-    // --- Animation du train ---
+    // === Animation du train ===
     let pos = 0;                 // longueur courante
-    let speed = 58;              // px/s (RALENTI)
+    let speed = 50;              // px/s (plus lent)
     let lastT = performance.now();
 
     function tick(now){
-      const dt = Math.min(40, now - lastT) / 1000; // clamp
+      const dt = Math.min(40, now - lastT) / 1000;
       lastT = now;
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       const effectiveSpeed = mq.matches ? 0 : speed;
@@ -460,7 +528,7 @@
       requestAnimationFrame(tick);
     }
 
-    // --- Init & resize ---
+    // === Init & resize ===
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
@@ -469,9 +537,13 @@
       lastT = performance.now();
       requestAnimationFrame(tick);
 
-      // Toggle panneau
-      panelTab.addEventListener('click', () => {
-        document.body.classList.toggle('panel-collapsed');
+      // Toggle panneau (gros bouton)
+      panelToggle.addEventListener('click', () => {
+        const collapsed = document.body.classList.toggle('panel-collapsed');
+        panelToggle.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
+      });
+      panelToggle.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); panelToggle.click(); }
       });
 
       // Rebuild on resize (debounce)
