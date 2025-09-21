@@ -2,120 +2,73 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>CV — Nicolas Tuor</title>
   <meta name="theme-color" content="#0a1220" />
-  <link rel="icon" href="/favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <style>
+    /* === Styles nav repris de portfolio === */
+    body { margin:0 }
+    .site-header nav.wrap { max-width: 1100px; padding: 10px 16px; margin: 0 auto; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
+    .btn.ghost { background: transparent }
+    .btn[aria-current="page"] { background:#0b1f33 }
+    .muted { opacity:.9 }
+
+    /* === Styles propres à la page CV === */
     :root{--bg:#0a1220;--panel:#0b1323;--text:#eef3f8;--muted:#9fb2c8;--br:14px;}
-    *{box-sizing:border-box} html,body{height:100%} body{
-      margin:0;background:radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
-      color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;}
-    header{position:sticky;top:0;z-index:10;background:rgba(10,18,32,.75);backdrop-filter:blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.08)}
-    .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:.75rem;align-items:center;font-weight:800}
-    .logo{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#09101d;border:1px solid rgba(255,255,255,.08)}
-    .nav{display:flex;gap:.4rem;flex-wrap:wrap}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.08);background:#0c1728;color:var(--text);
-      padding:.46rem .7rem;border-radius:10px;font-weight:600;text-decoration:none}
-    .btn:hover{background:#0e1b2f}
-    main{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
-    h1{margin:8px 0 16px 0;font-size:32px}
-    .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:6px 0 12px}
-    .viewer{height:calc(100vh - 260px);min-height:420px;border:1px solid rgba(255,255,255,.08);
-      background:#0b1323;border-radius:var(--br);overflow:hidden}
-    .viewer object{width:100%;height:100%;border:0;display:block}
-    .pill{border-radius:999px}
-    .muted{color:var(--muted);margin:4px 0 14px}
-    .lang{display:flex;gap:.4rem}
+    html,body{height:100%}
+    body{
+      background:radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      color:var(--text); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    }
+    main.wrap { max-width:1100px; margin:0 auto; padding:20px 16px 60px }
+    h1{ margin:8px 0 16px 0; font-size:32px }
+    .actions{ display:flex; gap:.6rem; flex-wrap:wrap; margin:6px 0 12px }
+    .viewer{ height:calc(100vh - 260px); min-height:420px; border:1px solid #ffffff22;
+             background:#0b1323; border-radius:var(--br); overflow:hidden }
+    .viewer object{ width:100%; height:100%; border:0; display:block }
   </style>
 </head>
+<body>
 
-<!-- ✅ CORRECTION: n'exécuter qu'après le parsing du DOM -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Normalise un chemin en "slug" (ex: /cv.html -> "cv", "/" -> "index")
-    const pathToSlug = (p) => {
-      if (!p || p === '/') return 'index';
-      return p.replace(/^\/|\.html$/g,'');
-    };
+  <!-- Header harmonisé (comme portfolio) -->
+  <header class="site-header">
+    <nav class="wrap row" aria-label="Navigation principale">
+      <a href="/index.html" class="btn ghost">Accueil</a>
+      <a href="/portfolio.html" class="btn ghost">Portfolio</a>
+      <a href="/cv.html" class="btn" aria-current="page">CV</a>
+      <a href="/passions.html" class="btn ghost">Passions</a>
+      <a href="/chatbot.html" class="btn ghost">Chatbot</a>
+      <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
+      <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
+      <span style="flex:1"></span>
+      <a href="/cv.html" class="btn">FR</a>
+      <a href="/cv-en.html" class="btn ghost">EN</a>
+      <a href="/cv-de.html" class="btn ghost">DE</a>
+    </nav>
+  </header>
 
-    // 1) Marquer le lien actif dans la nav gauche
-    const here = pathToSlug(location.pathname);
-    document.querySelectorAll('.nav-left a.chip').forEach(a => {
-      const href = a.getAttribute('href') || '';
-      const target = pathToSlug(href);
-      if (target === here) a.setAttribute('aria-current', 'page');
-    });
+  <main class="wrap">
+    <h1>CV — Nicolas Tuor</h1>
 
-    // 2) Liens de langue dynamiques
-    //    Utilise <body data-page="..."> si présent, sinon déduit depuis l’URL
-    const body = document.body;
-    const slug = (body && body.dataset && body.dataset.page) ? body.dataset.page : here;
+    <div class="actions">
+      <a class="btn" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+      <a class="btn" href="/assets/cv/cv-fr.pdf" download="Nicolas_Tuor_CV_FR.pdf">Télécharger le PDF (FR)</a>
+      <a class="btn" href="/assets/cv/cv-en.pdf" download="Nicolas_Tuor_CV_EN.pdf">Télécharger le PDF (EN)</a>
+    </div>
 
-    const hrefFor = (lang) => {
-      // index a un nom spécial
-      if (slug === 'index') return lang === 'fr' ? '/index.html' : `/index-${lang}.html`;
-      return lang === 'fr' ? `/${slug}.html` : `/${slug}-${lang}.html`;
-    };
-
-    const fr = document.getElementById('lang-fr');
-    const en = document.getElementById('lang-en');
-    const de = document.getElementById('lang-de');
-
-    if (fr) fr.href = hrefFor('fr');
-    if (en) en.href = hrefFor('en');
-    if (de) de.href = hrefFor('de'); // si une page -de n’existe pas, changer ici manuellement si besoin
-
-    // 3) Marquer la langue courante
-    const pageLang = (document.documentElement.getAttribute('lang') || 'fr').slice(0,2).toLowerCase();
-    ({ fr, en, de } = { fr, en, de });
-    if (pageLang === 'fr' && fr) fr.setAttribute('aria-current','page');
-    if (pageLang === 'en' && en) en.setAttribute('aria-current','page');
-    if (pageLang === 'de' && de) de.setAttribute('aria-current','page');
-  });
-</script>
-
-<body data-page="cv"> 
-<header class="navbar">
-  <div class="nav-left">
-    <a class="chip" href="/index.html">Accueil</a>
-    <a class="chip" href="/cv.html">CV</a>
-    <a class="chip" href="/portfolio.html">Portfolio</a>
-    <a class="chip" href="/passions.html">Passions</a>
-    <a class="chip" href="/chatbot.html">Chatbot</a>
-    <a class="chip" href="/fun-facts.html">Fun Facts</a>
-  </div>
-
-  <div class="nav-right">
-    <a class="chip" id="lang-fr" href="#">FR</a>
-    <a class="chip" id="lang-en" href="#">EN</a>
-    <a class="chip" id="lang-de" href="#">DE</a>
-    <button id="themeToggle" class="toggle" type="button" aria-label="Basculer thème">🌙 Mode nuit</button>
-  </div>
-</header>
-
-<main>
-  <h1>CV — Nicolas Tuor</h1>
-  <p class="muted">Aperçu intégré + liens directs. Les PDF sont servis depuis <code>/public/assets/cv/</code>.</p>
-
-  <div class="actions">
-    <a class="btn" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
-    <a class="btn" href="/assets/cv/cv-fr.pdf" download="Nicolas_Tuor_CV_FR.pdf">Télécharger le PDF (FR)</a>
-    <a class="btn" href="/assets/cv/cv-en.pdf" download="Nicolas_Tuor_CV_EN.pdf">Télécharger le PDF (EN)</a>
-  </div>
-
-  <div class="viewer">
-    <object data="/assets/cv/cv-fr.pdf#view=FitH" type="application/pdf">
-      <div style="padding:18px">
-        Votre navigateur ne peut pas afficher les PDF intégrés.<br>
-        <a class="btn" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener">Cliquez ici pour ouvrir le CV (FR)</a>
-      </div>
-    </object>
-  </div>
-</main>
+    <div class="viewer">
+      <object data="/assets/cv/cv-fr.pdf#view=FitH" type="application/pdf">
+        <div style="padding:18px">
+          Votre navigateur ne peut pas afficher le PDF intégré.<br>
+          <a class="btn" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener">Cliquez ici pour ouvrir le CV (FR)</a>
+        </div>
+      </object>
+    </div>
+  </main>
 
 </body>
 </html>
