@@ -1,54 +1,21 @@
-<!DOCTYPE html>
-<html lang="de" data-theme="dark">
+<!doctype html>
+<html lang="de">
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CV — Nicolas Tuor</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="refresh" content="0; url=/cv-en.html">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lebenslauf — Weiterleitung</title>
+
+  <link rel="alternate" hreflang="fr" href="/cv.html">
+  <link rel="alternate" hreflang="en" href="/cv-en.html">
+  <link rel="alternate" hreflang="de" href="/cv-de.html">
+  <link rel="alternate" hreflang="x-default" href="/cv-en.html">
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="/cv-de.html">
-      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/index-de.html">Start</a>
-      <a href="/portfolio-de.html">Portfolio</a>
-      <a href="/cv-de.html" aria-current="page">CV</a>
-      <a href="/chatbot-de.html">Chatbot</a>
-      <a href="/ai-lab-de.html">KI-Ideen</a>
-      <a href="/fun-facts-de.html">Fun Facts</a>
-      <button id="dlCvBtn" class="btn chip" type="button">PDF herunterladen</button>
-      <button class="btn chip" type="button" data-toggle-theme aria-label="Thema wechseln">🌓</button>
-      <span class="lang-switch">
-        <a class="btn chip" href="/cv.html">FR</a>
-        <a class="btn chip" href="/cv-en.html">EN</a>
-        <a class="btn chip" href="/cv-de.html" aria-current="page">DE</a>
-      </span>
-    </nav>
-  </div>
-</header>
-
-<main class="section container">
-  <h1 class="title">CV – Nicolas Tuor</h1>
-  <div class="cv-toolbar">
-    <label>Ansicht:
-      <select id="viewMode" class="select">
-        <option value="pdf">Geschütztes PDF</option>
-        <option value="constellation">Kompetenz-Konstellation (interaktiv)</option>
-        <option value="story">Unterrichts-Storyboard (interaktiv)</option>
-      </select>
-    </label>
-    <button id="printBtn" class="btn">Drucken/PDF</button>
-  </div>
-  <div id="cvArea"></div>
-</main>
-
-<script src="/cv-data.js"></script>
-<script src="/cv.js"></script>
-<script src="/site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+<body style="padding:16px">
+  <p>Weiterleitung zu der <a href="/cv-en.html">englischen Version des Lebenslaufs</a>…</p>
 </body>
 </html>
