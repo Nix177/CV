@@ -5,65 +5,230 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lebenslauf — Nicolas Tuor</title>
 
-  <!-- hreflang -->
+  <!-- Hreflang alternates -->
   <link rel="alternate" hreflang="fr" href="/cv.html">
   <link rel="alternate" hreflang="en" href="/cv-en.html">
   <link rel="alternate" hreflang="de" href="/cv-de.html">
   <link rel="alternate" hreflang="x-default" href="/cv-en.html">
 
   <meta name="theme-color" content="#0a1220" />
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
   <style>
-    :root{--bg:#0a1220;--panel:#0b1323;--text:#eef3f8;--muted:#a7b7cb;--border:#162238}
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;background:#0a1220;color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
-    header{position:sticky;top:0;z-index:10;background:#0b1323; border-bottom:1px solid rgba(255,255,255,.08)}
-    .wrap{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;gap:.5rem;align-items:center}
-    .brand{font-weight:800}
-    .spacer{flex:1}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.12);background:#0c1728;color:#fff;text-decoration:none;
-         padding:.45rem .7rem;border-radius:10px;font-weight:600;font-size:14px}
+    :root{
+      --bg:#0a1220; --panel:#0b1323; --card:#0d1524; --border:#162235;
+      --text:#eef3f8; --muted:#a6b6c9; --accent:#14b8a6; --shadow:0 10px 28px rgba(0,0,0,.35);
+      --max:1100px; --br:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: radial-gradient(1200px 720px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(10,18,32,.75); backdrop-filter:blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .head{max-width:var(--max); margin:0 auto; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .brand{display:flex; align-items:center; gap:.65rem; font-weight:800; letter-spacing:.2px}
+    .logo{width:30px; height:30px; border-radius:8px; display:grid; place-items:center;
+          background:linear-gradient(135deg,#0a1220,#00060d); color:#fff; border:1px solid rgba(255,255,255,.1)}
+    nav.top{display:flex; gap:.5rem; flex-wrap:wrap}
+    .btn{
+      appearance:none; border:1px solid rgba(255,255,255,.08); background:#0c1728; color:var(--text);
+      text-decoration:none; padding:.42rem .65rem; border-radius:10px; font-weight:600; font-size:14px;
+    }
     .btn:hover{background:#0e1b2f}
-    main{max-width:1100px;margin:22px auto;padding:0 16px}
-    h1{margin:0 0 8px 0;font-size:28px}
-    .muted{color:#a7b7cb}
-    .actions{display:flex;gap:.5rem;flex-wrap:wrap;margin:12px 0 8px}
-    .viewer{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#0b1323}
-    .viewer object,.viewer embed{display:block;width:100%;height:80vh}
-    .fallback{padding:14px}
-    .lang a[aria-current="page"]{background:#14304a}
-    .note{margin:8px 0 14px;color:#a7b7cb}
+
+    main{max-width:var(--max); margin:18px auto 80px; padding:0 16px}
+    h1{font-size:30px; margin:8px 0 14px 0}
+    .lede{color:var(--muted); margin:0 0 18px 0}
+
+    /* Layout */
+    .grid{
+      display:grid; grid-template-columns: 320px 1fr; gap:16px;
+    }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:var(--br);
+      box-shadow:var(--shadow); padding:14px;
+    }
+    .section{display:grid; gap:12px}
+    .h2{font-size:18px; font-weight:800; margin:0 0 6px 0}
+    .h3{font-size:16px; font-weight:800; margin:0}
+    .muted{color:var(--muted)}
+    ul{margin:6px 0 0 0; padding-left:18px}
+    li{margin:4px 0}
+    .tag{display:inline-block; background:#0c1728; border:1px solid rgba(255,255,255,.08); color:var(--text);
+         padding:.22rem .5rem; border-radius:999px; font-size:12px; font-weight:700; margin:2px 4px 0 0}
+
+    .dl{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+    .link{color:var(--text); text-decoration:none; background:#0c1728; border:1px solid rgba(255,255,255,.08);
+          padding:.38rem .6rem; border-radius:10px; font-weight:600; font-size:14px}
+    .link:hover{background:#0e1b2f}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .pill{background:#0f1c31; border:1px solid #163052; padding:.28rem .55rem; border-radius:999px; font-size:13px}
+    address{font-style:normal}
+    hr{height:1px; border:0; background:rgba(255,255,255,.08); margin:10px 0}
   </style>
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <div class="brand">Lebenslauf — Nicolas Tuor</div>
-    <span class="spacer"></span>
-    <nav class="lang" aria-label="Sprachen">
+  <div class="head">
+    <div class="brand">
+      <div class="logo">N·T</div>
+      <div>CV — Nicolas Tuor</div>
+    </div>
+    <nav class="top" aria-label="Navigation">
+      <a class="btn" href="/index.html">Accueil</a>
+      <a class="btn" href="/portfolio.html">Portfolio</a>
+      <a class="btn" href="/chatbot.html">Chatbot</a>
+      <a class="btn" href="/fun-facts.html">Fun Facts</a>
+      <span style="flex:1 1 auto"></span>
       <a class="btn" href="/cv.html">FR</a>
       <a class="btn" href="/cv-en.html">EN</a>
-      <a class="btn" aria-current="page" href="/cv-de.html">DE</a>
+      <a class="btn" aria-current="page" href="/cv-de.html" style="border-color:#1e3a5f;background:#10223a">DE</a>
     </nav>
   </div>
 </header>
 
 <main>
-  <p class="note">Hinweis: Für die exakte deutsche Fassung als HTML brauche ich deinen CV-Text (FR/EN).
-  Bis dahin wird die englische PDF-Version angezeigt.</p>
+  <h1>Lebenslauf — Nicolas Tuor</h1>
+  <p class="lede">Direkt angezeigte deutsche Fassung (Übersetzung aus dem Französischen). Sachlich, kompakt, gut lesbar.</p>
 
-  <div class="actions">
-    <a class="btn" target="_blank" rel="noopener" href="/public/assets/cv/cv-en.pdf">Im neuen Tab öffnen</a>
-    <a class="btn" href="/public/assets/cv/cv-en.pdf" download="Nicolas_Tuor_CV_EN.pdf">PDF herunterladen</a>
-  </div>
+  <div class="grid">
+    <!-- Sidebar -->
+    <aside class="section">
+      <section class="card">
+        <div class="h2">Kontakt</div>
+        <address>
+          <div class="row"><span class="pill">Telefon</span> <span>+41 79 762 26 67</span></div>
+          <div class="row"><span class="pill">E-Mail</span> <span><a class="link" href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a></span></div>
+          <div class="row"><span class="pill">Adresse</span>
+            <span>Rue de la Grand-Fontaine 6, 1700 Fribourg, Schweiz</span>
+          </div>
+        </address>
+      </section>
 
-  <div class="viewer" role="region" aria-label="Lebenslauf-Vorschau">
-    <object data="/public/assets/cv/cv-en.pdf" type="application/pdf">
-      <embed src="/public/assets/cv/cv-en.pdf" type="application/pdf"/>
-      <div class="fallback">
-        Ihr Browser kann eingebettete PDFs nicht anzeigen.
-        <a class="btn" href="/public/assets/cv/cv-en.pdf" target="_blank" rel="noopener">Hier klicken, um den Lebenslauf zu öffnen</a>.
-      </div>
-    </object>
+      <section class="card">
+        <div class="h2">Kompetenzen</div>
+        <ul>
+          <li>Forschungsmethodik &amp; Datenanalyse</li>
+          <li>Pädagogik, Fachdidaktik &amp; Weiterbildung</li>
+          <li>Sicherer Umgang mit digitalen Werkzeugen</li>
+          <li>Wissenschaftskommunikation &amp; Popularisierung</li>
+          <li>Teamarbeit &amp; interdisziplinäre Zusammenarbeit</li>
+          <li>Anpassungsfähigkeit &amp; Eigeninitiative</li>
+          <li>Problemlösungskompetenz</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="h2">Sprachen</div>
+        <div class="row">
+          <span class="tag">Französisch (Muttersprache)</span>
+          <span class="tag">Englisch (C2)</span>
+          <span class="tag">Deutsch (B2/C1)</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="h2">Interessen</div>
+        <ul>
+          <li>Wissenschaftsvermittlung, kritisches Denken</li>
+          <li>Astronomie &amp; Astrofotografie</li>
+          <li>Rudern (Wettkampf 2005–2011)</li>
+          <li>Improvisationstheater</li>
+          <li>Begeisterung für vielfältiges Lernen</li>
+          <li>Technologien &amp; KI-Werkzeuge (Bild/Video-Erstellung, Recherche, Spieleentwicklung mit GitHub Copilot &amp; Unity; Aufbau/Automatisierung von KI-Teams mit n8n)</li>
+          <li>Kampfkünste</li>
+        </ul>
+      </section>
+    </aside>
+
+    <!-- Main column -->
+    <div class="section">
+      <section class="card">
+        <div class="h2">Bildung</div>
+
+        <p class="h3">HEP Lausanne — Master in fachdidaktischer Ausbildung (Informatik) <span class="muted">• 2020–2024</span></p>
+        <ul>
+          <li>Schwerpunkt: Python, HTML/CSS, C++</li>
+          <li>Masterarbeit: <em>Explizites Unterrichten systematischen Debuggings und Kompetenztransfer</em> (Betreuung: Engin Bumbacher)</li>
+        </ul>
+        <hr>
+
+        <p class="h3">HEP Freiburg — Bachelor Vorschul- &amp; Primarstufe <span class="muted">• 2015–2019</span></p>
+        <ul>
+          <li>Bachelorarbeit: <em>Erhebung zur Kinderphilosophie an Freiburger Primarschulen</em> (Betreuung: Samuel Heinzen)</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="h2">Berufserfahrung</div>
+
+        <p class="h3">Stellvertretungen Primarstufe <span class="muted">• 2019–heute</span></p>
+        <p class="muted">Lehrperson auf verschiedenen Stufen.</p>
+        <hr>
+
+        <p class="h3">CAS «Éducation numérique» — Fortbildungstag, PH Freiburg <span class="muted">• 2024</span></p>
+        <p class="muted">Schwerpunkt Informatik &amp; Gesellschaft (Lehrtätigkeit).</p>
+        <hr>
+
+        <p class="h3">Zivildienst</p>
+        <ul>
+          <li>Einsätze in Masonnens, Villa-Thérèse, Praroman, Echarlens, Chénens, Vuisternens-devant-Romont</li>
+          <li>Begleitung von Geflüchteten, 1 Monat im Bundesasylzentrum Guglera <span class="muted">(2023)</span></li>
+        </ul>
+        <hr>
+
+        <p class="h3">Festanstellung Primarstufe, Schule Corminboeuf <span class="muted">• 2020–2021</span></p>
+        <p class="muted">Unterricht in 5H.</p>
+        <hr>
+
+        <p class="h3">Masterpraktikum, PH Freiburg — CRE/ATE <span class="muted">• 2022–2023</span></p>
+        <p class="muted">6-monatiges Forschungs-/Ausbildungspraktikum (Leitung: Lionel Alvarez).</p>
+        <hr>
+
+        <p class="h3">Weitere Tätigkeiten</p>
+        <ul>
+          <li>Rezeptionist, Hôtel Elite, Freiburg <span class="muted">• 2016–2017</span></li>
+          <li>Praktikum, Foyer Saint-Étienne <span class="muted">• 2013</span></li>
+          <li>Sicherheitsmitarbeiter, Phoenix Security <span class="muted">• 2012–2017</span></li>
+          <li>Archivhilfe, Staatskanzlei Kanton Freiburg (2 Monate) <span class="muted">• 2022–2023</span></li>
+          <li>Lern-/Admin-/Techniksupport, Gymnasium Jean-Piaget, Neuchâtel (Langzeitdienst) <span class="muted">• 09.09.2019–03.07.2020</span></li>
+          <li>Archivhilfe, Kantonsspital Freiburg (1 Monat) <span class="muted">• 2017</span></li>
+          <li>Mitglied ETUCOM (Studierendenkomitee PH FR) <span class="muted">• 2017–2019</span></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="h2">Zusätzliche Weiterbildungen</div>
+        <ul>
+          <li>Archivierung &amp; Records Management (½ Tag, Schloss Neuchâtel; M. Oguey &amp; M. d’Epagnier)</li>
+          <li>Zivildienstkurse: Kommunikation &amp; Betreuung; Betreuung von Jugendlichen 1 &amp; 2 (je 1 Woche)</li>
+          <li>Programm SPHAIR (Pilotenkurs, zwei Wochen)</li>
+          <li>Sicherheitsausbildungen bei Phoenix Security (regelmässig)</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="h2">Downloads</div>
+        <div class="dl">
+          <a class="link" href="/assets/cv/CV_Nicolas_Tuor.pdf" target="_blank" rel="noopener">Original-PDF (FR)</a>
+          <!-- Falls du eine englische PDF-Version asservierst, active la ligne ci-dessous -->
+          <!-- <a class="link" href="/assets/cv/CV_Nicolas_Tuor_EN.pdf" target="_blank" rel="noopener">PDF (EN)</a> -->
+        </div>
+      </section>
+    </div>
   </div>
 </main>
 </body>
