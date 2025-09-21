@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Resume — Nicolas Tuor</title>
+  <title>Resume — Nicolas Tuor (EN)</title>
 
+  <!-- Hreflang alternates -->
   <link rel="alternate" hreflang="fr" href="/cv.html">
   <link rel="alternate" hreflang="en" href="/cv-en.html">
   <link rel="alternate" hreflang="de" href="/cv-de.html">
@@ -12,44 +13,93 @@
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/style.css">
+  <meta name="theme-color" content="#0a1220" />
+
   <style>
-    .cv-wrap{max-width:1200px;margin:0 auto;padding:16px}
-    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}
-    .toolbar .btn{border:1px solid rgba(255,255,255,.12);background:#0c1728;color:#eef3f8;text-decoration:none;
-                  padding:.45rem .7rem;border-radius:10px;font-weight:600}
-    .pdf-frame{width:100%;height:calc(100vh - 170px);border:1px solid rgba(255,255,255,.12);border-radius:12px}
-    @media (max-width:800px){ .pdf-frame{height:70vh} }
+    :root{
+      --bg:#0a1220; --panel:#0b1323; --card:#0d1524; --border:#152238;
+      --text:#eef3f8; --muted:#9fb2c8; --accent:#14b8a6; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --max:1000px; --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+    }
+
+    header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(10,18,32,.75); backdrop-filter:blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .brand{display:flex; align-items:center; gap:.75rem; font-weight:800}
+    .logo{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#02060f;border:1px solid rgba(255,255,255,.08)}
+    nav.actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn, .pill{
+      appearance:none; border:1px solid rgba(255,255,255,.12); background:#0c1728; color:var(--text);
+      text-decoration:none; padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+    }
+    .btn:hover, .pill:hover{background:#0e1b2f}
+    .pill.active{background:#10223a; border-color:#203a62}
+
+    main{max-width:var(--max); margin:22px auto 80px; padding:0 16px}
+    h1{margin:0 0 12px 0; font-size:34px}
+    .muted{color:var(--muted)}
+
+    .viewer{height:80vh; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--panel); box-shadow:var(--shadow)}
+    .tools{display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 10px}
+    .notice{margin:10px 0; color:var(--muted)}
+    .notice a{color:var(--text)}
+    .bar{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .lang{display:flex; gap:6px}
   </style>
 </head>
 <body>
-<header class="site-header">
-  <nav class="wrap row" aria-label="Main navigation">
-    <a href="/index.html" class="btn ghost">Home</a>
-    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
-    <a href="/cv-en.html" class="btn">Resume</a>
-    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
-    <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
-    <span style="flex:1"></span>
-    <a href="/cv.html" class="btn ghost">FR</a>
-    <a href="/cv-en.html" class="btn">EN</a>
-    <a href="/cv-de.html" class="btn ghost">DE</a>
-  </nav>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">N·T</div>
+      <div>Resume — Nicolas Tuor</div>
+    </div>
+    <div class="bar">
+      <nav class="actions" aria-label="Navigation">
+        <a class="btn" href="/index.html">Home</a>
+        <a class="btn" href="/portfolio.html">Portfolio</a>
+        <a class="btn" href="/chatbot.html">Chatbot</a>
+        <a class="btn" href="/fun-facts.html">Fun Facts</a>
+      </nav>
+      <nav class="lang" aria-label="Languages">
+        <a class="pill" href="/cv.html" lang="fr">FR</a>
+        <a class="pill active" href="/cv-en.html" lang="en">EN</a>
+        <a class="pill" href="/cv-de.html" lang="de">DE</a>
+      </nav>
+    </div>
+  </div>
 </header>
 
-<main class="cv-wrap">
-  <h1 class="title" style="margin:14px 0 6px">Resume — Nicolas Tuor</h1>
-  <div class="toolbar" role="group" aria-label="Actions">
-    <a class="btn" href="/assets/cv/cv-en.pdf" target="_blank" rel="noopener">Open in new tab</a>
-    <a class="btn" href="/assets/cv/cv-en.pdf" download>Download PDF</a>
+<main>
+  <h1>Resume — Nicolas Tuor</h1>
+  <p class="muted">Embedded viewer + direct links. PDFs are served from <code>/public/assets/cv/</code>.</p>
+
+  <div class="tools">
+    <a class="btn" href="/public/docs/cv-en.pdf" target="_blank" rel="noopener">Open in new tab</a>
+    <a class="btn" href="/public/docs/cv-en.pdf" download="Nicolas-Tuor-Resume-en.pdf">Download PDF</a>
   </div>
 
-  <object class="pdf-frame"
-          data="/assets/cv/cv-en.pdf#view=FitH"
-          type="application/pdf">
-    <p>Your browser can’t display embedded PDFs.
-       <a href="/assets/cv/cv-en.pdf">Open the resume here</a>.</p>
-  </object>
+  <div class="viewer">
+    <object data="/public/docs/cv-en.pdf#view=FitH&pagemode=none"
+            type="application/pdf" width="100%" height="100%">
+      <div class="notice">
+        Your browser can't display embedded PDFs.
+        <a href="/public/docs/cv-en.pdf" target="_blank" rel="noopener">Click here to open the resume</a>.
+      </div>
+    </object>
+  </div>
 </main>
+
 </body>
 </html>
