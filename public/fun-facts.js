@@ -1,421 +1,302 @@
-/* Fun Facts — Cartes + Nuage (tooltip ≤30 mots), randomisation, flip sur place */
+/* Fun Facts – client
+   Corrige:
+   - fallback API->JSON si 0 item
+   - supprime les doublons de texte sur la face avant
+   - dos des cartes: explanation courte par carte + sources
+*/
+
 (function () {
-  "use strict";
+  const log = (...a) => console.log('[fun-facts]', ...a);
+  const $ = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+  const lang = (document.documentElement.lang || 'fr').slice(0, 2);
 
-  // ---------- Helpers ----------
-  const $  = (sel, root = document) => root.querySelector(sel);
-  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const rand = (a, b) => Math.random() * (b - a) + a;
-  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
-
-  const log  = (...args) => console.log("%c[fun-facts]", "color:#08c", ...args);
-  const warn = (...args) => console.warn("%c[fun-facts]", "color:#e80", ...args);
-
-  const lang = (document.documentElement.lang || "fr").slice(0, 2);
-  const API = "/api/facts";
-  const LOCAL_JSON = "/facts-data.json";
-  const MAX_TOOLTIP_WORDS = 30; // ≤ 30 mots pour le nuage
-
-  const toStr = (x) => (x == null ? "" : String(x)).trim();
-  const niceLabelFromUrl = (u) => (u || "").replace(/^https?:\/\//, "").slice(0, 95);
-
-  function normalizeOneSource(s) {
-    if (!s && s !== 0) return null;
-    if (typeof s === "string") {
-      const href = toStr(s);
-      if (!href) return null;
-      return { href, label: niceLabelFromUrl(href) };
+  // ---- Fetch helpers -------------------------------------------------------
+  async function fetchAPI(n, seenIds) {
+    const seen = (seenIds && seenIds.length) ? `&seen=${encodeURIComponent(seenIds.join(','))}` : '';
+    const url = `/api/facts?lang=${lang}&n=${n}${seen}`;
+    log('Fetch API:', url);
+    try {
+      const r = await fetch(url, { cache: 'no-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const arr = await r.json();
+      log('→ API items:', Array.isArray(arr) ? arr.length : 0);
+      // Considérer 0 comme un échec pour forcer le fallback
+      if (!Array.isArray(arr) || arr.length === 0) return null;
+      return arr.map(normalize);
+    } catch (e) {
+      log('API fail:', e.message || e);
+      return null;
     }
-    if (typeof s === "object") {
-      const href = toStr(s.url || s.href || s.link || "");
-      if (!href) return null;
-      const label = toStr(s.label || s.title || s.name || "") || niceLabelFromUrl(href);
-      return { href, label };
-    }
-    const href = toStr(s);
-    if (!href) return null;
-    return { href, label: niceLabelFromUrl(href) };
   }
-  function normalizeSources(arr) {
-    if (!arr) return [];
-    if (!Array.isArray(arr)) arr = [arr];
-    const out = [];
-    for (const s of arr) {
-      const v = normalizeOneSource(s);
-      if (v && v.href) out.push(v);
-    }
-    return out;
+
+  async function fetchLocal() {
+    const url = '/facts-data.json';
+    log('Fetch JSON local:', url);
+    const r = await fetch(url, { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const raw = await r.json();
+    const items = Array.isArray(raw) ? raw : (raw.items || []);
+    const filtered = items.filter(x => (x.lang ? x.lang.slice(0, 2) === lang : true));
+    log('→ JSON local items:', filtered.length);
+    return filtered.map(normalize);
   }
-  function normalizeList(list) {
-    return (list || []).map((it, i) => {
-      const id = it.id || `tmp:${i}:${(it.title || "").slice(0, 40)}`;
-      const type = it.type || "myth";
-      const category = it.category || "Général";
-      const title = it.title || (type === "fact" ? "Fait" : "Mythe");
-      const body = it.body || it.explain || it.explanation || it.answer || ""; // on tente plusieurs champs
-      const sources = normalizeSources(it.sources);
-      return { id, type, category, title, body, sources };
+
+  // ---- Normalisation robuste (supporte plusieurs schémas) ------------------
+  function normalize(o) {
+    const id = o.id || o.slug || `${(o.type || 'item')}-${Math.random().toString(36).slice(2, 8)}`;
+    const type = (o.type || o.kind || '').toLowerCase().includes('myth') ? 'myth'
+               : (o.type || o.kind || '').toLowerCase().includes('fact') ? 'fact'
+               : (o.answer === true ? 'fact' : o.answer === false ? 'myth' : 'unknown');
+
+    const category = o.category || o.domain || o.topic || o.tag || '';
+    const title = o.title || o.claim || o.statement || o.question || '—';
+    // Face avant: on évite le doublon. On affiche un teaser s’il existe,
+    // sinon rien (plutôt que de répéter le titre).
+    const teaser = firstNonEmpty(
+      o.teaser, o.subtitle, o.summary, o.lead, o.front, ''
+    );
+
+    // Face arrière: courte explication propre à la carte
+    let explainShort = firstNonEmpty(
+      o.explainShort, o.explanationShort, o.answerShort, o.short, o.back
+    );
+    const explanation = firstNonEmpty(o.explanation, o.explain, o.answer, o.rationale, '');
+
+    if (!explainShort && explanation) {
+      explainShort = truncateWords(stripHtml(String(explanation)), 30);
+    }
+
+    // Sources: tableaux de strings ou {label,url}
+    let sources = [];
+    if (Array.isArray(o.sources)) {
+      sources = o.sources.map(s => {
+        if (typeof s === 'string') return { label: s.replace(/^https?:\/\//, ''), url: s };
+        return { label: s.label || s.title || (s.url || '').replace(/^https?:\/\//, ''), url: s.url || s.href || '' };
+      });
+    }
+
+    return { id, type, category, title, teaser, explainShort, explanation, sources };
+  }
+
+  function firstNonEmpty(...vals) {
+    for (const v of vals) {
+      if (v === 0) return 0;
+      if (v && String(v).trim()) return v;
+    }
+    return '';
+  }
+  function truncateWords(str, n) {
+    const w = String(str).split(/\s+/);
+    return w.length > n ? w.slice(0, n).join(' ') + '…' : str;
+  }
+  function stripHtml(s) { return String(s).replace(/<[^>]+>/g, ''); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+  // ---- Rendu des cartes ----------------------------------------------------
+  const rootCards = $('#cards');
+  const seen = new Set();
+
+  function verdictText(t) {
+    if (t === 'fact') return 'Fait avéré';
+    if (t === 'myth') return 'Mythe réfuté';
+    return 'À vérifier';
+    }
+
+  function cardHTML(it) {
+    // Pas de doublon: on n’injecte PAS le titre dans .body si aucune accroche
+    const frontBody = it.teaser ? `<p class="body">${esc(it.teaser)}</p>` : '';
+    const backBody = (it.explainShort || it.explanation)
+      ? `<p class="body">${esc(it.explainShort || it.explanation)}</p>` : '';
+
+    const src = (it.sources && it.sources.length)
+      ? `<div class="sources"><ul>${
+            it.sources.map(s => s.url
+              ? `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label || s.url)}</a></li>`
+              : `<li>${esc(s.label)}</li>`).join('')
+          }</ul></div>`
+      : '';
+
+    return `
+      <article class="ff-card" data-id="${esc(it.id)}">
+        <div class="inner">
+          <div class="ff-face front">
+            <div class="type ${esc(it.type)}">
+              <span class="badge">${it.category ? esc(it.category) : ''}</span>
+              ${esc(it.type === 'myth' ? 'Mythe' : it.type === 'fact' ? 'Fait avéré' : 'À vérifier')}
+            </div>
+            <div class="title">${esc(it.title)}</div>
+            ${frontBody}
+            <div class="card-actions">
+              <button class="btn ghost flip" type="button" aria-label="Retourner">↩︎ Retourner</button>
+            </div>
+          </div>
+
+          <div class="ff-face back">
+            <div class="type ${esc(it.type)}">${esc(verdictText(it.type))}</div>
+            <div class="title">${esc(it.title)}</div>
+            ${backBody}
+            ${src}
+            <div class="card-actions">
+              <button class="btn ghost flip" type="button" aria-label="Retourner">↩︎ Revenir</button>
+            </div>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function renderCards(list) {
+    rootCards.innerHTML = list.map(cardHTML).join('');
+    // flip
+    $$('.ff-card .flip', rootCards).forEach(btn => {
+      btn.addEventListener('click', () => btn.closest('.ff-card').classList.toggle('flipped'));
     });
   }
 
-  // ---------- Fetch ----------
-  async function tryAPI(params) {
-    try {
-      const qs = new URLSearchParams(params || {}).toString();
-      const url = `${API}?${qs}`;
-      log("Fetch API:", url);
-      const r = await fetch(url, { headers: { "x-ff": "1" } });
-      if (!r.ok) throw new Error(`API status ${r.status}`);
-      const json = await r.json();
-      if (!Array.isArray(json)) throw new Error("API non-array");
-      const n = normalizeList(json);
-      log(`→ API OK (${n.length} items)`);
-      return n;
-    } catch (e) {
-      warn("API fallback:", e?.message || e);
-      return [];
-    }
-  }
-  async function tryLocalJSON() {
-    try {
-      log("Fetch JSON local:", LOCAL_JSON);
-      const r = await fetch(LOCAL_JSON);
-      if (!r.ok) throw new Error(`JSON status ${r.status}`);
-      const json = await r.json();
-      const arr = Array.isArray(json) ? json : json.items || [];
-      const n = normalizeList(arr);
-      log(`→ JSON local OK (${n.length} items)`);
-      return n;
-    } catch (e) {
-      warn("JSON local fallback:", e?.message || e);
-      return [];
-    }
-  }
-  function pickFrom(list, params = {}) {
-    let out = list.slice();
-    const n = Number(params.n) || undefined;
-    const kind = params.kind;
-    const seen = new Set((params.seen || "").split(",").filter(Boolean));
-    if (kind) out = out.filter((x) => x.type === kind);
-    if (seen.size) out = out.filter((x) => !seen.has(x.id));
-    shuffle(out);
-    if (n) out = out.slice(0, n);
-    return out;
-  }
-  async function fetchFacts(params) {
-    const api = await tryAPI(params);
-    if (api.length) return api;
-    const loc = await tryLocalJSON();
-    if (loc.length) return pickFrom(loc, params);
-    return [];
-  }
-
-  // ---------- Texte d’explication (fallbacks) ----------
-  function explainRaw(item) {
-    const txt = toStr(item.body || item.explain || item.explanation || item.answer || "");
-    if (txt) return txt;
-    if (item.type === "myth") {
-      return "Mythe réfuté : les observations et sources contredisent cette affirmation. Voir sources pour le détail.";
-    }
-    if (item.type === "fact") {
-      return "Fait avéré : constat documenté par des études ou observations. Voir sources pour le détail.";
-    }
-    return "Explication succincte indisponible. Les sources apportent le détail.";
-  }
-  function truncateWords(s, maxW) {
-    const words = (s||"").split(/\s+/).filter(Boolean);
-    if (words.length <= maxW) return s;
-    return words.slice(0, maxW).join(" ") + "…";
-  }
-  function explainShort(item, maxWords) {
-    return truncateWords(explainRaw(item), maxWords);
-  }
-
-  // ---------- Tooltip ----------
-  function ensureTooltip() {
-    let t = $("#ffTooltip");
-    if (t) return t;
-    t = document.createElement("div");
-    t.id = "ffTooltip";
-    t.innerHTML = `
-      <h4 id="ttTitle">—</h4>
-      <div id="ttMeta" class="meta"></div>
-      <p id="ttBody"></p>
-      <div id="ttSources" class="sources"></div>
-    `;
+  // ---- Nuage ---------------------------------------------------------------
+  const rootCloud = $('#cloud');
+  const tip = (() => {
+    const t = document.createElement('div');
+    t.id = 'ffTooltip';
     document.body.appendChild(t);
     return t;
-  }
-  function hideTooltip(){ const t=$("#ffTooltip"); if(t) t.style.display="none"; }
-
-  // ---------- CARTES ----------
-  let cardsWrap, segFilter, btnNewSet, btnOneFact, btnOneMyth;
-  let FILTER = "all";
-  let CARDS = [];
-  const seenCards = new Set();
-  let newSetClicks = 0;
-
-  function passFilter(item) {
-    const t = item.type || "unknown";
-    return FILTER === "all" || (FILTER === "fact" && t === "fact") || (FILTER === "myth" && t === "myth");
-  }
-
-  function sourcesBlock(sources){
-    if(!sources?.length) return "";
-    const lis = sources.map(s=>`<li><a href="${s.href}" target="_blank" rel="noopener">${s.label||niceLabelFromUrl(s.href)}</a></li>`).join("");
-    return `<div class="sources"><strong>Sources :</strong><ul>${lis}</ul></div>`;
-  }
-
-  function drawCards(list) {
-    CARDS = list.slice();
-    if (!cardsWrap) return;
-    cardsWrap.innerHTML = "";
-    if (!CARDS.length) {
-      cardsWrap.innerHTML = `<div style="opacity:.7;padding:1rem 0">Aucun élément à afficher.</div>`;
-      return;
-    }
-    for (const item of CARDS) {
-      if (!passFilter(item)) continue;
-      const typeLabel = item.type === "fact" ? "⭐ Fait avéré" : item.type === "myth" ? "❓ Mythe" : "💡 Indéterminé";
-      const typeClass = item.type === "fact" ? "fact" : item.type === "myth" ? "myth" : "unknown";
-
-      const card = document.createElement("article");
-      card.className = "ff-card";
-      card.dataset.id = item.id;
-      card.innerHTML = `
-        <div class="inner">
-          <div class="ff-face front">
-            <div class="type ${typeClass}">${typeLabel}</div>
-            <div class="meta"><span class="badge">${item.category||"Catégorie"}</span></div>
-            <div class="title">${item.title||"(sans titre)"}</div>
-            <div class="body" style="min-height:56px">${truncateWords(toStr(item.body||item.title||""), 35)}</div>
-          </div>
-          <div class="ff-face back">
-            <div class="type ${typeClass}">Réponse</div>
-            <div class="meta">
-              <span class="badge">${item.category||"Catégorie"}</span>
-              <span class="badge">${typeLabel.replace(/^[^ ]+ /,'')}</span>
-            </div>
-            <div class="body">${explainShort(item, 50)}</div>
-            ${sourcesBlock(item.sources)}
-          </div>
-        </div>
-      `;
-
-      // Flip en cliquant (sauf liens)
-      card.addEventListener("click",(e)=>{
-        if (e.target.closest("a")) return;
-        card.classList.toggle("flipped");
-      });
-
-      cardsWrap.appendChild(card);
-    }
-  }
-
-  async function loadInitialCards() {
-    const list = await fetchFacts({ lang, n: 8 });
-    log("Cartes initiales reçues:", list.length);
-    list.forEach((x) => seenCards.add(x.id));
-    drawCards(list);
-  }
-  async function newSet() {
-    const list = await fetchFacts({ lang, n: 8, seen: Array.from(seenCards).join(",") });
-    log("Nouveau lot:", list.length);
-    list.forEach((x) => seenCards.add(x.id));
-    drawCards(list);
-    newSetClicks = (newSetClicks + 1) % 3;
-    if (newSetClicks === 0 && window.launchConfetti) window.launchConfetti(900);
-  }
-  async function oneMyth() {
-    const list = await fetchFacts({ lang, kind: "myth", n: 1, seen: Array.from(seenCards).join(",") });
-    log("Un mythe:", list.length);
-    list.forEach((x) => seenCards.add(x.id));
-    drawCards(list);
-  }
-  async function oneFact() {
-    const list = await fetchFacts({ lang, kind: "fact", n: 1, seen: Array.from(seenCards).join(",") });
-    log("Un fait:", list.length);
-    list.forEach((x) => seenCards.add(x.id));
-    drawCards(list);
-  }
-  function onFilterClick(e) {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-    segFilter?.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    FILTER = btn.dataset.filter || "all";
-    drawCards(CARDS);
-  }
-
-  // ---------- NUAGE ----------
-  let cloud, btnShuffle;
-  const bubbles = [];
-  let running = true;
-
-  function positionTooltipAround(el, preferTop = true) {
-    const t = ensureTooltip();
-    const r = el.getBoundingClientRect();
-    const pad = 10;
-    const tw = t.offsetWidth || 320;
-    const th = t.offsetHeight || 120;
-
-    let x = r.left + r.width / 2 - tw / 2;
-    x = Math.max(8, Math.min(window.innerWidth - tw - 8, x));
-
-    let y = preferTop ? r.top - th - pad : r.bottom + pad;
-    if (y < 4) y = r.bottom + pad;
-    if (y + th > window.innerHeight - 4) y = Math.max(4, r.top - th - pad);
-
-    t.style.left = `${x}px`;
-    t.style.top = `${y + window.scrollY}px`;
-  }
-
-  function showTooltipFor(item, anchorEl) {
-    const t = ensureTooltip();
-    const ttTitle = $("#ttTitle", t);
-    const ttMeta = $("#ttMeta", t);
-    const ttBody = $("#ttBody", t);
-    const ttSources = $("#ttSources", t);
-
-    ttTitle.textContent = item.title || "(sans titre)";
-
-    ttMeta.innerHTML = "";
-    const c = document.createElement("span");
-    c.className = "badge";
-    c.textContent = item.category || "Catégorie";
-    ttMeta.appendChild(c);
-    const k = document.createElement("span");
-    k.className = "badge";
-    k.textContent = item.type === "fact" ? "Fait" : item.type === "myth" ? "Mythe" : "Indéterminé";
-    ttMeta.appendChild(k);
-
-    ttBody.textContent = explainShort(item, MAX_TOOLTIP_WORDS);
-
-    ttSources.innerHTML = "";
-    if (item.sources?.length) {
-      const h = document.createElement("div");
-      h.innerHTML = "<strong>Sources :</strong>";
-      const ul = document.createElement("ul");
-      ul.style.margin = ".2rem 0 0 1rem";
-      for (const s of item.sources) {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = s.href;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.textContent = s.label || niceLabelFromUrl(s.href);
-        li.appendChild(a);
-        ul.appendChild(li);
-      }
-      ttSources.appendChild(h);
-      ttSources.appendChild(ul);
-    }
-
-    t.style.display = "block";
-    positionTooltipAround(anchorEl, true);
-  }
-
-  function labelForCategory(s) {
-    const w = (s || "").split(/\s+/);
-    return (w[0] || "").slice(0, 16) + (w[1] ? " " + w[1].slice(0, 12) : "");
-  }
-
-  function createBubble(item) {
-    if (!cloud) return;
-    const el = document.createElement("div");
-    el.className = "bubble";
-    el.setAttribute("role", "button");
-    el.setAttribute("aria-label", item.title || "fun fact");
-
-    const r = Math.max(56, Math.min(110, 70 + ((item.title?.length || 20) / 4)));
-    el.style.width = el.style.height = r + "px";
-    el.style.left = rand(10, Math.max(12, cloud.clientWidth - r - 10)) + "px";
-    el.style.top = rand(10, Math.max(12, cloud.clientHeight - r - 10)) + "px";
-
-    const em = document.createElement("div");
-    em.className = "emoji";
-    em.textContent = item.type === "fact" ? "⭐" : item.type === "myth" ? "❓" : "💡";
-    el.appendChild(em);
-
-    const lab = document.createElement("div");
-    lab.className = "label";
-    lab.textContent = labelForCategory(item.category || (item.type === "fact" ? "Fait" : "Mythe"));
-    el.appendChild(lab);
-
-    cloud.appendChild(el);
-
-    const bub = {
-      el, item, r,
-      x: parseFloat(el.style.left),
-      y: parseFloat(el.style.top),
-      vx: rand(-0.4, 0.4) || 0.3,
-      vy: rand(-0.35, 0.35) || -0.25,
-      paused: false,
-    };
-
-    const show = () => { bub.paused = true; el.classList.add("paused"); showTooltipFor(item, el); };
-    const hide = () => { bub.paused = false; el.classList.remove("paused"); hideTooltip(); };
-
-    el.addEventListener("mouseenter", show);
-    el.addEventListener("mouseleave", hide);
-    el.addEventListener("click", show);
-
-    bubbles.push(bub);
-  }
-
-  function loop() {
-    if (!cloud) return;
-    const W = cloud.clientWidth, H = cloud.clientHeight;
-    for (const b of bubbles) {
-      if (b.paused) continue;
-      b.x += b.vx;
-      b.y += b.vy;
-      if (b.x <= 6 || b.x + b.r >= W - 6) b.vx *= -1;
-      if (b.y <= 6 || b.y + b.r >= H - 6) b.vy *= -1;
-      b.el.style.left = b.x + "px";
-      b.el.style.top  = b.y + "px";
-    }
-    requestAnimationFrame(loop);
-  }
-
-  async function loadCloud() {
-    const seen = Array.from(seenCards).join(",");
-    const list = await fetchFacts({ lang, n: 18, seen });
-    log("Nuage reçu:", list.length);
-    cloud.innerHTML = "";
-    bubbles.length = 0;
-    if (!list.length) {
-      const empty = document.createElement("div");
-      empty.style.opacity = ".7";
-      empty.style.padding = "1rem 0";
-      empty.textContent = "Aucun élément pour le nuage.";
-      cloud.appendChild(empty);
-      return;
-    }
-    list.forEach(createBubble);
-  }
-
-  // ---------- Start ----------
-  (async function start() {
-    cardsWrap  = $("#cards");
-    segFilter  = $(".seg");
-    btnNewSet  = $("#btnNewSet");
-    btnOneMyth = $("#btnOneMyth");
-    btnOneFact = $("#btnOneFact");
-    cloud      = $("#cloud");
-    btnShuffle = $("#btnShuffle");
-
-    document.addEventListener("visibilitychange", () => (running = document.visibilityState === "visible"));
-    btnNewSet?.addEventListener("click", newSet);
-    btnOneMyth?.addEventListener("click", oneMyth);
-    btnOneFact?.addEventListener("click", oneFact);
-    segFilter?.addEventListener("click", onFilterClick);
-    btnShuffle?.addEventListener("click", loadCloud);
-
-    await loadInitialCards();
-    await loadCloud();
-    loop();
-
-    log("Connectivité : API si dispo ; sinon JSON local ; sinon vide.");
   })();
+
+  function bubbleTipHTML(it) {
+    const src = (it.sources && it.sources.length)
+      ? `<div class="sources"><ul>${
+            it.sources.slice(0,3).map(s => s.url
+              ? `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label || s.url)}</a></li>`
+              : `<li>${esc(s.label)}</li>`).join('')
+          }</ul></div>`
+      : '';
+    const short = it.explainShort || truncateWords(stripHtml(it.explanation || ''), 30) || '—';
+    return `
+      <h4>${esc(it.title)}</h4>
+      <div class="meta"><span class="badge">${it.category ? esc(it.category) : ''}</span> ${esc(verdictText(it.type))}</div>
+      <p>${esc(short)}</p>
+      ${src}
+    `;
+  }
+
+  function renderCloud(list) {
+    rootCloud.innerHTML = '';
+    const box = rootCloud.getBoundingClientRect();
+    const W = Math.max(box.width, 600), H = Math.max(box.height, 360);
+
+    list.forEach((it, i) => {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = 90 + Math.round(Math.random()*80);
+      b.style.width = b.style.height = `${size}px`;
+      b.style.left = Math.round(Math.random()*(W - size)) + 'px';
+      b.style.top  = Math.round(Math.random()*(H - size)) + 'px';
+      b.innerHTML = `<span class="emoji">${it.type==='fact'?'✅':it.type==='myth'?'❌':'❔'}</span>
+                     <span class="label">${esc(truncateWords(it.title, 5))}</span>`;
+      b.addEventListener('mouseenter', (e) => showTip(e, it));
+      b.addEventListener('mousemove', (e) => moveTip(e));
+      b.addEventListener('mouseleave', hideTip);
+      b.addEventListener('click', (e) => showTip(e, it));
+      rootCloud.appendChild(b);
+    });
+  }
+  function showTip(e, it){ tip.innerHTML = bubbleTipHTML(it); tip.style.display='block'; moveTip(e); }
+  function moveTip(e){
+    const pad = 12, vw = window.innerWidth, vh = window.innerHeight;
+    const r = tip.getBoundingClientRect();
+    let x = e.clientX + pad, y = e.clientY + pad;
+    if (x + r.width > vw) x = vw - r.width - pad;
+    if (y + r.height > vh) y = vh - r.height - pad;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function hideTip(){ tip.style.display='none'; }
+
+  // ---- Jeu de données courant + commandes ----------------------------------
+  let DATA = [];          // pool (API ou JSON)
+  let CURRENT = [];       // cartes visibles
+  const N_INIT = 8;
+
+  async function ensureData() {
+    // 1) tenter l’API ; si 0 → JSON local
+    const byApi = await fetchAPI(32, Array.from(seen));
+    DATA = byApi && byApi.length ? byApi : await fetchLocal();
+  }
+
+  async function loadInitial() {
+    await ensureData();
+    CURRENT = pickRandom(DATA, N_INIT);
+    CURRENT.forEach(x => seen.add(x.id));
+    log('Cartes initiales:', CURRENT.length);
+    renderCards(CURRENT);
+    renderCloud(pickRandom(DATA, 14));
+    wireControls();
+  }
+
+  function wireControls() {
+    // Filtres (Tout/Faits/Mythes)
+    const seg = $('#ff-cards-controls .seg');
+    if (seg && !seg._wired) {
+      seg._wired = true;
+      seg.addEventListener('click', (e) => {
+        const btn = e.target.closest('button'); if (!btn) return;
+        $$('#ff-cards-controls .seg button').forEach(b => b.classList.toggle('active', b===btn));
+        const f = btn.dataset.filter || 'all';
+        $$('.ff-card').forEach(card => {
+          const t = card.querySelector('.type').classList.contains('myth') ? 'myth'
+                  : card.querySelector('.type').classList.contains('fact') ? 'fact' : 'unknown';
+          card.style.display = (f==='all' || f===t) ? '' : 'none';
+        });
+      });
+    }
+    // Nouveaux lots
+    const btnNew = $('#btnNewSet');
+    if (btnNew && !btnNew._wired) {
+      btnNew._wired = true;
+      btnNew.addEventListener('click', async () => {
+        await ensureData();
+        CURRENT = pickRandom(DATA.filter(x => !seen.has(x.id)), N_INIT);
+        if (CURRENT.length < N_INIT) CURRENT = CURRENT.concat(pickRandom(DATA, N_INIT - CURRENT.length));
+        CURRENT.forEach(x => seen.add(x.id));
+        renderCards(CURRENT);
+      });
+    }
+    const oneFact = $('#btnOneFact');
+    if (oneFact && !oneFact._wired) {
+      oneFact._wired = true;
+      oneFact.addEventListener('click', () => {
+        const pool = DATA.filter(x => x.type==='fact');
+        const pick = pickRandom(pool, 1);
+        if (pick.length) renderCards(pick.concat(CURRENT).slice(0, N_INIT));
+      });
+    }
+    const oneMyth = $('#btnOneMyth');
+    if (oneMyth && !oneMyth._wired) {
+      oneMyth._wired = true;
+      oneMyth.addEventListener('click', () => {
+        const pool = DATA.filter(x => x.type==='myth');
+        const pick = pickRandom(pool, 1);
+        if (pick.length) renderCards(pick.concat(CURRENT).slice(0, N_INIT));
+      });
+    }
+    const shuffleCloud = $('#btnShuffle');
+    if (shuffleCloud && !shuffleCloud._wired) {
+      shuffleCloud._wired = true;
+      shuffleCloud.addEventListener('click', async () => {
+        await ensureData();
+        renderCloud(pickRandom(DATA, 14));
+      });
+    }
+  }
+
+  function pickRandom(arr, n) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a.slice(0, Math.max(0, n));
+  }
+
+  // start
+  loadInitial();
 })();
