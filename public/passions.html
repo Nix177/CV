@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Passions & découvertes</title>
 
-  <link rel="icon" href="/favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="theme-color" content="#0a1220" />
 
   <style>
@@ -116,15 +116,6 @@
     }
     .link:hover{background:#0e1b2f}
 
-    /* ===== Games ===== */
-    .game-hours{
-      position:absolute; right:10px; bottom:10px; font-weight:800; font-size:12px;
-      background:rgba(20,184,166,.92); color:#052023; padding:.25rem .5rem; border-radius:8px;
-      border:1px solid rgba(255,255,255,.25)
-    }
-    .note{color:var(--muted2); font-size:13px; margin:8px 6px 18px 6px}
-    .hr{height:1px; background:rgba(255,255,255,.06); margin:20px 0}
-
     /* Lazy cover */
     .thumb[data-cover]{ background-image: linear-gradient(180deg,#0d1524,#0a1220) }
     .thumb.loaded{ background-image: var(--img); }
@@ -138,11 +129,11 @@
         <div>Passions & découvertes</div>
       </div>
       <nav class="top" aria-label="Navigation">
-        <a class="btn" href="/index.html">Accueil</a>
-        <a class="btn" href="/cv.html">CV</a>
-        <a class="btn" href="/portfolio.html">Portfolio</a>
-        <a class="btn" href="/chatbot.html">Chatbot</a>
-        <a class="btn" href="/fun-facts.html">Fun Facts</a>
+        <a class="btn" href="index.html">Accueil</a>
+        <a class="btn" href="cv.html">CV</a>
+        <a class="btn" href="portfolio.html">Portfolio</a>
+        <a class="btn" href="chatbot.html">Chatbot</a>
+        <a class="btn" href="fun-facts.html">Fun Facts</a>
       </nav>
     </div>
 
@@ -216,13 +207,12 @@
     <!-- ================= Jeux vidéo ================= -->
     <section id="jeux">
       <h2>Jeux vidéo</h2>
-      <p class="catdesc">Top 40 Steam (heures jouées, figé en local) + une sélection hors-Steam.</p>
-      <div class="note">Les images Steam proviennent des headers officiels figés en local. Aucune donnée de profil n’est lue côté site.</div>
+      <p class="catdesc">Top 40 Steam (images figées locales) + une sélection hors-Steam.</p>
 
       <h3 style="margin:6px 6px 10px 6px">Top 40 Steam</h3>
       <div class="grid" id="grid-steam"></div>
 
-      <div class="hr"></div>
+      <div style="height:1px;background:rgba(255,255,255,.06);margin:20px 0"></div>
 
       <h3 style="margin:6px 6px 10px 6px">Sélection hors-Steam</h3>
       <div class="grid" id="grid-games-custom"></div>
@@ -231,270 +221,148 @@
 
   <script>
     /* =========================================================
-       Data — chemins 100% locaux (dossiers /assets/passions/**)
+       IMPORTANT
+       - Tous les chemins sont RELATIFS (pas de / absolu)
+       - On ne montre plus les heures Steam
+       - Chargement d'image "safe": si le fichier manque, pas d'erreur
        ========================================================= */
+
+    const SHOW_STEAM_HOURS = false;
 
     const open = (url) => window.open(url, '_blank', 'noopener');
 
     // --- Astronomie ---
     const ASTRO = [
-      {
-        title: "Images JWST",
-        desc: "Galerie officielle du télescope James Webb. Images libres et légendées.",
-        cover: "/assets/passions/sites/webb-gallery.webp",
-        badge: "Site",
-        link: { label:"Voir", href:"https://webbtelescope.org/images" }
-      },
-      {
-        title: "Images brutes Curiosity",
-        desc: "Photos RAW du rover MSL pour traitement à la maison.",
-        cover: "/assets/passions/sites/curiosity-raw-images.webp",
-        badge: "Site",
-        link: { label:"Voir", href:"https://mars.nasa.gov/msl/multimedia/raw-images/" }
-      },
-      {
-        title: "MAST — Données astronomiques",
-        desc: "Archives STScI (Hubble, TESS, JWST). Téléchargements et catalogues.",
-        cover: "/assets/passions/sites/mast-archive-stsci.webp",
-        badge: "Données",
-        link: { label:"Accéder", href:"https://archive.stsci.edu/" }
-      },
-      {
-        title: "Cloudy Nights",
-        desc: "Communauté astro — retours d’expérience, tests, imagerie.",
-        cover: "/assets/passions/sites/cloudynights.webp",
-        badge: "Forum",
-        link: { label:"Forum", href:"https://www.cloudynights.com/" }
-      },
-      {
-        title: "Telescopic Watch",
-        desc: "Guides d’achat et comparatifs de télescopes pour débuter ou progresser.",
-        cover: "/assets/passions/sites/telescopicwatch.webp",
-        badge: "Guide",
-        link: { label:"Voir", href:"https://telescopicwatch.com/" }
-      },
-      {
-        title: "SRT — Radio-astronomie",
-        desc: "Petit radiotélescope éducatif du MIT Haystack, docs & plans.",
-        cover: "/assets/passions/sites/mit-haystack-srt.webp",
-        badge: "Projet",
-        link: { label:"Site", href:"https://www.haystack.mit.edu/haystack-public-outreach/srt-the-small-radio-telescope-for-education/" }
-      },
-      {
-        title: "Ed Ting (YouTube)",
-        desc: "Tests de télescopes, conseils d’achat et d’observation.",
-        cover: "/assets/passions/youtube/youtube-edting.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@edting" }
-      },
-      {
-        title: "Astrohopper",
-        desc: "Repérage d’objets au smartphone. Utilitaire simple, offline.",
-        cover: "/assets/passions/sites/astrohopper.webp",
-        badge: "Outil",
-        link: { label:"Essayer", href:"https://artyom-beilis.github.io/astrohopper.html" }
-      },
-      {
-        title: "Optique télescopes (PDF)",
-        desc: "Bases d’optique et types d’instruments — note d’Edmund Optics.",
-        cover: "/assets/passions/sites/edmundoptics-all-about-telescopes.webp",
-        badge: "Doc",
-        link: { label:"PDF", href:"https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf" }
-      }
+      { title:"Images JWST", desc:"Galerie officielle du télescope James Webb. Images libres et légendées.", cover:"assets/passions/sites/webb-gallery.webp", badge:"Site", link:{label:"Voir",href:"https://webbtelescope.org/images"} },
+      { title:"Images brutes Curiosity", desc:"Photos RAW du rover MSL pour traitement à la maison.", cover:"assets/passions/sites/curiosity-raw-images.webp", badge:"Site", link:{label:"Voir",href:"https://mars.nasa.gov/msl/multimedia/raw-images/"} },
+      { title:"MAST — Données astronomiques", desc:"Archives STScI (Hubble, TESS, JWST). Téléchargements et catalogues.", cover:"assets/passions/sites/mast-archive-stsci.webp", badge:"Données", link:{label:"Accéder",href:"https://archive.stsci.edu/"} },
+      { title:"Cloudy Nights", desc:"Communauté astro — retours d’expérience, tests, imagerie.", cover:"assets/passions/sites/cloudynights.webp", badge:"Forum", link:{label:"Forum",href:"https://www.cloudynights.com/"} },
+      { title:"Telescopic Watch", desc:"Guides d’achat et comparatifs de télescopes pour débuter ou progresser.", cover:"assets/passions/sites/telescopicwatch.webp", badge:"Guide", link:{label:"Voir",href:"https://telescopicwatch.com/"} },
+      { title:"SRT — Radio-astronomie", desc:"Petit radiotélescope éducatif du MIT Haystack, docs & plans.", cover:"assets/passions/sites/mit-haystack-srt.webp", badge:"Projet", link:{label:"Site",href:"https://www.haystack.mit.edu/haystack-public-outreach/srt-the-small-radio-telescope-for-education/"} },
+      { title:"Ed Ting (YouTube)", desc:"Tests de télescopes, conseils d’achat et d’observation.", cover:"assets/passions/youtube/youtube-edting.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@edting"} },
+      { title:"Astrohopper", desc:"Repérage d’objets au smartphone. Utilitaire simple, offline.", cover:"assets/passions/sites/astrohopper.webp", badge:"Outil", link:{label:"Essayer",href:"https://artyom-beilis.github.io/astrohopper.html"} },
+      { title:"Optique télescopes (PDF)", desc:"Bases d’optique et types d’instruments.", cover:"assets/passions/sites/edmundoptics-all-about-telescopes.webp", badge:"Doc", link:{label:"PDF",href:"https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf"} }
     ];
 
     // --- DIY & Bricolage ---
     const DIY = [
-      {
-        title: "How To Make Armor",
-        desc: "Techniques de forge et tôlerie pour armures — didactique.",
-        cover: "/assets/passions/youtube/youtube-howtomakearmor.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@howtomakearmor" }
-      },
-      {
-        title: "Armour Archive",
-        desc: "Patrons d’armures, retours & forum. Ressource historique.",
-        cover: "/assets/passions/sites/armour-archive-patterns.webp",
-        badge: "Site",
-        link: { label:"Patrons", href:"https://www.armourarchive.org/patterns/" }
-      },
-      {
-        title: "Clickspring",
-        desc: "Mécanismes & horlogerie : fabrication de précision filmée.",
-        cover: "/assets/passions/youtube/youtube-clickspring.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@Clickspring" }
-      },
-      {
-        title: "Art of Making Things",
-        desc: "Tutos variés : bois, métal, cuir, maquettes, couture maille…",
-        cover: "/assets/passions/sites/art-of-making-things.webp",
-        badge: "Site",
-        link: { label:"Tutoriels", href:"https://artofmakingthings.com/home" }
-      },
-      {
-        title: "Vidéos DIY — sélection",
-        desc: "Maison en terre, TV recyclée, écosystèmes en bocaux, cloud chamber.",
-        cover: "/assets/passions/sites/sketchware-docs.webp",
-        badge: "Playlist",
-        links: [
-          {label:"Maison en clay", href:"https://youtu.be/o6Z0MxWCbrc"},
-          {label:"TV recyclée", href:"https://youtu.be/qXrn4MqY1Wo"},
-          {label:"Écosystèmes", href:"https://youtu.be/QTH9m6MDIfc"},
-          {label:"Cloud chamber", href:"https://youtu.be/xky3f1aSkB8"}
+      { title:"How To Make Armor", desc:"Techniques de forge et tôlerie pour armures.", cover:"assets/passions/youtube/youtube-howtomakearmor.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@howtomakearmor"} },
+      { title:"Armour Archive", desc:"Patrons d’armures, retours & forum.", cover:"assets/passions/sites/armour-archive-patterns.webp", badge:"Site", link:{label:"Patrons",href:"https://www.armourarchive.org/patterns/"} },
+      { title:"Clickspring", desc:"Mécanismes & horlogerie : fabrication de précision.", cover:"assets/passions/youtube/youtube-clickspring.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"} },
+      { title:"Art of Making Things", desc:"Tutos variés : bois, métal, cuir, maquettes…", cover:"assets/passions/sites/art-of-making-things.webp", badge:"Site", link:{label:"Tutoriels",href:"https://artofmakingthings.com/home"} },
+      { title:"Vidéos DIY — sélection", desc:"Maison en terre, TV recyclée, écosystèmes, cloud chamber.", cover:"assets/passions/sites/sketchware-docs.webp", badge:"Playlist",
+        links:[
+          {label:"Maison en clay",href:"https://youtu.be/o6Z0MxWCbrc"},
+          {label:"TV recyclée",href:"https://youtu.be/qXrn4MqY1Wo"},
+          {label:"Écosystèmes",href:"https://youtu.be/QTH9m6MDIfc"},
+          {label:"Cloud chamber",href:"https://youtu.be/xky3f1aSkB8"}
         ]
       }
     ];
 
     // --- Histoire & Savoirs ---
     const HIST = [
-      {
-        title: "World War Two",
-        desc: "Chronologie hebdo de la Seconde Guerre mondiale.",
-        cover: "/assets/passions/youtube/youtube-worldwartwo.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@WorldWarTwo" }
-      },
-      {
-        title: "Benn Jordan",
-        desc: "Projets science/son : explications claires et testables.",
-        cover: "/assets/passions/youtube/youtube-bennjordan.webp",
-        badge: "Chaîne",
-        links: [
-          { label:"Chaîne", href:"https://www.youtube.com/@BennJordan" },
-          { label:"Oiseaux & data", href:"https://youtu.be/hCQCP-5g5bo" }
-        ]
-      },
-      {
-        title: "Technology Connections",
-        desc: "Histoire et principes des technologies du quotidien.",
-        cover: "/assets/passions/youtube/youtube-technologyconnections.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@TechnologyConnections" }
-      },
-      {
-        title: "Survive History",
-        desc: "Connaissances en tout genre sur l’histoire.",
-        cover: "/assets/passions/youtube/youtube-survivehistory.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@survivehistory" }
-      },
-      {
-        title: "MegaLag",
-        desc: "Explorations historiques fouillées, formats longs.",
-        cover: "/assets/passions/youtube/youtube-megalag.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@MegaLag" }
-      },
-      {
-        title: "Modern Knight",
-        desc: "Armement & Histoire : pédagogie, icono et rigueur.",
-        cover: "/assets/passions/youtube/youtube-modernknight.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@ModernKnight" }
-      },
-      {
-        title: "Kurzgesagt",
-        desc: "Sciences & société illustrées — vulgarisation exigeante.",
-        cover: "/assets/passions/youtube/youtube-kurzgesagt.webp",
-        badge: "Chaîne",
-        link: { label:"Chaîne", href:"https://www.youtube.com/@kurzgesagt" }
-      }
+      { title:"World War Two", desc:"Chronologie hebdo de la Seconde Guerre mondiale.", cover:"assets/passions/youtube/youtube-worldwartwo.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@WorldWarTwo"} },
+      { title:"Benn Jordan", desc:"Projets science/son : explications testables.", cover:"assets/passions/youtube/youtube-bennjordan.webp", badge:"Chaîne", links:[{label:"Chaîne",href:"https://www.youtube.com/@BennJordan"},{label:"Oiseaux & data",href:"https://youtu.be/hCQCP-5g5bo"}] },
+      { title:"Technology Connections", desc:"Histoire et principes des technologies du quotidien.", cover:"assets/passions/youtube/youtube-technologyconnections.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TechnologyConnections"} },
+      { title:"Survive History", desc:"Connaissances en tout genre sur l’histoire.", cover:"assets/passions/youtube/youtube-survivehistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@survivehistory"} },
+      { title:"MegaLag", desc:"Explorations historiques fouillées.", cover:"assets/passions/youtube/youtube-megalag.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@MegaLag"} },
+      { title:"Modern Knight", desc:"Armement & Histoire : rigueur et pédagogie.", cover:"assets/passions/youtube/youtube-modernknight.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ModernKnight"} },
+      { title:"Kurzgesagt", desc:"Sciences & société illustrées.", cover:"assets/passions/youtube/youtube-kurzgesagt.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@kurzgesagt"} }
     ];
 
     // --- Esprit critique ---
     const CRIT = [
-      { title:"La Tronche en Biais", desc:"Esprit critique : formats réguliers et accessibles.", cover:"/assets/passions/youtube/youtube-troncheenbiais.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@TroncheEnBiais"} },
-      { title:"Hygiène Mentale", desc:"Méthodes, biais, calculs mentaux. Commencer par les anciennes vidéos.", cover:"/assets/passions/youtube/youtube-hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
-      { title:"Mr Sam", desc:"Enquêtes et analyses sourcées, bonne progression dans le temps.", cover:"/assets/passions/youtube/youtube-mrsam.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@mrsam-interrogation"} },
-      { title:"Defakator", desc:"Séries sur deepfakes, IA, méthodes de vérification.", cover:"/assets/passions/youtube/youtube-defakatorofficiel.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@DefakatorOfficiel"} },
-      { title:"G. Milgram", desc:"Enquêtes et vérifs patientes sur sujets controversés.", cover:"/assets/passions/youtube/youtube-ggmilgram.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@ggmilgram"} },
-      { title:"AFIS & REC Toulouse", desc:"Réseau de culture scientifique et scepticisme appliqué.", cover:"/assets/passions/youtube/youtube-rectoulouse.webp", badge:"Chaînes", links:[{label:"AFIS", href:"https://www.youtube.com/@afis-science"},{label:"REC Toulouse", href:"https://www.youtube.com/@RECTOULOUSE"}] }
+      { title:"La Tronche en Biais", desc:"Esprit critique : formats réguliers.", cover:"assets/passions/youtube/youtube-troncheenbiais.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TroncheEnBiais"} },
+      { title:"Hygiène Mentale", desc:"Méthodes, biais, calculs mentaux.", cover:"assets/passions/youtube/youtube-hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
+      { title:"Mr Sam", desc:"Enquêtes et analyses sourcées.", cover:"assets/passions/youtube/youtube-mrsam.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@mrsam-interrogation"} },
+      { title:"Defakator", desc:"Séries sur deepfakes, IA.", cover:"assets/passions/youtube/youtube-defakatorofficiel.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@DefakatorOfficiel"} },
+      { title:"G. Milgram", desc:"Enquêtes et vérifs patientes.", cover:"assets/passions/youtube/youtube-ggmilgram.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ggmilgram"} },
+      { title:"AFIS & REC Toulouse", desc:"Culture scientifique et scepticisme.", cover:"assets/passions/youtube/youtube-rectoulouse.webp", badge:"Chaînes", links:[{label:"AFIS",href:"https://www.youtube.com/@afis-science"},{label:"REC Toulouse",href:"https://www.youtube.com/@RECTOULOUSE"}] }
     ];
 
     // --- Cuisine ---
     const FOOD = [
-      { title:"John Kirkwood", desc:"Techniques et recettes maîtrisées, explications nettes.", cover:"/assets/passions/youtube/youtube-johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
-      { title:"SortedFood", desc:"Tests, astuces et comparatifs — fun mais précis.", cover:"/assets/passions/youtube/youtube-sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@SortedFood"} },
-      { title:"Tasting History", desc:"Cuisine historique, sources et recettes reproductibles.", cover:"/assets/passions/youtube/youtube-tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@TastingHistory"} },
-      { title:"Akis Petretzikis", desc:"Cuisine grecque & internationale, formats clairs.", cover:"/assets/passions/youtube/youtube-akispetretzikis.webp", badge:"Chaîne", links:[{label:"Chaîne", href:"https://www.youtube.com/@akispetretzikisen"},{label:"Site", href:"https://akispetretzikis.com/en"}] }
+      { title:"John Kirkwood", desc:"Techniques et recettes maîtrisées.", cover:"assets/passions/youtube/youtube-johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
+      { title:"SortedFood", desc:"Tests, astuces et comparatifs.", cover:"assets/passions/youtube/youtube-sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@SortedFood"} },
+      { title:"Tasting History", desc:"Cuisine historique sourcée.", cover:"assets/passions/youtube/youtube-tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TastingHistory"} },
+      { title:"Akis Petretzikis", desc:"Cuisine grecque & internationale.", cover:"assets/passions/youtube/youtube-akispetretzikis.webp", badge:"Chaîne", links:[{label:"Chaîne",href:"https://www.youtube.com/@akispetretzikisen"},{label:"Site",href:"https://akispetretzikis.com/en"}] }
     ];
 
     // --- Éducation numérique ---
     const EDU = [
-      {title:"Scratch",desc:"Programmation visuelle pour tous.",cover:"/assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}},
-      {title:"Snap!",desc:"Scratch avancé : listes, closures, extensions.",cover:"/assets/passions/sites/snap-berkeley.webp",badge:"Outil",link:{label:"Essayer",href:"https://snap.berkeley.edu/"}},
-      {title:"Blockly Games",desc:"Mini-jeux pour apprendre la logique.",cover:"/assets/passions/sites/blockly-games.webp",badge:"Outil",link:{label:"Jouer",href:"https://blockly.games/"}},
-      {title:"Code.org Studio",desc:"Parcours guidés et activités en classe.",cover:"/assets/passions/sites/code-org-studio.webp",badge:"Plateforme",link:{label:"Ouvrir",href:"https://studio.code.org/users/sign_in"}},
-      {title:"NetsBlox",desc:"Programmation distribuée & APIs simples.",cover:"/assets/passions/sites/netsblox.webp",badge:"Outil",link:{label:"Essayer",href:"https://netsblox.org/"}},
-      {title:"App Inventor",desc:"Apps mobiles par blocs, Android.",cover:"/assets/passions/sites/appinventor.webp",badge:"Outil",link:{label:"Essayer",href:"https://appinventor.mit.edu/"}},
-      {title:"Alice",desc:"3D et narration interactive.",cover:"/assets/passions/sites/alice.webp",badge:"Outil",link:{label:"Ouvrir",href:"https://www.alice.org/"}},
-      {title:"Pencil Code",desc:"Du bloc au texte (JS/Coffee).",cover:"/assets/passions/sites/pencilcode.webp",badge:"Outil",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
-      {title:"MakeCode",desc:"Micro:bit & consorts en blocs/JS.",cover:"/assets/passions/sites/makecode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.microsoft.com/en-us/makecode"}},
-      {title:"Vidcode",desc:"Vidéo + JS pour ados.",cover:"/assets/passions/sites/vidcode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.vidcode.com/"}},
-      {title:"Construct",desc:"Jeux 2D sans coder (ou un peu).",cover:"/assets/passions/sites/construct.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.construct.net/fr"}},
-      {title:"Compute-it",desc:"Pensée informatique ludique.",cover:"/assets/passions/sites/compute-it.webp",badge:"Jeu",link:{label:"Jouer",href:"https://compute-it.toxicode.fr/"}},
-      {title:"Codingame",desc:"Défis de code multi-langages.",cover:"/assets/passions/sites/codingame.webp",badge:"Défis",link:{label:"Jouer",href:"https://codingame.com/start/"}},
-      {title:"p5.js",desc:"Création visuelle en JavaScript.",cover:"/assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doc",href:"https://p5js.org/"}},
-      {title:"Thonny",desc:"IDE minimal pour Python débutant.",cover:"/assets/passions/sites/thonny.webp",badge:"Outil",link:{label:"Télécharger",href:"https://thonny.org/"}},
-      {title:"Mu Editor",desc:"IDE Python pour l’éducation.",cover:"/assets/passions/sites/mu-editor.webp",badge:"Outil",link:{label:"Télécharger",href:"https://codewith.mu/"}},
-      {title:"TigerJython",desc:"Python orienté apprentissage.",cover:"/assets/passions/sites/tigerjython.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.tigerjython.ch/en"}},
-      {title:"Pyret",desc:"Langage pédagogique par design.",cover:"/assets/passions/sites/pyret.webp",badge:"Langage",link:{label:"Doc",href:"https://pyret.org/"}},
-      {title:"Vittascience",desc:"Cartes, capteurs & robotique scolaire.",cover:"/assets/passions/sites/vittascience.webp",badge:"Plateforme",link:{label:"Découvrir",href:"https://en.vittascience.com/"}},
-      {title:"Micro:bit",desc:"Électronique simple pour la classe.",cover:"/assets/passions/sites/microbit-makecode.webp",badge:"Outil",link:{label:"MakeCode",href:"https://makecode.microbit.org/"}},
-      {title:"cand.li",desc:"Mini-apps pédagogiques clés en main.",cover:"/assets/passions/sites/candli.webp",badge:"Outil",link:{label:"Voir",href:"https://cand.li/index-fr.html"}},
-      {title:"Human or Not",desc:"Jeu Turing moderne : IA vs humain.",cover:"/assets/passions/sites/humanornot.webp",badge:"Jeu",link:{label:"Jouer",href:"https://humanornot.ai/"}}
+      {title:"Scratch",desc:"Programmation visuelle pour tous.",cover:"assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}},
+      {title:"Snap!",desc:"Scratch avancé : listes, closures…",cover:"assets/passions/sites/snap-berkeley.webp",badge:"Outil",link:{label:"Essayer",href:"https://snap.berkeley.edu/"}},
+      {title:"Blockly Games",desc:"Mini-jeux pour la logique.",cover:"assets/passions/sites/blockly-games.webp",badge:"Outil",link:{label:"Jouer",href:"https://blockly.games/"}},
+      {title:"Code.org Studio",desc:"Parcours guidés et activités.",cover:"assets/passions/sites/code-org-studio.webp",badge:"Plateforme",link:{label:"Ouvrir",href:"https://studio.code.org/users/sign_in"}},
+      {title:"NetsBlox",desc:"Programmation distribuée & APIs.",cover:"assets/passions/sites/netsblox.webp",badge:"Outil",link:{label:"Essayer",href:"https://netsblox.org/"}},
+      {title:"App Inventor",desc:"Apps mobiles par blocs.",cover:"assets/passions/sites/appinventor.webp",badge:"Outil",link:{label:"Essayer",href:"https://appinventor.mit.edu/"}},
+      {title:"Alice",desc:"3D et narration interactive.",cover:"assets/passions/sites/alice.webp",badge:"Outil",link:{label:"Ouvrir",href:"https://www.alice.org/"}},
+      {title:"Pencil Code",desc:"Du bloc au texte (JS/Coffee).",cover:"assets/passions/sites/pencilcode.webp",badge:"Outil",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
+      {title:"MakeCode",desc:"Micro:bit & co en blocs/JS.",cover:"assets/passions/sites/makecode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.microsoft.com/en-us/makecode"}},
+      {title:"Vidcode",desc:"Vidéo + JS pour ados.",cover:"assets/passions/sites/vidcode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.vidcode.com/"}},
+      {title:"Construct",desc:"Jeux 2D sans coder.",cover:"assets/passions/sites/construct.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.construct.net/fr"}},
+      {title:"Compute-it",desc:"Pensée informatique ludique.",cover:"assets/passions/sites/compute-it.webp",badge:"Jeu",link:{label:"Jouer",href:"https://compute-it.toxicode.fr/"}},
+      {title:"Codingame",desc:"Défis multi-langages.",cover:"assets/passions/sites/codingame.webp",badge:"Défis",link:{label:"Jouer",href:"https://codingame.com/start/"}},
+      {title:"p5.js",desc:"Création visuelle JS.",cover:"assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doc",href:"https://p5js.org/"}},
+      {title:"Thonny",desc:"IDE Python débutant.",cover:"assets/passions/sites/thonny.webp",badge:"Outil",link:{label:"Télécharger",href:"https://thonny.org/"}},
+      {title:"Mu Editor",desc:"IDE Python éducatif.",cover:"assets/passions/sites/mu-editor.webp",badge:"Outil",link:{label:"Télécharger",href:"https://codewith.mu/"}},
+      {title:"TigerJython",desc:"Python orienté apprentissage.",cover:"assets/passions/sites/tigerjython.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.tigerjython.ch/en"}},
+      {title:"Pyret",desc:"Langage pédagogique.",cover:"assets/passions/sites/pyret.webp",badge:"Langage",link:{label:"Doc",href:"https://pyret.org/"}},
+      {title:"Vittascience",desc:"Cartes, capteurs & robotique.",cover:"assets/passions/sites/vittascience.webp",badge:"Plateforme",link:{label:"Découvrir",href:"https://en.vittascience.com/"}},
+      {title:"Micro:bit",desc:"Électronique simple.",cover:"assets/passions/sites/microbit-makecode.webp",badge:"Outil",link:{label:"MakeCode",href:"https://makecode.microbit.org/"}},
+      {title:"cand.li",desc:"Mini-apps pédagogiques.",cover:"assets/passions/sites/candli.webp",badge:"Outil",link:{label:"Voir",href:"https://cand.li/index-fr.html"}},
+      {title:"Human or Not",desc:"Jeu Turing moderne : IA vs humain.",cover:"assets/passions/sites/humanornot.webp",badge:"Jeu",link:{label:"Jouer",href:"https://humanornot.ai/"}}
     ];
 
     // --- Outils & divers ---
     const TOOLS = [
-      {title:"Unscreen",desc:"Supprimer l’arrière-plan vidéo.",cover:"/assets/passions/sites/unscreen.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.unscreen.com/"}},
-      {title:"Remove.bg",desc:"Détourage instantané d’images.",cover:"/assets/passions/sites/removebg.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
-      {title:"Hotpot AI",desc:"Génération et retouches variées.",cover:"/assets/passions/sites/hotpot-ai.webp",badge:"Outil",link:{label:"Essayer",href:"https://hotpot.ai/art-maker"}},
-      {title:"AI Experiments",desc:"Expériences IA de Google.",cover:"/assets/passions/sites/google-ai-experiments.webp",badge:"Galerie",link:{label:"Explorer",href:"https://experiments.withgoogle.com/collection/ai"}},
-      {title:"Axiom",desc:"Automatiser le web sans coder.",cover:"/assets/passions/sites/axiom-ai.webp",badge:"Outil",link:{label:"Voir",href:"https://axiom.ai/"}},
-      {title:"TinyWow",desc:"Utilitaires PDF, vidéo, images, etc.",cover:"/assets/passions/sites/tinywow.webp",badge:"Outils",link:{label:"Voir",href:"https://tinywow.com/"}},
-      {title:"OpenFoodFacts",desc:"Base produits ouverte & étiquettes.",cover:"/assets/passions/sites/openfoodfacts.webp",badge:"Données",link:{label:"Parcourir",href:"https://world.openfoodfacts.org/"}},
-      {title:"ImportYeti",desc:"Fret & fournisseurs (US Customs).",cover:"/assets/passions/sites/importyeti.webp",badge:"Data",link:{label:"Chercher",href:"https://www.importyeti.com/"}},
-      {title:"Capitol Trades",desc:"Transactions boursières d’élus US.",cover:"/assets/passions/sites/capitoltrades.webp",badge:"Data",link:{label:"Parcourir",href:"https://www.capitoltrades.com/trades"}},
-      {title:"Am I Unique?",desc:"Empreinte navigateur & privacy.",cover:"/assets/passions/sites/amiunique.webp",badge:"Test",link:{label:"Tester",href:"https://amiunique.org/fr/fingerprint"}},
-      {title:"VirusTotal",desc:"Scanner des fichiers/URLs.",cover:"/assets/passions/sites/virustotal.webp",badge:"Sécu",link:{label:"Scanner",href:"https://www.virustotal.com/gui/home/upload"}},
-      {title:"Scamdoc",desc:"Réputation d’un site ou vendeur.",cover:"/assets/passions/sites/scamdoc.webp",badge:"Sécu",link:{label:"Tester",href:"https://fr.scamdoc.com/"}},
-      {title:"Folding@home",desc:"Calcul distribué pour la science.",cover:"/assets/passions/sites/foldingathome.webp",badge:"Projet",link:{label:"Participer",href:"https://foldingathome.org/"}},
-      {title:"Night Watch",desc:"Restauration de La Ronde de nuit.",cover:"/assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
-      {title:"OpenRouter",desc:"Hub de modèles IA.",cover:"/assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Explorer",href:"https://openrouter.ai/"}},
-      {title:"BBC SFX",desc:"Banque de sons libre d’usage.",cover:"/assets/passions/sites/bbc-sfx.webp",badge:"Sons",link:{label:"Écouter",href:"https://sound-effects.bbcrewind.co.uk/"}},
-      {title:"PlayPhrase",desc:"Chercher des répliques dans des films.",cover:"/assets/passions/sites/playphrase.webp",badge:"Outil",link:{label:"Essayer",href:"https://playphrase.me/"}},
-      {title:"Driving Simulator Maps",desc:"Cartes procédurales jouables.",cover:"/assets/passions/sites/driving-simulator-framesynthesis.webp",badge:"Démo",link:{label:"Jouer",href:"https://framesynthesis.com/drivingsimulator/maps/"}},
-      {title:"RetroArch",desc:"Frontend émulation (multi-systèmes).",cover:"/assets/passions/sites/retroarch.webp",badge:"Outil",link:{label:"Télécharger",href:"https://www.retroarch.com/"}},
-      {title:"Powkiddy",desc:"Consoles portables pour rétro-gaming.",cover:"/assets/passions/sites/powkiddy.webp",badge:"Matériel",link:{label:"Voir",href:"https://arkadil.com/products/powkiddy-game-console"}},
-      {title:"CoolThings",desc:"Objets et gadgets originaux.",cover:"/assets/passions/sites/coolthings.webp",badge:"Site",link:{label:"Voir",href:"https://coolthings.com/"}},
-      {title:"ThisIsWhyImBroke",desc:"Wishlist d’objets insolites.",cover:"/assets/passions/sites/thisiswhyimbroke.webp",badge:"Site",link:{label:"Voir",href:"https://www.thisiswhyimbroke.com/"}},
-      {title:"NVIDIA AI Playground",desc:"Démos IA de NVIDIA Research.",cover:"/assets/passions/sites/nvidia-ai-playground.webp",badge:"Démo",link:{label:"Essayer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
-      {title:"GAIA Vari",desc:"Variabilité d’étoiles (ESA).",cover:"/assets/passions/sites/gaia-vari.webp",badge:"Data",link:{label:"Explorer",href:"https://www.gaiavari.space/"}},
-      {title:"NEO Toolkit (ESA)",desc:"Outils objets proches de la Terre.",cover:"/assets/passions/sites/esa-neo-toolkit.webp",badge:"Outil",link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"}},
-      {title:"Sketchware Docs",desc:"Développement Android par blocs.",cover:"/assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://docs.sketchware.io/"}},
-      {title:"Giza 3D",desc:"Exploration 3D des sites égyptiens.",cover:"/assets/passions/sites/giza3d.webp",badge:"Site",link:{label:"Visiter",href:"http://giza.fas.harvard.edu/giza3d/"}}
+      {title:"Unscreen",desc:"Supprimer l’arrière-plan vidéo.",cover:"assets/passions/sites/unscreen.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.unscreen.com/"}},
+      {title:"Remove.bg",desc:"Détourage instantané d’images.",cover:"assets/passions/sites/removebg.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
+      {title:"Hotpot AI",desc:"Génération et retouches.",cover:"assets/passions/sites/hotpot-ai.webp",badge:"Outil",link:{label:"Essayer",href:"https://hotpot.ai/art-maker"}},
+      {title:"AI Experiments",desc:"Expériences IA de Google.",cover:"assets/passions/sites/google-ai-experiments.webp",badge:"Galerie",link:{label:"Explorer",href:"https://experiments.withgoogle.com/collection/ai"}},
+      {title:"Axiom",desc:"Automatiser le web sans coder.",cover:"assets/passions/sites/axiom-ai.webp",badge:"Outil",link:{label:"Voir",href:"https://axiom.ai/"}},
+      {title:"TinyWow",desc:"Utilitaires PDF/vidéo/images.",cover:"assets/passions/sites/tinywow.webp",badge:"Outils",link:{label:"Voir",href:"https://tinywow.com/"}},
+      {title:"OpenFoodFacts",desc:"Base produits ouverte.",cover:"assets/passions/sites/openfoodfacts.webp",badge:"Données",link:{label:"Parcourir",href:"https://world.openfoodfacts.org/"}},
+      {title:"ImportYeti",desc:"Fret & fournisseurs.",cover:"assets/passions/sites/importyeti.webp",badge:"Data",link:{label:"Chercher",href:"https://www.importyeti.com/"}},
+      {title:"Capitol Trades",desc:"Transactions d’élus US.",cover:"assets/passions/sites/capitoltrades.webp",badge:"Data",link:{label:"Parcourir",href:"https://www.capitoltrades.com/trades"}},
+      {title:"Am I Unique?",desc:"Empreinte navigateur.",cover:"assets/passions/sites/amiunique.webp",badge:"Test",link:{label:"Tester",href:"https://amiunique.org/fr/fingerprint"}},
+      {title:"VirusTotal",desc:"Scanner fichiers/URLs.",cover:"assets/passions/sites/virustotal.webp",badge:"Sécu",link:{label:"Scanner",href:"https://www.virustotal.com/gui/home/upload"}},
+      {title:"Scamdoc",desc:"Réputation d’un site.",cover:"assets/passions/sites/scamdoc.webp",badge:"Sécu",link:{label:"Tester",href:"https://fr.scamdoc.com/"}},
+      {title:"Folding@home",desc:"Calcul distribué pour la science.",cover:"assets/passions/sites/foldingathome.webp",badge:"Projet",link:{label:"Participer",href:"https://foldingathome.org/"}},
+      {title:"Night Watch",desc:"Restauration La Ronde de nuit.",cover:"assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
+      {title:"OpenRouter",desc:"Hub de modèles IA.",cover:"assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Explorer",href:"https://openrouter.ai/"}},
+      {title:"BBC SFX",desc:"Banque de sons libre.",cover:"assets/passions/sites/bbc-sfx.webp",badge:"Sons",link:{label:"Écouter",href:"https://sound-effects.bbcrewind.co.uk/"}},
+      {title:"PlayPhrase",desc:"Chercher des répliques.",cover:"assets/passions/sites/playphrase.webp",badge:"Outil",link:{label:"Essayer",href:"https://playphrase.me/"}},
+      {title:"Driving Simulator Maps",desc:"Cartes procédurales.",cover:"assets/passions/sites/driving-simulator-framesynthesis.webp",badge:"Démo",link:{label:"Jouer",href:"https://framesynthesis.com/drivingsimulator/maps/"}},
+      {title:"RetroArch",desc:"Frontend émulation multi.",cover:"assets/passions/sites/retroarch.webp",badge:"Outil",link:{label:"Télécharger",href:"https://www.retroarch.com/"}},
+      {title:"Powkiddy",desc:"Consoles rétro-gaming.",cover:"assets/passions/sites/powkiddy.webp",badge:"Matériel",link:{label:"Voir",href:"https://arkadil.com/products/powkiddy-game-console"}},
+      {title:"CoolThings",desc:"Objets et gadgets.",cover:"assets/passions/sites/coolthings.webp",badge:"Site",link:{label:"Voir",href:"https://coolthings.com/"}},
+      {title:"ThisIsWhyImBroke",desc:"Wishlist d’objets insolites.",cover:"assets/passions/sites/thisiswhyimbroke.webp",badge:"Site",link:{label:"Voir",href:"https://www.thisiswhyimbroke.com/"}},
+      {title:"NVIDIA AI Playground",desc:"Démos IA NVIDIA.",cover:"assets/passions/sites/nvidia-ai-playground.webp",badge:"Démo",link:{label:"Essayer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
+      {title:"GAIA Vari",desc:"Variabilité d’étoiles.",cover:"assets/passions/sites/gaia-vari.webp",badge:"Data",link:{label:"Explorer",href:"https://www.gaiavari.space/"}},
+      {title:"NEO Toolkit (ESA)",desc:"Outils objets proches Terre.",cover:"assets/passions/sites/esa-neo-toolkit.webp",badge:"Outil",link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"}},
+      {title:"Sketchware Docs",desc:"Dev Android par blocs.",cover:"assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://docs.sketchware.io/"}},
+      {title:"Giza 3D",desc:"Exploration 3D des sites égyptiens.",cover:"assets/passions/sites/giza3d.webp",badge:"Site",link:{label:"Visiter",href:"http://giza.fas.harvard.edu/giza3d/"}}
     ];
 
-    // --- Jeux personnalisés (images à déposer par toi) ---
+    // --- Jeux personnalisés (images déposées par toi) ---
     const GAMES_CUSTOM = [
-      {title:"Star Citizen", cover:"/assets/passions/games/custom/star-citizen-cover.webp"},
-      {title:"Heroes of the Storm", cover:"/assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
-      {title:"World of Warcraft", cover:"/assets/passions/games/custom/world-of-warcraft-cover.webp"},
-      {title:"Subnautica", cover:"/assets/passions/games/custom/subnautica-cover.webp"},
-      {title:"Genshin Impact", cover:"/assets/passions/games/custom/genshin-impact-cover.webp"},
-      {title:"Farming Simulator", cover:"/assets/passions/games/custom/farming-simulator-cover.webp"},
-      {title:"Elite Dangerous", cover:"/assets/passions/games/custom/elite-dangerous-cover.webp"},
-      {title:"Breathedge", cover:"/assets/passions/games/custom/breathedge-cover.webp"},
-      {title:"Remnant: From the Ashes", cover:"/assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
-      {title:"Deathloop", cover:"/assets/passions/games/custom/deathloop-cover.webp"},
-      {title:"Minecraft", cover:"/assets/passions/games/custom/minecraft-cover.webp"},
-      {title:"Fable", cover:"/assets/passions/games/custom/fable-cover.webp"},
-      {title:"Jeux N64 (classiques)", cover:"/assets/passions/games/custom/n64-classics-cover.webp"},
-      {title:"Xbox Classic (sélection)", cover:"/assets/passions/games/custom/xbox-classics-cover.webp"},
-      {title:"…et bien d’autres", cover:"/assets/passions/games/custom/and-others-cover.webp"}
+      {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp"},
+      {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
+      {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp"},
+      {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp"},
+      {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp"},
+      {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp"},
+      {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp"},
+      {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp"},
+      {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
+      {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp"},
+      {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp"},
+      {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp"},
+      {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp"},
+      {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp"},
+      {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp"}
     ];
 
     /* =========================================================
@@ -536,30 +404,35 @@
       list.forEach(item => root.appendChild(card(item)));
     }
 
-    // Games (Steam Top 40) – lit fichier local
+    // Games (Steam Top 40) – lit fichier local (chemin relatif)
     async function renderSteam(){
       const root = document.getElementById('grid-steam');
       try{
-        const res = await fetch('/data/steam-top40.json', {cache:'no-cache'});
+        const res = await fetch('data/steam-top40.json', {cache:'no-cache'});
         if(!res.ok) throw new Error('steam-top40.json introuvable');
         const data = await res.json();
         data.forEach(g=>{
+          // normalise le chemin (supprime / initial si présent)
+          const img = String(g.image || '').replace(/^\//,'');
           const el = card({
             title: g.name,
             desc: "",
-            cover: g.image,
+            cover: img,
             badge: "Steam"
           });
-          const b = document.createElement('span');
-          b.className = 'game-hours';
-          b.textContent = `${g.hours} h`;
-          el.querySelector('.thumb').appendChild(b);
+          if (SHOW_STEAM_HOURS && typeof g.hours !== 'undefined') {
+            const b = document.createElement('span');
+            b.className = 'game-hours';
+            b.textContent = `${g.hours} h`;
+            el.querySelector('.thumb').appendChild(b);
+          }
           root.appendChild(el);
         });
       }catch(e){
         const d = document.createElement('div');
-        d.className = 'note';
-        d.textContent = "Impossible de charger le Top 40 local. Vérifie public/data/steam-top40.json.";
+        d.className = 'desc';
+        d.style.margin = '6px';
+        d.textContent = "Impossible de charger le Top 40 local. Vérifie data/steam-top40.json.";
         root.before(d);
       }
     }
@@ -572,22 +445,33 @@
       });
     }
 
-    // Lazy load backgrounds
+    // Lazy load backgrounds (safe: ne fixe l'image que si elle existe)
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
           const t = e.target;
           const url = t.getAttribute('data-cover');
-          if(url){
-            t.style.setProperty('--img', `url("${url}")`);
-            t.classList.add('loaded');
+          if(url){ preloadCover(url).then(ok=>{
+            if(ok){ setThumbBackground(t, url); }
+            t.classList.add('loaded'); // même sans image => fond sobre
             t.removeAttribute('data-cover');
-          }
+          }); }
           io.unobserve(t);
         }
       });
     }, { rootMargin: '300px' });
 
+    function setThumbBackground(el, url){
+      el.style.setProperty('--img', `url("${url}")`);
+    }
+    function preloadCover(url){
+      return new Promise(res=>{
+        const img = new Image();
+        img.onload = ()=>res(true);
+        img.onerror = ()=>res(false);
+        img.src = url;
+      });
+    }
     function observeThumbs(){
       document.querySelectorAll('.thumb[data-cover]').forEach(el=>io.observe(el));
     }
