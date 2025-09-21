@@ -1,158 +1,156 @@
-// /api/facts  — renvoie un tableau [{ id,type,category,title,body,sources:[{href,label}]}]
-// Stratégie :
-// 1) Scrape Wikipedia (FR → EN fallback) avec extraction plus robuste, cache 12h.
-// 2) Filtre/échantillonne côté serveur selon ?lang ?n ?kind ?seen.
+// api/facts.js
+// Node (Vercel) serverless function — robust Wikipedia scraper
+import * as cheerio from 'cheerio';
 
-import cheerio from "cheerio";
+const WIKI = {
+  fr: ['https://fr.wikipedia.org/wiki/Liste_d%27id%C3%A9es_re%C3%A7ues'],
+  en: [
+    'https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_arts_and_culture',
+    'https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_history',
+    'https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_science,_technology,_and_mathematics'
+  ]
+};
 
-const CACHE_TTL = 12 * 60 * 60 * 1000;
-const mem = new Map(); // key: lang -> {ts, items}
+const UA = 'nicolas-tuor-cv-facts/1.1 (+https://nicolastuor.ch)';
 
-const toStr = (x)=> (x==null?"":String(x)).trim();
-const niceLabel = (u)=> toStr(u).replace(/^https?:\/\//,"").slice(0,95);
-
-function normalize(items){
-  return items.map((it,i)=>({
-    id: it.id || `wiki:${i}`,
-    type: it.type || "myth",
-    category: it.category || "Général",
-    title: it.title || "(sans titre)",
-    body: it.body || "",
-    sources: (it.sources||[]).map(s=>({
-      href: toStr(s.href||s.url||s), label: toStr(s.label)||niceLabel(s.href||s.url||s)
-    })).filter(s=>s.href)
-  }));
+function trimSpaces(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+function stripRefs($el) {
+  return $el
+    .clone()
+    .find('sup,.reference,.nowrap,table,.hatnote,.mw-ref,.noprint')
+    .remove()
+    .end();
+}
+function nearestHeading($, el) {
+  // Dernier h3 ou h2 avant l'élément
+  const $h = $(el).prevAll('h3,h2').first();
+  return trimSpaces($h.text()).replace(/\[\s*edit\s*\]|\[.*?\]/gi, '');
+}
+function firstSentence(s) {
+  const txt = trimSpaces(s).replace(/\(\s*\)/g, '');
+  // coupage raisonnable
+  const m = txt.match(/(.+?[.!?])(\s|$)/);
+  return m ? m[1] : txt;
+}
+function shortenWords(s, n = 20) {
+  const words = trimSpaces(s).split(/\s+/);
+  return words.length <= n ? trimSpaces(s) : words.slice(0, n).join(' ') + '…';
+}
+function absolutize(lang, href) {
+  if (!href) return null;
+  if (/^https?:\/\//i.test(href)) return href;
+  const host = lang === 'fr' ? 'https://fr.wikipedia.org' : 'https://en.wikipedia.org';
+  return href.startsWith('/') ? host + href : host + '/' + href;
+}
+function hashId(s) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(16);
 }
 
-// FR principal
-const WIKI_FR = "https://fr.wikipedia.org/wiki/Liste_d%27id%C3%A9es_re%C3%A7ues";
-// EN : page racine + sous-listes
-const WIKI_EN_PAGES = [
-  "https://en.wikipedia.org/wiki/List_of_common_misconceptions",
-  "https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_arts_and_culture",
-  "https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_history",
-  "https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_science,_technology,_and_mathematics",
-];
-
-async function fetchWiki(url){
-  const r = await fetch(url, { headers: { "user-agent": "cv-nicolas-tuor-facts/1.0" }});
-  if(!r.ok) throw new Error(`fetch ${url}: ${r.status}`);
-  return await r.text();
-}
-
-// Extraction plus robuste : on prend tous les <ul> jusqu’au prochain h2/h3
-function extractFacts(html, lang){
+function extractFromHtml(lang, url, html) {
   const $ = cheerio.load(html);
-  const out = [];
-  const seen = new Set();
+  const root = $('.mw-parser-output');
 
-  $("h2, h3").each((_,h)=>{
-    const $h = $(h);
-    const cat = $h.text().replace(/\[.*?\]/g,"").trim();
+  const items = [];
+  // Toutes les UL/OL « de contenu »
+  root.find('ul,ol').each((_, list) => {
+    const $list = $(list);
+    // ignorer les navboxes/infobox/refs
+    if ($list.closest('.navbox,.infobox,.toc,.reflist,.haudio').length) return;
 
-    // Tous les contenus jusqu’au prochain heading
-    const $scope = $h.nextUntil("h2, h3");
-    const $uls = $scope.filter("ul").add($scope.find("ul"));
+    const category = nearestHeading($, list);
 
-    $uls.each((__, ul)=>{
-      $(ul).find("> li").each((i,li)=>{
-        const $li = $(li);
-        const text = $li.text().replace(/\s+/g," ").replace(/\[.*?\]/g,"").trim();
-        if(text.length < 25) return;
+    $list.children('li').each((__, li) => {
+      const $li = stripRefs($(li));
+      // éviter sous-listes qui sont des conteneurs
+      const txt = trimSpaces($li.text())
+        .replace(/\[[^\]]*?\]/g, '') // [1], [note]
+        .replace(/\s\(\)/g, '')
+        .replace(/\s*;$/, '');
+      if (!txt || txt.length < 15) return;
 
-        // phrase 1 = formulation du mythe ; reste = explication
-        const m = text.match(/^([^\.!?]{10,}?[\.!?])\s+(.*)$/);
-        const title = m ? m[1].trim() : text.slice(0,90)+"…";
-        const body  = m ? m[2].trim() : text;
+      // Titre = 1ère phrase « accroche », le reste = explication
+      const title = firstSentence(txt);
+      const rest = trimSpaces(txt.slice(title.length)) || txt;
 
-        const key = `${title}||${body.slice(0,80)}`;
-        if (seen.has(key)) return; // anti-doublon sur la même page
-        seen.add(key);
+      // Source = premier lien « plausible »
+      const a = $li.find('a[href]').filter((i, el) => {
+        const href = $(el).attr('href') || '';
+        return !href.startsWith('#') && !href.includes('redlink=');
+      }).first();
+      const href = absolutize(lang, a.attr('href'));
 
-        // liens (sources) présents dans l’item
-        const sources = [];
-        $li.find("a[href]").each((_,a)=>{
-          const href = $(a).attr("href");
-          if(!href || href.startsWith("#")) return;
-          const abs = href.startsWith("http") ? href : `https://${lang==="fr"?"fr":"en"}.wikipedia.org${href}`;
-          const label = $(a).text().trim() || niceLabel(abs);
-          sources.push({ href: abs, label });
-        });
+      const id = `myth-${hashId(title)}`;
+      const explanation = rest;
+      const explainShort = shortenWords(rest || title, 20);
 
-        out.push({
-          id: `wiki:${lang}:${cat}:${i}:${Math.abs(key.hashCode?.()||0)}`,
-          type: "myth",
-          category: cat || "Général",
-          title,
-          body,
-          sources
-        });
+      items.push({
+        id,
+        type: 'myth',
+        category: category || '',
+        title,
+        explanation,
+        explainShort,
+        sources: href ? [{ href, label: trimSpaces(a.text()) || 'Wikipédia' }] : [{ href: url, label: 'Wikipédia' }]
       });
     });
   });
 
-  return normalize(out);
-}
-
-// petit hash (pas critique, juste pour id stable)
-String.prototype.hashCode = function(){let h=0; for(let i=0;i<this.length;i++){h=((h<<5)-h)+this.charCodeAt(i); h|=0;} return h;};
-
-async function fetchAllEN(){
-  const pages = await Promise.allSettled(WIKI_EN_PAGES.map(fetchWiki));
-  const htmlParts = pages.filter(p=>p.status==="fulfilled").map(p=>p.value);
-  const items = [];
-  for (const html of htmlParts) items.push(...extractFacts(html, "en"));
-  // dédoublonne entre pages EN
-  const uniq = new Map();
-  for(const it of items){ const k = `${it.title}||${it.body.slice(0,80)}`; if(!uniq.has(k)) uniq.set(k,it); }
-  return Array.from(uniq.values());
-}
-
-async function getAllFacts(lang){
-  const key = (lang || "fr").slice(0,2);
-  const now = Date.now();
-  const cached = mem.get(key);
-  if(cached && now - cached.ts < CACHE_TTL) return cached.items;
-
-  let items = [];
-  try{
-    if (key === "fr") {
-      const html = await fetchWiki(WIKI_FR);
-      items = extractFacts(html, "fr");
-    } else {
-      items = await fetchAllEN();
-    }
-    if (!items.length && key === "fr") {
-      // fallback → EN si la page FR change
-      items = await fetchAllEN();
-    }
-  }catch{
-    items = [];
+  // dédup par titre
+  const seen = new Set();
+  const out = [];
+  for (const it of items) {
+    const key = it.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(it);
   }
-
-  mem.set(key, { ts: now, items });
-  return items;
+  return out;
 }
 
-function sampleServerSide(all, {n, kind, seen}){
-  let list = all.slice();
-  if(kind) list = list.filter(x=>x.type===kind);
-  const seenSet = new Set((seen||"").split(",").filter(Boolean));
-  if(seenSet.size) list = list.filter(x=>!seenSet.has(x.id));
-  for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [list[i],list[j]]=[list[j],list[i]];}
-  if(n) list = list.slice(0, n);
-  return list;
+async function scrapeLang(lang) {
+  const urls = WIKI[lang] || WIKI.en;
+  const all = [];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': lang } });
+      if (!res.ok) continue;
+      const html = await res.text();
+      all.push(...extractFromHtml(lang, url, html));
+    } catch {
+      // ignore — on tente les autres
+    }
+  }
+  return all;
 }
 
-export default async function handler(req, res){
-  try{
-    const { lang="fr", n="", kind="", seen="" } = req.query || {};
-    const N = Math.max(0, parseInt(n||"0",10)) || 0;
-    const all = await getAllFacts(lang);
-    const out = sampleServerSide(all, { n: N, kind, seen });
-    res.setHeader("cache-control","s-maxage=600, stale-while-revalidate=600");
-    res.status(200).json(out);
-  }catch{
-    res.status(200).json([]); // le front a son fallback local
+export default async function handler(req, res) {
+  const lang = (req.query.lang || 'fr').toLowerCase();
+  const n = Math.max(1, Math.min(parseInt(req.query.n || '24', 10), 48));
+  const seen = new Set((req.query.seen || '').split(',').filter(Boolean));
+
+  try {
+    const primary = await scrapeLang(lang);
+    const fallback = lang === 'fr' ? await scrapeLang('en') : [];
+    const pool = [...primary, ...fallback];
+
+    // filtrer « seen »
+    const fresh = pool.filter(it => !seen.has(it.id));
+
+    // shuffle simple
+    for (let i = fresh.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
+    }
+
+    const out = fresh.slice(0, n);
+
+    res.setHeader('access-control-allow-origin', '*');
+    res.setHeader('cache-control', 's-maxage=600, stale-while-revalidate=3600');
+    res.status(200).json({ items: out, count: out.length });
+  } catch (e) {
+    res.setHeader('access-control-allow-origin', '*');
+    res.status(200).json({ items: [], count: 0, error: String(e) });
   }
 }
