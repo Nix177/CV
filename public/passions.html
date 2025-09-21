@@ -176,8 +176,6 @@
     { title:"Armour Archive", desc:"Patrons d’armures.", cover:"assets/passions/sites/armour-archive-patterns.webp", badge:"Site", link:{label:"Patrons",href:"https://www.armourarchive.org/patterns/"} },
     { title:"Clickspring", desc:"Horlogerie & mécanismes.", cover:"assets/passions/youtube/youtube-clickspring.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"} },
     { title:"Art of Making Things", desc:"Tutos variés (bois, métal…).", cover:"assets/passions/sites/art-of-making-things.webp", badge:"Site", link:{label:"Tutoriels",href:"https://artofmakingthings.com/home"} },
-
-    /* — Une vignette PAR vidéo (covers -> dossier youtube) — */
     { title:"Maison en terre", desc:"Construction en clay.", cover:"assets/passions/youtube/youtube-diy-clay-house.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/o6Z0MxWCbrc"} },
     { title:"TV recyclée", desc:"Réparer / réutiliser pièces.", cover:"assets/passions/youtube/youtube-diy-recycled-tv.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/qXrn4MqY1Wo"} },
     { title:"Écosystèmes en bocaux", desc:"Micro-écosystèmes DIY.", cover:"assets/passions/youtube/youtube-diy-ecosystems.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/QTH9m6MDIfc"} },
@@ -260,7 +258,6 @@
     {title:"NVIDIA Playground",desc:"Démos IA NVIDIA.",cover:"assets/passions/sites/nvidia-ai-playground.webp",badge:"Démo",link:{label:"Essayer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
     {title:"GAIA Vari",desc:"Variabilité d’étoiles.",cover:"assets/passions/sites/gaia-vari.webp",badge:"Data",link:{label:"Explorer",href:"https://www.gaiavari.space/"}},
     {title:"NEO Toolkit",desc:"Outils objets géocroiseurs.",cover:"assets/passions/sites/esa-neo-toolkit.webp",badge:"Outil",link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"}},
-    {title:"Sketchware Docs (site)",desc:"Docs Sketchware (Vercel).",cover:"assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://sketchware-docs.vercel.app/"}},
     {title:"Giza 3D",desc:"Exploration 3D Égypte.",cover:"assets/passions/sites/giza3d.webp",badge:"Site",link:{label:"Visiter",href:"http://giza.fas.harvard.edu/giza3d/"}},
     {title:"Lobbywatch (CH)",desc:"Transparence des lobbys en Suisse.",cover:"assets/passions/sites/lobbywatch.webp",badge:"Data",link:{label:"Parcourir",href:"https://lobbywatch.ch/fr"}}
   ];
@@ -307,31 +304,21 @@
   function renderList(list, id){const root=document.getElementById(id); list.forEach(x=>root.appendChild(card(x)));}
 
   /* ==== Steam Top 40 ==== */
-
-  function normalizePath(s){
-    if(!s) return '';
-    return String(s).replace(/^\/+/, '').replace(/^public\//,'');
-  }
-
   async function renderSteam(){
     const root = document.getElementById('grid-steam');
     try{
-      const dataUrl = new URL('data/steam-top40.json', location.href).href;
-      const res = await fetch(dataUrl, {cache:'no-cache'});
+      const res = await fetch('data/steam-top40.json', {cache:'no-cache'});
       if(!res.ok) throw new Error('steam-top40.json introuvable');
       const data = await res.json();
 
       data.forEach(g=>{
-        // image fournie -> normalisée ; sinon fallback par appid
-        let img = normalizePath(g.image);
-        if(!img && g.appid) img = `assets/passions/games/steam/${g.appid}.webp`;
-
-        // Lien fiche Steam (ou recherche si pas d’appid)
-        const store = g.appid
-          ? `https://store.steampowered.com/app/${g.appid}/`
+        const appid = g.appid || g.id || g.appId;
+        const cover = appid ? `assets/passions/games/steam/${appid}.webp` : '';
+        const store = appid
+          ? `https://store.steampowered.com/app/${appid}/`
           : `https://store.steampowered.com/search/?term=${encodeURIComponent(g.name||'')}`;
 
-        const el = card({ title:g.name, desc:"", cover:img, badge:"Steam", link:{label:"Fiche",href:store} });
+        const el = card({ title:g.name, desc:"", cover, badge:"Steam", link:{label:"Fiche",href:store} });
         root.appendChild(el);
       });
     }catch(e){
