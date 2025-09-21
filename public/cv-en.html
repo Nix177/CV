@@ -1,54 +1,55 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CV — Nicolas Tuor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resume — Nicolas Tuor</title>
+
+  <link rel="alternate" hreflang="fr" href="/cv.html">
+  <link rel="alternate" hreflang="en" href="/cv-en.html">
+  <link rel="alternate" hreflang="de" href="/cv-de.html">
+  <link rel="alternate" hreflang="x-default" href="/cv-en.html">
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .cv-wrap{max-width:1200px;margin:0 auto;padding:16px}
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}
+    .toolbar .btn{border:1px solid rgba(255,255,255,.12);background:#0c1728;color:#eef3f8;text-decoration:none;
+                  padding:.45rem .7rem;border-radius:10px;font-weight:600}
+    .pdf-frame{width:100%;height:calc(100vh - 170px);border:1px solid rgba(255,255,255,.12);border-radius:12px}
+    @media (max-width:800px){ .pdf-frame{height:70vh} }
+  </style>
 </head>
 <body>
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="/cv-en.html">
-      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/index-en.html">Home</a>
-      <a href="/portfolio-en.html">Portfolio</a>
-      <a href="/cv-en.html" aria-current="page">CV</a>
-      <a href="/chatbot-en.html">Chatbot</a>
-      <a href="/ai-lab-en.html">AI Ideas</a>
-      <a href="/fun-facts-en.html">Fun Facts</a>
-      <button id="dlCvBtn" class="btn chip" type="button">Download PDF</button>
-      <button class="btn chip" type="button" data-toggle-theme aria-label="Toggle theme">🌓</button>
-      <span class="lang-switch">
-        <a class="btn chip" href="/cv.html">FR</a>
-        <a class="btn chip" href="/cv-en.html" aria-current="page">EN</a>
-        <a class="btn chip" href="/cv-de.html">DE</a>
-      </span>
-    </nav>
-  </div>
+<header class="site-header">
+  <nav class="wrap row" aria-label="Main navigation">
+    <a href="/index.html" class="btn ghost">Home</a>
+    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
+    <a href="/cv-en.html" class="btn">Resume</a>
+    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
+    <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
+    <span style="flex:1"></span>
+    <a href="/cv.html" class="btn ghost">FR</a>
+    <a href="/cv-en.html" class="btn">EN</a>
+    <a href="/cv-de.html" class="btn ghost">DE</a>
+  </nav>
 </header>
 
-<main class="section container">
-  <h1 class="title">CV – Nicolas Tuor</h1>
-  <div class="cv-toolbar">
-    <label>Display:
-      <select id="viewMode" class="select">
-        <option value="pdf">Protected PDF</option>
-        <option value="constellation">Skills constellation (interactive)</option>
-        <option value="story">Lesson storyboard (interactive)</option>
-      </select>
-    </label>
-    <button id="printBtn" class="btn">Print/PDF</button>
+<main class="cv-wrap">
+  <h1 class="title" style="margin:14px 0 6px">Resume — Nicolas Tuor</h1>
+  <div class="toolbar" role="group" aria-label="Actions">
+    <a class="btn" href="/assets/cv/cv-en.pdf" target="_blank" rel="noopener">Open in new tab</a>
+    <a class="btn" href="/assets/cv/cv-en.pdf" download>Download PDF</a>
   </div>
-  <div id="cvArea"></div>
-</main>
 
-<script src="/cv-data.js"></script>
-<script src="/cv.js"></script>
-<script src="/site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+  <object class="pdf-frame"
+          data="/assets/cv/cv-en.pdf#view=FitH"
+          type="application/pdf">
+    <p>Your browser can’t display embedded PDFs.
+       <a href="/assets/cv/cv-en.pdf">Open the resume here</a>.</p>
+  </object>
+</main>
 </body>
 </html>
