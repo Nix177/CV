@@ -43,22 +43,32 @@
   </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="nav-left">
-      <a class="chip" href="/">Home</a>
-      <a class="chip" href="/portfolio">Portfolio</a>
-      <a class="chip" href="/cv">CV</a>
-      <a class="chip" href="/chatbot">Chatbot</a>
-      <a class="chip" href="/ai-lab">AI Ideas</a>
-      <a class="chip" href="/fun-facts">Fun Facts</a>
+  <header aria-label="En-tête">
+  <div class="headwrap" style="max-width:1200px;margin:0 auto;padding:12px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between">
+    <div class="brand" style="display:flex;align-items:center;gap:.75rem;font-weight:800;letter-spacing:.3px">
+      <div class="logo" style="width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#0a1220,#00060d);color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)">N·T</div>
+      <div>Nicolas Tuor — <span style="color:#9fb2c8">Computer Science Didactics & Education</span></div>
     </div>
-    <div class="nav-right">
-      <a class="chip" href="/chatbot">FR</a>
-      <a class="chip" href="/chatbot-en">EN</a>
-      <a class="chip" href="/chatbot-de">DE</a>
-      <button id="themeToggle" class="toggle" type="button" aria-label="Toggle theme">🌙 Dark mode</button>
-    </div>
-  </header>
+
+    <nav class="top-actions" aria-label="Navigation principale" style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <a class="btn" href="./index.html">Accueil</a>
+      <a class="btn" href="./cv.html">CV</a>
+      <a class="btn" href="./portfolio.html">Portfolio</a>
+      <a class="btn" href="./chatbot.html">Chatbot</a>
+      <a class="btn" href="./fun-facts.html">Fun Facts</a>
+      <a class="btn" href="./passions.html">Passions</a>
+    </nav>
+
+    <!-- Switcher de langue (liens directs vers la même page si elle existe) -->
+    <nav class="lang" aria-label="Langue" style="display:flex;gap:.35rem;flex-wrap:wrap">
+      <!-- Sur passions.html, ces 3 liens pointent vers passions(.html|-en|-de) -->
+      <a class="btn" href="./passions.html" aria-current="page">FR</a>
+      <a class="btn" href="./passions-en.html">EN</a>
+      <a class="btn" href="./passions-de.html">DE</a>
+    </nav>
+  </div>
+</header>
+
 
   <main class="container">
     <h1>AI Chatbot</h1>
