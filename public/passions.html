@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Mes passions</title>
+  <title>Nicolas Tuor — Passions & découvertes</title>
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -12,973 +12,597 @@
   <style>
     :root{
       --bg:#0a1220;
-      --panel:#0b1323;
-      --card:#0d1524;
-      --border:#152238;
+      --card:#0c1628;
+      --card2:#0b1323;
       --text:#eef3f8;
-      --muted:#9fb2c8;
+      --muted:#a7b7cb;
+      --muted2:#87a0bc;
+      --chip:#0f1d34;
+      --chip-b:#1a2d49;
       --accent:#14b8a6;
       --shadow:0 10px 30px rgba(0,0,0,.35);
-      --maxw:1200px;
+      --br:16px;
+      --gap:16px;
+      --max:1200px;
     }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
     body{
       margin:0; color:var(--text);
-      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
       background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
     }
 
-    /* Header (identique esprit site) */
+    /* ===== Header ===== */
     header{
       position:sticky; top:0; z-index:20;
-      display:flex; align-items:center; justify-content:space-between; gap:1rem;
-      padding:16px; background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(10,18,32,.7); backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .brand{
-      display:flex; align-items:center; gap:.75rem;
-      padding:.4rem .6rem; border-radius:12px;
-      background:rgba(10,18,32,.65); border:1px solid rgba(255,255,255,.08);
-      box-shadow: var(--shadow); font-weight:800; letter-spacing:.3px;
+    .headwrap{
+      max-width: var(--max); margin:0 auto; padding:12px 18px;
+      display:flex; align-items:center; gap:12px; justify-content:space-between;
     }
-    .logo{
-      width:28px; height:28px; border-radius:8px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#0a1220,#00060d); color:#fff; font-weight:800;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    nav.top-actions{ display:flex; gap:.5rem; flex-wrap:wrap }
+    .brand{display:flex; align-items:center; gap:.75rem; font-weight:800; letter-spacing:.3px}
+    .logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+      background:linear-gradient(135deg,#0a1220,#00060d); color:#fff; border:1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); font-weight:800}
+    nav.top{display:flex; gap:.5rem; flex-wrap:wrap}
     .btn{
       appearance:none; border:1px solid rgba(255,255,255,.08);
       background:#0c1728; color:var(--text); text-decoration:none;
       padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
-      display:inline-flex; align-items:center; gap:.4rem;
     }
-    .btn:hover{ background:#0e1b2f }
+    .btn:hover{background:#0e1b2f}
+    .btn:active{transform:translateY(1px)}
 
-    main{ max-width: var(--maxw); margin: 18px auto 80px; padding: 0 16px; }
-
-    /* Bandeau d’ancres */
-    .anchors{
-      position:sticky; top:68px; z-index:15;
-      background: rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:12px; padding:8px; box-shadow: var(--shadow);
-      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;
+    /* ===== Anchor bar ===== */
+    .bar{
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(10,18,32,.55);
+    }
+    .barwrap{
+      max-width:var(--max); margin:0 auto; padding:10px 18px; display:flex; gap:8px; flex-wrap:wrap
     }
     .chip{
-      padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.12);
-      color:var(--text); text-decoration:none; background:#0c1728; font-weight:600; font-size:14px;
+      padding:.4rem .7rem; border-radius:999px; background:var(--chip); border:1px solid var(--chip-b);
+      color:var(--text); text-decoration:none; font-weight:600; font-size:14px;
     }
-    .chip:hover{ background:#0e1b2f }
-    .section{ margin: 28px 0 14px }
-    .section h2{ margin:0 0 8px 0; font-size:24px }
-    .section p.lead{ margin:0 0 12px 0; color:var(--muted) }
+    .chip:hover{background:#10223a}
 
-    /* Grille cartes */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:12px;
-    }
+    main{max-width:var(--max); margin:0 auto; padding:24px 18px 80px}
+
+    h1{margin:10px 0 6px 0; font-size:28px}
+    p.lead{margin:0 0 22px 0; color:var(--muted)}
+    section{margin:28px 0 8px 0}
+    section>h2{margin:18px 6px 4px 6px; font-size:22px}
+    section>p.catdesc{ margin:0 6px 14px 6px; color:var(--muted) }
+
+    /* ===== Grid / Card ===== */
+    .grid{display:grid; gap:var(--gap); grid-template-columns: repeat(3, 1fr)}
+    @media (max-width: 980px){ .grid{grid-template-columns: repeat(2, 1fr)} }
+    @media (max-width: 620px){ .grid{grid-template-columns: 1fr} }
+
     .card{
-      grid-column: span 4;
-      background:var(--card); border:1px solid var(--border); border-radius:14px;
-      box-shadow: var(--shadow); overflow:hidden; display:flex; flex-direction:column;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius: var(--br); overflow:hidden; box-shadow: var(--shadow);
+      display:flex; flex-direction:column; min-height: 320px;
     }
-    .card.large{ grid-column: span 12; }
-    .card.wide{ grid-column: span 8; }
     .thumb{
-      width:100%; aspect-ratio: 16/9; background:#0a1220; display:flex; align-items:center; justify-content:center;
-      color:var(--muted); font-size:12px; border-bottom:1px solid var(--border);
+      position:relative; height: 180px; background:#0d1524;
+      background-size:cover; background-position:center; background-repeat:no-repeat;
+      border-bottom:1px solid rgba(255,255,255,.07);
     }
-    .thumb img{ width:100%; height:100%; object-fit:cover; display:block }
-    .content{ padding:12px 12px 10px 12px; display:grid; gap:8px }
-    .content h3{ margin:0; font-size:16px }
-    .content p{ margin:0; color:var(--muted); font-size:14px }
-    .links{ display:flex; flex-wrap:wrap; gap:8px; margin-top:2px }
+    .thumb::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.25));
+    }
+    .badge{
+      position:absolute; left:10px; bottom:10px;
+      background:rgba(10,18,32,.8); border:1px solid rgba(255,255,255,.1);
+      color:var(--text); font-size:12px; padding:.25rem .5rem; border-radius:8px;
+      backdrop-filter: blur(4px);
+    }
+    .body{padding:12px}
+    .title{font-weight:800; margin:.2rem 0 .35rem 0; font-size:18px}
+    .desc{margin:0; color:var(--muted)}
+    .links{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
     .link{
-      padding:.35rem .6rem; border-radius:10px; background:#0c1728; border:1px solid rgba(255,255,255,.08);
-      color:var(--text); text-decoration:none; font-weight:600; font-size:13px;
+      text-decoration:none; color:var(--text); background:#0c1728; border:1px solid rgba(255,255,255,.08);
+      padding:.35rem .6rem; border-radius:10px; font-weight:600; font-size:14px;
     }
-    .link:hover{ background:#0e1b2f }
-    .note{ color:var(--muted); font-size:12px; margin-top:2px }
+    .link:hover{background:#0e1b2f}
 
-    /* Galeries (placeholders) */
-    .media-grid{ display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; padding: 10px 12px 12px 12px }
-    .media-slot{ aspect-ratio: 16/9; background:#0a1220; border:1px dashed rgba(255,255,255,.12); border-radius:10px;
-                 display:grid; place-items:center; color:var(--muted); font-size:12px }
-    .video-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; padding:0 12px 12px 12px }
-    .video-slot{ aspect-ratio:16/9; background:#000; border-radius:10px; overflow:hidden; border:1px solid var(--border) }
-    .video-slot iframe{ width:100%; height:100%; border:0 }
+    /* ===== Games ===== */
+    .game-hours{
+      position:absolute; right:10px; bottom:10px; font-weight:800; font-size:12px;
+      background:rgba(20,184,166,.92); color:#052023; padding:.25rem .5rem; border-radius:8px;
+      border:1px solid rgba(255,255,255,.25)
+    }
+    .note{color:var(--muted2); font-size:13px; margin:8px 6px 18px 6px}
+    .hr{height:1px; background:rgba(255,255,255,.06); margin:20px 0}
 
-    @media (max-width: 1100px){
-      .card{ grid-column: span 6; }
-      .card.wide{ grid-column: span 12; }
-      .media-grid{ grid-template-columns: repeat(4,1fr); }
-    }
-    @media (max-width: 760px){
-      .card{ grid-column: span 12; }
-      .media-grid{ grid-template-columns: repeat(2,1fr) }
-      .video-grid{ grid-template-columns: 1fr }
-    }
+    /* Lazy cover */
+    .thumb[data-cover]{ background-image: linear-gradient(180deg,#0d1524,#0a1220) }
+    .thumb.loaded{ background-image: var(--img); }
   </style>
 </head>
 <body>
-
-  <!-- Header (cohérent avec le site) -->
-  <header aria-label="En-tête">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">N·T</div>
-      <div>Mes passions — <span style="color:var(--muted)">partage de découvertes</span></div>
+  <header>
+    <div class="headwrap">
+      <div class="brand">
+        <div class="logo">N·T</div>
+        <div>Passions & découvertes</div>
+      </div>
+      <nav class="top" aria-label="Navigation">
+        <a class="btn" href="/index.html">Accueil</a>
+        <a class="btn" href="/cv.html">CV</a>
+        <a class="btn" href="/portfolio.html">Portfolio</a>
+        <a class="btn" href="/chatbot.html">Chatbot</a>
+        <a class="btn" href="/fun-facts.html">Fun Facts</a>
+      </nav>
     </div>
-    <nav class="top-actions" aria-label="Navigation">
-      <a class="btn" href="/index.html">Accueil</a>
-      <a class="btn" href="/cv.html">CV</a>
-      <a class="btn" href="/portfolio.html">Portfolio</a>
-      <a class="btn" href="/chatbot.html">Chatbot</a>
-      <a class="btn" href="/fun-facts.html">Fun Facts</a>
-    </nav>
+
+    <div class="bar">
+      <div class="barwrap" aria-label="Aller à">
+        <a class="chip" href="#astronomie">Astronomie</a>
+        <a class="chip" href="#diy">DIY & Bricolage</a>
+        <a class="chip" href="#histoire">Histoire & Savoirs</a>
+        <a class="chip" href="#esprit">Esprit critique</a>
+        <a class="chip" href="#cuisine">Cuisine</a>
+        <a class="chip" href="#edunum">Éducation numérique</a>
+        <a class="chip" href="#outils">Outils & divers</a>
+        <a class="chip" href="#jeux">Jeux vidéo</a>
+      </div>
+    </div>
   </header>
 
   <main>
-    <!-- Bandeau d’ancres -->
-    <nav class="anchors" aria-label="Accès rapide">
-      <a class="chip" href="#astronomie">Astronomie</a>
-      <a class="chip" href="#diy">DIY & Bricolage</a>
-      <a class="chip" href="#savoirs">Histoire & Savoirs</a>
-      <a class="chip" href="#esprit-critique">Esprit critique</a>
-      <a class="chip" href="#cuisine">Cuisine</a>
-      <a class="chip" href="#num-edu">Éducation & Programmation</a>
-      <a class="chip" href="#divers">Outils & Divers</a>
-      <a class="chip" href="#jeux">Jeux vidéo</a>
-    </nav>
+    <h1>Mes passions & ressources</h1>
+    <p class="lead">Une sélection de chaînes, sites et outils que je trouve utiles, inspirants ou ludiques. Descriptions concises, images locales pour un chargement rapide.</p>
 
-    <!-- ASTRONOMIE -->
-    <section id="astronomie" class="section">
+    <!-- ================= Astronomie ================= -->
+    <section id="astronomie">
       <h2>Astronomie</h2>
-      <p class="lead">Observations, images libres et ressources pour explorer le ciel (données brutes, guides, communautés).</p>
-
-      <div class="grid">
-        <!-- Bloc enrichi Astronomie -->
-        <article class="card large">
-          <div class="thumb"><span>Galerie perso (ajouter images/vidéos)</span></div>
-          <div class="content">
-            <h3>Mes télescopes & clichés</h3>
-            <p>Galerie de mes instruments et de 4 photos astro sélectionnées. Jusqu’à 10 images et 3 vidéos à insérer.</p>
-            <div class="links">
-              <a class="link" href="https://archive.stsci.edu/" target="_blank" rel="noopener">MAST (données brutes)</a>
-              <a class="link" href="https://webbtelescope.org/images" target="_blank" rel="noopener">Images James Webb</a>
-              <a class="link" href="https://mars.nasa.gov/msl/multimedia/raw-images/" target="_blank" rel="noopener">Curiosity — images brutes</a>
-              <a class="link" href="https://www.haystack.mit.edu/haystack-public-outreach/srt-the-small-radio-telescope-for-education/" target="_blank" rel="noopener">MIT Haystack SRT</a>
-            </div>
-            <div class="note">Ajoute ensuite tes photos/vidéos dans les emplacements ci-dessous.</div>
-          </div>
-          <!-- 10 emplacements images -->
-          <div class="media-grid">
-            <div class="media-slot">Image 1</div>
-            <div class="media-slot">Image 2</div>
-            <div class="media-slot">Image 3</div>
-            <div class="media-slot">Image 4</div>
-            <div class="media-slot">Image 5</div>
-            <div class="media-slot">Image 6</div>
-            <div class="media-slot">Image 7</div>
-            <div class="media-slot">Image 8</div>
-            <div class="media-slot">Image 9</div>
-            <div class="media-slot">Image 10</div>
-          </div>
-          <!-- 3 emplacements vidéo -->
-          <div class="video-grid">
-            <div class="video-slot"><!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID"></iframe> --></div>
-            <div class="video-slot"></div>
-            <div class="video-slot"></div>
-          </div>
-        </article>
-
-        <!-- Ressources astro (cartes uniformes) -->
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/DVuonz26P0w/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Vidéo — Images JWST (YouTube)</h3>
-            <p>Présentation des images emblématiques de James Webb, en haute résolution et libres d’accès.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/watch?v=DVuonz26P0w" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Cloudy Nights</span></div>
-          <div class="content">
-            <h3>Cloudy Nights (forum)</h3>
-            <p>Grand forum d’astronomie amateur : comptes-rendus d’observation, matériel, astrophotographie et conseils.</p>
-            <div class="links">
-              <a class="link" href="https://www.cloudynights.com/" target="_blank" rel="noopener">Visiter</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>SolarActivity</span></div>
-          <div class="content">
-            <h3>SolarActivity (Facebook)</h3>
-            <p>Groupe d’images solaires (H-alpha, taches, protubérances) postées par des astrophotographes.</p>
-            <div class="links">
-              <a class="link" href="https://www.facebook.com/groups/solaractivity/" target="_blank" rel="noopener">Voir le groupe</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/snz7JJlSZvw/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>John Dobson — Fabriquer son télescope</h3>
-            <p>Le pionnier du télescope Dobson montre comment construire un instrument simple et performant.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/snz7JJlSZvw?si=ylvraJ2te0o9EJ8L" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/iEUEvv4s3N4/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>DIY — Fabriquer ses oculaires</h3>
-            <p>Guide pas à pas pour concevoir et assembler ses propres oculaires d’observation.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/iEUEvv4s3N4?si=Jbd8-BrGYuKBhWV8" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/AOgvjRXnins/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Introduction à la radioastronomie</h3>
-            <p>Notions clés, instruments et premières mesures pour écouter l’Univers en ondes radio.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/AOgvjRXnins?si=qDc3jbiCqR_-jZGz" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Ed Ting</span></div>
-          <div class="content">
-            <h3>Ed Ting (YouTube)</h3>
-            <p>Tests de télescopes, conseils d’achat et retours d’expérience pour l’astronomie amateur.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@edting" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>TelescopicWatch</span></div>
-          <div class="content">
-            <h3>TelescopicWatch</h3>
-            <p>Comparatifs et guides d’achat de télescopes et accessoires, orientés débutants et intermédiaires.</p>
-            <div class="links">
-              <a class="link" href="https://telescopicwatch.com/" target="_blank" rel="noopener">Visiter</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>RMG — GCSE Astronomy</span></div>
-          <div class="content">
-            <h3>Ressources pédagogiques — RMG</h3>
-            <p>Fiches et supports pour l’astronomie scolaire (Royal Museums Greenwich).</p>
-            <div class="links">
-              <a class="link" href="https://www.rmg.co.uk/schools-communities/teacher-resources/gcse-astronomy-resources" target="_blank" rel="noopener">Voir</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>PDF</span></div>
-          <div class="content">
-            <h3>All About Telescopes (Edmund Optics)</h3>
-            <p>Guide PDF sur l’optique et les types de télescopes, pour comprendre et bien choisir.</p>
-            <div class="links">
-              <a class="link" href="https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf" target="_blank" rel="noopener">Télécharger</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Astrohopper</span></div>
-          <div class="content">
-            <h3>Astrohopper</h3>
-            <p>Planétarium web léger : aide au pointage des objets avec votre téléphone et un support.</p>
-            <div class="links">
-              <a class="link" href="https://artyom-beilis.github.io/astrohopper.html" target="_blank" rel="noopener">Essayer</a>
-            </div>
-          </div>
-        </article>
-      </div>
+      <p class="catdesc">Imagerie, données ouvertes et ressources pour observer, comprendre et bricoler.</p>
+      <div class="grid" id="grid-astro"></div>
     </section>
 
-    <!-- DIY & BRICOLAGE -->
-    <section id="diy" class="section">
+    <!-- ================= DIY & Bricolage ================= -->
+    <section id="diy">
       <h2>DIY & Bricolage</h2>
-      <p class="lead">Patrons, tutoriels et projets à fabriquer : armures, expériences, upcycling.</p>
-
-      <div class="grid">
-        <article class="card">
-          <div class="thumb"><span>Armour Archive</span></div>
-          <div class="content">
-            <h3>Armour Archive — Patterns</h3>
-            <p>Patrons d’armures historiques, techniques de forge, retours d’expérience de reconstituteurs.</p>
-            <div class="links">
-              <a class="link" href="https://www.armourarchive.org/patterns/" target="_blank" rel="noopener">Visiter</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Art of Making Things</span></div>
-          <div class="content">
-            <h3>The Art of Making Things</h3>
-            <p>Tutoriels variés (dont cottes de mailles) : techniques, matériaux et pas-à-pas illustrés.</p>
-            <div class="links">
-              <a class="link" href="https://artofmakingthings.com/home" target="_blank" rel="noopener">Visiter</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/o6Z0MxWCbrc/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Maison en terre (vidéo)</h3>
-            <p>Construction écologique avec terre argileuse et paille : bases et techniques.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/o6Z0MxWCbrc?si=8HkMzHaKMi1glaa_" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/qXrn4MqY1Wo/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>TV “infinity contrast” (vidéo)</h3>
-            <p>Upcycling : fabriquer un écran à contraste élevé avec des pièces recyclées.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/qXrn4MqY1Wo?si=ioY9uAODYFkpBn6a" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/QTH9m6MDIfc/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Écosystèmes en bocaux (vidéo)</h3>
-            <p>Créer et maintenir un écosystème autonome en bocal : principes et retours d’expérience.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/QTH9m6MDIfc?si=Srd1XIzWp0SENgcE" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/xky3f1aSkB8/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Chambre à brouillard (vidéo)</h3>
-            <p>Fabriquer une chambre à brouillard maison pour visualiser des traces de particules.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/xky3f1aSkB8?si=OzvKvZXVD2GccESx" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>How to Make Armor</span></div>
-          <div class="content">
-            <h3>How to Make Armor (YouTube)</h3>
-            <p>Atelier d’armurerie : démonstrations pas-à-pas pour forger et assembler des pièces d’armure.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@howtomakearmor" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Clicksring</span></div>
-          <div class="content">
-            <h3>Clickspring (YouTube)</h3>
-            <p>Horlogerie et usinage de précision : mécanismes, finitions et techniques d’atelier.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@Clickspring" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-      </div>
+      <p class="catdesc">Construire, réparer, comprendre la matière et les mécanismes.</p>
+      <div class="grid" id="grid-diy"></div>
     </section>
 
-    <!-- HISTOIRE & SAVOIRS -->
-    <section id="savoirs" class="section">
+    <!-- ================= Histoire & Savoirs ================= -->
+    <section id="histoire">
       <h2>Histoire & Savoirs</h2>
-      <p class="lead">Chaînes et docs pour comprendre technologies et histoire avec rigueur.</p>
-
-      <div class="grid">
-        <article class="card">
-          <div class="thumb"><span>World War Two</span></div>
-          <div class="content">
-            <h3>World War Two (YouTube)</h3>
-            <p>Chronologie de la Seconde Guerre mondiale, épisodes hebdomadaires documentés.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@WorldWarTwo" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Benn Jordan</span></div>
-          <div class="content">
-            <h3>Benn Jordan (YouTube)</h3>
-            <p>Projets science/son : détection du chant d’oiseaux, expériences et explications techniques.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@BennJordan" target="_blank" rel="noopener">Chaîne</a>
-              <a class="link" href="https://youtu.be/hCQCP-5g5bo?si=AK6ZhlJM-5r1IoZh" target="_blank" rel="noopener">Vidéo ex.</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Technology Connections</span></div>
-          <div class="content">
-            <h3>Technology Connections</h3>
-            <p>Explications soignées des technologies du quotidien : histoire, principes, usages.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@TechnologyConnections" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wide">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/0T-pPPUAppk/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Documentaire — Entertainment Made by North Korea</h3>
-            <p>Long documentaire sur l’industrie du divertissement en Corée du Nord : analyse et archives.</p>
-            <div class="links">
-              <a class="link" href="https://youtu.be/0T-pPPUAppk?si=WEyGCCLcO4kdCQUB" target="_blank" rel="noopener">Regarder</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Survive History</span></div>
-          <div class="content">
-            <h3>Survive History (YouTube)</h3>
-            <p>Scénarios historiques immersifs : auriez-vous survécu ? Analyses et contexte.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@survivehistory" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>MegaLag</span></div>
-          <div class="content">
-            <h3>MegaLag (YouTube)</h3>
-            <p>Enquêtes tech/consommation : pratiques douteuses, coulisses de services en ligne.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@MegaLag" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Modern History TV</span></div>
-          <div class="content">
-            <h3>Modern Knight (YouTube)</h3>
-            <p>Vie médiévale, reconstitutions et tests d’armures par Jason Kingsley.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@ModernKnight" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Kurzgesagt</span></div>
-          <div class="content">
-            <h3>Kurzgesagt – In a Nutshell</h3>
-            <p>Vidéos animées sur sciences et philosophie, pédagogie visuelle exigeante.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@kurzgesagt" target="_blank" rel="noopener">Chaîne</a>
-            </div>
-          </div>
-        </article>
-      </div>
+      <p class="catdesc">Chaînes et docs pour comprendre technologies et histoire avec rigueur.</p>
+      <div class="grid" id="grid-hist"></div>
     </section>
 
-    <!-- ESPRIT CRITIQUE -->
-    <section id="esprit-critique" class="section">
+    <!-- ================= Esprit critique ================= -->
+    <section id="esprit">
       <h2>Esprit critique</h2>
-      <p class="lead">Zététique, debunk et méthodes pour raisonner avec rigueur.</p>
-
-      <div class="grid">
-        <article class="card">
-          <div class="thumb"><span>La Tronche en Biais</span></div>
-          <div class="content">
-            <h3>La Tronche en Biais</h3>
-            <p>Analyses et débats sur pseudosciences, biais et esprits critiques.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@TroncheEnBiais" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Hygiène Mentale</span></div>
-          <div class="content">
-            <h3>Hygiène Mentale</h3>
-            <p>Outils concrets pour penser droit : biais, logique, exercices ludiques.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/c/Hygi%C3%A8neMentale" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Mr Sam</span></div>
-          <div class="content">
-            <h3>Mr Sam</h3>
-            <p>Analyses critiques de contenus web, méthodes et sources.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@mrsam-interrogation" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Defakator</span></div>
-          <div class="content">
-            <h3>Defakator</h3>
-            <p>Debunk souriant : rumeurs virales, deepfakes et fausses infos.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@DefakatorOfficiel" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>G Milgram</span></div>
-          <div class="content">
-            <h3>G Milgram</h3>
-            <p>Enquêtes et tests sur allégations douteuses et pseudo-sciences.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@ggmilgram" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>AFIS</span></div>
-          <div class="content">
-            <h3>AFIS</h3>
-            <p>Association française pour l’information scientifique : conférences et contenus.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@afis-science" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>REC Toulouse</span></div>
-          <div class="content">
-            <h3>REC Toulouse</h3>
-            <p>Réseau d’éducation critique : ateliers, talks et ressources.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@RECTOULOUSE" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>CaptainFact</span></div>
-          <div class="content">
-            <h3>CaptainFact</h3>
-            <p>Vérification collaborative des vidéos en ligne : citations sourcées, corrections.</p>
-            <div class="links"><a class="link" href="https://captainfact.io/" target="_blank" rel="noopener">Visiter</a></div>
-          </div>
-        </article>
-      </div>
+      <p class="catdesc">Analyses, méthodes et enquêtes pour mieux raisonner.</p>
+      <div class="grid" id="grid-crit"></div>
     </section>
 
-    <!-- CUISINE -->
-    <section id="cuisine" class="section">
-      <h2>Cuisine</h2>
-      <p class="lead">Recettes fiables, histoire culinaire et techniques.</p>
-
-      <div class="grid">
-        <article class="card">
-          <div class="thumb"><span>John Kirkwood</span></div>
-          <div class="content">
-            <h3>John Kirkwood</h3>
-            <p>Boulangerie et classiques expliqués pas-à-pas : pains, viennoiseries, pâtes.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@JohnKirkwoodProFoodHomemade" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>SortedFood</span></div>
-          <div class="content">
-            <h3>SortedFood</h3>
-            <p>Recettes et défis culinaires en équipe : fun, idées rapides, tests.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@SortedFood" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Tasting History</span></div>
-          <div class="content">
-            <h3>Tasting History</h3>
-            <p>Histoire par les recettes : plats anciens reconstitués avec sources.</p>
-            <div class="links"><a class="link" href="https://www.youtube.com/@TastingHistory" target="_blank" rel="noopener">Chaîne</a></div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><span>Akis Petretzikis</span></div>
-          <div class="content">
-            <h3>Akis Petretzikis</h3>
-            <p>Recettes méditerranéennes et internationales, pas-à-pas clairs.</p>
-            <div class="links">
-              <a class="link" href="https://www.youtube.com/@akispetretzikisen" target="_blank" rel="noopener">Chaîne</a>
-              <a class="link" href="https://akispetretzikis.com/en" target="_blank" rel="noopener">Site</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="thumb"><img alt="Miniature YouTube" src="https://img.youtube.com/vi/9fWzWpL5g6w/hqdefault.jpg"></div>
-          <div class="content">
-            <h3>Le pain au levain — 18 bases</h3>
-            <p>Principes essentiels pour entretenir son levain et réussir la cuisson.</p>
-            <div class="links"><a class="link" href="https://youtu.be/9fWzWpL5g6w?si=-fA7QKkcNYpOr-mR" target="_blank" rel="noopener">Regarder</a></div>
-          </div>
-        </article>
-      </div>
+    <!-- ================= Cuisine ================= -->
+    <section id="cuisine">
+      <h2>Cuisine & Food</h2>
+      <p class="catdesc">Techniques, sources historiques, recettes actionnables.</p>
+      <div class="grid" id="grid-food"></div>
     </section>
 
-    <!-- ÉDUCATION & PROGRAMMATION -->
-    <section id="num-edu" class="section">
-      <h2>Éducation & Programmation</h2>
-      <p class="lead">Apprendre à coder, créer des jeux, découvrir la pensée informatique.</p>
-
-      <div class="grid">
-        <!-- Blocs éducatifs (cartes uniformes) -->
-        <article class="card"><div class="thumb"><span>Scratch</span></div>
-          <div class="content"><h3>Scratch</h3><p>Initiation visuelle au code par blocs (MIT).</p>
-            <div class="links"><a class="link" href="https://scratch.mit.edu/" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Snap!</span></div>
-          <div class="content"><h3>Snap! (Berkeley)</h3><p>Version avancée de Scratch : fonctions, listes, récursivité.</p>
-            <div class="links"><a class="link" href="https://snap.berkeley.edu/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Blockly Games</span></div>
-          <div class="content"><h3>Blockly Games</h3><p>Petits jeux pour comprendre les bases de la programmation.</p>
-            <div class="links"><a class="link" href="https://blockly.games/" target="_blank" rel="noopener">Jouer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Code.org Studio</span></div>
-          <div class="content"><h3>Code.org Studio</h3><p>Parcours ludiques et activités guidées pour débuter.</p>
-            <div class="links"><a class="link" href="https://studio.code.org/users/sign_in" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>NetsBlox</span></div>
-          <div class="content"><h3>NetsBlox</h3><p>Crée des apps réseau (APIs, IoT) en blocs.</p>
-            <div class="links"><a class="link" href="https://netsblox.org/" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>App Inventor</span></div>
-          <div class="content"><h3>MIT App Inventor</h3><p>Apps mobiles par blocs pour Android.</p>
-            <div class="links"><a class="link" href="https://appinventor.mit.edu/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Alice</span></div>
-          <div class="content"><h3>Alice</h3><p>Création d’histoires et jeux 3D éducatifs.</p>
-            <div class="links"><a class="link" href="https://www.alice.org/" target="_blank" rel="noopener">Site</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Pencil Code</span></div>
-          <div class="content"><h3>Pencil Code</h3><p>Coder dessins/arts avec JS, CoffeeScript.</p>
-            <div class="links"><a class="link" href="https://lemarg.pencilcode.net/edit/" target="_blank" rel="noopener">Éditer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>MakeCode</span></div>
-          <div class="content"><h3>Microsoft MakeCode</h3><p>Micro:bit, Arcade, circuits — par blocs/JS.</p>
-            <div class="links"><a class="link" href="https://www.microsoft.com/en-us/makecode" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Vidcode</span></div>
-          <div class="content"><h3>Vidcode</h3><p>JavaScript par projets vidéo et effets.</p>
-            <div class="links"><a class="link" href="https://www.vidcode.com/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Construct</span></div>
-          <div class="content"><h3>Construct</h3><p>Moteur de jeux 2D : événements et comportements.</p>
-            <div class="links"><a class="link" href="https://www.construct.net/fr" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Compute-It</span></div>
-          <div class="content"><h3>Compute-It</h3><p>Puzzles ludiques pour logique algorithmique.</p>
-            <div class="links"><a class="link" href="https://compute-it.toxicode.fr/" target="_blank" rel="noopener">Jouer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>CodinGame</span></div>
-          <div class="content"><h3>CodinGame</h3><p>Défis et jeux multi-langages.</p>
-            <div class="links"><a class="link" href="https://codingame.com/start/" target="_blank" rel="noopener">Jouer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>p5.js</span></div>
-          <div class="content"><h3>p5.js</h3><p>Création visuelle, arts génératifs en JS.</p>
-            <div class="links"><a class="link" href="https://p5js.org/" target="_blank" rel="noopener">Site</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Thonny</span></div>
-          <div class="content"><h3>Thonny</h3><p>IDE Python simple pour débuter.</p>
-            <div class="links"><a class="link" href="https://thonny.org/" target="_blank" rel="noopener">Télécharger</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Mu</span></div>
-          <div class="content"><h3>Mu Editor</h3><p>IDE Python débutants, microcontrôleurs.</p>
-            <div class="links"><a class="link" href="https://codewith.mu/" target="_blank" rel="noopener">Télécharger</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>TigerJython</span></div>
-          <div class="content"><h3>TigerJython</h3><p>Python pédagogique (CH), activités guidées.</p>
-            <div class="links"><a class="link" href="https://www.tigerjython.ch/en" target="_blank" rel="noopener">Site</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Pyret</span></div>
-          <div class="content"><h3>Pyret</h3><p>Langage éducatif pour programmer avec rigueur.</p>
-            <div class="links"><a class="link" href="https://pyret.org/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>VittaScience</span></div>
-          <div class="content"><h3>VittaScience</h3><p>Électronique éducative et kits STEM.</p>
-            <div class="links"><a class="link" href="https://en.vittascience.com/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Micro:bit</span></div>
-          <div class="content"><h3>MakeCode Micro:bit</h3><p>Programmer la carte Micro:bit.</p>
-            <div class="links"><a class="link" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Candli</span></div>
-          <div class="content"><h3>Candli</h3><p>Crée ton jeu vidéo simplement.</p>
-            <div class="links"><a class="link" href="https://cand.li/index-fr.html" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card">
-          <div class="thumb"><span>CAS EduNum (HEP FR)</span></div>
-          <div class="content">
-            <h3>Formation continue — EduNum</h3>
-            <p>Programme de formation en éducation numérique (HEP Fribourg).</p>
-            <div class="links"><a class="link" href="https://www.hepfr.ch/formationcontinue/forms/inscriptions-cas-ednum" target="_blank" rel="noopener">Infos</a></div>
-          </div>
-        </article>
-      </div>
+    <!-- ================= Éducation numérique ================= -->
+    <section id="edunum">
+      <h2>Éducation numérique</h2>
+      <p class="catdesc">Coder, simuler, apprendre en jouant — outils et environnements pour tous.</p>
+      <div class="grid" id="grid-edu"></div>
     </section>
 
-    <!-- OUTILS & DIVERS -->
-    <section id="divers" class="section">
-      <h2>Outils & Divers</h2>
-      <p class="lead">IA créative, utilitaires web, données ouvertes, vie privée, fun.</p>
-
-      <div class="grid">
-        <!-- IA créative -->
-        <article class="card"><div class="thumb"><span>FakeYou</span></div>
-          <div class="content"><h3>FakeYou</h3><p>Génération de voix avec modèles clones.</p><div class="links"><a class="link" href="https://fakeyou.com/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Mubert</span></div>
-          <div class="content"><h3>Mubert</h3><p>Musique générative sous licence.</p><div class="links"><a class="link" href="https://mubert.com/" target="_blank" rel="noopener">Écouter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>WonderDynamics</span></div>
-          <div class="content"><h3>WonderDynamics</h3><p>Insertion auto de persos 3D dans des vidéos.</p><div class="links"><a class="link" href="https://wonderdynamics.com/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Durable</span></div>
-          <div class="content"><h3>Durable.co</h3><p>Génération de sites vitrines par IA.</p><div class="links"><a class="link" href="https://durable.co/" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Voicify</span></div>
-          <div class="content"><h3>Voicify.ai</h3><p>Clonage et conversion de voix.</p><div class="links"><a class="link" href="https://www.voicify.ai/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>OpenAI Sora</span></div>
-          <div class="content"><h3>OpenAI — Sora</h3><p>Génération vidéo à partir de texte/images.</p><div class="links"><a class="link" href="https://openai.com/sora" target="_blank" rel="noopener">En savoir plus</a></div></div></article>
-
-        <!-- Média & web utilitaires -->
-        <article class="card"><div class="thumb"><span>Unscreen</span></div>
-          <div class="content"><h3>Unscreen</h3><p>Suppression d’arrière-plan vidéo en ligne.</p><div class="links"><a class="link" href="https://www.unscreen.com/" target="_blank" rel="noopener">Utiliser</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Remove.bg</span></div>
-          <div class="content"><h3>Remove.bg</h3><p>Supprimer le fond d’une photo en un clic.</p><div class="links"><a class="link" href="https://www.remove.bg/fr" target="_blank" rel="noopener">Utiliser</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Hotpot</span></div>
-          <div class="content"><h3>Hotpot.ai</h3><p>Suite d’outils image/IA : upscale, art, design.</p><div class="links"><a class="link" href="https://hotpot.ai/art-maker" target="_blank" rel="noopener">Art Maker</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Google Experiments</span></div>
-          <div class="content"><h3>Google AI Experiments</h3><p>Démos interactives d’IA ludiques.</p><div class="links"><a class="link" href="https://experiments.withgoogle.com/collection/ai" target="_blank" rel="noopener">Parcourir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Axiom</span></div>
-          <div class="content"><h3>Axiom.ai</h3><p>Automatisations web sans code (RPA).</p><div class="links"><a class="link" href="https://axiom.ai/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>TinyWow</span></div>
-          <div class="content"><h3>TinyWow</h3><p>Multi-outils gratuits : PDF, image, vidéo.</p><div class="links"><a class="link" href="https://tinywow.com/" target="_blank" rel="noopener">Utiliser</a></div></div></article>
-
-        <!-- Open data & transparence -->
-        <article class="card"><div class="thumb"><span>OpenFoodFacts</span></div>
-          <div class="content"><h3>OpenFoodFacts</h3><p>Infos nutrition/compo des produits (base ouverte).</p><div class="links"><a class="link" href="https://world.openfoodfacts.org/" target="_blank" rel="noopener">Voir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>ImportYeti</span></div>
-          <div class="content"><h3>ImportYeti</h3><p>Données d’import/export pour investiguer des chaînes d’approvisionnement.</p><div class="links"><a class="link" href="https://www.importyeti.com/" target="_blank" rel="noopener">Explorer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Capitol Trades</span></div>
-          <div class="content"><h3>Capitol Trades</h3><p>Transactions boursières publiques des élus US.</p><div class="links"><a class="link" href="https://www.capitoltrades.com/trades" target="_blank" rel="noopener">Consulter</a></div></div></article>
-
-        <!-- Sécurité & vie privée -->
-        <article class="card"><div class="thumb"><span>AmIUnique</span></div>
-          <div class="content"><h3>AmIUnique</h3><p>Empreinte de navigateur : mesure de traçabilité.</p><div class="links"><a class="link" href="https://amiunique.org/fr/fingerprint" target="_blank" rel="noopener">Tester</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>VirusTotal</span></div>
-          <div class="content"><h3>VirusTotal</h3><p>Scan de fichiers/URLs par de multiples moteurs.</p><div class="links"><a class="link" href="https://www.virustotal.com/gui/home/upload" target="_blank" rel="noopener">Uploader</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>ScamDoc</span></div>
-          <div class="content"><h3>ScamDoc</h3><p>Indice de fiabilité de sites (signalement arnaques).</p><div class="links"><a class="link" href="https://fr.scamdoc.com/" target="_blank" rel="noopener">Vérifier</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>PimEyes</span></div>
-          <div class="content"><h3>PimEyes</h3><p>Recherche visage sur le web (sensibilisation vie privée).</p><div class="links"><a class="link" href="https://pimeyes.com/en" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <!-- Science / culture -->
-        <article class="card"><div class="thumb"><span>Folding@home</span></div>
-          <div class="content"><h3>Folding@home</h3><p>Calcul distribué pour la recherche biomédicale.</p><div class="links"><a class="link" href="https://foldingathome.org/" target="_blank" rel="noopener">Participer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Rijksmuseum</span></div>
-          <div class="content"><h3>Operation Night Watch</h3><p>Projet de restauration interactif de la Ronde de nuit.</p><div class="links"><a class="link" href="https://www.rijksmuseum.nl/en/stories/operation-night-watch" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Sci-Hub</span></div>
-          <div class="content"><h3>Sci-Hub</h3><p>Accès à des publications scientifiques (légalités variables).</p><div class="links"><a class="link" href="https://scihub.org/" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>OpenRouter</span></div>
-          <div class="content"><h3>OpenRouter</h3><p>Passerelle pour tester divers modèles d’IA.</p><div class="links"><a class="link" href="https://openrouter.ai/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <!-- Audio / rétro / divers fun -->
-        <article class="card"><div class="thumb"><span>BBC SFX</span></div>
-          <div class="content"><h3>BBC Sound Effects</h3><p>Banque d’effets sonores historiques.</p><div class="links"><a class="link" href="https://sound-effects.bbcrewind.co.uk/" target="_blank" rel="noopener">Parcourir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>PlayPhrase</span></div>
-          <div class="content"><h3>PlayPhrase.me</h3><p>Recherche de répliques de films/séries.</p><div class="links"><a class="link" href="https://playphrase.me/" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Framesynthesis</span></div>
-          <div class="content"><h3>Driving Simulator</h3><p>Mini simulateur de conduite sur cartes réelles.</p><div class="links"><a class="link" href="https://framesynthesis.com/drivingsimulator/maps/" target="_blank" rel="noopener">Jouer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>RetroArch</span></div>
-          <div class="content"><h3>RetroArch</h3><p>Frontend d’émulation multi-consoles.</p><div class="links"><a class="link" href="https://www.retroarch.com/" target="_blank" rel="noopener">Site</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Powkiddy</span></div>
-          <div class="content">
-            <h3>Powkiddy (console portable)</h3>
-            <p>Console rétro pour émulation nomade.</p>
-            <div class="links"><a class="link" href="https://arkadil.com/products/powkiddy-game-console" target="_blank" rel="noopener">Produit</a></div>
-          </div>
-        </article>
-
-        <article class="card"><div class="thumb"><span>CoolThings</span></div>
-          <div class="content"><h3>CoolThings</h3><p>Sélection de gadgets & idées cadeaux.</p><div class="links"><a class="link" href="https://coolthings.com/" target="_blank" rel="noopener">Parcourir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>ThisIsWhyImBroke</span></div>
-          <div class="content"><h3>ThisIsWhyImBroke</h3><p>Objets insolites, drôles, inutiles — et tentants.</p><div class="links"><a class="link" href="https://www.thisiswhyimbroke.com/" target="_blank" rel="noopener">Voir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Google AI Playground</span></div>
-          <div class="content"><h3>NVIDIA AI Playground</h3><p>Démos d’IA interactives signées NVIDIA.</p><div class="links"><a class="link" href="https://www.nvidia.com/en-us/research/ai-playground/" target="_blank" rel="noopener">Essayer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Open Food</span></div>
-          <div class="content"><h3>OpenFoodFacts</h3><p>Base ouverte sur produits alimentaires.</p><div class="links"><a class="link" href="https://world.openfoodfacts.org/" target="_blank" rel="noopener">Voir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Gaia Vari</span></div>
-          <div class="content"><h3>Gaia Vari</h3><p>Projet citoyen : classification d’étoiles variables (ESA).</p>
-            <div class="links"><a class="link" href="https://www.gaiavari.space/" target="_blank" rel="noopener">Participer</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>NEO Toolkit</span></div>
-          <div class="content"><h3>ESA NEO Toolkit</h3><p>Outils d’analyse des objets géocroiseurs.</p><div class="links"><a class="link" href="https://neo.ssa.esa.int/neo-toolkit" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Open Source Docs</span></div>
-          <div class="content"><h3>Sketchware Docs</h3><p>Documentation pour app Android par blocs.</p><div class="links"><a class="link" href="https://docs.sketchware.io/" target="_blank" rel="noopener">Lire</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>ScienceDirect</span></div>
-          <div class="content"><h3>Article — Serious Games</h3><p>Étude (2013) sur jeux sérieux et apprentissages.</p><div class="links"><a class="link" href="https://www.sciencedirect.com/science/article/pii/S1872497313001130" target="_blank" rel="noopener">Lire</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>WAVE</span></div>
-          <div class="content"><h3>WAVE — WebAIM</h3><p>Audit d’accessibilité de pages web.</p><div class="links"><a class="link" href="https://wave.webaim.org/" target="_blank" rel="noopener">Analyser</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>KiwiCo</span></div>
-          <div class="content"><h3>KiwiCo</h3><p>Kits STEM créatifs pour enfants et ados.</p><div class="links"><a class="link" href="https://www.kiwico.com/" target="_blank" rel="noopener">Découvrir</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Giza 3D</span></div>
-          <div class="content"><h3>Giza 3D (Harvard)</h3><p>Exploration 3D des monuments de Gizeh.</p><div class="links"><a class="link" href="http://giza.fas.harvard.edu/giza3d/" target="_blank" rel="noopener">Visiter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Hildegard</span></div>
-          <div class="content"><h3>Hildegard von Blingin’</h3><p>Reprises “bardcore” de titres modernes.</p><div class="links"><a class="link" href="https://www.youtube.com/@Hildegardvonblingin" target="_blank" rel="noopener">Écouter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>Miracle Aligner</span></div>
-          <div class="content"><h3>The Miracle Aligner</h3><p>Reprises rétro (50’s/60’s) de hits actuels.</p><div class="links"><a class="link" href="https://www.youtube.com/@the_miracle_aligner" target="_blank" rel="noopener">Écouter</a></div></div></article>
-
-        <article class="card"><div class="thumb"><span>OpenAI</span></div>
-          <div class="content"><h3>OpenAI Playground (IA)</h3><p>Tester des modèles via OpenRouter.</p><div class="links"><a class="link" href="https://openrouter.ai/" target="_blank" rel="noopener">Ouvrir</a></div></div></article>
-      </div>
+    <!-- ================= Outils & divers ================= -->
+    <section id="outils">
+      <h2>Outils & divers</h2>
+      <p class="catdesc">IA, images, audio, données ouvertes, culture scientifique & curiosités.</p>
+      <div class="grid" id="grid-tools"></div>
     </section>
 
-    <!-- CRÉATION DE JEUX VIDÉO (projets perso) -->
-    <section id="jeux" class="section">
+    <!-- ================= Jeux vidéo ================= -->
+    <section id="jeux">
       <h2>Jeux vidéo</h2>
-      <p class="lead">Mes projets Unity, mes jeux favoris et un aperçu Steam (top 40).</p>
+      <p class="catdesc">Top 40 Steam (heures jouées, figé en local) + une sélection hors-Steam.</p>
+      <div class="note">Les images Steam proviennent des headers officiels figés en local. Aucune donnée de profil n’est lue côté site.</div>
 
-      <div class="grid">
-        <!-- Bloc enrichi Unity/projets -->
-        <article class="card wide">
-          <div class="thumb"><span>Projets Unity (ajouter captures/vidéos)</span></div>
-          <div class="content">
-            <h3>Projets de jeux — Unity</h3>
-            <p>Prototypes personnels (2D/3D). Ajoute jusqu’à 10 images et 3 vidéos de démo.</p>
-            <div class="links">
-              <a class="link" href="#" onclick="return false">Repo / Page (à ajouter)</a>
-            </div>
-          </div>
-          <div class="media-grid">
-            <div class="media-slot">Image 1</div><div class="media-slot">Image 2</div><div class="media-slot">Image 3</div><div class="media-slot">Image 4</div><div class="media-slot">Image 5</div>
-            <div class="media-slot">Image 6</div><div class="media-slot">Image 7</div><div class="media-slot">Image 8</div><div class="media-slot">Image 9</div><div class="media-slot">Image 10</div>
-          </div>
-          <div class="video-grid">
-            <div class="video-slot"></div><div class="video-slot"></div><div class="video-slot"></div>
-          </div>
-        </article>
+      <h3 style="margin:6px 6px 10px 6px">Top 40 Steam</h3>
+      <div class="grid" id="grid-steam"></div>
 
-        <!-- Steam + titres supplémentaires -->
-        <article class="card">
-          <div class="thumb"><span>Steam</span></div>
-          <div class="content">
-            <h3>Mon profil Steam</h3>
-            <p>Top 40 jeux les plus joués : aperçu visuel des vignettes (à intégrer).</p>
-            <div class="links">
-              <a class="link" href="https://steamcommunity.com/profiles/76561198033343097/" target="_blank" rel="noopener">Voir le profil</a>
-            </div>
-            <div class="note">Un grid de vignettes Steam peut être ajouté ici.</div>
-          </div>
-        </article>
+      <div class="hr"></div>
 
-        <!-- Cartes rapides pour titres cités -->
-        <article class="card"><div class="thumb"><span>Star Citizen</span></div>
-          <div class="content"><h3>Star Citizen</h3><p>Simulation spatiale massive et persistante.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Heroes of the Storm</span></div>
-          <div class="content"><h3>Heroes of the Storm</h3><p>MOBA dynamique par Blizzard.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>World of Warcraft</span></div>
-          <div class="content"><h3>World of Warcraft</h3><p>MMORPG univers Warcraft.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Subnautica</span></div>
-          <div class="content"><h3>Subnautica</h3><p>Survie/exploration sous-marine.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Genshin Impact</span></div>
-          <div class="content"><h3>Genshin Impact</h3><p>Action-RPG monde ouvert.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Farming Simulator</span></div>
-          <div class="content"><h3>Farming Simulator</h3><p>Gestion agricole réaliste.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Elite Dangerous</span></div>
-          <div class="content"><h3>Elite Dangerous</h3><p>Commerce et exploration galactique.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Breathedge</span></div>
-          <div class="content"><h3>Breathedge</h3><p>Survie spatiale décalée.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Remnant: From the Ashes</span></div>
-          <div class="content"><h3>Remnant: From the Ashes</h3><p>Action-RPG coopératif.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>DEATHLOOP</span></div>
-          <div class="content"><h3>DEATHLOOP</h3><p>FPS à boucle temporelle.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Minecraft</span></div>
-          <div class="content"><h3>Minecraft</h3><p>Bac à sable, créa & survie.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Fable</span></div>
-          <div class="content"><h3>Fable</h3><p>Action-RPG fabuleux.</p></div></article>
-
-        <article class="card"><div class="thumb"><span>Rétro</span></div>
-          <div class="content"><h3>Classiques N64 & Xbox</h3>
-            <p>GoldenEye, Ocarina of Time, Halo… et bien d’autres.</p>
-          </div>
-        </article>
-      </div>
+      <h3 style="margin:6px 6px 10px 6px">Sélection hors-Steam</h3>
+      <div class="grid" id="grid-games-custom"></div>
     </section>
   </main>
 
+  <script>
+    /* =========================================================
+       Data — chemins 100% locaux (dossiers /assets/passions/**)
+       ========================================================= */
+
+    const open = (url) => window.open(url, '_blank', 'noopener');
+
+    // --- Astronomie ---
+    const ASTRO = [
+      {
+        title: "Images JWST",
+        desc: "Galerie officielle du télescope James Webb. Images libres et légendées.",
+        cover: "/assets/passions/sites/webb-gallery.webp",
+        badge: "Site",
+        link: { label:"Voir", href:"https://webbtelescope.org/images" }
+      },
+      {
+        title: "Images brutes Curiosity",
+        desc: "Photos RAW du rover MSL pour traitement à la maison.",
+        cover: "/assets/passions/sites/curiosity-raw-images.webp",
+        badge: "Site",
+        link: { label:"Voir", href:"https://mars.nasa.gov/msl/multimedia/raw-images/" }
+      },
+      {
+        title: "MAST — Données astronomiques",
+        desc: "Archives STScI (Hubble, TESS, JWST). Téléchargements et catalogues.",
+        cover: "/assets/passions/sites/mast-archive-stsci.webp",
+        badge: "Données",
+        link: { label:"Accéder", href:"https://archive.stsci.edu/" }
+      },
+      {
+        title: "Cloudy Nights",
+        desc: "Communauté astro — retours d’expérience, tests, imagerie.",
+        cover: "/assets/passions/sites/cloudynights.webp",
+        badge: "Forum",
+        link: { label:"Forum", href:"https://www.cloudynights.com/" }
+      },
+      {
+        title: "Telescopic Watch",
+        desc: "Guides d’achat et comparatifs de télescopes pour débuter ou progresser.",
+        cover: "/assets/passions/sites/telescopicwatch.webp",
+        badge: "Guide",
+        link: { label:"Voir", href:"https://telescopicwatch.com/" }
+      },
+      {
+        title: "SRT — Radio-astronomie",
+        desc: "Petit radiotélescope éducatif du MIT Haystack, docs & plans.",
+        cover: "/assets/passions/sites/mit-haystack-srt.webp",
+        badge: "Projet",
+        link: { label:"Site", href:"https://www.haystack.mit.edu/haystack-public-outreach/srt-the-small-radio-telescope-for-education/" }
+      },
+      {
+        title: "Ed Ting (YouTube)",
+        desc: "Tests de télescopes, conseils d’achat et d’observation.",
+        cover: "/assets/passions/youtube/youtube-edting.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@edting" }
+      },
+      {
+        title: "Astrohopper",
+        desc: "Repérage d’objets au smartphone. Utilitaire simple, offline.",
+        cover: "/assets/passions/sites/astrohopper.webp",
+        badge: "Outil",
+        link: { label:"Essayer", href:"https://artyom-beilis.github.io/astrohopper.html" }
+      },
+      {
+        title: "Optique télescopes (PDF)",
+        desc: "Bases d’optique et types d’instruments — note d’Edmund Optics.",
+        cover: "/assets/passions/sites/edmundoptics-all-about-telescopes.webp",
+        badge: "Doc",
+        link: { label:"PDF", href:"https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf" }
+      }
+    ];
+
+    // --- DIY & Bricolage ---
+    const DIY = [
+      {
+        title: "How To Make Armor",
+        desc: "Techniques de forge et tôlerie pour armures — didactique.",
+        cover: "/assets/passions/youtube/youtube-howtomakearmor.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@howtomakearmor" }
+      },
+      {
+        title: "Armour Archive",
+        desc: "Patrons d’armures, retours & forum. Ressource historique.",
+        cover: "/assets/passions/sites/armour-archive-patterns.webp",
+        badge: "Site",
+        link: { label:"Patrons", href:"https://www.armourarchive.org/patterns/" }
+      },
+      {
+        title: "Clickspring",
+        desc: "Mécanismes & horlogerie : fabrication de précision filmée.",
+        cover: "/assets/passions/youtube/youtube-clickspring.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@Clickspring" }
+      },
+      {
+        title: "Art of Making Things",
+        desc: "Tutos variés : bois, métal, cuir, maquettes, couture maille…",
+        cover: "/assets/passions/sites/art-of-making-things.webp",
+        badge: "Site",
+        link: { label:"Tutoriels", href:"https://artofmakingthings.com/home" }
+      },
+      {
+        title: "Vidéos DIY — sélection",
+        desc: "Maison en terre, TV recyclée, écosystèmes en bocaux, cloud chamber.",
+        cover: "/assets/passions/sites/sketchware-docs.webp",
+        badge: "Playlist",
+        links: [
+          {label:"Maison en clay", href:"https://youtu.be/o6Z0MxWCbrc"},
+          {label:"TV recyclée", href:"https://youtu.be/qXrn4MqY1Wo"},
+          {label:"Écosystèmes", href:"https://youtu.be/QTH9m6MDIfc"},
+          {label:"Cloud chamber", href:"https://youtu.be/xky3f1aSkB8"}
+        ]
+      }
+    ];
+
+    // --- Histoire & Savoirs ---
+    const HIST = [
+      {
+        title: "World War Two",
+        desc: "Chronologie hebdo de la Seconde Guerre mondiale.",
+        cover: "/assets/passions/youtube/youtube-worldwartwo.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@WorldWarTwo" }
+      },
+      {
+        title: "Benn Jordan",
+        desc: "Projets science/son : explications claires et testables.",
+        cover: "/assets/passions/youtube/youtube-bennjordan.webp",
+        badge: "Chaîne",
+        links: [
+          { label:"Chaîne", href:"https://www.youtube.com/@BennJordan" },
+          { label:"Oiseaux & data", href:"https://youtu.be/hCQCP-5g5bo" }
+        ]
+      },
+      {
+        title: "Technology Connections",
+        desc: "Histoire et principes des technologies du quotidien.",
+        cover: "/assets/passions/youtube/youtube-technologyconnections.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@TechnologyConnections" }
+      },
+      {
+        title: "Survive History",
+        desc: "Connaissances en tout genre sur l’histoire.",
+        cover: "/assets/passions/youtube/youtube-survivehistory.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@survivehistory" }
+      },
+      {
+        title: "MegaLag",
+        desc: "Explorations historiques fouillées, formats longs.",
+        cover: "/assets/passions/youtube/youtube-megalag.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@MegaLag" }
+      },
+      {
+        title: "Modern Knight",
+        desc: "Armement & Histoire : pédagogie, icono et rigueur.",
+        cover: "/assets/passions/youtube/youtube-modernknight.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@ModernKnight" }
+      },
+      {
+        title: "Kurzgesagt",
+        desc: "Sciences & société illustrées — vulgarisation exigeante.",
+        cover: "/assets/passions/youtube/youtube-kurzgesagt.webp",
+        badge: "Chaîne",
+        link: { label:"Chaîne", href:"https://www.youtube.com/@kurzgesagt" }
+      }
+    ];
+
+    // --- Esprit critique ---
+    const CRIT = [
+      { title:"La Tronche en Biais", desc:"Esprit critique : formats réguliers et accessibles.", cover:"/assets/passions/youtube/youtube-troncheenbiais.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@TroncheEnBiais"} },
+      { title:"Hygiène Mentale", desc:"Méthodes, biais, calculs mentaux. Commencer par les anciennes vidéos.", cover:"/assets/passions/youtube/youtube-hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
+      { title:"Mr Sam", desc:"Enquêtes et analyses sourcées, bonne progression dans le temps.", cover:"/assets/passions/youtube/youtube-mrsam.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@mrsam-interrogation"} },
+      { title:"Defakator", desc:"Séries sur deepfakes, IA, méthodes de vérification.", cover:"/assets/passions/youtube/youtube-defakatorofficiel.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@DefakatorOfficiel"} },
+      { title:"G. Milgram", desc:"Enquêtes et vérifs patientes sur sujets controversés.", cover:"/assets/passions/youtube/youtube-ggmilgram.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@ggmilgram"} },
+      { title:"AFIS & REC Toulouse", desc:"Réseau de culture scientifique et scepticisme appliqué.", cover:"/assets/passions/youtube/youtube-rectoulouse.webp", badge:"Chaînes", links:[{label:"AFIS", href:"https://www.youtube.com/@afis-science"},{label:"REC Toulouse", href:"https://www.youtube.com/@RECTOULOUSE"}] }
+    ];
+
+    // --- Cuisine ---
+    const FOOD = [
+      { title:"John Kirkwood", desc:"Techniques et recettes maîtrisées, explications nettes.", cover:"/assets/passions/youtube/youtube-johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
+      { title:"SortedFood", desc:"Tests, astuces et comparatifs — fun mais précis.", cover:"/assets/passions/youtube/youtube-sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@SortedFood"} },
+      { title:"Tasting History", desc:"Cuisine historique, sources et recettes reproductibles.", cover:"/assets/passions/youtube/youtube-tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne", href:"https://www.youtube.com/@TastingHistory"} },
+      { title:"Akis Petretzikis", desc:"Cuisine grecque & internationale, formats clairs.", cover:"/assets/passions/youtube/youtube-akispetretzikis.webp", badge:"Chaîne", links:[{label:"Chaîne", href:"https://www.youtube.com/@akispetretzikisen"},{label:"Site", href:"https://akispetretzikis.com/en"}] }
+    ];
+
+    // --- Éducation numérique ---
+    const EDU = [
+      {title:"Scratch",desc:"Programmation visuelle pour tous.",cover:"/assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}},
+      {title:"Snap!",desc:"Scratch avancé : listes, closures, extensions.",cover:"/assets/passions/sites/snap-berkeley.webp",badge:"Outil",link:{label:"Essayer",href:"https://snap.berkeley.edu/"}},
+      {title:"Blockly Games",desc:"Mini-jeux pour apprendre la logique.",cover:"/assets/passions/sites/blockly-games.webp",badge:"Outil",link:{label:"Jouer",href:"https://blockly.games/"}},
+      {title:"Code.org Studio",desc:"Parcours guidés et activités en classe.",cover:"/assets/passions/sites/code-org-studio.webp",badge:"Plateforme",link:{label:"Ouvrir",href:"https://studio.code.org/users/sign_in"}},
+      {title:"NetsBlox",desc:"Programmation distribuée & APIs simples.",cover:"/assets/passions/sites/netsblox.webp",badge:"Outil",link:{label:"Essayer",href:"https://netsblox.org/"}},
+      {title:"App Inventor",desc:"Apps mobiles par blocs, Android.",cover:"/assets/passions/sites/appinventor.webp",badge:"Outil",link:{label:"Essayer",href:"https://appinventor.mit.edu/"}},
+      {title:"Alice",desc:"3D et narration interactive.",cover:"/assets/passions/sites/alice.webp",badge:"Outil",link:{label:"Ouvrir",href:"https://www.alice.org/"}},
+      {title:"Pencil Code",desc:"Du bloc au texte (JS/Coffee).",cover:"/assets/passions/sites/pencilcode.webp",badge:"Outil",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
+      {title:"MakeCode",desc:"Micro:bit & consorts en blocs/JS.",cover:"/assets/passions/sites/makecode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.microsoft.com/en-us/makecode"}},
+      {title:"Vidcode",desc:"Vidéo + JS pour ados.",cover:"/assets/passions/sites/vidcode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.vidcode.com/"}},
+      {title:"Construct",desc:"Jeux 2D sans coder (ou un peu).",cover:"/assets/passions/sites/construct.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.construct.net/fr"}},
+      {title:"Compute-it",desc:"Pensée informatique ludique.",cover:"/assets/passions/sites/compute-it.webp",badge:"Jeu",link:{label:"Jouer",href:"https://compute-it.toxicode.fr/"}},
+      {title:"Codingame",desc:"Défis de code multi-langages.",cover:"/assets/passions/sites/codingame.webp",badge:"Défis",link:{label:"Jouer",href:"https://codingame.com/start/"}},
+      {title:"p5.js",desc:"Création visuelle en JavaScript.",cover:"/assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doc",href:"https://p5js.org/"}},
+      {title:"Thonny",desc:"IDE minimal pour Python débutant.",cover:"/assets/passions/sites/thonny.webp",badge:"Outil",link:{label:"Télécharger",href:"https://thonny.org/"}},
+      {title:"Mu Editor",desc:"IDE Python pour l’éducation.",cover:"/assets/passions/sites/mu-editor.webp",badge:"Outil",link:{label:"Télécharger",href:"https://codewith.mu/"}},
+      {title:"TigerJython",desc:"Python orienté apprentissage.",cover:"/assets/passions/sites/tigerjython.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.tigerjython.ch/en"}},
+      {title:"Pyret",desc:"Langage pédagogique par design.",cover:"/assets/passions/sites/pyret.webp",badge:"Langage",link:{label:"Doc",href:"https://pyret.org/"}},
+      {title:"Vittascience",desc:"Cartes, capteurs & robotique scolaire.",cover:"/assets/passions/sites/vittascience.webp",badge:"Plateforme",link:{label:"Découvrir",href:"https://en.vittascience.com/"}},
+      {title:"Micro:bit",desc:"Électronique simple pour la classe.",cover:"/assets/passions/sites/microbit-makecode.webp",badge:"Outil",link:{label:"MakeCode",href:"https://makecode.microbit.org/"}},
+      {title:"cand.li",desc:"Mini-apps pédagogiques clés en main.",cover:"/assets/passions/sites/candli.webp",badge:"Outil",link:{label:"Voir",href:"https://cand.li/index-fr.html"}},
+      {title:"Human or Not",desc:"Jeu Turing moderne : IA vs humain.",cover:"/assets/passions/sites/humanornot.webp",badge:"Jeu",link:{label:"Jouer",href:"https://humanornot.ai/"}}
+    ];
+
+    // --- Outils & divers ---
+    const TOOLS = [
+      {title:"Unscreen",desc:"Supprimer l’arrière-plan vidéo.",cover:"/assets/passions/sites/unscreen.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.unscreen.com/"}},
+      {title:"Remove.bg",desc:"Détourage instantané d’images.",cover:"/assets/passions/sites/removebg.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
+      {title:"Hotpot AI",desc:"Génération et retouches variées.",cover:"/assets/passions/sites/hotpot-ai.webp",badge:"Outil",link:{label:"Essayer",href:"https://hotpot.ai/art-maker"}},
+      {title:"AI Experiments",desc:"Expériences IA de Google.",cover:"/assets/passions/sites/google-ai-experiments.webp",badge:"Galerie",link:{label:"Explorer",href:"https://experiments.withgoogle.com/collection/ai"}},
+      {title:"Axiom",desc:"Automatiser le web sans coder.",cover:"/assets/passions/sites/axiom-ai.webp",badge:"Outil",link:{label:"Voir",href:"https://axiom.ai/"}},
+      {title:"TinyWow",desc:"Utilitaires PDF, vidéo, images, etc.",cover:"/assets/passions/sites/tinywow.webp",badge:"Outils",link:{label:"Voir",href:"https://tinywow.com/"}},
+      {title:"OpenFoodFacts",desc:"Base produits ouverte & étiquettes.",cover:"/assets/passions/sites/openfoodfacts.webp",badge:"Données",link:{label:"Parcourir",href:"https://world.openfoodfacts.org/"}},
+      {title:"ImportYeti",desc:"Fret & fournisseurs (US Customs).",cover:"/assets/passions/sites/importyeti.webp",badge:"Data",link:{label:"Chercher",href:"https://www.importyeti.com/"}},
+      {title:"Capitol Trades",desc:"Transactions boursières d’élus US.",cover:"/assets/passions/sites/capitoltrades.webp",badge:"Data",link:{label:"Parcourir",href:"https://www.capitoltrades.com/trades"}},
+      {title:"Am I Unique?",desc:"Empreinte navigateur & privacy.",cover:"/assets/passions/sites/amiunique.webp",badge:"Test",link:{label:"Tester",href:"https://amiunique.org/fr/fingerprint"}},
+      {title:"VirusTotal",desc:"Scanner des fichiers/URLs.",cover:"/assets/passions/sites/virustotal.webp",badge:"Sécu",link:{label:"Scanner",href:"https://www.virustotal.com/gui/home/upload"}},
+      {title:"Scamdoc",desc:"Réputation d’un site ou vendeur.",cover:"/assets/passions/sites/scamdoc.webp",badge:"Sécu",link:{label:"Tester",href:"https://fr.scamdoc.com/"}},
+      {title:"Folding@home",desc:"Calcul distribué pour la science.",cover:"/assets/passions/sites/foldingathome.webp",badge:"Projet",link:{label:"Participer",href:"https://foldingathome.org/"}},
+      {title:"Night Watch",desc:"Restauration de La Ronde de nuit.",cover:"/assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
+      {title:"OpenRouter",desc:"Hub de modèles IA.",cover:"/assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Explorer",href:"https://openrouter.ai/"}},
+      {title:"BBC SFX",desc:"Banque de sons libre d’usage.",cover:"/assets/passions/sites/bbc-sfx.webp",badge:"Sons",link:{label:"Écouter",href:"https://sound-effects.bbcrewind.co.uk/"}},
+      {title:"PlayPhrase",desc:"Chercher des répliques dans des films.",cover:"/assets/passions/sites/playphrase.webp",badge:"Outil",link:{label:"Essayer",href:"https://playphrase.me/"}},
+      {title:"Driving Simulator Maps",desc:"Cartes procédurales jouables.",cover:"/assets/passions/sites/driving-simulator-framesynthesis.webp",badge:"Démo",link:{label:"Jouer",href:"https://framesynthesis.com/drivingsimulator/maps/"}},
+      {title:"RetroArch",desc:"Frontend émulation (multi-systèmes).",cover:"/assets/passions/sites/retroarch.webp",badge:"Outil",link:{label:"Télécharger",href:"https://www.retroarch.com/"}},
+      {title:"Powkiddy",desc:"Consoles portables pour rétro-gaming.",cover:"/assets/passions/sites/powkiddy.webp",badge:"Matériel",link:{label:"Voir",href:"https://arkadil.com/products/powkiddy-game-console"}},
+      {title:"CoolThings",desc:"Objets et gadgets originaux.",cover:"/assets/passions/sites/coolthings.webp",badge:"Site",link:{label:"Voir",href:"https://coolthings.com/"}},
+      {title:"ThisIsWhyImBroke",desc:"Wishlist d’objets insolites.",cover:"/assets/passions/sites/thisiswhyimbroke.webp",badge:"Site",link:{label:"Voir",href:"https://www.thisiswhyimbroke.com/"}},
+      {title:"NVIDIA AI Playground",desc:"Démos IA de NVIDIA Research.",cover:"/assets/passions/sites/nvidia-ai-playground.webp",badge:"Démo",link:{label:"Essayer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
+      {title:"GAIA Vari",desc:"Variabilité d’étoiles (ESA).",cover:"/assets/passions/sites/gaia-vari.webp",badge:"Data",link:{label:"Explorer",href:"https://www.gaiavari.space/"}},
+      {title:"NEO Toolkit (ESA)",desc:"Outils objets proches de la Terre.",cover:"/assets/passions/sites/esa-neo-toolkit.webp",badge:"Outil",link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"}},
+      {title:"Sketchware Docs",desc:"Développement Android par blocs.",cover:"/assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://docs.sketchware.io/"}},
+      {title:"Giza 3D",desc:"Exploration 3D des sites égyptiens.",cover:"/assets/passions/sites/giza3d.webp",badge:"Site",link:{label:"Visiter",href:"http://giza.fas.harvard.edu/giza3d/"}}
+    ];
+
+    // --- Jeux personnalisés (images à déposer par toi) ---
+    const GAMES_CUSTOM = [
+      {title:"Star Citizen", cover:"/assets/passions/games/custom/star-citizen-cover.webp"},
+      {title:"Heroes of the Storm", cover:"/assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
+      {title:"World of Warcraft", cover:"/assets/passions/games/custom/world-of-warcraft-cover.webp"},
+      {title:"Subnautica", cover:"/assets/passions/games/custom/subnautica-cover.webp"},
+      {title:"Genshin Impact", cover:"/assets/passions/games/custom/genshin-impact-cover.webp"},
+      {title:"Farming Simulator", cover:"/assets/passions/games/custom/farming-simulator-cover.webp"},
+      {title:"Elite Dangerous", cover:"/assets/passions/games/custom/elite-dangerous-cover.webp"},
+      {title:"Breathedge", cover:"/assets/passions/games/custom/breathedge-cover.webp"},
+      {title:"Remnant: From the Ashes", cover:"/assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
+      {title:"Deathloop", cover:"/assets/passions/games/custom/deathloop-cover.webp"},
+      {title:"Minecraft", cover:"/assets/passions/games/custom/minecraft-cover.webp"},
+      {title:"Fable", cover:"/assets/passions/games/custom/fable-cover.webp"},
+      {title:"Jeux N64 (classiques)", cover:"/assets/passions/games/custom/n64-classics-cover.webp"},
+      {title:"Xbox Classic (sélection)", cover:"/assets/passions/games/custom/xbox-classics-cover.webp"},
+      {title:"…et bien d’autres", cover:"/assets/passions/games/custom/and-others-cover.webp"}
+    ];
+
+    /* =========================================================
+       RENDER
+       ========================================================= */
+
+    function card({title, desc, cover, badge, link, links, extraBadge}) {
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="thumb" data-cover="${cover || ''}">
+          <span class="badge">${extraBadge || badge || ''}</span>
+        </div>
+        <div class="body">
+          <div class="title">${escapeHtml(title)}</div>
+          ${desc ? `<p class="desc">${escapeHtml(desc)}</p>` : ''}
+          <div class="links"></div>
+        </div>`;
+      const wrap = el.querySelector('.links');
+      if (link) wrap.appendChild(chip(link.label, link.href));
+      if (Array.isArray(links)) links.forEach(l => wrap.appendChild(chip(l.label, l.href)));
+      return el;
+    }
+
+    function chip(label, href){
+      const a = document.createElement('a');
+      a.className = 'link';
+      a.textContent = label;
+      a.href = href;
+      a.target = "_blank";
+      a.rel = "noopener";
+      return a;
+    }
+
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    function renderList(list, mountId){
+      const root = document.getElementById(mountId);
+      list.forEach(item => root.appendChild(card(item)));
+    }
+
+    // Games (Steam Top 40) – lit fichier local
+    async function renderSteam(){
+      const root = document.getElementById('grid-steam');
+      try{
+        const res = await fetch('/data/steam-top40.json', {cache:'no-cache'});
+        if(!res.ok) throw new Error('steam-top40.json introuvable');
+        const data = await res.json();
+        data.forEach(g=>{
+          const el = card({
+            title: g.name,
+            desc: "",
+            cover: g.image,
+            badge: "Steam"
+          });
+          const b = document.createElement('span');
+          b.className = 'game-hours';
+          b.textContent = `${g.hours} h`;
+          el.querySelector('.thumb').appendChild(b);
+          root.appendChild(el);
+        });
+      }catch(e){
+        const d = document.createElement('div');
+        d.className = 'note';
+        d.textContent = "Impossible de charger le Top 40 local. Vérifie public/data/steam-top40.json.";
+        root.before(d);
+      }
+    }
+
+    // Games custom
+    function renderGamesCustom(){
+      const root = document.getElementById('grid-games-custom');
+      GAMES_CUSTOM.forEach(g=>{
+        root.appendChild(card({ title:g.title, cover:g.cover, badge:"Sélection" }));
+      });
+    }
+
+    // Lazy load backgrounds
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const t = e.target;
+          const url = t.getAttribute('data-cover');
+          if(url){
+            t.style.setProperty('--img', `url("${url}")`);
+            t.classList.add('loaded');
+            t.removeAttribute('data-cover');
+          }
+          io.unobserve(t);
+        }
+      });
+    }, { rootMargin: '300px' });
+
+    function observeThumbs(){
+      document.querySelectorAll('.thumb[data-cover]').forEach(el=>io.observe(el));
+    }
+
+    // Init
+    renderList(ASTRO, 'grid-astro');
+    renderList(DIY, 'grid-diy');
+    renderList(HIST, 'grid-hist');
+    renderList(CRIT, 'grid-crit');
+    renderList(FOOD, 'grid-food');
+    renderList(EDU, 'grid-edu');
+    renderList(TOOLS, 'grid-tools');
+    renderSteam();
+    renderGamesCustom();
+    observeThumbs();
+  </script>
 </body>
 </html>
