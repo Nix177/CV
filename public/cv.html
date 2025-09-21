@@ -32,16 +32,50 @@
     .lang{display:flex;gap:.4rem}
   </style>
 </head>
-<body>
+<script>
+  (function(){
+    // 1) Marquer le lien actif dans la nav
+    const here = (location.pathname.replace(/\/|\.html/g,'') || 'index');
+    document.querySelectorAll('.nav-left a.chip').forEach(a=>{
+      const target = (a.getAttribute('href')||'').replace(/\/|\.html/g,'') || 'index';
+      if (target === here) a.setAttribute('aria-current','page');
+    });
 
-<header>
-  <div class="wrap">
-    <div class="brand"><div class="logo">N·T</div><div>CV — Nicolas Tuor</div></div>
-    <div class="lang">
-      <a class="btn pill" href="/cv.html" aria-current="page">FR</a>
-      <a class="btn pill" href="/cv-en.html">EN</a>
-      <a class="btn pill" href="/cv-de.html">DE</a>
-    </div>
+    // 2) Liens langues dynamiques
+    //    Mettre <body data-page="cv">, "chatbot", "passions", "portfolio", "index"…
+    const slug = document.body.dataset.page || here || 'index';
+    const hrefFor = (lang) => lang==='fr' ? `/${slug}.html` : `/${slug}-${lang}.html`;
+
+    const fr = document.getElementById('lang-fr');
+    const en = document.getElementById('lang-en');
+    const de = document.getElementById('lang-de');
+
+    if (fr) fr.href = hrefFor('fr');
+    if (en) en.href = hrefFor('en');
+
+    // Si une version DE n’existe pas, tu peux la faire pointer vers EN :
+    // liste des pages sans DE, sinon lien DE normal
+    const noDE = new Set(['cv','portfolio','chatbot','passions','index']); // édite selon tes dispo
+    if (de) de.href = noDE.has(slug) ? hrefFor('en') : hrefFor('de');
+  })();
+</script>
+
+<body data-page="cv"> 
+<header class="navbar">
+  <div class="nav-left">
+    <a class="chip" href="/index.html">Accueil</a>
+    <a class="chip" href="/cv.html">CV</a>
+    <a class="chip" href="/portfolio.html">Portfolio</a>
+    <a class="chip" href="/passions.html">Passions</a>
+    <a class="chip" href="/chatbot.html">Chatbot</a>
+    <a class="chip" href="/fun-facts.html">Fun Facts</a>
+  </div>
+
+  <div class="nav-right">
+    <a class="chip" id="lang-fr" href="#">FR</a>
+    <a class="chip" id="lang-en" href="#">EN</a>
+    <a class="chip" id="lang-de" href="#">DE</a>
+    <button id="themeToggle" class="toggle" type="button" aria-label="Basculer thème">🌙 Mode nuit</button>
   </div>
 </header>
 
