@@ -1,47 +1,58 @@
-<!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<!doctype html>
+<html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CV — Nicolas Tuor</title>
+
+  <!-- Hreflang -->
+  <link rel="alternate" hreflang="fr" href="/cv.html">
+  <link rel="alternate" hreflang="en" href="/cv-en.html">
+  <link rel="alternate" hreflang="de" href="/cv-de.html">
+  <link rel="alternate" hreflang="x-default" href="/cv-en.html">
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .cv-wrap{max-width:1200px;margin:0 auto;padding:16px}
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}
+    .toolbar .btn{border:1px solid rgba(255,255,255,.12);background:#0c1728;color:#eef3f8;text-decoration:none;
+                  padding:.45rem .7rem;border-radius:10px;font-weight:600}
+    .pdf-frame{width:100%;height:calc(100vh - 170px);border:1px solid rgba(255,255,255,.12);border-radius:12px}
+    @media (max-width:800px){ .pdf-frame{height:70vh} }
+  </style>
 </head>
 <body>
 <header class="site-header">
   <nav class="wrap row" aria-label="Navigation principale">
-    <a href="/" class="btn ghost">Accueil</a>
+    <a href="/index.html" class="btn ghost">Accueil</a>
     <a href="/portfolio.html" class="btn ghost">Portfolio</a>
-    <a href="/cv.html" class="btn ghost">CV</a>
+    <a href="/cv.html" class="btn">CV</a>
     <a href="/chatbot.html" class="btn ghost">Chatbot</a>
-    <!-- lien corrigé -->
-    <a href="/ai-lab.html" class="btn ghost">Idées IA</a>
     <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
     <span style="flex:1"></span>
-    <!-- switch langues (même contenu dans EN/DE, libellés traduits) -->
-    <a href="#" class="btn">FR</a>
+    <!-- Switch langue -->
+    <a href="/cv.html" class="btn">FR</a>
     <a href="/cv-en.html" class="btn ghost">EN</a>
     <a href="/cv-de.html" class="btn ghost">DE</a>
   </nav>
 </header>
 
-<main class="container section">
-  <h1 class="title">CV — Nicolas Tuor</h1>
-
-  <div class="row gap" style="align-items:center;margin-bottom:10px">
-    <label for="viewMode">Affichage :</label>
-    <select id="viewMode" class="select">
-      <option value="pdf" selected>PDF protégé</option>
-      <option value="constellation">Constellation</option>
-      <option value="story">Storyboard</option>
-    </select>
-    <button id="printBtn" class="btn">Imprimer/PDF</button>
+<main class="cv-wrap">
+  <h1 class="title" style="margin:14px 0 6px">CV — Nicolas Tuor</h1>
+  <div class="toolbar" role="group" aria-label="Actions">
+    <a class="btn" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+    <a class="btn" href="/assets/cv/cv-fr.pdf" download>Télécharger le PDF</a>
   </div>
 
-  <div id="cvArea"></div>
+  <!-- Affichage simple et fiable du PDF local -->
+  <object class="pdf-frame"
+          data="/assets/cv/cv-fr.pdf#view=FitH"
+          type="application/pdf">
+    <p>Votre navigateur ne peut pas afficher les PDF intégrés.
+       <a href="/assets/cv/cv-fr.pdf">Cliquez ici pour ouvrir le CV</a>.</p>
+  </object>
 </main>
-
-<script src="/site.js" defer></script>
-<script src="/cv.js"></script>
 </body>
 </html>
