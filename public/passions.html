@@ -90,56 +90,48 @@
   <h1>Mes passions & ressources</h1>
   <p class="lead">Sélection de chaînes, sites et outils. Descriptions concises, images locales pour un chargement rapide.</p>
 
-  <!-- ===== Astronomie ===== -->
   <section id="astronomie">
     <h2>Astronomie</h2>
     <p class="catdesc">Imagerie, données ouvertes et ressources pour observer, comprendre et bricoler.</p>
     <div class="grid" id="grid-astro"></div>
   </section>
 
-  <!-- ===== DIY ===== -->
   <section id="diy">
     <h2>DIY & Bricolage</h2>
     <p class="catdesc">Construire, réparer, comprendre la matière et les mécanismes.</p>
     <div class="grid" id="grid-diy"></div>
   </section>
 
-  <!-- ===== Histoire & Savoirs ===== -->
   <section id="histoire">
     <h2>Histoire & Savoirs</h2>
     <p class="catdesc">Chaînes et docs pour comprendre technologies et histoire avec rigueur.</p>
     <div class="grid" id="grid-hist"></div>
   </section>
 
-  <!-- ===== Esprit critique ===== -->
   <section id="esprit">
     <h2>Esprit critique</h2>
     <p class="catdesc">Analyses, méthodes et enquêtes pour mieux raisonner.</p>
     <div class="grid" id="grid-crit"></div>
   </section>
 
-  <!-- ===== Cuisine ===== -->
   <section id="cuisine">
     <h2>Cuisine & Food</h2>
     <p class="catdesc">Techniques, sources historiques, recettes actionnables.</p>
     <div class="grid" id="grid-food"></div>
   </section>
 
-  <!-- ===== Éducation numérique ===== -->
   <section id="edunum">
     <h2>Éducation numérique</h2>
     <p class="catdesc">Coder, simuler, apprendre en jouant — outils et environnements pour tous.</p>
     <div class="grid" id="grid-edu"></div>
   </section>
 
-  <!-- ===== Outils & divers ===== -->
   <section id="outils">
     <h2>Outils & divers</h2>
     <p class="catdesc">IA, images, audio, données ouvertes, culture scientifique & curiosités.</p>
     <div class="grid" id="grid-tools"></div>
   </section>
 
-  <!-- ===== Jeux vidéo ===== -->
   <section id="jeux">
     <h2>Jeux vidéo</h2>
     <p class="catdesc">Top 40 Steam (images locales) + sélection hors-Steam.</p>
@@ -320,7 +312,14 @@
 
         const el = card({ title:g.name, desc:"", cover, badge:"Steam", link:{label:"Fiche",href:store} });
         root.appendChild(el);
+
+        // >>> FIX: observer branché sur chaque vignette ajoutée dynamiquement
+        const t = el.querySelector('.thumb');
+        if (t) io.observe(t);
       });
+
+      // Sécurité : on (re)scanne toutes les thumbs si nécessaire
+      observeThumbs();
     }catch(e){
       const d = document.createElement('div');
       d.className = 'desc'; d.style.margin='6px';
