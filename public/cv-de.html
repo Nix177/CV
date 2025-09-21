@@ -1,216 +1,104 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Lebenslauf (DE)</title>
+  <title>Resume — Nicolas Tuor (EN)</title>
 
   <!-- Hreflang alternates -->
-  <link rel="alternate" hreflang="fr" href="./cv.html">
-  <link rel="alternate" hreflang="en" href="./cv-en.html">
-  <link rel="alternate" hreflang="de" href="./cv-de.html">
-  <link rel="alternate" hreflang="x-default" href="./cv-en.html">
+  <link rel="alternate" hreflang="fr" href="/cv.html">
+  <link rel="alternate" hreflang="en" href="/cv-en.html">
+  <link rel="alternate" hreflang="de" href="/cv-de.html">
+  <link rel="alternate" hreflang="x-default" href="/cv-en.html">
 
-  <link rel="icon" href="favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#0a1220" />
 
   <style>
     :root{
       --bg:#0a1220; --panel:#0b1323; --card:#0d1524; --border:#152238;
       --text:#eef3f8; --muted:#9fb2c8; --accent:#14b8a6; --shadow:0 10px 30px rgba(0,0,0,.35);
-      --maxw:1100px; --br:16px;
+      --max:1000px; --radius:14px;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:radial-gradient(1200px 700px at 20% 0%,#0b1930 0%,var(--bg) 55%) fixed;color:var(--text);
-         font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
-
-    /* Header */
-    header{position:sticky;top:0;z-index:20;background:rgba(10,18,32,.75);backdrop-filter:blur(6px);
-           border-bottom:1px solid rgba(255,255,255,.08)}
-    .head{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
-    .brand{display:flex;gap:.75rem;align-items:center;font-weight:800}
-    .logo{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
-          background:linear-gradient(135deg,#0a1220,#00060d);border:1px solid rgba(255,255,255,.08)}
-    .nav{display:flex;gap:.5rem;flex-wrap:wrap}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.08);background:#0c1728;color:var(--text);
-         text-decoration:none;padding:.45rem .7rem;border-radius:10px;font-weight:600;font-size:14px}
-    .btn:hover{background:#0e1b2f}
-
-    /* Language pills */
-    .langs{display:flex;gap:6px}
-    .pill{padding:.35rem .55rem;border-radius:999px;border:1px solid rgba(255,255,255,.12);text-decoration:none;color:var(--text);font-weight:700;font-size:12px;background:#0f1d34}
-    .pill.active{background:var(--accent);color:#042a26;border-color:transparent}
-
-    main{max-width:var(--maxw);margin:18px auto 80px;padding:0 16px}
-
-    /* Header block of the CV */
-    .cv-head{display:grid;gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:var(--br);padding:18px;box-shadow:var(--shadow)}
-    .title{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
-    .title h1{font-size:28px;margin:0}
-    .subtitle{color:var(--muted);font-weight:600}
-
-    .meta{display:flex;flex-wrap:wrap;gap:12px}
-    .meta .tag{padding:.35rem .55rem;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0f1d34;font-size:13px}
-
-    /* Grid layout */
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:16px}
-    @media (max-width:920px){.grid{grid-template-columns:1fr}}
-
-    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--br);padding:16px;box-shadow:var(--shadow)}
-    .card h2{font-size:18px;margin:0 0 8px 0}
-    .muted{color:var(--muted)}
-    .list{margin:8px 0 0 0;padding-left:18px}
-    .list li{margin:4px 0}
-
-    /* Experience timeline */
-    .xp{display:grid;gap:14px}
-    .job{border-left:3px solid var(--accent);padding-left:12px}
-    .job h3{margin:.1rem 0 .2rem 0;font-size:16px}
-    .job .where{color:var(--muted);font-weight:600}
-    .job .when{color:var(--muted);font-size:13px;margin-bottom:6px}
-    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-    .chip{padding:.3rem .5rem;border-radius:8px;background:#10223a;border:1px solid #1a2d49;font-size:12px}
-
-    /* Print */
-    @media print{
-      body{background:#fff;color:#000}
-      header{display:none}
-      main{margin:0;max-width:100%;padding:0}
-      .card,.cv-head{box-shadow:none;border-color:#ddd}
-      a{color:#000}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
     }
+
+    header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(10,18,32,.75); backdrop-filter:blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .brand{display:flex; align-items:center; gap:.75rem; font-weight:800}
+    .logo{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#02060f;border:1px solid rgba(255,255,255,.08)}
+    nav.actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn, .pill{
+      appearance:none; border:1px solid rgba(255,255,255,.12); background:#0c1728; color:var(--text);
+      text-decoration:none; padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+    }
+    .btn:hover, .pill:hover{background:#0e1b2f}
+    .pill.active{background:#10223a; border-color:#203a62}
+
+    main{max-width:var(--max); margin:22px auto 80px; padding:0 16px}
+    h1{margin:0 0 12px 0; font-size:34px}
+    .muted{color:var(--muted)}
+
+    .viewer{height:80vh; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--panel); box-shadow:var(--shadow)}
+    .tools{display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 10px}
+    .notice{margin:10px 0; color:var(--muted)}
+    .notice a{color:var(--text)}
+    .bar{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .lang{display:flex; gap:6px}
   </style>
 </head>
 <body>
 
 <header>
-  <div class="head">
-    <div class="brand"><div class="logo">N·T</div><div>Lebenslauf</div></div>
-    <nav class="nav" aria-label="Navigation">
-      <a class="btn" href="index.html">Startseite</a>
-      <a class="btn" href="portfolio.html">Portfolio</a>
-      <a class="btn" href="passions.html">Passions</a>
-    </nav>
-    <div class="langs" aria-label="Sprachen">
-      <a class="pill" href="cv.html" lang="fr">FR</a>
-      <a class="pill" href="cv-en.html" lang="en">EN</a>
-      <span class="pill active" lang="de" aria-current="page">DE</span>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">N·T</div>
+      <div>Resume — Nicolas Tuor</div>
+    </div>
+    <div class="bar">
+      <nav class="actions" aria-label="Navigation">
+        <a class="btn" href="/index.html">Home</a>
+        <a class="btn" href="/portfolio.html">Portfolio</a>
+        <a class="btn" href="/chatbot.html">Chatbot</a>
+        <a class="btn" href="/fun-facts.html">Fun Facts</a>
+      </nav>
+      <nav class="lang" aria-label="Languages">
+        <a class="pill" href="/cv.html" lang="fr">FR</a>
+        <a class="pill active" href="/cv-en.html" lang="en">EN</a>
+        <a class="pill" href="/cv-de.html" lang="de">DE</a>
+      </nav>
     </div>
   </div>
 </header>
 
 <main>
-  <!-- Kopfbereich des CV -->
-  <section class="cv-head">
-    <div class="title">
-      <h1>Nicolas Tuor</h1>
-      <div class="subtitle"><!-- TODO: Berufsbezeichnung auf DE (z.B. "Dozent für digitale Bildung · Entwickler") --></div>
-    </div>
-    <div class="meta">
-      <span class="tag">📍 <!-- TODO: Ort/Land --></span>
-      <span class="tag">✉️ <!-- TODO: E-Mail --></span>
-      <span class="tag">🔗 <!-- TODO: Website/LinkedIn/GitHub --></span>
-      <span class="tag">🗂️ <a href="cv-en.pdf" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">PDF (EN)</a></span>
-    </div>
-    <div class="muted"><!-- TODO: Kurzprofil auf DE (2–3 Sätze) --></div>
-  </section>
+  <h1>Resume — Nicolas Tuor</h1>
+  <p class="muted">Embedded viewer + direct links. PDFs are served from <code>/public/assets/cv/</code>.</p>
 
-  <section class="grid" aria-label="Inhalt Lebenslauf">
-    <!-- Sidebar -->
-    <aside class="card">
-      <h2>Kompetenzen</h2>
-      <ul class="list">
-        <!-- TODO: Auflisten (bullet points) -->
-        <li><!-- z.B. Didaktik der Informatik, Medienpädagogik --></li>
-        <li><!-- z.B. Web-Entwicklung (HTML/CSS/JS) --></li>
-        <li><!-- z.B. Daten & Visualisierung --></li>
-      </ul>
+  <div class="tools">
+    <a class="btn" href="/public/docs/cv-en.pdf" target="_blank" rel="noopener">Open in new tab</a>
+    <a class="btn" href="/public/docs/cv-en.pdf" download="Nicolas-Tuor-Resume-en.pdf">Download PDF</a>
+  </div>
 
-      <h2 style="margin-top:16px">Tools & Tech</h2>
-      <div class="chips">
-        <!-- TODO: badgetags (z.B. "JavaScript", "Node", "Python", "Git", "Figma", "Unity") -->
-        <span class="chip">JavaScript</span><span class="chip">Node</span><span class="chip">Git</span>
+  <div class="viewer">
+    <object data="/public/docs/cv-en.pdf#view=FitH&pagemode=none"
+            type="application/pdf" width="100%" height="100%">
+      <div class="notice">
+        Your browser can't display embedded PDFs.
+        <a href="/public/docs/cv-en.pdf" target="_blank" rel="noopener">Click here to open the resume</a>.
       </div>
-
-      <h2 style="margin-top:16px">Sprachen</h2>
-      <ul class="list">
-        <!-- TODO: Deutsch/Französisch/Englisch + Niveau -->
-        <li><!-- z.B. Französisch · Muttersprache --></li>
-        <li><!-- Deutsch · C1 --></li>
-        <li><!-- Englisch · C1 --></li>
-      </ul>
-
-      <h2 style="margin-top:16px">Zertifikate</h2>
-      <ul class="list">
-        <!-- TODO -->
-        <li><!-- Titel · Jahr · Institution --></li>
-      </ul>
-
-      <h2 style="margin-top:16px">Interessen</h2>
-      <div class="chips">
-        <span class="chip">Astronomie</span><span class="chip">DIY</span><span class="chip">Geschichte</span>
-      </div>
-    </aside>
-
-    <!-- Main column -->
-    <section class="xp">
-      <article class="card">
-        <h2>Berufserfahrung</h2>
-
-        <!-- Job 1 -->
-        <div class="job">
-          <h3><!-- TODO: Funktionsbezeichnung --></h3>
-          <div class="where"><!-- TODO: Organisation / Standort --></div>
-          <div class="when"><!-- TODO: Zeitraum (z.B. 2021–Heute) --></div>
-          <ul class="list">
-            <li><!-- TODO: wichtigste Leistungen/Verantwortungen --></li>
-            <li><!-- … --></li>
-          </ul>
-          <div class="chips">
-            <!-- TODO: relevante Technologien/Themen -->
-            <span class="chip">Didaktik</span><span class="chip">Web</span>
-          </div>
-        </div>
-
-        <!-- Job 2 -->
-        <div class="job">
-          <h3><!-- TODO --></h3>
-          <div class="where"><!-- TODO --></div>
-          <div class="when"><!-- TODO --></div>
-          <ul class="list">
-            <li><!-- … --></li>
-          </ul>
-        </div>
-
-        <!-- Füge bei Bedarf weitere .job-Blöcke hinzu -->
-      </article>
-
-      <article class="card">
-        <h2>Projekte & Publikationen</h2>
-        <ul class="list">
-          <li><!-- TODO: Titel — Kurzbeschreibung, Link --></li>
-          <li><!-- TODO --></li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <h2>Ausbildung</h2>
-        <ul class="list">
-          <li><!-- TODO: Abschluss · Schule/Uni · Jahr(e) · Schwerpunkt --></li>
-          <li><!-- TODO --></li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <h2>Engagement</h2>
-        <ul class="list">
-          <li><!-- TODO: Community, Workshops, Mentoring usw. --></li>
-        </ul>
-      </article>
-    </section>
-  </section>
+    </object>
+  </div>
 </main>
 
 </body>
