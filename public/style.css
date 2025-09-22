@@ -413,38 +413,32 @@ a:focus-visible {
 }
 .chat .row input#q::placeholder { opacity: .8; }
 
-/* === NAV-PLACEMENT-ONLY (DO NOT TOUCH OTHER STYLES) === */
-header .site-nav {
-  position: static !important;
-  float: none !important;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+/* === UPDATE: NAV LAYOUT NORMALIZATION — placement only === */
+.site-nav{
+  display:flex;
+  align-items:center;
   gap: clamp(0.5rem, 1vw, 1rem);
+  width:100%;
+  /* pas de position/fixed ici: on respecte le header existant (sticky, fixed, etc.) */
   white-space: nowrap;
-  margin: 0 0 var(--space-2, 1rem);
 }
-header .site-nav .menu {
-  display: flex;
-  gap: clamp(0.5rem, 1vw, 0.75rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-header .site-nav .lang {
-  display: flex;
-  gap: 0.5rem;
-  margin: 0 0 0 auto;
-  padding: 0;
-  list-style: none;
-}
-header .site-nav li { list-style: none; }
-header .site-nav li::marker { content: ""; }
 
-/* Mobile: wrap propre si manque d’espace, langues restent à droite */
-@media (max-width: 620px) {
-  header .site-nav { flex-wrap: wrap; white-space: normal; }
-  header .site-nav .menu { flex: 1 1 auto; flex-wrap: wrap; }
-  header .site-nav .lang { margin-left: auto; }
+.site-nav .menu,
+.site-nav .lang{
+  display:flex;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.site-nav .lang{
+  margin-left:auto; /* pousse FR·EN·DE à droite */
+}
+
+/* Mobile: autoriser un wrap propre si l’espace manque, en gardant les langues à droite */
+@media (max-width: 620px){
+  .site-nav{ flex-wrap: wrap; white-space: normal; }
+  .site-nav .menu{ flex:1 1 auto; flex-wrap: wrap; }
+  .site-nav .lang{ margin-left:auto; }
 }
