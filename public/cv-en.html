@@ -7,6 +7,11 @@
   <meta name="theme-color" content="#0a1220" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <!-- UPDATE: hreflang -->
+  <link rel="alternate" hreflang="fr" href="/cv.html">
+  <link rel="alternate" hreflang="en" href="/cv-en.html">
+  <link rel="alternate" hreflang="de" href="/cv-de.html">
+  <link rel="alternate" hreflang="x-default" href="/cv.html">
   <style>
     /* === Nav styles copied from portfolio === */
     body { margin:0 }
@@ -36,18 +41,20 @@
 
   <!-- Unified header (same as portfolio) -->
   <header class="site-header">
-    <nav class="wrap row" aria-label="Main navigation">
-      <a href="/index-en.html" class="btn ghost">Home</a>
-      <a href="/portfolio-en.html" class="btn ghost">Portfolio</a>
-      <a href="/cv-en.html" class="btn" aria-current="page">CV</a>
-      <a href="/passions-en.html" class="btn ghost">Passions</a>
-      <a href="/chatbot-en.html" class="btn ghost">Chatbot</a>
-      <a href="/ai-lab.html" class="btn ghost">AI Lab</a>
-      <a href="/fun-facts.html" class="btn ghost">Common misconceptions</a>
-      <span style="flex:1"></span>
-      <a href="/cv.html" class="btn ghost">FR</a>
-      <a href="/cv-en.html" class="btn">EN</a>
-      <a href="/cv-de.html" class="btn ghost">DE</a>
+    <nav class="wrap row site-nav" aria-label="Main navigation">
+      <ul class="menu">
+        <li><a href="/index-en.html" class="btn ghost">Home</a></li>
+        <li><a href="/cv-en.html" class="btn" aria-current="page">CV</a></li>
+        <li><a href="/portfolio-en.html" class="btn ghost">Portfolio</a></li>
+        <li><a href="/passions-en.html" class="btn ghost">Passions</a></li>
+        <li><a href="/ai-lab-en.html" class="btn ghost">AI Lab</a></li>
+        <li><a href="/fun-facts-en.html" class="btn ghost">Common Misconceptions</a></li>
+      </ul>
+      <ul class="lang">
+        <li><a href="/cv.html" class="btn ghost">FR</a></li>
+        <li><a href="/cv-en.html" class="btn" aria-current="page">EN</a></li>
+        <li><a href="/cv-de.html" class="btn ghost">DE</a></li>
+      </ul>
     </nav>
   </header>
 

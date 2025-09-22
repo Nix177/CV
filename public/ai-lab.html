@@ -7,6 +7,11 @@
   <meta name="description" content="Générateur de quiz PER et mini-jeu pédagogiques."/>
   <link rel="icon" href="/favicon.ico"/><!-- si 404, remplace par /icon.svg existant -->
   <link rel="stylesheet" href="/style.css"/>
+  <!-- UPDATE: hreflang -->
+  <link rel="alternate" hreflang="fr" href="/ai-lab.html">
+  <link rel="alternate" hreflang="en" href="/ai-lab-en.html">
+  <link rel="alternate" hreflang="de" href="/ai-lab-de.html">
+  <link rel="alternate" hreflang="x-default" href="/ai-lab.html">
   <script src="/site.js" defer></script>
   <script src="/ai-lab.js" defer></script>
   <style>
@@ -18,17 +23,20 @@
 </head>
 <body>
 <header class="site-header">
-  <nav class="wrap row">
-    <a href="/" class="btn ghost">Accueil</a>
-    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
-    <a href="/cv.html" class="btn ghost">CV</a>
-    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
-    <a href="/ai-lab.html" class="btn" aria-current="page">Idées IA</a>
-    <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
-    <span style="flex:1"></span>
-    <a href="/ai-lab.html" class="btn">FR</a>
-    <a href="/ai-lab-en.html" class="btn ghost">EN</a>
-    <a href="/ai-lab-de.html" class="btn ghost">DE</a>
+  <nav class="wrap row site-nav">
+    <ul class="menu">
+      <li><a href="/index.html" class="btn ghost">Accueil</a></li>
+      <li><a href="/cv.html" class="btn ghost">CV</a></li>
+      <li><a href="/portfolio.html" class="btn ghost">Portfolio</a></li>
+      <li><a href="/passions.html" class="btn ghost">Passions</a></li>
+      <li><a href="/ai-lab.html" class="btn" aria-current="page">Labo IA</a></li>
+      <li><a href="/fun-facts.html" class="btn ghost">Idées reçues</a></li>
+    </ul>
+    <ul class="lang">
+      <li><a href="/ai-lab.html" class="btn" aria-current="page">FR</a></li>
+      <li><a href="/ai-lab-en.html" class="btn ghost">EN</a></li>
+      <li><a href="/ai-lab-de.html" class="btn ghost">DE</a></li>
+    </ul>
   </nav>
 </header>
 

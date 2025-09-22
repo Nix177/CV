@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Computer Science Didactics & Education</title>
   <link rel="stylesheet" href="/style.css" />
+  <!-- UPDATE: hreflang -->
+  <link rel="alternate" hreflang="fr" href="/index.html">
+  <link rel="alternate" hreflang="en" href="/index-en.html">
+  <link rel="alternate" hreflang="de" href="/index-de.html">
+  <link rel="alternate" hreflang="x-default" href="/index.html">
 </head>
 <body>
 
@@ -16,21 +21,20 @@
       <div>Nicolas Tuor — <span style="color:#9fb2c8">Computer Science Didactics & Education</span></div>
     </div>
 
-    <nav class="top-actions" aria-label="Navigation principale" style="display:flex;gap:.5rem;flex-wrap:wrap">
-      <a class="btn" href="./index.html">Home</a>
-      <a class="btn" href="./cv.html">CV</a>
-      <a class="btn" href="./portfolio.html">Portfolio</a>
-      <a class="btn" href="./chatbot.html">Chatbot</a>
-      <a class="btn" href="./fun-facts.html">Fun Facts</a>
-      <a class="btn" href="./passions.html">Passions</a>
-    </nav>
-
-    <!-- Switcher de langue (liens directs vers la même page si elle existe) -->
-    <nav class="lang" aria-label="Langue" style="display:flex;gap:.35rem;flex-wrap:wrap">
-      <!-- Sur passions.html, ces 3 liens pointent vers passions(.html|-en|-de) -->
-      <a class="btn" href="./passions.html" aria-current="page">FR</a>
-      <a class="btn" href="./passions-en.html">EN</a>
-      <a class="btn" href="./passions-de.html">DE</a>
+    <nav class="top-actions site-nav" aria-label="Navigation principale" style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <ul class="menu">
+        <li><a href="/index-en.html" aria-current="page">Home</a></li>
+        <li><a href="/cv-en.html">CV</a></li>
+        <li><a href="/portfolio-en.html">Portfolio</a></li>
+        <li><a href="/passions-en.html">Passions</a></li>
+        <li><a href="/ai-lab-en.html">AI Lab</a></li>
+        <li><a href="/fun-facts-en.html">Common Misconceptions</a></li>
+      </ul>
+      <ul class="lang">
+        <li><a href="/index.html">FR</a></li>
+        <li><a href="/index-en.html" aria-current="page">EN</a></li>
+        <li><a href="/index-de.html">DE</a></li>
+      </ul>
     </nav>
   </div>
 </header>

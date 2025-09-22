@@ -7,6 +7,11 @@
   <meta name="description" content="Projets et démos (éducation, IA, jeux pédagogiques)."/>
   <link rel="icon" href="/favicon.ico"/>
   <link rel="stylesheet" href="/style.css"/>
+  <!-- UPDATE: hreflang -->
+  <link rel="alternate" hreflang="fr" href="/portfolio.html">
+  <link rel="alternate" hreflang="en" href="/portfolio-en.html">
+  <link rel="alternate" hreflang="de" href="/portfolio-de.html">
+  <link rel="alternate" hreflang="x-default" href="/portfolio.html">
   <style>
     /* Styles de base (fonctionne même sans style.css luxueux) */
     body { margin:0 }
@@ -32,17 +37,20 @@
 </head>
 <body>
   <header class="site-header">
-    <nav class="wrap row" aria-label="Navigation principale" style="padding:10px 16px">
-      <a href="/" class="btn ghost">Accueil</a>
-      <a href="/portfolio.html" class="btn" aria-current="page">Portfolio</a>
-      <a href="/cv.html" class="btn ghost">CV</a>
-      <a href="/chatbot.html" class="btn ghost">Chatbot</a>
-      <a href="/ai-lab.html" class="btn ghost">Labo IA</a>
-      <a href="/fun-facts.html" class="btn ghost">Ideées reçues</a>
-      <span style="flex:1"></span>
-      <a href="/portfolio.html" class="btn">FR</a>
-      <a href="/portfolio-en.html" class="btn ghost">EN</a>
-      <a href="/portfolio-de.html" class="btn ghost">DE</a>
+    <nav class="wrap row site-nav" aria-label="Navigation principale" style="padding:10px 16px">
+      <ul class="menu">
+        <li><a href="/index.html" class="btn ghost">Accueil</a></li>
+        <li><a href="/cv.html" class="btn ghost">CV</a></li>
+        <li><a href="/portfolio.html" class="btn" aria-current="page">Portfolio</a></li>
+        <li><a href="/passions.html" class="btn ghost">Passions</a></li>
+        <li><a href="/ai-lab.html" class="btn ghost">Labo IA</a></li>
+        <li><a href="/fun-facts.html" class="btn ghost">Idées reçues</a></li>
+      </ul>
+      <ul class="lang">
+        <li><a href="/portfolio.html" class="btn" aria-current="page">FR</a></li>
+        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
+        <li><a href="/portfolio-de.html" class="btn ghost">DE</a></li>
+      </ul>
     </nav>
   </header>
 
