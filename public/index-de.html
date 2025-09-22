@@ -12,6 +12,25 @@
   <link rel="alternate" hreflang="x-default" href="/index.html">
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
+  <style>
+    /* ===== Header : brand | buttons ===== */
+    /* // UPDATE: décale le titre sous la nav globale */
+    :root { --navH: 56px; }                /* hauteur approx. de la nav en desktop */
+    @media (max-width: 820px){ :root { --navH: 72px; } }  /* nav peut passer à 2 lignes */
+
+    header{
+      position: fixed;
+      left: 18px;
+      right: 18px;
+      top: calc(18px + var(--navH));   /* était 18px → on ajoute la hauteur de la nav */
+      z-index: 5;                      /* sous #nt-global-nav (qui est au-dessus) */
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    }
+
+    /* // UPDATE: si un ancien nav local existe dans ce header, on le masque.
+       (#nt-global-nav est en dehors du header, donc non impacté) */
+    header > nav.site-nav { display: none; }
+  </style>
 </head>
 <body>
 
