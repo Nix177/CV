@@ -488,28 +488,74 @@ a:focus-visible {
 #nt-global-nav { position: relative; z-index: 100; }
 
 /* =========================================================
-   UPDATE — Portfolio : overlay de prévisualisation plus petit
-   (réduction uniquement visuelle, aucune autre page impactée)
+   === UPDATE: Portfolio — overlay & fallback responsive ===
+   - Réduit fortement la taille de l’aperçu
+   - Desktop et mobile
+   - Sans toucher aux autres pages
    ========================================================= */
-#overlay { z-index: 1000; }                /* s’assure que l’overlay passe devant la nav */
-#overlay.overlay {                         /* centre la modale */
-  align-items: center;
-  justify-content: center;
+:root{
+  --pfw: 720px;   /* largeur cible overlay desktop */
+  --pfh: 52vh;    /* hauteur cible overlay desktop */
 }
-#overlay .panel {                          /* taille réduite */
-  width: min(900px, 92vw);
-  height: min(62vh, 92vh);
+
+/* Overlay centré au-dessus de tout (si utilisé) */
+#overlay{ 
+  z-index: 1000; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+/* Panneau d'overlay compact */
+#overlay .panel{
+  width: min(var(--pfw), 92vw);
+  height: min(var(--pfh), 82vh);
   border-radius: var(--radius);
+  overflow: hidden;
 }
-#overlay iframe {                          /* occupe la hauteur utile */
+
+/* L’iframe occupe la zone utile */
+#overlay iframe{
+  display:block;
+  width:100%;
+  height: calc(100% - 46px); /* ajuste selon la hauteur de l’entête du panneau */
+  border:0;
+}
+
+/* --- Fallback (aperçu inline si embed impossible ou si JS l’utilise) --- */
+/* Cible les iframes d’aperçu du portfolio uniquement */
+iframe[data-preview],
+iframe.preview,
+.portfolio-preview iframe{
+  display:block;
+  margin-inline:auto;
+  max-width: min(var(--pfw), 96vw);
   width: 100%;
-  height: calc(100% - 46px);               /* ~hauteur de l’en-tête de l’overlay */
-  display: block;
-  border: 0;
+  height: clamp(280px, var(--pfh), 540px);
+  border:0;
+  border-radius: var(--radius);
+  outline: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
-@media (max-width: 620px) {
-  #overlay .panel {
+
+/* Breakpoints */
+@media (max-width: 980px){
+  :root{ --pfw: 640px; --pfh: 54vh; }
+}
+@media (max-width: 640px){
+  :root{ --pfw: 520px; --pfh: 58vh; }
+
+  #overlay .panel{
     width: 94vw;
-    height: 66vh;
+    height: var(--pfh);
+  }
+  #overlay iframe{
+    height: calc(100% - 42px);
+  }
+
+  iframe[data-preview],
+  iframe.preview,
+  .portfolio-preview iframe{
+    max-width: 94vw;
+    height: clamp(240px, 56vh, 520px);
   }
 }
