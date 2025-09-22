@@ -1,26 +1,22 @@
 /* public/portfolio.js
-   Renders the portfolio grid from public/portfolio-data.js (i18n-aware).
-   Keeps behaviour: Preview (overlay iframe, sandbox) + Visit (new tab).
-   Vanilla, no deps. No inline sizing (CSS controls everything).
+   Rendu du portfolio à partir de public/portfolio-data.js (avec i18n).
+   Aperçu = overlay <iframe> sécurisé (sandbox), Visiter = nouvel onglet.
+   Vanilla JS, sans dépendances.
 */
 (function () {
   "use strict";
 
-  const htmlLang = (document.documentElement.getAttribute("lang") || "fr")
-    .slice(0,2).toLowerCase();
+  // Langue de la page
+  const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0,2).toLowerCase();
 
+  // Libellés
   const T = ({
-    fr: { preview:"Aperçu", visit:"Visiter", close:"Fermer",
-          blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »." },
-    en: { preview:"Preview", visit:"Visit", close:"Close",
-          blocked:"This site denies being embedded. ➜ Use “Visit”." },
-    de: { preview:"Vorschau", visit:"Besuchen", close:"Schließen",
-          blocked:"Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen." }
-  })[htmlLang] || {
-    preview:"Aperçu", visit:"Visiter", close:"Fermer",
-    blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »."
-  };
+    fr: { preview:"Aperçu", visit:"Visiter", close:"Fermer", blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »." },
+    en: { preview:"Preview", visit:"Visit",  close:"Close",  blocked:"This site denies being embedded. ➜ Use “Visit”." },
+    de: { preview:"Vorschau", visit:"Besuchen", close:"Schließen", blocked:"Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen." }
+  })[htmlLang] || { preview:"Aperçu", visit:"Visiter", close:"Fermer", blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »." };
 
+  // Helpers
   const $  = (s, r=document) => r.querySelector(s);
   const el = (tag, attrs={}, children=[]) => {
     const n = document.createElement(tag);
@@ -32,119 +28,120 @@
       else n.setAttribute(k, v);
     }
     (Array.isArray(children) ? children : [children]).forEach(c => {
-      if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+      if (c != null) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
     });
     return n;
   };
 
-  // ---- data
+  // Charge les données (quel que soit l’ancien format)
   function loadData() {
-    const d = (window.portfolioData || (window.PORTFOLIO && window.PORTFOLIO.items) || window.PORTFOLIO_ITEMS || []);
+    const d = window.portfolioData
+      || (window.PORTFOLIO && window.PORTFOLIO.items)
+      || window.PORTFOLIO_ITEMS
+      || [];
     return Array.isArray(d) ? d : [];
   }
+
+  // Sélectionne titre/desc/url selon la langue (avec fallback)
   function pickI18n(it) {
     const i = it.i18n || {};
     const L = i[htmlLang] || i.fr || Object.values(i)[0] || {};
-    const title = L.title || it.title || it.name || "Untitled";
-    const description = L.description || it.description || it.desc || "";
-    const url = (L.url || it.url || it.link || "");
-    return { title, description, url };
+    return {
+      title: L.title || it.title || it.name || "Untitled",
+      description: L.description || it.description || it.desc || "",
+      url: L.url || it.url || it.link || ""
+    };
   }
 
-  // ---- overlay
-  function resetInlineSizing() {
-    const o = $("#overlay"), f = $("#overlayFrame");
-    const d = $("#ovlDialog"), b = $("#ovlBody");
-    [o,f,d,b].forEach(x => { if (x) { x.removeAttribute("style"); }});
+  // --- Overlay (créé si absent dans la page)
+  function ensureOverlay() {
+    let ovl = $("#pfOverlay");
+    if (ovl) return ovl;
+
+    ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
+      el("div", { class:"pf-panel" }, [
+        el("div", { class:"pf-head" }, [
+          el("strong", { id:"pfTitle", text:"" }),
+          el("button", { id:"pfClose", class:"btn" }, T.close)
+        ]),
+        el("div", { class:"pf-frame" }, [
+          el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
+        ]),
+        el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked)
+      ])
+    ]);
+    document.body.appendChild(ovl);
+    return ovl;
   }
+
   function openOverlay(url, title) {
-    const overlay = $("#overlay");
-    const dialog  = $("#ovlDialog");
-    const frame   = $("#overlayFrame");
-    const ovlTitle = $("#ovlTitle");
-    const ovlMsg   = $("#ovlMsg");
-    const btnClose = $("#btnClose");
+    const ovl = ensureOverlay();
+    const frame = $("#pfFrame");
+    const titleEl = $("#pfTitle");
+    const msg = $("#pfMsg");
+    const btnClose = $("#pfClose");
 
-    // purge any legacy inline styles so CSS wins
-    resetInlineSizing();
-
-    ovlTitle.textContent = title || "";
-    ovlMsg.style.display = "none";
+    titleEl.textContent = title || "";
+    msg.style.display = "none";
     frame.removeAttribute("src");
 
-    overlay.style.display = "flex";          // (layout is fully CSS-driven)
+    ovl.classList.add("show");
     document.body.style.overflow = "hidden";
 
+    // On ne donne pas allow-same-origin pour éviter les alertes du site cible
     frame.setAttribute("sandbox", "allow-scripts allow-popups");
     frame.src = url;
 
-    const timer = setTimeout(() => { ovlMsg.style.display = "block"; }, 2000);
+    const timer = setTimeout(() => { msg.style.display = "block"; }, 2000);
 
     const close = () => {
       clearTimeout(timer);
-      overlay.style.display = "none";
+      ovl.classList.remove("show");
       document.body.style.overflow = "";
       frame.removeAttribute("src");
       btnClose.removeEventListener("click", close);
-      overlay.removeEventListener("click", onBackdrop);
+      ovl.removeEventListener("click", onBackdrop);
       document.removeEventListener("keydown", onEsc);
     };
-    const onBackdrop = (e) => { if (e.target === overlay) close(); };
+    const onBackdrop = (e) => { if (e.target === ovl) close(); };
     const onEsc = (e) => { if (e.key === "Escape") close(); };
 
     btnClose.addEventListener("click", close);
-    overlay.addEventListener("click", onBackdrop);
+    ovl.addEventListener("click", onBackdrop);
     document.addEventListener("keydown", onEsc);
   }
 
-  // ---- cards
+  // Cartes
   function makeCard(it) {
     const { title, description, url } = pickI18n(it);
     const img  = it.image || it.thumbnail || null;
     const tags = Array.isArray(it.tags) ? it.tags : [];
 
-    const head = el("div", { class:"pf-head" }, [
-      img ? el("img", { class:"pf-thumb", src: img, alt:"" }) : null,
-      el("div", {}, [
-        el("h3", { class:"pf-title", text:title }),
-        description ? el("p", { class:"pf-desc", text:description }) : null
+    const left = el("div", { class:"p-thumb", ...(img ? { style:`background-image:url(${img})` } : {}) });
+    const right = el("div", {}, [
+      el("h3", { class:"p-title", text:title }),
+      description ? el("p", { class:"p-desc", text:description }) : null,
+      tags.length ? el("div", { class:"pf-tags" }, tags.map(t => el("span", { class:"badge", text:t }))) : null,
+      el("div", { class:"p-actions" }, [
+        el("button", { class:"btn linkish", onClick:() => openOverlay(url, title) }, T.preview),
+        el("a", { class:"btn primary", href:url, target:"_blank", rel:"noopener" }, T.visit)
       ])
     ]);
 
-    const tagBar = tags.length
-      ? el("div", { class:"pf-tags" }, tags.map(t => el("span", { class:"badge", text:t })))
-      : null;
-
-    const actions = el("div", { class:"pf-actions" }, [
-      el("button", { class:"btn", onClick: () => openOverlay(url, title) }, T.preview),
-      el("button", { class:"btn", onClick: () => url && window.open(url, "_blank", "noopener") }, T.visit)
-    ]);
-
-    return el("div", { class:"card pf-card" }, [head, tagBar, actions]);
+    const card = el("div", { class:"p-card" }, [left, right]);
+    return card;
   }
 
-  function renderGrid(list) {
-    const grid = $("#portfolioGrid");
+  function renderGrid(items) {
+    const grid = document.getElementById("portfolioGrid");
     if (!grid) return;
     grid.innerHTML = "";
-    if (!list.length) {
-      grid.appendChild(el("p", { class:"muted", text:"(Aucun projet pour le moment.)" }));
-      return;
-    }
     const frag = document.createDocumentFragment();
-    list.forEach(it => frag.appendChild(makeCard(it)));
+    items.forEach(it => frag.appendChild(makeCard(it)));
     grid.appendChild(frag);
   }
 
-  function initOverlayTexts() {
-    const close = $("#btnClose");
-    const msg   = $("#ovlMsg");
-    if (close) close.textContent = T.close;
-    if (msg)   msg.textContent   = T.blocked;
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
-    initOverlayTexts();
     renderGrid(loadData());
   });
 })();
