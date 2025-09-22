@@ -257,24 +257,24 @@
   <script>
     /* ===== Données des stations ===== */
     const STATIONS = [
-      { title:"Pensée critique", short:"Analyser, prouver, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
-      { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources et micro-projets pour apprendre vite et mieux, durablement." },
-      { title:"Goût de l’apprentissage", short:"Curiosité + petits défis fréquents.", detail:"Structuration des tâches pour nourrir le plaisir de comprendre et mesurer les progrès." },
-      { title:"Pédagogie par projets", short:"Problèmes réels, livrables concrets.", detail:"De la définition du besoin à la restitution, projets ancrés et collaboratifs." },
-      { title:"Émerveillement", short:"Moments ‘wow’ déclencheurs.", detail:"Scénariser l’étonnement pour ouvrir vers des notions exigeantes sans perdre la rigueur." },
-      { title:"Médiation & vulgarisation", short:"Traduire science & culture.", detail:"Formats clairs, inclusifs, actionnables — montrer, raconter, faire." },
-      { title:"Communautés de pratiques", short:"Apprendre entre pairs.", detail:"Espaces de mutualisation, canevas, cas, capitalisation continue." },
-      { title:"Apprendre par l’erreur", short:"Essai→feedback→amélioration.", detail:"Erreur = signal d’info ; itérations courtes en sécurité psychologique." },
-      { title:"Open science / open education", short:"Ouvrir quand c’est possible.", detail:"Réutilisabilité (licences, dépôts, gabarits) pour diffuser et équiper équitablement." },
-      { title:"Environnements capacitants", short:"Rendre capables d’agir.", detail:"Ajuster outils, contraintes et soutiens pour développer capabilités et initiative." },
-      { title:"Cours de technologie", short:"Construire, coder, documenter.", detail:"Robots, capteurs, web : la technique au service d’objectifs pédagogiques clairs." },
-      { title:"Méthodologie scientifique", short:"Hypothèses, protocoles, mesures.", detail:"Rendre visibles étapes et critères pour renforcer la rigueur et la vérification." },
-      { title:"Populariser pour tous", short:"Formations utiles aux adultes.", detail:"Parcours modulaires, clés en main, sans jargon inutile." },
+      { title:"Pensée critique", short:"Analyser, douter méthodiquement.", detail:"Formuler des questions testables, croiser les sources, argumenter avec preuves et critères." },
+      { title:"Apprentissage tout au long de la vie", short:"Autodidacticité outillée.", detail:"Routines, ressources, outils et techniques pour apprendre vite et mieux, durablement." },
+      { title:"Goût de l’apprentissage", short:"Curiosité et passion.", detail:"Je suis passionné par tous les types d'apprentissages et persuadé qu'on peut tout rendre intéressant." },
+      { title:"Pédagogie par projets", short:"Problèmes réels, livrables concrets.", detail:"De la définition du besoin à la restitution, projets ancrés et collaboratifs qui font sens." },
+      { title:"Émerveillement", short:"Mieux comprendre le monde pour l'apprécier.", detail:"Plus on en sait sur le fonctionnement et l'existance de choses plus le monde est magique." },
+      { title:"Médiation & vulgarisation", short:"Transmettre science & culture.", detail:"Apprendre quelque chose n'a de sens pour moi que si je peux le partager, cf passion ppur l'apprentissage et émerveillement." },
+      { title:"Communautés de pratiques", short:"Apprendre entre pairs.", detail:"Espaces de mutualisation, réseaux réellement sociaux sains de partage pour apprendre ensemble et soutenir les apprentissages." },
+      { title:"Apprendre par l’erreur", short:"Essai→feedback→amélioration.", detail:"Erreur = signal d’info ; si on ne se trompe jamais on ne s'améliore pas. Les systèmes d'évaluations sont perfectibles (portfolio)." },
+      { title:"Open science / open education", short:"Ouvrir, socio-constructivisme.", detail:"Réutilisabilité (licences, dépôts, gabarits) pour diffuser et équiper équitablement." },
+      { title:"Environnements capacitants", short:"Rendre capables d’agir.", detail:"Ajuster outils, contraintes et soutiens pour développer capabilités et initiative au lieu d'imposer." },
+      { title:"Cours de technologie", short:"Construire, coder, documenter, analyser.", detail:"Apprendre les technologies au sens large et durable. Mieux comprendre les outils qui nous entourent et leur fonctionnement." },
+      { title:"Méthodologie scientifique", short:"Hypothèses, protocoles, mesures.", detail:"Lecture, veille et rédaction aux standards scientifiques." },
+      { title:"Populariser pour tous", short:"Formations utiles aux adultes de tous horizons.", detail:"Parcours modulaires, clés en main, sans jargon inutile. Décloisonner les savoirs et la recherche." },
       { title:"Extended mind", short:"Outiller la cognition.", detail:"Évaluer et intégrer les artefacts qui augmentent mémoire, attention, jugement." },
-      { title:"Évaluation : changer de paradigme", short:"Évaluer pour apprendre.", detail:"Preuves authentiques, critères explicites, feedbacks exploitables." },
-      { title:"YouTube & ressources utiles", short:"Contenus réellement actionnables.", detail:"Sélection et scénarisation pour profs — moins de bruit, plus de valeur." },
+      { title:"Évaluation : changer de paradigme", short:"Évaluer pour apprendre.", detail:"Preuves authentiques, critères explicites, feedbacks exploitables, ne pas dégouter des apprentissages." },
+      { title:"YouTube & ressources utiles", short:"Formats prophanes de qualité.", detail:"Sélection et scénarisation pour profs — moins de bruit, plus de valeur." },
       { title:"On ne peut pas être expert en tout", short:"Relier les expertises.", detail:"Tisser des ponts et curer l’essentiel selon la valeur d’usage." },
-      { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes." }
+      { title:"Consulting scientifique", short:"Relier recherche et décision.", detail:"Lecture méthodique, critères de preuve, recommandations opérantes sans cupidité." }
     ];
 
     /* ===== Refs DOM ===== */
