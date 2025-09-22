@@ -197,6 +197,22 @@ kbd {
   box-shadow: none;
 }
 
+/* === UPDATE: base chip utilisée par la nav Fun Facts et le header global === */
+.chip {
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.chip[aria-current="page"] {
+  background: color-mix(in oklab, var(--surface), #fff 6%);
+}
+
+/* Option : variante si les liens ont déjà .btn.chip */
 .btn.chip {
   --btn-bg: rgba(255,255,255,.06);
   --btn-bd: rgba(255,255,255,.10);
@@ -441,4 +457,29 @@ a:focus-visible {
   .site-nav{ flex-wrap: wrap; white-space: normal; }
   .site-nav .menu{ flex:1 1 auto; flex-wrap: wrap; }
   .site-nav .lang{ margin-left:auto; }
+}
+
+/* === UPDATE: GLOBAL NAV (Fun Facts-like) — placement & alignement === */
+#nt-global-nav { border-bottom: 1px solid var(--border); background: transparent; }
+#nt-global-nav .site-nav {
+  max-width: 1100px; margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+#nt-global-nav .menu,
+#nt-global-nav .lang {
+  display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none;
+}
+#nt-global-nav .menu { flex-wrap: wrap; }
+#nt-global-nav .lang { margin-left: auto; flex-wrap: wrap; }
+
+/* On garantit une apparence décente si des <a> n'ont que .chip */
+#nt-global-nav .chip[aria-current="page"] {
+  background: color-mix(in oklab, var(--surface), #fff 6%);
+}
+
+/* Mobile: wrap propre, langues restent poussées à droite */
+@media (max-width: 620px) {
+  #nt-global-nav .site-nav { flex-wrap: wrap; }
+  #nt-global-nav .menu { flex: 1 1 auto; }
+  #nt-global-nav .lang  { margin-left: auto; }
 }
