@@ -1,270 +1,87 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nicolas Tuor — Leidenschaften & Entdeckungen</title>
-
-  <!-- UPDATE: hreflang -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Portfolio — Nicolas Tuor</title>
+  <meta name="description" content="Projekte und Demos (Bildung, KI, Lernspiele)."/>
+  <link rel="icon" href="/favicon.ico"/>
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
-
-  <link rel="icon" href="favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <meta name="theme-color" content="#0a1220" />
-
   <style>
-    :root{
-      --bg:#0a1220; --card:#0c1628; --text:#eef3f8; --muted:#a7b7cb; --accent:#14b8a6;
-      --shadow:0 10px 30px rgba(0,0,0,.35); --br:16px; --gap:16px; --max:1200px;
-    }
-    *{box-sizing:border-box} html,body{height:100%} html{scroll-behavior:smooth}
-    body{margin:0;color:var(--text);background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
-         font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;}
+    /* Basis-Styles (funktioniert auch ohne umfangreiches site.css) */
+    body { margin:0 }
+    main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
+    .btn.ghost { background: transparent }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; font-size:.85em; opacity:.9 }
+    .muted { opacity:.9 }
+    .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px }
+    .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
-    header{position:sticky;top:0;z-index:20;background:rgba(10,18,32,.7);backdrop-filter:blur(6px);
-           border-bottom:1px solid rgba(255,255,255,.06)}
-    .headwrap{max-width:var(--max);margin:0 auto;padding:12px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:.75rem;align-items:center;font-weight:800;letter-spacing:.3px}
-    .logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#0a1220,#00060d);
-          color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-    nav.top{display:flex;gap:.5rem;flex-wrap:wrap}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.08);background:#0c1728;color:var(--text);text-decoration:none;
-         padding:.45rem .7rem;border-radius:10px;font-weight:600;font-size:14px}
-    .btn:hover{background:#0e1b2f}.btn:active{transform:translateY(1px)}
-
-    .bar{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);background:rgba(10,18,32,.55)}
-    .barwrap{max-width:var(--max);margin:0 auto;padding:10px 18px;display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:.4rem .7rem;border-radius:999px;background:#0f1d34;border:1px solid #1a2d49;color:var(--text);
-          text-decoration:none;font-weight:600;font-size:14px}
-    .chip:hover{background:#10223a}
-
-    main{max-width:var(--max);margin:0 auto;padding:24px 18px 80px}
-    h1{margin:10px 0 6px 0;font-size:28px} p.lead{margin:0 0 22px 0;color:var(--muted)}
-    section{margin:28px 0 8px 0} section>h2{margin:18px 6px 4px 6px;font-size:22px}
-    section>p.catdesc{margin:0 6px 14px 6px;color:var(--muted)}
-
-    .grid{display:grid;gap:var(--gap);grid-template-columns:repeat(3,1fr)}
-    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:640px){.grid{grid-template-columns:1fr}}
-
-    .card{background:linear-gradient(180deg,#0d1524,#0a1220);border:1px solid #1a2d49;border-radius:var(--br);
-          box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-height:220px}
-    .thumb{height:160px;background-size:cover;background-position:center;position:relative}
-    .badge{position:absolute;top:8px;left:8px;background:#0f1d34;border:1px solid #1a2d49;border-radius:999px;
-           padding:.22rem .5rem;font-size:12px;color:var(--muted)}
-    .content{padding:10px 12px 12px}
-    .title{margin:0 0 6px 0;font-weight:800}
-    .desc{margin:0;color:var(--muted)}
-    .actions{margin-top:auto;padding:10px 12px 12px;display:flex;gap:8px;flex-wrap:wrap}
-    .link{text-decoration:none;color:var(--text);background:#0c1728;border:1px solid rgba(255,255,255,.08);
-          padding:.35rem .6rem;border-radius:10px;font-weight:600;font-size:14px}
-    .link:hover{background:#0e1b2f}
-    .thumb[data-cover]{background-image:linear-gradient(180deg,#0d1524,#0a1220)}
-    .thumb.loaded{background-image:var(--img)}
+    /* Vorschau-Overlay (sicher, ohne allow-same-origin) */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
+               display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
+    .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
+                      width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
+    .overlay .panel header { display:flex; justify-content: space-between; align-items:center; gap:10px;
+                             padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
+    .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
   </style>
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
 </head>
 <body>
-<header>
-  <div class="headwrap">
-    <div class="brand"><div class="logo">N·T</div><div>Leidenschaften & Entdeckungen</div></div>
+  <!-- Lokaler Header (wird von nav.js versteckt, nützlich bei no-JS) -->
+  <header class="site-header">
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
-        <li><a class="btn" href="/index-de.html">Startseite</a></li>
-        <li><a class="btn" href="/cv-de.html">Lebenslauf</a></li>
-        <li><a class="btn" href="/portfolio-de.html" aria-current="page">Portfolio</a></li>
-        <li><a class="btn" href="/passions-de.html">Leidenschaften</a></li>
-        <li><a class="btn" href="/ai-lab-de.html">KI-Lab</a></li>
-        <li><a class="btn" href="/fun-facts-de.html">Irrtümer</a></li>
+        <li><a href="/index-de.html" class="btn ghost">Startseite</a></li>
+        <li><a href="/cv-de.html" class="btn ghost">Lebenslauf</a></li>
+        <li><a href="/portfolio-de.html" class="btn" aria-current="page">Portfolio</a></li>
+        <li><a href="/passions-de.html" class="btn ghost">Leidenschaften</a></li>
+        <li><a href="/ai-lab-de.html" class="btn ghost">KI-Lab</a></li>
+        <li><a href="/fun-facts-de.html" class="btn ghost">Irrtümer</a></li>
       </ul>
       <ul class="lang">
-        <li><a class="btn" href="/portfolio.html">FR</a></li>
-        <li><a class="btn" href="/portfolio-en.html">EN</a></li>
-        <li><a class="btn" href="/portfolio-de.html" aria-current="page">DE</a></li>
+        <li><a href="/portfolio.html" class="btn ghost">FR</a></li>
+        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
+        <li><a href="/portfolio-de.html" class="btn" aria-current="page">DE</a></li>
       </ul>
     </nav>
-  </div>
-  <div class="bar">
-    <div class="barwrap">
-      <a class="chip" href="#astronomie">Astronomie</a>
-      <a class="chip" href="#diy">DIY & Handwerk</a>
-      <a class="chip" href="#histoire">Geschichte & Wissen</a>
-      <a class="chip" href="#esprit">Kritisches Denken</a>
-      <a class="chip" href="#cuisine">Kochen</a>
-      <a class="chip" href="#edunum">Digitale Bildung</a>
-      <a class="chip" href="#outils">Tools & Diverses</a>
-      <a class="chip" href="#jeux">Videospiele</a>
+  </header>
+
+  <main class="wrap">
+    <h1>Portfolio</h1>
+    <p class="muted">„Besuchen“ öffnet in einem neuen Tab. „Vorschau“ versucht ein sicheres Embed (falls die Zielseite es zulässt).</p>
+
+    <!-- Kartenraster -->
+    <div id="portfolioGrid" class="grid-cards"></div>
+
+    <!-- Vorschau-Overlay -->
+    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
+      <div class="panel">
+        <header>
+          <strong id="ovlTitle">Vorschau</strong>
+          <button id="overlayClose" class="btn">Schließen</button>
+        </header>
+        <!-- WICHTIG: kein allow-same-origin, um Warnungen zu vermeiden -->
+        <iframe id="overlayFrame" title="Vorschau" sandbox="allow-scripts allow-popups"></iframe>
+      </div>
     </div>
-  </div>
-</header>
+  </main>
 
-<main>
-  <h1>Leidenschaften & Entdeckungen</h1>
-  <p class="lead">Ausgewählte, verlässliche und nutzbare Ressourcen – mit Vorschaubildern, kurzen Texten und direkten Links.</p>
+  <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
+    © Nicolas Tuor — Portfolio
+  </footer>
 
-  <!-- Contenu identique pour ne rien casser -->
-  <section id="astronomie"><h2>Astronomie</h2><p class="catdesc">Himmel, Planeten, Beobachtung, Daten & Kanäle.</p><div class="grid" id="grid-astro"></div></section>
-  <section id="diy"><h2>DIY & Handwerk</h2><p class="catdesc">Bauen, reparieren, Mechanismen.</p><div class="grid" id="grid-diy"></div></section>
-  <section id="histoire"><h2>Geschichte & Wissen</h2><p class="catdesc">Technik & Geschichte verständlich erklärt.</p><div class="grid" id="grid-hist"></div></section>
-  <section id="esprit"><h2>Kritisches Denken</h2><p class="catdesc">Methoden, Analysen, Recherchen.</p><div class="grid" id="grid-crit"></div></section>
-  <section id="cuisine"><h2>Kochen</h2><p class="catdesc">Techniken, Quellen, getestete Rezepte.</p><div class="grid" id="grid-food"></div></section>
-  <section id="edunum"><h2>Digitale Bildung</h2><p class="catdesc">Coding & Lern-Tools für alle.</p><div class="grid" id="grid-edu"></div></section>
-  <section id="outils"><h2>Tools & Diverses</h2><p class="catdesc">KI, Bilder, Audio, Open Data & Kurioses.</p><div class="grid" id="grid-tools"></div></section>
-  <section id="jeux"><h2>Videospiele</h2><p class="catdesc">Top 40 auf Steam (eingefroren) + Off-Steam Auswahl.</p><div class="grid" id="grid-steam"></div><div style="height:1px;background:rgba(255,255,255,.06);margin:20px 0"></div><h3 style="margin:6px 6px 10px 6px">Off-Steam</h3><div class="grid" id="grid-games-custom"></div></section>
-</main>
-
-<!-- Même script que FR -->
-<script>
-  const open = (url)=>window.open(url,'_blank','noopener');
-
-  const ASTRO = [
-    { title:"Images JWST", desc:"Galerie d’images officielles (open data).", cover:"assets/passions/sites/jwst.webp", badge:"Site", link:{label:"Voir",href:"https://webbtelescope.org/resource-gallery/images"} },
-    { title:"Curiosity Raw", desc:"Images brutes rover Curiosity.", cover:"assets/passions/sites/curiosity.webp", badge:"Site", link:{label:"Voir",href:"https://mars.nasa.gov/msl/multimedia/raw-images/"} },
-    { title:"STScI MAST", desc:"Données brutes télescopes (traitement maison).", cover:"assets/passions/sites/mast.webp", badge:"Données", link:{label:"Accès",href:"https://archive.stsci.edu/"} },
-    { title:"Radioastronomie (intro)", desc:"Découverte et premiers montages.", cover:"assets/passions/youtube/radioastro-intro.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/AOgvjRXnins"} },
-    { title:"SolarActivity", desc:"Groupe FB — imagerie solaire amateur.", cover:"assets/passions/sites/solaractivity.webp", badge:"Communauté", link:{label:"Voir",href:"https://www.facebook.com/groups/solaractivity"} },
-    { title:"Ed Ting", desc:"Tests, explications et conseils télescopes.", cover:"assets/passions/youtube/edting.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@edting"} },
-    { title:"Astrohopper", desc:"Repérage d’objets (push-to mobile).", cover:"assets/passions/sites/astrohopper.webp", badge:"Outil", link:{label:"Essayer",href:"https://artyom-beilis.github.io/astrohopper.html"} },
-  ];
-  const DIY = [
-    { title:"How To Make Armor", desc:"Forge & tôlerie d’armures.", cover:"assets/passions/youtube/howtomakearmor.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@howtomakearmor"} },
-    { title:"Armour Archive", desc:"Patrons d’armures, forums dédiés.", cover:"assets/passions/sites/armour-archive-patterns.webp", badge:"Patrons", link:{label:"Patrons",href:"https://www.armourarchive.org/patterns/"} },
-    { title:"Clickspring", desc:"Horlogerie & mécanismes.", cover:"assets/passions/youtube/clickspring.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"} },
-    { title:"Art of Making Things", desc:"Tutos variés (bois, métal, etc.).", cover:"assets/passions/sites/art-of-making-things.webp", badge:"Tutoriels", link:{label:"Tutoriels",href:"https://artofmakingthings.com/home"} },
-    { title:"Maison en terre", desc:"Construction DIY (vidéo).", cover:"assets/passions/youtube/maison-terre.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/o6Z0MxWCbrc"} },
-    { title:"TV recyclée", desc:"Restauration / bidouille (vidéo).", cover:"assets/passions/youtube/tv-recyclee.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/qXrn4MqY1Wo"} },
-    { title:"Écosystèmes en bocaux", desc:"Micro-écosystèmes DIY (vidéo).", cover:"assets/passions/youtube/ecosystemes-bocaux.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/QTH9m6MDIfc"} },
-    { title:"Chambre à brouillard", desc:"Détection de particules (vidéo).", cover:"assets/passions/youtube/cloud-chamber.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/xky3f1aSkB8"} },
-  ];
-  const HISTOIRE = [
-    { title:"World War Two", desc:"La 2GM semaine par semaine (experts).", cover:"assets/passions/youtube/worldwartwo.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@WorldWarTwo"} },
-    { title:"Technology Connections", desc:"Explications techniques claires.", cover:"assets/passions/youtube/technologyconnections.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TechnologyConnections"} },
-    { title:"Megalag", desc:"Explorations historiques & techniques.", cover:"assets/passions/youtube/megalag.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@MegaLag"} },
-    { title:"Survive History", desc:"Histoire & reconstitutions.", cover:"assets/passions/youtube/survivehistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@survivehistory"} },
-    { title:"Modern Knight", desc:"Armes, armures, histoire vivante.", cover:"assets/passions/youtube/modernknight.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ModernKnight"} },
-    { title:"Documentaire recommandé", desc:"Excellent long-format.", cover:"assets/passions/youtube/doc-reco.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/0T-pPPUAppk"} },
-  ];
-  const ESPRIT = [
-    { title:"Tronche en Biais", desc:"Esprit critique : analyses et revues.", cover:"assets/passions/youtube/teb.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TroncheEnBiais"} },
-    { title:"Hygiène Mentale", desc:"Méthodes, raisonnements, biais.", cover:"assets/passions/youtube/hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
-    { title:"Mr Sam", desc:"Enquêtes, vulgarisation.", cover:"assets/passions/youtube/mrsam.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@mrsam-interrogation"} },
-    { title:"Defakator", desc:"Deepfakes, IA, vérifications.", cover:"assets/passions/youtube/defakator.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@DefakatorOfficiel"} },
-    { title:"G Milgram", desc:"Enquêtes argumentées.", cover:"assets/passions/youtube/gmilgram.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ggmilgram"} },
-    { title:"AFIS", desc:"Réseau de culture scientifique.", cover:"assets/passions/youtube/afis.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@afis-science"} },
-    { title:"REC Toulouse", desc:"Esprit critique à Toulouse.", cover:"assets/passions/youtube/rectoulouse.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@RECTOULOUSE"} },
-    { title:"Human or Not?", desc:"Jeu de Turing social en ligne.", cover:"assets/passions/sites/humanornot.webp", badge:"Jeu/IA", link:{label:"Jouer",href:"https://humanornot.ai/"} },
-  ];
-  const CUISINE = [
-    { title:"John Kirkwood", desc:"Techniques de boulangerie/traiteur.", cover:"assets/passions/youtube/johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
-    { title:"SortedFood", desc:"Cuisine collaborative & astuces.", cover:"assets/passions/youtube/sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@SortedFood"} },
-    { title:"Tasting History", desc:"Recettes historiques sourcées.", cover:"assets/passions/youtube/tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TastingHistory"} },
-    { title:"Akis Petretzikis", desc:"Cuisine grecque moderne.", cover:"assets/passions/youtube/akis.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@akispetretzikisen"} },
-  ];
-  const EDUNUM = [
-    { title:"Scratch", desc:"Apprendre à coder par blocs.", cover:"assets/passions/sites/scratch.webp", badge:"Site", link:{label:"Essayer",href:"https://scratch.mit.edu/"} },
-    { title:"Blockly Games", desc:"Jeux-pédago pour coder.", cover:"assets/passions/sites/blockly-games.webp", badge:"Site", link:{label:"Jouer",href:"https://blockly.games/"} },
-    { title:"Code.org", desc:"Parcours guidés & classes.", cover:"assets/passions/sites/codeorg.webp", badge:"Plateforme", link:{label:"Aller",href:"https://studio.code.org/"} },
-    { title:"App Inventor", desc:"Apps Android par blocs.", cover:"assets/passions/sites/appinventor.webp", badge:"Plateforme", link:{label:"Aller",href:"https://appinventor.mit.edu/"} },
-    { title:"p5.js", desc:"Créa visuelle en JS.", cover:"assets/passions/sites/p5js.webp", badge:"Librairie", link:{label:"Découvrir",href:"https://p5js.org/"} },
-    { title:"Thonny", desc:"IDE Python pédagogique.", cover:"assets/passions/sites/thonny.webp", badge:"Outil", link:{label:"Télécharger",href:"https://thonny.org/"} },
-    { title:"MakeCode micro:bit", desc:"Électronique créative.", cover:"assets/passions/sites/makecode-microbit.webp", badge:"Plateforme", link:{label:"Essayer",href:"https://makecode.microbit.org/"} },
-    { title:"VittaScience", desc:"STEM en classe.", cover:"assets/passions/sites/vittascience.webp", badge:"Plateforme", link:{label:"Essayer",href:"https://en.vittascience.com/"} },
-    { title:"Sketchware Docs", desc:"Dev Android par blocs.", cover:"assets/passions/sites/sketchware-docs.webp", badge:"Docs", link:{label:"Lire",href:"https://sketchware-docs.vercel.app/"} }
-  ];
-  const OUTILS = [
-    {title:"AI Playground (NVIDIA)",desc:"Démos IA interactives.",cover:"assets/passions/sites/nvidia-playground.webp",badge:"Démos",link:{label:"Jouer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
-    {title:"OpenRouter",desc:"Hub LLMs multi-fournisseurs.",cover:"assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Voir",href:"https://openrouter.ai/"}},
-    {title:"Durable",desc:"Générateur de sites IA.",cover:"assets/passions/sites/durable.webp",badge:"Site",link:{label:"Essayer",href:"https://durable.co/"}},
-    {title:"Remove.bg",desc:"Détourage d’images.",cover:"assets/passions/sites/removebg.webp",badge:"Image",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
-    {title:"iFixit",desc:"Guides de réparation.",cover:"assets/passions/sites/ifixit.webp",badge:"Guide",link:{label:"Consulter",href:"https://fr.ifixit.com/"}},
-    {title:"Rijksmuseum – Night Watch",desc:"Restauration en haute-def.",cover:"assets/passions/sites/rijks-nightwatch.webp",badge:"Culture",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
-    {title:"NEO Toolkit (ESA)",desc:"Astéroïdes proches de la Terre.",cover:"assets/passions/sites/neo-toolkit.webp",badge:"Espace",link:{label:"Voir",href:"https://neo.ssa.esa.int/neo-toolkit"}},
-    {title:"Giza 3D",desc:"Modèles 3D du plateau de Gizeh.",cover:"assets/passions/sites/giza3d.webp",badge:"3D",link:{label:"Explorer",href:"http://giza.fas.harvard.edu/giza3d/"}},
-    {title:"Lobbywatch (CH)",desc:"Transparence des lobbys en Suisse.",cover:"assets/passions/sites/lobbywatch.webp",badge:"Data",link:{label:"Parcourir",href:"https://lobbywatch.ch/fr"}}
-  ];
-  const GAMES_CUSTOM = [
-    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen.webp", badge:"PC", link:{label:"Site",href:"https://robertsspaceindustries.com/"} },
-    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft.webp", badge:"Sandbox", link:{label:"Site",href:"https://www.minecraft.net/"} },
-    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact.webp", badge:"Action-RPG", link:{label:"Site",href:"https://genshin.hoyoverse.com/"} },
-    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft.webp", badge:"MMO", link:{label:"Site",href:"https://worldofwarcraft.blizzard.com/"} },
-    {title:"Xbox (classic)", cover:"assets/passions/games/custom/xbox-classic.webp", badge:"Retro", link:{label:"Wiki",href:"https://commons.wikimedia.org/wiki/File:Xbox-Console-Set.png"} },
-    {title:"Nintendo 64", cover:"assets/passions/games/custom/n64.webp", badge:"Retro", link:{label:"Wiki",href:"https://commons.wikimedia.org/wiki/File:N64-Console-Set.png"} }
-  ];
-
-  function card({title, desc, cover, badge, link}){
-    const el = document.createElement('article');
-    el.className='card';
-    el.innerHTML = `
-      <div class="thumb" data-cover="${cover||''}">
-        ${badge?`<div class="badge">${badge}</div>`:''}
-      </div>
-      <div class="content">
-        <h3 class="title">${escapeHtml(title||'')}</h3>
-        ${desc?`<p class="desc">${escapeHtml(desc)}</p>`:''}
-      </div>
-      <div class="actions">
-        ${link?`<a class="link" href="${link.href}" target="_blank" rel="noopener">${link.label||'Öffnen'}</a>`:''}
-      </div>`;
-    return el;
-  }
-  const escapeHtml = (s)=>s.replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
-  function renderList(rootId, arr){ const root=document.getElementById(rootId); arr.forEach(it=>root.appendChild(card(it))); }
-
-  async function renderSteam(){
-    const root = document.getElementById('grid-steam');
-    try{
-      const res = await fetch('data/steam-top40.json', {cache:'no-cache'});
-      if(!res.ok) throw new Error('steam-top40.json introuvable');
-      const data = await res.json();
-      data.forEach(g=>{
-        const appid = g.appid || g.id || g.appId;
-        const cover = appid ? `assets/passions/games/steam/${appid}.webp` : '';
-        const store = appid ? `https://store.steampowered.com/app/${appid}/`
-                            : `https://store.steampowered.com/search/?term=${encodeURIComponent(g.name||'')}`;
-        const el = card({ title:g.name, desc:"", cover, badge:"Steam", link:{label:"Store",href:store} });
-        root.appendChild(el);
-        const t = el.querySelector('.thumb'); if (t) io.observe(t);
-      });
-      observeThumbs();
-    }catch(e){
-      const d = document.createElement('div'); d.className = 'desc'; d.style.margin='6px';
-      d.textContent = "Top 40 konnte nicht geladen werden. Prüfe data/steam-top40.json und assets/passions/games/steam/ .";
-      root.before(d); console.warn(e);
-    }
-  }
-
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(!e.isIntersecting) return;
-      const t = e.target;
-      const url = t.getAttribute('data-cover');
-      if(url){ preloadCover(url).then(ok=>{
-        if(ok) setThumbBackground(t,url);
-        else console.warn('Cover fehlt:', url);
-        t.classList.add('loaded'); t.removeAttribute('data-cover');
-      }); }
-      io.unobserve(t);
-    });
-  }, { rootMargin:'400px' });
-
-  function setThumbBackground(el,url){ el.style.setProperty('--img', `url("${url}")`); }
-  function preloadCover(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(true); i.onerror=()=>res(false); i.src=url; }); }
-  function observeThumbs(){ document.querySelectorAll('.thumb[data-cover]').forEach(t=>io.observe(t)); }
-
-  renderList('grid-astro', ASTRO);
-  renderList('grid-diy', DIY);
-  renderList('grid-hist', HISTOIRE);
-  renderList('grid-crit', ESPRIT);
-  renderList('grid-food', CUISINE);
-  renderList('grid-edu', EDUNUM);
-  renderList('grid-tools', OUTILS);
-  renderList('grid-games-custom', GAMES_CUSTOM);
-  renderSteam();
-  observeThumbs();
-</script>
+  <!-- Daten müssen VOR dem Script geladen werden -->
+  <script src="/portfolio-data.js"></script>
+  <script src="/portfolio.js" defer></script>
 </body>
 </html>
