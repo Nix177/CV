@@ -486,3 +486,30 @@ a:focus-visible {
 
 /* // UPDATE: place la nav globale au-dessus de tout */
 #nt-global-nav { position: relative; z-index: 100; }
+
+/* =========================================================
+   UPDATE — Portfolio : overlay de prévisualisation plus petit
+   (réduction uniquement visuelle, aucune autre page impactée)
+   ========================================================= */
+#overlay { z-index: 1000; }                /* s’assure que l’overlay passe devant la nav */
+#overlay.overlay {                         /* centre la modale */
+  align-items: center;
+  justify-content: center;
+}
+#overlay .panel {                          /* taille réduite */
+  width: min(900px, 92vw);
+  height: min(62vh, 92vh);
+  border-radius: var(--radius);
+}
+#overlay iframe {                          /* occupe la hauteur utile */
+  width: 100%;
+  height: calc(100% - 46px);               /* ~hauteur de l’en-tête de l’overlay */
+  display: block;
+  border: 0;
+}
+@media (max-width: 620px) {
+  #overlay .panel {
+    width: 94vw;
+    height: 66vh;
+  }
+}
