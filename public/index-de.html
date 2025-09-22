@@ -235,25 +235,25 @@
   <script>
     /* ===== Stationen (DE) ===== */
     const STATIONS = [
-      { title:"Kritisches Denken", short:"Analysieren, belegen, methodisch zweifeln.", detail:"Prüfbare Fragen stellen, Quellen kreuzen, mit Belegen und Kriterien argumentieren." },
-      { title:"Lebenslanges Lernen", short:"Selbstgesteuert mit guten Werkzeugen.", detail:"Routinen, Ressourcen, Mikroprojekte – schneller und nachhaltig lernen." },
-      { title:"Freude am Lernen", short:"Neugier + kleine, häufige Challenges.", detail:"Aufgaben so strukturieren, dass Verstehen und Fortschritt sichtbar werden." },
-      { title:"Projektbasierte Pädagogik", short:"Reale Probleme, konkrete Ergebnisse.", detail:"Vom Bedarf bis zur Abgabe: verankerte, kollaborative Projekte." },
-      { title:"Staunen", short:"„Wow“-Momente als Auslöser.", detail:"Überraschung inszenieren, um anspruchsvolle Inhalte mit Strenge zu erschließen." },
-      { title:"Vermittlung & Wissenschaftskommunikation", short:"Wissenschaft & Kultur übersetzen.", detail:"Klar, inklusiv, handlungsorientiert – zeigen, erzählen, machen." },
-      { title:"Communities of Practice", short:"Mit Peers lernen.", detail:"Räume zum Teilen, Vorlagen, Fälle, laufende Sammlung." },
-      { title:"Aus Fehlern lernen", short:"Versuch→Feedback→Verbesserung.", detail:"Fehler = Informationssignal; kurze Iterationen in psychologischer Sicherheit." },
-      { title:"Open Science / Open Education", short:"Öffnen, wenn möglich.", detail:"Wiederverwendbarkeit (Lizenzen, Repos, Templates) für faire Verbreitung." },
-      { title:"Ermöglichende Umgebungen", short:"Menschen handlungsfähig machen.", detail:"Werkzeuge, Constraints und Support justieren – Fähigkeiten & Initiative fördern." },
-      { title:"Technologieunterricht", short:"Bauen, programmieren, dokumentieren.", detail:"Roboter, Sensoren, Web: Technik im Dienst klarer Lernziele." },
-      { title:"Wissenschaftliche Methode", short:"Hypothesen, Protokolle, Messungen.", detail:"Schritte und Kriterien sichtbar machen – mehr Strenge und Überprüfung." },
-      { title:"Popularisieren für alle", short:"Nützliche Weiterbildung für Erwachsene.", detail:"Modulare, einsatzbereite Pfade ohne unnötigen Jargon." },
-      { title:"Extended Mind", short:"Kognition mit Werkzeugen erweitern.", detail:"Artefakte prüfen & integrieren, die Gedächtnis, Aufmerksamkeit, Urteil stärken." },
-      { title:"Beurteilung: Paradigmenwechsel", short:"Bewerten, um zu lernen.", detail:"Authentische Nachweise, explizite Kriterien, verwertbares Feedback." },
-      { title:"YouTube & nützliche Ressourcen", short:"Wirklich umsetzbare Inhalte.", detail:"Auswahl & Dramaturgie für Lehrpersonen – weniger Rauschen, mehr Wert." },
-      { title:"Niemand ist überall Expert*in", short:"Expertisen verbinden.", detail:"Brücken bauen und Wesentliches nach Gebrauchswert kuratieren." },
-      { title:"Wissenschaftsberatung", short:"Forschung & Entscheidung verbinden.", detail:"Methodische Lektüre, Evidenzkriterien, umsetzbare Empfehlungen." }
-    ];
+    { title:"Kritisches Denken", short:"Analysieren, methodisch zweifeln.", detail:"Testbare Fragen formulieren, Quellen abgleichen, mit Belegen und klaren Kriterien argumentieren." },
+    { title:"Lebenslanges Lernen", short:"Selbstgesteuertes Lernen mit Werkzeugen.", detail:"Routinen, Ressourcen, Werkzeuge und Techniken, um schneller, besser und nachhaltig zu lernen." },
+    { title:"Freude am Lernen", short:"Neugier und Leidenschaft.", detail:"Ich begeistere mich für jede Art des Lernens und bin überzeugt, dass man alles interessant machen kann." },
+    { title:"Projektbasierte Didaktik", short:"Reale Probleme, greifbare Ergebnisse.", detail:"Vom Bedarf bis zur Ergebnispräsentation: fundierte, kollaborative Projekte mit Sinn." },
+    { title:"Staunen", short:"Die Welt verstehen, um sie zu schätzen.", detail:"Je besser wir Funktionsweise und Existenz der Dinge begreifen, desto magischer wirkt die Welt." },
+    { title:"Vermittlung & Popularisierung", short:"Wissenschaft & Kultur vermitteln.", detail:"Lernen hat für mich nur Sinn, wenn ich es teilen kann – siehe Lernleidenschaft und Staunen." },
+    { title:"Communities of Practice", short:"Lernen unter Peers.", detail:"Gemeinsame Räume und gesunde soziale Netzwerke, um gemeinsam zu lernen und Lernen zu unterstützen." },
+    { title:"Lernen durch Fehler", short:"Versuch → Feedback → Verbesserung.", detail:"Fehler = Informationssignal; ohne Irrtümer kein Fortschritt. Bewertungssysteme sind verbesserbar (z. B. Portfolios)." },
+    { title:"Open Science / Open Education", short:"Offenheit, soziokonstruktivistisch.", detail:"Wiederverwendbarkeit (Lizenzen, Repos, Vorlagen) für faire Verbreitung und Ausstattung." },
+    { title:"Ermöglichungsräume", short:"Handlungsfähigkeit ermöglichen.", detail:"Werkzeuge, Rahmen und Unterstützung so justieren, dass Fähigkeiten und Initiative wachsen – statt zu verordnen." },
+    { title:"Technologieunterricht", short:"Bauen, programmieren, dokumentieren, analysieren.", detail:"Technologien breit und nachhaltig lernen. Werkzeuge und ihre Funktionsweise besser verstehen." },
+    { title:"Wissenschaftliche Methodik", short:"Hypothesen, Protokolle, Messungen.", detail:"Lesen, Recherche und Schreiben nach wissenschaftlichen Standards." },
+    { title:"Popularisierung für alle", short:"Nützliche Weiterbildungen für Erwachsene.", detail:"Modulare, einsatzbereite Angebote ohne unnötigen Jargon. Wissens- und Forschungssilos aufbrechen." },
+    { title:"Extended Mind", short:"Werkzeuge für die Kognition.", detail:"Artefakte bewerten und integrieren, die Gedächtnis, Aufmerksamkeit und Urteilsvermögen erweitern." },
+    { title:"Bewertung neu denken", short:"Bewerten, um zu lernen.", detail:"Authentische Nachweise, klare Kriterien, umsetzbares Feedback – ohne Lernende zu entmutigen." },
+    { title:"YouTube & nützliche Ressourcen", short:"Hochwertige populäre Formate.", detail:"Auswahl und Aufbereitung für Lehrkräfte – weniger Rauschen, mehr Nutzen." },
+    { title:"Niemand ist überall Experte", short:"Expertisen verbinden.", detail:"Brücken schlagen und das Wesentliche nach Gebrauchswert kuratieren." },
+    { title:"Wissenschaftsberatung", short:"Forschung und Entscheidungen verbinden.", detail:"Methodisches Lesen, Evidenzkriterien, umsetzbare Empfehlungen – ohne Eigennutz." }
+  ];
 
     /* ===== DOM-Referenzen ===== */
     const svg = document.getElementById('metro');
