@@ -18,18 +18,18 @@
     :root { --navH: 56px; }                /* hauteur approx. de la nav en desktop */
     @media (max-width: 820px){ :root { --navH: 72px; } }  /* nav peut passer à 2 lignes */
 
-    /* // UPDATE: brand sous la nav globale, quelle que soit sa hauteur */
-    header{
+    /* // UPDATE: brand sous la nav globale, sans impacter #nt-global-nav */
+    header:not(#nt-global-nav){
       position: fixed;
       left: 18px;
       right: 18px;
-      top: calc(18px + var(--nt-nav-h, 64px)); /* hauteur dynamique, fallback 64px */
-      z-index: 5; /* sous #nt-global-nav (z-index:100) */
+      top: calc(18px + var(--nt-nav-h, 64px));
+      z-index: 5; /* sous la nav globale (qui est z-index:100 dans style.css) */
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
     }
 
-    /* masque l'ancien nav local s'il subsiste dans ce header */
-    header > nav.site-nav { display: none !important; }
+    /* // UPDATE: masque l'ancien nav local sans toucher la nav globale */
+    header:not(#nt-global-nav) > nav.site-nav { display: none !important; }
   </style>
 </head>
 <body>
