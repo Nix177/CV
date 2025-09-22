@@ -483,3 +483,6 @@ a:focus-visible {
   #nt-global-nav .menu { flex: 1 1 auto; }
   #nt-global-nav .lang  { margin-left: auto; }
 }
+
+/* // UPDATE: place la nav globale au-dessus de tout */
+#nt-global-nav { position: relative; z-index: 100; }
