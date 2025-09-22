@@ -14,7 +14,6 @@
     { slug:'fun-facts', label:{fr:'Idées reçues',    en:'Common Misconceptions', de:'Irrtümer'} },
   ];
   // Pages sans version DE -> on renvoie vers EN
-  const NO_DE = new Set(['index','portfolio','passions','chatbot']);
 
   // --- Détection slug/lang à partir de l’URL -------------------------------
   const path = (location.pathname.split('/').pop() || 'index.html')
