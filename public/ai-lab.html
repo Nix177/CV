@@ -5,278 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>Idées IA — Lab</title>
   <meta name="description" content="Générateur de quiz PER et mini-jeu pédagogiques."/>
-  <link rel="icon" href="/favicon.ico"/>
+  <link rel="icon" href="/favicon.ico"/><!-- si 404, remplace par /icon.svg existant -->
   <link rel="stylesheet" href="/style.css"/>
   <script src="/site.js" defer></script>
-  <!-- On ne touche pas ton script : il continue à générer du JSON dans #qOutput -->
   <script src="/ai-lab.js" defer></script>
-
   <style>
-    :root{
-      --bg:#0a1220; --panel:#0b1323; --card:#0d1524; --border:#162235;
-      --text:#eef3f8; --muted:#a6b6c9; --accent:#14b8a6; --shadow:0 10px 28px rgba(0,0,0,.35);
-      --max:1100px; --br:14px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; color:var(--text);
-      font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      background: radial-gradient(1200px 720px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
-    }
-    main{max-width:var(--max); margin:0 auto; padding:16px}
-    h1{margin:8px 0 16px 0; font-size:28px}
-    .muted{color:var(--muted)}
-    .grid{display:grid; gap:16px}
-    @media (min-width: 980px){ .grid{grid-template-columns: 1fr 1fr} }
-
-    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--br);
-          box-shadow:var(--shadow); padding:14px}
-    .card h2{margin:0 0 10px 0; font-size:20px}
-
-    .row{display:flex; gap:8px; flex-wrap:wrap}
-    .btn{
-      appearance:none; border:1px solid rgba(255,255,255,.08); background:#0c1728; color:var(--text);
-      text-decoration:none; padding:.46rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
-    }
-    .btn:hover{background:#0e1b2f}
-
-    /* Générateur */
-    .controls{display:grid; gap:8px}
-    .controls .row > *{flex:1}
-    .controls select, .controls input, .controls textarea{
-      width:100%; background:#0c1728; color:var(--text); border:1px solid rgba(255,255,255,.12);
-      border-radius:10px; padding:.5rem .6rem; font:inherit;
-    }
-    textarea{min-height:84px; resize:vertical}
-
-    /* Sortie brute JSON */
-    #qOutput{
-      background:#0b1323; border:1px solid rgba(255,255,255,.08);
-      border-radius:10px; padding:10px; overflow:auto; max-height:360px;
-      white-space:pre-wrap; word-break:break-word;
-    }
-
-    /* Aperçu Quiz */
-    #quizPreview{display:grid; gap:12px}
-    .q-item{background:#0c1728; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px}
-    .q-title{font-weight:800; margin:0 0 8px 0}
-    .choices{display:grid; gap:8px}
-    .choice{
-      padding:.5rem .6rem; border-radius:10px; cursor:pointer; user-select:none;
-      border:1px solid rgba(255,255,255,.12); background:#0e1930;
-    }
-    .choice:hover{background:#0f1d34}
-    .choice.correct{border-color:#0fa; box-shadow:0 0 0 1px #0fa inset}
-    .choice.wrong{border-color:#f66; box-shadow:0 0 0 1px #f66 inset}
-    .q-footer{margin-top:8px; color:var(--muted); font-size:14px}
-    .q-footer a{color:var(--text)}
-    .q-meta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px}
-    .tag{display:inline-block; background:#0f1c31; border:1px solid #163052;
-         padding:.22rem .55rem; border-radius:999px; font-size:12px; font-weight:700}
-    .pill{border-radius:999px}
-
-    /* Oss(e)lets : on laisse l’ID tel quel et on réserve l’espace */
+    .layout{display:grid;gap:16px;grid-template-columns:1fr}
+    @media (min-width:960px){.layout{grid-template-columns:1fr 1fr}}
+    #qOutput pre{white-space:pre-wrap;word-break:break-word}
     #osselets-root{min-height:320px}
   </style>
 </head>
 <body>
+<header class="site-header">
+  <nav class="wrap row">
+    <a href="/" class="btn ghost">Accueil</a>
+    <a href="/portfolio.html" class="btn ghost">Portfolio</a>
+    <a href="/cv.html" class="btn ghost">CV</a>
+    <a href="/chatbot.html" class="btn ghost">Chatbot</a>
+    <a href="/ai-lab.html" class="btn" aria-current="page">Idées IA</a>
+    <a href="/fun-facts.html" class="btn ghost">Fun Facts</a>
+    <span style="flex:1"></span>
+    <a href="/ai-lab.html" class="btn">FR</a>
+    <a href="/ai-lab-en.html" class="btn ghost">EN</a>
+    <a href="/ai-lab-de.html" class="btn ghost">DE</a>
+  </nav>
+</header>
 
-<main>
+<main class="wrap">
   <h1>Idées IA — Lab</h1>
-  <p class="muted">Génère un quiz aligné PER (JSON), puis aperçu interactif automatique. Le mini-jeu
-    <strong>Oss(e)lets</strong> est plus bas et reste inchangé.</p>
-
-  <!-- 2 colonnes (desktop) : à gauche générateur + JSON ; à droite aperçu quiz -->
-  <section class="grid">
-    <!-- Générateur / Sortie brute -->
-    <article class="card">
-      <h2>Générateur de quiz (aligné PER)</h2>
-
-      <div class="controls">
-        <div class="row">
-          <select id="theme">
-            <option>Histoire — Antiquité</option>
-            <option>Sciences — Terre & Espace</option>
-            <option>Langue — Français</option>
+  <section class="layout">
+    <div class="card">
+      <h3>Générateur de quiz (aligné PER)</h3>
+      <div class="field">
+        <label for="qTheme">Thème</label>
+        <select id="qTheme">
+          <option value="histoire-antique">Histoire — Antiquité</option>
+          <option value="science">Sciences</option>
+          <option value="langue">Langue</option>
+          <option value="arts">Arts</option>
+        </select>
+      </div>
+      <div class="grid" style="display:grid;gap:8px;grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div class="field">
+          <label for="qAge">Âge / Cycle</label>
+          <select id="qAge">
+            <option value="cycle1">Cycle 1</option>
+            <option value="cycle2">Cycle 2</option>
+            <option value="cycle3">Cycle 3</option>
+            <option value="postoblig">Post-obligatoire</option>
           </select>
-          <select id="cycle">
-            <option>Cycle 1</option><option>Cycle 2</option><option>Cycle 3</option>
-          </select>
-          <input id="nbq" type="number" min="3" max="12" value="6" placeholder="Nombre de questions"/>
-          <select id="lang">
+        </div>
+        <div class="field">
+          <label for="qCount">Nombre de questions</label>
+          <input id="qCount" type="number" min="1" max="20" value="6"/>
+        </div>
+        <div class="field">
+          <label for="qLang">Langue</label>
+          <select id="qLang">
             <option value="fr" selected>Français</option>
-            <option value="en">Anglais</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
           </select>
-        </div>
-        <textarea id="goals" placeholder="Objectifs (mots-clés PER)…"></textarea>
-
-        <div class="row">
-          <!-- Ce bouton lance TON ai-lab.js si tu l’utilises ; sinon on peut coller du JSON ci-dessous -->
-          <button id="btnGen" class="btn">Générer</button>
-          <button id="btnUseSample" class="btn" type="button">Exemple rapide</button>
-        </div>
-
-        <div>
-          <div class="row" style="align-items:center;justify-content:space-between">
-            <strong>Sortie JSON</strong>
-            <button id="btnRender" class="btn pill" type="button">Aperçu interactif ▶</button>
-          </div>
-          <pre id="qOutput" aria-live="polite" aria-atomic="true">{}</pre>
         </div>
       </div>
-    </article>
+      <div class="field">
+        <label for="qObjectives">Objectifs (mots-clés PER)</label>
+        <textarea id="qObjectives" rows="3" placeholder="Ex.: repérage d’objets archéologiques ; notions apotropaïques ; vocabulaire du tarse…"></textarea>
+      </div>
+      <div class="row" style="display:flex;gap:8px;align-items:center">
+        <button id="qGen" class="btn primary">Générer</button>
+        <small id="qStatus" class="muted"></small>
+      </div>
+      <div id="qOutput" class="card" style="margin-top:10px;background:#ffffff10;border-color:#ffffff22;">
+        <pre>Le quiz généré apparaîtra ici…</pre>
+      </div>
+    </div>
 
-    <!-- Aperçu Quiz interactif -->
-    <article class="card">
-      <h2>Aperçu interactif du quiz</h2>
-      <div id="quizPreview" aria-live="polite"></div>
-      <p class="muted" id="quizHint">Colle ou génère du JSON (bouton « Aperçu ») pour voir le quiz ici.</p>
-    </article>
-  </section>
-
-  <!-- Séparateur -->
-  <div style="height:1px;background:rgba(255,255,255,.08);margin:18px 0"></div>
-
-  <!-- Mini-jeu Oss(e)lets : inchangé, on le place sous le quiz pour éviter tout chevauchement -->
-  <section class="card">
-    <h2>Oss(e)lets — mini-jeu</h2>
-    <div id="osselets-root"></div>
+    <div class="card">
+      <h3>Mini-jeu — Osselets d’astragale (Runner 2D)</h3>
+      <div id="osselets-root"><div class="muted">Chargement du jeu…</div></div>
+      <p class="muted" style="margin-top:8px">← → bouger · Espace sauter · P pause · M musique · H cours d’histoire.</p>
+    </div>
   </section>
 </main>
 
-<!-- Rendu quiz (n’interfère pas avec ton ai-lab.js). On observe #qOutput. -->
-<script>
-(function(){
-  const $ = (s, r=document)=>r.querySelector(s);
-  const out = $('#qOutput');
-  const preview = $('#quizPreview');
-  const hint = $('#quizHint');
+<footer class="wrap" style="margin:24px 0 40px;opacity:.8">© Nicolas Tuor — Lab IA</footer>
 
-  function renderQuizFromJSON(jsonText){
-    let data = null;
-    try{
-      data = JSON.parse(jsonText);
-    }catch(e){
-      preview.innerHTML = '';
-      if(hint) hint.textContent = "JSON invalide. Vérifie la structure.";
-      return;
-    }
-    const items = (data.questions || data.items || []).filter(Boolean);
-    if(!items.length){
-      preview.innerHTML = '';
-      if(hint) hint.textContent = "Aucune question trouvée dans le JSON.";
-      return;
-    }
-    preview.innerHTML = '';
-    if(hint) hint.textContent = '';
+<!-- React + ReactDOM UMD -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Babel Standalone avec TSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    items.forEach((q, idx)=>{
-      const wrap = document.createElement('div');
-      wrap.className = 'q-item';
+<!-- IMPORTANT : fichier renommé en .tsx -->
+<script type="text/babel"
+        data-presets="typescript,react"
+        data-plugins="transform-typescript"
+        src="/osselets-runner.tsx"></script>
 
-      // tags éventuels
-      const meta = document.createElement('div');
-      meta.className = 'q-meta';
-      if(q.topic) { const t=document.createElement('span'); t.className='tag'; t.textContent=q.topic; meta.appendChild(t); }
-      if(q.level) { const t=document.createElement('span'); t.className='tag'; t.textContent=q.level; meta.appendChild(t); }
-      if(meta.childElementCount) wrap.appendChild(meta);
-
-      const title = document.createElement('div');
-      title.className = 'q-title';
-      title.textContent = q.q || q.question || `Question ${idx+1}`;
-      wrap.appendChild(title);
-
-      const choices = Array.isArray(q.choices) ? q.choices.slice() : [];
-      const correct = (q.answer ?? q.correct ?? '').toString();
-
-      const box = document.createElement('div');
-      box.className = 'choices';
-
-      choices.forEach(c=>{
-        const ch = document.createElement('div');
-        ch.className = 'choice';
-        ch.textContent = c;
-        ch.onclick = () => {
-          // verrouillage après choix
-          [...box.children].forEach(el=>el.onclick=null);
-          if(c === correct){ ch.classList.add('correct'); }
-          else { ch.classList.add('wrong'); [...box.children].forEach(el=>{ if(el.textContent===correct) el.classList.add('correct'); }); }
-          // affiche explication + source
-          foot.style.display = 'block';
-        };
-        box.appendChild(ch);
-      });
-      wrap.appendChild(box);
-
-      const foot = document.createElement('div');
-      foot.className = 'q-footer';
-      foot.style.display = 'none';
-      const shortExplain = (q.explain || q.explanation || '').toString().trim();
-      const explain20 = shortExplain ? shortExplain.slice(0, 160) : '';
-      foot.innerHTML = `
-        ${explain20 ? explain20 : 'Réponse affichée. Consulte la source pour le détail.'}
-        ${q.source ? ` — <a href="${q.source}" target="_blank" rel="noopener">Source</a>` : ''}`;
-      wrap.appendChild(foot);
-
-      preview.appendChild(wrap);
-    });
-  }
-
-  // Bouton "Aperçu interactif" (rend le contenu actuel du <pre>)
-  $('#btnRender')?.addEventListener('click', ()=> renderQuizFromJSON(out.textContent || out.innerText || '{}'));
-
-  // Petit jeu de données de démo si besoin
-  $('#btnUseSample')?.addEventListener('click', ()=>{
-    const sample = {
-      "questions":[
-        {
-          "q":"Qui était le célèbre roi de Macédoine qui a conquis de nombreux territoires ?",
-          "choices":["Alexandre le Grand","Jules César","Hannibal","Néron"],
-          "answer":"Alexandre le Grand",
-          "explain":"Connu pour un empire de la Grèce à l’Indus.",
-          "source":"https://fr.wikipedia.org/wiki/Alexandre_le_Grand",
-          "topic":"Histoire", "level":"Cycle 2"
-        },
-        {
-          "q":"Quel peuple a construit les pyramides de Gizeh ?",
-          "choices":["Les Égyptiens","Les Romains","Les Grecs","Les Aztèques"],
-          "answer":"Les Égyptiens",
-          "explain":"Pyramides de l’Ancien Empire à Gizeh.",
-          "source":"https://fr.wikipedia.org/wiki/Pyramides_d%27%C3%89gypte",
-          "topic":"Histoire", "level":"Cycle 2"
-        }
-      ]
-    };
-    out.textContent = JSON.stringify(sample, null, 2);
-    renderQuizFromJSON(out.textContent);
-  });
-
-  // Si ton ai-lab.js écrit automatiquement dans #qOutput, on auto-rend avec un MutationObserver
-  const mo = new MutationObserver(()=> {
-    renderQuizFromJSON(out.textContent || out.innerText || '{}');
-  });
-  mo.observe(out, {childList:true, characterData:true, subtree:true});
-
-  // Laisse le bouton "Générer" faire son travail (ai-lab.js). On ne modifie pas.
-  $('#btnGen')?.addEventListener('click', ()=> {
-    // rien ici : ai-lab.js gère la génération et écrit dans #qOutput
-  });
-})();
-</script>
-
-<!-- Montage du jeu Oss(e)lets (inchangé) : on suppose qu’il expose window.AstragalusRunner -->
 <script type="text/babel" data-presets="react">
   (function(){
-    const root = document.getElementById("osselets-root");
+    const root=document.getElementById("osselets-root");
     if(root && window.AstragalusRunner){
-      const r = ReactDOM.createRoot(root);
+      const r=ReactDOM.createRoot(root);
       r.render(React.createElement(window.AstragalusRunner));
     }else{
-      console.warn("AstragalusRunner introuvable — ajoute `window.AstragalusRunner = AstragalusRunner;` à la fin de ton .tsx.");
+      console.warn("AstragalusRunner introuvable — ajoutez `window.AstragalusRunner = AstragalusRunner;` en bas de votre .tsx.");
     }
   })();
 </script>
-
 </body>
 </html>
