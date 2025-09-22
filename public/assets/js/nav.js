@@ -1,15 +1,15 @@
 /* /assets/js/nav.js
    Header de navigation canonique (style “Fun Facts”), vanilla.
-   - Construit le menu + switch langues (FR/EN/DE)
-   - Détecte slug/lang via l’URL (…-en.html / …-de.html ; sinon FR)
+   - Menu + switch langues (FR/EN/DE)
+   - Détecte la langue via <html lang> et supporte les URLs avec/sans .html
    - Met à jour <link rel="alternate" hreflang="…">
    - Masque les anciens <nav> locaux
-   - Expose --nt-nav-h (hauteur réelle) pour caler le brand en-dessous
+   - Expose --nt-nav-h (hauteur réelle) pour caler les titres en-dessous
 */
 (() => {
   'use strict';
 
-  // --- Config des pages (ordre strict) -------------------------------------
+  // --- Config des pages (ordre strict, slugs = noms de fichiers sans suffixe langue) ----
   const PAGES = [
     { slug: 'index',     label: { fr: 'Accueil',        en: 'Home',                  de: 'Startseite' } },
     { slug: 'cv',        label: { fr: 'CV',             en: 'CV',                    de: 'Lebenslauf' } },
@@ -19,31 +19,31 @@
     { slug: 'ai-lab',    label: { fr: 'Labo IA',        en: 'AI Lab',                de: 'KI Lab' } },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
   ];
+  const KNOWN = new Set(PAGES.map(p => p.slug));
 
-  // --- Détection slug/lang à partir de l’URL --------------------------------
-  const last = (location.pathname.endsWith('/'))
-    ? 'index.html'
-    : location.pathname.split('/').pop() || 'index.html';
+  // --- Langue active : on fait CONFIANCE à <html lang> -------------------------------
+  const htmlLang = (document.documentElement.getAttribute('lang') || 'fr').slice(0,2).toLowerCase();
+  const lang = (htmlLang === 'en' || htmlLang === 'de') ? htmlLang : 'fr';
 
-  const clean = last.replace(/[#?].*$/g, ''); // retire ?query et #hash
-  const m = clean.match(/^(.+?)(?:-(en|de))?\.html?$/i);
+  // --- Slug actif : supporte /slug, /slug.html, /slug-en, /slug-en.html --------------
+  const path = location.pathname.replace(/\/+/g, '/');
+  let lastSeg = path === '/' ? 'index' : path.split('/').filter(Boolean).pop(); // '' -> index
+  lastSeg = lastSeg.replace(/\.(html?|php)$/i, ''); // retire extension éventuelle
+  // sépare suffixe -en/-de éventuel
+  const mm = lastSeg.match(/^(.+?)(?:-(en|de))?$/i);
+  let slug = (mm && mm[1]) ? mm[1].toLowerCase() : 'index';
+  if (!KNOWN.has(slug)) slug = 'index';
 
-  let slug = (m && m[1]) ? m[1].toLowerCase() : 'index';
-  let lang = (m && m[2]) ? m[2].toLowerCase() : 'fr';
-
-  // Si page hors liste, on ne monte rien (évite effets indésirables)
-  const known = new Set(PAGES.map(p => p.slug));
-  if (!known.has(slug)) return;
-
-  // Construit l’URL canonique selon la langue
+  // --- URLs canoniques pour chaque langue -------------------------------------------
   const urlFor = (s, L) => {
+    // On garde les .html (ton serveur les accepte et/ou réécrit vers /slug)
     if (L === 'fr') return `/${s}.html`;
     if (L === 'en') return `/${s}-en.html`;
     if (L === 'de') return `/${s}-de.html`;
     return `/${s}.html`;
   };
 
-  // --- Création du header global -------------------------------------------
+  // --- Header global ---------------------------------------------------------------
   const header = document.createElement('header');
   header.id = 'nt-global-nav';
   header.className = 'navbar';
@@ -72,7 +72,7 @@
   });
 
   // Switch de langue
-  ['fr', 'en', 'de'].forEach(L => {
+  ['fr','en','de'].forEach(L => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.className = 'chip';
@@ -87,10 +87,10 @@
   nav.appendChild(right);
   header.appendChild(nav);
 
-  // Monte le header en tout début de <body>
+  // Monte le header en tout début de body
   document.body.prepend(header);
 
-  // Expose la hauteur réelle de la nav -> --nt-nav-h (utile pour le header local)
+  // Expose la hauteur réelle -> --nt-nav-h
   function setNavHeight() {
     const h = Math.ceil(header.getBoundingClientRect().height);
     document.documentElement.style.setProperty('--nt-nav-h', h + 'px');
@@ -101,7 +101,7 @@
 
   document.body.classList.add('nt-nav-mounted');
 
-  // Masque les anciens navs locaux (sans toucher à notre header)
+  // Masque les anciens navs locaux (sans toucher au nôtre)
   document.querySelectorAll('nav.site-nav').forEach(n => {
     if (!header.contains(n)) n.style.display = 'none';
   });
@@ -109,7 +109,7 @@
     if (h !== header) h.style.display = 'none';
   });
 
-  // --- hreflang alternates (FR/EN/DE + x-default->FR) ----------------------
+  // --- <link rel="alternate" hreflang="…"> -----------------------------------------
   const head = document.head;
   const ensureAlt = (hreflang, href) => {
     if (!href) return;
