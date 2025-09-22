@@ -78,6 +78,14 @@
 
   // Monte le header tout en haut du body
   document.body.prepend(header);
+  // // UPDATE: expose la hauteur réelle de la nav -> CSS var --nt-nav-h
+  function setNavHeight() {
+    const h = Math.ceil(header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--nt-nav-h', h + 'px');
+  }
+  setNavHeight();
+  window.addEventListener('load', setNavHeight);
+  window.addEventListener('resize', setNavHeight);
   document.body.classList.add('nt-nav-mounted');
 
   // Masque les anciens navs (sans supprimer le HTML)
