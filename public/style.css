@@ -622,3 +622,72 @@ a:focus-visible {
     transform: scale(.88);
   }
 }
+/* =========================================================
+   PORTFOLIO — Aperçu INLINE (pas la modale)
+   Réduit et rend responsive tout conteneur d'embed inline
+   ========================================================= */
+
+/* conteneurs possibles créés par le JS */
+.pf-embed,
+.pf-live,
+.pf-preview,
+.preview,
+.live-embed {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;     /* aligne avec ta largeur de page */
+  margin: 12px auto;
+  height: min(62vh, 700px);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* iframe interne : affiché “réduit” via scale */
+.pf-embed iframe,
+.pf-live iframe,
+.pf-preview iframe,
+.preview iframe,
+.live-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: calc(100% / .90);
+  height: calc(100% / .90);
+  transform: scale(.90);
+  transform-origin: top left;
+  border: 0;
+  background: #0a1524;
+}
+
+/* Variante compacte si besoin d’encore plus petit */
+.pf-embed.is-small iframe,
+.pf-live.is-small iframe,
+.pf-preview.is-small iframe,
+.preview.is-small iframe,
+.live-embed.is-small iframe {
+  width: calc(100% / .85);
+  height: calc(100% / .85);
+  transform: scale(.85);
+}
+
+/* Mobile : un peu plus réduit pour tout faire rentrer */
+@media (max-width: 640px) {
+  .pf-embed,
+  .pf-live,
+  .pf-preview,
+  .preview,
+  .live-embed { height: 72vh; border-radius: 12px; }
+
+  .pf-embed iframe,
+  .pf-live iframe,
+  .pf-preview iframe,
+  .preview iframe,
+  .live-embed iframe {
+    width: calc(100% / .88);
+    height: calc(100% / .88);
+    transform: scale(.88);
+  }
+}
+
