@@ -1,58 +1,87 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>Portfolio — Nicolas Tuor</title>
-  <!-- UPDATE: hreflang -->
+  <meta name="description" content="Projects and demos (education, AI, learning games)."/>
+  <link rel="icon" href="/favicon.ico"/>
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
+  <style>
+    /* Fallback styles (works even without the full site.css) */
+    body { margin:0 }
+    main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
+    .btn.ghost { background: transparent }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; font-size:.85em; opacity:.9 }
+    .muted { opacity:.9 }
+    .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px }
+    .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
+
+    /* Secure preview overlay (no allow-same-origin) */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
+               display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
+    .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
+                      width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
+    .overlay .panel header { display:flex; justify-content: space-between; align-items:center; gap:10px;
+                             padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
+    .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
+  </style>
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
 </head>
 <body>
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="/portfolio-en.html">
-      <span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span>
-    </a>
-    <nav class="site-nav" aria-label="Navigation">
+  <!-- Local header (masqué par nav.js, utile en no-JS) -->
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Main navigation">
       <ul class="menu">
-        <li><a href="/index-en.html">Home</a></li>
-        <li><a href="/cv-en.html">CV</a></li>
-        <li><a href="/portfolio-en.html" aria-current="page">Portfolio</a></li>
-        <li><a href="/passions-en.html">Passions</a></li>
-        <li><a href="/ai-lab-en.html">AI Lab</a></li>
-        <li><a href="/fun-facts-en.html">Common Misconceptions</a></li>
+        <li><a href="/index-en.html" class="btn ghost">Home</a></li>
+        <li><a href="/cv-en.html" class="btn ghost">CV</a></li>
+        <li><a href="/portfolio-en.html" class="btn" aria-current="page">Portfolio</a></li>
+        <li><a href="/passions-en.html" class="btn ghost">Passions</a></li>
+        <li><a href="/ai-lab-en.html" class="btn ghost">AI Lab</a></li>
+        <li><a href="/fun-facts-en.html" class="btn ghost">Common Misconceptions</a></li>
       </ul>
       <ul class="lang">
-        <li><a href="/portfolio.html">FR</a></li>
-        <li><a href="/portfolio-en.html" aria-current="page">EN</a></li>
-        <li><a href="/portfolio-de.html">DE</a></li>
+        <li><a href="/portfolio.html" class="btn ghost">FR</a></li>
+        <li><a href="/portfolio-en.html" class="btn" aria-current="page">EN</a></li>
+        <li><a href="/portfolio-de.html" class="btn ghost">DE</a></li>
       </ul>
     </nav>
-  </div>
-</header>
+  </header>
 
-<main class="section container">
-  <h1 class="title">Portfolio</h1>
-  <p class="lead">“Visit” opens a new tab. “Preview” tries an embedded view (if the site allows it).</p>
-  <div id="portfolioGrid" class="grid"></div>
-</main>
+  <main class="wrap">
+    <h1>Portfolio</h1>
+    <p class="muted">“Visit” opens in a new tab. “Preview” tries a secure embed (if the target site allows it).</p>
 
-<div class="overlay" id="overlay" role="dialog" aria-modal="true">
-  <div class="overlay-inner">
-    <div class="overlay-bar"><strong id="overlayTitle">Preview</strong><button class="btn" id="overlayClose">Close</button></div>
-    <iframe id="overlayFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
-  </div>
-</div>
+    <!-- Cards grid -->
+    <div id="portfolioGrid" class="grid-cards"></div>
 
-<script src="/portfolio-data.js"></script>
-<script src="/portfolio.js"></script>
-<script src="/site.js" defer></script>
-<script>(function(){const K="theme",H=document.documentElement,S=localStorage.getItem(K);if(S)H.setAttribute("data-theme",S);function set(t){H.setAttribute("data-theme",t);localStorage.setItem(K,t);}document.addEventListener("click",e=>{const t=e.target.closest("[data-toggle-theme]");if(!t)return;set(H.getAttribute("data-theme")==="light"?"dark":"light");});if(!S)set("dark");})();</script>
+    <!-- Preview overlay -->
+    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
+      <div class="panel">
+        <header>
+          <strong id="ovlTitle">Preview</strong>
+          <button id="overlayClose" class="btn">Close</button>
+        </header>
+        <!-- IMPORTANT: no allow-same-origin to avoid security warnings -->
+        <iframe id="overlayFrame" title="Preview" sandbox="allow-scripts allow-popups"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
+    © Nicolas Tuor — Portfolio
+  </footer>
+
+  <!-- Data must be loaded BEFORE the script -->
+  <script src="/portfolio-data.js"></script>
+  <script src="/portfolio.js" defer></script>
 </body>
 </html>
