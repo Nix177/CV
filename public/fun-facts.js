@@ -1,50 +1,27 @@
-<script>
-/* Fun Facts — front app
-   - fetch /api/facts?lang=fr|en|de&n=9&seen=...
-   - fallback sur /facts-data.json si l’API échoue
-   - cartes recto/verso (verso ≤ 30 mots), bouton "Nouveau lot"
+/* Fun Facts — front app (FR/EN/DE)
+   - GET /api/facts?lang=fr|en|de&n=9&seen=<csv>
+   - Fallback sur /facts-data.json si l’API échoue
+   - Cartes recto/verso (verso ≤ 30 mots) + bouton "Nouveau lot"
 */
+// UPDATE: JS pur (pas de balise <script>)
 (() => {
   const lang = (document.documentElement.lang || 'fr').toLowerCase();
   const COUNT = 9;
 
-  const T = {
-    fr: {
-      myth: 'Mythe',
-      fact: 'Fait vérifié',
-      flip: 'Retourner',
-      seeSrc: 'Voir la source',
-      newBatch: 'Nouveau lot aléatoire',
-      empty: 'Aucune carte à afficher.',
-    },
-    en: {
-      myth: 'Myth',
-      fact: 'Fact',
-      flip: 'Flip',
-      seeSrc: 'View source',
-      newBatch: 'New random batch',
-      empty: 'No cards to display.',
-    },
-    de: {
-      myth: 'Irrtum',
-      fact: 'Fakt',
-      flip: 'Umdrehen',
-      seeSrc: 'Quelle ansehen',
-      newBatch: 'Neues Zufallsset',
-      empty: 'Keine Karten anzuzeigen.',
-    },
-  }[lang] || T_fr();
+  const L10N = {
+    fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', seeSrc:'Voir la source', newBatch:'Nouveau lot aléatoire', empty:'Aucune carte à afficher.' },
+    en: { myth:'Myth',  fact:'Fact',         flip:'Flip',      seeSrc:'View source',   newBatch:'New random batch',   empty:'No cards to display.' },
+    de: { myth:'Irrtum',fact:'Fakt',         flip:'Umdrehen',  seeSrc:'Quelle ansehen',newBatch:'Neues Zufallsset',   empty:'Keine Karten anzuzeigen.' },
+  };
+  const T = L10N[lang] || L10N.fr;
 
-  function T_fr() { return T.fr; }
-
-  const $cards = document.querySelector('#ff_cards') || createCardsMount();
-  const $btnNew = document.querySelector('#ff_random') || document.querySelector('#btnNewSet');
+  // Points d’accroche tolérants (selon ta page)
+  const $cards = document.querySelector('#ff_cards, #ff-cards, #ff-cards-list, #ffCards, #cards') || createCardsMount();
+  const $btnNew = document.querySelector('#ff_random, #btnNewSet');
   const seen = new Set();
 
   if ($btnNew) $btnNew.addEventListener('click', loadNewBatch);
-
-  // Auto-charge au démarrage
-  loadNewBatch();
+  loadNewBatch(); // auto au démarrage
 
   // ---------- Helpers ----------
   function createCardsMount(){
@@ -72,7 +49,6 @@
     return `${h}-${Math.random().toString(36).slice(2,7)}`;
   }
 
-  // Normalise la forme renvoyée par /api/facts (ou fallback)
   function normalizeItem(x){
     const id = toId(x);
     const title = x.title || x.text || '—';
@@ -86,11 +62,11 @@
 
   async function fetchFacts(n){
     const seenList = [...seen].join(',');
-    const u = `/api/facts?lang=${encodeURIComponent(lang)}&n=${n}${seenList ? `&seen=${encodeURIComponent(seenList)}`:''}`;
+    const url = `/api/facts?lang=${encodeURIComponent(lang)}&n=${n}${seenList ? `&seen=${encodeURIComponent(seenList)}`:''}`;
     try{
       const ctrl = new AbortController();
       const to = setTimeout(()=>ctrl.abort(), 9000);
-      const r = await fetch(u, { signal: ctrl.signal, headers:{ 'x-ff': '1' }});
+      const r = await fetch(url, { signal: ctrl.signal, headers:{ 'x-ff':'1' } });
       clearTimeout(to);
       if (!r.ok) throw new Error('API facts non OK');
       const data = await r.json();
@@ -102,10 +78,9 @@
         const r = await fetch('/facts-data.json');
         if (!r.ok) throw new Error('fallback non trouvé');
         const all = await r.json();
-        // Filtre ceux déjà vus
-        const pool = (Array.isArray(all)?all:all?.items||[])
-          .filter(x => !seen.has(toId(x)));
-        // Mélange simple
+        const list = (Array.isArray(all) ? all : (all?.items || []));
+        // enlève ceux déjà vus + mélange
+        const pool = list.filter(x => !seen.has(toId(x)));
         for (let i=pool.length-1;i>0;i--){
           const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]];
         }
@@ -131,9 +106,7 @@
       root.setAttribute('data-id', item.id);
 
       root.innerHTML = `
-        <div class="ff-tags">
-          <span class="ff-badge">${ item.type === 'fact' ? T.fact : T.myth }</span>
-        </div>
+        <div class="ff-tags"><span class="ff-badge">${ item.type === 'fact' ? T.fact : T.myth }</span></div>
         <div class="ff-face ff-front">
           <h3 class="ff-title">${escapeHTML(item.title)}</h3>
           <div class="ff-actions">
@@ -152,7 +125,7 @@
 
       root.addEventListener('click', e => {
         const tgt = e.target;
-        if (tgt.closest('a')) return; // laisse les liens tranquilles
+        if (tgt.closest('a')) return; // ne bloque pas les liens
         if (tgt.closest('.flip') || tgt.closest('.ff-front') || tgt.closest('.ff-back')){
           root.classList.toggle('is-flipped');
         }
@@ -165,12 +138,11 @@
 
   async function loadNewBatch(){
     const items = await fetchFacts(COUNT);
-    // Marque les IDs affichés pour éviter de les re-proposer immédiatement
     items.forEach(it => seen.add(it.id));
     render(items);
   }
 
-  // --- utils sûres ---
+  // utils
   function escapeHTML(s){
     return String(s)
       .replaceAll('&','&amp;')
@@ -181,4 +153,3 @@
   }
   function escapeAttr(s){ return escapeHTML(s).replace(/"/g, '&quot;'); }
 })();
-</script>
