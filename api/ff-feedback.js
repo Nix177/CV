@@ -1,123 +1,68 @@
-// /api/ff-feedback.js
-// Append JSONL to data/ff-feedback/YYYY-MM.jsonl in your GitHub repo.
-// Requires: GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, (optional) GITHUB_BRANCH, ALLOWED_ORIGINS
+// api/ff-feedback.js
+// Ajoute chaque message en JSONL dans feedback/ff-YYYY-MM.jsonl via GitHub API.
+// Si non configuré (GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO), on log et on renvoie 202.
 
-const fetch = global.fetch;
+export const config = { runtime: 'edge' };
 
-const ALLOWED = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-
-function cors(req, res) {
-  const origin = req.headers.origin || '';
-  if (!ALLOWED.length || ALLOWED.some(p => origin.endsWith(p.replace(/^\*\./, '')) || origin === p)) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+export default async function handler(req) {
+  if (req.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
-
-function ok(res, data) {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(data));
-}
-function bad(res, code, msg) {
-  res.statusCode = code || 500;
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify({ error: msg || 'error' }));
-}
-
-async function getFile(owner, repo, path, branch, token) {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
-  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}`, 'User-Agent': 'nicolastuor-ch/ff-feedback' } });
-  if (r.status === 404) return { exists: false };
-  if (!r.ok) throw new Error('github_get_failed');
-  const j = await r.json();
-  return { exists: true, sha: j.sha, contentB64: j.content, encoding: j.encoding };
-}
-
-async function putFile(owner, repo, path, branch, token, content, sha = null, message = 'chore: append feedback') {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
-  const body = {
-    message,
-    content: Buffer.from(content, 'utf8').toString('base64'),
-    branch,
+  let body = {};
+  try { body = await req.json(); } catch {}
+  const item = {
+    message: String(body.message || '').slice(0, 5000),
+    pageUrl: String(body.pageUrl || ''),
+    pageTitle: String(body.pageTitle || ''),
+    userAgent: String(body.userAgent || ''),
+    ts: new Date().toISOString(),
   };
-  if (sha) body.sha = sha;
-  const r = await fetch(url, {
+
+  const token = process.env.GITHUB_TOKEN;
+  const owner = process.env.GITHUB_OWNER;
+  const repo  = process.env.GITHUB_REPO;
+  if (!token || !owner || !repo) {
+    console.log('[ff-feedback]', item);
+    return new Response(JSON.stringify({ ok:true, stored:false }), {
+      status: 202, headers: { 'content-type': 'application/json' }
+    });
+  }
+
+  const y = new Date().toISOString().slice(0,7); // "YYYY-MM"
+  const path = `feedback/ff-${y}.jsonl`;
+
+  // Récupère le fichier courant (pour obtenir le sha), sinon créera
+  const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
+  let sha = null, currentContent = '';
+  const getRes = await fetch(getUrl, { headers:{ Authorization:`Bearer ${token}`, 'User-Agent':'ff-bot' } });
+  if (getRes.ok) {
+    const data = await getRes.json();
+    sha = data.sha;
+    currentContent = Buffer.from(data.content || '', 'base64').toString('utf8');
+  }
+
+  const nextContent = (currentContent ? currentContent + '\n' : '') + JSON.stringify(item);
+  const putRes = await fetch(getUrl, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'User-Agent': 'nicolastuor-ch/ff-feedback',
+      'User-Agent': 'ff-bot',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      message: `feedback: ${item.pageTitle || '(no title)'} — ${item.ts}`,
+      content: Buffer.from(nextContent, 'utf8').toString('base64'),
+      sha,
+      branch: 'main'
+    })
   });
-  if (!r.ok) throw new Error(`github_put_failed(${r.status})`);
-  return r.json();
+
+  if (!putRes.ok) {
+    const t = await putRes.text();
+    console.error('[ff-feedback] push failed', t);
+    return new Response(JSON.stringify({ ok:false }), { status: 500 });
+  }
+  return new Response(JSON.stringify({ ok:true }), {
+    headers: { 'content-type':'application/json' }
+  });
 }
-
-module.exports = async (req, res) => {
-  cors(req, res);
-  if (req.method === 'OPTIONS') return ok(res, { ok: true });
-  if (req.method !== 'POST') return bad(res, 405, 'Method not allowed');
-
-  const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH = 'main' } = process.env;
-  if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
-    return bad(res, 500, 'Missing GitHub env');
-  }
-
-  try {
-    const chunks = [];
-    for await (const ch of req) chunks.push(ch);
-    const body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
-
-    const text = (body.text || '').toString().trim();
-    const lang = (body.lang || 'fr').toString().slice(0, 5);
-    const page = (body.page || '').toString().slice(0, 200);
-    const tz = (body.tz || '').toString().slice(0, 64);
-    const ua = (body.ua || '').toString().slice(0, 256);
-    const ip =
-      req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||
-      req.socket?.remoteAddress ||
-      '';
-
-    if (!text || text.length < 2) return bad(res, 400, 'empty');
-
-    const now = new Date();
-    const yyyy = now.getUTCFullYear();
-    const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-    const iso = now.toISOString();
-
-    const line = JSON.stringify({ ts: iso, lang, page, tz, ua, ip, text }) + '\n';
-    const filePath = `data/ff-feedback/${yyyy}-${mm}.jsonl`;
-
-    // récupère contenu existant (si existe)
-    let existed = false;
-    let sha = null;
-    let prev = '';
-    try {
-      const got = await getFile(GITHUB_OWNER, GITHUB_REPO, filePath, GITHUB_BRANCH, GITHUB_TOKEN);
-      if (got.exists) {
-        existed = true;
-        sha = got.sha;
-        const buff = Buffer.from(got.contentB64, got.encoding || 'base64');
-        prev = buff.toString('utf8');
-      }
-    } catch (_) {
-      // ignorer, on créera le fichier
-    }
-
-    const next = (prev || '') + line;
-    await putFile(GITHUB_OWNER, GITHUB_REPO, filePath, GITHUB_BRANCH, GITHUB_TOKEN, next, existed ? sha : null, 'chore: append feedback');
-
-    return ok(res, { ok: true });
-  } catch (e) {
-    return bad(res, 500, `ff-feedback failed: ${e.message}`);
-  }
-};
