@@ -1,6 +1,5 @@
 // api/facts.js — Edge Runtime
-// Essaie Wikipédia -> sinon fallback /facts-data.json. Toujours 200 avec {items:[]}
-// Query: ?lang=fr|en|de&n=9&seen=csv
+// Wikipédia -> sinon facts-data.json local (chemins robustes). Toujours 200.
 export const config = { runtime: 'edge' };
 
 const SOURCES = {
@@ -13,9 +12,9 @@ const SOURCES = {
     'https://en.wikipedia.org/wiki/List_of_common_misconceptions_about_science,_technology,_and_mathematics'
   ],
   de: [
-    // Il y a plusieurs pages DE possibles; on essaie la plus générale si dispo
-    'https://de.wikipedia.org/wiki/Liste_irrt%C3%BCmlicher_Ann%C3%A4hmen', // peut 404 selon renommage
-    'https://de.wikipedia.org/wiki/Irrtum' // fallback faible: sera ignoré si pas de listes utiles
+    // Les pages DE varient beaucoup ; on tente large, le fallback local fera foi.
+    'https://de.wikipedia.org/wiki/Liste_von_Irrt%C3%BCmern',
+    'https://de.wikipedia.org/wiki/Popul%C3%A4rirrtum'
   ]
 };
 
@@ -28,31 +27,38 @@ export default async function handler(req) {
       .split(',').map(s => s.trim()).filter(Boolean)
   );
 
-  // 1) Essaie de récupérer des items depuis Wikipédia
   let items = [];
   try {
     items = await fetchFromWikipedia(lang);
   } catch (e) {
-    // on continue, on fera le fallback
     console.error('[facts] wiki error:', e?.message || e);
   }
 
-  // 2) Filtre "seen", mélange, garde n
   items = filterShuffleTake(items, seen, n);
 
-  // 3) Si rien, fallback local
   if (items.length === 0) {
     try {
-      const fb = await fetchAsset('/facts-data.json');
-      const list = Array.isArray(fb) ? fb : (fb?.items || []);
+      // Fallbacks absolus construits depuis l’URL courante
+      const u = new URL(req.url);
+      const candidates = [
+        new URL('/assets/data/facts-data.json', u), // <- probable dans ton repo
+        new URL('/facts-data.json', u),
+        new URL('/assets/facts-data.json', u)
+      ];
+      let ok = null;
+      for (const c of candidates) {
+        const r = await fetch(c.toString(), { headers: { 'x-fb': '1' } });
+        if (r.ok) { ok = await r.json(); break; }
+      }
+      const list = Array.isArray(ok) ? ok : (ok?.items || []);
       items = filterShuffleTake(list.map(normalizeItem), seen, n);
     } catch (e) {
-      console.error('[facts] fallback error:', e?.message || e);
-      items = []; // on renvoie vide mais pas 500
+      console.error('[facts] local fallback error:', e?.message || e);
+      items = [];
     }
   }
 
-  return json({ items }, 200);
+  return json({ items }, 200, /*no-store*/true);
 }
 
 /* ---------------- Helpers ---------------- */
@@ -62,9 +68,7 @@ async function fetchFromWikipedia(lang) {
   const out = [];
   for (const url of urls) {
     try {
-      const html = await fetchText(url, 7000);
-      // extraction très simple des <li>…</li> “principaux”
-      // On retire tables/navbox/références autant que possible
+      const html = await fetchText(url, 8000);
       const cleaned = stripBlocks(html, [
         /<table[\s\S]*?<\/table>/gi,
         /<nav[\s\S]*?<\/nav>/gi,
@@ -72,22 +76,19 @@ async function fetchFromWikipedia(lang) {
         /<script[\s\S]*?<\/script>/gi,
         /<sup[\s\S]*?<\/sup>/gi
       ]);
-
       const liMatches = cleaned.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
       for (const li of liMatches) {
         let txt = normalizeWhitespace(
           stripTags(li)
-            .replace(/\[[^\]]*\]/g, '')          // [1], [citation needed]
-            .replace(/\([^)]*\)/g, (m)=> m.length>80 ? '' : m) // parenthèses très longues
-        );
-        txt = txt.replace(/^[:–—-]\s*/, '');
+            .replace(/\[[^\]]*?\]/g, '')
+            .replace(/\s*\([^)]{60,}\)/g, '') // parenthèses très longues
+        ).replace(/^[:–—-]\s*/, '');
 
-        if (txt.length < 40) continue; // rejette les lignes trop courtes
+        if (txt.length < 40) continue;
         const { title, explainShort } = splitTitleExplain(txt, lang);
-
         const item = {
           id: makeId(title),
-          type: 'myth',                      // par défaut côté wiki
+          type: 'myth',
           title,
           explainShort,
           category: guessCategory(url),
@@ -95,38 +96,26 @@ async function fetchFromWikipedia(lang) {
         };
         out.push(item);
       }
-    } catch (e) {
-      // ignore erreur sur une source; on tente les autres
-    }
+    } catch {}
   }
-  // dédoublonne par id
   const map = new Map();
   for (const it of out) map.set(it.id, it);
   return [...map.values()];
 }
 
 function splitTitleExplain(txt, lang) {
-  // Heuristiques: on coupe sur " – ", " — ", ":" si présent
-  let title = txt;
-  let explain = '';
-  for (const sep of [' — ', ' – ', ' : ', ': ', ' —', ' –']) {
+  for (const sep of [' — ', ' – ', ' : ', ': ']) {
     const i = txt.indexOf(sep);
-    if (i > 0 && i < txt.length - 4) {
-      title = txt.slice(0, i).trim();
-      explain = txt.slice(i + sep.length).trim();
-      break;
+    if (i > 10 && i < txt.length - 4) {
+      const title = capitalize(txt.slice(0, i).trim());
+      const exp   = txt.slice(i + sep.length).trim();
+      return { title, explainShort: truncateWords(exp || defaultExplain(lang), 30) };
     }
   }
-  if (!explain) {
-    // fallback court
-    const s = txt.split('. ');
-    title = s[0].trim();
-    explain = s.slice(1).join('. ').trim();
-  }
-  return {
-    title: capitalize(title),
-    explainShort: truncateWords(explain || defaultExplain(lang), 30)
-  };
+  const parts = txt.split('. ');
+  const title = capitalize(parts[0] || txt);
+  const exp   = parts.slice(1).join('. ').trim();
+  return { title, explainShort: truncateWords(exp || defaultExplain(lang), 30) };
 }
 
 function defaultExplain(lang) {
@@ -154,7 +143,6 @@ function normalizeItem(x) {
 
 function filterShuffleTake(list, seen, n) {
   const pool = list.filter(it => !seen.has(String(it.id)));
-  // shuffle
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -171,18 +159,12 @@ async function fetchText(url, timeoutMs = 8000) {
   return await res.text();
 }
 
-async function fetchAsset(path) {
-  const res = await fetch(path, { headers: { 'x-ff': '1' } });
-  if (!res.ok) throw new Error('asset ' + path + ' ' + res.status);
-  return await res.json();
-}
-
 function stripBlocks(html, regexps) {
   let out = html;
   for (const re of regexps) out = out.replace(re, '');
   return out;
 }
-function stripTags(s) { return s.replace(/<\/?[^>]+>/g, ''); }
+function stripTags(s){ return s.replace(/<\/?[^>]+>/g, ''); }
 function normalizeWhitespace(s){ return s.replace(/\s+/g, ' ').trim(); }
 function truncateWords(s, n) {
   const words = normalizeWhitespace(String(s)).split(' ');
@@ -199,12 +181,13 @@ function makeId(s){
   const hash = Math.abs(hashCode(base)).toString(36).slice(0, 6);
   return (base.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'id') + '-' + hash;
 }
-function hashCode(str){
-  let h = 0; for (let i=0;i<str.length;i++){ h = ((h<<5)-h + str.charCodeAt(i))|0; } return h;
-}
-function json(obj, status=200) {
+function hashCode(str){ let h=0; for (let i=0;i<str.length;i++){ h=((h<<5)-h+str.charCodeAt(i))|0; } return h; }
+function json(obj, status=200, noStore=false) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' }
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      ...(noStore ? { 'cache-control': 'no-store' } : {})
+    }
   });
 }
