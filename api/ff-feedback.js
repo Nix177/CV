@@ -1,4 +1,5 @@
-// api/ff-feedback.js
+// api/ff-feedback.js — Edge Runtime
+// Stocke le feedback dans GitHub (JSONL mois par mois) sinon renvoie 202
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
@@ -13,21 +14,23 @@ export default async function handler(req) {
     pageTitle: String(body.pageTitle || ''),
     userAgent: String(body.userAgent || ''),
     ts: new Date().toISOString(),
+    ip: req.headers.get('x-forwarded-for') || ''
   };
 
-  const token = process.env.GITHUB_TOKEN;
-  const owner = process.env.GITHUB_OWNER;
-  const repo  = process.env.GITHUB_REPO;
+  const token  = process.env.GITHUB_TOKEN;
+  const owner  = process.env.GITHUB_OWNER;
+  const repo   = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || 'main';
+
+  // Si non configuré → 202
   if (!token || !owner || !repo) {
-    console.log('[ff-feedback]', item); // pas de secrets -> OK en 202
-    return new Response(JSON.stringify({ ok:true, stored:false }), {
-      status: 202, headers: { 'content-type': 'application/json' }
-    });
+    console.warn('[ff-feedback] missing env, payload:', item);
+    return ok({ ok:true, stored:false }, 202);
   }
 
   const y = new Date().toISOString().slice(0,7); // "YYYY-MM"
   const path = `feedback/ff-${y}.jsonl`;
-  const api = (p) => `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(p)}`;
+  const url  = (p) => `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(p)}`;
   const hdrs = {
     Authorization: `Bearer ${token}`,
     'User-Agent': 'ff-bot',
@@ -35,42 +38,50 @@ export default async function handler(req) {
     'Content-Type': 'application/json'
   };
 
-  // Récupère pour obtenir le sha + contenu courant
   let sha = null, currentContent = '';
-  const getRes = await fetch(api(path), { headers: hdrs });
-  if (getRes.ok) {
-    const data = await getRes.json();
-    sha = data.sha || null;
-    currentContent = fromBase64(data.content || '');
+  try {
+    const rGet = await fetch(url(path), { headers: hdrs });
+    if (rGet.ok) {
+      const j = await rGet.json();
+      sha = j.sha || null;
+      currentContent = fromBase64(j.content || '');
+    }
+  } catch (e) {
+    // on continue en création
   }
 
-  const nextContent = (currentContent ? currentContent + '\n' : '') + JSON.stringify(item);
-  const putRes = await fetch(api(path), {
-    method: 'PUT',
-    headers: hdrs,
-    body: JSON.stringify({
-      message: `feedback: ${item.pageTitle || '(no title)'} — ${item.ts}`,
-      content: toBase64(nextContent),
-      sha,
-      branch: 'main'
-    })
-  });
-
-  if (!putRes.ok) {
-    const t = await putRes.text();
-    console.error('[ff-feedback] push failed', t);
-    return new Response(JSON.stringify({ ok:false }), { status: 500 });
+  const next = (currentContent ? currentContent + '\n' : '') + JSON.stringify(item);
+  try {
+    const rPut = await fetch(url(path), {
+      method: 'PUT',
+      headers: hdrs,
+      body: JSON.stringify({
+        message: `feedback: ${item.pageTitle || '(no title)'} — ${item.ts}`,
+        content: toBase64(next),
+        sha,
+        branch
+      })
+    });
+    if (!rPut.ok) {
+      const t = await rPut.text();
+      console.error('[ff-feedback] GitHub PUT failed:', rPut.status, t);
+      // Ne casse pas l’UX: 202
+      return ok({ ok:true, stored:false }, 202);
+    }
+  } catch (e) {
+    console.error('[ff-feedback] GitHub error:', e?.message || e);
+    return ok({ ok:true, stored:false }, 202);
   }
-  return new Response(JSON.stringify({ ok:true }), {
-    headers: { 'content-type':'application/json' }
-  });
+
+  return ok({ ok:true, stored:true }, 200);
 }
 
-// --- helpers base64 (UTF-8 safe) pour Edge runtime ---
-function toBase64(str){
-  return btoa(unescape(encodeURIComponent(str)));
+/* helpers Edge */
+function ok(obj, status=200){
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'content-type': 'application/json; charset=utf-8' }
+  });
 }
-function fromBase64(b64){
-  try { return decodeURIComponent(escape(atob(b64))); }
-  catch { return ''; }
-}
+function toBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function fromBase64(b64){ try{ return decodeURIComponent(escape(atob(b64))); }catch{ return ''; } }
