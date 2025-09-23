@@ -1,8 +1,8 @@
-<script>
-/* Languette feedback (discrète)
-   - à inclure sur les pages voulues : <script defer src="/assets/js/feedback.js"></script>
+/* Languette feedback (discrète, sur toutes les pages où ce script est chargé)
+   - Ajoute un onglet fixe à droite
    - POST /api/ff-feedback avec { message, pageUrl, pageTitle, userAgent, ts }
 */
+// UPDATE: JS pur (pas de balise <script>)
 (() => {
   if (document.getElementById('ff-feedback-tab')) return;
 
@@ -68,4 +68,3 @@
     }
   });
 })();
-</script>
