@@ -1,13 +1,3 @@
-/* =========================================================
-   Fun Facts — cartes recto/verso + chargement & nouveau lot
-   Dépend uniquement de #facts-grid et (optionnel) d’un bouton
-   #ff-new | #ff-btn-new | [data-ff-new].
-   API attendue : GET /api/facts?lang=fr&n=9
-   - Réponse acceptée : Array | { facts: Array } | { items: Array }
-   - Chaque item peut avoir : claim/front/title, explain/back/answer/summary,
-     url/source/link, sourceTitle/title.
-   - Repli local possible : window.FUN_FACTS ou /facts-data.json (optionnel)
-   ========================================================= */
 
 (() => {
   // --------- Détection langue ----------
