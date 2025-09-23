@@ -3,7 +3,7 @@
   const lang = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2).toLowerCase();
   const N = 9;
 
-  // Trouve/installe la grille
+  // Conteneur
   let grid = document.querySelector('#facts-grid');
   if (!grid) {
     grid = document.createElement('div');
@@ -22,7 +22,6 @@
     reroll.textContent = label('Nouveau lot aléatoire', 'New random set', 'Neuer Zufallssatz');
     grid.parentNode.insertBefore(reroll, grid);
   }
-
   reroll.addEventListener('click', () => loadFacts(true));
 
   function label(fr, en, de) {
@@ -30,8 +29,21 @@
     if (lang === 'de') return de;
     return en;
   }
+  const L = {
+    myth: label('Mythe', 'Myth', 'Mythos'),
+    fact: label('Fait vérifié', 'fact', 'Fakt'),
+    flip: label('Retourner', 'Flip', 'Umdrehen'),
+    view: label('Voir la source', 'View source', 'Quelle öffnen'),
+    fallbackTitle: label('Liste statique (repli)', 'Static list (fallback)', 'Statische Liste (Fallback)'),
+    fallbackMsg: label("Si vous voyez ceci, l’API est indisponible. Un repli local s’affiche.",
+                       'If you see this, the API is unavailable. Showing a local fallback.',
+                       'Wenn du das siehst, ist die API nicht erreichbar. Lokales Fallback wird angezeigt.')
+  };
 
-  function card(item) {
+  // ---------- UI helpers ----------
+  function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  function makeCard(item){
     const li = document.createElement('div');
     li.className = 'card3d';
     li.tabIndex = 0;
@@ -43,77 +55,77 @@
     const front = document.createElement('div');
     front.className = 'face front';
     front.innerHTML = `
-      <div style="display:flex;gap:8px;margin-bottom:6px">
-        <span class="chip">${label('Mythe','Myth','Mythos')}</span>
-      </div>
-      <div class="h3" style="font-size:1.35rem; font-weight:800">${escapeHTML(item.claim)}</div>
-      <div style="margin-top:10px"><button class="btn linkish">${label('Retourner','Flip','Umdrehen')}</button></div>
+      <div class="ff-head"><span class="chip">${L.myth}</span></div>
+      <p class="ff-text ff-claim">${escapeHTML(item.claim)}</p>
+      <div class="ff-actions"><button class="btn linkish">${L.flip}</button></div>
     `;
 
     // BACK = explain + source
     const back = document.createElement('div');
     back.className = 'face back';
-    const explain = item.explain ? escapeHTML(item.explain) : label('—', '—', '—');
-    const src = item.source ? `<a href="${item.source}" target="_blank" rel="noopener">${label('Voir la source','View source','Quelle öffnen')}</a>` : '';
+    const explain = item.explain ? escapeHTML(item.explain) : '—';
+    const src = item.source ? `<a class="ff-link" href="${item.source}" target="_blank" rel="noopener">${L.view}</a>` : '';
     back.innerHTML = `
-      <div style="display:flex;gap:8px;margin-bottom:6px">
-        <span class="chip">${label('Fait vérifié','fact','Fakt')}</span>
-      </div>
-      <p style="margin:0 0 10px">${explain}</p>
-      <div style="margin-top:auto"><button class="btn linkish">${label('Retourner','Flip','Umdrehen')}</button> ${src}</div>
+      <div class="ff-head"><span class="chip">${L.fact}</span></div>
+      <p class="ff-text ff-explain">${explain}</p>
+      <div class="ff-actions"><button class="btn linkish">${L.flip}</button> ${src}</div>
     `;
 
     inner.appendChild(front);
     inner.appendChild(back);
     li.appendChild(inner);
 
-    // Flip handlers
-    li.addEventListener('click', (e) => {
-      if (e.target.closest('button')) {
-        li.classList.toggle('is-flipped');
-      }
+    li.addEventListener('click', e => {
+      if (e.target.closest('button')) li.classList.toggle('is-flipped');
     });
-    li.addEventListener('keypress', (e) => {
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault(); li.classList.toggle('is-flipped');
-      }
+    li.addEventListener('keypress', e => {
+      if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); li.classList.toggle('is-flipped'); }
     });
 
     return li;
   }
 
-  function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function makeSkeleton(){
+    const s = document.createElement('div');
+    s.className = 'ff-skel';
+    return s;
+  }
+  function showSkeleton(count){
+    grid.replaceChildren();
+    for (let i=0;i<count;i++) grid.appendChild(makeSkeleton());
+    grid.classList.add('ff-loading');
+  }
+  function clearSkeleton(){
+    grid.classList.remove('ff-loading');
+    grid.replaceChildren();
+  }
+  function showFallback(){
+    clearSkeleton();
+    const msg = document.createElement('div');
+    msg.className = 'card pad';
+    msg.innerHTML = `<div class="title">${L.fallbackTitle}</div><p class="muted">${L.fallbackMsg}</p>`;
+    grid.appendChild(msg);
   }
 
-  async function loadFacts(spin) {
-    if (spin) {
-      reroll.classList.add('is-busy');
-      reroll.disabled = true;
+  // ---------- Data ----------
+  async function loadFacts(withSpinner){
+    if (withSpinner){
+      reroll.classList.add('is-busy'); reroll.disabled = true;
     }
-    grid.innerHTML = ''; // clear
-    try {
-      const res = await fetch(`/api/facts?lang=${encodeURIComponent(lang)}&n=${N}`, { cache: 'no-store' });
+    showSkeleton(N);
+    try{
+      const res = await fetch(`/api/facts?lang=${encodeURIComponent(lang)}&n=${N}`, { cache:'no-store' });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'API error');
-      for (const item of data.items) {
-        grid.appendChild(card(item));
-      }
-    } catch (e) {
-      // repli minimal si API KO
-      const msg = document.createElement('div');
-      msg.className = 'card pad';
-      msg.innerHTML = `<div class="title">${label('Liste statique (repli)', 'Static list (fallback)', 'Statische Liste (Fallback)')}</div>
-      <p class="muted">${label('Si vous voyez ceci, l’API est indisponible. Un repli local s’affiche.',
-      'If you see this, the API is unavailable. Showing a local fallback.',
-      'Wenn du das siehst, ist die API nicht erreichbar. Lokales Fallback wird angezeigt.')}</p>`;
-      grid.appendChild(msg);
-    } finally {
-      reroll.classList.remove('is-busy');
-      reroll.disabled = false;
+      clearSkeleton();
+      for (const it of data.items) grid.appendChild(makeCard(it));
+    }catch(err){
+      showFallback();
+    }finally{
+      reroll.classList.remove('is-busy'); reroll.disabled = false;
     }
   }
 
-  // Go
+  // init
   loadFacts(false);
 })();
