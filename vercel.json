@@ -1,17 +1,11 @@
 {
-  "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-
-  "functions": {
-    "api/*.js": { "runtime": "nodejs18.x" }
-  },
-
   "rewrites": [
-    { "source": "/ai",        "destination": "/ai-lab.html" },
+    { "source": "/ai", "destination": "/ai-lab.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
-    { "source": "/cv",        "destination": "/cv.html" },
-    { "source": "/chatbot",   "destination": "/chatbot.html" },
+    { "source": "/cv", "destination": "/cv.html" },
+    { "source": "/chatbot", "destination": "/chatbot.html" },
     { "source": "/fun-facts", "destination": "/fun-facts.html" }
   ]
 }
