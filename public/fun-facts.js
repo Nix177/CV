@@ -1,11 +1,26 @@
 // public/fun-facts.js
-
 (() => {
-  const grid = document.getElementById('facts-grid');
-  const btn = document.getElementById('ff-new');
-  const FALLBACK_SEL = '#ff-fallback, .ff-fallback';
+  // --- Sélection robuste des éléments de la page ---------------------------
+  const grid =
+    document.querySelector('#facts-grid') ||
+    document.querySelector('.facts-grid') ||
+    document.querySelector('#facts') ||
+    document.querySelector('.flip-grid'); // dernier recours
 
-  // Déduction langue à partir du nom de fichier
+  const btn =
+    document.querySelector('#ff-new') ||
+    document.querySelector('[data-role="ff-new"]') ||
+    document.querySelector('#facts-new');
+
+  if (!grid) {
+    console.error(
+      '[fun-facts] Aucun conteneur de cartes trouvé. ' +
+      'Ajoute id="facts-grid" (recommandé) sur le bloc qui doit recevoir les cartes.'
+    );
+    return; // on sort proprement pour éviter tout crash
+  }
+
+  // --- Langue depuis l’URL -------------------------------------------------
   const path = (location.pathname.split('/').pop() || 'fun-facts.html');
   const m = path.match(/^fun-facts(?:-(en|de))?\.html$/i);
   const lang = m && m[1] ? m[1] : 'fr';
@@ -13,44 +28,45 @@
   const t = (k) => {
     const L = {
       fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', source:'Voir la source', error:'Échec du chargement.' },
-      en: { myth:'Myth',  fact:'Verified fact', flip:'Flip',      source:'View source',    error:'Failed to load.' },
-      de: { myth:'Mythos',fact:'Geprüfte Tatsache', flip:'Umdrehen', source:'Quelle',     error:'Fehler beim Laden.' }
+      en: { myth:'Myth', fact:'Verified fact', flip:'Flip', source:'View source', error:'Failed to load.' },
+      de: { myth:'Mythos', fact:'Geprüfte Tatsache', flip:'Umdrehen', source:'Quelle', error:'Fehler beim Laden.' }
     };
-    return (L[lang]||L.fr)[k];
+    return (L[lang] || L.fr)[k];
   };
 
+  // --- Utilitaires ---------------------------------------------------------
   function shuffle(arr){
-    // Fisher-Yates
-    for(let i = arr.length-1; i > 0; i--){
-      const j = (crypto?.getRandomValues
-        ? crypto.getRandomValues(new Uint32Array(1))[0] % (i+1)
-        : Math.floor(Math.random()*(i+1)));
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
   }
 
-  function skeleton(n=9){
+  function skeleton(n = 9){
     grid.classList.add('ff-loading');
     grid.innerHTML = '';
-    for(let i=0;i<n;i++){
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < n; i++) {
       const d = document.createElement('div');
       d.className = 'ff-skel';
-      grid.appendChild(d);
+      frag.appendChild(d);
     }
+    grid.appendChild(frag);
   }
 
-  function card(node){
+  function wireCard(node){
     node.addEventListener('click', () => node.classList.toggle('is-flipped'));
-    // évite que le clic sur un lien renverse
-    node.querySelectorAll('a,button').forEach(el=>{
-      el.addEventListener('click', (e)=> e.stopPropagation());
+    node.querySelectorAll('a,button').forEach(el => {
+      el.addEventListener('click', (e) => e.stopPropagation());
     });
   }
 
   function render(facts){
     grid.classList.remove('ff-loading');
     grid.innerHTML = '';
+    const frag = document.createDocumentFragment();
+
     facts.forEach(f => {
       const wrap = document.createElement('div');
       wrap.className = 'card3d';
@@ -76,14 +92,19 @@
             </div>
           </div>
         </div>`;
-      grid.appendChild(wrap);
-      card(wrap);
+      frag.appendChild(wrap);
     });
+
+    grid.appendChild(frag);
+    grid.querySelectorAll('.card3d').forEach(wireCard);
+    // masque toute section fallback s'il y en a encore une dans le HTML
+    document.querySelectorAll('#ff-fallback, .ff-fallback').forEach(n => n.remove());
   }
 
-  async function load(n=9){
-    try{
-      btn?.classList.add('is-busy');
+  // --- Chargement depuis l’API ---------------------------------------------
+  async function load(n = 9){
+    try {
+      if (btn) btn.classList.add('is-busy');
       skeleton(n);
 
       const ts = Date.now();
@@ -93,25 +114,24 @@
         headers: { 'x-no-cache': String(ts) }
       });
 
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      let facts = await res.json();
+      if (!res.ok) throw new Error('HTTP ' + res.status);
 
-      // petite sécurité : shuffle côté client
-      facts = shuffle(facts.slice(0));
+      let facts = await res.json();
+      facts = shuffle(facts.slice()); // ordre varié côté client
 
       render(facts);
-      // masque le fallback si présent
-      document.querySelectorAll(FALLBACK_SEL).forEach(n => n.remove());
-    }catch(err){
+    } catch (err) {
       grid.classList.remove('ff-loading');
       grid.innerHTML = `<div class="card pad"><strong>${t('error')}</strong></div>`;
-      console.error(err);
-    }finally{
-      btn?.classList.remove('is-busy');
+      console.error('[fun-facts] load error:', err);
+    } finally {
+      if (btn) btn.classList.remove('is-busy');
     }
   }
 
-  btn?.addEventListener('click', () => load(9));
-  // premier rendu
+  // --- Événements ----------------------------------------------------------
+  if (btn) btn.addEventListener('click', () => load(9));
+
+  // Premier rendu
   load(9);
 })();
