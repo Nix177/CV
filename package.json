@@ -1,4 +1,13 @@
 {
+  "name": "cv-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "echo \"No build needed (static site + Vercel functions)\""
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
   }
