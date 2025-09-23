@@ -1,155 +1,142 @@
-/* Fun Facts — front app (FR/EN/DE)
-   - GET /api/facts?lang=fr|en|de&n=9&seen=<csv>
-   - Fallback sur /facts-data.json si l’API échoue
+/* =========================================================
+   Fun Facts — client unique (FR/EN/DE)
+   - GET /api/ff-batch?lang=fr|en|de&count=9&seen=<csv>
+   - Fallback: /facts-data.json si 0 item
    - Cartes recto/verso (verso ≤ 30 mots) + bouton "Nouveau lot"
-*/
-// UPDATE: JS pur (pas de balise <script>)
-(() => {
-  const lang = (document.documentElement.lang || 'fr').toLowerCase();
-  const COUNT = 9;
+   ========================================================= */
+(function () {
+  const log  = (...a) => console.log('[fun-facts]', ...a);
+  const warn = (...a) => console.warn('[fun-facts]', ...a);
+  const $    = (sel, el = document) => el.querySelector(sel);
+  const $$   = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+  const lang = (document.documentElement.lang || 'fr').slice(0, 2).toLowerCase();
 
   const L10N = {
-    fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', seeSrc:'Voir la source', newBatch:'Nouveau lot aléatoire', empty:'Aucune carte à afficher.' },
-    en: { myth:'Myth',  fact:'Fact',         flip:'Flip',      seeSrc:'View source',   newBatch:'New random batch',   empty:'No cards to display.' },
-    de: { myth:'Irrtum',fact:'Fakt',         flip:'Umdrehen',  seeSrc:'Quelle ansehen',newBatch:'Neues Zufallsset',   empty:'Keine Karten anzuzeigen.' },
+    fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', source:'Voir la source', newBatch:'🎲 Nouveau lot aléatoire', empty:'Aucune carte à afficher.' },
+    en: { myth:'Myth',  fact:'Fact',         flip:'Flip',      source:'View source',     newBatch:'🎲 New random batch',   empty:'No cards to display.' },
+    de: { myth:'Irrtum',fact:'Fakt',         flip:'Umdrehen',  source:'Quelle ansehen',  newBatch:'🎲 Neues Zufallsset',   empty:'Keine Karten anzuzeigen.' }
   };
   const T = L10N[lang] || L10N.fr;
 
-  // Points d’accroche tolérants (selon ta page)
-  const $cards = document.querySelector('#ff_cards, #ff-cards, #ff-cards-list, #ffCards, #cards') || createCardsMount();
-  const $btnNew = document.querySelector('#ff_random, #btnNewSet');
+  // points d'accroche de ta page
+  const $cards   = $('#ff_cards') || (() => { const d=document.createElement('div'); d.id='ff_cards'; document.body.appendChild(d); return d; })();
+  const $btnNew  = $('#ff_random');
+  const $fallback= $('#ff_fallback_list');
+  const $count   = $('#ff_count');
+
   const seen = new Set();
 
-  if ($btnNew) $btnNew.addEventListener('click', loadNewBatch);
-  loadNewBatch(); // auto au démarrage
+  if ($btnNew) $btnNew.addEventListener('click', e => { e.preventDefault(); loadNewBatch(); });
+  loadNewBatch(); // au démarrage
 
-  // ---------- Helpers ----------
-  function createCardsMount(){
-    const el = document.createElement('div');
-    el.id = 'ff_cards';
-    document.body.appendChild(el);
-    return el;
-  }
-
+  // ---------- helpers ----------
   function truncateWords(s, n = 30){
     if (!s) return '';
     const words = String(s).replace(/\s+/g,' ').trim().split(' ');
     return words.length <= n ? s : words.slice(0, n).join(' ') + '…';
   }
-
   function pickSource(sources){
-    if (Array.isArray(sources) && sources.length) return sources[0];
-    if (typeof sources === 'string') return sources;
+    if (Array.isArray(sources) && sources.length) {
+      const s = sources[0];
+      return { title: s.title || s.label || 'Source', url: s.url || s.href || '#' };
+    }
+    if (typeof sources === 'string') return { title: 'Source', url: sources };
     return null;
   }
-
-  function toId(x){
-    if (x?.id) return String(x.id);
-    const h = (x?.title || Math.random().toString(36)).toLowerCase().replace(/\s+/g,'-').slice(0,50);
-    return `${h}-${Math.random().toString(36).slice(2,7)}`;
-  }
-
-  function normalizeItem(x){
-    const id = toId(x);
+  function normalize(x){
+    const id = x.id || Math.random().toString(36).slice(2);
     const title = x.title || x.text || '—';
-    const explanation = x.explanation || x.explainShort || x.answer || '';
+    const explanation = x.explanation || x.truth || '';
     const explainShort = x.explainShort || truncateWords(explanation, 30);
-    const category = x.category || 'general';
-    const type = x.type || 'myth';
-    const sources = x.sources || x.source || [];
-    return { id, title, explanation, explainShort, category, type, sources: Array.isArray(sources)?sources:(sources?[sources]:[]) };
+    const type = (x.type || '').toLowerCase().includes('fact') ? 'fact' : 'myth';
+    const source = pickSource(x.sources || x.source);
+    return { id, title, explanation, explainShort, type, source };
   }
-
-  async function fetchFacts(n){
-    const seenList = [...seen].join(',');
-    const url = `/api/facts?lang=${encodeURIComponent(lang)}&n=${n}${seenList ? `&seen=${encodeURIComponent(seenList)}`:''}`;
-    try{
-      const ctrl = new AbortController();
-      const to = setTimeout(()=>ctrl.abort(), 9000);
-      const r = await fetch(url, { signal: ctrl.signal, headers:{ 'x-ff':'1' } });
-      clearTimeout(to);
-      if (!r.ok) throw new Error('API facts non OK');
-      const data = await r.json();
-      if (!Array.isArray(data?.items)) throw new Error('API format inattendu');
-      return data.items.map(normalizeItem);
-    }catch(e){
-      // Fallback local
-      try{
-        const r = await fetch('/facts-data.json');
-        if (!r.ok) throw new Error('fallback non trouvé');
-        const all = await r.json();
-        const list = (Array.isArray(all) ? all : (all?.items || []));
-        // enlève ceux déjà vus + mélange
-        const pool = list.filter(x => !seen.has(toId(x)));
-        for (let i=pool.length-1;i>0;i--){
-          const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]];
-        }
-        return pool.slice(0, n).map(normalizeItem);
-      }catch(err){
-        console.error('[FunFacts] fallback KO', err);
-        return [];
-      }
-    }
-  }
-
-  function render(items){
+  function renderCards(items){
     $cards.innerHTML = '';
     if (!items.length){
-      const p = document.createElement('p'); p.textContent = T.empty; p.className='muted';
-      $cards.appendChild(p); return;
+      $cards.innerHTML = `<p class="muted">${T.empty}</p>`;
+      return;
     }
     const frag = document.createDocumentFragment();
-    items.forEach(item => {
-      const src = pickSource(item.sources);
-      const root = document.createElement('article');
-      root.className = 'ff-card';
-      root.setAttribute('data-id', item.id);
-
-      root.innerHTML = `
-        <div class="ff-tags"><span class="ff-badge">${ item.type === 'fact' ? T.fact : T.myth }</span></div>
-        <div class="ff-face ff-front">
-          <h3 class="ff-title">${escapeHTML(item.title)}</h3>
-          <div class="ff-actions">
-            <button class="btn flip">${T.flip}</button>
-            ${ src ? `<a class="btn linkish" target="_blank" rel="noopener" href="${escapeAttr(src)}">${T.seeSrc}</a>` : '' }
+    for (const it of items) {
+      seen.add(it.id);
+      const card = document.createElement('div');
+      card.className = 'ff-card';
+      card.innerHTML = `
+        <div class="inner">
+          <div class="face front">
+            <div class="ff-badges">
+              <span class="ff-badge">${it.type === 'fact' ? T.fact : T.myth}</span>
+            </div>
+            <h3 style="margin:6px 0 0 0">${it.title}</h3>
+            <div class="ff-actions" style="margin-top:auto;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn chip ff-flip">${T.flip}</button>
+              ${it.source ? `<a class="btn chip" target="_blank" rel="noopener" href="${it.source.url}">${T.source}</a>` : ''}
+            </div>
           </div>
-        </div>
-        <div class="ff-face ff-back">
-          <p class="ff-explain">${escapeHTML(item.explainShort || item.explanation || '')}</p>
-          <div class="ff-actions">
-            <button class="btn flip">${T.flip}</button>
-            ${ src ? `<a class="btn linkish" target="_blank" rel="noopener" href="${escapeAttr(src)}">${T.seeSrc}</a>` : '' }
+          <div class="face back">
+            <p class="muted" style="margin:0 0 6px 0">${it.type === 'fact' ? T.fact : T.myth}</p>
+            <p style="margin:0">${truncateWords(it.explainShort || it.explanation || it.title, 30)}</p>
+            <div class="ff-actions" style="margin-top:auto;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn chip ff-flip">${T.flip}</button>
+              ${it.source ? `<a class="btn chip" target="_blank" rel="noopener" href="${it.source.url}">${T.source}</a>` : ''}
+            </div>
           </div>
-        </div>
-      `;
-
-      root.addEventListener('click', e => {
-        const tgt = e.target;
-        if (tgt.closest('a')) return; // ne bloque pas les liens
-        if (tgt.closest('.flip') || tgt.closest('.ff-front') || tgt.closest('.ff-back')){
-          root.classList.toggle('is-flipped');
-        }
+        </div>`;
+      card.addEventListener('click', e => {
+        const b = e.target.closest('.ff-flip');
+        if (b) { card.classList.toggle('is-flipped'); e.preventDefault(); e.stopPropagation(); }
       });
-
-      frag.appendChild(root);
-    });
+      frag.appendChild(card);
+    }
     $cards.appendChild(frag);
+    if ($count) $count.textContent = `${items.length} cards`;
+  }
+
+  // ---------- data loaders ----------
+  async function fetchAPI(n=9){
+    const seenCsv = [...seen].join(',');
+    const url = `/api/ff-batch?lang=${lang}&count=${n}${seenCsv ? `&seen=${encodeURIComponent(seenCsv)}`:''}`;
+    log('fetch', url);
+    try {
+      const r = await fetch(url, { cache:'no-cache' });
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      const json = await r.json();
+      // Accepte tableau ou {items:[...]}
+      const arr = Array.isArray(json) ? json : (Array.isArray(json.items) ? json.items : []);
+      return arr.map(normalize);
+    } catch (e) {
+      warn('API fail:', e.message || e);
+      return null;
+    }
+  }
+  async function fetchFallback(){
+    try {
+      const r = await fetch('/facts-data.json', { cache:'no-cache' });
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      const raw = await r.json();
+      const arr = Array.isArray(raw) ? raw : (raw.items || []);
+      return arr.filter(x => !x.lang || x.lang.slice(0,2) === lang).map(normalize);
+    } catch (e) {
+      warn('fallback fail:', e.message || e);
+      return [];
+    }
   }
 
   async function loadNewBatch(){
-    const items = await fetchFacts(COUNT);
-    items.forEach(it => seen.add(it.id));
-    render(items);
+    const api = await fetchAPI(9);
+    if (api && api.length) {
+      renderCards(api);
+      if ($fallback) $fallback.parentElement?.classList?.add('hidden');
+      return;
+    }
+    const loc = await fetchFallback();
+    renderCards(loc.slice(0, 9));
+    if ($fallback) {
+      // affiche la liste brute minimaliste pour info (même si on a rendu des cartes)
+      $fallback.innerHTML = loc.slice(0,9).map(x=>`<li>${x.title}</li>`).join('');
+      $fallback.parentElement?.classList?.remove('hidden');
+    }
   }
-
-  // utils
-  function escapeHTML(s){
-    return String(s)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#39;');
-  }
-  function escapeAttr(s){ return escapeHTML(s).replace(/"/g, '&quot;'); }
 })();
