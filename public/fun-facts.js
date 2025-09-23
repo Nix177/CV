@@ -1,159 +1,312 @@
-<!-- public/fun-facts.js -->
-<script>
-/* public/fun-facts.js — Fun Facts (FR/EN/DE)
-   - Consomme /api/facts?lang=xx&n=9  (réponse { items:[...] })
-   - Fallback tolérant si jamais la forme évolue.
-   - Cartes recto/verso, verso ≤ ~30 mots, bouton “Nouveau lot”.
-*/
-(() => {
-  const COUNT = 9;
+/* =========================================================
+   Fun Facts — cartes recto/verso + chargement & nouveau lot
+   Dépend uniquement de #facts-grid et (optionnel) d’un bouton
+   #ff-new | #ff-btn-new | [data-ff-new].
+   API attendue : GET /api/facts?lang=fr&n=9
+   - Réponse acceptée : Array | { facts: Array } | { items: Array }
+   - Chaque item peut avoir : claim/front/title, explain/back/answer/summary,
+     url/source/link, sourceTitle/title.
+   - Repli local possible : window.FUN_FACTS ou /facts-data.json (optionnel)
+   ========================================================= */
 
-  const I18N = {
-    fr: { myth:'Mythe', fact:'Fait vérifié', newBatch:'Nouveau lot aléatoire', seeSource:'Voir la source', flip:'Retourner', empty:'Aucune carte.' },
-    en: { myth:'Myth',  fact:'Fact',         newBatch:'New random batch',       seeSource:'See source',    flip:'Flip',      empty:'No cards.' },
-    de: { myth:'Mythos',fact:'Fakt',         newBatch:'Neuer Zufallssatz',      seeSource:'Quelle',        flip:'Umdrehen',  empty:'Keine Karten.' },
+(() => {
+  // --------- Détection langue ----------
+  const detectLang = () => {
+    const path = (location.pathname.split('/').pop() || 'fun-facts.html').toLowerCase();
+    const m = path.match(/-(en|de)\.html?$/);
+    return m ? m[1] : 'fr';
+  };
+  const LANG = detectLang();
+
+  // --------- i18n minimal ----------
+  const T = {
+    fr: { myth: 'Idée reçue', fact: 'Fait vérifié', source: 'Source', newBatch: 'Nouveau lot aléatoire' },
+    en: { myth: 'Misconception', fact: 'Verified fact', source: 'Source', newBatch: 'New random batch' },
+    de: { myth: 'Irrtum',     fact: 'Bewiesene Tatsache', source: 'Quelle', newBatch: 'Neuer zufälliger Satz' },
+  }[LANG] || T.fr;
+
+  // --------- Sélecteurs / helpers DOM ----------
+  const $ = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+
+  // Garantit un conteneur #facts-grid
+  const ensureMount = () => {
+    let mount = $('#facts-grid');
+    if (!mount) {
+      console.warn('[fun-facts] Aucun conteneur trouvé. Création de #facts-grid…');
+      const main = $('main') || document.body;
+      mount = document.createElement('section');
+      mount.id = 'facts-grid';
+      main.appendChild(mount);
+    }
+    return mount;
   };
 
-  // Lang depuis l’URL (fun-facts[-en|-de].html)
-  const m = (location.pathname.split('/').pop() || 'fun-facts.html').match(/-(en|de)\.html$/i);
-  const lang = (m && m[1]) ? m[1] : 'fr';
-  const t = I18N[lang] || I18N.fr;
+  const GRID = ensureMount();
 
-  // ---------- utils
-  const qs = (s, r=document) => r.querySelector(s);
-  const el = (tag, cls, txt) => { const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; };
-  const esc = s => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const words = s => String(s||'').trim().split(/\s+/).filter(Boolean);
-  const trimWords = (s, max=30) => { const w=words(s); return w.length<=max ? s : w.slice(0,max).join(' ')+'…'; };
+  // --------- Helpers texte ----------
+  const clampWords = (txt, maxWords) => {
+    if (!txt) return '';
+    const words = txt.trim().split(/\s+/);
+    if (words.length <= maxWords) return txt.trim();
+    return words.slice(0, maxWords).join(' ') + '…';
+  };
 
-  // Monte (ou crée) le conteneur + bouton
-  function ensureMount(){
-    let grid = qs('#facts-grid') || qs('.facts-grid') || qs('#facts') || qs('.flip-grid');
-    let btn  = qs('#ff-new') || qs('#ff_random') || qs('#btnNewSet');
+  const sentenceCase = (s) => {
+    if (!s) return '';
+    const t = s.trim().replace(/\s+/g, ' ');
+    if (!t) return '';
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  };
 
-    if (!grid) {
-      console.warn('[fun-facts] Aucun conteneur trouvé. Création de #facts-grid…');
-      const mount = qs('main .container') || qs('.container') || document.body;
-      const wrap  = el('section','container section');
-      const row   = el('div','row gap');
-      btn = el('button','btn primary',t.newBatch); btn.id='ff-new';
-      row.appendChild(btn);
-      grid = el('div','flip-grid'); grid.id='facts-grid'; grid.setAttribute('aria-live','polite');
-      wrap.appendChild(row); wrap.appendChild(grid); mount.appendChild(wrap);
-    } else {
-      if (!grid.id) grid.id = 'facts-grid';
-      if (!btn) {
-        const row = el('div','row gap');
-        btn = el('button','btn primary',t.newBatch); btn.id='ff-new';
-        grid.parentElement.insertBefore(row, grid);
-        row.appendChild(btn);
-      }
+  const ensurePeriod = (s) => {
+    if (!s) return '';
+    return /[.!?…]$/.test(s) ? s : s + '.';
+  };
+
+  const domainFrom = (url) => {
+    try { return new URL(url).hostname.replace(/^www\./, ''); }
+    catch { return ''; }
+  };
+
+  // --------- Skeletons ----------
+  const renderSkeletons = (n = 9) => {
+    GRID.classList.add('ff-loading');
+    GRID.setAttribute('aria-busy', 'true');
+    GRID.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const sk = document.createElement('div');
+      sk.className = 'ff-skel';
+      GRID.appendChild(sk);
     }
-    return { grid, btn };
-  }
+  };
 
-  // Fetch API -> retourne TOUJOURS un tableau d’items
-  async function getFacts(n){
-    const url = `/api/facts?lang=${encodeURIComponent(lang)}&n=${n}&r=${Date.now()}`;
-    const r = await fetch(url, { cache:'no-store' });
-    if (!r.ok) throw new Error(`API /api/facts -> ${r.status}`);
-    const data = await r.json();
-    const items = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []);
-    // petit shuffle local
-    for (let i=items.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [items[i],items[j]]=[items[j],items[i]]; }
-    return items;
-  }
+  const clearSkeletons = () => {
+    GRID.classList.remove('ff-loading');
+    GRID.removeAttribute('aria-busy');
+    GRID.innerHTML = '';
+  };
 
-  function pickSrc(x){
-    if (!x) return null;
-    if (typeof x === 'string') return { href:x, label:t.seeSource };
-    return { href: x.href || x.url || x.link || '', label: x.label || x.title || t.seeSource };
-  }
+  // --------- Normalisation des items ----------
+  const normalizeItem = (it) => {
+    if (!it || typeof it !== 'object') return null;
 
-  // Une carte 3D recto/verso
-  function makeCard(it){
-    const card  = el('div','card3d');
-    const inner = el('div','inner');
-    const front = el('div','face front');
-    const back  = el('div','face back');
+    // Champs possibles
+    const rawClaim = it.claim || it.front || it.title || it.myth || it.question || '';
+    const rawExplain = it.explain || it.back || it.answer || it.fact || it.summary || it.snippet || '';
+    const url = it.url || it.link || it.source || '';
+    const stitle = it.sourceTitle || it.title || '';
 
-    // tag
-    const headF = el('div','ff-head');
-    headF.appendChild(el('span','badge',t.myth));  // la source actuelle crée des mythes
-    front.appendChild(headF);
+    // Heuristique : si le "title" est très encyclopédique, on tente d’en faire une phrase mythe propre
+    let claim = rawClaim || '';
+    claim = claim
+      .replace(/^myth\s*[:\-]\s*/i, '')
+      .replace(/^misconception\s*[:\-]\s*/i, '')
+      .replace(/^fausse? idée\s*[:\-]\s*/i, '')
+      .replace(/^-+\s*/, '');
 
-    // recto = titre (idée reçue)
-    const title = it.title || it.claim || '—';
-    const h3 = el('h3','h3'); h3.textContent = title;
-    front.appendChild(h3);
+    // Nettoyage simple
+    claim = sentenceCase(claim);
+    // Pas de point final au recto (souvent mieux en titre)
+    claim = claim.replace(/[.!?…]+$/,''); 
 
-    // actions recto
-    const actF = el('div','ff-actions');
-    const flipF = el('button','btn flip',t.flip);
-    actF.appendChild(flipF);
-    const s0 = pickSrc(it.sources && it.sources[0]);
-    if (s0 && s0.href) {
-      const a = el('a','btn linkish',t.seeSource); a.target='_blank'; a.rel='noopener'; a.href=s0.href; actF.appendChild(a);
+    // Limite de longueur visuelle au recto (le CSS gère beaucoup, mais on aide un peu)
+    if (claim.length > 160) claim = clampWords(claim, 22);
+
+    // Verso : ≤ 30 mots, avec point final si manquant
+    let explain = rawExplain ? clampWords(rawExplain, 30) : '';
+    explain = ensurePeriod(sentenceCase(explain));
+
+    // Si on n’a vraiment rien au verso, mettre un placeholder doux (rare mais safe)
+    if (!explain || explain.length < 3) {
+      explain = {
+        fr: 'Voir la source pour le détail.',
+        en: 'See the source for details.',
+        de: 'Siehe Quelle für Details.'
+      }[LANG];
     }
-    front.appendChild(actF);
 
-    // verso = explication courte (≤ 30 mots)
-    const explain = trimWords(it.explainShort || it.explanation || '', 30);
-    const p = el('p','ff-text'); p.textContent = explain || '—';
-    back.appendChild(p);
+    return {
+      claim,
+      explain,
+      url,
+      sourceTitle: stitle || (url ? domainFrom(url) : '')
+    };
+  };
 
-    // actions verso
-    const actB = el('div','ff-actions');
-    const flipB = el('button','btn flip',t.flip);
-    actB.appendChild(flipB);
-    if (s0 && s0.href) {
-      const a2 = el('a','btn linkish',t.seeSource); a2.target='_blank'; a2.rel='noopener'; a2.href=s0.href; actB.appendChild(a2);
-    }
-    back.appendChild(actB);
+  // --------- Fabrication DOM d’une carte ----------
+  const cardEl = (item) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'card3d';
+    wrap.tabIndex = 0;
+    wrap.setAttribute('role', 'button');
+    wrap.setAttribute('aria-pressed', 'false');
 
-    inner.appendChild(front); inner.appendChild(back);
-    card.appendChild(inner);
+    // Front
+    const inner = document.createElement('div');
+    inner.className = 'inner';
 
-    // flip
-    card.addEventListener('click', (e)=>{
-      if (e.target.closest('a')) return;
-      if (e.target.closest('.flip') || e.target.closest('.front') || e.target.closest('.back')) {
-        inner.style.transform = inner.style.transform ? '' : 'rotateY(180deg)';
+    const front = document.createElement('div');
+    front.className = 'face front';
+    front.innerHTML = `
+      <div class="ff-head">
+        <span class="badge">${T.myth}</span>
+      </div>
+      <p class="ff-text ff-claim">${item.claim}</p>
+    `;
+
+    // Back
+    const back = document.createElement('div');
+    back.className = 'face back';
+    back.innerHTML = `
+      <div class="ff-head">
+        <span class="badge">${T.fact}</span>
+      </div>
+      <p class="ff-text ff-explain">${item.explain}</p>
+      <div class="ff-actions">
+        ${item.url ? `<a class="ff-link badge" href="${item.url}" target="_blank" rel="noopener">${T.source}${item.sourceTitle ? ' — ' + item.sourceTitle : ''}</a>` : ''}
+      </div>
+    `;
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    wrap.appendChild(inner);
+
+    // Flip handlers
+    const toggle = () => {
+      const flipped = wrap.classList.toggle('is-flipped');
+      wrap.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+    };
+    wrap.addEventListener('click', (e) => {
+      // éviter que le clic sur le lien source retourne immédiatement la carte
+      const a = e.target.closest('a');
+      if (a) return;
+      toggle();
+    });
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
       }
     });
 
-    return card;
-  }
+    return wrap;
+  };
 
-  function render(grid, items){
-    grid.innerHTML = '';
-    if (!Array.isArray(items) || !items.length){
-      grid.appendChild(el('p','muted',t.empty));
-      return;
-    }
+  // --------- Rendu d’un lot ----------
+  const renderFacts = (list) => {
+    clearSkeletons();
     const frag = document.createDocumentFragment();
-    items.forEach(it => frag.appendChild(makeCard(it)));
-    grid.appendChild(frag);
-  }
+    list.forEach((raw) => {
+      const norm = normalizeItem(raw);
+      if (!norm) return;
+      frag.appendChild(cardEl(norm));
+    });
+    GRID.appendChild(frag);
+  };
 
-  async function load(){
-    const { grid, btn } = ensureMount();
-    try {
-      btn && (btn.classList.add('is-busy'));
-      const facts = await getFacts(COUNT);
-      render(grid, facts);
-    } catch (e) {
-      console.error('[fun-facts]', e);
-      render(ensureMount().grid, []); // message “Aucune carte.”
-    } finally {
-      btn && (btn.classList.remove('is-busy'));
-      const root = qs('#ff_root'); if (root) root.classList.add('ff-ready');
+  // --------- Fetch JSON safe ----------
+  const fetchJson = async (url) => {
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Protéger contre un retour HTML (erreurs proxifiées)
+    const ct = res.headers.get('Content-Type') || '';
+    if (!/json/i.test(ct)) {
+      const text = await res.text();
+      throw new Error(`Réponse non-JSON (Content-Type="${ct}"): ${text.slice(0, 120)}…`);
     }
-  }
+    return res.json();
+  };
 
-  // init
-  const { grid, btn } = ensureMount();
-  if (btn) btn.addEventListener('click', load);
-  load();
+  // --------- API load avec replis ----------
+  let lastKeys = new Set(); // pour éviter de répéter le même lot
+  const itemKey = (it) => (it.url || it.claim || it.title || JSON.stringify(it)).slice(0, 200);
+
+  const getFacts = async (n = 9) => {
+    // 1) API principale
+    try {
+      const url = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${encodeURIComponent(n)}&t=${Date.now()}`;
+      let data = await fetchJson(url);
+      let arr = Array.isArray(data) ? data
+              : Array.isArray(data?.facts) ? data.facts
+              : Array.isArray(data?.items) ? data.items
+              : [];
+
+      // Filtre “nouveaux” vs dernier lot
+      if (arr.length) {
+        const filtered = arr.filter(x => !lastKeys.has(itemKey(x)));
+        if (filtered.length >= Math.min(n, 3)) {
+          arr = filtered;
+        }
+      }
+
+      // Mise à jour des clés vues
+      lastKeys = new Set(arr.slice(0, n).map(itemKey));
+      return arr.slice(0, n);
+    } catch (e) {
+      console.warn('[fun-facts] API principale en échec → repli. Raison:', e.message);
+    }
+
+    // 2) Repli global si présent
+    if (Array.isArray(window.FUN_FACTS) && window.FUN_FACTS.length) {
+      const pool = window.FUN_FACTS.slice();
+      pool.sort(() => Math.random() - 0.5);
+      const arr = pool.slice(0, n);
+      lastKeys = new Set(arr.map(itemKey));
+      return arr;
+    }
+
+    // 3) Repli JSON statique (optionnel)
+    try {
+      const data = await fetchJson('/facts-data.json'); // si présent
+      const arr = Array.isArray(data) ? data
+                : Array.isArray(data?.facts) ? data.facts
+                : [];
+      lastKeys = new Set(arr.slice(0, n).map(itemKey));
+      return arr.slice(0, n);
+    } catch (e) {
+      console.warn('[fun-facts] Repli JSON statique indisponible.');
+    }
+
+    return [];
+  };
+
+  // --------- Chargement principal ----------
+  const N = 9; // nombre de cartes
+  const load = async () => {
+    renderSkeletons(N);
+    try {
+      const facts = await getFacts(N);
+      renderFacts(facts);
+    } catch (e) {
+      clearSkeletons();
+      GRID.innerHTML = `<div class="muted">Aucune donnée disponible pour le moment.</div>`;
+      console.error(e);
+    }
+  };
+
+  // --------- Nouveau lot ----------
+  const bindNewBatch = () => {
+    const btn = $('#ff-new') || $('#ff-btn-new') || $('[data-ff-new]');
+    if (!btn) return;
+    const label = btn.textContent.trim();
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      btn.classList.add('is-busy');
+      btn.setAttribute('aria-busy', 'true');
+      try {
+        await load();
+      } finally {
+        btn.classList.remove('is-busy');
+        btn.removeAttribute('aria-busy');
+        if (!btn.textContent.trim()) btn.textContent = label || T.newBatch;
+      }
+    });
+  };
+
+  // --------- Go ----------
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    bindNewBatch();
+  });
 })();
-</script>
