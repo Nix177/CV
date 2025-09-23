@@ -1,142 +1,196 @@
-/* =========================================================
-   Fun Facts — client unique (FR/EN/DE)
-   - GET /api/ff-batch?lang=fr|en|de&count=9&seen=<csv>
-   - Fallback: /facts-data.json si 0 item
-   - Cartes recto/verso (verso ≤ 30 mots) + bouton "Nouveau lot"
-   ========================================================= */
-(function () {
-  const log  = (...a) => console.log('[fun-facts]', ...a);
-  const warn = (...a) => console.warn('[fun-facts]', ...a);
-  const $    = (sel, el = document) => el.querySelector(sel);
-  const $$   = (sel, el = document) => Array.from(el.querySelectorAll(sel));
-  const lang = (document.documentElement.lang || 'fr').slice(0, 2).toLowerCase();
-
-  const L10N = {
-    fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', source:'Voir la source', newBatch:'🎲 Nouveau lot aléatoire', empty:'Aucune carte à afficher.' },
-    en: { myth:'Myth',  fact:'Fact',         flip:'Flip',      source:'View source',     newBatch:'🎲 New random batch',   empty:'No cards to display.' },
-    de: { myth:'Irrtum',fact:'Fakt',         flip:'Umdrehen',  source:'Quelle ansehen',  newBatch:'🎲 Neues Zufallsset',   empty:'Keine Karten anzuzeigen.' }
+/* public/fun-facts.js
+   Fun Facts — rendu robuste (API -> fallback local), auto-mount, FR/EN/DE
+*/
+(() => {
+  // --------- Utilitaires ----------
+  const byId = (id) => document.getElementById(id);
+  const el = (tag, attrs = {}, children = []) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v;
+      else if (k === "html") n.innerHTML = v;
+      else n.setAttribute(k, v);
+    }
+    for (const c of [].concat(children)) c && n.appendChild(c);
+    return n;
   };
-  const T = L10N[lang] || L10N.fr;
-
-  // points d'accroche de ta page
-  const $cards   = $('#ff_cards') || (() => { const d=document.createElement('div'); d.id='ff_cards'; document.body.appendChild(d); return d; })();
-  const $btnNew  = $('#ff_random');
-  const $fallback= $('#ff_fallback_list');
-  const $count   = $('#ff_count');
-
-  const seen = new Set();
-
-  if ($btnNew) $btnNew.addEventListener('click', e => { e.preventDefault(); loadNewBatch(); });
-  loadNewBatch(); // au démarrage
-
-  // ---------- helpers ----------
-  function truncateWords(s, n = 30){
-    if (!s) return '';
-    const words = String(s).replace(/\s+/g,' ').trim().split(' ');
-    return words.length <= n ? s : words.slice(0, n).join(' ') + '…';
-  }
-  function pickSource(sources){
-    if (Array.isArray(sources) && sources.length) {
-      const s = sources[0];
-      return { title: s.title || s.label || 'Source', url: s.url || s.href || '#' };
+  const truncateWords = (txt, max = 30) => {
+    const parts = (txt || "").split(/\s+/).filter(Boolean);
+    return parts.length <= max ? txt : parts.slice(0, max).join(" ") + "…";
+  };
+  const pickRandom = (arr, n) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
-    if (typeof sources === 'string') return { title: 'Source', url: sources };
-    return null;
+    return a.slice(0, n);
+  };
+
+  // --------- Langue & libellés ----------
+  const path = location.pathname;
+  const lang = /-en\.html$/i.test(path) ? "en" : /-de\.html$/i.test(path) ? "de" : "fr";
+  const T = {
+    fr: {
+      newBatch: "Nouveau lot aléatoire",
+      source: "Voir la source",
+      flip: "Retourner",
+      fallbackTitle: "Liste statique (repli)",
+      fallbackMsg: "Si vous voyez ceci, l’API est indisponible. Un repli local s’affiche.",
+      myth: "Mythe",
+      fact: "Fait vérifié",
+    },
+    en: {
+      newBatch: "New random batch",
+      source: "View source",
+      flip: "Flip",
+      fallbackTitle: "Static list (fallback)",
+      fallbackMsg: "If you see this, the API is down. A local fallback is shown.",
+      myth: "Myth",
+      fact: "Verified fact",
+    },
+    de: {
+      newBatch: "Neuer Zufalls-Satz",
+      source: "Quelle anzeigen",
+      flip: "Umdrehen",
+      fallbackTitle: "Statische Liste (Fallback)",
+      fallbackMsg: "Wenn Sie dies sehen, ist die API nicht verfügbar. Lokaler Fallback.",
+      myth: "Mythos",
+      fact: "Gesicherte Tatsache",
+    },
+  }[lang];
+
+  // --------- Auto-mount minimal (aucune dépendance au HTML) ----------
+  let root = byId("facts-root");
+  if (!root) {
+    root = el("section", { id: "facts-root", class: "container section" });
+    // Privilégier <main> si présent
+    (document.querySelector("main") || document.body).appendChild(root);
   }
-  function normalize(x){
-    const id = x.id || Math.random().toString(36).slice(2);
-    const title = x.title || x.text || '—';
-    const explanation = x.explanation || x.truth || '';
-    const explainShort = x.explainShort || truncateWords(explanation, 30);
-    const type = (x.type || '').toLowerCase().includes('fact') ? 'fact' : 'myth';
-    const source = pickSource(x.sources || x.source);
-    return { id, title, explanation, explainShort, type, source };
-  }
-  function renderCards(items){
-    $cards.innerHTML = '';
-    if (!items.length){
-      $cards.innerHTML = `<p class="muted">${T.empty}</p>`;
-      return;
-    }
-    const frag = document.createDocumentFragment();
-    for (const it of items) {
-      seen.add(it.id);
-      const card = document.createElement('div');
-      card.className = 'ff-card';
-      card.innerHTML = `
-        <div class="inner">
-          <div class="face front">
-            <div class="ff-badges">
-              <span class="ff-badge">${it.type === 'fact' ? T.fact : T.myth}</span>
-            </div>
-            <h3 style="margin:6px 0 0 0">${it.title}</h3>
-            <div class="ff-actions" style="margin-top:auto;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn chip ff-flip">${T.flip}</button>
-              ${it.source ? `<a class="btn chip" target="_blank" rel="noopener" href="${it.source.url}">${T.source}</a>` : ''}
-            </div>
-          </div>
-          <div class="face back">
-            <p class="muted" style="margin:0 0 6px 0">${it.type === 'fact' ? T.fact : T.myth}</p>
-            <p style="margin:0">${truncateWords(it.explainShort || it.explanation || it.title, 30)}</p>
-            <div class="ff-actions" style="margin-top:auto;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn chip ff-flip">${T.flip}</button>
-              ${it.source ? `<a class="btn chip" target="_blank" rel="noopener" href="${it.source.url}">${T.source}</a>` : ''}
-            </div>
-          </div>
-        </div>`;
-      card.addEventListener('click', e => {
-        const b = e.target.closest('.ff-flip');
-        if (b) { card.classList.toggle('is-flipped'); e.preventDefault(); e.stopPropagation(); }
-      });
-      frag.appendChild(card);
-    }
-    $cards.appendChild(frag);
-    if ($count) $count.textContent = `${items.length} cards`;
+  // Action bar
+  const actions = el("div", { class: "row gap", style: "justify-content:flex-end;margin:10px 0 16px" }, [
+    el("button", { id: "btnNewFacts", class: "btn primary" }, [document.createTextNode(T.newBatch)]),
+  ]);
+  // Grid
+  const grid = el("div", { id: "factsGrid", class: "grid", style: "grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;" });
+  // Fallback box (cachée par défaut)
+  const fallback = el("div", { id: "factsFallback", class: "card pad", style: "display:none" }, [
+    el("div", { class: "title", html: T.fallbackTitle }),
+    el("p", { class: "muted", html: T.fallbackMsg }),
+  ]);
+
+  // Inject
+  root.appendChild(actions);
+  root.appendChild(fallback);
+  root.appendChild(grid);
+
+  // --------- Rendu cartes ----------
+  function cardNode(item) {
+    // item: { myth, explain, source }
+    const head = el("div", { class: "row gap", style: "justify-content:flex-start;margin-bottom:8px" }, [
+      el("span", { class: "chip" }, [document.createTextNode(T.myth)]),
+      el("span", { class: "chip" }, [document.createTextNode("myth")]),
+    ]);
+    const foot = el("div", { class: "row gap", style: "flex-wrap:wrap;margin-top:10px" }, [
+      el("button", { class: "btn linkish js-flip" }, [document.createTextNode(T.flip)]),
+      item.source ? el("a", { class: "btn linkish", href: item.source, target: "_blank", rel: "noopener" }, [document.createTextNode(T.source)]) : null,
+    ].filter(Boolean));
+
+    const front = el("div", { class: "card pad face front" }, [
+      head,
+      el("h3", { class: "h3", html: item.myth || "—" }),
+      foot,
+    ]);
+
+    const backHead = el("div", { class: "row gap", style: "justify-content:flex-start;margin-bottom:8px" }, [
+      el("span", { class: "chip" }, [document.createTextNode(T.fact)]),
+      el("span", { class: "chip" }, [document.createTextNode("fact")]),
+    ]);
+    const backFoot = el("div", { class: "row gap", style: "flex-wrap:wrap;margin-top:10px" }, [
+      el("button", { class: "btn linkish js-flip" }, [document.createTextNode(T.flip)]),
+      item.source ? el("a", { class: "btn linkish", href: item.source, target: "_blank", rel: "noopener" }, [document.createTextNode(T.source)]) : null,
+    ].filter(Boolean));
+
+    const back = el("div", { class: "card pad face back", style: "display:none" }, [
+      backHead,
+      el("p", { class: "muted", html: truncateWords(item.explain || "—", 30) }),
+      backFoot,
+    ]);
+
+    const wrapper = el("div", { class: "fact-card" }, [front, back]);
+
+    wrapper.addEventListener("click", (e) => {
+      const isFlipBtn = e.target && e.target.classList && e.target.classList.contains("js-flip");
+      if (!isFlipBtn) return;
+      const showBack = front.style.display !== "none";
+      front.style.display = showBack ? "none" : "";
+      back.style.display = showBack ? "" : "none";
+    });
+
+    return wrapper;
   }
 
-  // ---------- data loaders ----------
-  async function fetchAPI(n=9){
-    const seenCsv = [...seen].join(',');
-    const url = `/api/ff-batch?lang=${lang}&count=${n}${seenCsv ? `&seen=${encodeURIComponent(seenCsv)}`:''}`;
-    log('fetch', url);
+  function render(items, usedFallback = false) {
+    grid.innerHTML = "";
+    if (usedFallback) {
+      fallback.style.display = "";
+    } else {
+      fallback.style.display = "none";
+    }
+    items.forEach((it) => grid.appendChild(cardNode(it)));
+  }
+
+  // --------- Chargement data ----------
+  const N = 9;
+  async function fetchFromApi() {
+    const url = `/api/facts?lang=${encodeURIComponent(lang)}&n=${N}`;
+    const r = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!r.ok) throw new Error(`API /api/facts ${r.status}`);
+    const data = await r.json();
+    if (!data || !Array.isArray(data.items)) throw new Error("API shape invalid");
+    return data.items.map((x) => ({
+      myth: x.myth || x.claim || x.title || "",
+      explain: x.explain || x.answer || x.summary || "",
+      source: x.source || x.url || "",
+    }));
+  }
+
+  async function fetchFromLocal() {
+    // Assurez-vous d’avoir: public/assets/data/facts-data.json
+    // format: { "items":[ { "myth":"...", "explain":"...", "source":"..." }, ... ] }
+    const r = await fetch("/assets/data/facts-data.json", { headers: { "Accept": "application/json" } });
+    if (!r.ok) throw new Error(`fallback facts-data.json ${r.status}`);
+    const data = await r.json();
+    const items = Array.isArray(data) ? data : Array.isArray(data.items) ? data.items : [];
+    const picked = pickRandom(items, N).map((x) => ({
+      myth: x.myth || x.claim || x.title || "",
+      explain: x.explain || x.answer || x.summary || "",
+      source: x.source || x.url || "",
+    }));
+    return picked;
+  }
+
+  async function loadBatch() {
+    grid.innerHTML = '<div class="muted" style="padding:8px">…</div>';
     try {
-      const r = await fetch(url, { cache:'no-cache' });
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      const json = await r.json();
-      // Accepte tableau ou {items:[...]}
-      const arr = Array.isArray(json) ? json : (Array.isArray(json.items) ? json.items : []);
-      return arr.map(normalize);
-    } catch (e) {
-      warn('API fail:', e.message || e);
-      return null;
-    }
-  }
-  async function fetchFallback(){
-    try {
-      const r = await fetch('/facts-data.json', { cache:'no-cache' });
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      const raw = await r.json();
-      const arr = Array.isArray(raw) ? raw : (raw.items || []);
-      return arr.filter(x => !x.lang || x.lang.slice(0,2) === lang).map(normalize);
-    } catch (e) {
-      warn('fallback fail:', e.message || e);
-      return [];
+      const items = await fetchFromApi();
+      render(items, /*usedFallback*/ false);
+    } catch (e1) {
+      console.warn("[FunFacts] API KO → fallback local", e1);
+      try {
+        const items = await fetchFromLocal();
+        render(items, /*usedFallback*/ true);
+      } catch (e2) {
+        console.error("[FunFacts] Fallback KO", e2);
+        grid.innerHTML = '<div class="muted" style="padding:8px">Impossible de charger des faits pour le moment.</div>';
+        fallback.style.display = "";
+      }
     }
   }
 
-  async function loadNewBatch(){
-    const api = await fetchAPI(9);
-    if (api && api.length) {
-      renderCards(api);
-      if ($fallback) $fallback.parentElement?.classList?.add('hidden');
-      return;
-    }
-    const loc = await fetchFallback();
-    renderCards(loc.slice(0, 9));
-    if ($fallback) {
-      // affiche la liste brute minimaliste pour info (même si on a rendu des cartes)
-      $fallback.innerHTML = loc.slice(0,9).map(x=>`<li>${x.title}</li>`).join('');
-      $fallback.parentElement?.classList?.remove('hidden');
-    }
-  }
+  // --------- Actions ----------
+  byId("btnNewFacts").addEventListener("click", loadBatch);
+
+  // --------- Init ----------
+  loadBatch();
 })();
