@@ -1,189 +1,143 @@
 // /api/ff-batch.js
-// Node 18+ (fetch natif). Vercel: functions.runtime nodejs18.x
-// ENV requis: OPENAI_API_KEY (sinon fallback), ALLOWED_ORIGINS (optionnel, ex: https://nicolastuor.ch,https://*.vercel.app)
+// Node 18+, CommonJS (Vercel). Renvoie un tableau d'items normalisés.
+// Chaque item: { id, type:'myth'|'fact', title, explanation, explainShort, sources:[{title,url}] }
 
-const fs = require('fs');
-const path = require('path');
+const cheerio = require('cheerio');
 
-const ALLOWED = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-
-function cors(req, res) {
-  const origin = req.headers.origin || '';
-  if (!ALLOWED.length || ALLOWED.some(p => origin.endsWith(p.replace(/^\*\./, '')) || origin === p)) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
-
-function ok(res, data) {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(data));
-}
-function bad(res, code, msg) {
-  res.statusCode = code || 500;
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify({ error: msg || 'error' }));
-}
-
-const WIKI_HOST = {
-  fr: 'fr.wikipedia.org',
-  en: 'en.wikipedia.org',
-  de: 'de.wikipedia.org',
+const PAGES = {
+  fr: [
+    // La page FR n'est pas un “listicle” parfait → on complète par EN si besoin
+    'https://fr.wikipedia.org/wiki/Id%C3%A9e_re%C3%A7ue',
+    'https://fr.wikipedia.org/wiki/Liste_d%27id%C3%A9es_re%C3%A7ues'
+  ],
+  en: [
+    'https://en.wikipedia.org/wiki/List_of_common_misconceptions'
+  ],
+  de: [
+    'https://de.wikipedia.org/wiki/Liste_weit_verbreiteter_Irrt%C3%BCmer'
+  ]
 };
 
-async function fetchWikipediaRandom(lang = 'fr', count = 9) {
-  const host = WIKI_HOST[lang] || WIKI_HOST.fr;
-  const url = `https://${host}/w/api.php?action=query&generator=random&grnnamespace=0&prop=extracts|info&inprop=url&explaintext=1&exintro=1&format=json&grnlimit=${Math.min(
-    Math.max(+count || 9, 1),
-    20
-  )}`;
-  const r = await fetch(url, { headers: { 'User-Agent': 'nicolastuor-ch/ff-batch' } });
-  if (!r.ok) throw new Error('wiki_fetch_failed');
-  const j = await r.json();
-  const pages = j?.query?.pages ? Object.values(j.query.pages) : [];
-  return pages
-    .filter(p => p?.title && p?.fullurl)
-    .map(p => ({
-      title: p.title,
-      url: p.fullurl,
-      extract: (p.extract || '').replace(/\n+/g, ' ').trim().slice(0, 1200),
-    }));
+const UA = 'nicolastuor.ch/fun-facts (contact: site)';
+
+function trim(s){ return String(s||'').replace(/\s+/g,' ').trim(); }
+function shortenWords(s, n=30){
+  const w = trim(s).split(' ');
+  return (w.length<=n) ? trim(s) : w.slice(0,n).join(' ')+'…';
+}
+function absolutize(baseUrl, href){
+  try {
+    if (!href) return baseUrl;
+    if (/^https?:\/\//i.test(href)) return href;
+    const u = new URL(baseUrl);
+    if (href.startsWith('/')) return `${u.protocol}//${u.host}${href}`;
+    return baseUrl; // fallback
+  } catch { return href || baseUrl; }
+}
+function hashId(s){
+  // petit hash stable
+  let h = 0; const str = (s||'').toLowerCase();
+  for (let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i))|0; }
+  return Math.abs(h).toString(36);
 }
 
-async function openaiMythify(items, lang = 'fr') {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
+// Extraction générique depuis HTML Wikipédia (bullet points)
+function extractFromHtml(lang, url, html){
+  const $ = cheerio.load(html);
+  const $content = $('#mw-content-text');
 
-  const sys = {
-    fr: 'Tu es un assistant pédagogique. À partir d’extraits Wikipédia, propose pour chaque sujet un "mythe plausible" (1 phrase) et une réfutation concise (≤ 30 mots), plus une catégorie. Réponds en JSON strict.',
-    en: 'You are an educational assistant. From Wikipedia snippets, produce for each topic one plausible myth (1 sentence) and a concise debunk (≤ 30 words), plus a category. Answer strict JSON.',
-    de: 'Du bist ein pädagogischer Assistent. Erstelle aus Wikipedia-Auszügen pro Thema einen plausiblen Mythos (1 Satz) und eine knappe Widerlegung (≤ 30 Wörter) sowie eine Kategorie. Antworte als striktes JSON.',
-  }[lang] || 'Answer strict JSON.';
+  const items = [];
+  // On cible les <li> notables (éviter les menus)
+  $content.find('li').each((i, el) => {
+    const $li = $(el);
+    const txt = trim($li.text()).replace(/\[\d+\]/g, ''); // retire refs [1]
+    if (!txt || txt.length < 60) return; // éviter le bruit
 
-  const userPrompt = {
-    lang,
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          title: { type: 'string' },
-          claim: { type: 'string' },
-          explanation: { type: 'string' },
-          category: { type: 'string' },
-          source: { type: 'string' },
-        },
-        required: ['title', 'claim', 'explanation', 'category', 'source'],
-        additionalProperties: false,
-      },
-    },
-    items: items.map(x => ({ title: x.title, url: x.url, extract: x.extract })),
-    constraints: {
-      explanationMaxWords: 30,
-      claimIsMyth: true,
-    },
-  };
+    // Heuristique: une idée reçue se présente souvent comme une phrase assertive.
+    // On garde la 1re phrase en “claim”, et le reste en explication.
+    const sentenceSplit = txt.split(/(?<=[.!?])\s+/);
+    const title = trim(sentenceSplit[0]);
+    const rest  = trim(sentenceSplit.slice(1).join(' ')) || title;
 
-  const body = {
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: sys },
-      { role: 'user', content: JSON.stringify(userPrompt) },
-    ],
-    temperature: 0.3,
-    response_format: { type: 'json_object' },
-  };
+    // source plausible = 1er lien
+    const a = $li.find('a[href]').filter((i, el) => {
+      const href = $(el).attr('href') || '';
+      return !href.startsWith('#') && !href.includes('redlink=');
+    }).first();
+    const href = absolutize(url, a.attr('href'));
 
-  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify(body),
+    const id = `myth-${hashId(title)}`;
+    const explanation = rest;
+    const explainShort = shortenWords(explanation || title, 30);
+
+    items.push({
+      id,
+      type: 'myth',
+      category: '',
+      title,
+      explanation,
+      explainShort,
+      sources: [{ title: 'Wikipedia', url: href || url }]
+    });
   });
-  if (!resp.ok) throw new Error('openai_failed');
-  const data = await resp.json();
-  const text = data?.choices?.[0]?.message?.content || '{}';
-  let arr;
-  try {
-    // On autorise soit { ... } soit [ ... ] selon réponse
-    const parsed = JSON.parse(text);
-    arr = Array.isArray(parsed) ? parsed : parsed?.items || [];
-  } catch (e) {
-    throw new Error('openai_parse_failed');
+
+  // dédoublonnage par titre
+  const seen = new Set();
+  const out = [];
+  for (const it of items) {
+    const key = it.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(it);
   }
-  return arr
-    .filter(Boolean)
-    .map((x, i) => ({
-      id: `ai-${Date.now()}-${i}`,
-      title: x.title || items[i]?.title || 'Sujet',
-      claim: x.claim || 'Idée reçue non fournie',
-      explanation: x.explanation || 'Consultez la source pour la réfutation.',
-      category: x.category || 'Général',
-      sources: [x.source || items[i]?.url].filter(Boolean),
-      kind: 'myth',
-      lang,
-    }));
+  return out;
 }
 
-function readFallback() {
-  try {
-    const p = path.join(process.cwd(), 'public', 'assets', 'facts', 'facts-data.json');
-    const raw = fs.readFileSync(p, 'utf8');
-    const j = JSON.parse(raw);
-    return Array.isArray(j) ? j.slice(0, 9) : [];
-  } catch {
-    return [];
+async function scrapeLang(lang) {
+  const urls = PAGES[lang] || PAGES.en;
+  const all = [];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': lang } });
+      if (!res.ok) continue;
+      const html = await res.text();
+      all.push(...extractFromHtml(lang, url, html));
+    } catch {
+      // on ignore et on tente l'URL suivante
+    }
   }
+  return all;
 }
 
 module.exports = async (req, res) => {
-  cors(req, res);
-  if (req.method === 'OPTIONS') return ok(res, { ok: true });
-
-  if (req.method !== 'GET') return bad(res, 405, 'Method not allowed');
-
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const lang = (url.searchParams.get('lang') || 'fr').toLowerCase();
-  const count = Math.min(Math.max(parseInt(url.searchParams.get('count') || '9', 10), 1), 20);
+  const lang = String((req.query.lang || 'fr')).slice(0,2).toLowerCase();
+  const count = Math.max(1, Math.min(parseInt(req.query.count || '9', 10), 48));
+  const seenSet = new Set(String(req.query.seen || '').split(',').filter(Boolean));
 
   try {
-    const wiki = await fetchWikipediaRandom(lang, count);
-    let cards = await openaiMythify(wiki, lang);
-    if (!cards || !cards.length) {
-      // fallback IA → heuristique rapide
-      cards = wiki.slice(0, count).map((w, i) => ({
-        id: `wk-${Date.now()}-${i}`,
-        title: w.title,
-        claim:
-          lang === 'fr'
-            ? `On croit souvent à tort : « ${w.title} … »`
-            : lang === 'de'
-            ? `Oft fälschlich angenommen: „${w.title} …“`
-            : `Commonly (but wrongly) believed: “${w.title} …”`,
-        explanation:
-          lang === 'fr'
-            ? 'Voir la source pour la réfutation synthétique.'
-            : lang === 'de'
-            ? 'Siehe Quelle für die knappe Widerlegung.'
-            : 'See the source for the brief debunk.',
-        category: 'Général',
-        sources: [w.url],
-        kind: 'myth',
-        lang,
-      }));
+    const primary = await scrapeLang(lang);
+    const fallback = (lang === 'fr' ? await scrapeLang('en') : []);
+    // pool = FR + EN fallback (utile si la page FR est pauvre)
+    const pool = [...primary, ...fallback];
+
+    // filtre "déjà vu"
+    const fresh = pool.filter(it => !seenSet.has(it.id));
+
+    // shuffle Fisher–Yates
+    for (let i = fresh.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
     }
-    return ok(res, { items: cards });
+
+    const out = fresh.slice(0, count);
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+    // IMPORTANT: on renvoie un **tableau**
+    res.status(200).json(out);
   } catch (e) {
-    // Fallback fichier local
-    const fb = readFallback();
-    if (fb.length) return ok(res, { items: fb });
-    return bad(res, 500, `ff-batch failed: ${e.message}`);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // En cas d’échec: on ne casse pas la page → tableau vide
+    res.status(200).json([]);
   }
 };
