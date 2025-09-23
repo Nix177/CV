@@ -1,5 +1,5 @@
 // api/ff-feedback.js — Edge Runtime
-// Stocke le feedback dans GitHub (JSONL mois par mois) sinon renvoie 202
+// Stocke le feedback dans GitHub (JSONL mensuel) ; sinon 202 pour ne pas casser l’UX
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
@@ -8,6 +8,7 @@ export default async function handler(req) {
   }
   let body = {};
   try { body = await req.json(); } catch {}
+
   const item = {
     message: String(body.message || '').slice(0, 5000),
     pageUrl: String(body.pageUrl || ''),
@@ -22,7 +23,6 @@ export default async function handler(req) {
   const repo   = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || 'main';
 
-  // Si non configuré → 202
   if (!token || !owner || !repo) {
     console.warn('[ff-feedback] missing env, payload:', item);
     return ok({ ok:true, stored:false }, 202);
@@ -46,9 +46,7 @@ export default async function handler(req) {
       sha = j.sha || null;
       currentContent = fromBase64(j.content || '');
     }
-  } catch (e) {
-    // on continue en création
-  }
+  } catch {}
 
   const next = (currentContent ? currentContent + '\n' : '') + JSON.stringify(item);
   try {
@@ -63,9 +61,7 @@ export default async function handler(req) {
       })
     });
     if (!rPut.ok) {
-      const t = await rPut.text();
-      console.error('[ff-feedback] GitHub PUT failed:', rPut.status, t);
-      // Ne casse pas l’UX: 202
+      console.error('[ff-feedback] GitHub PUT failed:', rPut.status, await rPut.text());
       return ok({ ok:true, stored:false }, 202);
     }
   } catch (e) {
@@ -76,11 +72,10 @@ export default async function handler(req) {
   return ok({ ok:true, stored:true }, 200);
 }
 
-/* helpers Edge */
 function ok(obj, status=200){
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' }
+    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control':'no-store' }
   });
 }
 function toBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
