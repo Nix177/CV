@@ -1,136 +1,105 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fun Facts — Nicolas Tuor</title>
-  <link rel="icon" href="/favicon.ico" />
-  <!-- UPDATE: hreflang -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Fun Facts — Idées reçues & faits vérifiés</title>
+
+  <link rel="icon" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/style.css"/>
+
+  <!-- Hreflang -->
   <link rel="alternate" hreflang="fr" href="/fun-facts.html">
   <link rel="alternate" hreflang="en" href="/fun-facts-en.html">
   <link rel="alternate" hreflang="de" href="/fun-facts-de.html">
   <link rel="alternate" hreflang="x-default" href="/fun-facts.html">
 
+  <!-- Nav unifiée -->
+  <script defer src="/assets/js/nav.js"></script>
+
+  <!-- Page styles minimaux (spécifiques Fun Facts, n’impactent rien d’autre) -->
   <style>
-    :root{
-      --ink:#e6f1ff; --muted:#cfe2ff; --bd:#ffffff22;
-      --panel:#0b2237; --panel2:#081a2d;
-      --chip:#0d2a45; --chip2:#103258;
-      --ok:#22c55e; --ko:#ef4444; --unk:#f59e0b;
-    }
-    body{color:var(--ink);}
-    .container{max-width:1100px;margin:0 auto;padding:20px}
+    /* Masque le fallback tant que JS n’a pas monté la page */
+    .ff-wrap.ff-pending .ff-dynamic { display:none; }
+    .ff-wrap.ff-ready   .ff-fallback { display:none; }
 
-    /* NAV minimal */
-    .navbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd)}
-    .nav-left,.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--bd);background:var(--chip);border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{background:var(--chip2)}
+    .ff-wrap .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px 0}
+    .ff-toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px}
+    @media (max-width:780px){.ff-toolbar{grid-template-columns:1fr}}
+    .ff-toolbar input{max-width:420px}
 
-    h1{font-size:2.0rem;margin:18px 0}
-    h2{font-size:1.2rem;margin:18px 0 10px}
-
-    /* Boutons & segments */
-    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}
-    .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--bd);background:#0e3b63;color:var(--ink);cursor:pointer}
-    .btn.ghost{background:#0b1f33}
-    .seg{display:flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
-    .seg button{background:#0b1f33;border:0;padding:8px 10px;color:var(--ink);cursor:pointer}
-    .seg button.active{background:#133a61}
-
-    /* CARTES (grille + flip) */
-    #ff-cards-section .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+    /* Cartes */
+    .ff-cards{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+    @media (max-width:1100px){.ff-cards{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:680px){.ff-cards{grid-template-columns:1fr}}
     .ff-card{position:relative;perspective:1000px}
-    .ff-card .inner{position:relative;transition:transform .6s;transform-style:preserve-3d;min-height:168px}
-    .ff-card.flipped .inner{transform:rotateY(180deg)}
-    .ff-face{position:absolute;inset:0;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;backface-visibility:hidden}
-    .ff-face.back{transform:rotateY(180deg)}
-    .type{font-size:.85rem;margin-bottom:6px}
-    .type.fact{color:var(--ok)} .type.myth{color:var(--ko)} .type.unknown{color:var(--unk)}
-    .title{font-size:1.05rem;line-height:1.3;margin:2px 0 6px}
-    .body{font-size:.95rem;line-height:1.35;opacity:.95}
-    .badge{display:inline-block;font-size:.75rem;padding:.15rem .45rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-right:6px}
-    .sources ul{margin:.25rem 0 0 1rem}
-    .sources a{color:#93c5fd;text-decoration:none}
-    .sources a:hover{text-decoration:underline}
-    .card-actions{display:flex;gap:8px;margin-top:8px}
-    .flip{margin-left:auto}
+    .ff-card .inner{position:relative;transform-style:preserve-3d;transition:transform .45s ease;min-height:160px}
+    .ff-card[data-flipped="1"] .inner{transform:rotateY(180deg)}
+    .ff-face{position:absolute;inset:0;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:0 6px 18px rgba(0,0,0,.25);backface-visibility:hidden;display:flex;flex-direction:column;gap:8px}
+    .ff-back{transform:rotateY(180deg)}
+    .ff-tags{display:flex;gap:6px;flex-wrap:wrap}
+    .ff-badge{font-size:.75rem;border:1px solid var(--border);border-radius:999px;padding:2px 8px;background:rgba(255,255,255,.05)}
+    .ff-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    .ff-actions .btn{padding:6px 10px}
 
-    /* NUAGE */
-    #ff-cloud-section .cloud-wrap{position:relative;min-height:420px;border:1px dashed var(--bd);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.02),var(--panel2))}
-    .bubble{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:999px;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.85),rgba(255,255,255,.6));border:1px solid rgba(255,255,255,.4);box-shadow:0 8px 18px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease}
-    .bubble .emoji{position:absolute;top:6px;left:8px;font-size:16px;opacity:.9}
-    .bubble .label{font-weight:700;opacity:.9;text-align:center;padding:0 10px}
-    .bubble.paused{outline:2px solid rgba(255,255,255,.35);z-index:3}
+    /* Nuage (bubbles) */
+    .ff-canvas-box{position:relative;min-height:320px;border:1px dashed var(--border);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+    .ff-bubble{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:999px;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.85),rgba(255,255,255,.6));border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 18px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease}
+    .ff-bubble:hover{transform:scale(1.05)}
+    .ff-bubble span{font-weight:700;color:#0a1930;text-align:center;padding:0 10px}
 
-    /* TOOLTIP (nuage) */
-    #ffTooltip{position:absolute;max-width:min(520px,85vw);z-index:9999;background:rgba(15,23,42,.98);color:#e5e7eb;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px 14px;box-shadow:0 12px 28px rgba(0,0,0,.45);display:none}
-    #ffTooltip h4{margin:0 0 6px 0;font-size:1rem}
-    #ffTooltip .meta{margin-bottom:6px}
-    #ffTooltip .badge{display:inline-block;font-size:.7rem;padding:.1rem .4rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-right:6px}
-    #ffTooltip p{margin:6px 0 6px 0;font-size:.9rem;line-height:1.3}
-    #ffTooltip .sources ul{margin:.2rem 0 0 1rem}
-    #ffTooltip .sources a{color:#93c5fd;text-decoration:none}
-    #ffTooltip .sources a:hover{text-decoration:underline}
+    /* Popover (pour source rapide) */
+    .ff-popover{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
+    .ff-popover.show{display:flex}
+    .ff-pop-card{width:min(720px,96vw)}
   </style>
 
-  <script defer src="/confetti.js"></script>
   <script defer src="/fun-facts.js"></script>
-  <link rel="stylesheet" href="/style.css">
-  <script defer src="/assets/js/nav.js"></script>
 </head>
 <body>
-  <!-- NAV -->
-  <header class="navbar">
-    <!-- UPDATE: NAV LAYOUT ONLY -->
-    <nav class="site-nav" aria-label="Navigation">
-      <ul class="menu">
-        <li><a class="chip" href="/index.html">Accueil</a></li>
-        <li><a class="chip" href="/cv.html">CV</a></li>
-        <li><a class="chip" href="/portfolio.html">Portfolio</a></li>
-        <li><a class="chip" href="/passions.html">Passions</a></li>
-        <li><a class="chip" href="/ai-lab.html">Labo IA</a></li>
-        <li><a class="chip" href="/fun-facts.html" aria-current="page">Idées reçues</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a class="chip" href="/fun-facts.html" aria-current="page">FR</a></li>
-        <li><a class="chip" href="/fun-facts-en.html">EN</a></li>
-        <li><a class="chip" href="/fun-facts-de.html">DE</a></li>
-      </ul>
-    </nav>
-  </header>
 
-  <main class="container">
-    <h1>Fun Facts</h1>
+<main class="container section ff-wrap ff-pending" id="ff_root">
+  <h1 class="title">Fun Facts — <span class="muted">Idées reçues & faits vérifiés</span></h1>
+  <p class="lead">Une sélection ludique — on apprend tous les jours.</p>
 
-    <!-- CARTES -->
-    <section id="ff-cards-section">
-      <h2>Cartes</h2>
-      <div class="controls" id="ff-cards-controls">
-        <div class="seg" role="tablist" aria-label="Filtre type">
-          <button class="active" data-filter="all" aria-selected="true">Tout</button>
-          <button data-filter="fact">Fait avéré</button>
-          <button data-filter="myth">Mythe</button>
-        </div>
-        <button id="btnNewSet" class="btn">Nouveau lot aléatoire</button>
-        <button id="btnOneFact" class="btn ghost">Un fait</button>
-        <button id="btnOneMyth" class="btn ghost">Un mythe</button>
-        <span style="opacity:.75">Cliquez sur la carte pour la retourner et voir la réponse + sources.</span>
+  <!-- Contrôles -->
+  <section class="ff-section ff-dynamic" aria-label="Contrôles">
+    <div class="ff-toolbar">
+      <input id="ff_search" type="search" class="input" placeholder="Rechercher une idée reçue…"/>
+      <button id="ff_random" class="btn">🎲 Nouveau lot aléatoire</button>
+      <div class="muted" id="ff_count" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Cartes -->
+  <section id="ff-cards-section" class="ff-section ff-dynamic" aria-label="Cartes">
+    <div id="ff_cards" class="ff-cards"></div>
+  </section>
+
+  <!-- Nuage -->
+  <section id="ff-cloud-section" class="ff-section ff-dynamic" aria-label="Nuage">
+    <div class="ff-canvas-box" id="ff_cloud"></div>
+  </section>
+
+  <!-- Popover source -->
+  <div class="ff-popover" id="ff_pop">
+    <div class="ff-pop-card card pad">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <strong id="ff_pop_title">Source</strong>
+        <button class="btn" id="ff_pop_close">Fermer</button>
       </div>
-      <div id="cards" class="cards" aria-live="polite"></div>
-    </section>
+      <hr class="soft"/>
+      <div id="ff_pop_body"></div>
+    </div>
+  </div>
 
-    <!-- NUAGE -->
-    <section id="ff-cloud-section" style="margin-top:22px">
-      <h2>Nuage de Fun Facts</h2>
-      <div class="controls">
-        <button id="btnShuffle" class="btn">Nouveau nuage (random)</button>
-        <span style="opacity:.75">Survolez / cliquez une bulle pour voir une explication courte (≤ 30 mots) + sources.</span>
-      </div>
-      <div id="cloud" class="cloud-wrap"></div>
-    </section>
+  <!-- Fallback (si données KO) -->
+  <section class="ff-section ff-fallback" aria-label="Fallback">
+    <h2>Liste</h2>
+    <p class="muted">Si vous voyez cette liste, le montage dynamique est désactivé. Vérifiez que <code>fun-facts.js</code> est bien chargé et qu’aucun ancien <code>facts.js</code> n’est inclus.</p>
+    <ul id="ff_fallback_list"></ul>
+  </section>
+</main>
 
-    <p style="margin-top:10px;opacity:.8">© Nicolas Tuor — Fun Facts éducatifs.</p>
-  </main>
 </body>
 </html>
