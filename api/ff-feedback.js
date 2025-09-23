@@ -1,82 +1,76 @@
-// api/ff-feedback.js — Edge Runtime
-// Stocke le feedback dans GitHub (JSONL mensuel) ; sinon 202 pour ne pas casser l’UX
-export const config = { runtime: 'edge' };
+// /api/ff-feedback.js — Node (CommonJS), append JSONL dans ton repo GitHub
+const fetch = global.fetch;
 
-export default async function handler(req) {
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
-  }
-  let body = {};
-  try { body = await req.json(); } catch {}
+function cors(req, res) {
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
 
-  const item = {
-    message: String(body.message || '').slice(0, 5000),
-    pageUrl: String(body.pageUrl || ''),
-    pageTitle: String(body.pageTitle || ''),
-    userAgent: String(body.userAgent || ''),
-    ts: new Date().toISOString(),
-    ip: req.headers.get('x-forwarded-for') || ''
-  };
+function ok(res, data){ res.statusCode=200; res.setHeader('Content-Type','application/json; charset=utf-8'); res.end(JSON.stringify(data)); }
+function bad(res, code, msg){ res.statusCode=code||500; res.setHeader('Content-Type','application/json; charset=utf-8'); res.end(JSON.stringify({error:msg||'error'})); }
 
-  const token  = process.env.GITHUB_TOKEN;
-  const owner  = process.env.GITHUB_OWNER;
-  const repo   = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_BRANCH || 'main';
+async function getFile(owner, repo, path, branch, token) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}`, 'User-Agent':'nicolastuor-ch/ff-feedback' } });
+  if (r.status === 404) return { exists:false };
+  if (!r.ok) throw new Error('github_get_failed');
+  const j = await r.json();
+  return { exists:true, sha:j.sha, contentB64:j.content, encoding:j.encoding };
+}
+async function putFile(owner, repo, path, branch, token, content, sha=null, message='chore: append feedback'){
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
+  const body = { message, content: Buffer.from(content,'utf8').toString('base64'), branch };
+  if (sha) body.sha = sha;
+  const r = await fetch(url, { method:'PUT', headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json', 'User-Agent':'nicolastuor-ch/ff-feedback' }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error(`github_put_failed(${r.status})`);
+  return r.json();
+}
 
-  if (!token || !owner || !repo) {
-    console.warn('[ff-feedback] missing env, payload:', item);
-    return ok({ ok:true, stored:false }, 202);
-  }
+module.exports = async (req, res) => {
+  cors(req,res);
+  if (req.method === 'OPTIONS') return ok(res, { ok:true });
+  if (req.method !== 'POST') return bad(res, 405, 'Method not allowed');
 
-  const y = new Date().toISOString().slice(0,7); // "YYYY-MM"
-  const path = `feedback/ff-${y}.jsonl`;
-  const url  = (p) => `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(p)}`;
-  const hdrs = {
-    Authorization: `Bearer ${token}`,
-    'User-Agent': 'ff-bot',
-    Accept: 'application/vnd.github+json',
-    'Content-Type': 'application/json'
-  };
+  const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH='main' } = process.env;
+  if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) return bad(res, 500, 'Missing GitHub env');
 
-  let sha = null, currentContent = '';
   try {
-    const rGet = await fetch(url(path), { headers: hdrs });
-    if (rGet.ok) {
-      const j = await rGet.json();
-      sha = j.sha || null;
-      currentContent = fromBase64(j.content || '');
-    }
-  } catch {}
+    const chunks = [];
+    for await (const ch of req) chunks.push(ch);
+    let body = {};
+    try { body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch {}
 
-  const next = (currentContent ? currentContent + '\n' : '') + JSON.stringify(item);
-  try {
-    const rPut = await fetch(url(path), {
-      method: 'PUT',
-      headers: hdrs,
-      body: JSON.stringify({
-        message: `feedback: ${item.pageTitle || '(no title)'} — ${item.ts}`,
-        content: toBase64(next),
-        sha,
-        branch
-      })
-    });
-    if (!rPut.ok) {
-      console.error('[ff-feedback] GitHub PUT failed:', rPut.status, await rPut.text());
-      return ok({ ok:true, stored:false }, 202);
-    }
+    const text = (body.text || body.message || '').toString().trim();
+    if (!text) return bad(res, 400, 'empty');
+
+    const lang = (body.lang || (req.headers['accept-language']||'').slice(0,2) || 'fr').toString().slice(0,5);
+    const page = (body.page || body.pageUrl || '').toString().slice(0, 300);
+    const ua   = (body.ua   || req.headers['user-agent'] || '').toString().slice(0, 256);
+    const ip   = req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || req.socket?.remoteAddress || '';
+
+    const now = new Date();
+    const yyyy = now.getUTCFullYear();
+    const mm   = String(now.getUTCMonth()+1).padStart(2,'0');
+    const iso  = now.toISOString();
+
+    const line = JSON.stringify({ ts:iso, lang, page, ua, ip, text }) + '\n';
+    const path = `data/ff-feedback/${yyyy}-${mm}.jsonl`;
+
+    let existed = false, sha = null, prev = '';
+    try {
+      const got = await getFile(GITHUB_OWNER, GITHUB_REPO, path, GITHUB_BRANCH, GITHUB_TOKEN);
+      if (got.exists) {
+        existed = true; sha = got.sha;
+        prev = Buffer.from(got.contentB64, got.encoding || 'base64').toString('utf8');
+      }
+    } catch {}
+
+    await putFile(GITHUB_OWNER, GITHUB_REPO, path, GITHUB_BRANCH, GITHUB_TOKEN, (prev||'')+line, existed?sha:null, 'chore: append feedback');
+    return ok(res, { ok:true });
   } catch (e) {
-    console.error('[ff-feedback] GitHub error:', e?.message || e);
-    return ok({ ok:true, stored:false }, 202);
+    return bad(res, 500, `ff-feedback failed: ${e.message}`);
   }
-
-  return ok({ ok:true, stored:true }, 200);
-}
-
-function ok(obj, status=200){
-  return new Response(JSON.stringify(obj), {
-    status,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control':'no-store' }
-  });
-}
-function toBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
-function fromBase64(b64){ try{ return decodeURIComponent(escape(atob(b64))); }catch{ return ''; } }
+};
