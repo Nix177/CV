@@ -1,131 +1,117 @@
-// /public/fun-facts.js
-(function () {
-  const lang = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2).toLowerCase();
-  const N = 9;
+// public/fun-facts.js
 
-  // Conteneur
-  let grid = document.querySelector('#facts-grid');
-  if (!grid) {
-    grid = document.createElement('div');
-    grid.id = 'facts-grid';
-    grid.className = 'flip-grid';
-    const h1 = document.querySelector('main h1, h1') || document.body;
-    h1.parentNode.insertBefore(grid, h1.nextSibling);
-  }
+(() => {
+  const grid = document.getElementById('facts-grid');
+  const btn = document.getElementById('ff-new');
+  const FALLBACK_SEL = '#ff-fallback, .ff-fallback';
 
-  // Bouton reroll
-  let reroll = document.querySelector('#facts-reroll');
-  if (!reroll) {
-    reroll = document.createElement('button');
-    reroll.id = 'facts-reroll';
-    reroll.className = 'btn primary';
-    reroll.textContent = label('Nouveau lot aléatoire', 'New random set', 'Neuer Zufallssatz');
-    grid.parentNode.insertBefore(reroll, grid);
-  }
-  reroll.addEventListener('click', () => loadFacts(true));
+  // Déduction langue à partir du nom de fichier
+  const path = (location.pathname.split('/').pop() || 'fun-facts.html');
+  const m = path.match(/^fun-facts(?:-(en|de))?\.html$/i);
+  const lang = m && m[1] ? m[1] : 'fr';
 
-  function label(fr, en, de) {
-    if (lang === 'fr') return fr;
-    if (lang === 'de') return de;
-    return en;
-  }
-  const L = {
-    myth: label('Mythe', 'Myth', 'Mythos'),
-    fact: label('Fait vérifié', 'fact', 'Fakt'),
-    flip: label('Retourner', 'Flip', 'Umdrehen'),
-    view: label('Voir la source', 'View source', 'Quelle öffnen'),
-    fallbackTitle: label('Liste statique (repli)', 'Static list (fallback)', 'Statische Liste (Fallback)'),
-    fallbackMsg: label("Si vous voyez ceci, l’API est indisponible. Un repli local s’affiche.",
-                       'If you see this, the API is unavailable. Showing a local fallback.',
-                       'Wenn du das siehst, ist die API nicht erreichbar. Lokales Fallback wird angezeigt.')
+  const t = (k) => {
+    const L = {
+      fr: { myth:'Mythe', fact:'Fait vérifié', flip:'Retourner', source:'Voir la source', error:'Échec du chargement.' },
+      en: { myth:'Myth',  fact:'Verified fact', flip:'Flip',      source:'View source',    error:'Failed to load.' },
+      de: { myth:'Mythos',fact:'Geprüfte Tatsache', flip:'Umdrehen', source:'Quelle',     error:'Fehler beim Laden.' }
+    };
+    return (L[lang]||L.fr)[k];
   };
 
-  // ---------- UI helpers ----------
-  function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-
-  function makeCard(item){
-    const li = document.createElement('div');
-    li.className = 'card3d';
-    li.tabIndex = 0;
-
-    const inner = document.createElement('div');
-    inner.className = 'inner';
-
-    // FRONT = claim
-    const front = document.createElement('div');
-    front.className = 'face front';
-    front.innerHTML = `
-      <div class="ff-head"><span class="chip">${L.myth}</span></div>
-      <p class="ff-text ff-claim">${escapeHTML(item.claim)}</p>
-      <div class="ff-actions"><button class="btn linkish">${L.flip}</button></div>
-    `;
-
-    // BACK = explain + source
-    const back = document.createElement('div');
-    back.className = 'face back';
-    const explain = item.explain ? escapeHTML(item.explain) : '—';
-    const src = item.source ? `<a class="ff-link" href="${item.source}" target="_blank" rel="noopener">${L.view}</a>` : '';
-    back.innerHTML = `
-      <div class="ff-head"><span class="chip">${L.fact}</span></div>
-      <p class="ff-text ff-explain">${explain}</p>
-      <div class="ff-actions"><button class="btn linkish">${L.flip}</button> ${src}</div>
-    `;
-
-    inner.appendChild(front);
-    inner.appendChild(back);
-    li.appendChild(inner);
-
-    li.addEventListener('click', e => {
-      if (e.target.closest('button')) li.classList.toggle('is-flipped');
-    });
-    li.addEventListener('keypress', e => {
-      if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); li.classList.toggle('is-flipped'); }
-    });
-
-    return li;
+  function shuffle(arr){
+    // Fisher-Yates
+    for(let i = arr.length-1; i > 0; i--){
+      const j = (crypto?.getRandomValues
+        ? crypto.getRandomValues(new Uint32Array(1))[0] % (i+1)
+        : Math.floor(Math.random()*(i+1)));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
-  function makeSkeleton(){
-    const s = document.createElement('div');
-    s.className = 'ff-skel';
-    return s;
-  }
-  function showSkeleton(count){
-    grid.replaceChildren();
-    for (let i=0;i<count;i++) grid.appendChild(makeSkeleton());
+  function skeleton(n=9){
     grid.classList.add('ff-loading');
+    grid.innerHTML = '';
+    for(let i=0;i<n;i++){
+      const d = document.createElement('div');
+      d.className = 'ff-skel';
+      grid.appendChild(d);
+    }
   }
-  function clearSkeleton(){
+
+  function card(node){
+    node.addEventListener('click', () => node.classList.toggle('is-flipped'));
+    // évite que le clic sur un lien renverse
+    node.querySelectorAll('a,button').forEach(el=>{
+      el.addEventListener('click', (e)=> e.stopPropagation());
+    });
+  }
+
+  function render(facts){
     grid.classList.remove('ff-loading');
-    grid.replaceChildren();
-  }
-  function showFallback(){
-    clearSkeleton();
-    const msg = document.createElement('div');
-    msg.className = 'card pad';
-    msg.innerHTML = `<div class="title">${L.fallbackTitle}</div><p class="muted">${L.fallbackMsg}</p>`;
-    grid.appendChild(msg);
+    grid.innerHTML = '';
+    facts.forEach(f => {
+      const wrap = document.createElement('div');
+      wrap.className = 'card3d';
+      wrap.innerHTML = `
+        <div class="inner">
+          <div class="face front">
+            <div class="ff-head">
+              <span class="badge">${t('myth')}</span>
+            </div>
+            <p class="ff-text ff-claim">${f.claim || ''}</p>
+            <div class="ff-actions">
+              <button class="btn btn-sm">${t('flip')}</button>
+            </div>
+          </div>
+          <div class="face back">
+            <div class="ff-head">
+              <span class="badge">${t('fact')}</span>
+            </div>
+            <p class="ff-text ff-explain">${f.explain || ''}</p>
+            <div class="ff-actions">
+              ${f.source ? `<a class="btn linkish ff-link" href="${f.source}" target="_blank" rel="noopener">${t('source')}</a>` : ''}
+              <button class="btn btn-sm">${t('flip')}</button>
+            </div>
+          </div>
+        </div>`;
+      grid.appendChild(wrap);
+      card(wrap);
+    });
   }
 
-  // ---------- Data ----------
-  async function loadFacts(withSpinner){
-    if (withSpinner){
-      reroll.classList.add('is-busy'); reroll.disabled = true;
-    }
-    showSkeleton(N);
+  async function load(n=9){
     try{
-      const res = await fetch(`/api/facts?lang=${encodeURIComponent(lang)}&n=${N}`, { cache:'no-store' });
-      const data = await res.json();
-      if (!data.ok) throw new Error(data.error || 'API error');
-      clearSkeleton();
-      for (const it of data.items) grid.appendChild(makeCard(it));
+      btn?.classList.add('is-busy');
+      skeleton(n);
+
+      const ts = Date.now();
+      const url = `/api/facts?lang=${lang}&n=${n}&t=${ts}`;
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: { 'x-no-cache': String(ts) }
+      });
+
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      let facts = await res.json();
+
+      // petite sécurité : shuffle côté client
+      facts = shuffle(facts.slice(0));
+
+      render(facts);
+      // masque le fallback si présent
+      document.querySelectorAll(FALLBACK_SEL).forEach(n => n.remove());
     }catch(err){
-      showFallback();
+      grid.classList.remove('ff-loading');
+      grid.innerHTML = `<div class="card pad"><strong>${t('error')}</strong></div>`;
+      console.error(err);
     }finally{
-      reroll.classList.remove('is-busy'); reroll.disabled = false;
+      btn?.classList.remove('is-busy');
     }
   }
 
-  // init
-  loadFacts(false);
+  btn?.addEventListener('click', () => load(9));
+  // premier rendu
+  load(9);
 })();
