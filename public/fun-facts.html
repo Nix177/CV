@@ -8,27 +8,25 @@
   <link rel="icon" href="/favicon.svg"/>
   <link rel="stylesheet" href="/style.css"/>
 
-  <!-- Hreflang -->
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/fun-facts.html">
   <link rel="alternate" hreflang="en" href="/fun-facts-en.html">
   <link rel="alternate" hreflang="de" href="/fun-facts-de.html">
   <link rel="alternate" hreflang="x-default" href="/fun-facts.html">
 
-  <!-- Nav unifiée -->
+  <!-- Nav globale -->
   <script defer src="/assets/js/nav.js"></script>
 
-  <!-- Page styles minimaux (spécifiques Fun Facts, n’impactent rien d’autre) -->
+  <!-- Styles spécifiques page (très léger, isolé) -->
   <style>
-    /* Masque le fallback tant que JS n’a pas monté la page */
     .ff-wrap.ff-pending .ff-dynamic { display:none; }
     .ff-wrap.ff-ready   .ff-fallback { display:none; }
 
-    .ff-wrap .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px 0}
+    .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px 0}
     .ff-toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px}
     @media (max-width:780px){.ff-toolbar{grid-template-columns:1fr}}
     .ff-toolbar input{max-width:420px}
 
-    /* Cartes */
     .ff-cards{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
     @media (max-width:1100px){.ff-cards{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:680px){.ff-cards{grid-template-columns:1fr}}
@@ -42,33 +40,40 @@
     .ff-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
     .ff-actions .btn{padding:6px 10px}
 
-    /* Nuage (bubbles) */
     .ff-canvas-box{position:relative;min-height:320px;border:1px dashed var(--border);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
     .ff-bubble{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:999px;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.85),rgba(255,255,255,.6));border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 18px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease}
     .ff-bubble:hover{transform:scale(1.05)}
     .ff-bubble span{font-weight:700;color:#0a1930;text-align:center;padding:0 10px}
-
-    /* Popover (pour source rapide) */
-    .ff-popover{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
-    .ff-popover.show{display:flex}
-    .ff-pop-card{width:min(720px,96vw)}
   </style>
 
   <script defer src="/fun-facts.js"></script>
 </head>
 <body>
-
 <main class="container section ff-wrap ff-pending" id="ff_root">
   <h1 class="title">Fun Facts — <span class="muted">Idées reçues & faits vérifiés</span></h1>
   <p class="lead">Une sélection ludique — on apprend tous les jours.</p>
 
-  <!-- Contrôles -->
+  <!-- Barre outils -->
   <section class="ff-section ff-dynamic" aria-label="Contrôles">
     <div class="ff-toolbar">
       <input id="ff_search" type="search" class="input" placeholder="Rechercher une idée reçue…"/>
       <button id="ff_random" class="btn">🎲 Nouveau lot aléatoire</button>
       <div class="muted" id="ff_count" aria-live="polite"></div>
     </div>
+  </section>
+
+  <!-- Commentaires / suggestions -->
+  <section class="ff-section ff-dynamic" aria-label="Commentaires">
+    <h3 class="h3" style="margin-top:0">Commentaires / remarques / suggestions</h3>
+    <form id="ff_feedback_form" class="stack" style="grid-template-columns:1fr auto">
+      <textarea id="ff_feedback" rows="3" placeholder="Votre remarque… (ex.: ‘Ce mythe manque’, ‘Vous pourriez ajouter…’)"></textarea>
+      <div class="row gap">
+        <!-- honeypot -->
+        <input type="text" id="ff_hp" name="website" class="hidden" tabindex="-1" autocomplete="off" />
+        <button type="submit" class="btn">Envoyer</button>
+        <span id="ff_msg" class="muted" aria-live="polite"></span>
+      </div>
+    </form>
   </section>
 
   <!-- Cartes -->
@@ -81,25 +86,12 @@
     <div class="ff-canvas-box" id="ff_cloud"></div>
   </section>
 
-  <!-- Popover source -->
-  <div class="ff-popover" id="ff_pop">
-    <div class="ff-pop-card card pad">
-      <div class="row" style="justify-content:space-between;align-items:center;">
-        <strong id="ff_pop_title">Source</strong>
-        <button class="btn" id="ff_pop_close">Fermer</button>
-      </div>
-      <hr class="soft"/>
-      <div id="ff_pop_body"></div>
-    </div>
-  </div>
-
-  <!-- Fallback (si données KO) -->
+  <!-- Fallback si API HS -->
   <section class="ff-section ff-fallback" aria-label="Fallback">
-    <h2>Liste</h2>
-    <p class="muted">Si vous voyez cette liste, le montage dynamique est désactivé. Vérifiez que <code>fun-facts.js</code> est bien chargé et qu’aucun ancien <code>facts.js</code> n’est inclus.</p>
+    <h2>Liste statique (repli)</h2>
+    <p class="muted">Si vous voyez ceci, l’API est indisponible. Un repli local s’affiche.</p>
     <ul id="ff_fallback_list"></ul>
   </section>
 </main>
-
 </body>
 </html>
