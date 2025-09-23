@@ -1,136 +1,189 @@
-export default async function handler(req, res){
-  if (req.method !== "GET"){
-    res.setHeader("Allow","GET");
-    return res.status(405).end("Method Not Allowed");
+// /api/ff-batch.js
+// Node 18+ (fetch natif). Vercel: functions.runtime nodejs18.x
+// ENV requis: OPENAI_API_KEY (sinon fallback), ALLOWED_ORIGINS (optionnel, ex: https://nicolastuor.ch,https://*.vercel.app)
+
+const fs = require('fs');
+const path = require('path');
+
+const ALLOWED = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+function cors(req, res) {
+  const origin = req.headers.origin || '';
+  if (!ALLOWED.length || ALLOWED.some(p => origin.endsWith(p.replace(/^\*\./, '')) || origin === p)) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
   }
-  try{
-    const origin = req.headers.origin || "";
-    const allowed = /nicolastuor\.ch$/i.test(new URL(origin).host) || origin === "";
-    if (!allowed) return res.status(403).json({error:"forbidden"});
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
 
-    const lang  = (req.query.lang || "fr").toLowerCase();
-    const count = Math.min(12, Math.max(3, parseInt(req.query.count||"9",10)));
-    const q     = (req.query.q||"").trim();
+function ok(res, data) {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.end(JSON.stringify(data));
+}
+function bad(res, code, msg) {
+  res.statusCode = code || 500;
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.end(JSON.stringify({ error: msg || 'error' }));
+}
 
-    // 1) seed titles (tu peux étendre/adapter)
-    const seeds = {
-      fr:[
-        "Mythe_des_10_%_du_cerveau",
-        "Grande_Muraille_de_Chine",
-        "Caméléon#Changement_de_couleur",
-        "Casque_viking",
-        "Effet_Coriolis",
-        "Foudre",
-        "Fibre_optique"
-      ],
-      en:[
-        "Ten_percent_of_the_brain_myth",
-        "Great_Wall_of_China#Visibility_from_space",
-        "Chameleon#Color_change",
-        "Viking_Age#Popular_misconceptions",
-        "Coriolis_effect",
-        "Lightning",
-        "Fiber-optic_communication"
-      ],
-      de:[
-        "Zehn-Prozent-Mythos",
-        "Chinesische_Mauer",
-        "Chamäleon#Farbwechsel",
-        "Wikinger#Rezeption",
-        "Corioliskraft",
-        "Blitz",
-        "Glasfaser"
-      ]
-    }[lang] || [];
+const WIKI_HOST = {
+  fr: 'fr.wikipedia.org',
+  en: 'en.wikipedia.org',
+  de: 'de.wikipedia.org',
+};
 
-    // 2) pick some titles
-    const titles = shuffle(seeds).slice(0, count);
+async function fetchWikipediaRandom(lang = 'fr', count = 9) {
+  const host = WIKI_HOST[lang] || WIKI_HOST.fr;
+  const url = `https://${host}/w/api.php?action=query&generator=random&grnnamespace=0&prop=extracts|info&inprop=url&explaintext=1&exintro=1&format=json&grnlimit=${Math.min(
+    Math.max(+count || 9, 1),
+    20
+  )}`;
+  const r = await fetch(url, { headers: { 'User-Agent': 'nicolastuor-ch/ff-batch' } });
+  if (!r.ok) throw new Error('wiki_fetch_failed');
+  const j = await r.json();
+  const pages = j?.query?.pages ? Object.values(j.query.pages) : [];
+  return pages
+    .filter(p => p?.title && p?.fullurl)
+    .map(p => ({
+      title: p.title,
+      url: p.fullurl,
+      extract: (p.extract || '').replace(/\n+/g, ' ').trim().slice(0, 1200),
+    }));
+}
 
-    // 3) fetch summaries in chosen lang (Wikimedia REST)
-    const pages = [];
-    for (const t of titles){
-      try{
-        const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(t)}`;
-        const r = await fetch(url, {headers:{'accept':'application/json'}});
-        if (!r.ok) continue;
-        const js = await r.json();
-        pages.push({
-          title: js.title,
-          extract: js.extract || "",
-          url: js.content_urls?.desktop?.page || js.desktop?.page || js.canonicalurl || `https://${lang}.wikipedia.org/wiki/${js.title.replace(/\s/g,'_')}`
-        });
-      }catch{}
-    }
+async function openaiMythify(items, lang = 'fr') {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
 
-    if (!pages.length) return res.status(503).json({error:"no pages"});
+  const sys = {
+    fr: 'Tu es un assistant pédagogique. À partir d’extraits Wikipédia, propose pour chaque sujet un "mythe plausible" (1 phrase) et une réfutation concise (≤ 30 mots), plus une catégorie. Réponds en JSON strict.',
+    en: 'You are an educational assistant. From Wikipedia snippets, produce for each topic one plausible myth (1 sentence) and a concise debunk (≤ 30 words), plus a category. Answer strict JSON.',
+    de: 'Du bist ein pädagogischer Assistent. Erstelle aus Wikipedia-Auszügen pro Thema einen plausiblen Mythos (1 Satz) und eine knappe Widerlegung (≤ 30 Wörter) sowie eine Kategorie. Antworte als striktes JSON.',
+  }[lang] || 'Answer strict JSON.';
 
-    // 4) Summarize into claim/truth (<=30 words) via OpenAI (server-side)
-    const key = process.env.OPENAI_API_KEY;
-    async function summarize(p){
-      // keep it short & deterministic
-      const prompt = `
-Tu es concis. À partir de l'extrait Wikipedia (langue ${lang}):
-- Propose une courte "idée reçue" (mythe) en une phrase.
-- Donne une "explication vérifiée" (≤30 mots), claire et factuelle.
-- Catégorie simple (Science, Histoire, Nature, etc.)
-Réponds en JSON: {"claim":"...", "truth":"...", "category":"..."}.
+  const userPrompt = {
+    lang,
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          claim: { type: 'string' },
+          explanation: { type: 'string' },
+          category: { type: 'string' },
+          source: { type: 'string' },
+        },
+        required: ['title', 'claim', 'explanation', 'category', 'source'],
+        additionalProperties: false,
+      },
+    },
+    items: items.map(x => ({ title: x.title, url: x.url, extract: x.extract })),
+    constraints: {
+      explanationMaxWords: 30,
+      claimIsMyth: true,
+    },
+  };
 
-EXTRAIT:
-${p.extract}
-`;
-      const r = await fetch("https://api.openai.com/v1/chat/completions", {
-        method:"POST",
-        headers:{ "Authorization":`Bearer ${key}`, "Content-Type":"application/json" },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          temperature: 0.2,
-          messages: [{role:"user", content: prompt}]
-        })
-      });
-      if (!r.ok) throw new Error("openai error");
-      const js = await r.json();
-      const txt = js.choices?.[0]?.message?.content || "{}";
-      let obj={}; try{ obj=JSON.parse(txt); }catch{ obj={}; }
-      return {
-        title: { [lang]: p.title },
-        claim: { [lang]: obj.claim || p.title },
-        truth: { [lang]: (obj.truth||"").slice(0,240) },
-        category: { [lang]: obj.category || "Science" },
-        type: obj.category || "Science",
-        sources: [{ title: "Wikipedia", url: p.url }]
-      };
-    }
+  const body = {
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: sys },
+      { role: 'user', content: JSON.stringify(userPrompt) },
+    ],
+    temperature: 0.3,
+    response_format: { type: 'json_object' },
+  };
 
-    const out = [];
-    for (const p of pages){
-      try{
-        out.push(await summarize(p));
-      }catch{
-        // fallback minimal si résumé KO
-        out.push({
-          title:{[lang]:p.title},
-          claim:{[lang]:p.title},
-          truth:{[lang]:"Voir la source pour les détails."},
-          category:{[lang]:"Divers"},
-          type:"Misc",
-          sources:[{title:"Wikipedia", url:p.url}]
-        });
-      }
-    }
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) throw new Error('openai_failed');
+  const data = await resp.json();
+  const text = data?.choices?.[0]?.message?.content || '{}';
+  let arr;
+  try {
+    // On autorise soit { ... } soit [ ... ] selon réponse
+    const parsed = JSON.parse(text);
+    arr = Array.isArray(parsed) ? parsed : parsed?.items || [];
+  } catch (e) {
+    throw new Error('openai_parse_failed');
+  }
+  return arr
+    .filter(Boolean)
+    .map((x, i) => ({
+      id: `ai-${Date.now()}-${i}`,
+      title: x.title || items[i]?.title || 'Sujet',
+      claim: x.claim || 'Idée reçue non fournie',
+      explanation: x.explanation || 'Consultez la source pour la réfutation.',
+      category: x.category || 'Général',
+      sources: [x.source || items[i]?.url].filter(Boolean),
+      kind: 'myth',
+      lang,
+    }));
+}
 
-    // filtre recherche simple côté serveur si q fourni
-    const ql = q.toLowerCase();
-    const final = q ? out.filter(it =>
-      (it.title?.[lang]||"").toLowerCase().includes(ql) ||
-      (it.claim?.[lang]||"").toLowerCase().includes(ql) ||
-      (it.category?.[lang]||"").toLowerCase().includes(ql)
-    ) : out;
-
-    return res.status(200).json(final);
-  }catch(e){
-    return res.status(500).json({error:"server error", details:String(e)});
+function readFallback() {
+  try {
+    const p = path.join(process.cwd(), 'public', 'assets', 'facts', 'facts-data.json');
+    const raw = fs.readFileSync(p, 'utf8');
+    const j = JSON.parse(raw);
+    return Array.isArray(j) ? j.slice(0, 9) : [];
+  } catch {
+    return [];
   }
 }
 
-// util
-function shuffle(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]); }
+module.exports = async (req, res) => {
+  cors(req, res);
+  if (req.method === 'OPTIONS') return ok(res, { ok: true });
+
+  if (req.method !== 'GET') return bad(res, 405, 'Method not allowed');
+
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const lang = (url.searchParams.get('lang') || 'fr').toLowerCase();
+  const count = Math.min(Math.max(parseInt(url.searchParams.get('count') || '9', 10), 1), 20);
+
+  try {
+    const wiki = await fetchWikipediaRandom(lang, count);
+    let cards = await openaiMythify(wiki, lang);
+    if (!cards || !cards.length) {
+      // fallback IA → heuristique rapide
+      cards = wiki.slice(0, count).map((w, i) => ({
+        id: `wk-${Date.now()}-${i}`,
+        title: w.title,
+        claim:
+          lang === 'fr'
+            ? `On croit souvent à tort : « ${w.title} … »`
+            : lang === 'de'
+            ? `Oft fälschlich angenommen: „${w.title} …“`
+            : `Commonly (but wrongly) believed: “${w.title} …”`,
+        explanation:
+          lang === 'fr'
+            ? 'Voir la source pour la réfutation synthétique.'
+            : lang === 'de'
+            ? 'Siehe Quelle für die knappe Widerlegung.'
+            : 'See the source for the brief debunk.',
+        category: 'Général',
+        sources: [w.url],
+        kind: 'myth',
+        lang,
+      }));
+    }
+    return ok(res, { items: cards });
+  } catch (e) {
+    // Fallback fichier local
+    const fb = readFallback();
+    if (fb.length) return ok(res, { items: fb });
+    return bad(res, 500, `ff-batch failed: ${e.message}`);
+  }
+};
