@@ -1,9 +1,8 @@
-// /api/ff-batch.js
-// Node 18+ (fetch natif). Vercel: functions.runtime nodejs18.x
-// ENV requis: OPENAI_API_KEY (sinon fallback), ALLOWED_ORIGINS (optionnel, ex: https://nicolastuor.ch,https://*.vercel.app)
+// /api/ff-feedback.js
+// Append JSONL to data/ff-feedback/YYYY-MM.jsonl in your GitHub repo.
+// Requires: GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, (optional) GITHUB_BRANCH, ALLOWED_ORIGINS
 
-const fs = require('fs');
-const path = require('path');
+const fetch = global.fetch;
 
 const ALLOWED = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -33,157 +32,92 @@ function bad(res, code, msg) {
   res.end(JSON.stringify({ error: msg || 'error' }));
 }
 
-const WIKI_HOST = {
-  fr: 'fr.wikipedia.org',
-  en: 'en.wikipedia.org',
-  de: 'de.wikipedia.org',
-};
-
-async function fetchWikipediaRandom(lang = 'fr', count = 9) {
-  const host = WIKI_HOST[lang] || WIKI_HOST.fr;
-  const url = `https://${host}/w/api.php?action=query&generator=random&grnnamespace=0&prop=extracts|info&inprop=url&explaintext=1&exintro=1&format=json&grnlimit=${Math.min(
-    Math.max(+count || 9, 1),
-    20
-  )}`;
-  const r = await fetch(url, { headers: { 'User-Agent': 'nicolastuor-ch/ff-batch' } });
-  if (!r.ok) throw new Error('wiki_fetch_failed');
+async function getFile(owner, repo, path, branch, token) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}`, 'User-Agent': 'nicolastuor-ch/ff-feedback' } });
+  if (r.status === 404) return { exists: false };
+  if (!r.ok) throw new Error('github_get_failed');
   const j = await r.json();
-  const pages = j?.query?.pages ? Object.values(j.query.pages) : [];
-  return pages
-    .filter(p => p?.title && p?.fullurl)
-    .map(p => ({
-      title: p.title,
-      url: p.fullurl,
-      extract: (p.extract || '').replace(/\n+/g, ' ').trim().slice(0, 1200),
-    }));
+  return { exists: true, sha: j.sha, contentB64: j.content, encoding: j.encoding };
 }
 
-async function openaiMythify(items, lang = 'fr') {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
-
-  const sys = {
-    fr: 'Tu es un assistant pédagogique. À partir d’extraits Wikipédia, propose pour chaque sujet un "mythe plausible" (1 phrase) et une réfutation concise (≤ 30 mots), plus une catégorie. Réponds en JSON strict.',
-    en: 'You are an educational assistant. From Wikipedia snippets, produce for each topic one plausible myth (1 sentence) and a concise debunk (≤ 30 words), plus a category. Answer strict JSON.',
-    de: 'Du bist ein pädagogischer Assistent. Erstelle aus Wikipedia-Auszügen pro Thema einen plausiblen Mythos (1 Satz) und eine knappe Widerlegung (≤ 30 Wörter) sowie eine Kategorie. Antworte als striktes JSON.',
-  }[lang] || 'Answer strict JSON.';
-
-  const userPrompt = {
-    lang,
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          title: { type: 'string' },
-          claim: { type: 'string' },
-          explanation: { type: 'string' },
-          category: { type: 'string' },
-          source: { type: 'string' },
-        },
-        required: ['title', 'claim', 'explanation', 'category', 'source'],
-        additionalProperties: false,
-      },
-    },
-    items: items.map(x => ({ title: x.title, url: x.url, extract: x.extract })),
-    constraints: {
-      explanationMaxWords: 30,
-      claimIsMyth: true,
-    },
-  };
-
+async function putFile(owner, repo, path, branch, token, content, sha = null, message = 'chore: append feedback') {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
   const body = {
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: sys },
-      { role: 'user', content: JSON.stringify(userPrompt) },
-    ],
-    temperature: 0.3,
-    response_format: { type: 'json_object' },
+    message,
+    content: Buffer.from(content, 'utf8').toString('base64'),
+    branch,
   };
-
-  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+  if (sha) body.sha = sha;
+  const r = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'User-Agent': 'nicolastuor-ch/ff-feedback',
+    },
     body: JSON.stringify(body),
   });
-  if (!resp.ok) throw new Error('openai_failed');
-  const data = await resp.json();
-  const text = data?.choices?.[0]?.message?.content || '{}';
-  let arr;
-  try {
-    // On autorise soit { ... } soit [ ... ] selon réponse
-    const parsed = JSON.parse(text);
-    arr = Array.isArray(parsed) ? parsed : parsed?.items || [];
-  } catch (e) {
-    throw new Error('openai_parse_failed');
-  }
-  return arr
-    .filter(Boolean)
-    .map((x, i) => ({
-      id: `ai-${Date.now()}-${i}`,
-      title: x.title || items[i]?.title || 'Sujet',
-      claim: x.claim || 'Idée reçue non fournie',
-      explanation: x.explanation || 'Consultez la source pour la réfutation.',
-      category: x.category || 'Général',
-      sources: [x.source || items[i]?.url].filter(Boolean),
-      kind: 'myth',
-      lang,
-    }));
-}
-
-function readFallback() {
-  try {
-    const p = path.join(process.cwd(), 'public', 'assets', 'facts', 'facts-data.json');
-    const raw = fs.readFileSync(p, 'utf8');
-    const j = JSON.parse(raw);
-    return Array.isArray(j) ? j.slice(0, 9) : [];
-  } catch {
-    return [];
-  }
+  if (!r.ok) throw new Error(`github_put_failed(${r.status})`);
+  return r.json();
 }
 
 module.exports = async (req, res) => {
   cors(req, res);
   if (req.method === 'OPTIONS') return ok(res, { ok: true });
+  if (req.method !== 'POST') return bad(res, 405, 'Method not allowed');
 
-  if (req.method !== 'GET') return bad(res, 405, 'Method not allowed');
-
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const lang = (url.searchParams.get('lang') || 'fr').toLowerCase();
-  const count = Math.min(Math.max(parseInt(url.searchParams.get('count') || '9', 10), 1), 20);
+  const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH = 'main' } = process.env;
+  if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+    return bad(res, 500, 'Missing GitHub env');
+  }
 
   try {
-    const wiki = await fetchWikipediaRandom(lang, count);
-    let cards = await openaiMythify(wiki, lang);
-    if (!cards || !cards.length) {
-      // fallback IA → heuristique rapide
-      cards = wiki.slice(0, count).map((w, i) => ({
-        id: `wk-${Date.now()}-${i}`,
-        title: w.title,
-        claim:
-          lang === 'fr'
-            ? `On croit souvent à tort : « ${w.title} … »`
-            : lang === 'de'
-            ? `Oft fälschlich angenommen: „${w.title} …“`
-            : `Commonly (but wrongly) believed: “${w.title} …”`,
-        explanation:
-          lang === 'fr'
-            ? 'Voir la source pour la réfutation synthétique.'
-            : lang === 'de'
-            ? 'Siehe Quelle für die knappe Widerlegung.'
-            : 'See the source for the brief debunk.',
-        category: 'Général',
-        sources: [w.url],
-        kind: 'myth',
-        lang,
-      }));
+    const chunks = [];
+    for await (const ch of req) chunks.push(ch);
+    const body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+
+    const text = (body.text || '').toString().trim();
+    const lang = (body.lang || 'fr').toString().slice(0, 5);
+    const page = (body.page || '').toString().slice(0, 200);
+    const tz = (body.tz || '').toString().slice(0, 64);
+    const ua = (body.ua || '').toString().slice(0, 256);
+    const ip =
+      req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||
+      req.socket?.remoteAddress ||
+      '';
+
+    if (!text || text.length < 2) return bad(res, 400, 'empty');
+
+    const now = new Date();
+    const yyyy = now.getUTCFullYear();
+    const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const iso = now.toISOString();
+
+    const line = JSON.stringify({ ts: iso, lang, page, tz, ua, ip, text }) + '\n';
+    const filePath = `data/ff-feedback/${yyyy}-${mm}.jsonl`;
+
+    // récupère contenu existant (si existe)
+    let existed = false;
+    let sha = null;
+    let prev = '';
+    try {
+      const got = await getFile(GITHUB_OWNER, GITHUB_REPO, filePath, GITHUB_BRANCH, GITHUB_TOKEN);
+      if (got.exists) {
+        existed = true;
+        sha = got.sha;
+        const buff = Buffer.from(got.contentB64, got.encoding || 'base64');
+        prev = buff.toString('utf8');
+      }
+    } catch (_) {
+      // ignorer, on créera le fichier
     }
-    return ok(res, { items: cards });
+
+    const next = (prev || '') + line;
+    await putFile(GITHUB_OWNER, GITHUB_REPO, filePath, GITHUB_BRANCH, GITHUB_TOKEN, next, existed ? sha : null, 'chore: append feedback');
+
+    return ok(res, { ok: true });
   } catch (e) {
-    // Fallback fichier local
-    const fb = readFallback();
-    if (fb.length) return ok(res, { items: fb });
-    return bad(res, 500, `ff-batch failed: ${e.message}`);
+    return bad(res, 500, `ff-feedback failed: ${e.message}`);
   }
 };
