@@ -1,176 +1,253 @@
-/* public/fun-facts.js
-   Cartes + nuage + "nouveau lot" avec repli JSON local.
-   Zéro dépendance. */
-
+/* =========================================================
+   Fun Facts — cartes + nuage + lot aléatoire
+   Dépendances: aucune (vanilla). Charge /facts-data.json.
+   ========================================================= */
 (() => {
-  const log  = (...a) => console.log('[fun-facts]', ...a);
-  const warn = (...a) => console.warn('[fun-facts]', ...a);
-  const $    = (s, el=document) => el.querySelector(s);
-  const $$   = (s, el=document) => Array.from(el.querySelectorAll(s));
-  const lang = (document.documentElement.lang || 'fr').slice(0,2);
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-  // --- Cibles robustes (tolère plusieurs ids/classes existants)
-  const els = {
-    cards : $('#ff-grid, #ff_grid, #ff-cards, #ff_cards, .ff-cards .grid') || document.body,
-    cloud : $('#ff_canvas, #ff-cloud, .ff-cloud'),
-    rerollBtn : $('#ff_reroll, #ff-random, [data-action="reroll"]'),
-    form  : $('#ff_form')
+  // --- Lang detection -------------------------------------------------------
+  const path = (location.pathname.split('/').pop() || 'fun-facts.html').trim();
+  const m = path.match(/^(.+?)(?:-(en|de))?\.html?$/i);
+  const lang = (m && m[2]) ? m[2] : 'fr';
+
+  const I18N = {
+    fr: {
+      searchPh: "Rechercher une idée reçue…",
+      random: "🎲 Nouveau lot aléatoire",
+      source: "Source",
+      seeSource: "Voir la source",
+      flip: "Retourner",
+      myth: "Mythe",
+      fact: "Fait vérifié",
+      items: (n) => `${n} idées`,
+    },
+    en: {
+      searchPh: "Search a misconception…",
+      random: "🎲 New random batch",
+      source: "Source",
+      seeSource: "See source",
+      flip: "Flip",
+      myth: "Myth",
+      fact: "Verified fact",
+      items: (n) => `${n} items`,
+    },
+    de: {
+      searchPh: "Irrtum suchen…",
+      random: "🎲 Neuer zufälliger Satz",
+      source: "Quelle",
+      seeSource: "Quelle öffnen",
+      flip: "Umdrehen",
+      myth: "Mythos",
+      fact: "Geprüfte Tatsache",
+      items: (n) => `${n} Einträge`,
+    }
+  }[lang];
+
+  // Apply UI strings
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = $("#ff_search"); if (s) s.placeholder = I18N.searchPh;
+    const r = $("#ff_random"); if (r) r.textContent = I18N.random;
+  });
+
+  // --- Data loader ----------------------------------------------------------
+  async function loadFacts() {
+    const candidates = [
+      "/facts-data.json",
+      "/assets/data/facts-data.json",
+    ];
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url, {cache:"no-store"});
+        if (res.ok) return await res.json();
+      } catch(e) { /* try next */ }
+    }
+    return null;
+  }
+
+  // --- Helpers --------------------------------------------------------------
+  const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+  const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+  const words = (txt) => (txt||"").trim().split(/\s+/).filter(Boolean);
+  const trimWords = (txt, max=30) => {
+    const w = words(txt);
+    return w.length<=max ? txt : w.slice(0,max).join(" ")+"…";
   };
+  const byLang = (obj, fallback) => (obj && (obj[lang]||obj['en']||obj['fr'])) || fallback || "";
 
-  // --- Fetch helpers --------------------------------------------------------
-  async function fetchAPI(n, seenIds, series) {
-    const seen = seenIds?.length ? `&seen=${encodeURIComponent(seenIds.join(','))}` : '';
-    const ser  = series ? `&series=${encodeURIComponent(series)}` : '';
-    const url  = `/api/facts?lang=${lang}&n=${n}${seen}${ser}`;
-    try {
-      const r = await fetch(url, { cache:'no-cache' });
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      const arr = await r.json();
-      if (!Array.isArray(arr) || arr.length===0) return null;
-      return arr.map(normalize);
-    } catch (e) { warn('API fail:', e.message||e); return null; }
+  function pickRandomBatch(all, count=9, q="") {
+    let pool = all.slice();
+    if (q) {
+      const t = q.toLowerCase();
+      pool = pool.filter(f =>
+        (f.title && f.title.toLowerCase().includes(t)) ||
+        (f.claim && f.claim.toLowerCase().includes(t)) ||
+        (f.truth && f.truth.toLowerCase().includes(t)) ||
+        (f.category && f.category.toLowerCase().includes(t))
+      );
+    }
+    return shuffle(pool).slice(0, count);
   }
 
-  async function fetchLocal(series) {
-    const url = '/facts-data.json';
-    try {
-      const r = await fetch(url, { cache:'no-cache' });
-      if (!r.ok) throw new Error('HTTP '+r.status);
-      const raw = await r.json();
-      const items = Array.isArray(raw) ? raw : (raw.items || []);
-      const filtered = items.filter(x => {
-        const okLang   = x.lang ? x.lang.slice(0,2)===lang : true;
-        const okSeries = series ? (x.series===series || (x.tags||[]).includes(series)) : true;
-        return okLang && okSeries;
-      });
-      return filtered.map(normalize);
-    } catch (e) { warn('Local JSON fail:', e.message||e); return []; }
-  }
+  // --- Render cards ---------------------------------------------------------
+  function renderCards(root, items) {
+    root.innerHTML = "";
+    for (const f of items) {
+      const title = byLang(f.title, f.claim || "—");
+      const claim = byLang(f.claim, title);
+      const truth = trimWords(byLang(f.truth, ""), 30);
+      const cat = byLang(f.category, f.type || "");
+      const source = (f.sources && f.sources[0]) ? f.sources[0] : null;
 
-  // --- Normalisation (schémas flexibles) -----------------------------------
-  const strip = s => { const d=document.createElement('div'); d.innerHTML = s||''; return d.textContent||''; };
-  const first = (...xs) => xs.find(x => x!=null && String(x).trim()) ?? '';
-  const truncWords = (s, n) => {
-    const w = (s||'').split(/\s+/).filter(Boolean);
-    return w.length<=n ? s : w.slice(0,n).join(' ')+'…';
-  };
-
-  function normalize(o){
-    const id   = o.id || o.slug || `it-${Math.random().toString(36).slice(2,8)}`;
-    const type = (o.type || o.kind || '').toLowerCase().includes('myth') ? 'myth'
-               : (o.type || o.kind || '').toLowerCase().includes('fact') ? 'fact'
-               : (o.answer===true ? 'fact' : o.answer===false ? 'myth' : 'unknown');
-    const title = first(o.title, o.claim, o.statement, o.question, '—');
-    const category = first(o.category, o.domain, o.topic, o.tag, '');
-
-    const long = first(o.back, o.body, o.explanation, o.explain, o.answer, '');
-    const back = truncWords(strip(long), 30) ||
-                 (type==='myth' ? 'Mythe réfuté : voir sources.' :
-                  type==='fact' ? 'Fait avéré : voir sources.' : 'Explication indisponible.');
-
-    const sources = []
-      .concat(o.sources||o.refs||[])
-      .map(s => typeof s==='string' ? {href:s, label:s.replace(/^https?:\/\//,'').slice(0,80)}
-                                    : {href: s.href||s.url, label: s.label || (s.url||'').replace(/^https?:\/\//,'').slice(0,80)})
-      .filter(s => s && s.href);
-
-    return { id, type, title, category, back, sources };
-  }
-
-  // --- Rendu cartes ---------------------------------------------------------
-  function cardNode(it){
-    const el = document.createElement('article');
-    el.className = `ff-card ${it.type}`;
-    el.id = `ff-${it.id}`;
-    el.tabIndex = 0;
-    el.innerHTML = `
-      <div class="ff-front">
-        <div class="ff-meta">
-          <span class="ff-type">${it.type==='myth' ? '❓ Mythe' : '⭐ Fait avéré'}</span>
-          ${it.category ? `<span class="ff-cat">${escapeHTML(it.category)}</span>` : ''}
+      const card = document.createElement("article");
+      card.className = "ff-card";
+      card.innerHTML = `
+        <div class="inner" aria-live="polite">
+          <div class="ff-face ff-front">
+            <div class="ff-tags">
+              <span class="ff-badge">${I18N.myth}</span>
+              ${cat ? `<span class="ff-badge">${cat}</span>` : ""}
+            </div>
+            <h3 class="h3" style="margin:4px 0 2px">${title}</h3>
+            ${claim && claim!==title ? `<p class="muted" style="margin:0">${claim}</p>` : ""}
+            <div class="ff-actions">
+              <button class="btn" data-act="flip">${I18N.flip}</button>
+              ${source ? `<a class="btn linkish" target="_blank" rel="noopener" href="${source.url}">${I18N.seeSource}</a>` : ""}
+            </div>
+          </div>
+          <div class="ff-face ff-back">
+            <div class="ff-tags">
+              <span class="ff-badge">${I18N.fact}</span>
+              ${cat ? `<span class="ff-badge">${cat}</span>` : ""}
+            </div>
+            <p style="margin:4px 0 8px">${truth || "—"}</p>
+            <div class="ff-actions">
+              <button class="btn" data-act="flip">${I18N.flip}</button>
+              ${source ? `<a class="btn" target="_blank" rel="noopener" href="${source.url}">${I18N.source}</a>` : ""}
+            </div>
+          </div>
         </div>
-        <h3 class="ff-title">${escapeHTML(it.title)}</h3>
-      </div>
-      <div class="ff-back">
-        <p class="ff-explain">${escapeHTML(it.back)}</p>
-        ${it.sources?.length ? `<ul class="ff-sources">${
-          it.sources.slice(0,4).map(s=>`<li><a href="${escapeAttr(s.href)}" target="_blank" rel="noopener">${escapeHTML(s.label||s.href)}</a></li>`).join('')
-        }</ul>` : ''}
-      </div>`;
-    const flip = () => el.classList.toggle('flipped');
-    el.addEventListener('click', flip);
-    el.addEventListener('keydown', e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); flip(); }});
-    return el;
+      `;
+      card.addEventListener("click", (ev) => {
+        const bt = ev.target.closest("[data-act='flip']");
+        if (!bt) return;
+        card.dataset.flipped = card.dataset.flipped === "1" ? "0" : "1";
+      });
+      root.appendChild(card);
+    }
   }
 
-  function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+  // --- Render cloud ---------------------------------------------------------
+  function renderCloud(box, items) {
+    box.innerHTML = "";
+    const pad = 12;
+    const W = box.clientWidth || box.offsetWidth || 900;
+    const H = Math.max(box.clientHeight || 300, 260);
+    const used = [];
 
-  function renderCards(items){
-    if (!els.cards) return;
-    els.cards.innerHTML = '';
-    items.forEach(it => els.cards.appendChild(cardNode(it)));
-  }
+    const safePlace = (r) => !used.some(u =>
+      Math.hypot((u.x+u.r)-(r.x+r.r), (u.y+u.r)-(r.y+r.r)) < (u.r + r.r + 8)
+    );
 
-  // --- Nuage de bulles ------------------------------------------------------
-  function renderCloud(items){
-    if (!els.cloud) return;
-    const box = els.cloud; // conteneur positionné (voir CSS existant)
-    box.innerHTML = '';
-    const N = Math.min(items.length, 14);
-    const take = items.slice(0, N);
+    for (const f of items) {
+      const w = rnd(120, 200);
+      const h = rnd(60, 100);
+      const r = {x:rnd(pad, Math.max(pad, W-w-pad)), y:rnd(pad, Math.max(pad, H-h-pad)), r:Math.min(w,h)/2};
+      let tries = 60;
+      while (tries-- && !safePlace(r)) {
+        r.x = rnd(pad, Math.max(pad, W-w-pad));
+        r.y = rnd(pad, Math.max(pad, H-h-pad));
+      }
+      used.push(r);
 
-    take.forEach((it, i) => {
-      const b = document.createElement('div');
-      b.className = 'bubble';
-      const size = 70 + Math.round(Math.random()*60); // 70–130px
-      b.style.width = b.style.height = size+'px';
-      b.style.left  = (5 + Math.random()*85) + '%';
-      b.style.top   = (5 + Math.random()*70) + '%';
-      b.innerHTML = `<span class="emoji">${it.type==='myth'?'❓':'⭐'}</span>
-                     <span class="label">${escapeHTML(it.title)}</span>`;
-      b.addEventListener('click', () => {
-        const target = document.getElementById(`ff-${it.id}`);
-        if (target) target.scrollIntoView({behavior:'smooth', block:'center'});
+      const b = document.createElement("button");
+      b.className = "ff-bubble";
+      b.style.left = r.x+"px"; b.style.top = r.y+"px";
+      b.style.width = w+"px";  b.style.height = h+"px";
+      b.innerHTML = `<span>${byLang(f.title, f.claim || "—")}</span>`;
+      b.addEventListener("click", () => {
+        // scroll to card and flip
+        const idx = items.indexOf(f);
+        const card = $$(".ff-card")[idx];
+        if (card) {
+          card.scrollIntoView({behavior:"smooth", block:"center"});
+          setTimeout(()=>{ card.dataset.flipped = "1"; }, 300);
+        }
       });
       box.appendChild(b);
+    }
+  }
+
+  // --- Popover (optionnel : pour afficher toutes les sources d’un item) ----
+  function mountPopover() {
+    const pop = $("#ff_pop");
+    if (!pop) return;
+    $("#ff_pop_close").addEventListener("click", ()=> pop.classList.remove("show"));
+    pop.addEventListener("click", (e)=>{ if(e.target===pop) pop.classList.remove("show"); });
+  }
+
+  // --- Mount ---------------------------------------------------------------
+  let ALL = [];
+  let CURRENT = [];
+
+  function updateCount(n){ const c=$("#ff_count"); if (c) c.textContent = I18N.items(n); }
+
+  function refresh(batch) {
+    const cards = $("#ff_cards");
+    const cloud = $("#ff_cloud");
+    if (!cards || !cloud) return;
+    CURRENT = batch;
+    renderCards(cards, batch);
+    renderCloud(cloud, batch);
+    updateCount(batch.length);
+  }
+
+  function newRandomBatch(){
+    const q = ($("#ff_search")?.value||"").trim();
+    refresh(pickRandomBatch(ALL, 9, q));
+  }
+
+  async function main() {
+    mountPopover();
+    const root = $("#ff_root");
+    const data = await loadFacts();
+    if (!data || !Array.isArray(data.items||data)) {
+      // Fallback simple list
+      const list = $("#ff_fallback_list");
+      if (list) {
+        const demo = (data && (data.items||data)) || [];
+        demo.slice(0,20).forEach(f=>{
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${byLang(f.title, f.claim||"—")}</strong>
+            ${f.sources?.[0] ? ` — <a href="${f.sources[0].url}" target="_blank" rel="noopener">source</a>` : ""}`;
+          list.appendChild(li);
+        });
+      }
+      root.classList.remove("ff-pending");
+      root.classList.add("ff-ready");
+      return;
+    }
+
+    ALL = data.items || data;
+
+    // Premier lot
+    newRandomBatch();
+
+    // Écoutes
+    $("#ff_random")?.addEventListener("click", newRandomBatch);
+    $("#ff_search")?.addEventListener("input", () => {
+      // filtre + nouveau tirage dans le sous-ensemble
+      newRandomBatch();
     });
+
+    // Page « montée »
+    root.classList.remove("ff-pending");
+    root.classList.add("ff-ready");
   }
 
-  // --- Cycle de chargement --------------------------------------------------
-  let seenIds = [];
-  let currentSeries = '';
-
-  async function loadBatch({count=12, reset=false}={}){
-    if (reset) { seenIds = []; }
-    const first = await fetchAPI(count, seenIds, currentSeries);
-    const list  = first && first.length ? first : await fetchLocal(currentSeries);
-    // dédoublonne par id
-    const uniq = [];
-    const seen = new Set(seenIds);
-    for (const it of list) { if (!seen.has(it.id)) { seen.add(it.id); uniq.push(it); } }
-    if (!uniq.length) return;
-
-    seenIds = Array.from(seen);
-    renderCards(uniq);
-    renderCloud(uniq);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", main);
+  } else {
+    main();
   }
-
-  // --- Reroll / Form --------------------------------------------------------
-  els.rerollBtn && els.rerollBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    loadBatch({count: 12, reset: true});
-  });
-
-  els.form && els.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(els.form);
-    currentSeries = (fd.get('series') || '').toString().trim();
-    loadBatch({count: 12, reset: true});
-  });
-
-  // --- Go -------------------------------------------------------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    loadBatch({count: 12, reset: true});
-  });
 })();
