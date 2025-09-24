@@ -1,8 +1,9 @@
 // public/fun-facts.js — FR/EN/DE
-// - Recto = claim / Verso = explain + Source
+// - Recto = claim ; Verso = explain + Source
 // - Bouton "Nouveau lot" + skeleton de chargement
-// - Anti-répétitions (localStorage) + seen compact en GET
-// - Panneau debug optionnel (?ffdebug=1)
+// - Anti-répétitions (localStorage) + seen compact
+// - Debug panneau (?ffdebug=1)
+// - Fallback CSS seulement si #facts-grid = 0×0, puis SUPPRIMÉ si la grille retrouve une taille.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -39,9 +40,9 @@
 
   // ---------- i18n ----------
   const LMAP = {
-    fr: { myth: 'Mythe', fact: 'Fait vérifié', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.', cards: 'cartes', reset: '♻︎ Réinitialiser tirages' },
-    en: { myth: 'Myth',  fact: 'Verified fact', source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.', cards: 'cards', reset: '♻︎ Reset seen' },
-    de: { myth: 'Irrtum',fact: 'Belegter Fakt', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.', cards: 'Karten', reset: '♻︎ Zurücksetzen' },
+    fr: { myth: 'Mythe', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.', cards: 'cartes', reset: '♻︎ Réinitialiser tirages' },
+    en: { myth: 'Myth',  source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.', cards: 'cards', reset: '♻︎ Reset seen' },
+    de: { myth: 'Irrtum',source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.', cards: 'Karten', reset: '♻︎ Zurücksetzen' },
   };
   const L = LMAP[LANG] || LMAP.fr;
   log('LANG =', LANG, 'labels =', L);
@@ -84,6 +85,10 @@
     `;
     document.head.appendChild(st);
     dbg('fallback CSS injected');
+  };
+  const removeFallbackCSS = () => {
+    const st = $('#ff_fallback_css');
+    if (st) { st.remove(); dbg('fallback CSS removed'); }
   };
   const forceVisible = (el) => {
     let n = el, applied = false;
@@ -128,17 +133,14 @@
   const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
-  // ---------- Normalisation (recto/verso prêts) ----------
+  // ---------- Normalisation ----------
   const keyOf = (it) => (it?.id || it?.claim || it?.title || it?.url || JSON.stringify(it||{})).slice(0, 180);
   const normalize = (it) => {
-    // préférer les champs “propres” du batch
     let claim = it.claim || it.title || it.q || '';
     let explain = it.explain || it.explainShort || it.explanation || it.truth || it.answer || '';
     const url = it.source || (Array.isArray(it.sources) ? (typeof it.sources[0] === 'string' ? it.sources[0] : it.sources[0]?.url) : it.url) || '';
-
     claim = ensureDot(sentence(claim));
     explain = ensureDot(sentence(clampWords(explain, 30)));
-
     return { type: 'myth', claim, explain, url, _k: keyOf(it) };
   };
 
@@ -273,12 +275,14 @@
     GRID.appendChild(frag);
     if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
 
-    // Layout check
+    // Layout check: if grid has size, remove fallback CSS to restore 3D flip
     requestAnimationFrame(() => {
       let rect = GRID.getBoundingClientRect();
       if (!rect.width || !rect.height) {
         forceVisible(GRID);
         injectFallbackCSS();
+      } else {
+        removeFallbackCSS();
       }
     });
   };
@@ -287,13 +291,30 @@
   const ensureControls = () => {
     let btn = $('#ff_random') || $('#ff-random') || $('#ff-new');
     if (!btn) {
-      const h1 = document.querySelector('h1') || document.body;
+      // place a visible button right under H1 (or top of section)
+      const anchor = document.querySelector('h1') || GRID.parentElement || document.body;
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex';
+      wrap.style.gap = '8px';
+      wrap.style.alignItems = 'center';
+      wrap.style.margin = '12px 0';
       btn = document.createElement('button');
       btn.id = 'ff_random';
       btn.className = 'btn primary';
-      btn.style.marginLeft = '8px';
       btn.textContent = L.newBatch;
-      h1.parentNode.insertBefore(btn, h1.nextSibling);
+      wrap.appendChild(btn);
+      // optional reset button (dev)
+      const r = document.createElement('button');
+      r.id = 'ff_reset';
+      r.className = 'btn';
+      r.textContent = L.reset;
+      wrap.appendChild(r);
+      anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
+      r.addEventListener('click', () => {
+        localStorage.removeItem('ff_seen_ids_v1');
+        seenIDs = new Set();
+        lastKeys = new Set();
+      });
     }
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -302,21 +323,6 @@
       try { render(await getFacts(9, 3)); }
       finally { btn.classList.remove('is-busy'); btn.removeAttribute('aria-busy'); }
     });
-
-    // Reset "vu" (utile en dev)
-    if (!$('#ff_reset')) {
-      const r = document.createElement('button');
-      r.id = 'ff_reset';
-      r.className = 'btn';
-      r.style.marginLeft = '8px';
-      r.textContent = L.reset;
-      btn.after(r);
-      r.addEventListener('click', () => {
-        localStorage.removeItem('ff_seen_ids_v1');
-        seenIDs = new Set();
-        lastKeys = new Set();
-      });
-    }
   };
 
   // ---------- Go ----------
