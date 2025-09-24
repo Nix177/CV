@@ -74,7 +74,7 @@ function extractFacts(html, lang){
   const url = lang==="fr" ? WIKI_FR : WIKI_EN;
   let html = await fetchWiki(url);
   let items = extractFacts(html, lang);
-  if(!items.length && lang==="fr"){ // fallback EN
+  if(!items.length && lang==="fr"){ // fb EN
     html = await fetchWiki(WIKI_EN);
     items = extractFacts(html, "en");
   }
