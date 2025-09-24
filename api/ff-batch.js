@@ -185,7 +185,7 @@ module.exports = async function handler(req, res) {
       if (!seenIds.has(it.id)) { seenIds.add(it.id); uniq.push(it); }
     }
 
-    // Exclude 'seen' from query
+    // Exclude already seen IDs from query param
     const fresh = uniq.filter(it => !seen.has(it.id));
 
     // Shuffle & pick
