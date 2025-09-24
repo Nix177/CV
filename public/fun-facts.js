@@ -1,5 +1,5 @@
 // public/fun-facts.js — Fun Facts via dataset local (prioritaire) + fallback APIs.
-// Cartes recto/verso, anti-répétition persistante, FR/EN/DE, logs & CSS de secours.
+// Cartes recto/verso, anti-répétition persistante, FR/EN/DE, logs & CSS de secours (classes préfixées ff-* pour éviter les collisions).
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -36,18 +36,22 @@
   function injectFallbackCSS() {
     if (document.getElementById('ff-fallback-css')) return;
     const css = `
-      #facts-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; align-items:stretch; }
-      .card3d { perspective: 1200px; outline: none; }
-      .card3d .inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .5s ease; }
-      .card3d.is-flipped .inner { transform: rotateY(180deg); }
-      .card3d .face { position: relative; padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); min-height: 160px; box-shadow: 0 6px 20px rgba(0,0,0,.25); backface-visibility: hidden; }
-      .card3d .face.back { transform: rotateY(180deg); }
-      .ff-head { font-weight: 700; opacity: .9; margin-bottom: 8px; }
-      .badge { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: .85rem; }
+      #facts-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; align-items:stretch; margin-top: 8px; }
+      .ff-card { position: relative; perspective: 1200px; outline: none; }
+      .ff-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .5s ease; }
+      .ff-card.is-flipped .ff-inner { transform: rotateY(180deg); }
+      .ff-face { display:block !important; position: relative; padding: 16px; border-radius: 16px; 
+                 background-color: rgba(255,255,255,0.06); backdrop-filter: blur(4px); 
+                 color: #e8efff; min-height: 200px; 
+                 box-shadow: 0 6px 20px rgba(0,0,0,.28); backface-visibility: hidden; 
+                 border: 1px solid rgba(255,255,255,0.10); }
+      .ff-face.ff-back { transform: rotateY(180deg); }
+      .ff-head { font-weight: 700; opacity: .92; margin-bottom: 8px; }
+      .badge { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: .85rem; }
       .ff-text { line-height: 1.35; }
-      .ff-actions { margin-top: 12px; font-size: .9rem; opacity: .9; }
-      .ff-link { text-decoration: underline; }
-      .ff-skel { height: 180px; border-radius: 16px; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06)); background-size: 200% 100%; animation: ffShine 1.2s linear infinite; }
+      .ff-actions { margin-top: 12px; font-size: .9rem; opacity: .96; }
+      .ff-link { text-decoration: underline; color: #cfe0ff; }
+      .ff-skel { height: 200px; border-radius: 16px; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06)); background-size: 200% 100%; animation: ffShine 1.2s linear infinite; }
       @keyframes ffShine { 0%{background-position:0 0} 100%{background-position:200% 0} }
     `;
     const style = document.createElement('style');
@@ -139,21 +143,21 @@
   // ---------- Carte ----------
   const card = (n) => {
     const wrap = document.createElement('div');
-    wrap.className = 'card3d';
+    wrap.className = 'ff-card';
     wrap.tabIndex = 0;
 
     const inner = document.createElement('div');
-    inner.className = 'inner';
+    inner.className = 'ff-inner';
 
     const front = document.createElement('div');
-    front.className = 'face front';
+    front.className = 'ff-face ff-front';
     front.innerHTML = `
       <div class="ff-head"><span class="badge">${L.myth}</span></div>
       <p class="ff-text ff-claim">${n.claim || ''}</p>
       <div class="ff-actions"></div>`;
 
     const back = document.createElement('div');
-    back.className = 'face back';
+    back.className = 'ff-face ff-back';
     const link = n.url ? `<a class="ff-link" href="${n.url}" target="_blank" rel="noopener">${L.source} · ${domain(n.url)}</a>` : '';
     back.innerHTML = `<p class="ff-text ff-explain">${n.explain || ''}</p><div class="ff-actions">${link}</div>`;
 
@@ -285,7 +289,7 @@
       GRID.style.display = 'grid';
       GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
       GRID.style.gap = '16px';
-      GRID.style.minHeight = '180px';
+      GRID.style.minHeight = '200px';
       GRID.style.visibility = 'visible';
       DBG('forceVisible applied');
     }
@@ -299,7 +303,6 @@
     }
     const frag = document.createDocumentFragment();
 
-    // DEBUG: montrer quelques items normalisés
     for (let i = 0; i < Math.min(3, list.length); i++) {
       DBG('normalize['+i+']', normalize(list[i]));
     }
