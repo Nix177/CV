@@ -347,44 +347,57 @@ a:focus-visible {
 }
 
 /* =========================================================
-   FUN FACTS — Grille, +10% hauteur cartes, verso -10%, skeleton
+   FUN FACTS — v2 (ff-*) : grille, cartes, flip 3D, overrides anti-collision
    ========================================================= */
 
-/* >>> le conteneur a sa propre grille <<< */
+/* La section et la grille ont une largeur explicite */
+.ff-section{ width: min(1100px, 96vw); margin: 8px auto; }
 #facts-grid{
   display:grid;
   gap:16px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  min-height: 220px;         /* évite le 0px pendant le flux */
+  visibility: visible;
 }
 
-/* Faces en colonne, alignées à gauche */
-#facts-grid .card3d .face{
-  display:flex !important;
-  flex-direction:column;
-  align-items:flex-start;
-  text-align:left;
-  padding:16px;
+/* Cartes 3D (nouvelles classes préfixées) */
+.ff-card{ position: relative; perspective: 1200px; outline: none; }
+.ff-inner{
+  position: relative; width: 100%; min-height: 210px;
+  transform-style: preserve-3d; transition: transform .5s ease;
 }
+.ff-card.is-flipped .ff-inner{ transform: rotateY(180deg); }
 
-/* Tag du haut */
-#facts-grid .ff-head{ display:flex; gap:8px; margin-bottom:6px; }
+/* Faces (on force l’affichage pour casser les collisions) */
+.ff-face{
+  display: block !important;
+  position: relative !important;      /* surtout pas absolute par défaut */
+  inset: auto !important;
+  backface-visibility: hidden !important;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  box-shadow: 0 6px 20px rgba(0,0,0,.28);
+  /* pour éviter tout “collapse” */
+  min-height: 200px;
+}
+.ff-back{ transform: rotateY(180deg); }
 
-/* Texte recto/verso */
-#facts-grid .ff-text{ margin:0; font-size: clamp(0.98rem, 0.55vw + 0.9rem, 1.1rem); line-height:1.35; }
-#facts-grid .ff-claim{ font-weight:800; }
-#facts-grid .ff-explain{ font-weight:600; font-size: 0.9em; }  /* -10% au verso */
-
-#facts-grid .ff-actions{ margin-top:auto; display:flex; gap:10px; }
-#facts-grid .ff-link{ text-decoration:none; }
-
-/* +10% de hauteur par rapport à 170px */
-#facts-grid .card3d{ min-height: 188px; }
+/* Titre / texte / lien */
+.ff-head{ font-weight: 700; opacity: .92; margin-bottom: 8px; display:flex; gap:8px; }
+.ff-text{ line-height: 1.35; margin: 0; }
+.ff-claim{ font-weight: 800; }
+.ff-explain{ font-weight: 600; font-size: 0.95em; } /* verso un peu plus petit */
+.ff-actions{ margin-top: auto; display:flex; gap:10px; }
+.ff-link{ color: var(--link); text-decoration: underline; }
 
 /* Skeletons pendant le chargement */
 #facts-grid.ff-loading{ position:relative; }
 #facts-grid .ff-skel{
-  height: 188px;
-  border-radius: var(--radius);
+  height: 200px;
+  border-radius: 16px;
   border: 1px solid var(--border);
   background: linear-gradient(90deg,
     rgba(255,255,255,.04) 25%,
@@ -392,9 +405,12 @@ a:focus-visible {
     rgba(255,255,255,.04) 63%);
   background-size: 400% 100%;
   animation: ff-shine 1.1s ease-in-out infinite;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 20px rgba(0,0,0,.28);
 }
-@keyframes ff-shine{ 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+@keyframes ff-shine{ 0%{ background-position: 100% 0; } 100%{ background-position: 0 0; } }
 
-/* Cache le fallback statique si présent */
-#ff-fallback, .ff-fallback{ display:none !important; }
+/* --- Hard overrides anti-collision (si un thème masque encore) --- */
+#facts-grid, .ff-card, .ff-inner, .ff-face{
+  opacity: 1 !important;
+  visibility: visible !important;
+}
