@@ -1,5 +1,5 @@
 // public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks)
-// Flip sur place, autosize, états ff-ready/ff-pending et mini-chat en bas de page.
+// Flip sur place, autosize, états ff-ready/ff-pending et mini-chat.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -37,7 +37,7 @@
   };
   const L = LMAP[LANG] || LMAP.fr;
 
-  // ---------- CSS de secours (superposition + mode mesure) ----------
+  // ---------- CSS de secours ----------
   function injectFallbackCSS() {
     if (document.getElementById('ff-fallback-css')) return;
     const css = `
@@ -57,7 +57,6 @@
       .ff-skel{height:200px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12),rgba(255,255,255,.06));
                background-size:200% 100%;animation:ffShine 1.2s linear infinite;border:1px solid rgba(255,255,255,.10);box-shadow:0 6px 20px rgba(0,0,0,.28)}
       @keyframes ffShine{0%{background-position:0 0}100%{background-position:200% 0}}
-      /* Mode mesure pour calculer les hauteurs */
       .ff-card.ff-measure .ff-face{position:static !important;transform:none !important;backface-visibility:visible !important;overflow:visible;}
       /* Mini-chat */
       .ff-qa{margin-top:20px;border-radius:16px;border:1px dashed rgba(255,255,255,.25);background:rgba(255,255,255,.04);padding:14px 14px 12px;backdrop-filter:blur(3px)}
@@ -241,16 +240,20 @@
   let resizeTO=null;
   window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO=setTimeout(measureAndFixHeights, 120); });
 
-  // ---------- Mini-chat (réutilise le bloc du bas) ----------
+  // ---------- Mini-chat (nouvel endroit visible) ----------
   function mountChat(currentCards) {
-    // On cherche d’abord un conteneur existant en bas (souvent .ff-fallback),
-    // sinon on en crée un juste après la grille.
-    let host = document.getElementById('ff_chat') || document.querySelector('.ff-fallback');
+    // Crée un VRAI conteneur dynamique (pas .ff-fallback qui est masqué en ff-ready)
+    let host = document.getElementById('ff_chat');
     if (!host) {
+      const cardsSection = GRID.closest('section') || GRID.parentNode;
+      const sec = document.createElement('section');
+      sec.className = 'ff-section ff-dynamic';
       host = document.createElement('div');
       host.id = 'ff_chat';
-      GRID.parentNode.appendChild(host);
+      sec.appendChild(host);
+      cardsSection.parentNode.insertBefore(sec, cardsSection.nextSibling);
     }
+
     host.innerHTML = `
       <div class="ff-qa" id="ff-qa">
         <h3>${L.ask}</h3>
@@ -305,6 +308,8 @@
         input.focus();
       }
     });
+
+    DBG('chat mounted');
   }
 
   // ---------- Rendu ----------
@@ -338,8 +343,7 @@
       forceVisible();
       measureAndFixHeights();
       setReady();
-      // Monte le mini-chat (réutilise le bloc du bas au lieu de le laisser vide)
-      mountChat(normed);
+      mountChat(normed); // ← chat visible (ff-dynamic)
     });
   };
 
