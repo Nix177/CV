@@ -1,84 +1,75 @@
-/* public/fun-facts.js — debug + garde-affichage */
+/* public/fun-facts.js */
 (() => {
-  // ===== Debug ==============================================================
-  const DEBUG = /(?:\?|&)ffdebug=1\b/i.test(location.search) ||
-                (typeof localStorage !== 'undefined' && localStorage.getItem('ffDebug') === '1');
-  const dlog = (...a) => { if (DEBUG) console.log('[fun-facts]', ...a); };
-  const derr = (...a) => console.error('[fun-facts]', ...a);
-  const time = (label) => { const t0=performance.now(); return ()=>dlog(`${label} in ${(performance.now()-t0).toFixed(1)}ms`); };
+  const log = (...a) => console.debug('[fun-facts]', ...a);
 
-  // ===== Langue / i18n ======================================================
+  // ---------- Langue ----------
   const getLang = () => {
-    const htmlLang = (document.documentElement.getAttribute('lang') || '').slice(0,2).toLowerCase();
-    if (htmlLang) return htmlLang;
-    const m = (location.pathname.split('/').pop() || '').toLowerCase().match(/-(en|de)\.html?$/);
+    const h = (document.documentElement.getAttribute('lang') || '').slice(0,2).toLowerCase();
+    if (h) return h;
+    const m = (location.pathname.split('/').pop()||'').match(/-(en|de)\.html?$/i);
     return m ? m[1] : 'fr';
   };
   const LANG = getLang();
-  const LMAP = {
-    fr:{ myth:'Mythe', fact:'Fait vérifié', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.' },
-    en:{ myth:'Myth',  fact:'Verified fact', source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.' },
-    de:{ myth:'Irrtum',fact:'Belegter Fakt', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.' },
-  };
-  const L = LMAP[LANG] || LMAP.fr;
-  dlog('LANG =', LANG, 'labels =', L);
 
-  // ===== DOM helpers / conteneur ============================================
-  const $ = (s, el=document) => el.querySelector(s);
+  // ---------- i18n ----------
+  const L = {
+    fr: { myth:'Mythe', fact:'Fait vérifié', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.' },
+    en: { myth:'Myth',  fact:'Verified fact', source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.' },
+    de: { myth:'Irrtum',fact:'Belegter Fakt', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.' },
+  }[LANG];
+
+  log('LANG =', LANG, 'labels =', L);
+
+  // ---------- DOM helpers ----------
+  const $  = (s, el=document) => el.querySelector(s);
+  const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
 
   const ensureGrid = () => {
-    let grid = document.getElementById('facts-grid');
+    let grid = $('#facts-grid');
     if (!grid) {
       const main = $('main') || document.body;
       const sec = document.createElement('section');
-      sec.className = 'ff-section';
+      sec.className = 'section ff-section';
       grid = document.createElement('div');
       grid.id = 'facts-grid';
       sec.appendChild(grid);
       main.appendChild(sec);
-      console.warn('[fun-facts] #facts-grid manquait, il a été créé.');
+      log('#facts-grid manquait, créé dynamiquement.');
     } else {
-      dlog('#facts-grid trouvé.');
+      log('#facts-grid trouvé.');
     }
 
-    // Assure le layout et la visibilité
-    grid.classList.add('flip-grid');   // utilise la grille définie dans ta CSS globale
-    grid.classList.remove('hidden');   // au cas où
-    grid.style.removeProperty('display');
-
-    // Fallback si la CSS n'est pas chargée : force un grid minimal
-    const styles = getComputedStyle(grid);
-    const isNotGrid = styles.display === 'block' || styles.display === 'inline' || styles.display === 'contents';
-    if (isNotGrid) {
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
-      grid.style.gap = '16px';
-      dlog('Fallback grid inline appliqué (CSS globale manquante ?)');
-    }
+    // S’il n’a pas de layout, on le force (sécurise l’affichage même sans CSS)
+    grid.classList.add('flip-grid');
+    grid.style.minHeight = '40px'; // assure qu’on verra le squelette
     return grid;
   };
   const GRID = ensureGrid();
 
-  // ===== Squelette ==========================================================
+  // ---------- Skeleton ----------
   const showSkeleton = (n=9) => {
-    dlog('showSkeleton', n);
+    log('showSkeleton', n);
     GRID.classList.add('ff-loading');
     GRID.setAttribute('aria-busy','true');
     GRID.innerHTML = '';
     for (let i=0;i<n;i++){
-      const d=document.createElement('div');
-      d.className='ff-skel';
+      const d = document.createElement('div');
+      d.className = 'ff-skel';
       GRID.appendChild(d);
     }
+    // Fallback dur si la CSS n’est pas appliquée
+    GRID.style.display = GRID.style.display || 'grid';
+    GRID.style.gridTemplateColumns = GRID.style.gridTemplateColumns || 'repeat(auto-fit,minmax(220px,1fr))';
+    GRID.style.gap = GRID.style.gap || '16px';
   };
   const clearSkeleton = () => {
-    dlog('clearSkeleton');
+    log('clearSkeleton');
     GRID.classList.remove('ff-loading');
     GRID.removeAttribute('aria-busy');
-    GRID.innerHTML='';
+    GRID.innerHTML = '';
   };
 
-  // ===== Utils texte ========================================================
+  // ---------- Utils texte ----------
   const clampWords = (txt, max) => {
     if (!txt) return '';
     const w = txt.trim().split(/\s+/);
@@ -92,49 +83,53 @@
   const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
-  // ===== Normalisation ======================================================
-  const normalize = (it, idx) => {
-    if (!it || typeof it!=='object') { dlog('normalize: item invalide @', idx, it); return null; }
-    let claim   = it.claim   || it.front || it.title || it.myth || it.question || '';
-    let explain = it.explain || it.back  || it.fact  || it.answer || it.summary || '';
-    const url   = it.source || it.url || it.link || '';
+  // ---------- Normalisation ----------
+  const normalize = it => {
+    let claim   = it?.claim   ?? it?.front ?? it?.title ?? it?.myth ?? it?.question ?? '';
+    let explain = it?.explain ?? it?.back  ?? it?.fact  ?? it?.answer  ?? it?.summary ?? '';
+    const url   = it?.source  ?? it?.url   ?? it?.link  ?? '';
 
-    claim = claim
+    // Recto propre
+    claim = (claim||'')
       .replace(/^mythe?\s*[:\-]\s*/i,'')
       .replace(/^myth\s*[:\-]\s*/i,'')
       .replace(/^misconception\s*[:\-]\s*/i,'')
-      .replace(/^-+\s*/, '');
-    claim = sentence(claim).replace(/[.!?…]+$/,'');
-    if (claim.length>160) claim = clampWords(claim,22);
+      .replace(/^-+\s*/,'');
 
-    if (explain) explain = ensureDot(sentence(clampWords(explain,30)));
+    claim = sentence(claim).replace(/[.!?…]+$/,'');
+    if (claim.length>160) claim = clampWords(claim, 22);
+
+    // Verso ≤ 30 mots
+    if (explain) explain = ensureDot(sentence(clampWords(explain, 30)));
     if (!explain) {
-      explain = { fr:'Voir la source pour le détail.', en:'See the source for details.', de:'Siehe Quelle für Details.' }[LANG];
+      explain = { fr:'Voir la source pour le détail.',
+                  en:'See the source for details.',
+                  de:'Siehe Quelle für Details.' }[LANG];
     }
-    const out = { claim, explain, url, sourceTitle: it.sourceTitle || domain(url) };
-    if (DEBUG) dlog('normalize @', idx, '→', out);
-    return out;
+
+    const n = { claim, explain, url, sourceTitle: it?.sourceTitle || domain(url) };
+    return n;
   };
 
-  // ===== Carte ==============================================================
-  const card = (item) => {
+  // ---------- Carte ----------
+  const card = item => {
     const wrap = document.createElement('div');
     wrap.className = 'card3d';
-    wrap.tabIndex=0;
+    wrap.tabIndex = 0;
     wrap.setAttribute('role','button');
 
     const inner = document.createElement('div');
-    inner.className='inner';
+    inner.className = 'inner';
 
     const front = document.createElement('div');
-    front.className='face front';
+    front.className = 'face front';
     front.innerHTML = `
       <div class="ff-head"><span class="badge">${L.myth}</span></div>
       <p class="ff-text ff-claim">${item.claim}</p>
     `;
 
-    const back  = document.createElement('div');
-    back.className='face back';
+    const back = document.createElement('div');
+    back.className = 'face back';
     back.innerHTML = `
       <div class="ff-head"><span class="badge">${L.fact}</span></div>
       <p class="ff-text ff-explain">${item.explain}</p>
@@ -153,99 +148,101 @@
     return wrap;
   };
 
-  // ===== Fetch JSON sécurisé + logs ========================================
+  // ---------- Fetch JSON sécurisé ----------
   const fetchJSON = async (url) => {
-    dlog('fetchJSON:', url);
-    const stop = time('fetch');
+    log('fetchJSON:', url);
+    const t0 = performance.now();
     const res = await fetch(url, { headers:{'Accept':'application/json'} });
-    stop();
-    dlog('→ status =', res.status, 'content-type =', res.headers.get('content-type'));
-    if (!res.ok) {
-      let preview = '';
-      try { preview = (await res.text()).slice(0,200); } catch {}
-      throw new Error(`HTTP ${res.status} — body: ${preview}`);
-    }
+    const t1 = performance.now();
+    log('fetch in', (t1-t0).toFixed(1)+'ms', '→ status =', res.status, 'content-type =', res.headers.get('content-type'));
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const ct = res.headers.get('content-type') || '';
     if (!/json/i.test(ct)){
       const txt = await res.text();
-      throw new Error(`Réponse non-JSON (${ct}) — début: ${txt.slice(0,200)}`);
+      throw new Error(`Réponse non-JSON (${ct}): ${txt.slice(0,120)}…`);
     }
-    const data = await res.json();
-    if (DEBUG) {
-      dlog('payload keys =', data && typeof data==='object' ? Object.keys(data) : typeof data);
-      try { dlog('payload preview =', JSON.parse(JSON.stringify(data)).items?.slice?.(0,2) ?? data); } catch {}
-    }
-    return data;
+    const payload = await res.json();
+    const keys = payload && typeof payload==='object' ? Object.keys(payload) : [];
+    log('payload keys =', keys, 'payload preview =', Array.isArray(payload?.items)?payload.items.slice(0,2):payload);
+    return payload;
   };
 
-  // ===== Charger un lot =====================================================
+  // ---------- Charge un lot ----------
   let lastKeys = new Set();
-  const keyOf = it => (it.url || it.claim || JSON.stringify(it)).slice(0,200);
+  const keyOf = it => (it?.url || it?.claim || JSON.stringify(it)).slice(0,200);
 
   const getFacts = async (n=9) => {
     const url = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
-    const raw = await fetchJSON(url);
+    const data = await fetchJSON(url);
     let arr =
-      Array.isArray(raw)        ? raw :
-      Array.isArray(raw?.items) ? raw.items :
-      Array.isArray(raw?.facts) ? raw.facts :
+      Array.isArray(data)        ? data :
+      Array.isArray(data?.items) ? data.items :
+      Array.isArray(data?.facts) ? data.facts :
       [];
-    dlog('getFacts: array len =', arr.length);
 
+    log('getFacts: type=', Array.isArray(arr)?'array':typeof arr, 'len=', arr.length);
+
+    // filtrage anti-répétition immédiate
     if (arr.length){
       const filtered = arr.filter(x => !lastKeys.has(keyOf(x)));
-      dlog('filtered unique =', filtered.length);
+      log('filtered unique =', filtered.length);
       if (filtered.length >= Math.min(n,3)) arr = filtered;
     }
-    const out = arr.slice(0,n);
-    lastKeys = new Set(out.map(keyOf));
-    return out;
+    lastKeys = new Set(arr.slice(0,n).map(keyOf));
+    return arr.slice(0,n);
   };
 
   const render = (list) => {
-    dlog('render: items =', list.length);
+    log('render: items =', list.length);
     clearSkeleton();
+
+    // Filets de sécurité d’affichage du grid
+    GRID.style.display = 'grid';
+    GRID.style.gridTemplateColumns = 'repeat(auto-fit,minmax(220px,1fr))';
+    GRID.style.gap = '16px';
+
     const frag = document.createDocumentFragment();
-    list.forEach((it, idx) => {
-      const n = normalize(it, idx);
+    list.forEach((it, i) => {
+      const n = normalize(it);
+      log(`normalize @ ${i} →`, n);
       if (n) frag.appendChild(card(n));
     });
     GRID.appendChild(frag);
 
-    // Vérification post-render
-    const cards = GRID.querySelectorAll('.card3d');
-    dlog('post-render: #cards =', cards.length);
-    if (cards.length === 0) {
-      console.warn('[fun-facts] Aucune carte visible après render. Forçage display:grid (fallback).');
-      GRID.style.display = 'grid';
-      GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
-      GRID.style.gap = '16px';
-    }
+    requestAnimationFrame(() => {
+      const nCards = $$('.card3d', GRID).length;
+      log('post-render: #cards =', nCards);
+      const rect = GRID.getBoundingClientRect();
+      if (nCards === 0 || rect.height < 10) {
+        console.warn('[fun-facts] cartes invisibles → application de styles de secours');
+        GRID.style.display = 'grid';
+        GRID.style.gridTemplateColumns = 'repeat(auto-fit,minmax(220px,1fr))';
+        GRID.style.gap = '16px';
+        const first = $('.card3d', GRID);
+        if (first) first.style.minHeight = '180px';
+      }
+    });
   };
 
   const load = async () => {
-    console.groupCollapsed('[fun-facts] load()');
+    log('load()');
     showSkeleton(9);
-    const stop = time('load() total');
+    const t0 = performance.now();
     try {
       const facts = await getFacts(9);
-      if (!Array.isArray(facts)) {
-        derr('load: facts N’EST PAS un tableau. Reçu =', facts);
-        GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
-        return;
-      }
       render(facts);
     } catch (e) {
       clearSkeleton();
       GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
-      derr('load() error:', e);
+      console.error('[fun-facts] load() error:', e);
     } finally {
-      stop();
-      console.groupEnd();
+      const t1 = performance.now();
+      log('load() total in', (t1-t0).toFixed(1)+'ms');
     }
   };
 
-  // ===== Bouton "Nouveau lot" ==============================================
+  // ---------- Bouton "Nouveau lot" ----------
   const ensureNewBtn = () => {
     let btn = $('#ff_random') || $('#ff-random') || $('#ff-new');
     if (!btn) {
@@ -253,37 +250,23 @@
       btn = document.createElement('button');
       btn.id = 'ff_random';
       btn.className = 'btn primary';
-      btn.style.margin = '10px 0';
       btn.textContent = L.newBatch;
-      h1.parentNode.insertBefore(btn, h1.nextSibling);
-      dlog('Bouton "Nouveau lot" créé.');
+      (h1.parentNode || document.body).insertBefore(btn, h1.nextSibling);
+      log('Bouton "Nouveau lot" injecté.');
     } else {
-      dlog('Bouton "Nouveau lot" trouvé.');
+      log('Bouton "Nouveau lot" trouvé.');
     }
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      dlog('Nouveau lot: click');
       btn.classList.add('is-busy'); btn.setAttribute('aria-busy','true');
       try { await load(); } finally { btn.classList.remove('is-busy'); btn.removeAttribute('aria-busy'); }
     });
   };
 
-  // ===== Détecter si quelqu’un efface le grid après render ==================
-  const mo = new MutationObserver(() => {
-    const hasCards = GRID.querySelector('.card3d');
-    if (!hasCards && !GRID.classList.contains('ff-loading')) {
-      console.warn('[fun-facts] Le contenu de #facts-grid a été vidé par autre chose.');
-    }
-  });
-  mo.observe(GRID, {childList:true, subtree:false});
-
-  // ===== Go =================================================================
+  // ---------- GO ----------
   document.addEventListener('DOMContentLoaded', () => {
-    dlog('DOMContentLoaded');
+    log('DOMContentLoaded');
     ensureNewBtn();
     load();
   });
-
-  // Expose pour debug
-  window.__ff = { reload: load, debug(on=true){ localStorage.setItem('ffDebug', on?'1':'0'); dlog('debug=', on); }, lang: LANG };
 })();
