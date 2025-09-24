@@ -1,5 +1,5 @@
 // public/fun-facts.js — Fun Facts via dataset local (prioritaire) + fallback APIs.
-// Cartes recto/verso, anti-répétition persistante, FR/EN/DE.
+// Cartes recto/verso, anti-répétition persistante, FR/EN/DE, logs & CSS de secours.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -15,6 +15,7 @@
   };
   const LANG = getLang();
   DBG('LANG', LANG);
+  log('LANG =', LANG, 'labels =', {});
 
   // ---------- Fichiers dataset par langue ----------
   const DATASETS = {
@@ -30,7 +31,31 @@
     de: { myth: 'Irrtum',      fact: 'Antwort', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.',       cards: 'Karten' },
   };
   const L = LMAP[LANG] || LMAP.fr;
-  log('LANG =', LANG, 'labels =', L);
+
+  // ---------- CSS de secours (flip 3D + grid) ----------
+  function injectFallbackCSS() {
+    if (document.getElementById('ff-fallback-css')) return;
+    const css = `
+      #facts-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; align-items:stretch; }
+      .card3d { perspective: 1200px; outline: none; }
+      .card3d .inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .5s ease; }
+      .card3d.is-flipped .inner { transform: rotateY(180deg); }
+      .card3d .face { position: relative; padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); min-height: 160px; box-shadow: 0 6px 20px rgba(0,0,0,.25); backface-visibility: hidden; }
+      .card3d .face.back { transform: rotateY(180deg); }
+      .ff-head { font-weight: 700; opacity: .9; margin-bottom: 8px; }
+      .badge { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: .85rem; }
+      .ff-text { line-height: 1.35; }
+      .ff-actions { margin-top: 12px; font-size: .9rem; opacity: .9; }
+      .ff-link { text-decoration: underline; }
+      .ff-skel { height: 180px; border-radius: 16px; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06)); background-size: 200% 100%; animation: ffShine 1.2s linear infinite; }
+      @keyframes ffShine { 0%{background-position:0 0} 100%{background-position:200% 0} }
+    `;
+    const style = document.createElement('style');
+    style.id = 'ff-fallback-css';
+    style.textContent = css;
+    document.head.appendChild(style);
+    DBG('fallback CSS injected');
+  }
 
   // ---------- DOM helpers ----------
   const $  = (s, el=document) => el.querySelector(s);
@@ -73,7 +98,6 @@
   };
 
   // ---------- Utils texte ----------
-  const trim = (s) => String(s || '').replace(/\s+/g, ' ').trim();
   const clampWords = (txt, max=30) => {
     if (!txt) return '';
     const w = txt.trim().split(/\s+/);
@@ -88,7 +112,7 @@
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
   // ---------- Keys / normalisation ----------
-  const shortHash = (str) => { // hash court base36
+  const shortHash = (str) => {
     let h = 2166136261 >>> 0;
     const s = String(str || '');
     for (let i = 0; i < s.length; i++) {
@@ -99,13 +123,10 @@
   };
   const keyOf = (it) => {
     if (it && it.id) return String(it.id);
-    // clé stable depuis pair (claim+source) si pas d'id dans le JSON
     return shortHash((it?.claim || it?.title || '') + '|' + (it?.source || it?.url || ''));
   };
 
   const normalize = (it) => {
-    // dataset: { claim, explain, source }
-    // APIs fallback divers: harmonise en { type, claim, explain, url }
     const type = (it.type || 'myth').toLowerCase();
     const claimRaw = it.claim || it.title || it.q || '';
     let explainRaw = it.explainShort || it.explanation || it.explain || it.truth || it.answer || '';
@@ -153,11 +174,11 @@
   };
   const saveSeen = (set) => {
     const arr = [...set];
-    const MAX = 600; // on garde large puisqu’on a 300+ items par langue
+    const MAX = 600;
     localStorage.setItem(LS_SEEN, JSON.stringify(arr.slice(-MAX)));
   };
   let seenIDs = loadSeen();
-  let lastKeys = new Set(); // évite les 9 précédents
+  let lastKeys = new Set();
 
   // ---------- DATASET local (prioritaire) ----------
   async function fetchDataset(lang) {
@@ -210,23 +231,17 @@
   }
 
   const fetchBatch = async (n) => {
-    // 0) dataset local par langue
     const ds = await fetchDataset(LANG);
     if (Array.isArray(ds) && ds.length) {
-      // mélange puis échantillon en excluant seen
       const pool = shuffleInPlace(ds.slice());
       const pick = sampleExcluding(pool, n*3, new Set([...seenIDs, ...lastKeys]));
       if (pick.length) return { arr: pick, meta: { source: 'dataset' } };
     }
-
-    // 1) scraping Wikipédia
     try {
       const url1 = `/api/ff-batch?lang=${encodeURIComponent(LANG)}&count=${n*3}`;
       const data1 = await fetchJSON(url1);
       if (Array.isArray(data1) && data1.length) return { arr: data1, meta: { source: 'ff-batch' } };
     } catch (e) { log('ff-batch failed → fallback /api/facts', e); }
-
-    // 2) facts fallback
     const url2 = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
     const data2 = await fetchJSON(url2);
     const arr = Array.isArray(data2) ? data2
@@ -263,6 +278,19 @@
   };
 
   // ---------- Rendu ----------
+  function forceVisible() {
+    const rect = GRID.getBoundingClientRect();
+    const needs = (!rect.height || !rect.width);
+    if (needs) {
+      GRID.style.display = 'grid';
+      GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
+      GRID.style.gap = '16px';
+      GRID.style.minHeight = '180px';
+      GRID.style.visibility = 'visible';
+      DBG('forceVisible applied');
+    }
+  }
+
   const render = (list) => {
     clearSkeleton();
     if (!list || !list.length) {
@@ -270,19 +298,23 @@
       return;
     }
     const frag = document.createDocumentFragment();
+
+    // DEBUG: montrer quelques items normalisés
+    for (let i = 0; i < Math.min(3, list.length); i++) {
+      DBG('normalize['+i+']', normalize(list[i]));
+    }
+
     list.forEach((it) => frag.appendChild(card(normalize(it))));
     GRID.appendChild(frag);
+
+    DBG('grid children after render', GRID.children.length);
+
     if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
-    // garde visible
+
     requestAnimationFrame(() => {
-      const rect = GRID.getBoundingClientRect();
-      if (!rect.height || !rect.width) {
-        GRID.style.display = 'grid';
-        GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
-        GRID.style.gap = '16px';
-        GRID.style.minHeight = '180px';
-        GRID.style.visibility = 'visible';
-      }
+      const r = GRID.getBoundingClientRect();
+      DBG('grid rect', { w: Math.round(r.width), h: Math.round(r.height) });
+      forceVisible();
     });
   };
 
@@ -316,7 +348,9 @@
     });
   };
 
+  // ---------- Go ----------
   document.addEventListener('DOMContentLoaded', () => {
+    injectFallbackCSS();
     DBG('grid found');
     ensureNewBtn();
     load();
