@@ -83,8 +83,7 @@
     if (claim.length>160) claim = clampWords(claim,22);
 
     // Verso ≤ 30 mots
-    if (explain) explain = ensureDot(sentence(claimWords(explain,30)));
-    function claimWords(x, n){ return clampWords(x, n); }
+    if (explain) explain = ensureDot(sentence(clampWords(explain,30)));
 
     if (!explain) {
       explain = { fr:'Voir la source pour le détail.',
@@ -136,7 +135,6 @@
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const ct = res.headers.get('content-type') || '';
     if (!/json/i.test(ct)){
-      // Si jamais c'est de l'HTML, éviter l’“Unexpected token <”
       const txt = await res.text();
       throw new Error(`Réponse non-JSON (${ct}): ${txt.slice(0,120)}…`);
     }
@@ -148,7 +146,6 @@
   const keyOf = it => (it.url || it.claim || JSON.stringify(it)).slice(0,200);
 
   const getFacts = async (n=9) => {
-    // API officielle
     const url = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
     const data = await fetchJSON(url);
     let arr =
@@ -188,7 +185,7 @@
     }
   };
 
-  // ---------- Bouton "Nouveau lot" (crée si absent) ----------
+  // ---------- Bouton "Nouveau lot" ----------
   const ensureNewBtn = () => {
     let btn = $('#ff_random') || $('#ff-random') || $('#ff-new');
     if (!btn) {
