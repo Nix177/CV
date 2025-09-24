@@ -347,10 +347,17 @@ a:focus-visible {
 }
 
 /* =========================================================
-   FUN FACTS — +10% taille cartes, verso -10%, skeleton + fallback masqué
+   FUN FACTS — Grille, +10% hauteur cartes, verso -10%, skeleton
    ========================================================= */
 
-/* Faces en colonne, à gauche */
+/* >>> le conteneur a sa propre grille <<< */
+#facts-grid{
+  display:grid;
+  gap:16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Faces en colonne, alignées à gauche */
 #facts-grid .card3d .face{
   display:flex !important;
   flex-direction:column;
@@ -359,21 +366,21 @@ a:focus-visible {
   padding:16px;
 }
 
-/* En-tête tags */
+/* Tag du haut */
 #facts-grid .ff-head{ display:flex; gap:8px; margin-bottom:6px; }
 
-/* Texte harmonisé recto/verso */
+/* Texte recto/verso */
 #facts-grid .ff-text{ margin:0; font-size: clamp(0.98rem, 0.55vw + 0.9rem, 1.1rem); line-height:1.35; }
 #facts-grid .ff-claim{ font-weight:800; }
-#facts-grid .ff-explain{ font-weight:600; font-size: 0.9em; }  /* -10% sur le verso */
+#facts-grid .ff-explain{ font-weight:600; font-size: 0.9em; }  /* -10% au verso */
 
 #facts-grid .ff-actions{ margin-top:auto; display:flex; gap:10px; }
 #facts-grid .ff-link{ text-decoration:none; }
 
-/* +10% hauteur des cartes */
-#facts-grid .card3d{ min-height: 188px; } /* 170px → 188px (~+10%) */
+/* +10% de hauteur par rapport à 170px */
+#facts-grid .card3d{ min-height: 188px; }
 
-/* Skeletons */
+/* Skeletons pendant le chargement */
 #facts-grid.ff-loading{ position:relative; }
 #facts-grid .ff-skel{
   height: 188px;
@@ -389,5 +396,5 @@ a:focus-visible {
 }
 @keyframes ff-shine{ 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
 
-/* Cache la section “repli” si elle existe encore */
+/* Cache le fallback statique si présent */
 #ff-fallback, .ff-fallback{ display:none !important; }
