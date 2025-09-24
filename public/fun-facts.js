@@ -1,4 +1,4 @@
-// public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks) avec autosize des cartes
+// public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks) avec flip sur place et autosize
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -43,7 +43,7 @@
       .ff-card.is-flipped .ff-inner{transform:rotateY(180deg);}
       .ff-face{display:block !important;position:absolute !important;inset:0 !important;overflow:auto;
                backface-visibility:hidden !important;padding:16px;border-radius:16px;background:rgba(255,255,255,.06);
-               border:1px solid rgba(255,255,255,.10);color:#e8efff;box-shadow:0 6px 20px rgba(0,0,0,.28);}
+               border:1px solid rgba(255,255,255,.10);color:#e8efff;box-shadow:0 6px 20px rgba(0,0,0,.28)}
       .ff-face.ff-back{transform:rotateY(180deg);}
       .ff-head{font-weight:700;opacity:.92;margin-bottom:8px}
       .badge{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.18);font-size:.85rem}
@@ -53,8 +53,7 @@
       .ff-skel{height:200px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12),rgba(255,255,255,.06));
                background-size:200% 100%;animation:ffShine 1.2s linear infinite;border:1px solid rgba(255,255,255,.10);box-shadow:0 6px 20px rgba(0,0,0,.28)}
       @keyframes ffShine{0%{background-position:0 0}100%{background-position:200% 0}}
-
-      /* Mode mesure : on annule la superposition juste le temps de calculer les hauteurs */
+      /* Mode mesure: on annule la superposition le temps de calculer les hauteurs */
       .ff-card.ff-measure .ff-face{position:static !important;transform:none !important;backface-visibility:visible !important;overflow:visible;}
     `;
     const style = document.createElement('style');
@@ -184,19 +183,42 @@
     return { arr, meta:{source:'facts'} };
   };
 
+  // ---------- getFacts (réintroduite) ----------
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  async function getFacts(n = 9, maxTries = 3) {
+    const picked = [];
+    const seenNow = new Set([...lastKeys, ...seenIDs]);
+    for (let attempt = 1; attempt <= maxTries && picked.length < n; attempt++) {
+      const { arr, meta } = await fetchBatch(n);
+      DBG('batch', { attempt, source: meta?.source, len: arr?.length || 0 });
+      for (const x of arr) {
+        const k = keyOf(x);
+        if (!seenNow.has(k)) {
+          picked.push(x);
+          seenNow.add(k);
+          if (picked.length >= n) break;
+        }
+      }
+      if (picked.length < n) await sleep(200);
+    }
+    lastKeys = new Set(picked.map(keyOf));
+    for (const k of lastKeys) seenIDs.add(k);
+    saveSeen(seenIDs);
+    DBG('picked raw len', picked.length);
+    return picked;
+  }
+
   // ---------- Autosize des cartes ----------
   function measureAndFixHeights() {
     const cards = $$('.ff-card');
     if (!cards.length) return;
     cards.forEach(card => {
-      // Mode "mesure": on empile naturellement pour connaître les hauteurs
       card.classList.add('ff-measure');
       card.style.height = ''; // reset
       const front = card.querySelector('.ff-front');
       const back  = card.querySelector('.ff-back');
       const h = Math.max(front?.scrollHeight || 0, back?.scrollHeight || 0, 200);
       card.classList.remove('ff-measure');
-      // Hauteur fixe pour le flip sans créer de vide
       card.style.height = h + 'px';
       const inner = card.querySelector('.ff-inner');
       if (inner) inner.style.height = '100%';
@@ -208,8 +230,7 @@
   // ---------- Rendu ----------
   function forceVisible() {
     const rect = GRID.getBoundingClientRect();
-    const needs = (!rect.height || !rect.width);
-    if (needs) {
+    if (!rect.height || !rect.width) {
       GRID.style.display = 'grid';
       GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
       GRID.style.gap = '16px';
@@ -234,7 +255,7 @@
     if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
     requestAnimationFrame(() => {
       forceVisible();
-      measureAndFixHeights();   // << calibrage hauteur
+      measureAndFixHeights();   // ajuste la hauteur pour que le flip reste “sur place”
       setReady();
     });
   };
