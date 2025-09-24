@@ -1,6 +1,16 @@
-/* public/fun-facts.js */
+/* public/fun-facts.js — avec logs de debug détaillés */
 (() => {
-  // ---------- Langue ----------
+  // ===== Debug helper =======================================================
+  const DEBUG = /(?:\?|&)ffdebug=1\b/i.test(location.search) ||
+                (typeof localStorage !== 'undefined' && localStorage.getItem('ffDebug') === '1');
+  const dlog = (...args) => { if (DEBUG) console.log('[fun-facts]', ...args); };
+  const derr = (...args) => console.error('[fun-facts]', ...args);
+  const time = (label) => {
+    const t0 = performance.now();
+    return () => { const dt = (performance.now() - t0).toFixed(1); dlog(`${label} in ${dt}ms`); };
+  };
+
+  // ===== Langue =============================================================
   const getLang = () => {
     const htmlLang = (document.documentElement.getAttribute('lang') || '').slice(0,2).toLowerCase();
     if (htmlLang) return htmlLang;
@@ -10,15 +20,18 @@
   };
   const LANG = getLang();
 
-  // ---------- i18n ----------
-  const L = {
-    fr: { myth: 'Mythe', fact: 'Fait vérifié', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.' },
-    en: { myth: 'Myth',  fact: 'Verified fact', source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.' },
-    de: { myth: 'Irrtum',fact: 'Belegter Fakt', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.' },
-  }[LANG];
+  // ===== i18n ===============================================================
+  const LMAP = {
+    fr: { myth:'Mythe', fact:'Fait vérifié', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.' },
+    en: { myth:'Myth',  fact:'Verified fact', source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.' },
+    de: { myth:'Irrtum',fact:'Belegter Fakt', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.' },
+  };
+  const L = LMAP[LANG] || LMAP.fr;
+  dlog('LANG =', LANG, 'labels =', L);
 
-  // ---------- DOM helpers ----------
+  // ===== DOM helpers ========================================================
   const $ = (s, el=document) => el.querySelector(s);
+
   const ensureGrid = () => {
     let grid = $('#facts-grid');
     if (!grid) {
@@ -30,13 +43,16 @@
       sec.appendChild(grid);
       main.appendChild(sec);
       console.warn('[fun-facts] #facts-grid manquait, il a été créé.');
+    } else {
+      dlog('#facts-grid trouvé.');
     }
     return grid;
   };
   const GRID = ensureGrid();
 
-  // ---------- Squelette ----------
+  // ===== Squelette ==========================================================
   const showSkeleton = (n=9) => {
+    dlog('showSkeleton', n);
     GRID.classList.add('ff-loading');
     GRID.setAttribute('aria-busy','true');
     GRID.innerHTML = '';
@@ -47,12 +63,13 @@
     }
   };
   const clearSkeleton = () => {
+    dlog('clearSkeleton');
     GRID.classList.remove('ff-loading');
     GRID.removeAttribute('aria-busy');
     GRID.innerHTML='';
   };
 
-  // ---------- Utils texte ----------
+  // ===== Utils texte ========================================================
   const clampWords = (txt, max) => {
     if (!txt) return '';
     const w = txt.trim().split(/\s+/);
@@ -66,9 +83,12 @@
   const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
-  // ---------- Normalisation item {claim, explain, url} ----------
-  const normalize = it => {
-    if (!it || typeof it!=='object') return null;
+  // ===== Normalisation item {claim, explain, url} ===========================
+  const normalize = (it, idx) => {
+    if (!it || typeof it!=='object') {
+      dlog('normalize: item invalide @', idx, it);
+      return null;
+    }
     let claim   = it.claim   || it.front || it.title || it.myth || it.question || '';
     let explain = it.explain || it.back  || it.fact  || it.answer || it.summary || '';
     const url   = it.source || it.url || it.link || '';
@@ -78,11 +98,11 @@
       .replace(/^mythe?\s*[:\-]\s*/i,'')
       .replace(/^myth\s*[:\-]\s*/i,'')
       .replace(/^misconception\s*[:\-]\s*/i,'')
-      .replace(/^-+\s*/,'');
+      .replace(/^-+\s*/, '');
     claim = sentence(claim).replace(/[.!?…]+$/,'');
     if (claim.length>160) claim = clampWords(claim,22);
 
-    // Verso ≤ 30 mots
+    // Verso ≤ 30 mots (et phrase)
     if (explain) explain = ensureDot(sentence(clampWords(explain,30)));
 
     if (!explain) {
@@ -91,13 +111,17 @@
                   de:'Siehe Quelle für Details.' }[LANG];
     }
 
-    return { claim, explain, url, sourceTitle: it.sourceTitle || domain(url) };
+    const out = { claim, explain, url, sourceTitle: it.sourceTitle || domain(url) };
+    if (DEBUG) dlog('normalize @', idx, '→', out);
+    return out;
   };
 
-  // ---------- Carte ----------
-  const card = item => {
+  // ===== Carte ==============================================================
+  const card = (item) => {
     const wrap = document.createElement('div');
-    wrap.className = 'card3d'; wrap.tabIndex=0; wrap.setAttribute('role','button');
+    wrap.className = 'card3d';
+    wrap.tabIndex=0;
+    wrap.setAttribute('role','button');
 
     const inner = document.createElement('div');
     inner.className='inner';
@@ -129,82 +153,126 @@
     return wrap;
   };
 
-  // ---------- Fetch JSON safe ----------
+  // ===== Fetch JSON safe + logs ============================================
   const fetchJSON = async (url) => {
+    dlog('fetchJSON:', url);
+    const stop = time('fetch');
     const res = await fetch(url, { headers:{'Accept':'application/json'} });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    stop();
+    dlog('→ status =', res.status, 'content-type =', res.headers.get('content-type'));
+
+    if (!res.ok) {
+      let preview = '';
+      try { preview = (await res.text()).slice(0,200); } catch {}
+      throw new Error(`HTTP ${res.status} — body: ${preview}`);
+    }
     const ct = res.headers.get('content-type') || '';
     if (!/json/i.test(ct)){
       const txt = await res.text();
-      throw new Error(`Réponse non-JSON (${ct}): ${txt.slice(0,120)}…`);
+      throw new Error(`Réponse non-JSON (${ct}) — début: ${txt.slice(0,200)}`);
     }
-    return res.json();
+    const data = await res.json();
+    if (DEBUG) {
+      dlog('payload keys =', data && typeof data==='object' ? Object.keys(data) : typeof data);
+      try { dlog('payload preview =', JSON.parse(JSON.stringify(data)).items?.slice?.(0,2) ?? data); } catch {}
+    }
+    return data;
   };
 
-  // ---------- Charge un lot ----------
+  // ===== Charge un lot ======================================================
   let lastKeys = new Set();
   const keyOf = it => (it.url || it.claim || JSON.stringify(it)).slice(0,200);
 
   const getFacts = async (n=9) => {
     const url = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
-    const data = await fetchJSON(url);
+    const raw = await fetchJSON(url);
+
+    // Accepter plusieurs formes possibles
     let arr =
-      Array.isArray(data)          ? data :
-      Array.isArray(data?.items)   ? data.items :
-      Array.isArray(data?.facts)   ? data.facts :
+      Array.isArray(raw)          ? raw :
+      Array.isArray(raw?.items)   ? raw.items :
+      Array.isArray(raw?.facts)   ? raw.facts :
       [];
+
+    dlog('getFacts: type=', Array.isArray(arr) ? 'array' : typeof arr, 'len=', arr.length);
 
     // éviter de répéter exactement le même lot
     if (arr.length){
       const filtered = arr.filter(x => !lastKeys.has(keyOf(x)));
+      dlog('filtered unique =', filtered.length);
       if (filtered.length >= Math.min(n,3)) arr = filtered;
     }
-    lastKeys = new Set(arr.slice(0,n).map(keyOf));
-    return arr.slice(0,n);
+    const out = arr.slice(0,n);
+    lastKeys = new Set(out.map(keyOf));
+    return out;
   };
 
   const render = (list) => {
+    dlog('render: items =', list.length);
     clearSkeleton();
     const frag = document.createDocumentFragment();
-    list.forEach(it => {
-      const n = normalize(it);
+    list.forEach((it, idx) => {
+      const n = normalize(it, idx);
       if (n) frag.appendChild(card(n));
     });
     GRID.appendChild(frag);
   };
 
   const load = async () => {
+    console.groupCollapsed('[fun-facts] load()');
     showSkeleton(9);
+    const stop = time('load() total');
     try {
       const facts = await getFacts(9);
+      if (!Array.isArray(facts)) {
+        derr('load: facts N’EST PAS un tableau. Reçu =', facts);
+        GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
+        return;
+      }
       render(facts);
     } catch (e) {
       clearSkeleton();
       GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
-      console.error('[fun-facts] load() error:', e);
+      derr('load() error:', e);
+    } finally {
+      stop();
+      console.groupEnd();
     }
   };
 
-  // ---------- Bouton "Nouveau lot" ----------
+  // ===== Bouton "Nouveau lot" ==============================================
   const ensureNewBtn = () => {
     let btn = $('#ff_random') || $('#ff-random') || $('#ff-new');
     if (!btn) {
-      const h1 = document.querySelector('h1') || document.body;
+      const h1 = document.querySelector('h1') || document.body.firstElementChild || document.body;
       btn = document.createElement('button');
       btn.id = 'ff_random';
       btn.className = 'btn primary';
+      btn.style.margin = '10px 0';
       btn.textContent = L.newBatch;
       h1.parentNode.insertBefore(btn, h1.nextSibling);
+      dlog('Bouton "Nouveau lot" créé.');
+    } else {
+      dlog('Bouton "Nouveau lot" trouvé.');
     }
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
+      dlog('Nouveau lot: click');
       btn.classList.add('is-busy'); btn.setAttribute('aria-busy','true');
       try { await load(); } finally { btn.classList.remove('is-busy'); btn.removeAttribute('aria-busy'); }
     });
   };
 
-  // ---------- Go ----------
+  // ===== Expose quelques helpers pour tester depuis la console =============
+  window.__ff = {
+    reload: load,
+    debug(on=true){ localStorage.setItem('ffDebug', on ? '1' : '0'); dlog('debug set to', on); },
+    lang: LANG
+  };
+
+  // ===== Go =================================================================
   document.addEventListener('DOMContentLoaded', () => {
+    dlog('DOMContentLoaded');
     ensureNewBtn();
     load();
   });
