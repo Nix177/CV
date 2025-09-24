@@ -2,6 +2,7 @@
 // - seen compact (hash) pour éviter URLs trop longues → 500/414
 // - panneau debug (#ff_debug) + logs détaillés (activer avec ?ffdebug=1)
 // - fallback CSS si la grille/carte ont une hauteur nulle
+// - "forceVisible" : si #facts-grid mesure 0×0, on rend visibles ses ancêtres
 // - priorité /api/ff-batch puis fallback /api/facts
 // - verso ≤ 30 mots (contrôle côté front)
 
@@ -27,7 +28,6 @@
     const line = document.createElement('div');
     line.textContent = a.map(x => (typeof x === 'string' ? x : JSON.stringify(x))).join(' ');
     dbgBox.appendChild(line);
-    // scroll auto
     dbgBox.scrollTop = dbgBox.scrollHeight;
   };
 
@@ -96,6 +96,38 @@
     `;
     document.head.appendChild(st);
     dbg('fallback CSS injected');
+  };
+
+  // ---------- Force visible (si les parents cachent la grille) ----------
+  const forceVisible = (el) => {
+    let n = el;
+    let changed = false;
+    while (n && n !== document.body) {
+      const cs = getComputedStyle(n);
+      if (cs.display === 'none') {
+        n.setAttribute('data-ff-force-display', '1');
+        n.style.setProperty('display', 'block', 'important');
+        changed = true;
+      }
+      if (cs.visibility === 'hidden') {
+        n.setAttribute('data-ff-force-visibility', '1');
+        n.style.setProperty('visibility', 'visible', 'important');
+        changed = true;
+      }
+      if (parseFloat(cs.opacity || '1') === 0) {
+        n.setAttribute('data-ff-force-opacity', '1');
+        n.style.setProperty('opacity', '1', 'important');
+        changed = true;
+      }
+      // hauteur 0 forcée ?
+      if ((parseFloat(cs.height) === 0 || parseFloat(cs.maxHeight) === 0) && !n.style.height) {
+        n.setAttribute('data-ff-force-height', '1');
+        n.style.setProperty('min-height', '100px', 'important');
+        changed = true;
+      }
+      n = n.parentElement;
+    }
+    if (changed) dbg('forceVisible: applied');
   };
 
   // ---------- Squelettes ----------
@@ -186,7 +218,6 @@
   };
 
   // ---------- seen compact ----------
-  // hash court (FNV-1a-ish) → base36
   const shortHash = (str) => {
     let h = 2166136261 >>> 0;
     for (let i = 0; i < str.length; i++) {
@@ -299,11 +330,20 @@
     GRID.appendChild(frag);
     if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
 
-    // Si la grille a une hauteur nulle, on injecte une CSS de secours
+    // Vérif de layout
     requestAnimationFrame(() => {
-      const rect = GRID.getBoundingClientRect();
+      let rect = GRID.getBoundingClientRect();
       dbg('grid rect', { w: rect.width, h: rect.height });
-      if (!rect.height || !rect.width) injectFallbackCSS();
+      if (!rect.width || !rect.height) {
+        // On force la visibilité des parents + on (re)injecte la CSS secours
+        forceVisible(GRID);
+        injectFallbackCSS();
+        // Re-mesure
+        requestAnimationFrame(() => {
+          rect = GRID.getBoundingClientRect();
+          dbg('grid rect (after force)', { w: rect.width, h: rect.height });
+        });
+      }
     });
   };
 
