@@ -2,174 +2,72 @@
 <html lang="de" data-theme="dark">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Fun Facts — Irrtümer & bewiesene Fakten</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Fun Facts — Irrtümer & belegte Fakten</title>
+
   <link rel="icon" href="/favicon.svg"/>
-  <!-- UPDATE: hreflang -->
+  <link rel="stylesheet" href="/style.css"/>
+
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/fun-facts.html">
   <link rel="alternate" hreflang="en" href="/fun-facts-en.html">
   <link rel="alternate" hreflang="de" href="/fun-facts-de.html">
   <link rel="alternate" hreflang="x-default" href="/fun-facts.html">
-  <style>
-    /* Fun-Facts-spezifisch (leicht, basiert auf style.css) */
-    .ff-wrap{display:grid;gap:16px}
-    .ff-controls{position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--border)}
-    .ff-toolbar{display:grid;gap:10px;grid-template-columns:1.4fr 0.9fr 0.9fr 0.9fr auto}
-    .ff-toolbar label{display:grid;gap:6px}
-    .ff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-    .ff-card{position:relative;perspective:1000px}
-    .ff-card .inner{position:relative;width:100%;height:220px;transform-style:preserve-3d;transition:transform .6s}
-    .ff-card.is-flipped .inner{transform:rotateY(180deg)}
-    .ff-card .face{position:absolute;inset:0;padding:14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);backface-visibility:hidden;display:grid;gap:8px}
-    .ff-card .back{transform:rotateY(180deg)}
-    .ff-badges{display:flex;gap:6px;flex-wrap:wrap}
-    .ff-badge{border:1px solid var(--border);border-radius:999px;padding:4px 8px;background:var(--surface);font-size:.85rem}
-    .ff-meta{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .ff-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .ff-pager{display:flex;gap:8px;align-items:center;justify-content:flex-end}
-    .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
-    /* Zufällige Bubbles */
-    .ff-random-wrap{display:grid;gap:10px}
-    .ff-canvas-box{position:relative;overflow:hidden;border:1px dashed var(--border);border-radius:var(--radius);background:rgba(255,255,255,.02)}
-    #ff_canvas{width:100%;height:auto;display:block}
-    .ff-popover{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
-    .ff-popover.show{display:flex}
-    .ff-pop-card{width:min(780px,96vw)}
-    .ff-aria{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
-    @media (max-width:980px){.ff-toolbar{grid-template-columns:1fr 1fr 1fr;}}
-    @media (max-width:640px){.ff-toolbar{grid-template-columns:1fr;}}
-  </style>
-  <script defer src="/site.js"></script>
-  <link rel="stylesheet" href="/style.css">
+
+  <!-- Globale Navigation -->
   <script defer src="/assets/js/nav.js"></script>
+
+  <!-- Leichte Seitestile (gleich wie FR/EN) -->
+  <style>
+    .ff-wrap.ff-pending .ff-dynamic { display:none; }
+    .ff-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px 0}
+
+    .ff-toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+    @media (max-width:780px){.ff-toolbar{grid-template-columns:1fr}}
+    .ff-toolbar .input{max-width:420px}
+
+    #facts-grid{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+    @media (max-width:1100px){#facts-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:680px){#facts-grid{grid-template-columns:1fr}}
+
+    #facts-grid.ff-loading .ff-skel{
+      height:170px;border-radius:var(--radius);border:1px solid var(--border);
+      background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 37%,rgba(255,255,255,.04) 63%);
+      background-size:400% 100%;animation:ff-shine 1.1s ease-in-out infinite;box-shadow:var(--shadow);
+    }
+    @keyframes ff-shine{0%{background-position:100% 0}100%{background-position:0 0}}
+  </style>
 </head>
 <body>
+<main class="container section ff-wrap ff-pending" id="ff_root">
+  <h1 class="title">Fun Facts — <span class="muted">Irrtümer & belegte Fakten</span></h1>
+  <p class="lead">Eine spielerische Auswahl — man lernt jeden Tag.</p>
 
-<header class="nav">
-  <div class="container">
-    <a class="brand" href="/fun-facts-de.html"><span class="brand-badge">NT</span><span class="brand-text">Nicolas Tuor</span></a>
-    <!-- UPDATE: NAV LAYOUT ONLY -->
-    <nav class="site-nav" aria-label="Navigation">
-      <ul class="menu">
-        <li><a href="/index-de.html">Startseite</a></li>
-        <li><a href="/cv-de.html">Lebenslauf</a></li>
-        <li><a href="/portfolio-de.html">Portfolio</a></li>
-        <li><a href="/passions-de.html">Leidenschaften</a></li>
-        <li><a href="/ai-lab-de.html">KI-Lab</a></li>
-        <li><a href="/fun-facts-de.html" aria-current="page">Irrtümer</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a class="btn chip" href="/fun-facts.html">FR</a></li>
-        <li><a class="btn chip" href="/fun-facts-en.html">EN</a></li>
-        <li><a class="btn chip" href="/fun-facts-de.html" aria-current="page">DE</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<main class="container section ff-wrap">
-  <h1 class="title" id="ff_title">Fun Facts — <span class="muted">Irrtümer & bewiesene Fakten</span></h1>
-  <p class="lead" id="ff_lead">Eine spielerische Auswahl – man lernt nie aus.</p>
-
-  <!-- Steuerung -->
-  <section class="ff-controls ff-section">
-    <form id="ff_form" class="ff-toolbar" role="search">
-      <label><span id="lbl_search">Suche</span>
-        <input id="q" name="q" placeholder="Zum Filtern tippen…"/>
-      </label>
-      <label><span id="lbl_type">Typ</span>
-        <select id="type" name="type">
-          <option value="all">Alle</option>
-          <option value="myth">Irrtümer</option>
-          <option value="fact">Fakten</option>
-        </select>
-      </label>
-      <label><span id="lbl_cat">Kategorie</span>
-        <select id="cat" name="cat">
-          <option value="all">Alle</option>
-          <option>Science</option><option>History</option><option>Health</option>
-          <option>Language</option><option>Culture</option><option>Technology</option>
-          <option>Nature</option><option>Geography</option>
-        </select>
-      </label>
-      <label><span id="lbl_sort">Sortieren</span>
-        <select id="sort" name="sort">
-          <option value="pop_desc">Popularität ↓</option>
-          <option value="pop_asc">Popularität ↑</option>
-          <option value="wow_desc">Wow ↓</option>
-          <option value="wow_asc">Wow ↑</option>
-        </select>
-      </label>
-      <div class="ff-actions">
-        <label><span id="lbl_n">Zufall: N</span>
-          <input id="n" name="n" type="range" min="3" max="12" value="6"/>
-        </label>
-        <button class="btn primary" id="btn_random" type="button" data-busy>🎲 Überraschen Sie mich</button>
-      </div>
-    </form>
+  <!-- Steuerleiste -->
+  <section class="ff-section ff-dynamic" aria-label="Steuerung">
+    <div class="ff-toolbar">
+      <input id="ff_search" class="input" type="search" placeholder="Nach einem Irrtum suchen…"/>
+      <button id="ff_random" class="btn primary">🎲 Neuer zufälliger Satz</button>
+      <div id="ff_count" class="muted" aria-live="polite"></div>
+    </div>
   </section>
 
-  <!-- Top-Irrtümer -->
-  <section class="ff-section">
-    <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_top_myths">Top 50 — Weitverbreitete Irrtümer</h2>
-      <div class="ff-pager">
-        <button class="btn chip" id="pgm_prev">◀</button>
-        <span id="pgm_lbl" class="muted">1/5</span>
-        <button class="btn chip" id="pgm_next">▶</button>
-      </div>
-    </div>
-    <div class="ff-grid" id="grid_myths" aria-live="polite"></div>
+  <!-- Kartengitter -->
+  <section class="ff-section ff-dynamic" aria-label="Karten">
+    <div id="facts-grid"></div>
   </section>
 
-  <!-- Top-Fakten -->
-  <section class="ff-section">
-    <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_top_facts">50 bewiesene Fakten</h2>
-      <div class="ff-pager">
-        <button class="btn chip" id="pgf_prev">◀</button>
-        <span id="pgf_lbl" class="muted">1/5</span>
-        <button class="btn chip" id="pgf_next">▶</button>
-      </div>
-    </div>
-    <div class="ff-grid" id="grid_facts" aria-live="polite"></div>
+  <!-- Optionale Wolke -->
+  <section class="ff-section ff-dynamic" aria-label="Wolke">
+    <div id="ff_cloud" style="position:relative;min-height:320px;border:1px dashed var(--border);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)"></div>
   </section>
 
-  <!-- Zufallsblasen -->
-  <section class="ff-section ff-random-wrap">
-    <div class="row gap" style="align-items:center;justify-content:space-between">
-      <h2 id="h_random">Zufallsauswahl — Visualisierung</h2>
-      <div class="row gap"><span id="seed_lbl" class="muted"></span></div>
-    </div>
-    <div class="ff-canvas-box">
-      <canvas id="ff_canvas" width="1200" height="540" aria-label="Zufallsvisualisierung"></canvas>
-    </div>
-    <div id="ff_announce" class="ff-aria" aria-live="polite"></div>
-  </section>
+  <!-- Kein Fallback-Block, um das leere Quadrat zu vermeiden -->
 </main>
 
-<footer class="container section footer">
-  <p class="foot">© Nicolas Tuor — Bildungsorientierte Fun Facts</p>
-</footer>
-
-<!-- Popover -->
-<div id="ff_pop" class="ff-popover" role="dialog" aria-modal="true" aria-labelledby="pop_title">
-  <div class="ff-pop-card card pad">
-    <div class="row gap" style="align-items:flex-start;justify-content:space-between">
-      <h3 id="pop_title">Details</h3>
-      <button id="pop_close" class="btn chip">✕</button>
-    </div>
-    <p id="pop_claim" class="muted"></p>
-    <p id="pop_truth"></p>
-    <div id="pop_sources" class="row gap" style="flex-wrap:wrap"></div>
-  </div>
-</div>
-
-<noscript>
-  <p class="container">Für diese interaktive Seite ist JavaScript erforderlich.</p>
-</noscript>
-
+<!-- Seiten-JS -->
 <script defer src="/fun-facts.js"></script>
+<!-- Feedback-Lasche -->
 <script defer src="/assets/js/feedback.js"></script>
 </body>
 </html>
