@@ -1,39 +1,33 @@
-/* public/fun-facts.js — avec logs de debug détaillés */
+/* public/fun-facts.js — debug + garde-affichage */
 (() => {
-  // ===== Debug helper =======================================================
+  // ===== Debug ==============================================================
   const DEBUG = /(?:\?|&)ffdebug=1\b/i.test(location.search) ||
                 (typeof localStorage !== 'undefined' && localStorage.getItem('ffDebug') === '1');
-  const dlog = (...args) => { if (DEBUG) console.log('[fun-facts]', ...args); };
-  const derr = (...args) => console.error('[fun-facts]', ...args);
-  const time = (label) => {
-    const t0 = performance.now();
-    return () => { const dt = (performance.now() - t0).toFixed(1); dlog(`${label} in ${dt}ms`); };
-  };
+  const dlog = (...a) => { if (DEBUG) console.log('[fun-facts]', ...a); };
+  const derr = (...a) => console.error('[fun-facts]', ...a);
+  const time = (label) => { const t0=performance.now(); return ()=>dlog(`${label} in ${(performance.now()-t0).toFixed(1)}ms`); };
 
-  // ===== Langue =============================================================
+  // ===== Langue / i18n ======================================================
   const getLang = () => {
     const htmlLang = (document.documentElement.getAttribute('lang') || '').slice(0,2).toLowerCase();
     if (htmlLang) return htmlLang;
-    const path = (location.pathname.split('/').pop() || '').toLowerCase();
-    const m = path.match(/-(en|de)\.html?$/);
+    const m = (location.pathname.split('/').pop() || '').toLowerCase().match(/-(en|de)\.html?$/);
     return m ? m[1] : 'fr';
   };
   const LANG = getLang();
-
-  // ===== i18n ===============================================================
   const LMAP = {
-    fr: { myth:'Mythe', fact:'Fait vérifié', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.' },
-    en: { myth:'Myth',  fact:'Verified fact', source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.' },
-    de: { myth:'Irrtum',fact:'Belegter Fakt', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.' },
+    fr:{ myth:'Mythe', fact:'Fait vérifié', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.' },
+    en:{ myth:'Myth',  fact:'Verified fact', source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.' },
+    de:{ myth:'Irrtum',fact:'Belegter Fakt', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.' },
   };
   const L = LMAP[LANG] || LMAP.fr;
   dlog('LANG =', LANG, 'labels =', L);
 
-  // ===== DOM helpers ========================================================
+  // ===== DOM helpers / conteneur ============================================
   const $ = (s, el=document) => el.querySelector(s);
 
   const ensureGrid = () => {
-    let grid = $('#facts-grid');
+    let grid = document.getElementById('facts-grid');
     if (!grid) {
       const main = $('main') || document.body;
       const sec = document.createElement('section');
@@ -45,6 +39,21 @@
       console.warn('[fun-facts] #facts-grid manquait, il a été créé.');
     } else {
       dlog('#facts-grid trouvé.');
+    }
+
+    // Assure le layout et la visibilité
+    grid.classList.add('flip-grid');   // utilise la grille définie dans ta CSS globale
+    grid.classList.remove('hidden');   // au cas où
+    grid.style.removeProperty('display');
+
+    // Fallback si la CSS n'est pas chargée : force un grid minimal
+    const styles = getComputedStyle(grid);
+    const isNotGrid = styles.display === 'block' || styles.display === 'inline' || styles.display === 'contents';
+    if (isNotGrid) {
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
+      grid.style.gap = '16px';
+      dlog('Fallback grid inline appliqué (CSS globale manquante ?)');
     }
     return grid;
   };
@@ -83,17 +92,13 @@
   const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
-  // ===== Normalisation item {claim, explain, url} ===========================
+  // ===== Normalisation ======================================================
   const normalize = (it, idx) => {
-    if (!it || typeof it!=='object') {
-      dlog('normalize: item invalide @', idx, it);
-      return null;
-    }
+    if (!it || typeof it!=='object') { dlog('normalize: item invalide @', idx, it); return null; }
     let claim   = it.claim   || it.front || it.title || it.myth || it.question || '';
     let explain = it.explain || it.back  || it.fact  || it.answer || it.summary || '';
     const url   = it.source || it.url || it.link || '';
 
-    // Recto propre
     claim = claim
       .replace(/^mythe?\s*[:\-]\s*/i,'')
       .replace(/^myth\s*[:\-]\s*/i,'')
@@ -102,15 +107,10 @@
     claim = sentence(claim).replace(/[.!?…]+$/,'');
     if (claim.length>160) claim = clampWords(claim,22);
 
-    // Verso ≤ 30 mots (et phrase)
     if (explain) explain = ensureDot(sentence(clampWords(explain,30)));
-
     if (!explain) {
-      explain = { fr:'Voir la source pour le détail.',
-                  en:'See the source for details.',
-                  de:'Siehe Quelle für Details.' }[LANG];
+      explain = { fr:'Voir la source pour le détail.', en:'See the source for details.', de:'Siehe Quelle für Details.' }[LANG];
     }
-
     const out = { claim, explain, url, sourceTitle: it.sourceTitle || domain(url) };
     if (DEBUG) dlog('normalize @', idx, '→', out);
     return out;
@@ -153,14 +153,13 @@
     return wrap;
   };
 
-  // ===== Fetch JSON safe + logs ============================================
+  // ===== Fetch JSON sécurisé + logs ========================================
   const fetchJSON = async (url) => {
     dlog('fetchJSON:', url);
     const stop = time('fetch');
     const res = await fetch(url, { headers:{'Accept':'application/json'} });
     stop();
     dlog('→ status =', res.status, 'content-type =', res.headers.get('content-type'));
-
     if (!res.ok) {
       let preview = '';
       try { preview = (await res.text()).slice(0,200); } catch {}
@@ -179,24 +178,20 @@
     return data;
   };
 
-  // ===== Charge un lot ======================================================
+  // ===== Charger un lot =====================================================
   let lastKeys = new Set();
   const keyOf = it => (it.url || it.claim || JSON.stringify(it)).slice(0,200);
 
   const getFacts = async (n=9) => {
     const url = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
     const raw = await fetchJSON(url);
-
-    // Accepter plusieurs formes possibles
     let arr =
-      Array.isArray(raw)          ? raw :
-      Array.isArray(raw?.items)   ? raw.items :
-      Array.isArray(raw?.facts)   ? raw.facts :
+      Array.isArray(raw)        ? raw :
+      Array.isArray(raw?.items) ? raw.items :
+      Array.isArray(raw?.facts) ? raw.facts :
       [];
+    dlog('getFacts: array len =', arr.length);
 
-    dlog('getFacts: type=', Array.isArray(arr) ? 'array' : typeof arr, 'len=', arr.length);
-
-    // éviter de répéter exactement le même lot
     if (arr.length){
       const filtered = arr.filter(x => !lastKeys.has(keyOf(x)));
       dlog('filtered unique =', filtered.length);
@@ -216,6 +211,16 @@
       if (n) frag.appendChild(card(n));
     });
     GRID.appendChild(frag);
+
+    // Vérification post-render
+    const cards = GRID.querySelectorAll('.card3d');
+    dlog('post-render: #cards =', cards.length);
+    if (cards.length === 0) {
+      console.warn('[fun-facts] Aucune carte visible après render. Forçage display:grid (fallback).');
+      GRID.style.display = 'grid';
+      GRID.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
+      GRID.style.gap = '16px';
+    }
   };
 
   const load = async () => {
@@ -263,12 +268,14 @@
     });
   };
 
-  // ===== Expose quelques helpers pour tester depuis la console =============
-  window.__ff = {
-    reload: load,
-    debug(on=true){ localStorage.setItem('ffDebug', on ? '1' : '0'); dlog('debug set to', on); },
-    lang: LANG
-  };
+  // ===== Détecter si quelqu’un efface le grid après render ==================
+  const mo = new MutationObserver(() => {
+    const hasCards = GRID.querySelector('.card3d');
+    if (!hasCards && !GRID.classList.contains('ff-loading')) {
+      console.warn('[fun-facts] Le contenu de #facts-grid a été vidé par autre chose.');
+    }
+  });
+  mo.observe(GRID, {childList:true, subtree:false});
 
   // ===== Go =================================================================
   document.addEventListener('DOMContentLoaded', () => {
@@ -276,4 +283,7 @@
     ensureNewBtn();
     load();
   });
+
+  // Expose pour debug
+  window.__ff = { reload: load, debug(on=true){ localStorage.setItem('ffDebug', on?'1':'0'); dlog('debug=', on); }, lang: LANG };
 })();
