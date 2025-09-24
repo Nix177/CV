@@ -1,18 +1,19 @@
 // /api/ff-batch.js
-// Scrape des pages Wikipédia "idées reçues" (FR/EN/DE) et renvoi de cartes prêtes à afficher.
-// - Node runtime (cheerio OK si présent, sinon regex fallback).
-// - Renvoie TOUJOURS 200 + JSON (tableau), jamais 500.
-// - Sortie normalisée: { id, claim, explain, source }  (explain ≤ ~30 mots).
-// - Si OPENAI_API_KEY est défini, on l'utilise **en dernier recours** pour obtenir {claim, explain} propres.
-//   Sinon, heuristiques + trimming.
+// Scrape Wikipedia "misconceptions" lists (FR/EN/DE) and return ready-to-render cards.
+// Output: [{ id, claim, explain, source }]
+// - Node runtime
+// - Strong filtering against references/bibliography lines
+// - Heuristics to form a clean "claim" and a short "explain" (≤30 words)
+// - Optional LLM fallback if OPENAI_API_KEY present (last resort)
+// - Always 200 with JSON array (never 500)
 
 export const config = { runtime: 'nodejs' };
 
 const DEFAULT_COUNT = 24;
 
+// Keep ONLY the true "list" pages to avoid the FR definition article noise.
 const PAGES = {
   fr: [
-    'https://fr.wikipedia.org/wiki/Id%C3%A9e_re%C3%A7ue',
     'https://fr.wikipedia.org/wiki/Liste_d%27id%C3%A9es_re%C3%A7ues'
   ],
   en: [
@@ -41,29 +42,45 @@ const splitFirstSentence = (txt) => {
   return m ? { s1: trim(m[1]), rest: trim(m[2]) } : { s1: t, rest: '' };
 };
 
+// Aggressive filters for bibliography-style items
+const MONTHS_FR = 'janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre';
 const isRefLike = (t) => {
   const s = trim(t);
   if (!s) return true;
-  if (/^(↑|→|Voir aussi|Bibliographie)\b/i.test(s)) return true;
-  if (/\b(consult[ée] le|PMID|DOI|ISBN|ISSN|Paris:|p\.\s*\d+)\b/i.test(s)) return true;
-  if (/^\(|\)$/.test(s) || /^\s*«.+»\s*$/.test(s)) return true;
-  if (s.length < 40) return true; // trop court pour une “idée reçue”
+  if (/^(↑|→|Voir aussi|Bibliographie|Notes? et r(é|e)f(é|e)rences?)\b/i.test(s)) return true;
+  if (/\b(consult[ée] le|PMID|DOI|ISBN|ISSN|Paris:|p\.\s*\d+|op\. cit\.)\b/i.test(s)) return true;
+  if (new RegExp(`\\b(?:${MONTHS_FR})\\b`, 'i').test(s) && /\b20\d{2}\b/.test(s) && /\b(sur|dans)\b/i.test(s)) return true;
+  if (/^«|^".+?"\s*(,|—|-)/.test(s)) return true;
+  if (/^\s*[A-ZÉÈÀÂÎÔÛÄÖÜ][^,]{2,},\s/.test(s)) return true; // Name, ...
+  if (s.length < 40) return true; // too short to be a belief
   return false;
 };
 
 const cleanNoise = (t) => trim(
   String(t)
-    .replace(/\[[^\]]*\]/g, ' ')         // [1], [note]
-    .replace(/\s*\((?:consulte|PMID|DOI|ISBN|ISSN)[^)]+\)\s*/gi, ' ')
-    .replace(/«|»|“|”|„|‟|‚|’/g, '"')
+    .replace(/\[[^\]]*\]/g, ' ')          // [1], [note]
+    .replace(/\s*\((?:consult[ée] le|PMID|DOI|ISBN|ISSN)[^)]+\)\s*/gi, ' ')
+    .replace(/[«»“”„‟‚’]/g, '"')
     .replace(/^[↑→]\s*/g, '')
     .replace(/\s+/g, ' ')
 );
 
+// Does the sentence look like a belief (not a reference line)?
+function looksLikeClaim(lang, s) {
+  s = trim(s);
+  const tests = {
+    fr: /^(Les|La|Le|Un|Une|On|Il|Elle|L’|L'|Beaucoup|Certains|Souvent|On pense que|Il est (courant|r(é|e)pandu) de croire que|Contrairement|En r(é|e)alit(é|e)|On dit que)\b/i,
+    en: /^(Many|People|Some|It|They|Cats|Bulls|The|A|An|Contrary|In fact|It is (often|commonly) believed)\b/i,
+    de: /^(Viele|Man|Es|Die|Der|Das|Ein|Eine|Entgegen|Tats(ä|a)chlich|Es wird (oft|h(ä|a)ufig) angenommen)\b/i,
+  };
+  const badStart = /^(Voir aussi|Bibliographie|Notes? et r(é|e)f(é|e)rences?)\b/i;
+  return !badStart.test(s) && (tests[lang] || tests.fr).test(s);
+}
+
 async function fetchHtml(url, lang) {
   const r = await fetch(url, {
     headers: {
-      'user-agent': 'ff-batch/1.0 (educational project)',
+      'user-agent': 'ff-batch/1.1 (educational project)',
       'accept-language':
         lang === 'fr' ? 'fr,en;q=0.9' :
         lang === 'de' ? 'de,en;q=0.9' : 'en;q=0.9'
@@ -79,7 +96,6 @@ async function tryCheerioExtract(html) {
     const cheerio = mod.default || mod;
     const $ = cheerio.load(html);
     const items = [];
-    // listes et paragraphes
     $('#mw-content-text li, #mw-content-text p').each((_, el) => {
       const raw = $(el).text();
       const t = cleanNoise(raw);
@@ -102,10 +118,10 @@ function regexExtract(html) {
   return out;
 }
 
-/* ------------ Génération claim/explain -------------- */
+/* ------------ generate claim/explain -------------- */
 
 function tryHeuristicCE(lang, text) {
-  // 1) “Idée reçue : … / Myth: … / Mythos: …”
+  // Label-based
   const mythLabel = lang === 'fr' ? /(id(é|e)e\s+reçue\s*[:\-]\s*)(.+)/i
                    : lang === 'de' ? /(mythos|irrtum)\s*[:\-]\s*(.+)/i
                    : /(myth|misconception)\s*[:\-]\s*(.+)/i;
@@ -115,7 +131,7 @@ function tryHeuristicCE(lang, text) {
     return { claim, explain: '' };
   }
 
-  // 2) “Contrairement à une idée reçue … / Contrary to popular belief … / Entgegen der landläufigen Meinung …”
+  // Contrary to popular belief...
   const contrary = lang === 'fr'
     ? /contrairement\s+à\s+une\s+id(é|e)e\s+reçue[, ]+(.+)/i
     : lang === 'de'
@@ -125,7 +141,8 @@ function tryHeuristicCE(lang, text) {
   const mContr = text.match(contrary);
   if (mContr) {
     const truth = trim(mContr[2] || mContr[1] || '');
-    // Inversion naïve de la négation (assez efficace pour beaucoup de cas simples)
+    const { s1, rest } = splitFirstSentence(truth);
+    // naive inversion (works decently)
     let claim = truth;
     if (lang === 'fr') {
       claim = claim
@@ -137,14 +154,15 @@ function tryHeuristicCE(lang, text) {
     } else {
       claim = claim.replace(/\bist nicht\b/gi, 'ist').replace(/\bsind nicht\b/gi, 'sind').replace(/\bnicht\b/gi, '');
     }
-    const { s1, rest } = splitFirstSentence(truth);
-    const explain = clampWords(rest || truth, 30);
-    return { claim: trim(claim), explain };
+    return { claim: trim(claim), explain: clampWords(rest || truth, 30) };
   }
 
-  // 3) Par défaut: 1re phrase = claim (si elle ressemble à une croyance)
+  // Default: first sentence => claim (if it looks like a belief)
   const { s1, rest } = splitFirstSentence(text);
-  return { claim: s1, explain: clampWords(rest || '', 30) };
+  if (looksLikeClaim(lang, s1)) {
+    return { claim: s1, explain: clampWords(rest || '', 30) };
+  }
+  return { claim: '', explain: '' };
 }
 
 async function llmCE(lang, text) {
@@ -154,17 +172,17 @@ async function llmCE(lang, text) {
 
     const sys =
       lang === 'fr'
-        ? 'Tu extraits une IDÉE REÇUE ("claim") et une RÉFUTATION courte ("explain", ≤30 mots) dans la même langue.'
+        ? 'Tu extraits une IDÉE REÇUE ("claim") et une RÉFUTATION courte ("explain", ≤30 mots) en FR.'
         : lang === 'de'
-          ? 'Extrahiere einen Irrtum als "claim" und eine kurze Widerlegung "explain" (≤30 Wörter) auf Deutsch.'
-          : 'Extract a misconception as "claim" and a short refutation "explain" (≤30 words) in the same language.';
+          ? 'Extrahiere einen Irrtum ("claim") und eine kurze Widerlegung ("explain", ≤30 Wörter) auf Deutsch.'
+          : 'Extract a misconception as "claim" and a short refutation "explain" (≤30 words) in EN.';
 
     const user =
       (lang === 'fr'
-        ? 'À partir de ce texte de Wikipédia, fournis strictement {"claim":"…","explain":"…"}.\nTexte :\n'
+        ? 'À partir de ce texte de Wikipédia, fournis strictement {"claim":"…","explain":"…"} en FR.\nTexte :\n'
         : lang === 'de'
-          ? 'Aus diesem Wikipedia-Text, gib strikt {"claim":"…","explain":"…"}.\nText:\n'
-          : 'From this Wikipedia text, return strictly {"claim":"…","explain":"…"}. Text:\n') + text;
+          ? 'Aus diesem Wikipedia-Text, gib strikt {"claim":"…","explain":"…"} auf DE.\nText:\n'
+          : 'From this Wikipedia text, return strictly {"claim":"…","explain":"…"} in EN. Text:\n') + text;
 
     const body = {
       model: 'gpt-4o-mini',
@@ -210,14 +228,12 @@ export default async function handler(req, res) {
         const html = await fetchHtml(pageUrl, lang);
         let arr = await tryCheerioExtract(html);
         if (!arr) arr = regexExtract(html);
-        // garde de côté l'URL de page
+        // couple text with pageUrl
         texts.push(...arr.map(t => ({ pageUrl, text: t })));
-      } catch (e) {
-        // console.error('ff-batch page error', pageUrl, e?.message || e);
-      }
+      } catch {}
     }
 
-    // Fallback EN si vide
+    // EN fallback if nothing
     if (!texts.length && lang !== 'en') {
       for (const pageUrl of PAGES.en) {
         try {
@@ -229,46 +245,46 @@ export default async function handler(req, res) {
       }
     }
 
-    // Normalisation -> {id, claim, explain, source}
+    // Normalize → {id, claim, explain, source}
     const out = [];
     for (const { pageUrl, text } of texts) {
       if (!text || text.length < 40) continue;
 
-      // Heuristique d’abord
       let { claim, explain } = tryHeuristicCE(lang, text);
 
-      // Si le claim ressemble à une citation/biblio → tenter LLM
-      if (!claim || /^(«|"|↑|Voir aussi|Bibliographie)/i.test(claim) || /\b(consult[ée] le|PMID|DOI|ISBN)\b/i.test(claim)) {
+      // If claim still looks bad → try LLM (optional)
+      if (!claim || !looksLikeClaim(lang, claim)) {
         const ce = await llmCE(lang, text);
         if (ce) ({ claim, explain } = ce);
       }
 
-      // Dernière protection
       claim = trim(claim).replace(/^[-–—•]\s*/, '');
       if (!claim || claim.length < 10) continue;
-      explain = clampWords(explain || text, 30);
+      explain = clampWords(explain || '', 30);
 
       const id = keyOf(pageUrl, claim);
       out.push({ id, claim, explain, source: pageUrl });
     }
 
-    // Dé-doublonnage + mélange
+    // Dedup + shuffle + slice
     const seen = new Set();
     const uniq = [];
     for (const it of out) {
       if (!seen.has(it.id)) { seen.add(it.id); uniq.push(it); }
     }
-    shuffleInPlace(uniq);
+    for (let i = uniq.length - 1; i > 0; i--) {
+      const j = (Math.random() * (i + 1)) | 0;
+      [uniq[i], uniq[j]] = [uniq[j], uniq[i]];
+    }
     const picked = uniq.slice(0, count);
 
     return res.status(200).json(picked);
-  } catch (e) {
-    // sécurité finale
+  } catch {
     return res.status(200).json([]);
   }
 }
 
-/* -------------- helpers bas niveau ------------- */
+/* -------------- helpers ------------- */
 
 function getQuery(req) {
   if (req.query && typeof req.query === 'object') return req.query;
@@ -277,5 +293,3 @@ function getQuery(req) {
     return Object.fromEntries(u.searchParams.entries());
   } catch { return {}; }
 }
-
-const shuffleInPlace = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
