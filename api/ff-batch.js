@@ -1,12 +1,16 @@
 // /api/ff-batch.js
-// Node 18+, CommonJS (Vercel). Renvoie un tableau d'items normalisés.
-// Chaque item: { id, type:'myth'|'fact', title, explanation, explainShort, sources:[{title,url}] }
+// Robust Wikipedia batch scraper for "misconceptions" lists.
+// - Works WITH or WITHOUT 'cheerio' installed (no hard require at module load).
+// - Never throws to the client: always returns 200 with an array (possibly empty).
+// - Supports ?lang=fr|en|de, ?count=number, ?seen=comma-separated-ids
+//
+// Next.js (pages/api) — Node runtime.
 
-const cheerio = require('cheerio');
+const DEFAULT_COUNT = 24;
 
+// Misconception list pages per language
 const PAGES = {
   fr: [
-    // La page FR n'est pas un “listicle” parfait → on complète par EN si besoin
     'https://fr.wikipedia.org/wiki/Id%C3%A9e_re%C3%A7ue',
     'https://fr.wikipedia.org/wiki/Liste_d%27id%C3%A9es_re%C3%A7ues'
   ],
@@ -14,130 +18,184 @@ const PAGES = {
     'https://en.wikipedia.org/wiki/List_of_common_misconceptions'
   ],
   de: [
-    'https://de.wikipedia.org/wiki/Liste_weit_verbreiteter_Irrt%C3%BCmer'
-  ]
+    'https://de.wikipedia.org/wiki/Liste_von_Irrt%C3%BCmern'
+  ],
 };
 
-const UA = 'nicolastuor.ch/fun-facts (contact: site)';
+// ---------- utils ----------
+const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+const trim = (s) => String(s || '').replace(/\s+/g, ' ').trim();
+const hash = (s) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
+  return (h >>> 0).toString(36);
+};
+const keyOf = (txt) => hash(trim(txt).slice(0, 140));
 
-function trim(s){ return String(s||'').replace(/\s+/g,' ').trim(); }
-function shortenWords(s, n=30){
-  const w = trim(s).split(' ');
-  return (w.length<=n) ? trim(s) : w.slice(0,n).join(' ')+'…';
-}
-function absolutize(baseUrl, href){
+const splitClaimExplain = (txt) => {
+  // Heuristic: first sentence = claim, rest = explanation
+  const t = trim(txt).replace(/\[\d+\]/g, ''); // remove [1] refs
+  const m = t.match(/^(.+?[.!?…])\s+(.+)$/);
+  if (m) return { claim: trim(m[1]), explanation: trim(m[2]) };
+  return { claim: t, explanation: '' };
+};
+
+const ensureHttps = (u) => {
   try {
-    if (!href) return baseUrl;
-    if (/^https?:\/\//i.test(href)) return href;
-    const u = new URL(baseUrl);
-    if (href.startsWith('/')) return `${u.protocol}//${u.host}${href}`;
-    return baseUrl; // fallback
-  } catch { return href || baseUrl; }
-}
-function hashId(s){
-  // petit hash stable
-  let h = 0; const str = (s||'').toLowerCase();
-  for (let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i))|0; }
-  return Math.abs(h).toString(36);
-}
+    const url = new URL(u, 'https://en.wikipedia.org');
+    // Keep only wikipedia domains
+    if (!/\.wikipedia\.org$/i.test(url.hostname)) return '';
+    return url.toString();
+  } catch { return ''; }
+};
 
-// Extraction générique depuis HTML Wikipédia (bullet points)
-function extractFromHtml(lang, url, html){
-  const $ = cheerio.load(html);
-  const $content = $('#mw-content-text');
+const shuffleInPlace = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 
+// Minimal <li> text extractor without cheerio (regex-based, best-effort)
+function extractListItemsByRegex(html) {
   const items = [];
-  // On cible les <li> notables (éviter les menus)
-  $content.find('li').each((i, el) => {
-    const $li = $(el);
-    const txt = trim($li.text()).replace(/\[\d+\]/g, ''); // retire refs [1]
-    if (!txt || txt.length < 60) return; // éviter le bruit
-
-    // Heuristique: une idée reçue se présente souvent comme une phrase assertive.
-    // On garde la 1re phrase en “claim”, et le reste en explication.
-    const sentenceSplit = txt.split(/(?<=[.!?])\s+/);
-    const title = trim(sentenceSplit[0]);
-    const rest  = trim(sentenceSplit.slice(1).join(' ')) || title;
-
-    // source plausible = 1er lien
-    const a = $li.find('a[href]').filter((i, el) => {
-      const href = $(el).attr('href') || '';
-      return !href.startsWith('#') && !href.includes('redlink=');
-    }).first();
-    const href = absolutize(url, a.attr('href'));
-
-    const id = `myth-${hashId(title)}`;
-    const explanation = rest;
-    const explainShort = shortenWords(explanation || title, 30);
-
-    items.push({
-      id,
-      type: 'myth',
-      category: '',
-      title,
-      explanation,
-      explainShort,
-      sources: [{ title: 'Wikipedia', url: href || url }]
-    });
-  });
-
-  // dédoublonnage par titre
-  const seen = new Set();
-  const out = [];
-  for (const it of items) {
-    const key = it.title.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(it);
+  const re = /<li[^>]*>([\s\S]*?)<\/li>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    let block = m[1]
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<sup[\s\S]*?<\/sup>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ');
+    block = trim(block);
+    if (block && block.length >= 60) items.push(block);
   }
-  return out;
+  return items;
 }
 
-async function scrapeLang(lang) {
-  const urls = PAGES[lang] || PAGES.en;
-  const all = [];
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': lang } });
-      if (!res.ok) continue;
-      const html = await res.text();
-      all.push(...extractFromHtml(lang, url, html));
-    } catch {
-      // on ignore et on tente l'URL suivante
-    }
+async function tryCheerioExtract(html) {
+  // Try dynamic import so absence of cheerio doesn't crash the function
+  let cheerio;
+  try {
+    // Works when cheerio is present in dependencies; otherwise throws
+    const mod = await import('cheerio');
+    cheerio = mod.default || mod;
+  } catch {
+    return null; // signal caller to use regex fallback
   }
-  return all;
-}
-
-module.exports = async (req, res) => {
-  const lang = String((req.query.lang || 'fr')).slice(0,2).toLowerCase();
-  const count = Math.max(1, Math.min(parseInt(req.query.count || '9', 10), 48));
-  const seenSet = new Set(String(req.query.seen || '').split(',').filter(Boolean));
 
   try {
-    const primary = await scrapeLang(lang);
-    const fallback = (lang === 'fr' ? await scrapeLang('en') : []);
-    // pool = FR + EN fallback (utile si la page FR est pauvre)
-    const pool = [...primary, ...fallback];
+    const $ = cheerio.load(html);
+    const $content = $('#mw-content-text');
+    const items = [];
+    $content.find('li').each((i, el) => {
+      const $li = $(el);
+      let txt = $li.text();
+      txt = trim(txt).replace(/\[\d+\]/g, '');
+      if (txt && txt.length >= 60) items.push(txt);
+    });
+    return items;
+  } catch {
+    return null;
+  }
+}
 
-    // filtre "déjà vu"
-    const fresh = pool.filter(it => !seenSet.has(it.id));
+async function fetchHtml(url) {
+  const r = await fetch(url, {
+    headers: { 'user-agent': 'ff-batch/1.0 (educational project)' }
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status} on ${url}`);
+  return r.text();
+}
 
-    // shuffle Fisher–Yates
-    for (let i = fresh.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
+// ---------- handler ----------
+module.exports = async function handler(req, res) {
+  // Set CORS + cache headers early; we'll always end with 200
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+  try {
+    const urlObj = new URL(req.url, 'http://localhost'); // base won't be used
+    const lang = (urlObj.searchParams.get('lang') || 'fr').toLowerCase();
+    const count = clamp(parseInt(urlObj.searchParams.get('count') || DEFAULT_COUNT, 10) | 0, 1, 60);
+    const seenParam = trim(urlObj.searchParams.get('seen') || '');
+    const seen = new Set(seenParam ? seenParam.split(',').map(s => s.trim()).filter(Boolean) : []);
+
+    const pages = PAGES[lang] || PAGES.fr;
+
+    let candidates = [];
+    for (const pageUrl of pages) {
+      try {
+        const html = await fetchHtml(pageUrl);
+        // Try cheerio first for accuracy; fallback to regex
+        let texts = await tryCheerioExtract(html);
+        if (!texts) texts = extractListItemsByRegex(html);
+
+        // Turn into normalized items
+        const items = texts.map(t => {
+          const { claim, explanation } = splitClaimExplain(t);
+          const id = keyOf(t);
+          return {
+            id,
+            type: 'myth',
+            title: claim,
+            explanation,
+            explainShort: explanation ? explanation.split(/\s+/).slice(0, 28).join(' ') : '',
+            sources: [{ title: 'Wikipedia', url: pageUrl }]
+          };
+        });
+
+        candidates.push(...items);
+      } catch (e) {
+        // Ignore this page and continue with others
+        // console.error('ff-batch page error', pageUrl, e);
+      }
     }
 
+    // If FR yielded nothing, fallback to EN list
+    if (!candidates.length && lang === 'fr') {
+      for (const pageUrl of PAGES.en) {
+        try {
+          const html = await fetchHtml(pageUrl);
+          let texts = await tryCheerioExtract(html);
+          if (!texts) texts = extractListItemsByRegex(html);
+          const items = texts.map(t => {
+            const { claim, explanation } = splitClaimExplain(t);
+            const id = keyOf(t);
+            return {
+              id,
+              type: 'myth',
+              title: claim,
+              explanation,
+              explainShort: explanation ? explanation.split(/\s+/).slice(0, 28).join(' ') : '',
+              sources: [{ title: 'Wikipedia', url: pageUrl }]
+            };
+          });
+          candidates.push(...items);
+        } catch {}
+      }
+    }
+
+    // De-dupe by id
+    const uniq = [];
+    const seenIds = new Set();
+    for (const it of candidates) {
+      if (!seenIds.has(it.id)) { seenIds.add(it.id); uniq.push(it); }
+    }
+
+    // Exclude 'seen' from query
+    const fresh = uniq.filter(it => !seen.has(it.id));
+
+    // Shuffle & pick
+    shuffleInPlace(fresh);
     const out = fresh.slice(0, count);
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
-    // IMPORTANT: on renvoie un **tableau**
-    res.status(200).json(out);
-  } catch (e) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    // En cas d’échec: on ne casse pas la page → tableau vide
-    res.status(200).json([]);
+    res.status(200).end(JSON.stringify(out));
+  } catch (err) {
+    // Final safety: never leak 500 to client
+    // Return an empty array so client can fallback to /api/facts
+    res.status(200).end('[]');
   }
 };
