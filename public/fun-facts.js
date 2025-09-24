@@ -1,5 +1,5 @@
 // public/fun-facts.js — Fun Facts via dataset local (prioritaire) + fallback APIs.
-// Cartes recto/verso, anti-répétition persistante, FR/EN/DE, logs & CSS de secours (classes préfixées ff-* pour éviter les collisions).
+// Cartes recto/verso, anti-répétition persistante, FR/EN/DE, logs & CSS de secours.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -17,22 +17,33 @@
   DBG('LANG', LANG);
   log('LANG =', LANG, 'labels =', {});
 
-  // ---------- Fichiers dataset par langue ----------
-  const DATASETS = {
-    fr: '/ff-dataset.fr.json',
-    en: '/ff-dataset.en.json',
-    de: '/ff-dataset.de.json',
+  // ---------- Root / états d'affichage ----------
+  const ROOT = document.getElementById('ff_root'); // présent dans fun-facts.html
+  const setReady = () => {
+    if (!ROOT) return;
+    ROOT.classList.remove('ff-pending');
+    ROOT.classList.add('ff-ready');
   };
+  const setPending = (msg) => {
+    if (!ROOT) return;
+    ROOT.classList.remove('ff-ready');
+    ROOT.classList.add('ff-pending');
+    const st = document.getElementById('ff_status');
+    if (st) st.textContent = msg || '';
+  };
+
+  // ---------- Fichiers dataset par langue ----------
+  const DATASETS = { fr: '/ff-dataset.fr.json', en: '/ff-dataset.en.json', de: '/ff-dataset.de.json' };
 
   // ---------- i18n ----------
   const LMAP = {
-    fr: { myth: 'Idée reçue', fact: 'Réponse', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.', cards: 'cartes' },
-    en: { myth: 'Myth',        fact: 'Answer',  source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.',           cards: 'cards' },
-    de: { myth: 'Irrtum',      fact: 'Antwort', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.',       cards: 'Karten' },
+    fr: { myth:'Idée reçue', fact:'Réponse', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.', cards:'cartes' },
+    en: { myth:'Myth',       fact:'Answer',  source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.',           cards:'cards' },
+    de: { myth:'Irrtum',     fact:'Antwort', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.',       cards:'Karten' },
   };
   const L = LMAP[LANG] || LMAP.fr;
 
-  // ---------- CSS de secours (flip 3D + grid) ----------
+  // ---------- CSS de secours ----------
   function injectFallbackCSS() {
     if (document.getElementById('ff-fallback-css')) return;
     const css = `
@@ -40,18 +51,18 @@
       .ff-card { position: relative; perspective: 1200px; outline: none; }
       .ff-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .5s ease; }
       .ff-card.is-flipped .ff-inner { transform: rotateY(180deg); }
-      .ff-face { display:block !important; position: relative; padding: 16px; border-radius: 16px; 
-                 background-color: rgba(255,255,255,0.06); backdrop-filter: blur(4px); 
-                 color: #e8efff; min-height: 200px; 
-                 box-shadow: 0 6px 20px rgba(0,0,0,.28); backface-visibility: hidden; 
-                 border: 1px solid rgba(255,255,255,0.10); }
+      .ff-face { display:block !important; position: relative; padding:16px; border-radius:16px;
+                 background-color: rgba(255,255,255,.06); backdrop-filter: blur(4px);
+                 color:#e8efff; min-height:200px; box-shadow:0 6px 20px rgba(0,0,0,.28);
+                 backface-visibility: hidden; border:1px solid rgba(255,255,255,.10); }
       .ff-face.ff-back { transform: rotateY(180deg); }
-      .ff-head { font-weight: 700; opacity: .92; margin-bottom: 8px; }
-      .badge { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.18); font-size: .85rem; }
-      .ff-text { line-height: 1.35; }
-      .ff-actions { margin-top: 12px; font-size: .9rem; opacity: .96; }
-      .ff-link { text-decoration: underline; color: #cfe0ff; }
-      .ff-skel { height: 200px; border-radius: 16px; background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06)); background-size: 200% 100%; animation: ffShine 1.2s linear infinite; }
+      .ff-head { font-weight:700; opacity:.92; margin-bottom:8px; }
+      .badge { padding:4px 8px; border-radius:999px; background:rgba(255,255,255,.18); font-size:.85rem; }
+      .ff-text { line-height:1.35; }
+      .ff-actions { margin-top:12px; font-size:.9rem; opacity:.96; }
+      .ff-link { text-decoration:underline; color:#cfe0ff; }
+      .ff-skel { height:200px; border-radius:16px; background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06));
+                 background-size:200% 100%; animation: ffShine 1.2s linear infinite; border:1px solid rgba(255,255,255,.10); box-shadow:0 6px 20px rgba(0,0,0,.28); }
       @keyframes ffShine { 0%{background-position:0 0} 100%{background-position:200% 0} }
     `;
     const style = document.createElement('style');
@@ -64,7 +75,6 @@
   // ---------- DOM helpers ----------
   const $  = (s, el=document) => el.querySelector(s);
   const $$ = (s, el=document) => [...el.querySelectorAll(s)];
-
   const ensureGrid = () => {
     let grid = $('#facts-grid');
     if (!grid) {
@@ -89,11 +99,7 @@
     GRID.classList.add('ff-loading');
     GRID.setAttribute('aria-busy','true');
     GRID.innerHTML = '';
-    for (let i=0;i<n;i++){
-      const d=document.createElement('div');
-      d.className='ff-skel';
-      GRID.appendChild(d);
-    }
+    for (let i=0;i<n;i++){ const d=document.createElement('div'); d.className='ff-skel'; GRID.appendChild(d); }
   };
   const clearSkeleton = () => {
     GRID.classList.remove('ff-loading');
@@ -107,29 +113,17 @@
     const w = txt.trim().split(/\s+/);
     return (w.length<=max) ? txt.trim() : (w.slice(0,max).join(' ')+'…');
   };
-  const sentence = s => {
-    if (!s) return '';
-    const t = s.trim().replace(/\s+/g,' ');
-    return t ? t[0].toUpperCase()+t.slice(1) : '';
-  };
+  const sentence = s => { if (!s) return ''; const t = s.trim().replace(/\s+/g,' '); return t ? t[0].toUpperCase()+t.slice(1) : ''; };
   const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
   const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
 
   // ---------- Keys / normalisation ----------
   const shortHash = (str) => {
-    let h = 2166136261 >>> 0;
-    const s = String(str || '');
-    for (let i = 0; i < s.length; i++) {
-      h ^= s.charCodeAt(i);
-      h = (h + (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24)) >>> 0;
-    }
+    let h = 2166136261 >>> 0; const s = String(str || '');
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h + (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24)) >>> 0; }
     return h.toString(36);
   };
-  const keyOf = (it) => {
-    if (it && it.id) return String(it.id);
-    return shortHash((it?.claim || it?.title || '') + '|' + (it?.source || it?.url || ''));
-  };
-
+  const keyOf = (it) => it?.id ? String(it.id) : shortHash((it?.claim || it?.title || '') + '|' + (it?.source || it?.url || ''));
   const normalize = (it) => {
     const type = (it.type || 'myth').toLowerCase();
     const claimRaw = it.claim || it.title || it.q || '';
@@ -170,17 +164,10 @@
     return wrap;
   };
 
-  // ---------- Anti-répétitions persistantes ----------
+  // ---------- Anti-répétitions ----------
   const LS_SEEN = 'ff_seen_ids_v1';
-  const loadSeen = () => {
-    try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) || '[]')); }
-    catch { return new Set(); }
-  };
-  const saveSeen = (set) => {
-    const arr = [...set];
-    const MAX = 600;
-    localStorage.setItem(LS_SEEN, JSON.stringify(arr.slice(-MAX)));
-  };
+  const loadSeen = () => { try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) || '[]')); } catch { return new Set(); } };
+  const saveSeen = (set) => { const arr = [...set]; localStorage.setItem(LS_SEEN, JSON.stringify(arr.slice(-600))); };
   let seenIDs = loadSeen();
   let lastKeys = new Set();
 
@@ -229,10 +216,7 @@
     }
     return out;
   }
-  function shuffleInPlace(a){
-    for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; }
-    return a;
-  }
+  function shuffleInPlace(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
   const fetchBatch = async (n) => {
     const ds = await fetchDataset(LANG);
@@ -257,7 +241,6 @@
 
   // ---------- Reconstituer N cartes uniques ----------
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
   const getFacts = async (n = 9, maxTries = 3) => {
     const picked = [];
     const seenNow = new Set([...lastKeys, ...seenIDs]);
@@ -299,31 +282,22 @@
     clearSkeleton();
     if (!list || !list.length) {
       GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
+      setPending(L.noData);
       return;
     }
     const frag = document.createDocumentFragment();
-
-    for (let i = 0; i < Math.min(3, list.length); i++) {
-      DBG('normalize['+i+']', normalize(list[i]));
-    }
-
+    for (let i = 0; i < Math.min(3, list.length); i++) DBG('normalize['+i+']', normalize(list[i]));
     list.forEach((it) => frag.appendChild(card(normalize(it))));
     GRID.appendChild(frag);
-
     DBG('grid children after render', GRID.children.length);
-
     if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
-
-    requestAnimationFrame(() => {
-      const r = GRID.getBoundingClientRect();
-      DBG('grid rect', { w: Math.round(r.width), h: Math.round(r.height) });
-      forceVisible();
-    });
+    requestAnimationFrame(() => { forceVisible(); setReady(); });
   };
 
   // ---------- Actions ----------
   const load = async () => {
     showSkeleton(9);
+    setPending(''); // masque la partie dynamique tant que ça charge
     try {
       const facts = await getFacts(9, 3);
       render(facts);
@@ -331,6 +305,7 @@
       clearSkeleton();
       GRID.innerHTML = `<p class="muted">${L.noData}</p>`;
       console.error('[fun-facts] load() error:', e);
+      setPending('API indisponible.');
     }
   };
 
