@@ -1,4 +1,5 @@
-// public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks) avec flip sur place et autosize
+// public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks)
+// Flip sur place, autosize, états ff-ready/ff-pending et mini-chat en bas de page.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -27,9 +28,12 @@
 
   // ---------- i18n ----------
   const LMAP = {
-    fr: { myth:'Idée reçue', fact:'Réponse', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.', cards:'cartes' },
-    en: { myth:'Myth',       fact:'Answer',  source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.',           cards:'cards' },
-    de: { myth:'Irrtum',     fact:'Antwort', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.',       cards:'Karten' },
+    fr: { myth:'Idée reçue', fact:'Réponse', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.', cards:'cartes',
+          ask:'Questions sur ces idées reçues ?', placeholder:'Pose ta question…', send:'Envoyer', thinking:'Je réfléchis…' },
+    en: { myth:'Myth',       fact:'Answer',  source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.',           cards:'cards',
+          ask:'Questions about these myths?', placeholder:'Ask a question…', send:'Send', thinking:'Thinking…' },
+    de: { myth:'Irrtum',     fact:'Antwort', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.',       cards:'Karten',
+          ask:'Fragen zu diesen Irrtümern?', placeholder:'Stelle eine Frage…', send:'Senden', thinking:'Ich überlege…' },
   };
   const L = LMAP[LANG] || LMAP.fr;
 
@@ -53,8 +57,18 @@
       .ff-skel{height:200px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12),rgba(255,255,255,.06));
                background-size:200% 100%;animation:ffShine 1.2s linear infinite;border:1px solid rgba(255,255,255,.10);box-shadow:0 6px 20px rgba(0,0,0,.28)}
       @keyframes ffShine{0%{background-position:0 0}100%{background-position:200% 0}}
-      /* Mode mesure: on annule la superposition le temps de calculer les hauteurs */
+      /* Mode mesure pour calculer les hauteurs */
       .ff-card.ff-measure .ff-face{position:static !important;transform:none !important;backface-visibility:visible !important;overflow:visible;}
+      /* Mini-chat */
+      .ff-qa{margin-top:20px;border-radius:16px;border:1px dashed rgba(255,255,255,.25);background:rgba(255,255,255,.04);padding:14px 14px 12px;backdrop-filter:blur(3px)}
+      .ff-qa h3{margin:0 0 8px 0;font-size:1.05rem;opacity:.92}
+      .ff-qa-messages{max-height:280px;overflow:auto;padding:6px 2px 8px;display:flex;flex-direction:column;gap:8px}
+      .ff-qa-msg{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);line-height:1.35}
+      .ff-qa-msg.me{align-self:flex-end;background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.35)}
+      .ff-qa-form{display:flex;gap:8px;margin-top:10px}
+      .ff-qa-input{flex:1;min-height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#e8efff;padding:0 12px}
+      .ff-qa-btn{min-width:110px;border-radius:12px;padding:8px 14px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#e8efff;cursor:pointer}
+      .ff-qa-btn[aria-busy="true"]{opacity:.6;cursor:progress}
     `;
     const style = document.createElement('style');
     style.id = 'ff-fallback-css';
@@ -183,7 +197,7 @@
     return { arr, meta:{source:'facts'} };
   };
 
-  // ---------- getFacts (réintroduite) ----------
+  // ---------- getFacts ----------
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   async function getFacts(n = 9, maxTries = 3) {
     const picked = [];
@@ -227,6 +241,72 @@
   let resizeTO=null;
   window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO=setTimeout(measureAndFixHeights, 120); });
 
+  // ---------- Mini-chat (réutilise le bloc du bas) ----------
+  function mountChat(currentCards) {
+    // On cherche d’abord un conteneur existant en bas (souvent .ff-fallback),
+    // sinon on en crée un juste après la grille.
+    let host = document.getElementById('ff_chat') || document.querySelector('.ff-fallback');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'ff_chat';
+      GRID.parentNode.appendChild(host);
+    }
+    host.innerHTML = `
+      <div class="ff-qa" id="ff-qa">
+        <h3>${L.ask}</h3>
+        <div class="ff-qa-messages" id="ff-qa-msgs" aria-live="polite"></div>
+        <form class="ff-qa-form" id="ff-qa-form">
+          <input class="ff-qa-input" id="ff-qa-input" type="text" placeholder="${L.placeholder}" autocomplete="off" />
+          <button class="ff-qa-btn" id="ff-qa-btn" type="submit">${L.send}</button>
+        </form>
+      </div>
+    `;
+
+    const msgs = document.getElementById('ff-qa-msgs');
+    const form = document.getElementById('ff-qa-form');
+    const input = document.getElementById('ff-qa-input');
+    const btn = document.getElementById('ff-qa-btn');
+
+    const push = (txt, me=false) => {
+      const p = document.createElement('div');
+      p.className = 'ff-qa-msg' + (me ? ' me' : '');
+      p.textContent = txt;
+      msgs.appendChild(p);
+      msgs.scrollTop = msgs.scrollHeight;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = (input.value || '').trim();
+      if (!q) return;
+      push(q, true);
+      input.value = '';
+      btn.setAttribute('aria-busy','true'); btn.disabled = true;
+
+      try {
+        const payload = {
+          lang: LANG,
+          q,
+          cards: (currentCards || []).slice(0, 12).map(c => ({
+            claim: c.claim, explain: c.explain, source: c.url || ''
+          })),
+        };
+        const r = await fetch('/api/ff-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json().catch(()=>({answer:'(API indisponible)'}));
+        push(j.answer || '(API indisponible)');
+      } catch (err) {
+        push('(API indisponible)');
+      } finally {
+        btn.removeAttribute('aria-busy'); btn.disabled = false;
+        input.focus();
+      }
+    });
+  }
+
   // ---------- Rendu ----------
   function forceVisible() {
     const rect = GRID.getBoundingClientRect();
@@ -247,16 +327,19 @@
       setPending(L.noData);
       return;
     }
+    const normed = list.map(normalize);
     const frag = document.createDocumentFragment();
-    for (let i=0; i<Math.min(3,list.length); i++) DBG('normalize['+i+']', normalize(list[i]));
-    list.forEach((it) => frag.appendChild(card(normalize(it))));
+    for (let i=0; i<Math.min(3,normed.length); i++) DBG('normalize['+i+']', normed[i]);
+    normed.forEach((it) => frag.appendChild(card(it)));
     GRID.appendChild(frag);
     DBG('grid children after render', GRID.children.length);
-    if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
+    if (COUNT) COUNT.textContent = `${normed.length} ${L.cards}`;
     requestAnimationFrame(() => {
       forceVisible();
-      measureAndFixHeights();   // ajuste la hauteur pour que le flip reste “sur place”
+      measureAndFixHeights();
       setReady();
+      // Monte le mini-chat (réutilise le bloc du bas au lieu de le laisser vide)
+      mountChat(normed);
     });
   };
 
