@@ -16,9 +16,9 @@
 
   // ---------- i18n ----------
   const LMAP = {
-    fr: { myth: 'Mythe', fact: 'Fait vérifié', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.' },
-    en: { myth: 'Myth',  fact: 'Verified fact', source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.' },
-    de: { myth: 'Irrtum',fact: 'Belegter Fakt', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.' },
+    fr: { myth: 'Mythe', fact: 'Fait vérifié', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.', cards: 'cartes' },
+    en: { myth: 'Myth',  fact: 'Verified fact', source: 'Source', newBatch: '🎲 New random batch',      noData: 'No data available for now.', cards: 'cards' },
+    de: { myth: 'Irrtum',fact: 'Belegter Fakt', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz',  noData: 'Zurzeit keine Daten verfügbar.', cards: 'Karten' },
   };
   const L = LMAP[LANG] || LMAP.fr;
   log('LANG =', LANG, 'labels =', L);
@@ -182,7 +182,7 @@
     const url2 = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
     const data2 = await fetchJSON(url2);           // { ok, items } ou tableau
     const arr = Array.isArray(data2) ? data2
-            : Array.isArray(data2?.items) ? data2.items
+         : Array.isArray(data2?.items) ? data2.items
             : Array.isArray(data2?.facts) ? data2.facts
             : [];
     return { arr, meta: { source: 'facts' } };
@@ -225,7 +225,7 @@
     const frag = document.createDocumentFragment();
     list.forEach((it) => frag.appendChild(card(normalize(it))));
     GRID.appendChild(frag);
-    if (COUNT) COUNT.textContent = `${list.length} cards`;
+    if (COUNT) COUNT.textContent = `${list.length} ${L.cards}`;
     requestAnimationFrame(() => {
       const rect = GRID.getBoundingClientRect();
       if (!rect.height || !rect.width) {
