@@ -1,14 +1,12 @@
 // /api/ff-batch.js
-// Robust Wikipedia batch scraper for "misconceptions" lists.
-// - Works WITH or WITHOUT 'cheerio' installed (no hard require at module load).
-// - Never throws to the client: always returns 200 with an array (possibly empty).
-// - Supports ?lang=fr|en|de, ?count=number, ?seen=comma-separated-ids
-//
-// Next.js (pages/api) — Node runtime.
+// Next.js API route — Node runtime forced (works on Vercel).
+// Scrapes Wikipedia "misconceptions" lists and returns normalized items.
+// Always replies 200 (empty array on failure). Minimal + robust.
+
+export const config = { runtime: 'nodejs' };
 
 const DEFAULT_COUNT = 24;
 
-// Misconception list pages per language
 const PAGES = {
   fr: [
     'https://fr.wikipedia.org/wiki/Id%C3%A9e_re%C3%A7ue',
@@ -25,39 +23,16 @@ const PAGES = {
 // ---------- utils ----------
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const trim = (s) => String(s || '').replace(/\s+/g, ' ').trim();
-const hash = (s) => {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
-  return (h >>> 0).toString(36);
-};
+const hash = (s) => { let h=0; for (let i=0;i<s.length;i++) h=(h*31 + s.charCodeAt(i))|0; return (h>>>0).toString(36); };
 const keyOf = (txt) => hash(trim(txt).slice(0, 140));
-
 const splitClaimExplain = (txt) => {
-  // Heuristic: first sentence = claim, rest = explanation
-  const t = trim(txt).replace(/\[\d+\]/g, ''); // remove [1] refs
+  const t = trim(txt).replace(/\[\d+\]/g, '');
   const m = t.match(/^(.+?[.!?…])\s+(.+)$/);
   if (m) return { claim: trim(m[1]), explanation: trim(m[2]) };
   return { claim: t, explanation: '' };
 };
+const shuffleInPlace = (arr) => { for (let i=arr.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; };
 
-const ensureHttps = (u) => {
-  try {
-    const url = new URL(u, 'https://en.wikipedia.org');
-    // Keep only wikipedia domains
-    if (!/\.wikipedia\.org$/i.test(url.hostname)) return '';
-    return url.toString();
-  } catch { return ''; }
-};
-
-const shuffleInPlace = (arr) => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = (Math.random() * (i + 1)) | 0;
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
-// Minimal <li> text extractor without cheerio (regex-based, best-effort)
 function extractListItemsByRegex(html) {
   const items = [];
   const re = /<li[^>]*>([\s\S]*?)<\/li>/gi;
@@ -75,52 +50,55 @@ function extractListItemsByRegex(html) {
 }
 
 async function tryCheerioExtract(html) {
-  // Try dynamic import so absence of cheerio doesn't crash the function
   let cheerio;
   try {
-    // Works when cheerio is present in dependencies; otherwise throws
-    const mod = await import('cheerio');
+    const mod = await import('cheerio'); // ok si installé, sinon throw
     cheerio = mod.default || mod;
-  } catch {
-    return null; // signal caller to use regex fallback
-  }
+  } catch { return null; }
 
   try {
     const $ = cheerio.load(html);
-    const $content = $('#mw-content-text');
     const items = [];
-    $content.find('li').each((i, el) => {
-      const $li = $(el);
-      let txt = $li.text();
+    $('#mw-content-text').find('li').each((_, el) => {
+      let txt = $(el).text();
       txt = trim(txt).replace(/\[\d+\]/g, '');
       if (txt && txt.length >= 60) items.push(txt);
     });
     return items;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
-async function fetchHtml(url) {
+async function fetchHtml(url, lang) {
   const r = await fetch(url, {
-    headers: { 'user-agent': 'ff-batch/1.0 (educational project)' }
+    headers: {
+      'user-agent': 'ff-batch/1.0 (educational project)',
+      'accept-language': lang === 'fr' ? 'fr,en;q=0.9' : lang === 'de' ? 'de,en;q=0.9' : 'en;q=0.9'
+    }
   });
   if (!r.ok) throw new Error(`HTTP ${r.status} on ${url}`);
   return r.text();
 }
 
-// ---------- handler ----------
-module.exports = async function handler(req, res) {
-  // Set CORS + cache headers early; we'll always end with 200
+function getQuery(req) {
+  if (req.query && typeof req.query === 'object') return req.query; // pages/api
+  try {
+    const u = new URL(req.url, 'http://localhost');
+    return Object.fromEntries(u.searchParams.entries());
+  } catch { return {}; }
+}
+
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
 
   try {
-    const urlObj = new URL(req.url, 'http://localhost'); // base won't be used
-    const lang = (urlObj.searchParams.get('lang') || 'fr').toLowerCase();
-    const count = clamp(parseInt(urlObj.searchParams.get('count') || DEFAULT_COUNT, 10) | 0, 1, 60);
-    const seenParam = trim(urlObj.searchParams.get('seen') || '');
+    const q = getQuery(req);
+    const lang = (q.lang || 'fr').toLowerCase();
+    const count = clamp(parseInt(q.count ?? DEFAULT_COUNT, 10) | 0, 1, 60);
+
+    // NB: on tolère 'seen', mais on n’en dépend pas pour la stabilité
+    const seenParam = trim(q.seen || '');
     const seen = new Set(seenParam ? seenParam.split(',').map(s => s.trim()).filter(Boolean) : []);
 
     const pages = PAGES[lang] || PAGES.fr;
@@ -128,15 +106,13 @@ module.exports = async function handler(req, res) {
     let candidates = [];
     for (const pageUrl of pages) {
       try {
-        const html = await fetchHtml(pageUrl);
-        // Try cheerio first for accuracy; fallback to regex
+        const html = await fetchHtml(pageUrl, lang);
         let texts = await tryCheerioExtract(html);
         if (!texts) texts = extractListItemsByRegex(html);
 
-        // Turn into normalized items
-        const items = texts.map(t => {
+        const items = texts.map((t) => {
           const { claim, explanation } = splitClaimExplain(t);
-          const id = keyOf(t);
+          const id = keyOf(pageUrl + '|' + t);
           return {
             id,
             type: 'myth',
@@ -149,53 +125,47 @@ module.exports = async function handler(req, res) {
 
         candidates.push(...items);
       } catch (e) {
-        // Ignore this page and continue with others
-        // console.error('ff-batch page error', pageUrl, e);
+        console.error('ff-batch: page error', pageUrl, e?.message || e);
       }
     }
 
-    // If FR yielded nothing, fallback to EN list
-    if (!candidates.length && lang === 'fr') {
+    // Fallback EN si rien trouvé (ex: pages FR changeantes)
+    if (!candidates.length && lang !== 'en') {
       for (const pageUrl of PAGES.en) {
         try {
-          const html = await fetchHtml(pageUrl);
+          const html = await fetchHtml(pageUrl, 'en');
           let texts = await tryCheerioExtract(html);
           if (!texts) texts = extractListItemsByRegex(html);
-          const items = texts.map(t => {
+          const items = texts.map((t) => {
             const { claim, explanation } = splitClaimExplain(t);
-            const id = keyOf(t);
+            const id = keyOf(pageUrl + '|' + t);
             return {
-              id,
-              type: 'myth',
-              title: claim,
-              explanation,
+              id, type: 'myth', title: claim, explanation,
               explainShort: explanation ? explanation.split(/\s+/).slice(0, 28).join(' ') : '',
               sources: [{ title: 'Wikipedia', url: pageUrl }]
             };
           });
           candidates.push(...items);
-        } catch {}
+        } catch (e) {
+          console.error('ff-batch: EN fallback error', pageUrl, e?.message || e);
+        }
       }
     }
 
-    // De-dupe by id
-    const uniq = [];
-    const seenIds = new Set();
-    for (const it of candidates) {
-      if (!seenIds.has(it.id)) { seenIds.add(it.id); uniq.push(it); }
-    }
+    // Dédoublonnage
+    const byId = new Map();
+    for (const it of candidates) if (!byId.has(it.id)) byId.set(it.id, it);
+    let fresh = [...byId.values()];
 
-    // Exclude already seen IDs from query param
-    const fresh = uniq.filter(it => !seen.has(it.id));
+    // Exclusion 'seen' (si jamais ça matche)
+    if (seen.size) fresh = fresh.filter(it => !seen.has(it.id));
 
-    // Shuffle & pick
     shuffleInPlace(fresh);
     const out = fresh.slice(0, count);
 
-    res.status(200).end(JSON.stringify(out));
-  } catch (err) {
-    // Final safety: never leak 500 to client
-    // Return an empty array so client can fallback to /api/facts
-    res.status(200).end('[]');
+    return res.status(200).json(out);
+  } catch (e) {
+    console.error('ff-batch: fatal', e?.stack || e?.message || e);
+    return res.status(200).json([]); // jamais 500
   }
-};
+}
