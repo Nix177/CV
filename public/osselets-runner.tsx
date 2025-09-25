@@ -760,7 +760,7 @@ function AstragalusRunner() {
         </div>
 
         <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
-          {inIntro ? "Start affiche un screenshot (si présent). → pour parcourir l’intro, puis clique Start."
+          {inIntro ? "Jeu de découverte des différents usages des osselets et leurs ginifications"
                    : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile."}
         </p>
 
@@ -828,8 +828,9 @@ function AstragalusRunner() {
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Screenshot d’accueil : place <code>start-screenshot.webp</code> (ou <code>.jpg/.png</code>) dans <code>/assets/games/osselets/audio/img/</code>.  
-            Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou <code>bear(1..6).png</code>.  
+             /**
+             /**Screenshot d’accueil : place <code>start-screenshot.webp</code> (ou <code>.jpg/.png</code>) dans <code>/assets/games/osselets/audio/img/</code>.  
+             /**Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou <code>bear(1..6).png</code>.  
             Amulettes PNG : <code>{AMULET_FILES.speed}</code>, <code>{AMULET_FILES.purify}</code>, <code>{AMULET_FILES.ward}</code>.
           </div>
         </div>
