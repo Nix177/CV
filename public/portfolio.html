@@ -6,13 +6,13 @@
   <title>Portfolio — Nicolas Tuor</title>
   <meta name="description" content="Projets et démos (éducation, IA, jeux pédagogiques)."/>
   <link rel="icon" href="/favicon.ico"/>
-  <!-- UPDATE: hreflang -->
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
   <style>
-    /* Styles de base (fonctionne même sans style.css luxueux) */
+    /* Styles de base (fonctionne même sans style.css) */
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
     .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
@@ -25,7 +25,7 @@
     @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
     /* Overlay d’aperçu (sécurisé, sans allow-same-origin) */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,55);
                display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
     .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
                       width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
@@ -38,8 +38,9 @@
   <script defer src="/assets/js/feedback.js"></script>
 </head>
 <body>
+  <!-- En-tête local (masqué par nav.js si JS actif) -->
   <header class="site-header">
-    <nav class="site-nav" aria-label="Navigation">
+    <nav class="site-nav" aria-label="Navigation principale">
       <ul class="menu">
         <li><a href="/index.html" class="btn ghost">Accueil</a></li>
         <li><a href="/cv.html" class="btn ghost">CV</a></li>
@@ -70,7 +71,6 @@
           <strong id="ovlTitle">Aperçu</strong>
           <button id="overlayClose" class="btn">Fermer</button>
         </header>
-        <!-- IMPORTANT : pas de allow-same-origin pour éviter l’avertissement -->
         <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
       </div>
     </div>
@@ -105,7 +105,13 @@
     <section id="ai-lab-game" class="card">
       <h2>🎮 Osselets — mini-jeu</h2>
       <p class="muted">Démo jouable intégrée dans un conteneur fixe.</p>
-      <div class="game-wrap" style="position:relative;height:560px;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
+
+      <!-- Bouton Start -->
+      <button id="osselets-start" class="btn">Lancer le jeu</button>
+
+      <!-- Conteneur plus haut pour afficher tout le jeu -->
+      <div class="game-wrap"
+           style="position:relative;height:clamp(600px,78vh,1000px);overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
         <div id="osselets-root"></div>
       </div>
     </section>
@@ -123,26 +129,43 @@
   <!-- BEGIN AI-LAB-SCRIPTS -->
   <script src="/ai-lab.js" defer></script>
 
+  <!-- React + Babel pour le runner Osselets -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+  <!-- Runner (TypeScript + React via Babel) -->
   <script type="text/babel"
           data-presets="typescript,react"
           data-plugins="transform-typescript"
           src="/osselets-runner.tsx"></script>
 
+  <!-- Montage sur clic -->
   <script type="text/babel" data-presets="react">
     (function () {
+      var startBtn = document.getElementById('osselets-start');
       var root = document.getElementById('osselets-root');
-      // @ts-ignore
-      var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
-      if (root && Comp) {
+
+      // Forcer le remplissage du conteneur par le jeu
+      var style = document.createElement('style');
+      style.textContent = `
+        #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
+        #osselets-root canvas { width: 100% !important; height: 100% !important; image-rendering: pixelated; }
+      `;
+      document.head.appendChild(style);
+
+      function mountRunner() {
+        // @ts-ignore
+        var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
+        if (!root || !Comp) { console.warn('AstragalusRunner non initialisé.'); return; }
         var r = ReactDOM.createRoot(root);
         r.render(React.createElement(Comp));
-      } else {
-        console.warn('AstragalusRunner non initialisé (racine ou export manquant).');
+        if (startBtn) { startBtn.disabled = true; startBtn.textContent = 'En cours…'; }
+        root.setAttribute('tabindex', '0');
+        setTimeout(function(){ try{ root.focus({preventScroll:true}); }catch(e){ root.focus(); } }, 50);
       }
+
+      if (startBtn) startBtn.addEventListener('click', mountRunner, { once: true });
     })();
   </script>
   <!-- END AI-LAB-SCRIPTS -->
