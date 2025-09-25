@@ -76,6 +76,8 @@
     </div>
 
     <!-- BEGIN AI-LAB-MERGE -->
+
+    <!-- ✳️ Générateur de quiz — temporairement désactivé
     <section id="ai-lab" class="card" style="margin-top:18px">
       <h2>🧪 AI Lab — générateur de quiz (PER)</h2>
       <div class="row" style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
@@ -101,6 +103,7 @@
       </div>
       <div id="q-output" style="margin-top:12px"></div>
     </section>
+    -->
 
     <section id="ai-lab-game" class="card">
       <h2>🎮 Osselets — mini-jeu</h2>
@@ -109,10 +112,17 @@
       <!-- Bouton Start -->
       <button id="osselets-start" class="btn">Lancer le jeu</button>
 
-      <!-- Conteneur plus haut pour afficher tout le jeu -->
+      <!-- Conteneur du jeu avec screenshot d’attente -->
       <div class="game-wrap"
            style="position:relative;height:clamp(800px,78vh,1000px);overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
-        <div id="osselets-root"></div>
+        <!-- Screenshot d’accueil (retiré au lancement) -->
+        <img id="osselets-cover"
+             src="/assets/games/osselets/audio/img/start-screenshot.webp"
+             alt="Aperçu du jeu Osselets Runner"
+             onerror="this.remove()"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" />
+        <!-- Point de montage React -->
+        <div id="osselets-root" style="position:absolute;inset:0"></div>
       </div>
     </section>
     <!-- END AI-LAB-MERGE -->
@@ -140,13 +150,13 @@
           data-plugins="transform-typescript"
           src="/osselets-runner.tsx"></script>
 
-  <!-- Montage sur clic -->
+  <!-- Montage sur clic : retire la cover puis rend le jeu -->
   <script type="text/babel" data-presets="react">
     (function () {
       var startBtn = document.getElementById('osselets-start');
       var root = document.getElementById('osselets-root');
 
-      // Forcer le remplissage du conteneur par le jeu
+      /* Forcer le remplissage du conteneur par le jeu */
       var style = document.createElement('style');
       style.textContent = `
         #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
@@ -155,6 +165,9 @@
       document.head.appendChild(style);
 
       function mountRunner() {
+        var cover = document.getElementById('osselets-cover');
+        if (cover) cover.remove(); // enlève le screenshot d’accueil
+
         // @ts-ignore
         var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
         if (!root || !Comp) { console.warn('AstragalusRunner non initialisé.'); return; }
