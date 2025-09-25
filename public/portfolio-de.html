@@ -25,7 +25,7 @@
     @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
     /* Vorschau-Overlay (sicher, ohne allow-same-origin) */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,55);
                display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
     .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
                       width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
@@ -71,7 +71,6 @@
           <strong id="ovlTitle">Vorschau</strong>
           <button id="overlayClose" class="btn">Schließen</button>
         </header>
-        <!-- WICHTIG: kein allow-same-origin, um Warnungen zu vermeiden -->
         <iframe id="overlayFrame" title="Vorschau" sandbox="allow-scripts allow-popups"></iframe>
       </div>
     </div>
@@ -106,7 +105,13 @@
     <section id="ai-lab-game" class="card">
       <h2>🎮 Osselets — Minispiel</h2>
       <p class="muted">Spielbare Demo in einem festen Container.</p>
-      <div class="game-wrap" style="position:relative;height:560px;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
+
+      <!-- Start-Button -->
+      <button id="osselets-start" class="btn">Starten</button>
+
+      <!-- Höherer Container, damit das Spiel voll sichtbar ist -->
+      <div class="game-wrap"
+           style="position:relative;height:clamp(600px,78vh,1000px);overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
         <div id="osselets-root"></div>
       </div>
     </section>
@@ -124,26 +129,42 @@
   <!-- BEGIN AI-LAB-SCRIPTS -->
   <script src="/ai-lab.js" defer></script>
 
+  <!-- React + Babel für den Runner -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+  <!-- Runner (TypeScript + React via Babel) -->
   <script type="text/babel"
           data-presets="typescript,react"
           data-plugins="transform-typescript"
           src="/osselets-runner.tsx"></script>
 
+  <!-- Klick zum Starten -->
   <script type="text/babel" data-presets="react">
     (function () {
+      var startBtn = document.getElementById('osselets-start');
       var root = document.getElementById('osselets-root');
-      // @ts-ignore
-      var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
-      if (root && Comp) {
+
+      var style = document.createElement('style');
+      style.textContent = `
+        #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
+        #osselets-root canvas { width: 100% !important; height: 100% !important; image-rendering: pixelated; }
+      `;
+      document.head.appendChild(style);
+
+      function mountRunner() {
+        // @ts-ignore
+        var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
+        if (!root || !Comp) { console.warn('AstragalusRunner nicht initialisiert.'); return; }
         var r = ReactDOM.createRoot(root);
         r.render(React.createElement(Comp));
-      } else {
-        console.warn('AstragalusRunner non initialisé (racine ou export manquant).');
+        if (startBtn) { startBtn.disabled = true; startBtn.textContent = 'Läuft…'; }
+        root.setAttribute('tabindex', '0');
+        setTimeout(function(){ try{ root.focus({preventScroll:true}); }catch(e){ root.focus(); } }, 50);
       }
+
+      if (startBtn) startBtn.addEventListener('click', mountRunner, { once: true });
     })();
   </script>
   <!-- END AI-LAB-SCRIPTS -->
