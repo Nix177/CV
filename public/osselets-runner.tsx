@@ -21,8 +21,8 @@ const AUDIO = {
 
 /** Noms fichiers de l’ours (6 frames) */
 const BEAR_FILES = [
-  "bear (1).png","bear (2).png","bear (3).png",
-  "bear (4).png","bear (5).png","bear (6).png",
+  "bear(1).png","bear(2).png","bear(3).png",
+  "bear(4).png","bear(5).png","bear(6).png",
 ];
 
 type ImgDict = { [k: string]: HTMLImageElement | null };
@@ -686,7 +686,7 @@ function AstragalusRunner() {
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Héros animé via <code>hero.anim.json</code> (dans <code>audio/img/</code> actuellement — le code gère aussi <code>img/</code>). Ours : 6 PNG <code>bear (1..6).png</code>.
+            Héros animé via <code>hero.anim.json</code> (dans <code>audio/img/</code> actuellement — le code gère aussi <code>img/</code>). Ours : 6 PNG <code>bear(1..6).png</code>.
           </div>
         </div>
       </div>
