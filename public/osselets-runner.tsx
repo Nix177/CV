@@ -521,3 +521,178 @@ function AstragalusRunner() {
       ctx.globalAlpha=slots[i].owned?1:0.35; drawAmuletMini(ctx,x+28,88); ctx.globalAlpha=1;
       ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label, x+28, 116);
     }
+    // Indicateurs
+    ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#0f172a"; ctx.font="10px ui-sans-serif, system-ui"; ctx.fillText("Musique (M)", 278,74);
+    ctx.fillStyle = historyMode ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,98,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#0f172a"; ctx.fillText("Cours (H)", 278,102);
+    ctx.restore();
+  }
+  function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number){
+    ctx.save(); ctx.translate(cx,cy); ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); ctx.restore();
+  }
+  function wrapText(ctx:CanvasRenderingContext2D, text:string, x:number,y:number, maxW:number, lh:number){
+    const words=text.split(" "); let line=""; for(let n=0;n<words.length;n++){ const test=line+words[n]+" "; const w=ctx.measureText(test).width;
+      if (w>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+" "; y+=lh; } else line=test;
+    } ctx.fillText(line,x,y);
+  }
+
+  // --- JSX
+  return (
+    <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
+      <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
+        <div className="mb-2" style={{display:"flex",gap:8,alignItems:"center",justifyContent:"space-between"}}>
+          <h1 className="text-xl sm:text-2xl" style={{fontWeight:600}}>Runner 2D – Amulettes d’astragale</h1>
+          <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
+            <button onClick={()=>setHistoryMode(v=>!v)} className="btn" style={btn()}>
+              {historyMode ? "Cours ON" : "Cours OFF"}
+            </button>
+            <button onClick={toggleMusic} className="btn" style={btn()}>
+              {musicOn ? "Musique ON" : "Musique OFF"}
+            </button>
+            <button onClick={()=>setPaused(v=>!v)} disabled={inIntro||summaryOpen} className="btn" style={primaryBtn(inIntro||summaryOpen)}>
+              {paused ? "Lecture" : "Pause"}
+            </button>
+            <label className="btn" style={btn()}>
+              <input type="checkbox" checked={mobileMode} onChange={e=>{ setMobileMode(e.target.checked); clearTouchKeys(); }} />
+              <span style={{marginLeft:6}}>Mode mobile</span>
+            </label>
+            {mobileMode && (
+              <label className="btn" style={btn()}>
+                <input type="checkbox" checked={oneButton} onChange={e=>setOneButton(e.target.checked)} />
+                <span style={{marginLeft:6}}>1 bouton</span>
+              </label>
+            )}
+          </div>
+        </div>
+
+        <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
+          {inIntro
+            ? "Cinématique d’intro : → pour avancer. Clique Start (dans le cadre) pour lancer le jeu."
+            : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile ci-dessus."}
+        </p>
+
+        <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
+          <div className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
+            <canvas ref={canvasRef} width={W} height={H} style={{width:"100%", height:"100%", imageRendering:"pixelated"}} />
+
+            {/* START overlay dans le canvas */}
+            {inIntro && (
+              <div style={{position:"absolute", inset:0, display:"flex", alignItems:"end", justifyContent:"center", paddingBottom:16, pointerEvents:"none"}}>
+                <button onClick={startGame} style={{...primaryBtn(false), pointerEvents:"auto", padding:"10px 16px", borderRadius:14}}>
+                  Start
+                </button>
+              </div>
+            )}
+
+            {/* Résumé de fin de niveau */}
+            {summaryOpen && (
+              <div style={{position:"absolute", inset:0, background:"rgba(255,255,255,.95)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
+                <div style={{width:"min(860px,100%)", background:"#fff", border:"1px solid #e5e7eb", borderRadius:16, padding:16, boxShadow:"0 8px 24px rgba(0,0,0,.08)"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <h2 style={{fontWeight:600}}>Fin du niveau {level} ✅</h2>
+                    <span style={{fontSize:12, padding:"2px 8px", borderRadius:999, background:"#111827", color:"#fff"}}>Mode amulette</span>
+                  </div>
+                  <div style={{display:"grid", gap:12, gridTemplateColumns:"1fr 1fr", marginTop:12}}>
+                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
+                      <h3 style={{fontWeight:600, marginBottom:8}}>Ce que tu as vu</h3>
+                      <ul style={{paddingLeft:18, margin:0}}>
+                        <li>Astragale = <em>talus</em>, os du tarse postérieur.</li>
+                        <li>Usages symboliques/amuletiques (chance, purification, apotropaïque).</li>
+                        <li>Fabrication : extraction → nettoyage/polissage → perçage → collier.</li>
+                      </ul>
+                    </div>
+                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
+                      <h3 style={{fontWeight:600, marginBottom:8}}>Questions flash</h3>
+                      <ol style={{paddingLeft:18, margin:0}}>
+                        <li>V/F : l’astragale est un os du tarse.</li>
+                        <li>Il s’articule avec : tibia / crâne / humérus.</li>
+                        <li>Donne un usage amulette/protection vu dans le niveau.</li>
+                        <li>Pourquoi percer l’osselet avant de le porter ?</li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div style={{display:"flex", gap:8, justifyContent:"end", marginTop:12}}>
+                    <button onClick={()=>{ resetLevel(true); setPaused(false); }} style={btn()}>Revoir la cinématique</button>
+                    <button onClick={()=>{ resetLevel(false); setPaused(false); }} style={btnDark()}>Recommencer</button>
+                    <button onClick={nextLevel} style={primaryBtn(false)}>Prochain niveau →</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Contrôles à l’écran (mode mobile) */}
+            {mobileMode && !inIntro && !summaryOpen && (
+              <>
+                {!oneButton && (
+                  <div style={{position:"absolute", left:12, right:12, bottom:12, display:"flex", gap:12, justifyContent:"space-between", pointerEvents:"none"}}>
+                    <TouchBtn label="←"
+                      onDown={()=>press("left",true)} onUp={()=>press("left",false)} />
+                    <TouchBtn label="Saut"
+                      onDown={()=>press("jump",true)} onUp={()=>press("jump",false)} />
+                    <TouchBtn label="→"
+                      onDown={()=>press("right",true)} onUp={()=>press("right",false)} />
+                  </div>
+                )}
+                {oneButton && (
+                  <div onPointerDown={()=>press("jump",true)} onPointerUp={()=>press("jump",false)}
+                       style={{position:"absolute", inset:"0 0 0 0", pointerEvents:"auto"}} />
+                )}
+              </>
+            )}
+
+            {/* AUDIO avec <source> pour .ogg + .mp3 */}
+            <audio ref={musicEl} preload="auto">
+              <source src={ASSETS.audio + AUDIO.music.ogg} type="audio/ogg"/>
+              <source src={ASSETS.audio + AUDIO.music.mp3} type="audio/mpeg"/>
+            </audio>
+            <audio ref={sfxJumpEl} preload="auto">
+              <source src={ASSETS.audio + AUDIO.jump.ogg} type="audio/ogg"/>
+              <source src={ASSETS.audio + AUDIO.jump.mp3} type="audio/mpeg"/>
+            </audio>
+            <audio ref={sfxCatchEl} preload="auto">
+              <source src={ASSETS.audio + AUDIO.catch.ogg} type="audio/ogg"/>
+              <source src={ASSETS.audio + AUDIO.catch.mp3} type="audio/mpeg"/>
+            </audio>
+            <audio ref={sfxOuchEl} preload="auto">
+              <source src={ASSETS.audio + AUDIO.ouch.ogg} type="audio/ogg"/>
+              <source src={ASSETS.audio + AUDIO.ouch.mp3} type="audio/mpeg"/>
+            </audio>
+          </div>
+
+          <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
+            Option sprites : si tu ajoutes des images dans <code>/assets/games/osselets/img/</code>, le jeu les utilisera automatiquement. Sinon rendu vectoriel.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Boutons UI (styles inline pour ne pas dépendre de Tailwind) */
+function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1 }) as React.CSSProperties; }
+function btnDark(){ return ({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" }) as React.CSSProperties; }
+function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
+
+/** Bouton tactile réutilisable */
+function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
+  const events = {
+    onMouseDown: props.onDown, onMouseUp: props.onUp, onMouseLeave: props.onUp,
+    onTouchStart: (e:React.TouchEvent)=>{ e.preventDefault(); props.onDown(); },
+    onTouchEnd: (e:React.TouchEvent)=>{ e.preventDefault(); props.onUp(); },
+    onPointerDown: (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onDown(); },
+    onPointerUp: (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onUp(); },
+  };
+  return (
+    <button {...events}
+      style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
+      {props.label}
+    </button>
+  );
+}
+
+// Expose pour le script HTML (montage au clic sur #osselets-start) :contentReference[oaicite:2]{index=2}
+// @ts-ignore
+(window as any).AstragalusRunner = AstragalusRunner;
