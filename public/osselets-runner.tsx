@@ -8,7 +8,7 @@ const IMG_BASES = [
   "/assets/games/osselets/audio/img/", // emplacement actuel
   "/assets/games/osselets/img/",       // fallback si tu déplaces plus tard
 ];
-const AUDIO_BASE = "/assets/games/osselets/audio/"start-screenshot";
+const AUDIO_BASE = "/assets/games/osselets/audio/";
 
 // MP3 uniquement
 const AUDIO = {
