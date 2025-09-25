@@ -28,7 +28,7 @@ const AMULET_FILES = {
 /* -------------------- Réglages visuels/jeux -------------------- */
 const WORLD_W = 960;
 const WORLD_H = 540;
-const ANIM_SPEED = 0.6;  // 60 % de la vitesse initiale
+const ANIM_SPEED = 0.3;  // 60 % de la vitesse initiale
 const HERO_SCALE = 1.5;
 const BEAR_SCALE = 1.5;
 
