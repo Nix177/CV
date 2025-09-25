@@ -1,30 +1,29 @@
 // public/osselets-runner.tsx
-// Runner 2D — Start button + musique loop + SFX + mobile + sprites via hero.anim.json (files[] ou src+frames)
+// Runner 2D — Start visible, MP3 only, mobile, héros via hero.anim.json (files[] OK), ours animé (6 frames),
+// et chargement d’images avec fallback audio/img -> img
 
 const { useEffect, useRef, useState } = React;
 
-/** Chemins des assets (public/ sert à /) */
-const ASSETS = {
-  img: "/assets/games/osselets/audio/img/",
-  audio: "/assets/games/osselets/audio/",
-};
+/** Bases d’assets (on tente d’abord audio/img/ car ton repo est ainsi, puis img/) */
+const IMG_BASES = [
+  "/assets/games/osselets/audio/img/",
+  "/assets/games/osselets/img/",
+];
+const AUDIO_BASE = "/assets/games/osselets/audio/";
 
-/** Fichiers audio (mets .ogg si tu peux pour une boucle parfaite) */
+/** Audio MP3 uniquement */
 const AUDIO = {
-  music: { mp3: "game-music-1.mp3" },
-  jump:  { mp3: "jump-sound.mp3"   },
-  catch: { mp3: "catch-sound.mp3"  },
-  ouch:  { mp3: "ouch-sound.mp3"   },
+  music: "game-music-1.mp3",
+  jump:  "jump-sound.mp3",
+  catch: "catch-sound.mp3",
+  ouch:  "ouch-sound.mp3",
 };
 
-/** Autres sprites optionnels (statiques) si tu en ajoutes plus tard */
-const SPRITES = {
-  bear: "bear.png",
-  eye: "evil-eye.png",
-  amuSpeed: "amulet-speed.png",
-  amuPurify: "amulet-purify.png",
-  amuWard: "amulet-ward.png",
-};
+/** Noms fichiers de l’ours (6 frames) */
+const BEAR_FILES = [
+  "bear (1).png","bear (2).png","bear (3).png",
+  "bear (4).png","bear (5).png","bear (6).png",
+];
 
 type ImgDict = { [k: string]: HTMLImageElement | null };
 
@@ -36,12 +35,22 @@ function loadImage(url: string): Promise<HTMLImageElement> {
     im.src = encodeURI(url);
   });
 }
-async function fetchJSON<T=any>(url: string): Promise<T | null> {
-  try {
-    const r = await fetch(url, { cache: "no-store" });
-    if (!r.ok) return null;
-    return (await r.json()) as T;
-  } catch { return null; }
+/** Essaye sur toutes les bases IMG_BASES jusqu’à succès */
+async function loadImageSmart(file: string): Promise<HTMLImageElement | null> {
+  for (const base of IMG_BASES) {
+    try { return await loadImage(base + file); }
+    catch { /* next */ }
+  }
+  return null;
+}
+async function fetchJSON<T=any>(file: string): Promise<T | null> {
+  for (const base of IMG_BASES) {
+    try {
+      const r = await fetch(base + file, { cache: "no-store" });
+      if (r.ok) return (await r.json()) as T;
+    } catch { /* next */ }
+  }
+  return null;
 }
 
 /** ---- Types animation (héros) ---- */
@@ -95,17 +104,6 @@ function AstragalusRunner() {
     try{ el.currentTime=0; el.play().catch(()=>{});}catch{}
   }
 
-  // Chargement sprites "autres"
-  const [spritesReady, setSpritesReady] = useState(false);
-  const images = useRef<ImgDict>({});
-  useEffect(() => {
-    let canceled = false;
-    const entries = Object.entries(SPRITES);
-    Promise.all(entries.map(([k,f]) => loadImage(ASSETS.img+f).then(img=>[k,img]).catch(()=>[k,null])))
-      .then(pairs => { if(canceled) return; const dict:ImgDict={}; pairs.forEach(([k,im]) => dict[k as string]=im as any); images.current=dict; setSpritesReady(true); });
-    return ()=>{ canceled=true; };
-  }, []);
-
   // ---- HÉROS: manifest d’animations ----
   const heroAnim = useRef<HeroAnim | null>(null);
   const heroState = useRef<{ name: "idle"|"run"|"jump"; t:number }>({ name: "idle", t: 0 });
@@ -113,7 +111,7 @@ function AstragalusRunner() {
   useEffect(() => {
     let canceled = false;
     (async () => {
-      const j = await fetchJSON<any>(ASSETS.img + "hero.anim.json"); // peut être absent
+      const j = await fetchJSON<any>("hero.anim.json");
       if (canceled) return;
       if (!j) { heroAnim.current = null; return; }
 
@@ -123,26 +121,26 @@ function AstragalusRunner() {
 
       async function buildClip(def: any): Promise<Clip | null> {
         if (def?.files && Array.isArray(def.files)) {
-          const imgs = await Promise.all(def.files.map((f:string)=>loadImage(ASSETS.img+f)));
-          const frames = imgs.map(im => ({ image: im, sx:0, sy:0, sw: im.naturalWidth, sh: im.naturalHeight }));
+          const imgs = await Promise.all(def.files.map((f:string)=>loadImageSmart(f)));
+          const frames = imgs.filter(Boolean).map(im => ({ image: im!, sx:0, sy:0, sw: im!.naturalWidth, sh: im!.naturalHeight }));
           return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
         }
         if (def?.rects && def?.src) {
-          const img = await loadImage(ASSETS.img + def.src);
+          const img = await loadImageSmart(def.src);
+          if (!img) return null;
           const frames = def.rects.map((r:any)=>({ image: img, sx:r.x, sy:r.y, sw:r.w, sh:r.h }));
           return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
         }
         if (def?.src && def?.frames) {
-          const img = await loadImage(ASSETS.img + def.src);
+          const img = await loadImageSmart(def.src);
+          if (!img) return null;
           const fs: [number,number] = def.frameSize ?? baseFS;
           let fw = fs[0], fh = fs[1];
           if (!def.frameSize) {
             if (img.naturalWidth % def.frames === 0) {
               fw = Math.round(img.naturalWidth / def.frames);
               fh = img.naturalHeight;
-            } else {
-              fh = img.naturalHeight; fw = fh; // fallback carrés
-            }
+            } else { fh = img.naturalHeight; fw = fh; }
           }
           const frames: FrameRect[] = [];
           for (let i=0;i<def.frames;i++){
@@ -164,6 +162,19 @@ function AstragalusRunner() {
     return ()=>{ canceled=true; };
   }, []);
 
+  // ---- OURS: animation simple (6 frames)
+  const bearAnim = useRef<{ frames: HTMLImageElement[]; t:number }|null>(null);
+  useEffect(() => {
+    let canceled = false;
+    (async () => {
+      const imgs = (await Promise.all(BEAR_FILES.map(f=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
+      if (canceled) return;
+      if (imgs.length) bearAnim.current = { frames: imgs, t: 0 };
+      else bearAnim.current = null;
+    })();
+    return ()=>{ canceled=true; };
+  }, []);
+
   // Joueur & monde
   const player = useRef({
     x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true, facing:1,
@@ -179,7 +190,7 @@ function AstragalusRunner() {
   const bear = useRef({ x:-999, y:GROUND_Y-60, w:64, h:60, vx:0, active:false });
   type Stage = "start"|"speedAmulet"|"bearChase"|"postChase"|"purifyAmulet"|"wardAmulet"|"evilEyeWave"|"end";
   const stage = useRef<Stage>("start");
-  const [levelRef] = [useRef(level)]; useEffect(()=>{ levelRef.current = level; },[level]);
+  const levelRef = useRef(level); useEffect(()=>{ levelRef.current = level; },[level]);
 
   // Intro
   const intro = useRef({ step:0, t:0 });
@@ -239,7 +250,7 @@ function AstragalusRunner() {
     };
     reqRef.current = requestAnimationFrame(tick);
     return ()=>{ if(reqRef.current) cancelAnimationFrame(reqRef.current); };
-  }, [paused, inIntro, mobileMode, spritesReady]);
+  }, [paused, inIntro, mobileMode]);
 
   const clamp = (n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const nowMs = ()=>performance.now();
@@ -305,6 +316,8 @@ function AstragalusRunner() {
       const desired = d>260?3.2+diff : d<140?2.2+diff : 2.8+diff;
       bear.current.vx += (desired - bear.current.vx)*0.04;
       bear.current.x += (bear.current.vx * dt * 60)/60;
+      // animer l'ours
+      if (bearAnim.current) bearAnim.current.t += dt;
       p.dirt = clamp(p.dirt + 0.002*dt, 0, 1);
       if (bear.current.x + bear.current.w > p.x + 10) bear.current.x = p.x - 320;
       if (p.x > CHASE_END_X){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
@@ -363,12 +376,13 @@ function AstragalusRunner() {
 
     ctx.save(); ctx.translate(-camX,0);
     for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
-    drawAmulet(ctx, AMULET1_X, GROUND_Y-40, "Vitesse",  images.current.amuSpeed);
-    drawAmulet(ctx, AMULET2_X, GROUND_Y-40, "Purif.",   images.current.amuPurify);
-    drawAmulet(ctx, AMULET3_X, GROUND_Y-40, "Bouclier", images.current.amuWard);
+    drawAmulet(ctx, AMULET1_X, GROUND_Y-40, "Vitesse");
+    drawAmulet(ctx, AMULET2_X, GROUND_Y-40, "Purif.");
+    drawAmulet(ctx, AMULET3_X, GROUND_Y-40, "Bouclier");
 
-    if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y, images.current.bear);
-    for(const e of eyes.current) if(e.alive) drawEvilEye(ctx,e.x,e.y,images.current.eye);
+    if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y);
+
+    for(const e of eyes.current) if(e.alive) drawEvilEye(ctx,e.x,e.y);
 
     drawHero(ctx, p.x,p.y,p.w,p.h,p.facing,p.dirt,p.runPhase,wardTimer.current);
 
@@ -410,6 +424,12 @@ function AstragalusRunner() {
     if (step===3){ center("Perçage (suspension)",120); const cx=W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); ctx.fillStyle="#64748b"; ctx.fillRect(cx-4, cy-60, 8, 36); ctx.beginPath(); ctx.moveTo(cx-8, cy-24); ctx.lineTo(cx+8, cy-24); ctx.lineTo(cx, cy-40); ctx.closePath(); ctx.fill(); ctx.fillStyle="#7c2d12"; ctx.beginPath(); ctx.arc(cx, cy-6, 2, 0, Math.PI*2); ctx.fill(); center("Trou discret pour enfiler un lien.",360); }
     if (step===4){ center("Montage en collier / amulette",120); const cx=W/2,cy=260; ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx-80, cy-30); ctx.quadraticCurveTo(cx, cy-60, cx+80, cy-30); ctx.stroke(); drawAstragalusIcon(ctx,cx,cy,26); center("Clique Start pour jouer →",360); }
     if (step>=5){ center("Prêt ? Clique Start pour jouer.", H/2); }
+
+    // Bouton Start visible (absolu)
+    const root = canvasRef.current?.parentElement as HTMLElement | null;
+    if (root) {
+      // on s'assure que le bouton existe (créé par React ci-dessous)
+    }
   }
 
   // Primitifs de dessin
@@ -419,44 +439,45 @@ function AstragalusRunner() {
     ctx.fillStyle="#cbd5e1"; ctx.fillRect(-18, groundY-140, 36, 10); ctx.fillRect(-18, groundY-10, 36, 10);
     ctx.restore();
   }
-  function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string, sprite:HTMLImageElement|null|undefined){
+  function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string){
     const t = performance.now()*0.002; ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, -16,-16,32,32); }
-    else {
-      ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(t),18,-12); ctx.stroke();
-      const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
-    }
+    ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(t),18,-12); ctx.stroke();
+    const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
+    ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
     ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30); ctx.restore();
   }
-  function drawBear(ctx:CanvasRenderingContext2D, x:number, y:number, sprite:HTMLImageElement|null|undefined){
+  function drawBear(ctx:CanvasRenderingContext2D, x:number, y:number){
     ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, 0,0,64,60); }
-    else {
+    const ba = bearAnim.current;
+    if (ba && ba.frames.length){
+      const fps = 10; // vitesse de cycle de l’ours
+      const idx = Math.floor(ba.t * fps) % ba.frames.length;
+      const im = ba.frames[idx];
+      const Wd = 64, Hd = 60; // destination
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(im, 0,0, im.naturalWidth, im.naturalHeight, 0,0, Wd, Hd);
+    } else {
+      // Fallback rectangle si pas d'images
       ctx.fillStyle="#78350f"; ctx.fillRect(0,20,64,36); ctx.beginPath(); ctx.arc(54,26,14,0,Math.PI*2); ctx.fill();
       ctx.fillRect(6,56,10,12); ctx.fillRect(26,56,10,12); ctx.fillRect(46,56,10,12);
       ctx.fillStyle="#fde68a"; ctx.fillRect(60,22,3,3);
     }
     ctx.restore();
   }
-  function drawEvilEye(ctx:CanvasRenderingContext2D, x:number, y:number, sprite:HTMLImageElement|null|undefined){
+  function drawEvilEye(ctx:CanvasRenderingContext2D, x:number, y:number){
     ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, -16,-16,32,32); }
-    else {
-      ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle="#93c5fd"; ctx.beginPath(); ctx.ellipse(0,0,9,6,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
-    }
+    ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#93c5fd"; ctx.beginPath(); ctx.ellipse(0,0,9,6,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
     ctx.restore();
   }
 
-  // ---- HÉROS : animé si manifest dispo, sinon fallback vectoriel
+  // ---- HÉROS
   function drawHero(ctx:CanvasRenderingContext2D, x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number){
     ctx.save(); ctx.translate(x,y);
 
-    // Bouclier
     if (wardLeft>0){
       const pct=Math.min(1,wardLeft/10); const rad=44+6*Math.sin(performance.now()*0.006);
       const grd=ctx.createRadialGradient(w/2,h/2,10, w/2,h/2,rad);
@@ -479,7 +500,7 @@ function AstragalusRunner() {
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(fr.image, fr.sx, fr.sy, fr.sw, fr.sh, dx, dy, w, h);
     } else {
-      // Fallback vectoriel (si pas d'images)
+      // Fallback vectoriel
       if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
       const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
       ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, h-16, 8,16); ctx.fillRect(w-18+legB*0.2, h-16, 8,16);
@@ -561,6 +582,12 @@ function AstragalusRunner() {
   }
 
   // JSX / UI
+  const startBtnStyle: React.CSSProperties = (() => {
+    const s: any = { padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:"pointer", boxShadow:"0 6px 14px rgba(5,150,105,.25)" };
+    s.position = "absolute"; s.bottom = 16; s.left = "50%"; s.transform = "translateX(-50%)"; s.zIndex = 5;
+    return s;
+  })();
+
   return (
     <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
       <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
@@ -592,13 +619,11 @@ function AstragalusRunner() {
           <div className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
             <canvas ref={canvasRef} width={W} height={H} style={{width:"100%", height:"100%", imageRendering:"pixelated"}} />
 
-            {/* Start overlay */}
+            {/* Start: bouton absolu (z-index) */}
             {inIntro && (
-              <div style={{position:"absolute", inset:0, display:"flex", alignItems:"end", justifyContent:"center", paddingBottom:16, pointerEvents:"none"}}>
-                <button onClick={startGame} style={{...primaryBtn(false), pointerEvents:"auto", padding:"10px 16px", borderRadius:14}}>
-                  Start
-                </button>
-              </div>
+              <button onClick={startGame} style={startBtnStyle}>
+                Start
+              </button>
             )}
 
             {/* Résumé fin */}
@@ -653,27 +678,15 @@ function AstragalusRunner() {
               </>
             )}
 
-            {/* Audio */}
-            <audio ref={musicEl} preload="auto">
-              <source src={ASSETS.audio + AUDIO.music.ogg} type="audio/ogg"/>
-              <source src={ASSETS.audio + AUDIO.music.mp3} type="audio/mpeg"/>
-            </audio>
-            <audio ref={sfxJumpEl} preload="auto">
-              <source src={ASSETS.audio + AUDIO.jump.ogg} type="audio/ogg"/>
-              <source src={ASSETS.audio + AUDIO.jump.mp3} type="audio/mpeg"/>
-            </audio>
-            <audio ref={sfxCatchEl} preload="auto">
-              <source src={ASSETS.audio + AUDIO.catch.ogg} type="audio/ogg"/>
-              <source src={ASSETS.audio + AUDIO.catch.mp3} type="audio/mpeg"/>
-            </audio>
-            <audio ref={sfxOuchEl} preload="auto">
-              <source src={ASSETS.audio + AUDIO.ouch.ogg} type="audio/ogg"/>
-              <source src={ASSETS.audio + AUDIO.ouch.mp3} type="audio/mpeg"/>
-            </audio>
+            {/* Audio MP3 uniquement */}
+            <audio ref={musicEl} preload="auto" src={AUDIO_BASE + AUDIO.music} />
+            <audio ref={sfxJumpEl} preload="auto" src={AUDIO_BASE + AUDIO.jump} />
+            <audio ref={sfxCatchEl} preload="auto" src={AUDIO_BASE + AUDIO.catch} />
+            <audio ref={sfxOuchEl} preload="auto" src={AUDIO_BASE + AUDIO.ouch} />
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Héros animé via <code>/assets/games/osselets/img/hero.anim.json</code> (liste <code>files[]</code> acceptant espaces/parenthèses). Sans manifest, rendu vectoriel par défaut.
+            Héros animé via <code>hero.anim.json</code> (dans <code>audio/img/</code> actuellement — le code gère aussi <code>img/</code>). Ours : 6 PNG <code>bear (1..6).png</code>.
           </div>
         </div>
       </div>
@@ -702,5 +715,6 @@ function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
   );
 }
 
-// Expose pour montage depuis tes pages HTML (bouton Start)
+// Expose pour montage depuis la page
+// @ts-ignore
 (window as any).AstragalusRunner = AstragalusRunner;
