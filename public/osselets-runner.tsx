@@ -1,10 +1,11 @@
 // public/osselets-runner.tsx
-// Runner 2D — Start visible, MP3 only, mobile, héros via hero.anim.json (files[] OK), ours animé (6 frames),
-// et chargement d’images avec fallback audio/img -> img
+// Runner 2D — Start visible (z-index), MP3 only, mobile, héros via hero.anim.json (files[] OK),
+// ours animé (6 frames "bear (1..6).png"), et fallback images audio/img -> img.
+// Robuste si frames manquantes (pas de crash).
 
 const { useEffect, useRef, useState } = React;
 
-/** Bases d’assets (on tente d’abord audio/img/ car ton repo est ainsi, puis img/) */
+/** Bases d’assets — on tente d’abord audio/img/ (ton repo actuel), puis img/ (quand tu déplaceras) */
 const IMG_BASES = [
   "/assets/games/osselets/audio/img/",
   "/assets/games/osselets/img/",
@@ -19,7 +20,7 @@ const AUDIO = {
   ouch:  "ouch-sound.mp3",
 };
 
-/** Noms fichiers de l’ours (6 frames) */
+/** Noms fichiers de l’ours (respecte les espaces) */
 const BEAR_FILES = [
   "bear(1).png","bear(2).png","bear(3).png",
   "bear(4).png","bear(5).png","bear(6).png",
@@ -35,11 +36,11 @@ function loadImage(url: string): Promise<HTMLImageElement> {
     im.src = encodeURI(url);
   });
 }
-/** Essaye sur toutes les bases IMG_BASES jusqu’à succès */
+/** Essaye chaque base jusqu’à succès */
 async function loadImageSmart(file: string): Promise<HTMLImageElement | null> {
   for (const base of IMG_BASES) {
     try { return await loadImage(base + file); }
-    catch { /* next */ }
+    catch { /* try next base */ }
   }
   return null;
 }
@@ -48,7 +49,7 @@ async function fetchJSON<T=any>(file: string): Promise<T | null> {
     try {
       const r = await fetch(base + file, { cache: "no-store" });
       if (r.ok) return (await r.json()) as T;
-    } catch { /* next */ }
+    } catch { /* try next base */ }
   }
   return null;
 }
@@ -89,6 +90,7 @@ function AstragalusRunner() {
   const sfxJumpEl = useRef<HTMLAudioElement | null>(null);
   const sfxCatchEl= useRef<HTMLAudioElement | null>(null);
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
+  const startedOnce = useRef(false);
 
   function startMusicIfWanted() {
     const el = musicEl.current; if (!el) return;
@@ -103,6 +105,21 @@ function AstragalusRunner() {
     const el = ref.current; if(!el) return;
     try{ el.currentTime=0; el.play().catch(()=>{});}catch{}
   }
+  // Déclencheur musique sur toute 1re interaction (au cas où le bouton Start serait ignoré par le navigateur)
+  useEffect(() => {
+    function firstInteract() {
+      if (!startedOnce.current) {
+        startedOnce.current = true;
+        startMusicIfWanted();
+      }
+    }
+    window.addEventListener("pointerdown", firstInteract, { once: true });
+    window.addEventListener("keydown", firstInteract, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", firstInteract);
+      window.removeEventListener("keydown", firstInteract);
+    };
+  }, []);
 
   // ---- HÉROS: manifest d’animations ----
   const heroAnim = useRef<HeroAnim | null>(null);
@@ -120,17 +137,22 @@ function AstragalusRunner() {
       const clips: AnimSet = {};
 
       async function buildClip(def: any): Promise<Clip | null> {
+        // Liste de fichiers (ton cas)
         if (def?.files && Array.isArray(def.files)) {
-          const imgs = await Promise.all(def.files.map((f:string)=>loadImageSmart(f)));
-          const frames = imgs.filter(Boolean).map(im => ({ image: im!, sx:0, sy:0, sw: im!.naturalWidth, sh: im!.naturalHeight }));
+          const imgs = (await Promise.all(def.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
+          if (!imgs.length) return null; // ⟵ évite clip vide
+          const frames = imgs.map(im => ({ image: im, sx:0, sy:0, sw: im.naturalWidth, sh: im.naturalHeight }));
           return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
         }
+        // Sprite découpé par rects
         if (def?.rects && def?.src) {
           const img = await loadImageSmart(def.src);
           if (!img) return null;
           const frames = def.rects.map((r:any)=>({ image: img, sx:r.x, sy:r.y, sw:r.w, sh:r.h }));
+          if (!frames.length) return null;
           return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
         }
+        // Strip horizontal src+frames
         if (def?.src && def?.frames) {
           const img = await loadImageSmart(def.src);
           if (!img) return null;
@@ -147,6 +169,7 @@ function AstragalusRunner() {
             const sx = Math.min(img.naturalWidth - fw, Math.round(i*fw));
             frames.push({ image: img, sx, sy:0, sw:fw, sh:fh });
           }
+          if (!frames.length) return null;
           return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
         }
         return null;
@@ -155,7 +178,7 @@ function AstragalusRunner() {
       const anims = j.animations ?? {};
       for (const key of Object.keys(anims)) {
         const clip = await buildClip(anims[key]);
-        if (clip) clips[key] = clip;
+        if (clip) clips[key] = clip; // si null → on ignore
       }
       heroAnim.current = { clips, origin, frameSize: baseFS };
     })();
@@ -169,8 +192,7 @@ function AstragalusRunner() {
     (async () => {
       const imgs = (await Promise.all(BEAR_FILES.map(f=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
       if (canceled) return;
-      if (imgs.length) bearAnim.current = { frames: imgs, t: 0 };
-      else bearAnim.current = null;
+      bearAnim.current = imgs.length ? { frames: imgs, t: 0 } : null;
     })();
     return ()=>{ canceled=true; };
   }, []);
@@ -316,8 +338,7 @@ function AstragalusRunner() {
       const desired = d>260?3.2+diff : d<140?2.2+diff : 2.8+diff;
       bear.current.vx += (desired - bear.current.vx)*0.04;
       bear.current.x += (bear.current.vx * dt * 60)/60;
-      // animer l'ours
-      if (bearAnim.current) bearAnim.current.t += dt;
+      if (bearAnim.current) bearAnim.current.t += dt; // animer l’ours
       p.dirt = clamp(p.dirt + 0.002*dt, 0, 1);
       if (bear.current.x + bear.current.w > p.x + 10) bear.current.x = p.x - 320;
       if (p.x > CHASE_END_X){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
@@ -424,12 +445,6 @@ function AstragalusRunner() {
     if (step===3){ center("Perçage (suspension)",120); const cx=W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); ctx.fillStyle="#64748b"; ctx.fillRect(cx-4, cy-60, 8, 36); ctx.beginPath(); ctx.moveTo(cx-8, cy-24); ctx.lineTo(cx+8, cy-24); ctx.lineTo(cx, cy-40); ctx.closePath(); ctx.fill(); ctx.fillStyle="#7c2d12"; ctx.beginPath(); ctx.arc(cx, cy-6, 2, 0, Math.PI*2); ctx.fill(); center("Trou discret pour enfiler un lien.",360); }
     if (step===4){ center("Montage en collier / amulette",120); const cx=W/2,cy=260; ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx-80, cy-30); ctx.quadraticCurveTo(cx, cy-60, cx+80, cy-30); ctx.stroke(); drawAstragalusIcon(ctx,cx,cy,26); center("Clique Start pour jouer →",360); }
     if (step>=5){ center("Prêt ? Clique Start pour jouer.", H/2); }
-
-    // Bouton Start visible (absolu)
-    const root = canvasRef.current?.parentElement as HTMLElement | null;
-    if (root) {
-      // on s'assure que le bouton existe (créé par React ci-dessous)
-    }
   }
 
   // Primitifs de dessin
@@ -452,14 +467,13 @@ function AstragalusRunner() {
     ctx.save(); ctx.translate(x,y);
     const ba = bearAnim.current;
     if (ba && ba.frames.length){
-      const fps = 10; // vitesse de cycle de l’ours
+      const fps = 10;
       const idx = Math.floor(ba.t * fps) % ba.frames.length;
       const im = ba.frames[idx];
-      const Wd = 64, Hd = 60; // destination
+      const Wd = 64, Hd = 60;
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(im, 0,0, im.naturalWidth, im.naturalHeight, 0,0, Wd, Hd);
     } else {
-      // Fallback rectangle si pas d'images
       ctx.fillStyle="#78350f"; ctx.fillRect(0,20,64,36); ctx.beginPath(); ctx.arc(54,26,14,0,Math.PI*2); ctx.fill();
       ctx.fillRect(6,56,10,12); ctx.fillRect(26,56,10,12); ctx.fillRect(46,56,10,12);
       ctx.fillStyle="#fde68a"; ctx.fillRect(60,22,3,3);
@@ -486,21 +500,21 @@ function AstragalusRunner() {
     }
 
     const anim = heroAnim.current;
-    if (anim && anim.clips[heroState.current.name]) {
-      const clip = anim.clips[heroState.current.name];
-      const count = Math.max(1, clip.frames.length);
+    const clip = anim?.clips[heroState.current.name];
+    if (clip && clip.frames.length) {
+      const count = clip.frames.length;
       let idx = Math.floor(heroState.current.t * clip.fps);
       idx = clip.loop ? (idx % count) : Math.min(idx, count-1);
       const fr = clip.frames[idx];
 
       if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
-      const ox = anim.origin?.[0] ?? 0.5, oy = anim.origin?.[1] ?? 1;
+      const ox = anim!.origin?.[0] ?? 0.5, oy = anim!.origin?.[1] ?? 1;
       const dx = -ox * w, dy = -oy * h;
 
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(fr.image, fr.sx, fr.sy, fr.sw, fr.sh, dx, dy, w, h);
     } else {
-      // Fallback vectoriel
+      // Fallback vectoriel si pas de frames chargées
       if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
       const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
       ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, h-16, 8,16); ctx.fillRect(w-18+legB*0.2, h-16, 8,16);
