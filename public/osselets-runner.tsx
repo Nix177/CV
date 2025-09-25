@@ -5,7 +5,7 @@ const { useEffect, useRef, useState } = React;
 
 /** Chemins des assets (public/ sert à /) */
 const ASSETS = {
-  img: "/assets/games/osselets/img/",
+  img: "/assets/games/osselets/audio/img/",
   audio: "/assets/games/osselets/audio/",
 };
 
