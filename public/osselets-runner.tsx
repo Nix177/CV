@@ -1,23 +1,23 @@
-// osselets-runner.tsx — version avec manifest d’animations du héros (strips inégaux OK)
-// Sprites héros via /assets/games/osselets/img/hero.anim.json (+ hero_idle.png, hero_run.png, hero_jump.png)
+// public/osselets-runner.tsx
+// Runner 2D — Start button + musique loop + SFX + mobile + sprites via hero.anim.json (files[] ou src+frames)
 
 const { useEffect, useRef, useState } = React;
 
-/** Chemins d’assets */
+/** Chemins des assets (public/ sert à /) */
 const ASSETS = {
   img: "/assets/games/osselets/img/",
   audio: "/assets/games/osselets/audio/",
 };
 
-/** Audio */
+/** Fichiers audio (mets .ogg si tu peux pour une boucle parfaite) */
 const AUDIO = {
   music: { ogg: "game-music-1.ogg", mp3: "game-music-1.mp3" },
-  jump: { ogg: "jump-sound.ogg", mp3: "jump-sound.mp3" },
-  catch: { ogg: "catch-sound.ogg", mp3: "catch-sound.mp3" },
-  ouch: { ogg: "ouch-sound.ogg", mp3: "ouch-sound.mp3" },
+  jump:  { ogg: "jump-sound.ogg",   mp3: "jump-sound.mp3"   },
+  catch: { ogg: "catch-sound.ogg",  mp3: "catch-sound.mp3"  },
+  ouch:  { ogg: "ouch-sound.ogg",   mp3: "ouch-sound.mp3"   },
 };
 
-/** Sprites optionnels pour autres entités (statiques si présents) */
+/** Autres sprites optionnels (statiques) si tu en ajoutes plus tard */
 const SPRITES = {
   bear: "bear.png",
   eye: "evil-eye.png",
@@ -27,12 +27,13 @@ const SPRITES = {
 };
 
 type ImgDict = { [k: string]: HTMLImageElement | null };
+
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const im = new Image();
     im.onload = () => resolve(im);
     im.onerror = reject;
-    im.src = url;
+    im.src = encodeURI(url);
   });
 }
 async function fetchJSON<T=any>(url: string): Promise<T | null> {
@@ -50,14 +51,14 @@ type AnimSet = { [name: string]: Clip };
 type HeroAnim = { clips: AnimSet; origin: [number, number]; frameSize: [number, number] };
 
 function AstragalusRunner() {
-  // Canvas & world
+  // Canvas & monde
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const reqRef = useRef<number | null>(null);
   const W = 960, H = 540;
   const GROUND_Y = 440;
   const WORLD_LEN = 4200;
 
-  // UI flow
+  // UI
   const [inIntro, setInIntro] = useState(true);
   const [paused, setPaused] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
@@ -75,9 +76,9 @@ function AstragalusRunner() {
 
   // Audio
   const [musicOn, setMusicOn] = useState(true);
-  const musicEl = useRef<HTMLAudioElement | null>(null);
+  const musicEl   = useRef<HTMLAudioElement | null>(null);
   const sfxJumpEl = useRef<HTMLAudioElement | null>(null);
-  const sfxCatchEl = useRef<HTMLAudioElement | null>(null);
+  const sfxCatchEl= useRef<HTMLAudioElement | null>(null);
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
 
   function startMusicIfWanted() {
@@ -94,7 +95,7 @@ function AstragalusRunner() {
     try{ el.currentTime=0; el.play().catch(()=>{});}catch{}
   }
 
-  // Images (non-héros)
+  // Chargement sprites "autres"
   const [spritesReady, setSpritesReady] = useState(false);
   const images = useRef<ImgDict>({});
   useEffect(() => {
@@ -134,16 +135,13 @@ function AstragalusRunner() {
         if (def?.src && def?.frames) {
           const img = await loadImage(ASSETS.img + def.src);
           const fs: [number,number] = def.frameSize ?? baseFS;
-          // Découpage : si la largeur est divisible, on utilise, sinon on tente frames carrés de fs[0]
           let fw = fs[0], fh = fs[1];
           if (!def.frameSize) {
             if (img.naturalWidth % def.frames === 0) {
               fw = Math.round(img.naturalWidth / def.frames);
               fh = img.naturalHeight;
             } else {
-              // fallback : assume carrés basé sur la hauteur
-              fh = img.naturalHeight;
-              fw = fh;
+              fh = img.naturalHeight; fw = fh; // fallback carrés
             }
           }
           const frames: FrameRect[] = [];
@@ -166,7 +164,7 @@ function AstragalusRunner() {
     return ()=>{ canceled=true; };
   }, []);
 
-  // Player & world
+  // Joueur & monde
   const player = useRef({
     x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true, facing:1,
     baseSpeed:3.0, speedMul:1.0, dirt:0, runPhase:0, coyote:0, jumpBuf:0
@@ -181,13 +179,12 @@ function AstragalusRunner() {
   const bear = useRef({ x:-999, y:GROUND_Y-60, w:64, h:60, vx:0, active:false });
   type Stage = "start"|"speedAmulet"|"bearChase"|"postChase"|"purifyAmulet"|"wardAmulet"|"evilEyeWave"|"end";
   const stage = useRef<Stage>("start");
-  const levelRef = useRef(level);
-  useEffect(()=>{ levelRef.current = level; },[level]);
+  const [levelRef] = [useRef(level)]; useEffect(()=>{ levelRef.current = level; },[level]);
 
   // Intro
   const intro = useRef({ step:0, t:0 });
 
-  // Keyboard
+  // Clavier
   useEffect(() => {
     function down(e: KeyboardEvent) {
       if (["ArrowLeft","ArrowRight"," ","Space","m","M","h","H","p","P"].includes(e.key)) e.preventDefault();
@@ -212,7 +209,7 @@ function AstragalusRunner() {
     return ()=>{ window.removeEventListener("keydown",down); window.removeEventListener("keyup",up); };
   }, [inIntro, summaryOpen]);
 
-  // Touch helpers
+  // Touch
   function press(name: "left"|"right"|"jump", v:boolean){ onScreenKeys.current[name]=v; }
   function clearTouchKeys(){ onScreenKeys.current={left:false,right:false,jump:false}; }
 
@@ -229,7 +226,7 @@ function AstragalusRunner() {
   }
   function nextLevel(){ setLevel(l=>l+1); resetLevel(false); setPaused(false); }
 
-  // Loop
+  // Boucle
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx) return;
@@ -247,7 +244,7 @@ function AstragalusRunner() {
   const clamp = (n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const nowMs = ()=>performance.now();
 
-  // History popup
+  // Popup histoire
   const historyPopup = useRef<{ text:string; until:number }|null>(null);
   function showHistory(text:string){ historyPopup.current={text,until:nowMs()+4200}; }
 
@@ -298,7 +295,7 @@ function AstragalusRunner() {
     else heroState.current.t += dt;
 
     // Script événements
-    if (stage.current==="start" && p.x > 900-20) {
+    if (stage.current==="start" && p.x > AMULET1_X-20) {
       stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true;
       setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl);
       setTimeout(()=>{ stage.current="bearChase"; bear.current.active=true; bear.current.x=p.x-300; bear.current.vx=2.8; setMessage("Un ours te poursuit !"); }, 500);
@@ -310,19 +307,19 @@ function AstragalusRunner() {
       bear.current.x += (bear.current.vx * dt * 60)/60;
       p.dirt = clamp(p.dirt + 0.002*dt, 0, 1);
       if (bear.current.x + bear.current.w > p.x + 10) bear.current.x = p.x - 320;
-      if (p.x > 2000){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
+      if (p.x > CHASE_END_X){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
     }
-    if (stage.current==="postChase" && p.x > 2200-20) {
+    if (stage.current==="postChase" && p.x > AMULET2_X-20) {
       stage.current="purifyAmulet"; inv.current.purify=true; playOne(sfxCatchEl);
       const clean=()=>{ player.current.dirt=Math.max(0, player.current.dirt-0.05); if(player.current.dirt>0) requestAnimationFrame(clean); };
       requestAnimationFrame(clean);
       if (historyMode) showHistory("Purification symbolique/amuletique attestée dans l’Antiquité.");
     }
-    if ((stage.current==="purifyAmulet"||stage.current==="postChase") && p.x > 3100-20) {
+    if ((stage.current==="purifyAmulet"||stage.current==="postChase") && p.x > AMULET3_X-20) {
       stage.current="wardAmulet"; inv.current.ward=true; wardTimer.current=10; playOne(sfxCatchEl);
       setMessage("Bouclier apotropaïque (temporaire) !");
     }
-    if ((stage.current==="wardAmulet"||stage.current==="purifyAmulet") && p.x > 3200) {
+    if ((stage.current==="wardAmulet"||stage.current==="purifyAmulet") && p.x > EVIL_WAVE_START_X) {
       stage.current="evilEyeWave";
       const n=6+(levelRef.current-1)*4;
       for(let i=0;i<n;i++)
@@ -366,9 +363,9 @@ function AstragalusRunner() {
 
     ctx.save(); ctx.translate(-camX,0);
     for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
-    drawAmulet(ctx, 900,  GROUND_Y-40, "Vitesse",  images.current.amuSpeed);
-    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.",   images.current.amuPurify);
-    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier", images.current.amuWard);
+    drawAmulet(ctx, AMULET1_X, GROUND_Y-40, "Vitesse",  images.current.amuSpeed);
+    drawAmulet(ctx, AMULET2_X, GROUND_Y-40, "Purif.",   images.current.amuPurify);
+    drawAmulet(ctx, AMULET3_X, GROUND_Y-40, "Bouclier", images.current.amuWard);
 
     if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y, images.current.bear);
     for(const e of eyes.current) if(e.alive) drawEvilEye(ctx,e.x,e.y,images.current.eye);
@@ -415,7 +412,7 @@ function AstragalusRunner() {
     if (step>=5){ center("Prêt ? Clique Start pour jouer.", H/2); }
   }
 
-  // Drawing primitives
+  // Primitifs de dessin
   function drawColumn(ctx:CanvasRenderingContext2D, baseX:number, groundY:number){
     ctx.save(); ctx.translate(baseX,0);
     ctx.fillStyle="#e5e7eb"; ctx.fillRect(-12, groundY-140, 24, 140);
@@ -482,7 +479,7 @@ function AstragalusRunner() {
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(fr.image, fr.sx, fr.sy, fr.sw, fr.sh, dx, dy, w, h);
     } else {
-      // Fallback vectoriel (ancien rendu)
+      // Fallback vectoriel (si pas d'images)
       if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
       const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
       ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, h-16, 8,16); ctx.fillRect(w-18+legB*0.2, h-16, 8,16);
@@ -492,12 +489,6 @@ function AstragalusRunner() {
       ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(16+i*8,22); ctx.lineTo(20+i*8,46); ctx.stroke(); }
       ctx.strokeStyle="#eab308"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(10,36); ctx.lineTo(w-10,36); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(w/2-8,22); ctx.quadraticCurveTo(w/2,18,w/2+8,22); ctx.stroke();
-      if (inv.current.speed || inv.current.purify || inv.current.ward) {
-        ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2;
-        ctx.beginPath(); ctx.ellipse(w/2,26,5,3.5,0,0,Math.PI*2); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w/2-3.5,26); ctx.quadraticCurveTo(w/2,24.5,w/2+3.5,26);
-        ctx.moveTo(w/2-3.5,26); ctx.quadraticCurveTo(w/2,27.5,w/2+3.5,26); ctx.stroke();
-      }
       ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(w/2,12,8,0,Math.PI*2); ctx.fill();
     }
 
@@ -682,7 +673,7 @@ function AstragalusRunner() {
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Héros animé via <code>/assets/games/osselets/img/hero.anim.json</code> (strips inégaux, listes d’images ou rects – tous supportés). Sans manifest, rendu vectoriel par défaut.
+            Héros animé via <code>/assets/games/osselets/img/hero.anim.json</code> (liste <code>files[]</code> acceptant espaces/parenthèses). Sans manifest, rendu vectoriel par défaut.
           </div>
         </div>
       </div>
@@ -691,9 +682,9 @@ function AstragalusRunner() {
 }
 
 /** Styles boutons */
-function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1 }) as React.CSSProperties; }
+function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1 }) as React.CSSProperties; }
 function btnDark(){ return ({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" }) as React.CSSProperties; }
-function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
+function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
 
 /** Bouton tactile */
 function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
@@ -711,6 +702,5 @@ function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
   );
 }
 
-// Expose
-// @ts-ignore
+// Expose pour montage depuis tes pages HTML (bouton Start)
 (window as any).AstragalusRunner = AstragalusRunner;
