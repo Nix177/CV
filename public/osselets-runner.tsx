@@ -11,10 +11,10 @@ const ASSETS = {
 
 /** Fichiers audio (mets .ogg si tu peux pour une boucle parfaite) */
 const AUDIO = {
-  music: { ogg: "game-music-1.ogg", mp3: "game-music-1.mp3" },
-  jump:  { ogg: "jump-sound.ogg",   mp3: "jump-sound.mp3"   },
-  catch: { ogg: "catch-sound.ogg",  mp3: "catch-sound.mp3"  },
-  ouch:  { ogg: "ouch-sound.ogg",   mp3: "ouch-sound.mp3"   },
+  music: { mp3: "game-music-1.mp3" },
+  jump:  { mp3: "jump-sound.mp3"   },
+  catch: { mp3: "catch-sound.mp3"  },
+  ouch:  { mp3: "ouch-sound.mp3"   },
 };
 
 /** Autres sprites optionnels (statiques) si tu en ajoutes plus tard */
