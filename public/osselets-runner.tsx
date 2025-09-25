@@ -1,18 +1,16 @@
 // public/osselets-runner.tsx
-// Runner 2D — robuste aux frames manquantes, Start visible, MP3-only,
-// héro via hero.anim.json, ours via bear.anim.json ou patterns bear(1..6)/bear (1..6),
-// chemins img: audio/img/ puis img/ (fallback).
+// Runner 2D – Amulettes d’astragale (version robuste + responsive + assets PNG amulettes)
 
 const { useEffect, useRef, useState } = React;
 
-/** Bases images : d’abord audio/img/ (ton repo), puis img/ (quand tu déplaceras) */
+/* -------------------- Chemins & assets -------------------- */
 const IMG_BASES = [
-  "/assets/games/osselets/audio/img/",
-  "/assets/games/osselets/img/",
+  "/assets/games/osselets/audio/img/", // ton emplacement actuel
+  "/assets/games/osselets/img/",       // fallback si tu déplaces plus tard
 ];
 const AUDIO_BASE = "/assets/games/osselets/audio/";
 
-/** MP3 uniquement */
+// MP3 uniquement
 const AUDIO = {
   music: "game-music-1.mp3",
   jump:  "jump-sound.mp3",
@@ -20,10 +18,28 @@ const AUDIO = {
   ouch:  "ouch-sound.mp3",
 };
 
+// PNG amulettes (noms EXACTS tels que dans ta capture)
+const AMULET_FILES = {
+  speed:  "amulette-speed.png",
+  purify: "amulette-purify.png",
+  ward:   "amulette-ward.png",
+};
+
+/* -------------------- Réglages visuels/jeux -------------------- */
+const WORLD_W = 960;
+const WORLD_H = 540;
+const ANIM_SPEED = 0.6;  // 60 % de la vitesse initiale
+const HERO_SCALE = 1.5;
+const BEAR_SCALE = 1.5;
+
+const GROUND_Y   = 440;  // coord. logique (dans WORLD_H)
+const WORLD_LEN  = 4200; // longueur du niveau
+
+/* -------------------- Utils chargement -------------------- */
 function logOnce(key:string, ...args:any[]) {
   const k = `__once_${key}`;
   // @ts-ignore
-  if (window[k]) return; // already logged
+  if (window[k]) return;
   // @ts-ignore
   window[k] = true;
   console.warn(...args);
@@ -33,18 +49,18 @@ function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const im = new Image();
     im.onload = () => resolve(im);
-    im.onerror = (e) => reject(new Error(`img load failed: ${url}`));
+    im.onerror = () => reject(new Error(`img load failed: ${url}`));
     im.src = encodeURI(url);
   });
 }
 
-/** Essaye chaque base jusqu’à succès, sinon null + warn */
 async function loadImageSmart(file: string): Promise<HTMLImageElement | null> {
   for (const base of IMG_BASES) {
-    try { return await loadImage(base + file); }
-    catch (err) { /* try next */ }
+    try {
+      return await loadImage(base + file);
+    } catch {}
   }
-  logOnce(`img_${file}`, `[osselets] Image introuvable: ${file} (essayé: ${IMG_BASES.map(b=>b+file).join(", ")})`);
+  logOnce(`img_${file}`, `[osselets] image introuvable: ${file} (essayé: ${IMG_BASES.map(b=>b+file).join(", ")})`);
   return null;
 }
 
@@ -53,39 +69,79 @@ async function fetchJSON<T=any>(file: string): Promise<T | null> {
     try {
       const r = await fetch(base + file, { cache: "no-store" });
       if (r.ok) return (await r.json()) as T;
-    } catch { /* try next */ }
+    } catch {}
   }
   return null;
 }
 
-/** ---- Types animation (héros) ---- */
+/* -------------------- Types animation héros -------------------- */
 type FrameRect = { image: HTMLImageElement; sx: number; sy: number; sw: number; sh: number };
 type Clip = { frames: FrameRect[]; fps: number; loop: boolean; name?: string };
 type AnimSet = { [name: string]: Clip };
 type HeroAnim = { clips: AnimSet; origin: [number, number]; frameSize: [number, number] };
 
-function AstragalusRunner() {
-  // Canvas & monde
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const reqRef = useRef<number | null>(null);
-  const W = 960, H = 540;
-  const GROUND_Y = 440;
-  const WORLD_LEN = 4200;
+/* ============================================================ */
 
-  // UI
-  const [inIntro, setInIntro] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const [summaryOpen, setSummaryOpen] = useState(false);
-  const [level, setLevel] = useState(1);
-  const [message, setMessage] = useState("← → bouger | Espace sauter | P pause | H cours | M musique");
-  const [historyMode, setHistoryMode] = useState(true);
+function AstragalusRunner() {
+  /* ---------- Canvas responsive + DPR ---------- */
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef  = useRef<HTMLCanvasElement | null>(null);
+  const ctxRef     = useRef<CanvasRenderingContext2D | null>(null);
+  const scaleRef   = useRef(1);   // scale visuel (pour adapter 16:9)
+  const dprRef     = useRef(1);   // device pixel ratio
+
+  useEffect(() => {
+    function resize() {
+      const wrap = wrapperRef.current, cv = canvasRef.current;
+      if (!wrap || !cv) return;
+
+      const rectW = wrap.clientWidth;
+      const targetW = rectW;                // 100% largeur dispo
+      const targetH = Math.round(targetW * (WORLD_H / WORLD_W)); // ratio 16:9
+
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      dprRef.current = dpr;
+
+      // taille pixel du canvas (attr width/height) = taille CSS * DPR
+      cv.width  = Math.floor(targetW * dpr);
+      cv.height = Math.floor(targetH * dpr);
+
+      // taille CSS (pour layout)
+      cv.style.width  = `${targetW}px`;
+      cv.style.height = `${targetH}px`;
+
+      // contexte & transform pour dessiner aux coords logiques (WORLD_W × WORLD_H)
+      const ctx = cv.getContext("2d");
+      if (ctx) {
+        ctxRef.current = ctx;
+        ctx.setTransform(0,0,0,0,0,0);     // reset
+        const scale = (targetW * dpr) / WORLD_W;
+        scaleRef.current = scale;          // utile si besoin
+        ctx.setTransform(scale, 0, 0, scale, 0, 0); // on dessine aux coords du monde
+      }
+    }
+
+    resize();
+    const ro = new ResizeObserver(resize);
+    if (wrapperRef.current) ro.observe(wrapperRef.current);
+    window.addEventListener("resize", resize);
+    return () => { ro.disconnect(); window.removeEventListener("resize", resize); };
+  }, []);
+
+  /* ---------- UI états ---------- */
+  const [inIntro, setInIntro]       = useState(true);
+  const [paused, setPaused]         = useState(false);
+  const [summaryOpen, setSummaryOpen]= useState(false);
+  const [level, setLevel]           = useState(1);
+  const [message, setMessage]       = useState("← → bouger | Espace sauter | P pause | H cours | M musique");
+  const [historyMode, setHistoryMode]= useState(true);
 
   // Mobile
   const autoCoarse = typeof window !== "undefined" && window.matchMedia
     ? window.matchMedia("(pointer: coarse)").matches
     : false;
   const [mobileMode, setMobileMode] = useState<boolean>(autoCoarse);
-  const [oneButton, setOneButton] = useState<boolean>(false);
+  const [oneButton, setOneButton]   = useState<boolean>(false);
   const onScreenKeys = useRef({ left:false, right:false, jump:false });
 
   // Audio
@@ -95,7 +151,6 @@ function AstragalusRunner() {
   const sfxCatchEl= useRef<HTMLAudioElement | null>(null);
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
   const startedOnce = useRef(false);
-
   function startMusicIfWanted() {
     const el = musicEl.current; if (!el) return;
     el.loop = true; el.volume = 0.35; el.muted = !musicOn;
@@ -109,13 +164,9 @@ function AstragalusRunner() {
     const el = ref.current; if(!el) return;
     try{ el.currentTime=0; el.play().catch(()=>{});}catch{}
   }
-  // Déclenche musique sur 1re interaction (au cas où)
   useEffect(() => {
     function firstInteract() {
-      if (!startedOnce.current) {
-        startedOnce.current = true;
-        startMusicIfWanted();
-      }
+      if (!startedOnce.current) { startedOnce.current = true; startMusicIfWanted(); }
     }
     window.addEventListener("pointerdown", firstInteract, { once: true });
     window.addEventListener("keydown", firstInteract, { once: true });
@@ -125,7 +176,7 @@ function AstragalusRunner() {
     };
   }, []);
 
-  // ---- HÉROS
+  /* ---------- Héros & animations ---------- */
   const heroAnim = useRef<HeroAnim | null>(null);
   const heroState = useRef<{ name: "idle"|"run"|"jump"; t:number }>({ name: "idle", t: 0 });
 
@@ -141,14 +192,12 @@ function AstragalusRunner() {
       const clips: AnimSet = {};
 
       async function buildClip(name:string, def: any): Promise<Clip | null> {
-        // Cas 1: liste de fichiers
         if (def?.files && Array.isArray(def.files)) {
           const imgs = (await Promise.all(def.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
           if (!imgs.length) { logOnce(`hero_${name}`, `[osselets] ${name}: 0 frame chargée (files[] manquants ?)`); return null; }
           const frames = imgs.map(im => ({ image: im, sx:0, sy:0, sw: im.naturalWidth, sh: im.naturalHeight }));
           return { frames, fps: Number(def.fps) || 10, loop: def.loop ?? true, name };
         }
-        // Cas 2: sprite + rects
         if (def?.rects && def?.src) {
           const img = await loadImageSmart(def.src);
           if (!img) { logOnce(`hero_${name}_src`, `[osselets] ${name}: sprite introuvable: ${def.src}`); return null; }
@@ -156,7 +205,6 @@ function AstragalusRunner() {
           if (!frames.length) { logOnce(`hero_${name}_rects`, `[osselets] ${name}: rects[] vide`); return null; }
           return { frames, fps: Number(def.fps) || 10, loop: def.loop ?? true, name };
         }
-        // Cas 3: strip horizontal simple
         if (def?.src && def?.frames) {
           const img = await loadImageSmart(def.src);
           if (!img) { logOnce(`hero_${name}_src2`, `[osselets] ${name}: sprite introuvable: ${def.src}`); return null; }
@@ -186,42 +234,24 @@ function AstragalusRunner() {
         if (clip) clips[key] = clip;
       }
       heroAnim.current = { clips, origin, frameSize: baseFS };
-
-      // Petit log pour voir ce qui a vraiment chargé
-      const loaded = Object.fromEntries(Object.entries(clips).map(([k,c])=>[k, c.frames.length]));
-      console.info("[osselets] hero clips chargés:", loaded);
+      console.info("[osselets] hero clips chargés:", Object.fromEntries(Object.entries(clips).map(([k,c])=>[k, c.frames.length])));
     })();
     return ()=>{ canceled=true; };
   }, []);
 
-  // ---- OURS
+  /* ---------- Ours (6 PNG ou bear.anim.json) ---------- */
   const bearAnim = useRef<{ frames: HTMLImageElement[]; t:number }|null>(null);
   useEffect(() => {
     let canceled = false;
     (async () => {
-      // 1) essayer bear.anim.json si présent
       const j = await fetchJSON<any>("bear.anim.json");
       if (j?.files || (j?.src && (j?.rects || j?.frames))) {
         let frames: HTMLImageElement[] = [];
         if (j.files) {
-          const imgs = (await Promise.all(j.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
-          frames = imgs;
-        } else if (j.src && j.rects) {
-          const img = await loadImageSmart(j.src);
-          if (img) frames = j.rects.map((r:any)=>({img, r})).map(({img,r})=>{
-            // on découpe au rendu, donc on pousse l'image entière; on gérera sx/sy plus tard si besoin
-            return img;
-          });
-        } else if (j.src && j.frames) {
-          const img = await loadImageSmart(j.src);
-          if (img) {
-            // on ne découpe pas ici, simple; si besoin: même logique que héros
-            frames = [img]; // minimal
-          }
+          frames = (await Promise.all(j.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
         }
         if (frames.length) { bearAnim.current = { frames, t:0 }; if (!canceled) console.info("[osselets] ours via bear.anim.json:", frames.length,"frames"); return; }
       }
-      // 2) sinon, essayer les deux patterns de noms
       const withSpace = await Promise.all([1,2,3,4,5,6].map(i=>loadImageSmart(`bear (${i}).png`)));
       let imgs = withSpace.filter(Boolean) as HTMLImageElement[];
       if (!imgs.length) {
@@ -234,7 +264,17 @@ function AstragalusRunner() {
     return ()=>{ canceled=true; };
   }, []);
 
-  // Joueur & monde
+  /* ---------- PNG amulettes ---------- */
+  const amuletsRef = useRef<{[k in keyof typeof AMULET_FILES]?: HTMLImageElement | null}>({});
+  useEffect(() => {
+    (async () => {
+      amuletsRef.current.speed  = await loadImageSmart(AMULET_FILES.speed);
+      amuletsRef.current.purify = await loadImageSmart(AMULET_FILES.purify);
+      amuletsRef.current.ward   = await loadImageSmart(AMULET_FILES.ward);
+    })();
+  }, []);
+
+  /* ---------- Monde & gameplay ---------- */
   const player = useRef({
     x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true, facing:1,
     baseSpeed:3.0, speedMul:1.0, dirt:0, runPhase:0, coyote:0, jumpBuf:0
@@ -243,18 +283,18 @@ function AstragalusRunner() {
   const wardTimer = useRef(0);
   const keys = useRef<{[k:string]:boolean}>({});
 
-  const AMULET1_X=900, CHASE_END_X=2000, AMULET2_X=2200, AMULET3_X=3100, EVIL_WAVE_START_X=3200;
-  type Eye = { x:number; y:number; vx:number; vy:number; alive:boolean };
-  const eyes = useRef<Eye[]>([]);
   const bear = useRef({ x:-999, y:GROUND_Y-60, w:64, h:60, vx:0, active:false });
   type Stage = "start"|"speedAmulet"|"bearChase"|"postChase"|"purifyAmulet"|"wardAmulet"|"evilEyeWave"|"end";
   const stage = useRef<Stage>("start");
-  const levelRef = useRef(level); useEffect(()=>{ levelRef.current = level; },[level]);
+  const [levelState, setLevelState] = useState(1);
+  const levelRef = useRef(levelState); useEffect(()=>{ levelRef.current = levelState; },[levelState]);
 
-  // Intro
+  type Eye = { x:number; y:number; vx:number; vy:number; alive:boolean };
+  const eyes = useRef<Eye[]>([]);
+
   const intro = useRef({ step:0, t:0 });
 
-  // Clavier
+  // clavier
   useEffect(() => {
     function down(e: KeyboardEvent) {
       if (["ArrowLeft","ArrowRight"," ","Space","m","M","h","H","p","P"].includes(e.key)) e.preventDefault();
@@ -279,7 +319,7 @@ function AstragalusRunner() {
     return ()=>{ window.removeEventListener("keydown",down); window.removeEventListener("keyup",up); };
   }, [inIntro, summaryOpen]);
 
-  // Touch
+  // touch
   function press(name: "left"|"right"|"jump", v:boolean){ onScreenKeys.current[name]=v; }
   function clearTouchKeys(){ onScreenKeys.current={left:false,right:false,jump:false}; }
 
@@ -294,11 +334,12 @@ function AstragalusRunner() {
     setMessage("← → bouger | Espace sauter | P pause | H cours | M musique");
     setSummaryOpen(false); if(goIntro){ setInIntro(true); intro.current={step:0,t:0}; }
   }
-  function nextLevel(){ setLevel(l=>l+1); resetLevel(false); setPaused(false); }
+  function nextLevel(){ setLevel(l=>l+1); setLevelState(v=>v+1); resetLevel(false); setPaused(false); }
 
-  // Boucle
+  /* ---------- Boucle ---------- */
+  const reqRef = useRef<number | null>(null);
   useEffect(() => {
-    const ctx = canvasRef.current?.getContext("2d");
+    const ctx = ctxRef.current || canvasRef.current?.getContext("2d");
     if (!ctx) return;
     let last = performance.now();
     const tick = (t:number) => {
@@ -312,13 +353,8 @@ function AstragalusRunner() {
   }, [paused, inIntro, mobileMode]);
 
   const clamp = (n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
-  const nowMs = ()=>performance.now();
 
-  // Popup histoire
-  const historyPopup = useRef<{ text:string; until:number }|null>(null);
-  function showHistory(text:string){ historyPopup.current={text,until:nowMs()+4200}; }
-
-  // Update
+  // update
   function update(dt:number){
     if (inIntro || summaryOpen) {
       if (inIntro){ intro.current.t+=dt; if(intro.current.t>4){ intro.current.t=0; intro.current.step=Math.min(5,intro.current.step+1);} }
@@ -358,13 +394,12 @@ function AstragalusRunner() {
     // Bouclier
     if (wardTimer.current>0) wardTimer.current=Math.max(0, wardTimer.current - dt*0.016);
 
-    // --- HÉROS: anim choisie
-    const nextName: "idle"|"run"|"jump" =
-      !p.onGround ? "jump" : (Math.abs(p.vx)>0.5 ? "run" : "idle");
+    // Anim héros
+    const nextName: "idle"|"run"|"jump" = !p.onGround ? "jump" : (Math.abs(p.vx)>0.5 ? "run" : "idle");
     if (heroState.current.name !== nextName) heroState.current = { name: nextName, t: 0 };
-    else heroState.current.t += dt;
+    else heroState.current.t += dt * ANIM_SPEED;
 
-    // Script événements (identique à avant)
+    // Script d'événements
     if (stage.current==="start" && p.x > 900-20) {
       stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true;
       setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl);
@@ -375,7 +410,7 @@ function AstragalusRunner() {
       const desired = d>260?3.2+diff : d<140?2.2+diff : 2.8+diff;
       bear.current.vx += (desired - bear.current.vx)*0.04;
       bear.current.x += (bear.current.vx * dt * 60)/60;
-      if (bearAnim.current) bearAnim.current.t += dt;
+      if (bearAnim.current) bearAnim.current.t += dt * ANIM_SPEED;
       p.dirt = clamp(p.dirt + 0.002*dt, 0, 1);
       if (bear.current.x + bear.current.w > p.x + 10) bear.current.x = p.x - 320;
       if (p.x > 2000){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
@@ -416,27 +451,34 @@ function AstragalusRunner() {
     return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
   }
 
-  // Render
-  function render(ctx:CanvasRenderingContext2D, t:number){
-    if (inIntro) return renderIntro(ctx,t);
-    const p = player.current;
-    const camX = Math.max(0, Math.min(WORLD_LEN - W, p.x - W*0.35));
+  /* ---------- Rendu ---------- */
+  const historyPopup = useRef<{ text:string; until:number }|null>(null);
+  function showHistory(text:string){ historyPopup.current={text,until:performance.now()+4200}; }
 
-    ctx.clearRect(0,0,W,H);
-    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  function render(ctx:CanvasRenderingContext2D, t:number){
+    if (!ctx) return;
+    if (inIntro) return renderIntro(ctx,t);
+
+    const p = player.current;
+    const camX = Math.max(0, Math.min(WORLD_LEN - WORLD_W, p.x - WORLD_W*0.35));
+
+    // fond
+    ctx.clearRect(0,0,WORLD_W,WORLD_H);
+    const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
+    ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
 
     drawMountains(ctx, camX*0.2);
     drawOliveTrees(ctx, camX*0.5);
     drawFrieze(ctx, camX*0.8);
 
-    ctx.fillStyle="#ede9fe"; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+    ctx.fillStyle="#ede9fe"; ctx.fillRect(0,GROUND_Y,WORLD_W,WORLD_H-GROUND_Y);
 
     ctx.save(); ctx.translate(-camX,0);
     for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
-    drawAmulet(ctx, 900, GROUND_Y-40, "Vitesse");
-    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.");
-    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier");
+
+    drawAmulet(ctx, 900,  GROUND_Y-40, "Vitesse", amuletsRef.current.speed);
+    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.",  amuletsRef.current.purify);
+    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier",amuletsRef.current.ward);
 
     if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y);
 
@@ -452,7 +494,7 @@ function AstragalusRunner() {
     if (historyMode && historyPopup.current && performance.now()<historyPopup.current.until){
       const txt=historyPopup.current.text; ctx.save(); ctx.globalAlpha=.95;
       ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=2;
-      const boxW=Math.min(680,W-40), x=(W-boxW)/2, y=H-130;
+      const boxW=Math.min(680,WORLD_W-40), x=(WORLD_W-boxW)/2, y=WORLD_H-130;
       ctx.fillRect(x,y,boxW,80); ctx.strokeRect(x,y,boxW,80);
       ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui";
       wrapText(ctx,txt,x+12,y+26,boxW-24,18); ctx.restore();
@@ -462,66 +504,94 @@ function AstragalusRunner() {
     ctx.fillText(message,16,26); ctx.fillText("P pause | H cours | M musique",16,46);
   }
 
-  // Intro
   function renderIntro(ctx:CanvasRenderingContext2D,_t:number){
     const step=intro.current.step, tt=intro.current.t;
-    ctx.clearRect(0,0,W,H);
-    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.clearRect(0,0,WORLD_W,WORLD_H);
+    const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
+    ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
     drawMountains(ctx,0); drawOliveTrees(ctx,0); drawFrieze(ctx,0);
 
     ctx.save(); ctx.globalAlpha=.92; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
-    ctx.fillRect(40,40,W-80,H-160); ctx.strokeRect(40,40,W-80,H-160); ctx.restore();
+    ctx.fillRect(40,40,WORLD_W-80,WORLD_H-160); ctx.strokeRect(40,40,WORLD_W-80,WORLD_H-160); ctx.restore();
 
     ctx.fillStyle="#0f172a"; ctx.font="22px ui-sans-serif, system-ui";
-    function center(txt:string,y:number){ ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(txt,W/2,y); ctx.textAlign="start"; ctx.textBaseline="alphabetic"; }
+    function center(txt:string,y:number){ ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(txt,WORLD_W/2,y); ctx.textAlign="start"; ctx.textBaseline="alphabetic"; }
 
-    if (step===0){ center("Grèce antique — De l’os à l’amulette",120); ctx.font="14px ui-sans-serif, system-ui"; center("→ pour avancer • puis Start",H-72); drawSheepSil(ctx,220,260,480,200); drawTalusGlow(ctx,540,378); center("Astragale (talus) — os du tarse",360); }
+    if (step===0){ center("Grèce antique — De l’os à l’amulette",120); ctx.font="14px ui-sans-serif, system-ui"; center("→ pour avancer • puis Start",WORLD_H-72); drawSheepSil(ctx,220,260,480,200); drawTalusGlow(ctx,540,378); center("Astragale (talus) — os du tarse",360); }
     if (step===1){ center("Extraction post-abattage",120); drawSheepSil(ctx,220,260,480,200); const k=Math.min(1,tt/3); const sx=540,sy=378, ex=sx+120,ey=sy-60; drawTalusGlow(ctx,sx,sy,0.25); drawAstragalusIcon(ctx, sx+(ex-sx)*k, sy+(ey-sy)*k, 20); center("L’os est prélevé puis travaillé.",360); }
-    if (step===2){ center("Nettoyage & polissage",120); const cx=W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); for(let i=0;i<8;i++){ const a=(i/8)*Math.PI*2+tt*0.4; ctx.strokeStyle="#a3e635"; ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*36, cy+Math.sin(a)*36); ctx.lineTo(cx+Math.cos(a)*46, cy+Math.sin(a)*46); ctx.stroke(); } center("L’os devient portable.",360); }
-    if (step===3){ center("Perçage (suspension)",120); const cx=W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); ctx.fillStyle="#64748b"; ctx.fillRect(cx-4, cy-60, 8, 36); ctx.beginPath(); ctx.moveTo(cx-8, cy-24); ctx.lineTo(cx+8, cy-24); ctx.lineTo(cx, cy-40); ctx.closePath(); ctx.fill(); ctx.fillStyle="#7c2d12"; ctx.beginPath(); ctx.arc(cx, cy-6, 2, 0, Math.PI*2); ctx.fill(); center("Trou discret pour enfiler un lien.",360); }
-    if (step===4){ center("Montage en collier / amulette",120); const cx=W/2,cy=260; ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx-80, cy-30); ctx.quadraticCurveTo(cx, cy-60, cx+80, cy-30); ctx.stroke(); drawAstragalusIcon(ctx,cx,cy,26); center("Clique Start pour jouer →",360); }
-    if (step>=5){ center("Prêt ? Clique Start pour jouer.", H/2); }
+    if (step===2){ center("Nettoyage & polissage",120); const cx=WORLD_W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); for(let i=0;i<8;i++){ const a=(i/8)*Math.PI*2+tt*0.4; ctx.strokeStyle="#a3e635"; ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*36, cy+Math.sin(a)*36); ctx.lineTo(cx+Math.cos(a)*46, cy+Math.sin(a)*46); ctx.stroke(); } center("L’os devient portable.",360); }
+    if (step===3){ center("Perçage (suspension)",120); const cx=WORLD_W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); ctx.fillStyle="#64748b"; ctx.fillRect(cx-4, cy-60, 8, 36); ctx.beginPath(); ctx.moveTo(cx-8, cy-24); ctx.lineTo(cx+8, cy-24); ctx.lineTo(cx, cy-40); ctx.closePath(); ctx.fill(); ctx.fillStyle="#7c2d12"; ctx.beginPath(); ctx.arc(cx, cy-6, 2, 0, Math.PI*2); ctx.fill(); center("Trou discret pour enfiler un lien.",360); }
+    if (step===4){ center("Montage en collier / amulette",120); const cx=WORLD_W/2,cy=260; ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx-80, cy-30); ctx.quadraticCurveTo(cx, cy-60, cx+80, cy-30); ctx.stroke(); drawAstragalusIcon(ctx,cx,cy,26); center("Clique Start pour jouer →",360); }
+    if (step>=5){ center("Prêt ? Clique Start pour jouer.", WORLD_H/2); }
   }
 
-  // Primitifs de dessin
+  /* ---------- Primitifs de dessin ---------- */
   function drawColumn(ctx:CanvasRenderingContext2D, baseX:number, groundY:number){
     ctx.save(); ctx.translate(baseX,0);
     ctx.fillStyle="#e5e7eb"; ctx.fillRect(-12, groundY-140, 24, 140);
     ctx.fillStyle="#cbd5e1"; ctx.fillRect(-18, groundY-140, 36, 10); ctx.fillRect(-18, groundY-10, 36, 10);
     ctx.restore();
   }
-  function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string){
-    const t = performance.now()*0.002; ctx.save(); ctx.translate(x,y);
-    ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(t),18,-12); ctx.stroke();
-    const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
-    ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
-    ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30); ctx.restore();
-  }
-  function drawBear(ctx:CanvasRenderingContext2D, x:number, y:number){
+
+  function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string, png?:HTMLImageElement|null){
     ctx.save(); ctx.translate(x,y);
-    const ba = bearAnim.current;
-    if (ba && ba.frames.length){
-      const fps = 10;
-      const count = ba.frames.length;
-      // Sécuriser l’index
-      let idx = Math.floor((ba.t||0) * fps);
-      if (!isFinite(idx) || idx < 0) idx = 0;
-      idx = idx % count;
-      const im = ba.frames[idx];
-      const Wd = 64, Hd = 60;
+    // chaîne / suspension
+    ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(performance.now()*0.002),18,-12); ctx.stroke();
+
+    if (png) {
+      // Dessine le PNG (64x64 recommandé)
+      const s = 1.0;
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(im, 0,0, im.naturalWidth, im.naturalHeight, 0,0, Wd, Hd);
+      ctx.drawImage(png, -32*s, -32*s, 64*s, 64*s);
     } else {
-      // Fallback ours
-      ctx.fillStyle="#78350f"; ctx.fillRect(0,20,64,36); ctx.beginPath(); ctx.arc(54,26,14,0,Math.PI*2); ctx.fill();
-      ctx.fillRect(6,56,10,12); ctx.fillRect(26,56,10,12); ctx.fillRect(46,56,10,12);
-      ctx.fillStyle="#fde68a"; ctx.fillRect(60,22,3,3);
+      // Fallback vectoriel
+      const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
+      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
+    }
+
+    ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30);
+    ctx.restore();
+  }
+
+  function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number, png?:HTMLImageElement|null){
+    ctx.save(); ctx.translate(cx,cy);
+    if (png) {
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(png, -16, -16, 32, 32);
+    } else {
+      ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke();
     }
     ctx.restore();
   }
+
+  function drawBear(ctx:CanvasRenderingContext2D, x:number, y:number){
+    const ba = bearAnim.current;
+    const W0=64, H0=60;
+    const Wd = Math.round(W0 * BEAR_SCALE);
+    const Hd = Math.round(H0 * BEAR_SCALE);
+
+    ctx.save();
+    ctx.translate(x, y + H0); // ancrage au sol
+
+    if (ba && ba.frames.length){
+      const fps = 10 * ANIM_SPEED;
+      let idx = Math.floor((ba.t||0) * fps) % ba.frames.length;
+      if (!isFinite(idx) || idx<0) idx=0;
+      const im = ba.frames[idx];
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(im, 0,0, im.naturalWidth, im.naturalHeight, 0, -Hd, Wd, Hd);
+    } else {
+      ctx.fillStyle="#78350f"; ctx.fillRect(0, -Hd+20*BEAR_SCALE, Wd, Hd-24*BEAR_SCALE);
+      ctx.beginPath(); ctx.arc(Wd-10*BEAR_SCALE, -Hd+26*BEAR_SCALE, 14*BEAR_SCALE, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle="#fde68a"; ctx.fillRect(Wd-6*BEAR_SCALE, -Hd+22*BEAR_SCALE, 3*BEAR_SCALE, 3*BEAR_SCALE);
+    }
+    ctx.restore();
+  }
+
   function drawEvilEye(ctx:CanvasRenderingContext2D, x:number, y:number){
     ctx.save(); ctx.translate(x,y);
     ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
@@ -530,16 +600,18 @@ function AstragalusRunner() {
     ctx.restore();
   }
 
-  // ---- HÉROS (blindé)
   function drawHero(ctx:CanvasRenderingContext2D, x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number){
-    ctx.save(); ctx.translate(x,y);
+    ctx.save();
 
-    // Bouclier
+    const dw = Math.round(w * HERO_SCALE);
+    const dh = Math.round(h * HERO_SCALE);
+    ctx.translate(x + w/2, y + h); // ancrage bas-centre
+
     if (wardLeft>0){
-      const pct=Math.min(1,wardLeft/10); const rad=44+6*Math.sin(performance.now()*0.006);
-      const grd=ctx.createRadialGradient(w/2,h/2,10, w/2,h/2,rad);
+      const pct=Math.min(1,wardLeft/10); const rad=44*HERO_SCALE+6*Math.sin(performance.now()*0.006);
+      const grd=ctx.createRadialGradient(0,0,10, 0,0,rad);
       grd.addColorStop(0,`rgba(56,189,248,${0.25+0.25*pct})`); grd.addColorStop(1,"rgba(56,189,248,0)");
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(w/2,h/2,rad,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,rad,0,Math.PI*2); ctx.fill();
     }
 
     const anim = heroAnim.current;
@@ -553,52 +625,48 @@ function AstragalusRunner() {
       if (!isFinite(idx) || idx < 0) idx = 0;
       idx = clip.loop ? (idx % count) : Math.min(idx, count-1);
       const fr = clip.frames[idx] ?? clip.frames[0];
-      if (fr) {
-        if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
-        const ox = anim!.origin?.[0] ?? 0.5, oy = anim!.origin?.[1] ?? 1;
-        const dx = -ox * w, dy = -oy * h;
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(fr.image, fr.sx|0, fr.sy|0, fr.sw|0 || fr.image.naturalWidth, fr.sh|0 || fr.image.naturalHeight, dx, dy, w, h);
-      } else {
-        // Frames vides → fallback
-        fallbackHero(ctx, w, h, facing, runPhase);
-      }
+
+      if (facing<0){ ctx.scale(-1,1); }
+      const ox = anim!.origin?.[0] ?? 0.5, oy = anim!.origin?.[1] ?? 1;
+      const dx = -ox * dw, dy = -oy * dh;
+
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(fr.image, fr.sx|0, fr.sy|0, fr.sw||fr.image.naturalWidth, fr.sh||fr.image.naturalHeight, dx, dy, dw, dh);
     } else {
-      fallbackHero(ctx, w, h, facing, runPhase);
+      // Fallback vectoriel (ancré bas-centre)
+      if (facing<0){ ctx.scale(-1,1); }
+      const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
+      ctx.translate(-dw/2, -dh);
+      ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, dh-16, 8,16); ctx.fillRect(dw-18+legB*0.2, dh-16, 8,16);
+      ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2, dh-2, 10,2); ctx.fillRect(dw-18+legB*0.2, dh-2, 10,2);
+      ctx.fillStyle="#334155"; ctx.fillRect(8,28,dw-16,14);
+      ctx.fillStyle="#e5e7eb"; ctx.beginPath(); ctx.moveTo(12,20); ctx.lineTo(dw-12,20); ctx.lineTo(dw-18,48); ctx.lineTo(18,48); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(16+i*8,22); ctx.lineTo(20+i*8,46); ctx.stroke(); }
+      ctx.strokeStyle="#eab308"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(10,36); ctx.lineTo(dw-10,36); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(dw/2-8,22); ctx.quadraticCurveTo(dw/2,18,dw/2+8,22); ctx.stroke();
+      ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(dw/2,12,8,0,Math.PI*2); ctx.fill();
     }
 
-    if (dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-4,-4,w+8,h+8); ctx.globalAlpha=1; }
+    if (dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-dw/2,-dh,dw,dh); ctx.globalAlpha=1; }
     ctx.restore();
-  }
-  function fallbackHero(ctx:CanvasRenderingContext2D, w:number, h:number, facing:number, runPhase:number){
-    if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
-    const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
-    ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, h-16, 8,16); ctx.fillRect(w-18+legB*0.2, h-16, 8,16);
-    ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2, h-2, 10,2); ctx.fillRect(w-18+legB*0.2, h-2, 10,2);
-    ctx.fillStyle="#334155"; ctx.fillRect(8,28,w-16,14);
-    ctx.fillStyle="#e5e7eb"; ctx.beginPath(); ctx.moveTo(12,20); ctx.lineTo(w-12,20); ctx.lineTo(w-18,48); ctx.lineTo(18,48); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(16+i*8,22); ctx.lineTo(20+i*8,46); ctx.stroke(); }
-    ctx.strokeStyle="#eab308"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(10,36); ctx.lineTo(w-10,36); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w/2-8,22); ctx.quadraticCurveTo(w/2,18,w/2+8,22); ctx.stroke();
-    ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(w/2,12,8,0,Math.PI*2); ctx.fill();
   }
 
   function drawMountains(ctx:CanvasRenderingContext2D, off:number){
     ctx.save(); ctx.translate(-off,0);
-    for(let x=-200;x<W+WORLD_LEN;x+=420){
+    for(let x=-200;x<WORLD_W+WORLD_LEN;x+=420){
       ctx.fillStyle="#c7d2fe"; ctx.beginPath(); ctx.moveTo(x,380); ctx.lineTo(x+120,260); ctx.lineTo(x+240,380); ctx.closePath(); ctx.fill();
       ctx.fillStyle="#bfdbfe"; ctx.beginPath(); ctx.moveTo(x+140,380); ctx.lineTo(x+260,280); ctx.lineTo(x+360,380); ctx.closePath(); ctx.fill();
     } ctx.restore();
   }
   function drawOliveTrees(ctx:CanvasRenderingContext2D, off:number){
     ctx.save(); ctx.translate(-off,0);
-    for(let x=0;x<W+WORLD_LEN;x+=260){ ctx.fillStyle="#a78bfa"; ctx.fillRect(x+40,GROUND_Y-60,8,60);
+    for(let x=0;x<WORLD_W+WORLD_LEN;x+=260){ ctx.fillStyle="#a78bfa"; ctx.fillRect(x+40,GROUND_Y-60,8,60);
       ctx.fillStyle="#ddd6fe"; ctx.beginPath(); ctx.ellipse(x+44,GROUND_Y-75,26,16,0,0,Math.PI*2); ctx.fill();
     } ctx.restore();
   }
   function drawFrieze(ctx:CanvasRenderingContext2D, off:number){
     ctx.save(); ctx.translate(-off,0);
-    for(let x=0;x<W+WORLD_LEN;x+=180){ ctx.strokeStyle="#94a3b8"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,GROUND_Y-10);
+    for(let x=0;x<WORLD_W+WORLD_LEN;x+=180){ ctx.strokeStyle="#94a3b8"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,GROUND_Y-10);
       for(let i=0;i<6;i++){ const sx=x+i*24; ctx.lineTo(sx+12,GROUND_Y-18); ctx.lineTo(sx+24,GROUND_Y-10); }
       ctx.stroke();
     } ctx.restore();
@@ -626,9 +694,12 @@ function AstragalusRunner() {
   function drawHUD(ctx:CanvasRenderingContext2D){
     ctx.save(); ctx.globalAlpha=.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
     ctx.fillRect(12,56,236,62); ctx.strokeRect(12,56,236,62);
-    const slots=[{owned:inv.current.speed,label:"Vitesse"},{owned:inv.current.purify,label:"Purif."},{owned:inv.current.ward,label:"Bouclier"}];
-    for(let i=0;i<slots.length;i++){ const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48);
-      ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88); ctx.globalAlpha=1;
+    const slots=[{owned:inv.current.speed,label:"Vitesse",png:amuletsRef.current.speed},
+                 {owned:inv.current.purify,label:"Purif.",png:amuletsRef.current.purify},
+                 {owned:inv.current.ward,label:"Bouclier",png:amuletsRef.current.ward}];
+    for(let i=0;i<slots.length;i++){
+      const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48);
+      ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88,slots[i].png||undefined); ctx.globalAlpha=1;
       ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label, x+28, 116);
     }
     ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
@@ -637,22 +708,32 @@ function AstragalusRunner() {
     ctx.fillStyle="#0f172a"; ctx.fillText("Cours (H)", 278,102);
     ctx.restore();
   }
-  function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number){
-    ctx.save(); ctx.translate(cx,cy); ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); ctx.restore();
-  }
   function wrapText(ctx:CanvasRenderingContext2D, text:string, x:number,y:number, maxW:number, lh:number){
     const words=text.split(" "); let line=""; for(let n=0;n<words.length;n++){ const test=line+words[n]+" "; if(ctx.measureText(test).width>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+" "; y+=lh; } else line=test; }
     ctx.fillText(line,x,y);
   }
 
-  // JSX / UI
-  const startBtnStyle: React.CSSProperties = (() => {
-    const s: any = { padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:"pointer", boxShadow:"0 6px 14px rgba(5,150,105,.25)" };
-    s.position = "absolute"; s.bottom = 16; s.left = "50%"; s.transform = "translateX(-50%)"; s.zIndex = 5;
-    return s;
-  })();
+  /* ---------- UI / JSX ---------- */
+  const startBtnStyle: React.CSSProperties = { padding:"12px 18px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:"pointer", boxShadow:"0 6px 14px rgba(5,150,105,.25)", position:"absolute", bottom:16, left:"50%", transform:"translateX(-50%)", zIndex:5 };
+
+  function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1 }) as React.CSSProperties; }
+  function btnDark(){ return ({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" }) as React.CSSProperties; }
+  function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
+
+  function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
+    const events = {
+      onMouseDown: props.onDown, onMouseUp: props.onUp, onMouseLeave: props.onUp,
+      onTouchStart: (e:React.TouchEvent)=>{ e.preventDefault(); props.onDown(); },
+      onTouchEnd:   (e:React.TouchEvent)=>{ e.preventDefault(); props.onUp(); },
+      onPointerDown:(e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onDown(); },
+      onPointerUp:  (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onUp(); },
+    };
+    return (
+      <button {...events} style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
+        {props.label}
+      </button>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
@@ -682,8 +763,9 @@ function AstragalusRunner() {
         </p>
 
         <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
-          <div className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
-            <canvas ref={canvasRef} width={W} height={H} style={{width:"100%", height:"100%", imageRendering:"pixelated"}} />
+          <div ref={wrapperRef} className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
+            {/* Canvas responsive (ratio 16:9, net via DPR) */}
+            <canvas ref={canvasRef} />
 
             {inIntro && <button onClick={startGame} style={startBtnStyle}>Start</button>}
 
@@ -738,7 +820,7 @@ function AstragalusRunner() {
               </>
             )}
 
-            {/* Audio MP3 uniquement */}
+            {/* Audio MP3 */}
             <audio ref={musicEl} preload="auto" src={AUDIO_BASE + AUDIO.music} />
             <audio ref={sfxJumpEl} preload="auto" src={AUDIO_BASE + AUDIO.jump} />
             <audio ref={sfxCatchEl} preload="auto" src={AUDIO_BASE + AUDIO.catch} />
@@ -747,7 +829,7 @@ function AstragalusRunner() {
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
             Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou fichiers <code>bear(1..6).png</code>/<code>bear (1..6).png</code>.  
-            Si un asset manque, regarde la console: un <code>console.warn</code> donne le nom exact.
+            Amulettes PNG utilisées : <code>{AMULET_FILES.speed}</code>, <code>{AMULET_FILES.purify}</code>, <code>{AMULET_FILES.ward}</code>.
           </div>
         </div>
       </div>
@@ -755,26 +837,6 @@ function AstragalusRunner() {
   );
 }
 
-/** Styles boutons */
-function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1 }) as React.CSSProperties; }
-function btnDark(){ return ({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" }) as React.CSSProperties; }
-function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
-
-/** Bouton tactile */
-function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
-  const events = {
-    onMouseDown: props.onDown, onMouseUp: props.onUp, onMouseLeave: props.onUp,
-    onTouchStart: (e:React.TouchEvent)=>{ e.preventDefault(); props.onDown(); },
-    onTouchEnd:   (e:React.TouchEvent)=>{ e.preventDefault(); props.onUp(); },
-    onPointerDown:(e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onDown(); },
-    onPointerUp:  (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onUp(); },
-  };
-  return (
-    <button {...events} style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
-      {props.label}
-    </button>
-  );
-}
-
+// Expose
 // @ts-ignore
 (window as any).AstragalusRunner = AstragalusRunner;
