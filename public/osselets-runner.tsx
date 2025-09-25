@@ -1,11 +1,11 @@
 // public/osselets-runner.tsx
-// Runner 2D – Amulettes d’astragale (version robuste + responsive + assets PNG amulettes)
+// Runner 2D – Amulettes d’astragale (screenshot d’accueil + réglages width/feet + anim plus lente + DPI net)
 
 const { useEffect, useRef, useState } = React;
 
 /* -------------------- Chemins & assets -------------------- */
 const IMG_BASES = [
-  "/assets/games/osselets/audio/img/", // ton emplacement actuel
+  "/assets/games/osselets/audio/img/", // emplacement actuel
   "/assets/games/osselets/img/",       // fallback si tu déplaces plus tard
 ];
 const AUDIO_BASE = "/assets/games/osselets/audio/";
@@ -18,30 +18,43 @@ const AUDIO = {
   ouch:  "ouch-sound.mp3",
 };
 
-// PNG amulettes (noms EXACTS tels que dans ta capture)
+// PNG amulettes
 const AMULET_FILES = {
   speed:  "amulette-speed.png",
   purify: "amulette-purify.png",
   ward:   "amulette-ward.png",
 };
 
+// Screenshot (optionnel) affiché AVANT Start : mets un des fichiers ci-dessous dans /audio/img/
+const START_SCREENSHOT_CANDIDATES = [
+  "start-screenshot.webp",
+  "start-screenshot.jpg",
+  "start-screenshot.png",
+];
+
 /* -------------------- Réglages visuels/jeux -------------------- */
 const WORLD_W = 960;
 const WORLD_H = 540;
-const ANIM_SPEED = 0.1;  // 60 % de la vitesse initiale
-const HERO_SCALE = 1.5;
+
+// ↓↓ Animations plus lentes (baisse si encore trop rapide)
+const ANIM_SPEED = 0.1;
+
+// ↓↓ Contrôle de “l’épaisseur visuelle” du héros (scale non-uniforme)
+const HERO_SCALE_X = 1.60;     // largeur visuelle (augmente pour épaissir)
+const HERO_SCALE_Y = 1.50;     // hauteur visuelle
+const HERO_FOOT_ADJ_PX = 4;    // + pousse le sprite vers le bas (corrige “flottement”)
+
+// Ours (si tu veux aussi l’agrandir)
 const BEAR_SCALE = 1.5;
 
-const GROUND_Y   = 440;  // coord. logique (dans WORLD_H)
-const WORLD_LEN  = 4200; // longueur du niveau
+const GROUND_Y  = 440;
+const WORLD_LEN = 4200;
 
 /* -------------------- Utils chargement -------------------- */
 function logOnce(key:string, ...args:any[]) {
-  const k = `__once_${key}`;
-  // @ts-ignore
-  if (window[k]) return;
-  // @ts-ignore
-  window[k] = true;
+  const k = `__once_${key}` as any;
+  if ((window as any)[k]) return;
+  (window as any)[k] = true;
   console.warn(...args);
 }
 
@@ -56,9 +69,7 @@ function loadImage(url: string): Promise<HTMLImageElement> {
 
 async function loadImageSmart(file: string): Promise<HTMLImageElement | null> {
   for (const base of IMG_BASES) {
-    try {
-      return await loadImage(base + file);
-    } catch {}
+    try { return await loadImage(base + file); } catch {}
   }
   logOnce(`img_${file}`, `[osselets] image introuvable: ${file} (essayé: ${IMG_BASES.map(b=>b+file).join(", ")})`);
   return null;
@@ -87,8 +98,6 @@ function AstragalusRunner() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef  = useRef<HTMLCanvasElement | null>(null);
   const ctxRef     = useRef<CanvasRenderingContext2D | null>(null);
-  const scaleRef   = useRef(1);   // scale visuel (pour adapter 16:9)
-  const dprRef     = useRef(1);   // device pixel ratio
 
   useEffect(() => {
     function resize() {
@@ -96,27 +105,21 @@ function AstragalusRunner() {
       if (!wrap || !cv) return;
 
       const rectW = wrap.clientWidth;
-      const targetW = rectW;                // 100% largeur dispo
-      const targetH = Math.round(targetW * (WORLD_H / WORLD_W)); // ratio 16:9
+      const targetW = rectW;
+      const targetH = Math.round(targetW * (WORLD_H / WORLD_W));
 
       const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-      dprRef.current = dpr;
 
-      // taille pixel du canvas (attr width/height) = taille CSS * DPR
       cv.width  = Math.floor(targetW * dpr);
       cv.height = Math.floor(targetH * dpr);
-
-      // taille CSS (pour layout)
       cv.style.width  = `${targetW}px`;
       cv.style.height = `${targetH}px`;
 
-      // contexte & transform pour dessiner aux coords logiques (WORLD_W × WORLD_H)
       const ctx = cv.getContext("2d");
       if (ctx) {
         ctxRef.current = ctx;
-        ctx.setTransform(0,0,0,0,0,0);     // reset
+        ctx.setTransform(0,0,0,0,0,0);
         const scale = (targetW * dpr) / WORLD_W;
-        scaleRef.current = scale;          // utile si besoin
         ctx.setTransform(scale, 0, 0, scale, 0, 0); // on dessine aux coords du monde
       }
     }
@@ -151,6 +154,7 @@ function AstragalusRunner() {
   const sfxCatchEl= useRef<HTMLAudioElement | null>(null);
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
   const startedOnce = useRef(false);
+
   function startMusicIfWanted() {
     const el = musicEl.current; if (!el) return;
     el.loop = true; el.volume = 0.35; el.muted = !musicOn;
@@ -174,6 +178,17 @@ function AstragalusRunner() {
       window.removeEventListener("pointerdown", firstInteract);
       window.removeEventListener("keydown", firstInteract);
     };
+  }, []);
+
+  /* ---------- Screenshot d’accueil ---------- */
+  const startShotRef = useRef<HTMLImageElement | null>(null);
+  useEffect(() => {
+    (async ()=>{
+      for (const name of START_SCREENSHOT_CANDIDATES) {
+        const im = await loadImageSmart(name);
+        if (im) { startShotRef.current = im; break; }
+      }
+    })();
   }, []);
 
   /* ---------- Héros & animations ---------- */
@@ -211,10 +226,8 @@ function AstragalusRunner() {
           const fs: [number,number] = def.frameSize ?? baseFS;
           let fw = fs[0], fh = fs[1];
           if (!def.frameSize) {
-            if (img.naturalWidth % def.frames === 0) {
-              fw = Math.round(img.naturalWidth / def.frames);
-              fh = img.naturalHeight;
-            } else { fh = img.naturalHeight; fw = fh; }
+            if (img.naturalWidth % def.frames === 0) { fw = Math.round(img.naturalWidth / def.frames); fh = img.naturalHeight; }
+            else { fh = img.naturalHeight; fw = fh; }
           }
           const frames: FrameRect[] = [];
           for (let i=0;i<def.frames;i++){
@@ -247,9 +260,7 @@ function AstragalusRunner() {
       const j = await fetchJSON<any>("bear.anim.json");
       if (j?.files || (j?.src && (j?.rects || j?.frames))) {
         let frames: HTMLImageElement[] = [];
-        if (j.files) {
-          frames = (await Promise.all(j.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
-        }
+        if (j.files) frames = (await Promise.all(j.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean) as HTMLImageElement[];
         if (frames.length) { bearAnim.current = { frames, t:0 }; if (!canceled) console.info("[osselets] ours via bear.anim.json:", frames.length,"frames"); return; }
       }
       const withSpace = await Promise.all([1,2,3,4,5,6].map(i=>loadImageSmart(`bear (${i}).png`)));
@@ -265,7 +276,7 @@ function AstragalusRunner() {
   }, []);
 
   /* ---------- PNG amulettes ---------- */
-  const amuletsRef = useRef<{[k in keyof typeof AMULET_FILES]?: HTMLImageElement | null}>({});
+  const amuletsRef = useRef<{speed?:HTMLImageElement|null; purify?:HTMLImageElement|null; ward?:HTMLImageElement|null}>({});
   useEffect(() => {
     (async () => {
       amuletsRef.current.speed  = await loadImageSmart(AMULET_FILES.speed);
@@ -399,7 +410,7 @@ function AstragalusRunner() {
     if (heroState.current.name !== nextName) heroState.current = { name: nextName, t: 0 };
     else heroState.current.t += dt * ANIM_SPEED;
 
-    // Script d'événements
+    // Script d'événements (identique)
     if (stage.current==="start" && p.x > 900-20) {
       stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true;
       setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl);
@@ -455,6 +466,26 @@ function AstragalusRunner() {
   const historyPopup = useRef<{ text:string; until:number }|null>(null);
   function showHistory(text:string){ historyPopup.current={text,until:performance.now()+4200}; }
 
+  function drawCover(ctx:CanvasRenderingContext2D, img:HTMLImageElement){
+    // équivalent CSS object-fit: cover
+    const canvasRatio = WORLD_W / WORLD_H;
+    const imgRatio    = img.naturalWidth / img.naturalHeight;
+    let sx=0, sy=0, sw=img.naturalWidth, sh=img.naturalHeight;
+    if (imgRatio > canvasRatio) {
+      // image plus large → crop horizontal
+      sh = img.naturalHeight;
+      sw = sh * canvasRatio;
+      sx = (img.naturalWidth - sw)/2;
+    } else {
+      // image plus haute → crop vertical
+      sw = img.naturalWidth;
+      sh = sw / canvasRatio;
+      sy = (img.naturalHeight - sh)/2;
+    }
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(img, sx,sy,sw,sh, 0,0, WORLD_W,WORLD_H);
+  }
+
   function render(ctx:CanvasRenderingContext2D, t:number){
     if (!ctx) return;
     if (inIntro) return renderIntro(ctx,t);
@@ -462,7 +493,6 @@ function AstragalusRunner() {
     const p = player.current;
     const camX = Math.max(0, Math.min(WORLD_LEN - WORLD_W, p.x - WORLD_W*0.35));
 
-    // fond
     ctx.clearRect(0,0,WORLD_W,WORLD_H);
     const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
     ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
@@ -476,9 +506,9 @@ function AstragalusRunner() {
     ctx.save(); ctx.translate(-camX,0);
     for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
 
-    drawAmulet(ctx, 900,  GROUND_Y-40, "Vitesse", amuletsRef.current.speed);
-    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.",  amuletsRef.current.purify);
-    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier",amuletsRef.current.ward);
+    drawAmulet(ctx, 900,  GROUND_Y-40, "Vitesse", amuletsRef.current.speed || undefined);
+    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.",  amuletsRef.current.purify || undefined);
+    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier",amuletsRef.current.ward || undefined);
 
     if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y);
 
@@ -506,22 +536,29 @@ function AstragalusRunner() {
 
   function renderIntro(ctx:CanvasRenderingContext2D,_t:number){
     const step=intro.current.step, tt=intro.current.t;
-    ctx.clearRect(0,0,WORLD_W,WORLD_H);
-    const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
-    ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
-    drawMountains(ctx,0); drawOliveTrees(ctx,0); drawFrieze(ctx,0);
 
+    // -------- Screenshot si dispo (sinon fond dégradé) --------
+    ctx.clearRect(0,0,WORLD_W,WORLD_H);
+    const shot = startShotRef.current;
+    if (shot) {
+      drawCover(ctx, shot);
+    } else {
+      const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#0b1021"); g.addColorStop(1,"#0b0f18");
+      ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
+    }
+
+    // Cartouche semi-transparent pour la narrative
     ctx.save(); ctx.globalAlpha=.92; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
     ctx.fillRect(40,40,WORLD_W-80,WORLD_H-160); ctx.strokeRect(40,40,WORLD_W-80,WORLD_H-160); ctx.restore();
 
     ctx.fillStyle="#0f172a"; ctx.font="22px ui-sans-serif, system-ui";
     function center(txt:string,y:number){ ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(txt,WORLD_W/2,y); ctx.textAlign="start"; ctx.textBaseline="alphabetic"; }
 
-    if (step===0){ center("Grèce antique — De l’os à l’amulette",120); ctx.font="14px ui-sans-serif, system-ui"; center("→ pour avancer • puis Start",WORLD_H-72); drawSheepSil(ctx,220,260,480,200); drawTalusGlow(ctx,540,378); center("Astragale (talus) — os du tarse",360); }
-    if (step===1){ center("Extraction post-abattage",120); drawSheepSil(ctx,220,260,480,200); const k=Math.min(1,tt/3); const sx=540,sy=378, ex=sx+120,ey=sy-60; drawTalusGlow(ctx,sx,sy,0.25); drawAstragalusIcon(ctx, sx+(ex-sx)*k, sy+(ey-sy)*k, 20); center("L’os est prélevé puis travaillé.",360); }
-    if (step===2){ center("Nettoyage & polissage",120); const cx=WORLD_W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); for(let i=0;i<8;i++){ const a=(i/8)*Math.PI*2+tt*0.4; ctx.strokeStyle="#a3e635"; ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*36, cy+Math.sin(a)*36); ctx.lineTo(cx+Math.cos(a)*46, cy+Math.sin(a)*46); ctx.stroke(); } center("L’os devient portable.",360); }
-    if (step===3){ center("Perçage (suspension)",120); const cx=WORLD_W/2,cy=260; drawAstragalusIcon(ctx,cx,cy,26); ctx.fillStyle="#64748b"; ctx.fillRect(cx-4, cy-60, 8, 36); ctx.beginPath(); ctx.moveTo(cx-8, cy-24); ctx.lineTo(cx+8, cy-24); ctx.lineTo(cx, cy-40); ctx.closePath(); ctx.fill(); ctx.fillStyle="#7c2d12"; ctx.beginPath(); ctx.arc(cx, cy-6, 2, 0, Math.PI*2); ctx.fill(); center("Trou discret pour enfiler un lien.",360); }
-    if (step===4){ center("Montage en collier / amulette",120); const cx=WORLD_W/2,cy=260; ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx-80, cy-30); ctx.quadraticCurveTo(cx, cy-60, cx+80, cy-30); ctx.stroke(); drawAstragalusIcon(ctx,cx,cy,26); center("Clique Start pour jouer →",360); }
+    if (step===0){ center("Grèce antique — De l’os à l’amulette",120); ctx.font="14px ui-sans-serif, system-ui"; center("→ pour avancer • puis Start",WORLD_H-72); }
+    if (step===1){ center("Extraction post-abattage",120); center("L’os est prélevé puis travaillé.",360); }
+    if (step===2){ center("Nettoyage & polissage",120); center("L’os devient portable.",360); }
+    if (step===3){ center("Perçage (suspension)",120); center("Trou discret pour enfiler un lien.",360); }
+    if (step===4){ center("Montage en collier / amulette",120); center("Clique Start pour jouer →",360); }
     if (step>=5){ center("Prêt ? Clique Start pour jouer.", WORLD_H/2); }
   }
 
@@ -535,21 +572,11 @@ function AstragalusRunner() {
 
   function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string, png?:HTMLImageElement|null){
     ctx.save(); ctx.translate(x,y);
-    // chaîne / suspension
     ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(performance.now()*0.002),18,-12); ctx.stroke();
 
-    if (png) {
-      // Dessine le PNG (64x64 recommandé)
-      const s = 1.0;
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(png, -32*s, -32*s, 64*s, 64*s);
-    } else {
-      // Fallback vectoriel
-      const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
-    }
+    if (png) { ctx.imageSmoothingEnabled = false; ctx.drawImage(png, -32, -32, 64, 64); }
+    else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke(); }
 
     ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30);
     ctx.restore();
@@ -557,14 +584,9 @@ function AstragalusRunner() {
 
   function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number, png?:HTMLImageElement|null){
     ctx.save(); ctx.translate(cx,cy);
-    if (png) {
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(png, -16, -16, 32, 32);
-    } else {
-      ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke();
-    }
+    if (png) { ctx.imageSmoothingEnabled = false; ctx.drawImage(png, -16, -16, 32, 32); }
+    else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); }
     ctx.restore();
   }
 
@@ -574,8 +596,7 @@ function AstragalusRunner() {
     const Wd = Math.round(W0 * BEAR_SCALE);
     const Hd = Math.round(H0 * BEAR_SCALE);
 
-    ctx.save();
-    ctx.translate(x, y + H0); // ancrage au sol
+    ctx.save(); ctx.translate(x, y + H0); // ancrage au sol
 
     if (ba && ba.frames.length){
       const fps = 10 * ANIM_SPEED;
@@ -603,12 +624,12 @@ function AstragalusRunner() {
   function drawHero(ctx:CanvasRenderingContext2D, x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number){
     ctx.save();
 
-    const dw = Math.round(w * HERO_SCALE);
-    const dh = Math.round(h * HERO_SCALE);
+    const dw = Math.round(w * HERO_SCALE_X);
+    const dh = Math.round(h * HERO_SCALE_Y);
     ctx.translate(x + w/2, y + h); // ancrage bas-centre
 
     if (wardLeft>0){
-      const pct=Math.min(1,wardLeft/10); const rad=44*HERO_SCALE+6*Math.sin(performance.now()*0.006);
+      const pct=Math.min(1,wardLeft/10); const rad=44*HERO_SCALE_Y+6*Math.sin(performance.now()*0.006);
       const grd=ctx.createRadialGradient(0,0,10, 0,0,rad);
       grd.addColorStop(0,`rgba(56,189,248,${0.25+0.25*pct})`); grd.addColorStop(1,"rgba(56,189,248,0)");
       ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,rad,0,Math.PI*2); ctx.fill();
@@ -628,7 +649,8 @@ function AstragalusRunner() {
 
       if (facing<0){ ctx.scale(-1,1); }
       const ox = anim!.origin?.[0] ?? 0.5, oy = anim!.origin?.[1] ?? 1;
-      const dx = -ox * dw, dy = -oy * dh;
+      const dx = -ox * dw;
+      const dy = -oy * dh + HERO_FOOT_ADJ_PX; // ↓ corrige le “flottement”
 
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(fr.image, fr.sx|0, fr.sy|0, fr.sw||fr.image.naturalWidth, fr.sh||fr.image.naturalHeight, dx, dy, dw, dh);
@@ -636,7 +658,7 @@ function AstragalusRunner() {
       // Fallback vectoriel (ancré bas-centre)
       if (facing<0){ ctx.scale(-1,1); }
       const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
-      ctx.translate(-dw/2, -dh);
+      ctx.translate(-dw/2, -dh+HERO_FOOT_ADJ_PX);
       ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, dh-16, 8,16); ctx.fillRect(dw-18+legB*0.2, dh-16, 8,16);
       ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2, dh-2, 10,2); ctx.fillRect(dw-18+legB*0.2, dh-2, 10,2);
       ctx.fillStyle="#334155"; ctx.fillRect(8,28,dw-16,14);
@@ -671,26 +693,6 @@ function AstragalusRunner() {
       ctx.stroke();
     } ctx.restore();
   }
-  function drawSheepSil(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number){
-    ctx.save(); ctx.translate(x,y);
-    ctx.fillStyle="#33415522"; ctx.strokeStyle="#334155"; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(0,h*0.4); ctx.quadraticCurveTo(w*0.2,h*0.1,w*0.55,h*0.1);
-    ctx.quadraticCurveTo(w*0.85,h*0.1,w,h*0.3); ctx.quadraticCurveTo(w*0.9,h*0.55,w*0.6,h*0.6);
-    ctx.quadraticCurveTo(w*0.35,h*0.65,w*0.15,h*0.6); ctx.quadraticCurveTo(0,h*0.55,0,h*0.4); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle="#334155"; ctx.fillRect(w*0.2,h*0.6,10,h*0.4); ctx.fillRect(w*0.28,h*0.6,10,h*0.4); ctx.fillRect(w*0.72,h*0.6,10,h*0.4); ctx.fillRect(w*0.8,h*0.6,10,h*0.4);
-    ctx.restore();
-  }
-  function drawTalusGlow(ctx:CanvasRenderingContext2D,x:number,y:number,str=1){
-    const grd=ctx.createRadialGradient(x,y,2,x,y,44); grd.addColorStop(0,`rgba(20,184,166,${0.5*str})`); grd.addColorStop(1,"rgba(20,184,166,0)");
-    ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(x,y,44,0,Math.PI*2); ctx.fill();
-  }
-  function drawAstragalusIcon(ctx:CanvasRenderingContext2D,x:number,y:number,R:number){
-    ctx.save(); ctx.translate(x,y);
-    ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.ellipse(0,0,R,R*0.72,0,0,Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-R*0.7,0); ctx.quadraticCurveTo(0,-R*0.38,R*0.7,0);
-    ctx.moveTo(-R*0.7,0); ctx.quadraticCurveTo(0,R*0.38,R*0.7,0); ctx.stroke(); ctx.restore();
-  }
   function drawHUD(ctx:CanvasRenderingContext2D){
     ctx.save(); ctx.globalAlpha=.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
     ctx.fillRect(12,56,236,62); ctx.strokeRect(12,56,236,62);
@@ -699,7 +701,7 @@ function AstragalusRunner() {
                  {owned:inv.current.ward,label:"Bouclier",png:amuletsRef.current.ward}];
     for(let i=0;i<slots.length;i++){
       const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48);
-      ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88,slots[i].png||undefined); ctx.globalAlpha=1;
+      ctx.globalAlpha=slots[i].owned?1:.35; (drawAmuletMini as any)(ctx,x+28,88,slots[i].png||undefined); ctx.globalAlpha=1;
       ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label, x+28, 116);
     }
     ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
@@ -758,13 +760,12 @@ function AstragalusRunner() {
         </div>
 
         <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
-          {inIntro ? "Cinématique d’intro : → pour avancer. Clique Start (dans le cadre) pour lancer le jeu."
+          {inIntro ? "Start affiche un screenshot (si présent). → pour parcourir l’intro, puis clique Start."
                    : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile."}
         </p>
 
         <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
           <div ref={wrapperRef} className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
-            {/* Canvas responsive (ratio 16:9, net via DPR) */}
             <canvas ref={canvasRef} />
 
             {inIntro && <button onClick={startGame} style={startBtnStyle}>Start</button>}
@@ -804,7 +805,6 @@ function AstragalusRunner() {
               </div>
             )}
 
-            {/* Contrôles mobiles */}
             {mobileMode && !inIntro && !summaryOpen && (
               <>
                 {!oneButton && (
@@ -828,8 +828,9 @@ function AstragalusRunner() {
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou fichiers <code>bear(1..6).png</code>/<code>bear (1..6).png</code>.  
-            Amulettes PNG utilisées : <code>{AMULET_FILES.speed}</code>, <code>{AMULET_FILES.purify}</code>, <code>{AMULET_FILES.ward}</code>.
+            Screenshot d’accueil : place <code>start-screenshot.webp</code> (ou <code>.jpg/.png</code>) dans <code>/assets/games/osselets/audio/img/</code>.  
+            Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou <code>bear(1..6).png</code>.  
+            Amulettes PNG : <code>{AMULET_FILES.speed}</code>, <code>{AMULET_FILES.purify}</code>, <code>{AMULET_FILES.ward}</code>.
           </div>
         </div>
       </div>
@@ -837,6 +838,5 @@ function AstragalusRunner() {
   );
 }
 
-// Expose
 // @ts-ignore
 (window as any).AstragalusRunner = AstragalusRunner;
