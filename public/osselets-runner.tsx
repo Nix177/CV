@@ -959,7 +959,9 @@ class MusicEngine {
       </div>
     </div>
   );
-// À ajouter tout à la fin du fichier :
-window.AstragalusRunner = AstragalusRunner;
-
 }
+
+// expose composant pour l'init côté page
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).AstragalusRunner = AstragalusRunner;

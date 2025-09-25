@@ -16,7 +16,6 @@
     { slug: 'portfolio', label: { fr: 'Portfolio',      en: 'Portfolio',             de: 'Portfolio' } },
     { slug: 'passions',  label: { fr: 'Passions',       en: 'Passions',              de: 'Leidenschaften' } },
     { slug: 'chatbot',   label: { fr: 'Chatbot',        en: 'Chatbot',               de: 'Chatbot' } },
-    { slug: 'ai-lab',    label: { fr: 'Labo IA',        en: 'AI Lab',                de: 'KI Lab' } },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
   ];
   const KNOWN = new Set(PAGES.map(p => p.slug));
