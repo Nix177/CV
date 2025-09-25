@@ -40,7 +40,7 @@ const WORLD_H = 540;
 const ANIM_SPEED = 0.1;
 
 // ↓↓ Contrôle de “l’épaisseur visuelle” du héros (scale non-uniforme)
-const HERO_SCALE_X = 1.60;     // largeur visuelle (augmente pour épaissir)
+const HERO_SCALE_X = 1.70;     // largeur visuelle (augmente pour épaissir)
 const HERO_SCALE_Y = 1.50;     // hauteur visuelle
 const HERO_FOOT_ADJ_PX = 4;    // + pousse le sprite vers le bas (corrige “flottement”)
 
