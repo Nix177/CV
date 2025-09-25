@@ -74,6 +74,42 @@
         <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
       </div>
     </div>
+
+    <!-- BEGIN AI-LAB-MERGE -->
+    <section id="ai-lab" class="card" style="margin-top:18px">
+      <h2>🧪 AI Lab — générateur de quiz (PER)</h2>
+      <div class="row" style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+        <div>
+          <label for="q-theme">Thème</label>
+          <select id="q-theme" class="input">
+            <option value="histoire-antique">Histoire — Antiquité</option>
+            <option value="science">Sciences</option>
+            <option value="langue">Langue</option>
+            <option value="arts">Arts</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="q-age">Âge / Cycle</label>
+          <select id="q-age" class="input"><option>Cycle 2</option><option>Cycle 3</option></select>
+          <label for="q-count" style="margin-left:8px">Nombre de questions</label>
+          <input id="q-count" class="input" type="number" min="3" max="10" value="5"/>
+        </div>
+      </div>
+      <div class="stack" style="margin-top:10px">
+        <button id="q-generate" class="btn">Générer</button>
+        <div id="q-status" class="muted"></div>
+      </div>
+      <div id="q-output" style="margin-top:12px"></div>
+    </section>
+
+    <section id="ai-lab-game" class="card">
+      <h2>🎮 Osselets — mini-jeu</h2>
+      <p class="muted">Démo jouable intégrée dans un conteneur fixe.</p>
+      <div class="game-wrap" style="position:relative;height:560px;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
+        <div id="osselets-root"></div>
+      </div>
+    </section>
+    <!-- END AI-LAB-MERGE -->
   </main>
 
   <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
@@ -83,5 +119,32 @@
   <!-- Les données DOIVENT être chargées AVANT le script -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
+
+  <!-- BEGIN AI-LAB-SCRIPTS -->
+  <script src="/ai-lab.js" defer></script>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel"
+          data-presets="typescript,react"
+          data-plugins="transform-typescript"
+          src="/osselets-runner.tsx"></script>
+
+  <script type="text/babel" data-presets="react">
+    (function () {
+      var root = document.getElementById('osselets-root');
+      // @ts-ignore
+      var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
+      if (root && Comp) {
+        var r = ReactDOM.createRoot(root);
+        r.render(React.createElement(Comp));
+      } else {
+        console.warn('AstragalusRunner non initialisé (racine ou export manquant).');
+      }
+    })();
+  </script>
+  <!-- END AI-LAB-SCRIPTS -->
 </body>
 </html>
