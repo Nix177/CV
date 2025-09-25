@@ -760,7 +760,7 @@ function AstragalusRunner() {
         </div>
 
         <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
-          {inIntro ? "Jeu de découverte des différents usages des osselets et leurs ginifications"
+          {inIntro ? "Jeu de découverte des différents usages des osselets"
                    : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile."}
         </p>
 
