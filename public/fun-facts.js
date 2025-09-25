@@ -1,5 +1,5 @@
 // public/fun-facts.js — Fun Facts (dataset prioritaire + fallbacks)
-// Flip sur place, autosize, wrap-around quand tout a été vu, et hooks pour un mini-chat.
+// Flip 3D, autosize, wrap-around, mini-chat dynamique, et masquage de la barre de recherche.
 
 (() => {
   const log = (...a) => console.debug('[fun-facts]', ...a);
@@ -37,14 +37,20 @@
   };
   const L = LMAP[LANG] || LMAP.fr;
 
-  // ---------- CSS fallback (pour s'afficher même si le CSS global manque) ----------
+  // ---------- CSS / animations (fallback + chat + fade-in) ----------
   function injectFallbackCSS() {
     if (document.getElementById('ff-fallback-css')) return;
     const css = `
+      /* Masquer définitivement la barre de recherche si présente */
+      #ff_search{display:none!important}
+
       #facts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:stretch;margin-top:8px;}
-      .ff-card{position:relative;perspective:1200px;outline:none;min-height:200px;}
+      .ff-card{position:relative;perspective:1200px;outline:none;min-height:200px;opacity:0;transform:translateY(8px);animation:ffAppear .28s ease forwards}
+      @keyframes ffAppear{to{opacity:1;transform:none}}
+
       .ff-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s ease;}
       .ff-card.is-flipped .ff-inner{transform:rotateY(180deg);}
+
       .ff-face{display:block !important;position:absolute !important;inset:0 !important;overflow:auto;
                backface-visibility:hidden !important;padding:16px;border-radius:16px;background:rgba(255,255,255,.06);
                border:1px solid rgba(255,255,255,.10);color:#e8efff;box-shadow:0 6px 20px rgba(0,0,0,.28)}
@@ -57,7 +63,10 @@
       .ff-skel{height:200px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12),rgba(255,255,255,.06));
                background-size:200% 100%;animation:ffShine 1.2s linear infinite;border:1px solid rgba(255,255,255,.10);box-shadow:0 6px 20px rgba(0,0,0,.28)}
       @keyframes ffShine{0%{background-position:0 0}100%{background-position:200% 0}}
+
       .ff-card.ff-measure .ff-face{position:static !important;transform:none !important;backface-visibility:visible !important;overflow:visible;}
+
+      /* Mini-chat */
       .ff-qa{margin-top:20px;border-radius:16px;border:1px dashed rgba(255,255,255,.25);background:rgba(255,255,255,.04);padding:14px 14px 12px;backdrop-filter:blur(3px)}
       .ff-qa h3{margin:0 0 8px 0;font-size:1.05rem;opacity:.92}
       .ff-qa-messages{max-height:280px;overflow:auto;padding:6px 2px 8px;display:flex;flex-direction:column;gap:8px}
@@ -73,6 +82,17 @@
     style.textContent = css;
     document.head.appendChild(style);
     DBG('fallback CSS injected');
+  }
+
+  // ---------- Masquer la barre de recherche (sans toucher au HTML) ----------
+  function hideSearchBar() {
+    const s = document.getElementById('ff_search');
+    if (s) {
+      s.style.display = 'none';
+      // si tu veux la retirer complètement du DOM :
+      // s.remove();
+      DBG('search bar hidden');
+    }
   }
 
   // ---------- DOM helpers ----------
@@ -174,9 +194,7 @@
   };
 
   // ---------- Batch ----------
-  function sampleExcluding(arr, want, excluded) {
-    const out=[]; for(const it of arr){ const k=keyOf(it); if(!excluded.has(k)){ out.push(it); if(out.length>=want) break; } } return out;
-  }
+  function sampleExcluding(arr, want, excluded) { const out=[]; for(const it of arr){ const k=keyOf(it); if(!excluded.has(k)){ out.push(it); if(out.length>=want) break; } } return out; }
   function shuffleInPlace(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
   const fetchBatch = async (n) => {
@@ -205,7 +223,6 @@
 
   // ---------- getFacts (avec wrap-around quand tout est vu) ----------
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
   async function getFacts(n = 9, maxTries = 3) {
     const picked = [];
     const avoid  = new Set([...lastKeys]);                 // ne pas répéter le lot précédent
@@ -270,6 +287,78 @@
   let resizeTO=null;
   window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO=setTimeout(measureAndFixHeights, 120); });
 
+  // ---------- Mini-chat dynamique ----------
+  function mountChat(currentCards) {
+    // Crée un conteneur visible juste après la section des cartes
+    let host = document.getElementById('ff_chat');
+    if (!host) {
+      const cardsSection = GRID.closest('section') || GRID.parentNode;
+      const sec = document.createElement('section');
+      sec.className = 'ff-section ff-dynamic';
+      host = document.createElement('div');
+      host.id = 'ff_chat';
+      sec.appendChild(host);
+      cardsSection.parentNode.insertBefore(sec, cardsSection.nextSibling);
+    }
+
+    host.innerHTML = `
+      <div class="ff-qa" id="ff-qa">
+        <h3>${L.ask}</h3>
+        <div class="ff-qa-messages" id="ff-qa-msgs" aria-live="polite"></div>
+        <form class="ff-qa-form" id="ff-qa-form">
+          <input class="ff-qa-input" id="ff-qa-input" type="text" placeholder="${L.placeholder}" autocomplete="off" />
+          <button class="ff-qa-btn" id="ff-qa-btn" type="submit">${L.send}</button>
+        </form>
+      </div>
+    `;
+
+    const msgs = document.getElementById('ff-qa-msgs');
+    const form = document.getElementById('ff-qa-form');
+    const input = document.getElementById('ff-qa-input');
+    const btn = document.getElementById('ff-qa-btn');
+
+    const push = (txt, me=false) => {
+      const p = document.createElement('div');
+      p.className = 'ff-qa-msg' + (me ? ' me' : '');
+      p.textContent = txt;
+      msgs.appendChild(p);
+      msgs.scrollTop = msgs.scrollHeight;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = (input.value || '').trim();
+      if (!q) return;
+      push(q, true);
+      input.value = '';
+      btn.setAttribute('aria-busy','true'); btn.disabled = true;
+
+      try {
+        const payload = {
+          lang: LANG,
+          q,
+          cards: (currentCards || []).slice(0, 12).map(c => ({
+            claim: c.claim, explain: c.explain, source: c.url || ''
+          })),
+        };
+        const r = await fetch('/api/ff-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const j = await r.json().catch(()=>({answer:'(API indisponible)'}));
+        push(j.answer || '(API indisponible)');
+      } catch {
+        push('(API indisponible)');
+      } finally {
+        btn.removeAttribute('aria-busy'); btn.disabled = false;
+        input.focus();
+      }
+    });
+
+    DBG('chat mounted');
+  }
+
   // ---------- Rendu ----------
   function forceVisible() {
     const rect = GRID.getBoundingClientRect();
@@ -282,6 +371,7 @@
       DBG('forceVisible applied');
     }
   }
+
   const render = (list) => {
     clearSkeleton();
     if (!list || !list.length) {
@@ -298,6 +388,7 @@
       forceVisible();
       measureAndFixHeights();
       setReady();
+      mountChat(normed); // ← (re)monte le chat à chaque lot
     });
   };
 
@@ -331,13 +422,14 @@
     });
   };
 
-  // Expose hooks pour un éventuel mini-chat
+  // Expose hooks si besoin (ex: chat “plus de fun facts”)
   window.__ff_normalize = normalize;
   window.__ff_render = (list) => render(list);
 
   // ---------- Go ----------
   document.addEventListener('DOMContentLoaded', () => {
     injectFallbackCSS();
+    hideSearchBar();       // ← masque la barre “Rechercher une idée reçue…”
     DBG('grid found');
     ensureNewBtn();
     load();
