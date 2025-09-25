@@ -1,15 +1,15 @@
-// osselets-runner.tsx — version mobile + audio + sprites optionnels
-// Ce composant est monté par le HTML de ton portfolio (bouton #osselets-start). :contentReference[oaicite:1]{index=1}
+// osselets-runner.tsx — version avec manifest d’animations du héros (strips inégaux OK)
+// Sprites héros via /assets/games/osselets/img/hero.anim.json (+ hero_idle.png, hero_run.png, hero_jump.png)
 
 const { useEffect, useRef, useState } = React;
 
-/** Répertoires d’assets (mets tes fichiers là, voir liste plus bas) */
+/** Chemins d’assets */
 const ASSETS = {
   img: "/assets/games/osselets/img/",
   audio: "/assets/games/osselets/audio/",
 };
 
-/** Fichiers audio (mets .mp3 et si possible .ogg pour une boucle parfaite) */
+/** Audio */
 const AUDIO = {
   music: { ogg: "game-music-1.ogg", mp3: "game-music-1.mp3" },
   jump: { ogg: "jump-sound.ogg", mp3: "jump-sound.mp3" },
@@ -17,18 +17,16 @@ const AUDIO = {
   ouch: { ogg: "ouch-sound.ogg", mp3: "ouch-sound.mp3" },
 };
 
-/** Sprites optionnels : si absents → rendu vectoriel de secours */
+/** Sprites optionnels pour autres entités (statiques si présents) */
 const SPRITES = {
-  hero: "hero.png",              // spritesheet 64x64 (idle/run/jump)
-  bear: "bear.png",              // spritesheet 64x64 (run)
-  eye: "evil-eye.png",           // 32x32 (clignement)
-  amuSpeed: "amulet-speed.png",  // 32x32 (pulse)
+  bear: "bear.png",
+  eye: "evil-eye.png",
+  amuSpeed: "amulet-speed.png",
   amuPurify: "amulet-purify.png",
   amuWard: "amulet-ward.png",
 };
 
 type ImgDict = { [k: string]: HTMLImageElement | null };
-
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const im = new Image();
@@ -37,16 +35,29 @@ function loadImage(url: string): Promise<HTMLImageElement> {
     im.src = url;
   });
 }
+async function fetchJSON<T=any>(url: string): Promise<T | null> {
+  try {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) return null;
+    return (await r.json()) as T;
+  } catch { return null; }
+}
+
+/** ---- Types animation (héros) ---- */
+type FrameRect = { image: HTMLImageElement; sx: number; sy: number; sw: number; sh: number };
+type Clip = { frames: FrameRect[]; fps: number; loop: boolean };
+type AnimSet = { [name: string]: Clip };
+type HeroAnim = { clips: AnimSet; origin: [number, number]; frameSize: [number, number] };
 
 function AstragalusRunner() {
-  // --- Canvas & loop
+  // Canvas & world
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const reqRef = useRef<number | null>(null);
   const W = 960, H = 540;
   const GROUND_Y = 440;
   const WORLD_LEN = 4200;
 
-  // --- UI / flow
+  // UI flow
   const [inIntro, setInIntro] = useState(true);
   const [paused, setPaused] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
@@ -54,15 +65,15 @@ function AstragalusRunner() {
   const [message, setMessage] = useState("← → bouger | Espace sauter | P pause | H cours | M musique");
   const [historyMode, setHistoryMode] = useState(true);
 
-  // --- Mobile support (autodetect + switch)
+  // Mobile
   const autoCoarse = typeof window !== "undefined" && window.matchMedia
     ? window.matchMedia("(pointer: coarse)").matches
     : false;
   const [mobileMode, setMobileMode] = useState<boolean>(autoCoarse);
-  const [oneButton, setOneButton] = useState<boolean>(false); // auto-run + tap = jump
+  const [oneButton, setOneButton] = useState<boolean>(false);
   const onScreenKeys = useRef({ left:false, right:false, jump:false });
 
-  // --- Audio
+  // Audio
   const [musicOn, setMusicOn] = useState(true);
   const musicEl = useRef<HTMLAudioElement | null>(null);
   const sfxJumpEl = useRef<HTMLAudioElement | null>(null);
@@ -70,61 +81,101 @@ function AstragalusRunner() {
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
 
   function startMusicIfWanted() {
-    const el = musicEl.current;
-    if (!el) return;
-    el.loop = true;
-    el.volume = 0.35;
-    el.muted = !musicOn;
+    const el = musicEl.current; if (!el) return;
+    el.loop = true; el.volume = 0.35; el.muted = !musicOn;
     if (musicOn) el.play().catch(()=>{});
   }
   function toggleMusic() {
     const el = musicEl.current;
-    setMusicOn(v => {
-      const n = !v;
-      if (el) {
-        el.muted = !n;
-        if (n && el.paused) el.play().catch(()=>{});
-      }
-      return n;
-    });
+    setMusicOn(v => { const n=!v; if(el){ el.muted=!n; if(n && el.paused) el.play().catch(()=>{});} return n; });
   }
   function playOne(ref: React.MutableRefObject<HTMLAudioElement | null>) {
-    const el = ref.current;
-    if (!el) return;
-    try { el.currentTime = 0; el.play().catch(()=>{}); } catch {}
+    const el = ref.current; if(!el) return;
+    try{ el.currentTime=0; el.play().catch(()=>{});}catch{}
   }
 
-  // --- Assets images (optionnels)
+  // Images (non-héros)
   const [spritesReady, setSpritesReady] = useState(false);
   const images = useRef<ImgDict>({});
-
   useEffect(() => {
     let canceled = false;
     const entries = Object.entries(SPRITES);
-    Promise.all(
-      entries.map(([key, file]) => loadImage(ASSETS.img + file).then(img => [key, img]).catch(()=>[key,null]))
-    ).then((pairs) => {
-      if (canceled) return;
-      const dict: ImgDict = {};
-      pairs.forEach(([k, im]) => (dict[k as string] = im as HTMLImageElement | null));
-      images.current = dict;
-      setSpritesReady(true);
-    });
-    return () => { canceled = true; };
+    Promise.all(entries.map(([k,f]) => loadImage(ASSETS.img+f).then(img=>[k,img]).catch(()=>[k,null])))
+      .then(pairs => { if(canceled) return; const dict:ImgDict={}; pairs.forEach(([k,im]) => dict[k as string]=im as any); images.current=dict; setSpritesReady(true); });
+    return ()=>{ canceled=true; };
   }, []);
 
-  // --- Player & world
+  // ---- HÉROS: manifest d’animations ----
+  const heroAnim = useRef<HeroAnim | null>(null);
+  const heroState = useRef<{ name: "idle"|"run"|"jump"; t:number }>({ name: "idle", t: 0 });
+
+  useEffect(() => {
+    let canceled = false;
+    (async () => {
+      const j = await fetchJSON<any>(ASSETS.img + "hero.anim.json"); // peut être absent
+      if (canceled) return;
+      if (!j) { heroAnim.current = null; return; }
+
+      const origin: [number,number] = j.origin ?? [0.5, 1];
+      const baseFS: [number,number] = j.frameSize ?? [64,64];
+      const clips: AnimSet = {};
+
+      async function buildClip(def: any): Promise<Clip | null> {
+        if (def?.files && Array.isArray(def.files)) {
+          const imgs = await Promise.all(def.files.map((f:string)=>loadImage(ASSETS.img+f)));
+          const frames = imgs.map(im => ({ image: im, sx:0, sy:0, sw: im.naturalWidth, sh: im.naturalHeight }));
+          return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
+        }
+        if (def?.rects && def?.src) {
+          const img = await loadImage(ASSETS.img + def.src);
+          const frames = def.rects.map((r:any)=>({ image: img, sx:r.x, sy:r.y, sw:r.w, sh:r.h }));
+          return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
+        }
+        if (def?.src && def?.frames) {
+          const img = await loadImage(ASSETS.img + def.src);
+          const fs: [number,number] = def.frameSize ?? baseFS;
+          // Découpage : si la largeur est divisible, on utilise, sinon on tente frames carrés de fs[0]
+          let fw = fs[0], fh = fs[1];
+          if (!def.frameSize) {
+            if (img.naturalWidth % def.frames === 0) {
+              fw = Math.round(img.naturalWidth / def.frames);
+              fh = img.naturalHeight;
+            } else {
+              // fallback : assume carrés basé sur la hauteur
+              fh = img.naturalHeight;
+              fw = fh;
+            }
+          }
+          const frames: FrameRect[] = [];
+          for (let i=0;i<def.frames;i++){
+            const sx = Math.min(img.naturalWidth - fw, Math.round(i*fw));
+            frames.push({ image: img, sx, sy:0, sw:fw, sh:fh });
+          }
+          return { frames, fps: def.fps ?? 10, loop: def.loop ?? true };
+        }
+        return null;
+      }
+
+      const anims = j.animations ?? {};
+      for (const key of Object.keys(anims)) {
+        const clip = await buildClip(anims[key]);
+        if (clip) clips[key] = clip;
+      }
+      heroAnim.current = { clips, origin, frameSize: baseFS };
+    })();
+    return ()=>{ canceled=true; };
+  }, []);
+
+  // Player & world
   const player = useRef({
-    x: 120, y: GROUND_Y - 68, w: 42, h: 68,
-    vx:0, vy:0, onGround:true, facing:1,
-    baseSpeed: 3.0, speedMul: 1.0, dirt: 0, runPhase: 0,
-    coyote: 0, jumpBuf: 0
+    x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true, facing:1,
+    baseSpeed:3.0, speedMul:1.0, dirt:0, runPhase:0, coyote:0, jumpBuf:0
   });
   const inv = useRef({ speed:false, purify:false, ward:false });
   const wardTimer = useRef(0);
   const keys = useRef<{[k:string]:boolean}>({});
 
-  const AMULET1_X = 900, CHASE_END_X=2000, AMULET2_X=2200, AMULET3_X=3100, EVIL_WAVE_START_X=3200;
+  const AMULET1_X=900, CHASE_END_X=2000, AMULET2_X=2200, AMULET3_X=3100, EVIL_WAVE_START_X=3200;
   type Eye = { x:number; y:number; vx:number; vy:number; alive:boolean };
   const eyes = useRef<Eye[]>([]);
   const bear = useRef({ x:-999, y:GROUND_Y-60, w:64, h:60, vx:0, active:false });
@@ -133,19 +184,18 @@ function AstragalusRunner() {
   const levelRef = useRef(level);
   useEffect(()=>{ levelRef.current = level; },[level]);
 
-  // --- Intro steps
+  // Intro
   const intro = useRef({ step:0, t:0 });
 
-  // --- Input clavier
+  // Keyboard
   useEffect(() => {
     function down(e: KeyboardEvent) {
       if (["ArrowLeft","ArrowRight"," ","Space","m","M","h","H","p","P"].includes(e.key)) e.preventDefault();
-      if (inIntro) {
-        if (e.key === "ArrowRight") { intro.current.step = Math.min(5, intro.current.step+1); intro.current.t=0; }
-      } else if (!summaryOpen) {
-        if (e.key==="ArrowLeft") keys.current.left = true;
-        if (e.key==="ArrowRight") keys.current.right = true;
-        if (e.key===" "||e.key==="Space") keys.current.jump = true;
+      if (inIntro) { if (e.key==="ArrowRight"){ intro.current.step=Math.min(5,intro.current.step+1); intro.current.t=0; } }
+      else if (!summaryOpen) {
+        if (e.key==="ArrowLeft") keys.current.left=true;
+        if (e.key==="ArrowRight") keys.current.right=true;
+        if (e.key===" "||e.key==="Space") keys.current.jump=true;
       }
       if ((e.key==="p"||e.key==="P") && !inIntro && !summaryOpen) setPaused(v=>!v);
       if (e.key==="h"||e.key==="H") setHistoryMode(v=>!v);
@@ -153,155 +203,139 @@ function AstragalusRunner() {
     }
     function up(e: KeyboardEvent) {
       if (inIntro || summaryOpen) return;
-      if (e.key==="ArrowLeft") keys.current.left = false;
-      if (e.key==="ArrowRight") keys.current.right = false;
-      if (e.key===" "||e.key==="Space") keys.current.jump = false;
+      if (e.key==="ArrowLeft") keys.current.left=false;
+      if (e.key==="ArrowRight") keys.current.right=false;
+      if (e.key===" "||e.key==="Space") keys.current.jump=false;
     }
     window.addEventListener("keydown",down);
     window.addEventListener("keyup",up);
     return ()=>{ window.removeEventListener("keydown",down); window.removeEventListener("keyup",up); };
   }, [inIntro, summaryOpen]);
 
-  // --- Mobile on-screen buttons (touch + mouse, multi-touch friendly)
-  function press(name: "left"|"right"|"jump", v:boolean) {
-    onScreenKeys.current[name] = v;
-  }
-  function clearTouchKeys() { onScreenKeys.current = {left:false,right:false,jump:false}; }
+  // Touch helpers
+  function press(name: "left"|"right"|"jump", v:boolean){ onScreenKeys.current[name]=v; }
+  function clearTouchKeys(){ onScreenKeys.current={left:false,right:false,jump:false}; }
 
-  // --- Start / reset
-  function startGame() {
-    setInIntro(false);
-    setSummaryOpen(false);
-    setPaused(false);
-    startMusicIfWanted();
-  }
-  function resetLevel(goIntro=false) {
-    const p = player.current;
-    Object.assign(p, { x:120, y:GROUND_Y-68, vx:0, vy:0, onGround:true, facing:1, speedMul:1.0, dirt:0, runPhase:0, coyote:0, jumpBuf:0 });
-    inv.current = { speed:false, purify:false, ward:false };
-    wardTimer.current = 0;
-    stage.current = "start";
-    bear.current = { x:-999, y:GROUND_Y-60, w:64, h:60, vx:0, active:false };
-    eyes.current = [];
+  // Start / reset
+  function startGame(){ setInIntro(false); setSummaryOpen(false); setPaused(false); startMusicIfWanted(); }
+  function resetLevel(goIntro=false){
+    Object.assign(player.current,{ x:120,y:GROUND_Y-68,vx:0,vy:0,onGround:true,facing:1,speedMul:1.0,dirt:0,runPhase:0,coyote:0,jumpBuf:0 });
+    inv.current={speed:false,purify:false,ward:false};
+    wardTimer.current=0; stage.current="start";
+    bear.current={ x:-999,y:GROUND_Y-60,w:64,h:60,vx:0,active:false };
+    eyes.current=[]; heroState.current={name:"idle",t:0};
     setMessage("← → bouger | Espace sauter | P pause | H cours | M musique");
-    setSummaryOpen(false);
-    if (goIntro) { setInIntro(true); intro.current={step:0,t:0}; }
+    setSummaryOpen(false); if(goIntro){ setInIntro(true); intro.current={step:0,t:0}; }
   }
-  function nextLevel() { setLevel(l=>l+1); resetLevel(false); setPaused(false); }
+  function nextLevel(){ setLevel(l=>l+1); resetLevel(false); setPaused(false); }
 
-  // --- Game loop
+  // Loop
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx) return;
     let last = performance.now();
-
     const tick = (t:number) => {
-      const dt = Math.min(33, t-last)/16.666; last = t;
+      const dt = Math.min(33, t-last)/16.666; last=t;
       if (!paused) update(dt);
-      render(ctx, t);
+      render(ctx,t);
       reqRef.current = requestAnimationFrame(tick);
     };
     reqRef.current = requestAnimationFrame(tick);
-    return ()=>{ if (reqRef.current) cancelAnimationFrame(reqRef.current); };
+    return ()=>{ if(reqRef.current) cancelAnimationFrame(reqRef.current); };
   }, [paused, inIntro, mobileMode, spritesReady]);
 
-  // --- Helpers
-  const clamp = (n:number,a:number,b:number) => Math.max(a, Math.min(b,n));
-  const nowMs = () => performance.now();
+  const clamp = (n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+  const nowMs = ()=>performance.now();
 
-  // --- History popup
+  // History popup
   const historyPopup = useRef<{ text:string; until:number }|null>(null);
-  function showHistory(text:string){ historyPopup.current = { text, until: nowMs()+4200 }; }
+  function showHistory(text:string){ historyPopup.current={text,until:nowMs()+4200}; }
 
-  // --- Update
-  function update(dt:number) {
+  // Update
+  function update(dt:number){
     if (inIntro || summaryOpen) {
-      if (inIntro) {
-        intro.current.t += dt;
-        if (intro.current.t > 4) { intro.current.t=0; intro.current.step = Math.min(5, intro.current.step+1); }
-      }
+      if (inIntro){ intro.current.t+=dt; if(intro.current.t>4){ intro.current.t=0; intro.current.step=Math.min(5,intro.current.step+1);} }
       return;
     }
-
     const p = player.current;
-    // Inputs combinés (clavier + écran)
+
+    // Inputs
     const left  = keys.current.left  || onScreenKeys.current.left;
-    const right = keys.current.right || onScreenKeys.current.right || (mobileMode && oneButton); // auto-run en one-button
+    const right = keys.current.right || onScreenKeys.current.right || (mobileMode && oneButton);
     const jump  = keys.current.jump  || onScreenKeys.current.jump;
 
-    // Axe horizontal
-    let ax = 0;
-    if (left)  { ax -= 1; p.facing = -1; }
-    if (right) { ax += 1; p.facing =  1; }
+    // Horizontal
+    let ax=0; if(left){ax-=1;p.facing=-1;} if(right){ax+=1;p.facing=1;}
     const targetVx = ax * p.baseSpeed * p.speedMul;
     p.vx += (targetVx - p.vx) * 0.4;
 
-    // Coyote/jump buffer
+    // Coyote/buffer
     p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt*0.016);
     p.jumpBuf = jump ? 0.12 : Math.max(0, p.jumpBuf - dt*0.016);
-    // Gravité
+
+    // Gravité + saut
     p.vy += 0.8 * dt;
-    // Saut si possible
-    if (p.jumpBuf>0 && (p.coyote>0 || p.onGround)) {
-      p.vy = -14; p.onGround = false; p.coyote=0; p.jumpBuf=0; playOne(sfxJumpEl);
-    }
+    if (p.jumpBuf>0 && (p.coyote>0 || p.onGround)) { p.vy=-14; p.onGround=false; p.coyote=0; p.jumpBuf=0; playOne(sfxJumpEl); }
 
     // Intégration
     p.x += (p.vx * dt * 60)/60;
     p.y += (p.vy * dt * 60)/60;
 
     // Sol
-    if (p.y + p.h >= GROUND_Y) { p.y = GROUND_Y - p.h; p.vy=0; if(!p.onGround) p.onGround=true; }
-    else { p.onGround=false; }
+    if (p.y + p.h >= GROUND_Y){ p.y=GROUND_Y-p.h; p.vy=0; if(!p.onGround) p.onGround=true; } else p.onGround=false;
 
     // Limites
     p.x = clamp(p.x, 0, WORLD_LEN-1);
-    p.runPhase += Math.abs(p.vx) * dt * 0.4;
+    p.runPhase += Math.abs(p.vx)*dt*0.4;
 
     // Bouclier
-    if (wardTimer.current>0) wardTimer.current = Math.max(0, wardTimer.current - dt*0.016);
+    if (wardTimer.current>0) wardTimer.current=Math.max(0, wardTimer.current - dt*0.016);
 
-    // Script d’événements
-    if (stage.current==="start" && p.x > AMULET1_X-20) {
+    // --- HÉROS: choix d’animation
+    const nextName: "idle"|"run"|"jump" =
+      !p.onGround ? "jump" : (Math.abs(p.vx)>0.5 ? "run" : "idle");
+    if (heroState.current.name !== nextName) heroState.current = { name: nextName, t: 0 };
+    else heroState.current.t += dt;
+
+    // Script événements
+    if (stage.current==="start" && p.x > 900-20) {
       stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true;
-      setMessage("Amulette de vitesse trouvée ! → cours !");
-      playOne(sfxCatchEl);
+      setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl);
       setTimeout(()=>{ stage.current="bearChase"; bear.current.active=true; bear.current.x=p.x-300; bear.current.vx=2.8; setMessage("Un ours te poursuit !"); }, 500);
     }
     if (stage.current==="bearChase" && bear.current.active) {
-      const d = p.x - bear.current.x; const diff=0.2*(levelRef.current-1);
+      const d=p.x-bear.current.x, diff=0.2*(levelRef.current-1);
       const desired = d>260?3.2+diff : d<140?2.2+diff : 2.8+diff;
-      bear.current.vx += (desired - bear.current.vx) * 0.04;
+      bear.current.vx += (desired - bear.current.vx)*0.04;
       bear.current.x += (bear.current.vx * dt * 60)/60;
       p.dirt = clamp(p.dirt + 0.002*dt, 0, 1);
       if (bear.current.x + bear.current.w > p.x + 10) bear.current.x = p.x - 320;
-      if (p.x > CHASE_END_X) { stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
+      if (p.x > 2000){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
     }
-    if (stage.current==="postChase" && p.x > AMULET2_X-20) {
+    if (stage.current==="postChase" && p.x > 2200-20) {
       stage.current="purifyAmulet"; inv.current.purify=true; playOne(sfxCatchEl);
       const clean=()=>{ player.current.dirt=Math.max(0, player.current.dirt-0.05); if(player.current.dirt>0) requestAnimationFrame(clean); };
       requestAnimationFrame(clean);
       if (historyMode) showHistory("Purification symbolique/amuletique attestée dans l’Antiquité.");
     }
-    if ((stage.current==="purifyAmulet" || stage.current==="postChase") && p.x > AMULET3_X-20) {
+    if ((stage.current==="purifyAmulet"||stage.current==="postChase") && p.x > 3100-20) {
       stage.current="wardAmulet"; inv.current.ward=true; wardTimer.current=10; playOne(sfxCatchEl);
       setMessage("Bouclier apotropaïque (temporaire) !");
     }
-    if ((stage.current==="wardAmulet" || stage.current==="purifyAmulet") && p.x > EVIL_WAVE_START_X) {
+    if ((stage.current==="wardAmulet"||stage.current==="purifyAmulet") && p.x > 3200) {
       stage.current="evilEyeWave";
-      const n = 6 + (levelRef.current-1)*4;
-      for(let i=0;i<n;i++){
+      const n=6+(levelRef.current-1)*4;
+      for(let i=0;i<n;i++)
         eyes.current.push({ x:p.x+240+i*90, y:GROUND_Y-100-((i%3)*30), vx:-(2.2+((i%3)*0.4)+0.1*(levelRef.current-1)), vy:0, alive:true });
-      }
       setMessage("Vague du ‘mauvais œil’ !");
     }
     if (eyes.current.length){
       for(const e of eyes.current){
         if(!e.alive) continue;
         e.x += (e.vx * dt * 60)/60;
-        if (rectOverlap(e.x-10, e.y-6, 20, 12, p.x, p.y, p.w, p.h)) {
-          if (wardTimer.current>0){ e.vx = -e.vx*0.6; e.x += e.vx*4; e.alive=false; }
-          else { p.speedMul=Math.max(0.8, p.speedMul-0.2); setTimeout(()=>p.speedMul=Math.min(1.2, p.speedMul+0.2),1500); e.alive=false; playOne(sfxOuchEl); }
+        if (rectOverlap(e.x-10,e.y-6,20,12, p.x,p.y,p.w,p.h)) {
+          if (wardTimer.current>0){ e.vx=-e.vx*0.6; e.x+=e.vx*4; e.alive=false; }
+          else { p.speedMul=Math.max(0.8,p.speedMul-0.2); setTimeout(()=>p.speedMul=Math.min(1.2,p.speedMul+0.2),1500); e.alive=false; playOne(sfxOuchEl); }
         }
       }
       eyes.current = eyes.current.filter(e=>e.alive && e.x>-100);
@@ -314,78 +348,60 @@ function AstragalusRunner() {
     return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
   }
 
-  // --- Render
+  // Render
   function render(ctx:CanvasRenderingContext2D, t:number){
     if (inIntro) return renderIntro(ctx,t);
-
     const p = player.current;
-    const camX = clamp(p.x - W*0.35, 0, WORLD_LEN - W);
+    const camX = Math.max(0, Math.min(WORLD_LEN - W, p.x - W*0.35));
 
     ctx.clearRect(0,0,W,H);
-    // Ciel
-    const g = ctx.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
 
-    // Décors (vectoriels simples)
     drawMountains(ctx, camX*0.2);
     drawOliveTrees(ctx, camX*0.5);
     drawFrieze(ctx, camX*0.8);
 
-    // Sol
     ctx.fillStyle="#ede9fe"; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
 
     ctx.save(); ctx.translate(-camX,0);
-    // Colonnes + amulettes
     for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
-    drawAmulet(ctx, AMULET1_X, GROUND_Y-40, "Vitesse", images.current.amuSpeed);
-    drawAmulet(ctx, AMULET2_X, GROUND_Y-40, "Purif.", images.current.amuPurify);
-    drawAmulet(ctx, AMULET3_X, GROUND_Y-40, "Bouclier", images.current.amuWard);
+    drawAmulet(ctx, 900,  GROUND_Y-40, "Vitesse",  images.current.amuSpeed);
+    drawAmulet(ctx, 2200, GROUND_Y-40, "Purif.",   images.current.amuPurify);
+    drawAmulet(ctx, 3100, GROUND_Y-40, "Bouclier", images.current.amuWard);
 
-    // Ours
     if (bear.current.active) drawBear(ctx, bear.current.x, bear.current.y, images.current.bear);
+    for(const e of eyes.current) if(e.alive) drawEvilEye(ctx,e.x,e.y,images.current.eye);
 
-    // Projectiles
-    for(const e of eyes.current) if (e.alive) drawEvilEye(ctx, e.x, e.y, images.current.eye);
+    drawHero(ctx, p.x,p.y,p.w,p.h,p.facing,p.dirt,p.runPhase,wardTimer.current);
 
-    // Héros
-    drawHero(ctx, p.x, p.y, p.w, p.h, p.facing, p.dirt, p.runPhase, wardTimer.current, images.current.hero);
-
-    // Fin
     ctx.fillStyle="#94a3b8"; ctx.fillRect(WORLD_LEN-40, GROUND_Y-120, 8, 120);
     ctx.restore();
 
-    // HUD
     drawHUD(ctx);
 
-    // Popup histoire
-    if (historyMode && historyPopup.current && nowMs() < historyPopup.current.until) {
-      const txt = historyPopup.current.text;
-      ctx.save(); ctx.globalAlpha=0.95; ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=2;
-      const boxW = Math.min(680, W-40); const x=(W-boxW)/2; const y=H-130;
+    if (historyMode && historyPopup.current && performance.now()<historyPopup.current.until){
+      const txt=historyPopup.current.text; ctx.save(); ctx.globalAlpha=.95;
+      ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=2;
+      const boxW=Math.min(680,W-40), x=(W-boxW)/2, y=H-130;
       ctx.fillRect(x,y,boxW,80); ctx.strokeRect(x,y,boxW,80);
       ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui";
-      wrapText(ctx, txt, x+12, y+26, boxW-24, 18);
-      ctx.restore();
+      wrapText(ctx,txt,x+12,y+26,boxW-24,18); ctx.restore();
     }
 
-    // Messages
     ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui";
-    ctx.fillText(message, 16, 26);
-    ctx.fillText("P pause | H cours | M musique", 16, 46);
+    ctx.fillText(message,16,26); ctx.fillText("P pause | H cours | M musique",16,46);
   }
 
-  // --- Intro render
-  function renderIntro(ctx:CanvasRenderingContext2D, _t:number){
-    const step = intro.current.step, tt=intro.current.t;
+  // Intro
+  function renderIntro(ctx:CanvasRenderingContext2D,_t:number){
+    const step=intro.current.step, tt=intro.current.t;
     ctx.clearRect(0,0,W,H);
-    const g = ctx.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
     drawMountains(ctx,0); drawOliveTrees(ctx,0); drawFrieze(ctx,0);
 
-    // panneau
-    ctx.save(); ctx.globalAlpha=0.92; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
+    ctx.save(); ctx.globalAlpha=.92; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
     ctx.fillRect(40,40,W-80,H-160); ctx.strokeRect(40,40,W-80,H-160); ctx.restore();
 
     ctx.fillStyle="#0f172a"; ctx.font="22px ui-sans-serif, system-ui";
@@ -399,7 +415,7 @@ function AstragalusRunner() {
     if (step>=5){ center("Prêt ? Clique Start pour jouer.", H/2); }
   }
 
-  // --- Drawing primitives (sprites si dispo, sinon vectoriel)
+  // Drawing primitives
   function drawColumn(ctx:CanvasRenderingContext2D, baseX:number, groundY:number){
     ctx.save(); ctx.translate(baseX,0);
     ctx.fillStyle="#e5e7eb"; ctx.fillRect(-12, groundY-140, 24, 140);
@@ -407,25 +423,22 @@ function AstragalusRunner() {
     ctx.restore();
   }
   function drawAmulet(ctx:CanvasRenderingContext2D, x:number, y:number, label:string, sprite:HTMLImageElement|null|undefined){
-    const t = performance.now()*0.002;
-    ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, -16, -16, 32, 32); }
+    const t = performance.now()*0.002; ctx.save(); ctx.translate(x,y);
+    if (sprite){ ctx.drawImage(sprite, -16,-16,32,32); }
     else {
       ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(t),18,-12); ctx.stroke();
-      const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,`rgba(20,184,166,0.8)`); grd.addColorStop(1,"rgba(20,184,166,0)");
+      const grd = ctx.createRadialGradient(0,0,2,0,0,18); grd.addColorStop(0,"rgba(20,184,166,0.8)"); grd.addColorStop(1,"rgba(20,184,166,0)");
       ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
       ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke();
     }
-    ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30);
-    ctx.restore();
+    ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30); ctx.restore();
   }
   function drawBear(ctx:CanvasRenderingContext2D, x:number, y:number, sprite:HTMLImageElement|null|undefined){
     ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, 0, 0, 64, 60); }
+    if (sprite){ ctx.drawImage(sprite, 0,0,64,60); }
     else {
-      ctx.fillStyle="#78350f"; ctx.fillRect(0,20,64,36);
-      ctx.beginPath(); ctx.arc(54,26,14,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#78350f"; ctx.fillRect(0,20,64,36); ctx.beginPath(); ctx.arc(54,26,14,0,Math.PI*2); ctx.fill();
       ctx.fillRect(6,56,10,12); ctx.fillRect(26,56,10,12); ctx.fillRect(46,56,10,12);
       ctx.fillStyle="#fde68a"; ctx.fillRect(60,22,3,3);
     }
@@ -433,7 +446,7 @@ function AstragalusRunner() {
   }
   function drawEvilEye(ctx:CanvasRenderingContext2D, x:number, y:number, sprite:HTMLImageElement|null|undefined){
     ctx.save(); ctx.translate(x,y);
-    if (sprite){ ctx.drawImage(sprite, -16, -16, 32, 32); }
+    if (sprite){ ctx.drawImage(sprite, -16,-16,32,32); }
     else {
       ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
       ctx.fillStyle="#93c5fd"; ctx.beginPath(); ctx.ellipse(0,0,9,6,0,0,Math.PI*2); ctx.fill();
@@ -441,19 +454,36 @@ function AstragalusRunner() {
     }
     ctx.restore();
   }
-  function drawHero(ctx:CanvasRenderingContext2D, x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number, sprite:HTMLImageElement|null|undefined){
+
+  // ---- HÉROS : animé si manifest dispo, sinon fallback vectoriel
+  function drawHero(ctx:CanvasRenderingContext2D, x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number){
     ctx.save(); ctx.translate(x,y);
+
     // Bouclier
-    if (wardLeft>0){ const pct=Math.min(1,wardLeft/10); const rad=44+6*Math.sin(performance.now()*0.006);
-      const grd = ctx.createRadialGradient(w/2,h/2,10, w/2,h/2,rad);
+    if (wardLeft>0){
+      const pct=Math.min(1,wardLeft/10); const rad=44+6*Math.sin(performance.now()*0.006);
+      const grd=ctx.createRadialGradient(w/2,h/2,10, w/2,h/2,rad);
       grd.addColorStop(0,`rgba(56,189,248,${0.25+0.25*pct})`); grd.addColorStop(1,"rgba(56,189,248,0)");
       ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(w/2,h/2,rad,0,Math.PI*2); ctx.fill();
     }
-    // Flip
-    if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
-    if (sprite){ ctx.drawImage(sprite, 2, 0, w, h); }
-    else {
-      // fallback vectoriel (idem version précédente, compacté)
+
+    const anim = heroAnim.current;
+    if (anim && anim.clips[heroState.current.name]) {
+      const clip = anim.clips[heroState.current.name];
+      const count = Math.max(1, clip.frames.length);
+      let idx = Math.floor(heroState.current.t * clip.fps);
+      idx = clip.loop ? (idx % count) : Math.min(idx, count-1);
+      const fr = clip.frames[idx];
+
+      if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
+      const ox = anim.origin?.[0] ?? 0.5, oy = anim.origin?.[1] ?? 1;
+      const dx = -ox * w, dy = -oy * h;
+
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(fr.image, fr.sx, fr.sy, fr.sw, fr.sh, dx, dy, w, h);
+    } else {
+      // Fallback vectoriel (ancien rendu)
+      if (facing<0){ ctx.scale(-1,1); ctx.translate(-w,0); }
       const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
       ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, h-16, 8,16); ctx.fillRect(w-18+legB*0.2, h-16, 8,16);
       ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2, h-2, 10,2); ctx.fillRect(w-18+legB*0.2, h-2, 10,2);
@@ -469,10 +499,12 @@ function AstragalusRunner() {
         ctx.moveTo(w/2-3.5,26); ctx.quadraticCurveTo(w/2,27.5,w/2+3.5,26); ctx.stroke();
       }
       ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(w/2,12,8,0,Math.PI*2); ctx.fill();
-      if (dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-4,-4,w+8,h+8); ctx.globalAlpha=1; }
     }
+
+    if (dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-4,-4,w+8,h+8); ctx.globalAlpha=1; }
     ctx.restore();
   }
+
   function drawMountains(ctx:CanvasRenderingContext2D, off:number){
     ctx.save(); ctx.translate(-off,0);
     for(let x=-200;x<W+WORLD_LEN;x+=420){
@@ -514,14 +546,13 @@ function AstragalusRunner() {
     ctx.moveTo(-R*0.7,0); ctx.quadraticCurveTo(0,R*0.38,R*0.7,0); ctx.stroke(); ctx.restore();
   }
   function drawHUD(ctx:CanvasRenderingContext2D){
-    ctx.save(); ctx.globalAlpha=0.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
+    ctx.save(); ctx.globalAlpha=.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
     ctx.fillRect(12,56,236,62); ctx.strokeRect(12,56,236,62);
     const slots=[{owned:inv.current.speed,label:"Vitesse"},{owned:inv.current.purify,label:"Purif."},{owned:inv.current.ward,label:"Bouclier"}];
     for(let i=0;i<slots.length;i++){ const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48);
-      ctx.globalAlpha=slots[i].owned?1:0.35; drawAmuletMini(ctx,x+28,88); ctx.globalAlpha=1;
+      ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88); ctx.globalAlpha=1;
       ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label, x+28, 116);
     }
-    // Indicateurs
     ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
     ctx.fillStyle="#0f172a"; ctx.font="10px ui-sans-serif, system-ui"; ctx.fillText("Musique (M)", 278,74);
     ctx.fillStyle = historyMode ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,98,6,0,Math.PI*2); ctx.fill();
@@ -534,33 +565,26 @@ function AstragalusRunner() {
     ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); ctx.restore();
   }
   function wrapText(ctx:CanvasRenderingContext2D, text:string, x:number,y:number, maxW:number, lh:number){
-    const words=text.split(" "); let line=""; for(let n=0;n<words.length;n++){ const test=line+words[n]+" "; const w=ctx.measureText(test).width;
-      if (w>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+" "; y+=lh; } else line=test;
-    } ctx.fillText(line,x,y);
+    const words=text.split(" "); let line=""; for(let n=0;n<words.length;n++){ const test=line+words[n]+" "; if(ctx.measureText(test).width>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+" "; y+=lh; } else line=test; }
+    ctx.fillText(line,x,y);
   }
 
-  // --- JSX
+  // JSX / UI
   return (
     <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
       <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
         <div className="mb-2" style={{display:"flex",gap:8,alignItems:"center",justifyContent:"space-between"}}>
           <h1 className="text-xl sm:text-2xl" style={{fontWeight:600}}>Runner 2D – Amulettes d’astragale</h1>
           <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
-            <button onClick={()=>setHistoryMode(v=>!v)} className="btn" style={btn()}>
-              {historyMode ? "Cours ON" : "Cours OFF"}
-            </button>
-            <button onClick={toggleMusic} className="btn" style={btn()}>
-              {musicOn ? "Musique ON" : "Musique OFF"}
-            </button>
-            <button onClick={()=>setPaused(v=>!v)} disabled={inIntro||summaryOpen} className="btn" style={primaryBtn(inIntro||summaryOpen)}>
-              {paused ? "Lecture" : "Pause"}
-            </button>
-            <label className="btn" style={btn()}>
+            <button onClick={()=>setHistoryMode(v=>!v)} style={btn()}> {historyMode ? "Cours ON" : "Cours OFF"} </button>
+            <button onClick={toggleMusic} style={btn()}> {musicOn ? "Musique ON" : "Musique OFF"} </button>
+            <button onClick={()=>setPaused(v=>!v)} disabled={inIntro||summaryOpen} style={primaryBtn(inIntro||summaryOpen)}>{paused ? "Lecture" : "Pause"}</button>
+            <label style={btn()}>
               <input type="checkbox" checked={mobileMode} onChange={e=>{ setMobileMode(e.target.checked); clearTouchKeys(); }} />
               <span style={{marginLeft:6}}>Mode mobile</span>
             </label>
             {mobileMode && (
-              <label className="btn" style={btn()}>
+              <label style={btn()}>
                 <input type="checkbox" checked={oneButton} onChange={e=>setOneButton(e.target.checked)} />
                 <span style={{marginLeft:6}}>1 bouton</span>
               </label>
@@ -569,16 +593,15 @@ function AstragalusRunner() {
         </div>
 
         <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
-          {inIntro
-            ? "Cinématique d’intro : → pour avancer. Clique Start (dans le cadre) pour lancer le jeu."
-            : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile ci-dessus."}
+          {inIntro ? "Cinématique d’intro : → pour avancer. Clique Start (dans le cadre) pour lancer le jeu."
+                   : "← → bouger • Espace sauter • P pause • H cours • M musique. Sur mobile, active le mode mobile."}
         </p>
 
         <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
           <div className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
             <canvas ref={canvasRef} width={W} height={H} style={{width:"100%", height:"100%", imageRendering:"pixelated"}} />
 
-            {/* START overlay dans le canvas */}
+            {/* Start overlay */}
             {inIntro && (
               <div style={{position:"absolute", inset:0, display:"flex", alignItems:"end", justifyContent:"center", paddingBottom:16, pointerEvents:"none"}}>
                 <button onClick={startGame} style={{...primaryBtn(false), pointerEvents:"auto", padding:"10px 16px", borderRadius:14}}>
@@ -587,7 +610,7 @@ function AstragalusRunner() {
               </div>
             )}
 
-            {/* Résumé de fin de niveau */}
+            {/* Résumé fin */}
             {summaryOpen && (
               <div style={{position:"absolute", inset:0, background:"rgba(255,255,255,.95)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
                 <div style={{width:"min(860px,100%)", background:"#fff", border:"1px solid #e5e7eb", borderRadius:16, padding:16, boxShadow:"0 8px 24px rgba(0,0,0,.08)"}}>
@@ -623,27 +646,23 @@ function AstragalusRunner() {
               </div>
             )}
 
-            {/* Contrôles à l’écran (mode mobile) */}
+            {/* Contrôles mobiles */}
             {mobileMode && !inIntro && !summaryOpen && (
               <>
                 {!oneButton && (
                   <div style={{position:"absolute", left:12, right:12, bottom:12, display:"flex", gap:12, justifyContent:"space-between", pointerEvents:"none"}}>
-                    <TouchBtn label="←"
-                      onDown={()=>press("left",true)} onUp={()=>press("left",false)} />
-                    <TouchBtn label="Saut"
-                      onDown={()=>press("jump",true)} onUp={()=>press("jump",false)} />
-                    <TouchBtn label="→"
-                      onDown={()=>press("right",true)} onUp={()=>press("right",false)} />
+                    <TouchBtn label="←" onDown={()=>press("left",true)} onUp={()=>press("left",false)} />
+                    <TouchBtn label="Saut" onDown={()=>press("jump",true)} onUp={()=>press("jump",false)} />
+                    <TouchBtn label="→" onDown={()=>press("right",true)} onUp={()=>press("right",false)} />
                   </div>
                 )}
                 {oneButton && (
-                  <div onPointerDown={()=>press("jump",true)} onPointerUp={()=>press("jump",false)}
-                       style={{position:"absolute", inset:"0 0 0 0", pointerEvents:"auto"}} />
+                  <div onPointerDown={()=>press("jump",true)} onPointerUp={()=>press("jump",false)} style={{position:"absolute", inset:0, pointerEvents:"auto"}} />
                 )}
               </>
             )}
 
-            {/* AUDIO avec <source> pour .ogg + .mp3 */}
+            {/* Audio */}
             <audio ref={musicEl} preload="auto">
               <source src={ASSETS.audio + AUDIO.music.ogg} type="audio/ogg"/>
               <source src={ASSETS.audio + AUDIO.music.mp3} type="audio/mpeg"/>
@@ -663,7 +682,7 @@ function AstragalusRunner() {
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Option sprites : si tu ajoutes des images dans <code>/assets/games/osselets/img/</code>, le jeu les utilisera automatiquement. Sinon rendu vectoriel.
+            Héros animé via <code>/assets/games/osselets/img/hero.anim.json</code> (strips inégaux, listes d’images ou rects – tous supportés). Sans manifest, rendu vectoriel par défaut.
           </div>
         </div>
       </div>
@@ -671,28 +690,27 @@ function AstragalusRunner() {
   );
 }
 
-/** Boutons UI (styles inline pour ne pas dépendre de Tailwind) */
+/** Styles boutons */
 function btn(disabled=false){ return ({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1 }) as React.CSSProperties; }
 function btnDark(){ return ({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" }) as React.CSSProperties; }
 function primaryBtn(disabled=false){ return ({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" }) as React.CSSProperties; }
 
-/** Bouton tactile réutilisable */
+/** Bouton tactile */
 function TouchBtn(props:{label:string; onDown:()=>void; onUp:()=>void;}){
   const events = {
     onMouseDown: props.onDown, onMouseUp: props.onUp, onMouseLeave: props.onUp,
     onTouchStart: (e:React.TouchEvent)=>{ e.preventDefault(); props.onDown(); },
-    onTouchEnd: (e:React.TouchEvent)=>{ e.preventDefault(); props.onUp(); },
-    onPointerDown: (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onDown(); },
-    onPointerUp: (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onUp(); },
+    onTouchEnd:   (e:React.TouchEvent)=>{ e.preventDefault(); props.onUp(); },
+    onPointerDown:(e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onDown(); },
+    onPointerUp:  (e:React.PointerEvent)=>{ if(e.pointerType!=="mouse") props.onUp(); },
   };
   return (
-    <button {...events}
-      style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
+    <button {...events} style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
       {props.label}
     </button>
   );
 }
 
-// Expose pour le script HTML (montage au clic sur #osselets-start) :contentReference[oaicite:2]{index=2}
+// Expose
 // @ts-ignore
 (window as any).AstragalusRunner = AstragalusRunner;
