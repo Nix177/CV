@@ -100,20 +100,20 @@
         <button id="osselets-start-l3" class="btn">Niveau 3</button>
       </div>
 
-     <!-- Conteneur du jeu avec screenshot d’attente -->
-<div class="game-wrap"
-     style="position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
+      <!-- Conteneur du jeu avec screenshot d’attente -->
+      <div class="game-wrap"
+           style="position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
 
-  <!-- 📸 Screenshot d’accueil (réserve 72px en bas pour le bouton Start) -->
-  <img id="osselets-cover"
-       src="/assets/games/osselets/audio/img/start-screenshot.webp"
-       alt="Aperçu du jeu Osselets"
-       onerror="this.remove()"
-       style="position:absolute;top:0;left:0;right:0;bottom:72px;width:100%;height:auto;object-fit:cover;display:block;z-index:1;pointer-events:none" />
+        <!-- 📸 Screenshot d’accueil (réserve 72px en bas pour le bouton Start) -->
+        <img id="osselets-cover"
+             src="/assets/games/osselets/audio/img/start-screenshot.webp"
+             alt="Aperçu du jeu Osselets"
+             onerror="this.remove()"
+             style="position:absolute;top:0;left:0;right:0;bottom:72px;width:100%;height:auto;object-fit:cover;display:block;z-index:1;pointer-events:none" />
 
-  <!-- Point de montage React AU-DESSUS du screenshot -->
-  <div id="osselets-root" style="position:absolute;inset:0;z-index:2"></div>
-</div>
+        <!-- Point de montage React AU-DESSUS du screenshot -->
+        <div id="osselets-root" style="position:absolute;inset:0;z-index:2"></div>
+      </div>
     </section>
     <!-- /OSSELETS -->
   </main>
