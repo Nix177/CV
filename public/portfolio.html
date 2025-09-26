@@ -90,8 +90,8 @@
          OSSELETS — Jeux (LVL1/2/3)
          ========================================================= -->
     <section id="ai-lab-game" class="card">
-      <h2>🎮 Osselets — mini-jeux</h2>
-      <p class="muted">LVL1: Runner pédagogique • LVL2: Écrire avec les os • LVL3: Rouler les os.</p>
+      <h2>🎮 Runner 2D – Amulettes d’astragale</h2>
+      <p class="muted">Jeu de découverte des usages de l’astragale (amulette, rite, protection).</p>
 
       <!-- Boutons de lancement -->
       <div class="row" style="gap:8px;margin-bottom:8px">
@@ -110,6 +110,14 @@
              alt="Aperçu du jeu Osselets"
              onerror="this.remove()"
              style="position:absolute;top:0;left:0;right:0;bottom:72px;width:100%;height:auto;object-fit:cover;display:block;z-index:1;pointer-events:none" />
+
+        <!-- Bouton Start dans le cadre -->
+        <button id="osselets-cta"
+                style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
+                       z-index:3;padding:10px 16px;border:1px solid #ffffff33;border-radius:10px;
+                       background:#0b1f33;color:#e6f1ff;cursor:pointer">
+          Start
+        </button>
 
         <!-- Point de montage React AU-DESSUS du screenshot -->
         <div id="osselets-root" style="position:absolute;inset:0;z-index:2"></div>
@@ -147,6 +155,7 @@
       var start3 = document.getElementById('osselets-start-l3');
       var root   = document.getElementById('osselets-root');
       var cover  = document.getElementById('osselets-cover');
+      var cta    = document.getElementById('osselets-cta');
 
       // Canvas plein conteneur + rendu pixel-art net
       var style = document.createElement('style');
@@ -158,7 +167,8 @@
 
       function mount(comp) {
         if (!root || !comp) return;
-        if (cover) cover.remove(); // retire le screenshot
+        if (cover) { cover.style.display = 'none'; cover.remove(); }
+        if (cta)   { cta.style.display   = 'none'; cta.remove(); }
         var r = ReactDOM.createRoot(root);
         r.render(React.createElement(comp));
         root.setAttribute('tabindex', '0');
@@ -179,6 +189,11 @@
         // @ts-ignore
         mount(window && window.AstragalusLevel3);
       }, { once:false });
+
+      if (cta) cta.addEventListener('click', function(){
+        // @ts-ignore
+        mount(window && window.AstragalusRunner);
+      }, { once:true });
     })();
   </script>
 </body>
