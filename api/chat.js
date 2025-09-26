@@ -1,10 +1,10 @@
 // api/chat.js — Backend stable pour /api/chat
 // - Sans dépendances externes (fetch global Node 18+)
-// - CommonJS (module.exports) pour Vercel/Node
+// - ESM (export default) pour Vercel/Node 18
 // - Jamais de 500: fallback texte si OPENAI_API_KEY absent ou échec LLM
 
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
 // --- Config ---
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""; // renseigner dans Vercel -> Settings -> Environment Variables
@@ -164,7 +164,7 @@ function fallbackAnswer(q, lc, profile, cvText, liberty, concise) {
 }
 
 // --- Handler principal ---
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       // utile pour tester rapidement l’API
@@ -239,4 +239,4 @@ module.exports = async (req, res) => {
       used: { liberty:1, concise:false, lang, hasProfile:!!profile, hasCvText:!!cvText, cvLink:"/CV_Nicolas_Tuor.pdf", engine:"fallback", error:String(e) }
     });
   }
-};
+}
