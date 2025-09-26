@@ -1,7 +1,7 @@
+(function (global) {
+  const { useEffect, useRef, useState } = React;
 // public/osselets-level2.tsx
 // Niveau 2 — « Écrire avec les os » : fil qui traverse des trous numérotés (alphabet grec, 24 lettres)
-
-const { useEffect, useRef, useState } = React;
 
 /* ---------- Config visuelle ---------- */
 const L2_W = 960, L2_H = 540;
@@ -289,3 +289,6 @@ function AstragalusLevel2(){
 
 // @ts-ignore
 (window as any).AstragalusLevel2 = AstragalusLevel2;
+// expose
+global.AstragalusLevel2 = global.AstragalusLevel2 || AstragalusLevel2;
+})(window);

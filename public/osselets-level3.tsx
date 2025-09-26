@@ -1,7 +1,7 @@
+(function (global) {
+  const { useEffect, useRef, useState } = React;
 // public/osselets-level3.tsx
 // Niveau 3 — « Rouler les os » : lancers d’astragales (jeu + oracle)
-
-const { useEffect, useRef, useState } = React;
 
 /* ---------- Config ---------- */
 const L3_W = 960, L3_H = 540;
@@ -226,3 +226,6 @@ function AstragalusLevel3(){
 
 // @ts-ignore
 (window as any).AstragalusLevel3 = AstragalusLevel3;
+// expose
+global.AstragalusLevel3 = global.AstragalusLevel3 || AstragalusLevel3;
+})(window);
