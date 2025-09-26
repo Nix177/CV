@@ -11,21 +11,21 @@
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
+
+  <!-- Styles de base (fallback si /style.css n'est pas chargé) -->
   <style>
-    /* Styles de base (fonctionne même sans style.css) */
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
     .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
     .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
     .btn.ghost { background: transparent }
-    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; font-size:.85em; opacity:.9 }
     .muted { opacity:.9 }
     .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px }
     .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
     @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
-    /* Overlay d’aperçu (sécurisé, sans allow-same-origin) */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,55);
+    /* Overlay d’aperçu (sécurisé) */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
                display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
     .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
                       width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
@@ -33,12 +33,16 @@
                              padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
     .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
   </style>
+
+  <!-- Style global du site -->
   <link rel="stylesheet" href="/style.css">
+
+  <!-- Nav + feedback -->
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
 </head>
 <body>
-  <!-- En-tête local (masqué par nav.js si JS actif) -->
+  <!-- En-tête (fallback si JS) -->
   <header class="site-header">
     <nav class="site-nav" aria-label="Navigation principale">
       <ul class="menu">
@@ -75,88 +79,74 @@
       </div>
     </div>
 
-    <!-- BEGIN AI-LAB-MERGE -->
-
-    <!-- ✳️ Générateur de quiz — temporairement désactivé
+    <!-- ✳️ Générateur de quiz — temporairement désactivé -->
+    <!--
     <section id="ai-lab" class="card" style="margin-top:18px">
-      <h2>🧪 AI Lab — générateur de quiz (PER)</h2>
-      <div class="row" style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
-        <div>
-          <label for="q-theme">Thème</label>
-          <select id="q-theme" class="input">
-            <option value="histoire-antique">Histoire — Antiquité</option>
-            <option value="science">Sciences</option>
-            <option value="langue">Langue</option>
-            <option value="arts">Arts</option>
-          </select>
-        </div>
-        <div class="row">
-          <label for="q-age">Âge / Cycle</label>
-          <select id="q-age" class="input"><option>Cycle 2</option><option>Cycle 3</option></select>
-          <label for="q-count" style="margin-left:8px">Nombre de questions</label>
-          <input id="q-count" class="input" type="number" min="3" max="10" value="5"/>
-        </div>
-      </div>
-      <div class="stack" style="margin-top:10px">
-        <button id="q-generate" class="btn">Générer</button>
-        <div id="q-status" class="muted"></div>
-      </div>
-      <div id="q-output" style="margin-top:12px"></div>
+      ... (commenté)
     </section>
     -->
 
+    <!-- =========================================================
+         OSSELETS — Jeux (LVL1/2/3)
+         ========================================================= -->
     <section id="ai-lab-game" class="card">
-      <h2>🎮 Osselets — mini-jeu</h2>
-      <p class="muted">Démo jouable intégrée dans un conteneur fixe.</p>
+      <h2>🎮 Osselets — mini-jeux</h2>
+      <p class="muted">LVL1: Runner pédagogique • LVL2: Écrire avec les os • LVL3: Rouler les os.</p>
 
-      <!-- Bouton Start -->
-      <button id="osselets-start" class="btn">Lancer le jeu</button>
+      <!-- Boutons de lancement -->
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <button id="osselets-start" class="btn">Lancer le niveau 1</button>
+        <button id="osselets-start-l2" class="btn">Niveau 2</button>
+        <button id="osselets-start-l3" class="btn">Niveau 3</button>
+      </div>
 
       <!-- Conteneur du jeu avec screenshot d’attente -->
       <div class="game-wrap"
            style="position:relative;height:clamp(800px,78vh,1000px);overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
-        <!-- Screenshot d’accueil (retiré au lancement) -->
+        <!-- 📸 Screenshot d’accueil (ajoute ce fichier pour éviter le 404) -->
         <img id="osselets-cover"
              src="/assets/games/osselets/audio/img/start-screenshot.webp"
-             alt="Aperçu du jeu Osselets Runner"
+             alt="Aperçu du jeu Osselets"
              onerror="this.remove()"
              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" />
         <!-- Point de montage React -->
         <div id="osselets-root" style="position:absolute;inset:0"></div>
       </div>
     </section>
-    <!-- END AI-LAB-MERGE -->
+    <!-- /OSSELETS -->
   </main>
 
   <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
     © Nicolas Tuor — Portfolio
   </footer>
 
-  <!-- Les données DOIVENT être chargées AVANT le script -->
+  <!-- Données -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
 
-  <!-- BEGIN AI-LAB-SCRIPTS -->
+  <!-- Lab -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel pour le runner Osselets -->
+  <!-- React + Babel (UMD) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Runner (TypeScript + React via Babel) -->
-  <script type="text/babel"
-          data-presets="typescript,react"
-          data-plugins="transform-typescript"
-          src="/osselets-runner.tsx"></script>
+  <!-- Jeux Osselets (TypeScript + React via Babel) -->
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
 
-  <!-- Montage sur clic : retire la cover puis rend le jeu -->
+  <!-- Montage / Navigation niveaux -->
   <script type="text/babel" data-presets="react">
     (function () {
-      var startBtn = document.getElementById('osselets-start');
-      var root = document.getElementById('osselets-root');
+      var start1 = document.getElementById('osselets-start');
+      var start2 = document.getElementById('osselets-start-l2');
+      var start3 = document.getElementById('osselets-start-l3');
+      var root   = document.getElementById('osselets-root');
+      var cover  = document.getElementById('osselets-cover');
 
-      /* Forcer le remplissage du conteneur par le jeu */
+      // Canvas plein conteneur + rendu pixel-art net
       var style = document.createElement('style');
       style.textContent = `
         #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
@@ -164,23 +154,30 @@
       `;
       document.head.appendChild(style);
 
-      function mountRunner() {
-        var cover = document.getElementById('osselets-cover');
-        if (cover) cover.remove(); // enlève le screenshot d’accueil
-
-        // @ts-ignore
-        var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
-        if (!root || !Comp) { console.warn('AstragalusRunner non initialisé.'); return; }
+      function mount(comp) {
+        if (!root || !comp) return;
+        if (cover) cover.remove(); // retire le screenshot
         var r = ReactDOM.createRoot(root);
-        r.render(React.createElement(Comp));
-        if (startBtn) { startBtn.disabled = true; startBtn.textContent = 'En cours…'; }
+        r.render(React.createElement(comp));
         root.setAttribute('tabindex', '0');
         setTimeout(function(){ try{ root.focus({preventScroll:true}); }catch(e){ root.focus(); } }, 50);
       }
 
-      if (startBtn) startBtn.addEventListener('click', mountRunner, { once: true });
+      if (start1) start1.addEventListener('click', function(){
+        // @ts-ignore
+        mount(window && window.AstragalusRunner);
+      }, { once:false });
+
+      if (start2) start2.addEventListener('click', function(){
+        // @ts-ignore
+        mount(window && window.AstragalusLevel2);
+      }, { once:false });
+
+      if (start3) start3.addEventListener('click', function(){
+        // @ts-ignore
+        mount(window && window.AstragalusLevel3);
+      }, { once:false });
     })();
   </script>
-  <!-- END AI-LAB-SCRIPTS -->
 </body>
 </html>
