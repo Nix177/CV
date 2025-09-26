@@ -25,7 +25,7 @@ const AMULET_FILES = {
 };
 
 // Screenshot d’accueil (optionnel) recherché avant Start
-const START_SCREENSHOT_CANDIDATES = ["start-screenshot.webp","start-screenshot.jpg","start-screenshot.png"];
+const START_SCREENSHOT_CANDIDATES = ["start-screenshot.png"];
 
 /* -------------------- Réglages visuels/jeux (restent tes valeurs) -------------------- */
 const WORLD_W = 960;
