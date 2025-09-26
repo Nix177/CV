@@ -117,6 +117,12 @@ function AstragalusRunner() {
   const sfxCatchEl= useRef<HTMLAudioElement | null>(null);
   const sfxOuchEl = useRef<HTMLAudioElement | null>(null);
   const startedOnce = useRef(false);
+  // --- Pickup bubbles (mini speech balloons) ---
+  type Bubble = { x:number; y:number; text:string; until:number };
+  const bubbles = React.useRef<Bubble[]>([]);
+  function addBubble(worldX:number, worldY:number, text:string, ms=2200){
+    bubbles.current.push({ x:worldX, y:worldY, text, until: performance.now()+ms });
+  }
   function startMusicIfWanted(){ const el=musicEl.current; if(!el) return; el.loop=true; el.volume=0.35; el.muted=!musicOn; if(musicOn) el.play().catch(()=>{}); }
   function toggleMusic(){ const el=musicEl.current; setMusicOn(v=>{ const n=!v; if(el){ el.muted=!n; if(n && el.paused) el.play().catch(()=>{});} return n; }); }
   function playOne(ref: React.MutableRefObject<HTMLAudioElement | null>){ const el=ref.current; if(!el) return; try{ el.currentTime=0; el.play().catch(()=>{});}catch{} }
@@ -335,6 +341,8 @@ function AstragalusRunner() {
     // Script d'événements (ton flux d’origine)
     if (stage.current==="start" && p.x > 900-20) {
       stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true;
+      // pickup bubble
+      addBubble(900, GROUND_Y-80, "Vitesse ↑");
       setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl);
     }
     if (stage.current==="speedAmulet") {
@@ -353,12 +361,16 @@ function AstragalusRunner() {
     }
     if (stage.current==="postChase" && p.x > 2200-20) {
       stage.current="purifyAmulet"; inv.current.purify=true; playOne(sfxCatchEl);
+      // pickup bubble
+      addBubble(2200, GROUND_Y-80, "Purification");
       const clean=()=>{ player.current.dirt=Math.max(0, player.current.dirt-0.05); if(player.current.dirt>0) requestAnimationFrame(clean); };
       requestAnimationFrame(clean);
       pushEdu("Purification — nettoyage/polissage : l’os devient portable et “pur”.");
     }
     if ((stage.current==="purifyAmulet"||stage.current==="postChase") && p.x > 3100-20) {
       stage.current="wardAmulet"; inv.current.ward=true; wardTimer.current=10; playOne(sfxCatchEl);
+      // pickup bubble
+      addBubble(3100, GROUND_Y-80, "Bouclier");
       setMessage("Bouclier apotropaïque (temporaire) !");
       pushEdu("Bouclier — porté au cou, l’osselet devient amulette contre l’envie/le mauvais œil.");
     }
@@ -423,6 +435,15 @@ function AstragalusRunner() {
     drawHero(ctx, p.x,p.y,p.w,p.h,p.facing,p.dirt,p.runPhase,wardTimer.current);
 
     ctx.fillStyle="#94a3b8"; ctx.fillRect(WORLD_LEN-40, GROUND_Y-120, 8, 120);
+    {
+      const now = performance.now();
+      for (const b of bubbles.current) {
+        if (now <= b.until) {
+          drawPickupBubble(ctx, Math.round(b.x - camX), Math.round(b.y - 70), b.text);
+        }
+      }
+      bubbles.current = bubbles.current.filter(b => now <= b.until);
+    }
     ctx.restore();
 
     // HUD
@@ -475,6 +496,51 @@ function AstragalusRunner() {
     else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke(); }
     ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label, 0, 30);
+    ctx.restore();
+  }
+
+  function drawPickupBubble(ctx:CanvasRenderingContext2D, x:number, y:number, text:string){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.font = "12px ui-sans-serif, system-ui";
+    const pad = 6;
+    const maxW = 200;
+    const lines = (function wrapLines(){
+      const words = text.split(/\s+/), out:string[] = []; let cur = "";
+      for (const w of words){
+        const test = cur ? cur + " " + w : w;
+        if (ctx.measureText(test).width > (maxW - pad*2) && cur) { out.push(cur); cur = w; } else cur = test;
+      }
+      if (cur) out.push(cur); return out;
+    })();
+    const w = Math.max(60, Math.min(maxW, Math.max(...lines.map(l=>ctx.measureText(l).width)) + pad*2));
+    const h = lines.length*16 + pad*2 + 8;
+
+    // bubble box
+    ctx.fillStyle = "rgba(255,255,255,.95)";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.5;
+    // rounded rect
+    ctx.beginPath();
+    const r=8; const x0=-w/2, y0=-h, x1=x0+w, y1=y0+h;
+    ctx.moveTo(x0+r,y0);
+    ctx.arcTo(x1,y0,x1,y1,r);
+    ctx.arcTo(x1,y1,x0,y1,r);
+    ctx.arcTo(x0,y1,x0,y0,r);
+    ctx.arcTo(x0,y0,x1,y0,r);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // tail
+    ctx.beginPath();
+    ctx.moveTo(-8, -2);
+    ctx.lineTo(0, 10);
+    ctx.lineTo(8, -2);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // text
+    ctx.fillStyle = "#0f172a";
+    let yy = y0 + pad + 12;
+    for (const ln of lines) { ctx.fillText(ln, x0 + pad, yy); yy += 16; }
     ctx.restore();
   }
   function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number, png?:HTMLImageElement|null){
