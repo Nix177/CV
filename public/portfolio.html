@@ -42,7 +42,7 @@
   <script defer src="/assets/js/feedback.js"></script>
 </head>
 <body>
-  <!-- En-tête (fallback si JS) -->
+  <!-- En-tête -->
   <header class="site-header">
     <nav class="site-nav" aria-label="Navigation principale">
       <ul class="menu">
@@ -142,22 +142,26 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Jeux Osselets (TypeScript + React via Babel) -->
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
+  <!-- Jeux Osselets (TSX compilé côté client) 
+       ⚠️ On force le runtime JSX "classique" (pas automatic) pour éviter une 2e instance invisible de React. -->
+  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-runner.tsx"></script>
+  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level2.tsx"></script>
+  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level3.tsx"></script>
 
-  <!-- Montage / Navigation niveaux -->
-  <script type="text/babel" data-presets="react">
+  <!-- Montage / Navigation niveaux (une seule racine React réutilisée) -->
+  <script>
     (function () {
       var start1 = document.getElementById('osselets-start');
       var start2 = document.getElementById('osselets-start-l2');
       var start3 = document.getElementById('osselets-start-l3');
-      var root   = document.getElementById('osselets-root');
+      var rootEl = document.getElementById('osselets-root');
       var cover  = document.getElementById('osselets-cover');
       var cta    = document.getElementById('osselets-cta');
 
-      // Canvas plein conteneur + rendu pixel-art net
+      // un seul root React réutilisé
+      var root = ReactDOM.createRoot(rootEl);
+
+      // Styles de confort pour le canvas
       var style = document.createElement('style');
       style.textContent = `
         #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
@@ -165,35 +169,26 @@
       `;
       document.head.appendChild(style);
 
-      function mount(comp) {
-        if (!root || !comp) return;
-        if (cover) { cover.style.display = 'none'; cover.remove(); }
-        if (cta)   { cta.style.display   = 'none'; cta.remove(); }
-        var r = ReactDOM.createRoot(root);
-        r.render(React.createElement(comp));
-        root.setAttribute('tabindex', '0');
-        setTimeout(function(){ try{ root.focus({preventScroll:true}); }catch(e){ root.focus(); } }, 50);
+      function mount(Comp) {
+        if (!Comp) return;
+        if (cover) { cover.remove(); cover = null; }
+        if (cta)   { cta.remove();   cta   = null; }
+        root.render(React.createElement(Comp));
+        rootEl.setAttribute('tabindex','0');
+        try { rootEl.focus({ preventScroll:true }); } catch {}
       }
 
-      if (start1) start1.addEventListener('click', function(){
-        // @ts-ignore
-        mount(window && window.AstragalusRunner);
-      }, { once:false });
+      window.__OSSELETS_GOTO_LEVEL = function (n) {
+        var Comp = n===2 ? window.AstragalusLevel2
+                 : n===3 ? window.AstragalusLevel3
+                 :         window.AstragalusRunner;
+        mount(Comp);
+      };
 
-      if (start2) start2.addEventListener('click', function(){
-        // @ts-ignore
-        mount(window && window.AstragalusLevel2);
-      }, { once:false });
-
-      if (start3) start3.addEventListener('click', function(){
-        // @ts-ignore
-        mount(window && window.AstragalusLevel3);
-      }, { once:false });
-
-      if (cta) cta.addEventListener('click', function(){
-        // @ts-ignore
-        mount(window && window.AstragalusRunner);
-      }, { once:true });
+      if (start1) start1.onclick = function(){ mount(window.AstragalusRunner); };
+      if (start2) start2.onclick = function(){ mount(window.AstragalusLevel2); };
+      if (start3) start3.onclick = function(){ mount(window.AstragalusLevel3); };
+      if (cta)    cta.onclick    = function(){ mount(window.AstragalusRunner); };
     })();
   </script>
 </body>
