@@ -1,14 +1,13 @@
 /* public/osselets-level2.tsx
-   Mini-jeu 2 — Écrire avec les os (fil + alphabet)
-   - Utilise l’astragale GLB (avec trous) si trouvé
-   - Projette 24 ancres Hole_<face>_<nn> → lettres
-   - Fallback cercle 2D si pas d’ancres
-   - AudioBus global + bouton Stop
+   Mini-jeu 2 — « Écrire avec les os » (fil + alphabet grec)
+   - Charge /assets/games/osselets/level2/3d/astragalus.glb (trous)
+   - Projette Hole_<face>_<nn> → 24 points; sinon Fallback cercle 2D
+   - Loader Three partagé (un seul import + fallback CDN) + bouton Stop musique
 */
 (function (global) {
   const { useEffect, useRef, useState } = React;
 
-  // -------- AudioBus --------
+  // -------- AudioBus partagé --------
   if (!global.AstragalusAudioBus) {
     global.AstragalusAudioBus = {
       _list: [], register(a){ if(a && !this._list.includes(a)) this._list.push(a); },
@@ -17,36 +16,48 @@
     };
   }
 
+  // -------- Loader Three (mémo + fallbacks CDN) --------
+  function ensureThree(){
+    if (global.__THREE_PROMISE__) return global.__THREE_PROMISE__;
+    global.__THREE_PROMISE__ = new Promise(async (res,rej)=>{
+      if (global.THREE && global.THREE.GLTFLoader && global.THREE.OrbitControls) return res(global.THREE);
+      const add = (src)=>new Promise((r,j)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>r(1); s.onerror=()=>j(new Error("load "+src)); document.head.appendChild(s); });
+      async function tryAll(urls){ for(const u of urls){ try{ await add(u); return true; }catch(e){ /* next */ } } return false; }
+      const base = "0.149.0";
+      const ok = await tryAll([
+        `https://unpkg.com/three@${base}/build/three.min.js`,
+        `https://cdn.jsdelivr.net/npm/three@${base}/build/three.min.js`
+      ]);
+      if (!ok) return rej(new Error("three failed"));
+      const ok2 = await tryAll([
+        `https://unpkg.com/three@${base}/examples/js/controls/OrbitControls.js`,
+        `https://cdn.jsdelivr.net/npm/three@${base}/examples/js/controls/OrbitControls.js`
+      ]);
+      const ok3 = await tryAll([
+        `https://unpkg.com/three@${base}/examples/js/loaders/GLTFLoader.js`,
+        `https://cdn.jsdelivr.net/npm/three@${base}/examples/js/loaders/GLTFLoader.js`
+      ]);
+      if (!(ok2 && ok3)) return rej(new Error("examples failed"));
+      res(global.THREE);
+    });
+    return global.__THREE_PROMISE__;
+  }
+
+  // -------- Config & données --------
   const L2_W=960, L2_H=540;
   const ABASE="/assets/games/osselets/audio/";
   const AU = { music:"game-music-1.mp3", ok:"catch-sound.mp3", bad:"ouch-sound.mp3" };
+  const GLB_CANDIDATES=[
+    "/assets/games/osselets/level2/3d/astragalus.glb",
+    "/assets/games/osselets/level2/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus.glb"
+  ];
 
   const GREEK=["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
   const LATN =["A","B","G","D","E","Z","Ē","Th","I","K","L","M","N","X","O","P","R","S","T","Y","Ph","Ch","Ps","Ō"];
   const PUZ=[ {title:"ΝΙΚΗ",latin:"NIKĒ",seq:[12,8,9,6],tip:"Victoire : souhait propitiatoire."},
               {title:"ΕΛΠΙΣ",latin:"ELPIS",seq:[4,10,15,8,17],tip:"Espoir : message positif."},
               {title:"ΤΥΧΗ",latin:"TYCHĒ",seq:[18,19,21,6],tip:"Bonne fortune."} ];
-
-  // -------- Three UMD loader --------
-  function ensureThree(){
-    return new Promise((res,rej)=>{
-      if (global.THREE && global.THREE.GLTFLoader && global.THREE.OrbitControls) return res(global.THREE);
-      const add=src=>new Promise((r,j)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>r(1); s.onerror=()=>j(new Error("load "+src)); document.head.appendChild(s); });
-      (async()=>{ try{
-        await add("https://unpkg.com/three@0.149.0/build/three.min.js");
-        await add("https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js");
-        await add("https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js");
-        res(global.THREE);
-      }catch(e){ rej(e);} })();
-    });
-  }
-  const GLB_CANDIDATES=[
-    "/assets/games/osselets/3d/astragalus.glb",
-    "/assets/games/osselets/level2/astragalus.glb",
-    "/assets/games/osselets/level2/3d/astragalus.glb",
-    "/assets/games/osselets/level2/astragalus holes.glb",
-    "/assets/games/osselets/level2/astragalus_holes.glb",
-  ];
 
   function wrap(ctx, text, x,y,w,lh){ const words=(text||"").split(/\s+/); let line=""; for (let i=0;i<words.length;i++){ const t=(line?line+" ":"")+words[i]; if (ctx.measureText(t).width>w && line){ ctx.fillText(line,x,y); line=words[i]; y+=lh; } else line=t; } if(line) ctx.fillText(line,x,y); }
   function loadA(f){ try{ const a=new Audio(ABASE+f); a.preload="auto"; return a; }catch{return null;} }
@@ -71,8 +82,7 @@
         cv.style.width=w+"px"; cv.style.height=h+"px";
         ctx.setTransform(dpr*(w/L2_W),0,0,dpr*(w/L2_W),0,0);
       }
-      resize(); const ro=window.ResizeObserver?new ResizeObserver(resize):null; if(ro&&hostRef.current) ro.observe(hostRef.current);
-      global.addEventListener("resize",resize);
+      resize(); const ro=window.ResizeObserver? new ResizeObserver(resize):null; ro?.observe(hostRef.current); global.addEventListener("resize",resize);
       return ()=>{ ro?.disconnect(); global.removeEventListener("resize",resize); };
     },[]);
 
@@ -115,7 +125,7 @@
 
           const loader=new THREE.GLTFLoader();
           let glb=null, used="";
-          for(const p of GLB_CANDIDATES){ try{ glb=await loader.loadAsync(p); used=p; break; }catch(e){ console.warn("[L2] GLB échec:", p); } }
+          for(const p of GLB_CANDIDATES){ try{ glb=await loader.loadAsync(p); used=p; break; }catch(e){ /* next */ } }
           if(!glb){ console.warn("[L2] Aucun GLB — fallback cercle"); fallbackHoles(); }
           else console.log("[L2] GLB chargé:", used);
 
@@ -125,7 +135,7 @@
             const s=1.1; model.scale.set(s,s,s); scene.add(model);
             const order=[]; ["ventre","dos","bassin","membres"].forEach(face=>{ for(let i=1;i<=6;i++) order.push(`Hole_${face}_${String(i).padStart(2,"0")}`); });
             anchors = order.map(n=>model.getObjectByName(n)).filter(Boolean);
-            if(anchors.length!==24){ console.warn(`[L2] Anchres ${anchors.length}/24 — fallback cercle`); anchors.length=0; }
+            if(anchors.length!==24){ console.warn(`[L2] Ancres ${anchors.length}/24 — fallback cercle`); anchors.length=0; }
           }
 
           const v=new THREE.Vector3();
@@ -147,7 +157,7 @@
     },[]);
 
     // gameplay
-    const [pi,setPi]=useState(0); const cur=()=>PUZ[pi];
+    const [pi,setPi]=useState(0); const PUZref=useRef(PUZ); const cur=()=>PUZref.current[pi];
     const progress=useRef(0), path=useRef([]); const [toast,setToast]=useState("Trace le fil : "+cur().title+" ("+cur().latin+")");
     function at(x,y){ return holes.current.find(h => (x-h.x)**2+(y-h.y)**2 <= 18*18); }
 
@@ -158,37 +168,47 @@
       const down=ev=>{ const {x,y}=mm(ev); const h=at(x,y); if(h){ state.drag=true; state.pt={x:h.x,y:h.y}; path.current=[{x:h.x,y:h.y}]; progress.current=0; setToast("Suis les lettres…"); } };
       const move=ev=>{ if(!state.drag) return; const {x,y}=mm(ev); state.pt={x,y}; if(path.current.length===0) path.current.push({x,y}); else path.current[path.current.length-1]={x,y}; };
       const up=()=>{ if(!state.drag) return; state.drag=false; const seq=cur().seq; const near=at(state.pt.x,state.pt.y);
-        if(near && near.index===seq[progress.current]){ progress.current++; try{ okRef.current&&(okRef.current.currentTime=0, okRef.current.play()); }catch{}; if(progress.current>=seq.length) setToast("Bravo ! « "+cur().title+" » ("+cur().latin+")"); else setToast("OK, suivant : "+GREEK[seq[progress.current]]+" ("+LATN[seq[progress.current]]+")"); }
-        else { try{ badRef.current&&(badRef.current.currentTime=0, badRef.current.play()); }catch{}; setToast("Essaie encore : "+GREEK[seq[progress.current]]+" ("+LATN[seq[progress.current]]+")"); } };
+        if(near && near.index===seq[progress.current]){ progress.current++; try{ okRef.current&&(okRef.current.currentTime=0, okRef.current.play()); }catch{}; if(progress.current>=seq.length){ setToast("Bravo ! Mot : "+cur().title+" (“"+cur().latin+"”)"); progress.current=0; } }
+        else { try{ badRef.current&&(badRef.current.currentTime=0, badRef.current.play()); }catch{}; setToast("Raté… recommence au premier trou !"); progress.current=0; }
+      };
       cv.addEventListener("pointerdown",down); cv.addEventListener("pointermove",move); global.addEventListener("pointerup",up);
       return ()=>{ cv.removeEventListener("pointerdown",down); cv.removeEventListener("pointermove",move); global.removeEventListener("pointerup",up); };
     },[pi]);
 
-    const zones=useRef([]);
-    function btn(ctx,x,y,w,h,label,cb){ ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#94a3b8"; ctx.lineWidth=1.5; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h); ctx.fillStyle="#0f172a"; ctx.font="13px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(label,x+w/2,y+h/2+1); zones.current.push({x,y,w,h,cb}); }
     useEffect(()=>{
       const ctx=ctxRef.current; let raf;
       function draw(){
         ctx.clearRect(0,0,L2_W,L2_H);
-        ctx.fillStyle="#0f172a"; ctx.font="18px ui-sans-serif, system-ui"; ctx.fillText("Écrire avec les os — 3D",16,28);
+        // fond
+        const g=ctx.createLinearGradient(0,0,0,L2_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
+        ctx.fillStyle=g; ctx.fillRect(0,0,L2_W,L2_H);
 
-        for(const h of holes.current){ ctx.fillStyle="#1e293b"; ctx.beginPath(); ctx.arc(h.x,h.y,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle="#f8fafc"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(h.label,h.x,h.y-18); }
+        // tapis 3D derrière
+        ctx.fillStyle="#0b3b2e"; ctx.fillRect(16, 44, L2_W-32, 300);
+        ctx.strokeStyle="#14532d"; ctx.lineWidth=6; ctx.strokeRect(16, 44, L2_W-32, 300);
 
-        if (path.current.length>0){ ctx.strokeStyle="#ef4444"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(path.current[0].x,path.current[0].y); for(let i=1;i<path.current.length;i++) ctx.lineTo(path.current[i].x,path.current[i].y); ctx.stroke(); }
+        // trous projetés
+        ctx.fillStyle="#fde68a"; ctx.strokeStyle="#eab308";
+        holes.current.forEach((h,i)=>{ ctx.beginPath(); ctx.arc(h.x,h.y,12,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(GREEK[i], h.x, h.y); ctx.fillStyle="#fde68a"; });
 
-        const x=L2_W-310,y=52,w=296,h=230;
-        ctx.save(); ctx.fillStyle="rgba(248,250,252,.88)"; ctx.strokeStyle="#94a3b8"; ctx.lineWidth=1.5; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h);
-        ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui"; ctx.fillText("Mot cible",x+12,y+22);
-        ctx.font="18px ui-sans-serif, system-ui"; ctx.fillStyle="#0b3b2e"; ctx.fillText(PUZ[pi].title+" ("+PUZ[pi].latin+")",x+12,y+48);
-        ctx.font="12px ui-sans-serif, system-ui"; ctx.fillStyle="#334155"; wrap(ctx,"Indice : "+PUZ[pi].tip,x+12,y+76,w-24,16);
-        ctx.restore();
+        // chemin en cours
+        if(path.current.length>1){ ctx.strokeStyle="#0ea5e9"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(path.current[0].x, path.current[0].y); for(const p of path.current) ctx.lineTo(p.x,p.y); ctx.stroke(); }
 
+        // panneau droit
+        const x=L2_W-320, y=44, w=300, h=300; ctx.save();
+        ctx.fillStyle="#f8fafc"; ctx.fillRect(x,y,w,h); ctx.strokeStyle="#94a3b8"; ctx.strokeRect(x,y,w,h);
+        ctx.fillStyle="#0f172a"; ctx.font="16px ui-sans-serif, system-ui"; ctx.fillText("Mot : "+cur().title+" (“"+cur().latin+"”)", x+12, y+28);
+        ctx.font="13px ui-sans-serif, system-ui"; wrap(ctx, "Principe : passe dans le trou N d’une face et ressors par le trou N de la face opposée (ventre↔dos, bassin↔membres).", x+12, y+48, w-24, 18);
+        ctx.font="12px ui-sans-serif, system-ui"; wrap(ctx, "Indice : "+cur().tip, x+12, y+h-64, w-24, 16);
+
+        // boutons
         zones.current.length=0;
-        btn(ctx,x+8,y+h-92,132,32,"Réinitialiser",()=>{ path.current.length=0; progress.current=0; setToast("Trace le fil : "+PUZ[pi].title+" ("+PUZ[pi].latin+")"); });
+        btn(ctx,x+8,y+h-92,132,32,"Réinitialiser",()=>{ path.current.length=0; progress.current=0; setToast("Trace le fil : "+cur().title+" ("+cur().latin+")"); });
         btn(ctx,x+156,y+h-92,132,32,"Mot suivant",()=>{ const n=(pi+1)%PUZ.length; path.current.length=0; progress.current=0; setPi(n); setToast("Trace le fil : "+PUZ[n].title+" ("+PUZ[n].latin+")"); });
         btn(ctx,x+8,y+h-48,132,32,"Musique "+(musicOn?"ON":"OFF"),()=>setMusicOn(v=>!v));
         btn(ctx,x+156,y+h-48,132,32,"Stop musique",()=>global.AstragalusAudioBus.stopAll());
 
+        // toast bas
         ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui"; wrap(ctx,toast||"",16,L2_H-48,L2_W-32,18);
 
         raf=requestAnimationFrame(draw);
@@ -197,6 +217,9 @@
       return ()=> cancelAnimationFrame(raf);
     },[pi,toast,musicOn]);
 
+    // zones cliquables
+    const zones = useRef([]); // {x,y,w,h,cb}
+    function btn(ctx,x,y,w,h,label,cb){ ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#94a3b8"; ctx.lineWidth=1.5; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h); ctx.fillStyle="#0f172a"; ctx.font="13px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(label, x+w/2, y+h/2+1); zones.current.push({x,y,w,h,cb}); }
     useEffect(()=>{
       const el=canvasRef.current;
       function onClick(ev){ const r=el.getBoundingClientRect(); const mx=(ev.clientX-r.left)*(L2_W/r.width), my=(ev.clientY-r.top)*(L2_H/r.height); const z=zones.current.find(z=> mx>=z.x && mx<=z.x+z.w && my>=z.y && my<=z.y+z.h); zones.current.length=0; if(z) z.cb(); }
