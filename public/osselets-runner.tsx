@@ -1,444 +1,300 @@
-// public/osselets-runner.tsx
-// Runner 2D – Amulettes d’astragale (LEVEL 1)
+/* global React, ReactDOM */
+(() => {
+  // ⚠️ verrouille l’instance React pour éviter “invalid hook call” (#321)
+  // @ts-ignore
+  const ReactGlobal = (window as any).React;
+  // @ts-ignore
+  const React = ReactGlobal;
+  // @ts-ignore
+  const { useRef, useEffect, useMemo, useState } = React;
 
-const { useEffect, useRef, useState } = React;
+  const IMG = "/assets/games/osselets/audio/img/";
+  const SND = "/assets/games/osselets/audio/";
 
-/* ---------- Gestion musique globale (1 seule en lecture) ---------- */
-function claimGlobalMusic(aud: HTMLAudioElement | null) {
-  const w = window as any;
-  if (!w.__OSSELETS_MUS__) w.__OSSELETS_MUS__ = { current: null as HTMLAudioElement | null };
-  try { const cur = w.__OSSELETS_MUS__.current; if (cur && cur !== aud) cur.pause(); } catch {}
-  w.__OSSELETS_MUS__.current = aud;
-}
-
-/* -------------------- Chemins & assets -------------------- */
-const IMG_BASES = [
-  "/assets/games/osselets/audio/img/",
-  "/assets/games/osselets/img/",
-];
-const AUDIO_BASE = "/assets/games/osselets/audio/";
-const AUDIO = { music:"game-music-1.mp3", jump:"jump-sound.mp3", catch:"catch-sound.mp3", ouch:"ouch-sound.mp3" };
-const AMULET_FILES = { speed:"amulette-speed.png", purify:"amulette-purify.png", ward:"amulette-ward.png" };
-const START_SCREENSHOT_CANDIDATES = ["start-screenshot.webp","start-screenshot.png","start-screenshot.jpg"];
-
-/* -------------------- Réglages -------------------- */
-const WORLD_W=960, WORLD_H=540;
-const ANIM_SPEED=0.10;
-const HERO_SCALE_X=1.70, HERO_SCALE_Y=1.50, HERO_FOOT_ADJ_PX=12;
-const BEAR_SCALE=1.5;
-const GROUND_Y=440, WORLD_LEN=4200;
-
-/* -------------------- Utils -------------------- */
-function logOnce(key:string, ...args:any[]){ const k="__once_"+key; if((window as any)[k])return; (window as any)[k]=true; console.warn(...args); }
-function loadImage(url:string){ return new Promise<HTMLImageElement>((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(new Error(url)); im.src=encodeURI(url); }); }
-async function loadImageSmart(file:string){ for(const b of IMG_BASES){ try{ return await loadImage(b+file);}catch{} } logOnce("img_"+file,"[osselets] image introuvable:",file); return null; }
-async function fetchJSON(file:string){ for(const b of IMG_BASES){ try{ const r=await fetch(b+file,{cache:"no-store"}); if(r.ok) return await r.json(); }catch{} } return null; }
-
-/* -------------------- Types légers -------------------- */
-/** @typedef {{ image: HTMLImageElement, sx:number, sy:number, sw:number, sh:number }} FrameRect */
-/** @typedef {{ frames: FrameRect[], fps:number, loop:boolean, name?:string }} Clip */
-
-function AstragalusRunner(){
-  /* Canvas responsive */
-  const wrapperRef = useRef<HTMLDivElement|null>(null);
-  const canvasRef  = useRef<HTMLCanvasElement|null>(null);
-  const ctxRef     = useRef<CanvasRenderingContext2D|null>(null);
-  useEffect(()=>{
-    function resize(){
-      const wrap=wrapperRef.current!, cv=canvasRef.current!;
-      const w = wrap.clientWidth, h=Math.round(w*(WORLD_H/WORLD_W));
-      const dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
-      cv.width=Math.floor(w*dpr); cv.height=Math.floor(h*dpr);
-      cv.style.width=w+"px"; cv.style.height=h+"px";
-      const ctx=cv.getContext("2d")!; ctxRef.current=ctx;
-      const s=(w*dpr)/WORLD_W; ctx.setTransform(s,0,0,s,0,0);
+  function getAudioBus() {
+    const w = window as any;
+    if (!w.__OSSELETS_AUDIO__) {
+      w.__OSSELETS_AUDIO__ = {
+        bgm: null as HTMLAudioElement | null,
+        sfx: new Map<string, HTMLAudioElement>(),
+        stopAll() {
+          if (this.bgm) { try { this.bgm.pause(); this.bgm.currentTime = 0; } catch {} this.bgm = null; }
+          for (const a of this.sfx.values()) { try { a.pause(); a.currentTime=0; } catch {} }
+          this.sfx.clear();
+        },
+        playBgm(url:string, volume=0.35) {
+          if (this.bgm) { try { this.bgm.pause(); } catch {} }
+          const a = new Audio(url); a.loop = true; a.volume = volume; this.bgm = a;
+          a.play().catch(()=>{ /* bloqué par navigateur → sera OK après interaction */ });
+          return a;
+        },
+        play(url:string, volume=0.9) {
+          const a = new Audio(url); a.volume = volume;
+          a.play().catch(()=>{});
+          this.sfx.set(url, a); a.addEventListener("ended", ()=>this.sfx.delete(url));
+          return a;
+        }
+      };
     }
-    resize(); const ro=new ResizeObserver(resize); wrapperRef.current && ro.observe(wrapperRef.current);
-    window.addEventListener("resize",resize);
-    return ()=>{ ro.disconnect(); window.removeEventListener("resize",resize); };
-  },[]);
-
-  /* UI états */
-  const [inIntro,setInIntro]=useState(true);
-  const [paused,setPaused]=useState(false);
-  const [summaryOpen,setSummaryOpen]=useState(false);
-  const [level,setLevel]=useState(1);
-  const [message,setMessage]=useState("← → bouger | Espace sauter | P pause | M musique");
-
-  // mobile
-  const autoCoarse = typeof window!=="undefined" && window.matchMedia?.("(pointer: coarse)").matches || false;
-  const [mobileMode,setMobileMode]=useState(!!autoCoarse);
-  const [oneButton,setOneButton]=useState(false);
-  const onScreenKeys = useRef({left:false,right:false,jump:false});
-
-  // audio
-  const [musicOn,setMusicOn]=useState(true);
-  const musicEl=useRef<HTMLAudioElement|null>(null);
-  const sfxJumpEl=useRef<HTMLAudioElement|null>(null);
-  const sfxCatchEl=useRef<HTMLAudioElement|null>(null);
-  const sfxOuchEl=useRef<HTMLAudioElement|null>(null);
-  const startedOnce=useRef(false);
-
-  function startMusicIfWanted(){
-    const el=musicEl.current; if(!el) return;
-    claimGlobalMusic(el);
-    el.loop=true; el.volume=0.35; el.muted=!musicOn;
-    if(musicOn) el.play().catch(()=>{});
+    return w.__OSSELETS_AUDIO__;
   }
-  function toggleMusic(){
-    const el=musicEl.current; setMusicOn(v=>{ const n=!v; if(el){ el.muted=!n; if(n && el.paused){ claimGlobalMusic(el); el.play().catch(()=>{});} } return n; });
-  }
-  function playOne(ref:React.RefObject<HTMLAudioElement>){ const el=ref.current; if(!el) return; try{ el.currentTime=0; el.play().catch(()=>{});}catch{} }
-  useEffect(()=>{
-    function first(){ if(!startedOnce.current){ startedOnce.current=true; startMusicIfWanted(); } }
-    window.addEventListener("pointerdown",first,{once:true});
-    window.addEventListener("keydown",first,{once:true});
-    return ()=>{ window.removeEventListener("pointerdown",first); window.removeEventListener("keydown",first); };
-  },[]);
 
-  /* Screenshot d’accueil */
-  const startShotRef=useRef<HTMLImageElement|null>(null);
-  useEffect(()=>{ (async()=>{ for(const n of START_SCREENSHOT_CANDIDATES){ const im=await loadImageSmart(n); if(im){ startShotRef.current=im; break; } } })(); },[]);
+  const loadImage = (src: string) =>
+    new Promise<HTMLImageElement>((res, rej) => { const im = new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=src; });
 
-  /* Héros */
-  const heroAnim=useRef<any>(null);
-  const heroState=useRef({name:"idle",t:0});
-  useEffect(()=>{ let dead=false; (async()=>{
-    const j=await fetchJSON("hero.anim.json"); if(dead) return;
-    if(!j){ heroAnim.current=null; logOnce("herojson","hero.anim.json manquant"); return;}
-    const origin=j.origin??[0.5,1], baseFS=j.frameSize??[64,64], clips:any={};
-    async function build(name:string,def:any){
-      if(def?.files){ const imgs=(await Promise.all(def.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean);
-        if(imgs.length) return {frames:imgs.map((im:HTMLImageElement)=>({image:im,sx:0,sy:0,sw:im.naturalWidth,sh:im.naturalHeight})), fps:Number(def.fps)||10, loop:!!def.loop, name}; }
-      if(def?.src && (def?.rects || def?.frames)){ const img=await loadImageSmart(def.src); if(!img) return null;
-        if(def.rects){ const frames=def.rects.map((r:any)=>({image:img,sx:r.x,sy:r.y,sw:r.w,sh:r.h})); return {frames,fps:Number(def.fps)||10,loop:!!def.loop,name}; }
-        const fs=def.frameSize??baseFS, fw=fs[0], fh=fs[1], frames=[] as any[]; for(let i=0;i<def.frames;i++){ frames.push({image:img,sx:i*fw,sy:0,sw:fw,sh:fh}); }
-        return {frames,fps:Number(def.fps)||10,loop:!!def.loop,name};
-      } return null;
+  const loadJSON = (url: string) => fetch(url).then(r => { if(!r.ok) throw new Error("json"); return r.json(); });
+
+  type Anim = { files:string[]; fps:number; loop:boolean; };
+  type HeroCfg = { origin:[number,number]; frameSize:[number,number]; animations:Record<string,Anim> };
+
+  function AstragalusRunner() {
+    const wrapRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement|null>(null);
+    const [ready, setReady] = useState(false);
+    const [ended, setEnded] = useState<{ title:string; lines:string[] } | null>(null);
+    const [eduMsg, setEduMsg] = useState<string>("");
+
+    const assets = useRef<any>({ heroCfg:null as HeroCfg|null, heroImgs:new Map<string,HTMLImageElement>(), bearImgs:[] as HTMLImageElement[], items:new Map<string,HTMLImageElement>() });
+    const world = useRef<any>({
+      t:0, w:1280, h:720, pxRatio:1,
+      groundY:0,
+      started:false,
+      hero:{ x:240, y:0, vx:0, vy:0, onGround:true, scale:1.35, anim:"idle", frame:0, frameTime:0 },
+      bear:{ x:1200, y:0, speed:-2.2, frame:0, ft:0 },
+      items:[] as Array<{x:number;y:number;kind:"speed"|"purify"|"ward";taken?:boolean}>,
+      eyes:[] as Array<{x:number;y:number;vx:number}>,
+      input:{left:false,right:false,jump:false},
+      paused:false
+    });
+
+    function setToast(msg:string){
+      if(!msg) return;
+      setEduMsg(msg);
+      const until = performance.now()+3200;
+      const id = setInterval(()=>{ if(performance.now()>until){ clearInterval(id); setEduMsg(""); } }, 200);
     }
-    for(const k of Object.keys(j.animations??{})){ const c=await build(k,j.animations[k]); if(c) clips[k]=c; }
-    heroAnim.current={clips,origin,frameSize:baseFS};
-  })(); return ()=>{ dead=true; }; },[]);
 
-  /* Ours */
-  const bearAnim=useRef<{frames:HTMLImageElement[],t:number}|null>(null);
-  useEffect(()=>{ let dead=false;(async()=>{
-    const j=await fetchJSON("bear.anim.json");
-    if(j?.files){ const fr=(await Promise.all(j.files.map((f:string)=>loadImageSmart(f)))).filter(Boolean); if(fr.length){ bearAnim.current={frames:fr,t:0}; return; } }
-    const withSpace=await Promise.all([1,2,3,4,5,6].map(i=>loadImageSmart(`bear (${i}).png`)));
-    let imgs=withSpace.filter(Boolean) as HTMLImageElement[];
-    if(!imgs.length){ const noSpace=await Promise.all([1,2,3,4,5,6].map(i=>loadImageSmart(`bear(${i}).png`))); imgs=noSpace.filter(Boolean) as HTMLImageElement[]; }
-    bearAnim.current = imgs.length ? {frames:imgs,t:0} : null;
-  })(); return ()=>{ dead=true; }; },[]);
+    useEffect(() => {
+      const bus = getAudioBus();
+      bus.stopAll();
 
-  /* Amulettes */
-  const amuletsRef=useRef<any>({});
-  useEffect(()=>{ (async()=>{ amuletsRef.current.speed=await loadImageSmart(AMULET_FILES.speed); amuletsRef.current.purify=await loadImageSmart(AMULET_FILES.purify); amuletsRef.current.ward=await loadImageSmart(AMULET_FILES.ward); })(); },[]);
+      const wrap = wrapRef.current!;
+      wrap.style.position = "absolute";
+      wrap.style.inset = "0";
+      wrap.style.display = "grid";
+      wrap.style.placeItems = "stretch";
 
-  /* Monde & gameplay */
-  const player=useRef({x:120,y:GROUND_Y-68,w:42,h:68,vx:0,vy:0,onGround:true,facing:1,baseSpeed:3.0,speedMul:1.0,dirt:0,runPhase:0,coyote:0,jumpBuf:0});
-  const inv=useRef({speed:false,purify:false,ward:false});
-  const wardTimer=useRef(0);
-  const keys=useRef<any>({});
-  const bear=useRef({x:-999,y:GROUND_Y-60,w:64,h:60,vx:0,active:false});
-  const stage=useRef("start");
-  const [levelState,setLevelState]=useState(1);
-  const levelRef=useRef(levelState); useEffect(()=>{ levelRef.current=levelState; },[levelState]);
+      const cvs = document.createElement("canvas");
+      cvs.style.width = "100%";
+      cvs.style.height = "100%";
+      cvs.style.imageRendering = "pixelated";
+      wrap.appendChild(cvs);
+      canvasRef.current = cvs;
 
-  const eyes=useRef<any[]>([]);
-  const intro=useRef({step:0,t:0});
+      const ctx = cvs.getContext("2d")!;
+      const onResize = () => {
+        const r = window.devicePixelRatio || 1;
+        const rect = wrap.getBoundingClientRect();
+        cvs.width = Math.max(16, Math.floor(rect.width * r));
+        cvs.height = Math.max(16, Math.floor(rect.height * r));
+        world.current.pxRatio = r;
+        world.current.w = cvs.width;
+        world.current.h = cvs.height;
+        world.current.groundY = Math.floor(cvs.height * 0.82);
+      };
+      onResize();
+      const ro = new ResizeObserver(onResize);
+      ro.observe(wrap);
 
-  // bulles pédagogiques
-  const [edu,setEdu]=useState<{msg:string,until:number}|null>(null);
-  const eduLog=useRef<string[]>([]);
-  function pushEdu(msg:string,ms=4800){ const until=performance.now()+ms; setEdu({msg,until}); if(!eduLog.current.length||eduLog.current[eduLog.current.length-1]!==msg){ eduLog.current.push(msg); if(eduLog.current.length>8) eduLog.current.shift(); } }
-  const eduSeen=useRef({speed:false,purify:false,ward:false});
+      const onKey = (e:KeyboardEvent) => {
+        const d = world.current.input;
+        if (e.type === "keydown") {
+          if (e.code==="ArrowLeft")  d.left = true;
+          if (e.code==="ArrowRight") d.right = true;
+          if (e.code==="Space")      d.jump = true;
+          if (e.code==="KeyP")       world.current.paused = !world.current.paused;
+          if (e.code==="KeyM") {
+            // toggle musique
+            const playing = !!getAudioBus().bgm;
+            if (playing) bus.stopAll(); else if (world.current.started) bus.playBgm(SND+"game-music-1.mp3",0.35);
+          }
+        } else {
+          if (e.code==="ArrowLeft")  d.left = false;
+          if (e.code==="ArrowRight") d.right = false;
+          if (e.code==="Space")      d.jump = false;
+        }
+      };
+      window.addEventListener("keydown", onKey);
+      window.addEventListener("keyup", onKey);
 
-  // clavier
-  useEffect(()=>{
-    function down(e:KeyboardEvent){
-      if(["ArrowLeft","ArrowRight"," ","Space","m","M","p","P"].includes(e.key)) e.preventDefault();
-      if(inIntro){ if(e.key==="ArrowRight"){ intro.current.step=Math.min(5,intro.current.step+1); intro.current.t=0; } }
-      else if(!summaryOpen){ if(e.key==="ArrowLeft")keys.current.left=true; if(e.key==="ArrowRight")keys.current.right=true; if(e.key===" "||e.key==="Space")keys.current.jump=true; }
-      if((e.key==="p"||e.key==="P") && !inIntro && !summaryOpen) setPaused(v=>!v);
-      if(e.key==="m"||e.key==="M") toggleMusic();
-    }
-    function up(e:KeyboardEvent){ if(inIntro||summaryOpen) return; if(e.key==="ArrowLeft")keys.current.left=false; if(e.key==="ArrowRight")keys.current.right=false; if(e.key===" "||e.key==="Space")keys.current.jump=false; }
-    window.addEventListener("keydown",down); window.addEventListener("keyup",up);
-    return ()=>{ window.removeEventListener("keydown",down); window.removeEventListener("keyup",up); };
-  },[inIntro,summaryOpen]);
+      let raf = 0;
+      const loop = () => { raf = requestAnimationFrame(loop); if(!ready || world.current.paused) return; step(); render(); };
 
-  // touch
-  function press(name:"left"|"right"|"jump",v:boolean){ onScreenKeys.current[name]=v; }
-  function clearTouchKeys(){ onScreenKeys.current={left:false,right:false,jump:false}; }
+      (async () => {
+        const heroCfg:HeroCfg = await loadJSON(IMG + "hero.anim.json");
+        assets.current.heroCfg = heroCfg;
+        const files = new Set<string>();
+        Object.values(heroCfg.animations).forEach(a => a.files.forEach(f => files.add(f)));
+        await Promise.all([...files].map(async f => { assets.current.heroImgs.set(f, await loadImage(IMG+f)); }));
+        for (let i=1;i<=6;i++) assets.current.bearImgs.push(await loadImage(IMG + `bear(${i}).png`));
+        assets.current.items.set("speed",  await loadImage(IMG+"amulette-speed.png"));
+        assets.current.items.set("purify", await loadImage(IMG+"amulette-purify.png"));
+        assets.current.items.set("ward",   await loadImage(IMG+"amulette-ward.png"));
+        assets.current.items.set("eye",    await loadImage(IMG+"evil-eye.png"));
+        const wy = world.current.groundY;
+        world.current.items = [
+          { x: 600,  y: wy-10, kind:"speed"  },
+          { x: 980,  y: wy-10, kind:"purify" },
+          { x: 1380, y: wy-10, kind:"ward"   },
+        ];
+        setReady(true);
+        loop();
+      })().catch(console.error);
 
-  // Start / reset / next
-  function startGame(){ setInIntro(false); setSummaryOpen(false); setPaused(false); startMusicIfWanted(); }
-  function resetLevel(goIntro=false){
-    Object.assign(player.current,{x:120,y:GROUND_Y-68,vx:0,vy:0,onGround:true,facing:1,speedMul:1.0,dirt:0,runPhase:0,coyote:0,jumpBuf:0});
-    inv.current={speed:false,purify:false,ward:false}; wardTimer.current=0; stage.current="start";
-    bear.current={x:-999,y:GROUND_Y-60,w:64,h:60,vx:0,active:false}; eyes.current=[]; heroState.current={name:"idle",t:0};
-    eduSeen.current={speed:false,purify:false,ward:false}; eduLog.current.length=0; setEdu(null);
-    setMessage("← → bouger | Espace sauter | P pause | M musique");
-    setSummaryOpen(false); if(goIntro){ setInIntro(true); intro.current={step:0,t:0}; }
-  }
-  function nextLevel(){
-    // pause ma musique et signaler le lvl 2
-    if (musicEl.current){ try{ musicEl.current.pause(); }catch{} }
-    setLevel(l=>l+1); setLevelState(v=>v+1); setPaused(false);
-    // évènement + tentative de scroll
-    window.dispatchEvent(new CustomEvent("osselets:go-level",{detail:{from:1,to:2}}));
-    const tgt = document.getElementById("osselets-level-2") || document.querySelector("#level2,#lvl2,[data-level='2']") as HTMLElement | null;
-    if (tgt) tgt.scrollIntoView({behavior:"smooth", block:"start"});
-  }
+      // clic pour démarrer (déclenche aussi la musique)
+      cvs.addEventListener("pointerdown", ()=>{
+        if (!world.current.started) {
+          world.current.started = true;
+          getAudioBus().playBgm(SND+"game-music-1.mp3",0.35);
+        }
+      });
 
-  /* Boucle */
-  const reqRef=useRef<number|undefined>(undefined);
-  useEffect(()=>{
-    const ctx=ctxRef.current || canvasRef.current?.getContext("2d"); if(!ctx) return;
-    let last=performance.now();
-    const tick=(t:number)=>{ const dt=Math.min(33,t-last)/16.666; last=t; if(!paused) update(dt); render(ctx); reqRef.current=requestAnimationFrame(tick); };
-    reqRef.current=requestAnimationFrame(tick);
-    return ()=>{ if(reqRef.current) cancelAnimationFrame(reqRef.current); };
-  },[paused,inIntro,mobileMode]);
+      return () => {
+        cancelAnimationFrame(raf);
+        ro.disconnect();
+        window.removeEventListener("keydown", onKey);
+        window.removeEventListener("keyup", onKey);
+        try { wrap.removeChild(cvs); } catch {}
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ready]);
 
-  const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+    const step = () => {
+      const W = world.current;
+      if (!W.started) return; // attendre clic Start in-canvas
 
-  function update(dt:number){
-    if(inIntro||summaryOpen){ if(inIntro){ intro.current.t+=dt; if(intro.current.t>4){ intro.current.t=0; intro.current.step=Math.min(5,intro.current.step+1);} } return; }
-    const p=player.current;
-    // inputs
-    const left=keys.current.left||onScreenKeys.current.left;
-    const right=keys.current.right||onScreenKeys.current.right||(mobileMode&&oneButton);
-    const jump=keys.current.jump||onScreenKeys.current.jump;
-    // horiz
-    let ax=0; if(left){ax-=1;p.facing=-1;} if(right){ax+=1;p.facing=1;}
-    const targetVx=ax*p.baseSpeed*p.speedMul; p.vx+=(targetVx-p.vx)*0.4;
-    // coyote/buffer
-    p.coyote=p.onGround?0.12:Math.max(0,p.coyote-dt*0.016);
-    p.jumpBuf=jump?0.12:Math.max(0,p.jumpBuf-dt*0.016);
-    // gravité / saut
-    p.vy+=0.8*dt; if(p.jumpBuf>0&&(p.coyote>0||p.onGround)){ p.vy=-14;p.onGround=false;p.coyote=0;p.jumpBuf=0; playOne(sfxJumpEl); }
-    // intégration
-    p.x += (p.vx*dt*60)/60; p.y += (p.vy*dt*60)/60;
-    // sol
-    if(p.y+p.h>=GROUND_Y){ p.y=GROUND_Y-p.h; p.vy=0; if(!p.onGround) p.onGround=true; } else p.onGround=false;
-    // limites
-    p.x=clamp(p.x,0,WORLD_LEN-1); p.runPhase+=Math.abs(p.vx)*dt*0.4;
-    // bouclier
-    if(wardTimer.current>0) wardTimer.current=Math.max(0,wardTimer.current-dt*0.016);
-    // anim
-    const nextName=!p.onGround?"jump":(Math.abs(p.vx)>0.5?"run":"idle");
-    if(heroState.current.name!==nextName) heroState.current={name:nextName,t:0}; else heroState.current.t+=dt*ANIM_SPEED;
+      const hero = W.hero;
+      const acc = 0.5;
+      if (W.input.left)  hero.vx -= acc;
+      if (W.input.right) hero.vx += acc;
+      hero.vx *= 0.9;
+      hero.x += hero.vx;
 
-    // toasts courts
-    if(!eduSeen.current.speed && Math.abs(p.x-900)<80){ eduSeen.current.speed=true; pushEdu("Vitesse — l’astragale (talus) est l’os clé de la cheville : il permet le mouvement."); }
-    if(!eduSeen.current.purify&& Math.abs(p.x-2200)<80){ eduSeen.current.purify=true; pushEdu("Purification — l’osselet issu d’un sacrifice devient support rituel et protecteur."); }
-    if(!eduSeen.current.ward  && Math.abs(p.x-3100)<80){ eduSeen.current.ward=true; pushEdu("Bouclier — amulette apotropaïque contre le « mauvais œil »."); }
+      if (W.input.jump && hero.onGround) {
+        hero.vy = -10.5; hero.onGround=false;
+        getAudioBus().play(SND+"jump-sound.mp3",0.7);
+      }
+      hero.vy += 0.55; hero.y += hero.vy;
+      const gy = W.groundY;
+      if (hero.y >= gy) { hero.y = gy; hero.vy=0; hero.onGround=true; }
 
-    // script
-    if(stage.current==="start" && p.x>880){ stage.current="speedAmulet"; p.speedMul=1.6; inv.current.speed=true; addBubble(900,GROUND_Y-80,"Vitesse ↑"); setMessage("Amulette de vitesse trouvée ! → cours !"); playOne(sfxCatchEl); }
-    if(stage.current==="speedAmulet"){ stage.current="bearChase"; bear.current.active=true; bear.current.x=p.x-300; bear.current.vx=2.8; setMessage("Un ours te poursuit !"); }
-    if(stage.current==="bearChase" && bear.current.active){
-      const d=p.x-bear.current.x, diff=0.2*(levelRef.current-1);
-      const desired = d>260?3.2+diff : d<140?2.2+diff : 2.8+diff;
-      bear.current.vx += (desired-bear.current.vx)*0.04;
-      bear.current.x  += (bear.current.vx*dt*60)/60;
-      if(bearAnim.current) bearAnim.current.t += dt*ANIM_SPEED;
-      p.dirt=clamp(p.dirt+0.002*dt,0,1);
-      if(bear.current.x+bear.current.w>p.x+10) bear.current.x=p.x-320;
-      if(p.x>2000){ stage.current="postChase"; bear.current.active=false; p.speedMul=1.2; setMessage("Tu t’es échappé !"); }
-    }
-    if(stage.current==="postChase" && p.x>2180){ stage.current="purifyAmulet"; inv.current.purify=true; playOne(sfxCatchEl); addBubble(2200,GROUND_Y-80,"Purification"); const clean=()=>{ player.current.dirt=Math.max(0,player.current.dirt-0.05); if(player.current.dirt>0) requestAnimationFrame(clean); }; requestAnimationFrame(clean); pushEdu("Purification — nettoyage/polissage : l’os devient portable et “pur”."); }
-    if((stage.current==="purifyAmulet"||stage.current==="postChase") && p.x>3080){ stage.current="wardAmulet"; inv.current.ward=true; wardTimer.current=10; playOne(sfxCatchEl); addBubble(3100,GROUND_Y-80,"Bouclier"); setMessage("Bouclier apotropaïque (temporaire) !"); pushEdu("Bouclier — porté au cou, l’osselet protège du mauvais œil."); }
-    if((stage.current==="wardAmulet"||stage.current==="purifyAmulet") && p.x>3200){ stage.current="evilEyeWave"; const n=6+(levelRef.current-1)*4;
-      for(let i=0;i<n;i++) eyes.current.push({x:p.x+240+i*90,y:GROUND_Y-100-((i%3)*30),vx:-(2.2+((i%3)*0.4)+0.1*(levelRef.current-1)),vy:0,alive:true}); setMessage("Vague du ‘mauvais œil’ !"); }
-    if(eyes.current.length){
-      for(const e of eyes.current){ if(!e.alive) continue; e.x += (e.vx*dt*60)/60; if(rectOverlap(e.x-10,e.y-6,20,12,p.x,p.y,p.w,p.h)){ if(wardTimer.current>0){ e.vx=-e.vx*0.6; e.x+=e.vx*4; e.alive=false; } else { p.speedMul=Math.max(0.8,p.speedMul-0.2); setTimeout(()=>p.speedMul=Math.min(1.2,p.speedMul+0.2),1500); e.alive=false; playOne(sfxOuchEl); } } }
-      eyes.current=eyes.current.filter(e=>e.alive&&e.x>-100);
-      if(!eyes.current.length && stage.current==="evilEyeWave"){ stage.current="end"; setMessage("Fin de démo — continue jusqu’au bout →"); }
-    }
-    if(p.x>=WORLD_LEN-80 && !summaryOpen){ setPaused(true); setSummaryOpen(true); }
-  }
-  function rectOverlap(ax:number,ay:number,aw:number,ah:number,bx:number,by:number,bw:number,bh:number){ return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by; }
+      const cfg = assets.current.heroCfg as HeroCfg;
+      const anim = hero.onGround ? (Math.abs(hero.vx)>0.3 ? "run" : "idle") : "jump";
+      if (hero.anim!==anim) { hero.anim=anim; hero.frame=0; hero.frameTime=0; }
+      const fps = Math.max(2, (cfg.animations[anim]?.fps ?? 8) * (anim==="run" ? 0.6 : 0.4));
+      hero.frameTime += 1;
+      if (hero.frameTime >= 60/fps) {
+        hero.frameTime = 0;
+        const len = cfg.animations[anim]?.files.length || 1;
+        hero.frame = Math.min(len-1, (hero.frame+1) % len);
+      }
 
-  /* Rendu */
-  function drawCover(ctx:CanvasRenderingContext2D,img:HTMLImageElement){
-    const rC=WORLD_W/WORLD_H, rI=img.naturalWidth/img.naturalHeight; let sx=0,sy=0,sw=img.naturalWidth,sh=img.naturalHeight;
-    if(rI>rC){ sh=img.naturalHeight; sw=sh*rC; sx=(img.naturalWidth-sw)/2; } else { sw=img.naturalWidth; sh=sw/rC; sy=(img.naturalHeight-sh)/2; }
-    ctx.imageSmoothingEnabled=true; ctx.drawImage(img,sx,sy,sw,sh,0,0,WORLD_W,WORLD_H);
-  }
-  function render(ctx:CanvasRenderingContext2D){
-    if(inIntro) return renderIntro(ctx);
-    const p=player.current; const camX=Math.max(0,Math.min(WORLD_LEN-WORLD_W,p.x-WORLD_W*0.35));
-    ctx.clearRect(0,0,WORLD_W,WORLD_H);
-    const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0"); ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
-    drawMountains(ctx,camX*0.2); drawOliveTrees(ctx,camX*0.5); drawFrieze(ctx,camX*0.8);
-    ctx.fillStyle="#ede9fe"; ctx.fillRect(0,GROUND_Y,WORLD_W,WORLD_H-GROUND_Y);
-    ctx.save(); ctx.translate(-camX,0);
-    for(let x=300;x<WORLD_LEN;x+=420) drawColumn(ctx,x,GROUND_Y);
-    drawAmulet(ctx, 900,GROUND_Y-40,"Vitesse",amuletsRef.current.speed||undefined);
-    drawAmulet(ctx,2200,GROUND_Y-40,"Purif.",  amuletsRef.current.purify||undefined);
-    drawAmulet(ctx,3100,GROUND_Y-40,"Bouclier",amuletsRef.current.ward||undefined);
-    if(bear.current.active) drawBear(ctx,bear.current.x,bear.current.y);
-    for(const e of eyes.current) if(e.alive) drawEvilEye(ctx,e.x,e.y);
-    drawHero(ctx,p.x,p.y,p.w,p.h,p.facing,p.dirt,p.runPhase,wardTimer.current);
-    ctx.fillStyle="#94a3b8"; ctx.fillRect(WORLD_LEN-40,GROUND_Y-120,8,120);
-    // bulles
-    const now=performance.now();
-    for(const b of bubbles.current){ if(now<=b.until) drawPickupBubble(ctx,Math.round(b.x-camX),Math.round(b.y-70),b.text); }
-    bubbles.current=bubbles.current.filter(b=>now<=b.until);
-    ctx.restore();
+      const bear=W.bear;
+      bear.ft += 1; if (bear.ft>=6) { bear.ft=0; bear.frame=(bear.frame+1)%assets.current.bearImgs.length; }
+      bear.x += bear.speed;
 
-    // HUD
-    drawHUD(ctx);
-    ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui"; ctx.fillText(message,16,26);
-    if(edu && performance.now()<edu.until) drawEduToast(ctx,edu.msg);
-  }
-  function renderIntro(ctx:CanvasRenderingContext2D){
-    const step=intro.current.step;
-    ctx.clearRect(0,0,WORLD_W,WORLD_H);
-    const shot=startShotRef.current; if(shot) drawCover(ctx,shot); else{ const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#0b1021"); g.addColorStop(1,"#0b0f18"); ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H); }
-    const pad=40, panelH=Math.min(420,WORLD_H-2*pad), panelY=Math.round((WORLD_H-panelH)/2);
-    ctx.save(); ctx.globalAlpha=.92; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2; ctx.fillRect(pad,panelY,WORLD_W-2*pad,panelH); ctx.strokeRect(pad,panelY,WORLD_W-2*pad,panelH); ctx.restore();
-    ctx.fillStyle="#0f172a";
-    function center(txt:string,y:number,s=22){ ctx.font=`${s}px ui-sans-serif, system-ui`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(txt,WORLD_W/2,y); ctx.textAlign="start"; ctx.textBaseline="alphabetic"; }
-    const yTitle=panelY+56, yBody=panelY+Math.round(panelH*0.60);
-    if(step===0){ center("Grèce antique — De l’os à l’amulette",yTitle); center("→ pour avancer • puis Start",panelY+panelH-36,14); }
-    if(step===1){ center("Extraction post-abattage",yTitle); center("L’os est prélevé puis travaillé.",yBody); }
-    if(step===2){ center("Nettoyage & polissage",yTitle); center("L’os devient portable.",yBody); }
-    if(step===3){ center("Perçage (suspension)",yTitle); center("Trou discret pour enfiler un lien.",yBody); }
-    if(step>=4){ center("Montage en amulette",yTitle); center("Clique Start pour jouer →",yBody); }
-  }
+      for (const it of W.items) {
+        if (it.taken) continue;
+        if (Math.abs(it.x-hero.x)<38 && Math.abs(it.y-hero.y)<54) {
+          it.taken = true;
+          let msg="";
+          if (it.kind==="speed")  { msg="Amulette de vitesse : symbole de mobilité et de réussite."; getAudioBus().play(SND+"catch-sound.mp3",0.8); }
+          if (it.kind==="purify") { msg="Amulette de purification : chasse l’impur lors du rite.";     getAudioBus().play(SND+"catch-sound.mp3",0.8); }
+          if (it.kind==="ward")   { msg="Amulette-bouclier : protège du « mauvais œil ».";            getAudioBus().play(SND+"catch-sound.mp3",0.8); }
+          setToast(msg);
+        }
+      }
 
-  /* Primitifs */
-  const bubbles=useRef<{x:number,y:number,text:string,until:number}[]>([]);
-  function addBubble(x:number,y:number,text:string,ms=2200){ bubbles.current.push({x,y,text,until:performance.now()+ms}); }
-  function drawColumn(ctx:CanvasRenderingContext2D,x:number,groundY:number){ ctx.save(); ctx.translate(x,0); ctx.fillStyle="#e5e7eb"; ctx.fillRect(-12,groundY-140,24,140); ctx.fillStyle="#cbd5e1"; ctx.fillRect(-18,groundY-140,36,10); ctx.fillRect(-18,groundY-10,36,10); ctx.restore(); }
-  function drawAmulet(ctx:CanvasRenderingContext2D,x:number,y:number,label:string,png?:HTMLImageElement){ ctx.save(); ctx.translate(x,y); ctx.strokeStyle="#6b7280"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-18,-12); ctx.quadraticCurveTo(0,-24-6*Math.sin(performance.now()*0.002),18,-12); ctx.stroke(); if(png){ ctx.imageSmoothingEnabled=false; ctx.drawImage(png,-32,-32,64,64);} else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,14,10,0,0,Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,-6,10,0); ctx.moveTo(-10,0); ctx.quadraticCurveTo(0,6,10,0); ctx.stroke(); } ctx.fillStyle="#0f172a"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(label,0,30); ctx.restore(); }
-  function drawPickupBubble(ctx:CanvasRenderingContext2D,x:number,y:number,text:string){ ctx.save(); ctx.translate(x,y); ctx.font="12px ui-sans-serif, system-ui"; const pad=6,maxW=200; const lines=(()=>{ const ws=text.split(/\s+/); const out:string[]=[]; let cur=""; for(const w of ws){ const t=cur?cur+" "+w:w; if(ctx.measureText(t).width>(maxW-pad*2)&&cur){ out.push(cur); cur=w; } else cur=t; } if(cur) out.push(cur); return out; })(); const w=Math.max(60,Math.min(maxW,Math.max(...lines.map(l=>ctx.measureText(l).width))+pad*2)); const h=lines.length*16+pad*2+8; ctx.fillStyle="rgba(255,255,255,.95)"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1.5; const r=8, x0=-w/2, y0=-h, x1=x0+w, y1=y0+h; ctx.beginPath(); ctx.moveTo(x0+r,y0); ctx.arcTo(x1,y0,x1,y1,r); ctx.arcTo(x1,y1,x0,y1,r); ctx.arcTo(x0,y1,x0,y0,r); ctx.arcTo(x0,y0,x1,y0,r); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8,-2); ctx.lineTo(0,10); ctx.lineTo(8,-2); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle="#0f172a"; let yy=y0+pad+12; for(const ln of lines){ ctx.fillText(ln,x0+pad,yy); yy+=16; } ctx.restore(); }
-  function drawAmuletMini(ctx:CanvasRenderingContext2D,cx:number,cy:number,png?:HTMLImageElement){ ctx.save(); ctx.translate(cx,cy); if(png){ ctx.imageSmoothingEnabled=false; ctx.drawImage(png,-16,-16,32,32);} else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); } ctx.restore(); }
-  function drawBear(ctx:CanvasRenderingContext2D,x:number,y:number){ const ba=bearAnim.current; const W0=64,H0=60, Wd=Math.round(W0*BEAR_SCALE), Hd=Math.round(H0*BEAR_SCALE); ctx.save(); ctx.translate(x,y+H0); if(ba&&ba.frames.length){ const fps=10*ANIM_SPEED; let idx=Math.floor((ba.t||0)*fps)%ba.frames.length; if(!isFinite(idx)||idx<0) idx=0; const im=ba.frames[idx]; ctx.imageSmoothingEnabled=false; ctx.drawImage(im,0,0,im.naturalWidth,im.naturalHeight,0,-Hd,Wd,Hd); } else { ctx.fillStyle="#78350f"; ctx.fillRect(0,-Hd+20*BEAR_SCALE,Wd,Hd-24*BEAR_SCALE); ctx.beginPath(); ctx.arc(Wd-10*BEAR_SCALE,-Hd+26*BEAR_SCALE,14*BEAR_SCALE,0,Math.PI*2); ctx.fill(); ctx.fillStyle="#fde68a"; ctx.fillRect(Wd-6*BEAR_SCALE,-Hd+22*BEAR_SCALE,3*BEAR_SCALE,3*BEAR_SCALE); } ctx.restore(); }
-  function drawEvilEye(ctx:CanvasRenderingContext2D,x:number,y:number){ ctx.save(); ctx.translate(x,y); ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle="#93c5fd"; ctx.beginPath(); ctx.ellipse(0,0,9,6,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill(); ctx.restore(); }
-  function drawHero(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,facing:number,dirt:number,runPhase:number,wardLeft:number){ ctx.save(); const dw=Math.round(w*HERO_SCALE_X), dh=Math.round(h*HERO_SCALE_Y); ctx.translate(x+w/2,y+h); if(wardLeft>0){ const pct=Math.min(1,wardLeft/10); const rad=44*HERO_SCALE_Y+6*Math.sin(performance.now()*0.006); const grd=ctx.createRadialGradient(0,0,10,0,0,rad); grd.addColorStop(0,`rgba(56,189,248,${0.25+0.25*pct})`); grd.addColorStop(1,"rgba(56,189,248,0)"); ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,rad,0,Math.PI*2); ctx.fill(); } const anim=heroAnim.current; const clip=anim?.clips?.[heroState.current.name]; if(clip&&clip.frames.length){ const cnt=clip.frames.length; let fps=Number(clip.fps)||10; let tt=Number(heroState.current.t)||0; let idx=Math.floor(tt*fps); if(!isFinite(idx)||idx<0) idx=0; idx=clip.loop?(idx%cnt):Math.min(idx,cnt-1); const fr=clip.frames[idx]??clip.frames[0]; if(facing<0) ctx.scale(-1,1); const ox=anim?.origin?.[0]??0.5, oy=anim?.origin?.[1]??1; const dx=-ox*dw, dy=-oy*dh+HERO_FOOT_ADJ_PX; ctx.imageSmoothingEnabled=false; ctx.drawImage(fr.image,fr.sx|0,fr.sy|0,fr.sw||fr.image.naturalWidth,fr.sh||fr.image.naturalHeight,dx,dy,dw,dh); } else { if(facing<0) ctx.scale(-1,1); const legA=Math.sin(runPhase*8)*6, legB=Math.sin(runPhase*8+Math.PI)*6; ctx.translate(-dw/2,-dh+HERO_FOOT_ADJ_PX); ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2,dh-16,8,16); ctx.fillRect(dw-18+legB*0.2,dh-16,8,16); ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2,dh-2,10,2); ctx.fillRect(dw-18+legB*0.2,dh-2,10,2); ctx.fillStyle="#334155"; ctx.fillRect(8,28,dw-16,14); ctx.fillStyle="#e5e7eb"; ctx.beginPath(); ctx.moveTo(12,20); ctx.lineTo(dw-12,20); ctx.lineTo(dw-18,48); ctx.lineTo(18,48); ctx.closePath(); ctx.fill(); ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(16+i*8,22); ctx.lineTo(20+i*8,46); ctx.stroke(); } ctx.strokeStyle="#eab308"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(10,36); ctx.lineTo(dw-10,36); ctx.stroke(); ctx.beginPath(); ctx.moveTo(dw/2-8,22); ctx.quadraticCurveTo(dw/2,18,dw/2+8,22); ctx.stroke(); ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(dw/2,12,8,0,Math.PI*2); ctx.fill(); } if(dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-dw/2,-dh,dw,dh); ctx.globalAlpha=1; } ctx.restore(); }
-  function drawMountains(ctx:CanvasRenderingContext2D,off:number){ ctx.save(); ctx.translate(-off,0); for(let x=-200;x<WORLD_W+WORLD_LEN;x+=420){ ctx.fillStyle="#c7d2fe"; ctx.beginPath(); ctx.moveTo(x,380); ctx.lineTo(x+120,260); ctx.lineTo(x+240,380); ctx.closePath(); ctx.fill(); ctx.fillStyle="#bfdbfe"; ctx.beginPath(); ctx.moveTo(x+140,380); ctx.lineTo(x+260,280); ctx.lineTo(x+360,380); ctx.closePath(); ctx.fill(); } ctx.restore(); }
-  function drawOliveTrees(ctx:CanvasRenderingContext2D,off:number){ ctx.save(); ctx.translate(-off,0); for(let x=0;x<WORLD_W+WORLD_LEN;x+=260){ ctx.fillStyle="#a78bfa"; ctx.fillRect(x+40,GROUND_Y-60,8,60); ctx.fillStyle="#ddd6fe"; ctx.beginPath(); ctx.ellipse(x+44,GROUND_Y-75,26,16,0,0,Math.PI*2); ctx.fill(); } ctx.restore(); }
-  function drawFrieze(ctx:CanvasRenderingContext2D,off:number){ ctx.save(); ctx.translate(-off,0); for(let x=0;x<WORLD_W+WORLD_LEN;x+=180){ ctx.strokeStyle="#94a3b8"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,GROUND_Y-10); for(let i=0;i<6;i++){ const sx=x+i*24; ctx.lineTo(sx+12,GROUND_Y-18); ctx.lineTo(sx+24,GROUND_Y-10); } ctx.stroke(); } ctx.restore(); }
-  function drawHUD(ctx:CanvasRenderingContext2D){
-    ctx.save(); ctx.globalAlpha=.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2; ctx.fillRect(12,56,236,62); ctx.strokeRect(12,56,236,62);
-    const slots=[{owned:inv.current.speed,label:"Vitesse",png:amuletsRef.current.speed},{owned:inv.current.purify,label:"Purif.",png:amuletsRef.current.purify},{owned:inv.current.ward,label:"Bouclier",png:amuletsRef.current.ward}];
-    for(let i=0;i<slots.length;i++){ const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48); ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88,slots[i].png); ctx.globalAlpha=1; ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label,x+28,116); }
-    ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle="#0f172a"; ctx.font="10px ui-sans-serif, system-ui"; ctx.fillText("Musique (M)",278,74);
-    ctx.restore();
-    if(summaryOpen){ const W=WORLD_W,H=WORLD_H; ctx.save(); ctx.fillStyle="rgba(255,255,255,.95)"; ctx.fillRect(0,0,W,H); ctx.restore(); }
-  }
-  function drawEduToast(ctx:CanvasRenderingContext2D,text:string){ const pad=12, boxW=Math.min(680,WORLD_W-40), x=20, y=20+40; ctx.save(); ctx.globalAlpha=.98; ctx.fillStyle="#ffffff"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=2; ctx.fillRect(x,y,boxW,80); ctx.strokeRect(x,y,boxW,80); ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui"; wrapText(ctx,text,x+12,y+26,boxW-24,18); ctx.restore(); }
-  function wrapText(ctx:CanvasRenderingContext2D,text:string,x:number,y:number,maxW:number,lh:number){ const ws=text.split(" "); let line=""; for(let n=0;n<ws.length;n++){ const test=line+ws[n]+" "; if(ctx.measureText(test).width>maxW && n>0){ ctx.fillText(line,x,y); line=ws[n]+" "; y+=lh; } else line=test; } ctx.fillText(line,x,y); }
+      if (!ended && hero.x > 2100) {
+        setEnded({
+          title:"Fin du niveau 1",
+          lines:[
+            "• L’astragale sert d’amulette (vitesse, protection, purification).",
+            "• Les rituels structurent l’action et marquent le passage.",
+            "• Prochain niveau : montage de l’amulette (ficelle + perles)."
+          ]
+        });
+      }
+    };
 
-  /* UI */
-  const startBtnStyle:any={ padding:"12px 18px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:"pointer", boxShadow:"0 6px 14px rgba(5,150,105,.25)", position:"absolute", bottom:16, left:"50%", transform:"translateX(-50%)", zIndex:5 };
-  const btn=(disabled=false)=>({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1 } as any);
-  const btnDark=()=>({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" } as any);
-  const primaryBtn=(disabled=false)=>({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity:disabled?.5:1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" } as any);
+    const render = () => {
+      const cvs = canvasRef.current!; const ctx = cvs.getContext("2d")!;
+      const W = world.current;
+      ctx.clearRect(0,0,cvs.width,cvs.height);
 
-  function TouchBtn(props:any){
-    const events={ onMouseDown:props.onDown,onMouseUp:props.onUp,onMouseLeave:props.onUp,
-      onTouchStart:(e:any)=>{e.preventDefault();props.onDown();}, onTouchEnd:(e:any)=>{e.preventDefault();props.onUp();},
-      onPointerDown:(e:any)=>{ if(e.pointerType!=="mouse") props.onDown(); }, onPointerUp:(e:any)=>{ if(e.pointerType!=="mouse") props.onUp(); } };
-    return <button {...events} style={{pointerEvents:"auto",flex:"1 1 0",padding:"14px 10px",border:"1px solid #e5e7eb",borderRadius:14,background:"#ffffffEE",fontWeight:600}}>{props.label}</button>;
+      ctx.fillStyle="#eef3ff"; ctx.fillRect(0,0,cvs.width,cvs.height);
+      ctx.fillStyle="#e8ebfb"; ctx.fillRect(0, Math.floor(cvs.height*0.65), cvs.width, Math.floor(cvs.height*0.35));
+      ctx.fillStyle="#cfd6ff"; ctx.fillRect(0, W.groundY, cvs.width, 6);
+
+      // items
+      for (const it of W.items) {
+        if (it.taken) continue;
+        const img = assets.current.items.get(it.kind);
+        if (img) ctx.drawImage(img, it.x-24, it.y-48, 48, 48);
+      }
+
+      // ours
+      const bi = assets.current.bearImgs[W.bear.frame];
+      if (bi) ctx.drawImage(bi, W.bear.x-48, W.groundY-96, 96, 96);
+
+      // héros
+      const cfg = assets.current.heroCfg as HeroCfg;
+      if (cfg) {
+        const f = cfg.animations[W.hero.anim]?.files[W.hero.frame];
+        const im = f && assets.current.heroImgs.get(f);
+        if (im) ctx.drawImage(im, W.hero.x - cfg.frameSize[0]*W.hero.scale/2, W.hero.y - cfg.frameSize[1]*W.hero.scale, cfg.frameSize[0]*W.hero.scale, cfg.frameSize[1]*W.hero.scale);
+      }
+
+      // overlay "cliquer pour démarrer"
+      if (!W.started) {
+        ctx.fillStyle="rgba(255,255,255,.9)";
+        ctx.fillRect(0,0,cvs.width,cvs.height);
+        ctx.fillStyle="#203050";
+        ctx.font="bold 24px system-ui"; ctx.textAlign="center";
+        ctx.fillText("Clique dans le cadre pour démarrer", cvs.width/2, cvs.height/2);
+        ctx.textAlign="start";
+      }
+
+      if (eduMsg) {
+        const pad=10, maxW=Math.min(520, cvs.width-40);
+        ctx.font="16px system-ui"; ctx.fillStyle="rgba(255,255,255,.92)";
+        ctx.fillRect(20,20, maxW, 60);
+        ctx.strokeStyle="#aac"; ctx.strokeRect(20,20,maxW,60);
+        ctx.fillStyle="#203050"; ctx.fillText(eduMsg, 28, 56);
+      }
+
+      if (ended) {
+        ctx.fillStyle="rgba(255,255,255,.85)"; ctx.fillRect(0,0,cvs.width,cvs.height);
+        ctx.fillStyle="#203050"; ctx.font="bold 28px system-ui"; ctx.fillText(ended.title, 40, 60);
+        ctx.font="18px system-ui"; let y=100; for (const L of ended.lines){ ctx.fillText(L, 40, y); y+=26; }
+        const bW=230,bH=44, bx=40, by=y+40;
+        ctx.fillStyle="#0b1f33"; ctx.fillRect(bx,by,bW,bH);
+        ctx.fillStyle="#e6f1ff"; ctx.font="16px system-ui"; ctx.fillText("Niveau suivant →", bx+20, by+28);
+        cvs.onclick = (ev:any) => {
+          const r = cvs.getBoundingClientRect();
+          const mx = (ev.clientX-r.left)*(cvs.width/r.width);
+          const my = (ev.clientY-r.top)*(cvs.height/r.height);
+          if (mx>=bx && mx<=bx+bW && my>=by && my<=by+bH) {
+            const w:any = window; if (w.__OSSELETS_GOTO_LEVEL) w.__OSSELETS_GOTO_LEVEL(2);
+          }
+        };
+      } else {
+        cvs.onclick = null;
+      }
+    };
+
+    return <div ref={wrapRef} />;
   }
 
-  return (
-    <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
-      <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
-        <div className="mb-2" style={{display:"flex",gap:8,alignItems:"center",justifyContent:"space-between"}}>
-          <h1 className="text-xl sm:text-2xl" style={{fontWeight:600}}>Runner 2D – Amulettes d’astragale</h1>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            <button onClick={toggleMusic} style={btn()}> {musicOn?"Musique ON":"Musique OFF"} </button>
-            <button onClick={()=>setPaused(v=>!v)} disabled={inIntro||summaryOpen} style={primaryBtn(inIntro||summaryOpen)}>{paused?"Lecture":"Pause"}</button>
-            <label style={btn()}><input type="checkbox" checked={mobileMode} onChange={e=>{setMobileMode(e.target.checked); clearTouchKeys();}} /><span style={{marginLeft:6}}>Mode mobile</span></label>
-            {mobileMode && <label style={btn()}><input type="checkbox" checked={oneButton} onChange={e=>setOneButton(e.target.checked)} /><span style={{marginLeft:6}}>1 bouton</span></label>}
-          </div>
-        </div>
-
-        <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
-          {inIntro ? "Jeu de découverte des usages de l’astragale (amulette, rite, protection)."
-                   : "← → bouger • Espace sauter • P pause • M musique. Sur mobile, active le mode mobile."}
-        </p>
-
-        <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
-          <div ref={wrapperRef} className="w-full"
-               style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12, marginBottom:12}}>
-            <canvas ref={canvasRef} />
-            {inIntro && <button onClick={startGame} style={startBtnStyle}>Start</button>}
-
-            {summaryOpen && (
-              <div style={{position:"absolute", inset:0, background:"rgba(255,255,255,.95)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
-                <div style={{width:"min(860px,100%)", background:"#fff", border:"1px solid #e5e7eb", borderRadius:16, padding:16, boxShadow:"0 8px 24px rgba(0,0,0,.08)"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                    <h2 style={{fontWeight:600}}>Fin du niveau {level} ✅</h2>
-                    <span style={{fontSize:12, padding:"2px 8px", borderRadius:999, background:"#111827", color:"#fff"}}>Synthèse</span>
-                  </div>
-                  <div style={{display:"grid", gap:12, gridTemplateColumns:"1fr 1fr", marginTop:12}}>
-                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
-                      <h3 style={{fontWeight:600, marginBottom:8}}>Ce que tu as vu</h3>
-                      <ul style={{paddingLeft:18, margin:0}}>
-                        <li>Astragale = <em>talus</em>, os clé du mouvement (pied/cheville).</li>
-                        <li>De l’os au bijou : nettoyage, polissage, perçage → suspension.</li>
-                        <li>Usages amulétistes : purification & apotropaïsme (mauvais œil).</li>
-                        {eduLog.current.slice(-3).map((t,i)=><li key={i} style={{opacity:.85}}>{t}</li>)}
-                      </ul>
-                    </div>
-                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
-                      <h3 style={{fontWeight:600, marginBottom:8}}>Questions flash</h3>
-                      <ol style={{paddingLeft:18, margin:0}}>
-                        <li>V/F : l’astragale appartient au tarse.</li>
-                        <li>Pourquoi percer l’osselet ?</li>
-                        <li>Donne un usage protecteur évoqué dans le niveau.</li>
-                      </ol>
-                    </div>
-                  </div>
-                  <div style={{display:"flex", gap:8, justifyContent:"end", marginTop:12}}>
-                    <button onClick={()=>{ resetLevel(true); setPaused(false); }} style={btn()}>Revoir la cinématique</button>
-                    <button onClick={()=>{ resetLevel(false); setPaused(false); }} style={btnDark()}>Recommencer</button>
-                    <button onClick={nextLevel} style={primaryBtn(false)}>Prochain niveau →</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {mobileMode && !inIntro && !summaryOpen && (
-              <>
-                {!oneButton && (
-                  <div style={{position:"absolute", left:12, right:12, bottom:12, display:"flex", gap:12, justifyContent:"space-between", pointerEvents:"none"}}>
-                    <TouchBtn label="←" onDown={()=>press("left",true)} onUp={()=>press("left",false)} />
-                    <TouchBtn label="Saut" onDown={()=>press("jump",true)} onUp={()=>press("jump",false)} />
-                    <TouchBtn label="→" onDown={()=>press("right",true)} onUp={()=>press("right",false)} />
-                  </div>
-                )}
-                {oneButton && <div onPointerDown={()=>press("jump",true)} onPointerUp={()=>press("jump",false)} style={{position:"absolute", inset:0, pointerEvents:"auto"}} />}
-              </>
-            )}
-
-            {/* Audio MP3 (tag marqué pour arrêt global par les autres niveaux) */}
-            <audio ref={musicEl} data-osselets-mus preload="auto" src={AUDIO_BASE+AUDIO.music}/>
-            <audio ref={sfxJumpEl} preload="auto" src={AUDIO_BASE+AUDIO.jump}/>
-            <audio ref={sfxCatchEl} preload="auto" src={AUDIO_BASE+AUDIO.catch}/>
-            <audio ref={sfxOuchEl} preload="auto" src={AUDIO_BASE+AUDIO.ouch}/>
-          </div>
-
-          {/* petit espace supplémentaire sous la fenêtre → Start toujours dégagé */}
-          <div style={{height: inIntro ? 12 : 0}}/>
-
-          <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou <code>bear(1..6).png</code>/<code>bear (1..6).png</code>.
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// @ts-ignore
-(window as any).AstragalusRunner = AstragalusRunner;
+  (window as any).AstragalusRunner = AstragalusRunner;
+})();
