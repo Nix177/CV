@@ -6,12 +6,14 @@
   <title>Portfolio — Nicolas Tuor</title>
   <meta name="description" content="Projets et démos (éducation, IA, jeux pédagogiques)."/>
   <link rel="icon" href="/favicon.ico"/>
+
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
 
-  <!-- Styles de base (fallback si /style.css n'est pas chargé) -->
+  <!-- Fallback de styles (ta feuille /style.css continue d’être chargée en dessous) -->
   <style>
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
@@ -23,7 +25,7 @@
     .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
     @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
-    /* Overlay d’aperçu (sécurisé) — PARTIE SITES (inchangée) */
+    /* Overlay d’aperçu pour la partie Sites (inchangé) */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
                display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
     .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
@@ -31,17 +33,34 @@
     .overlay .panel header { display:flex; justify-content: space-between; align-items:center; gap:10px;
                              padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
     .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
+
+    /* === Styles communs aux mini-jeux === */
+    .game-wrap {
+      position: relative;
+      width: 100%;
+      height: clamp(520px, 65vh, 860px);      /* ➜ plus grand pour ton bouton Start */
+      overflow: hidden;
+      border-radius: 14px;
+      background: #071528;
+      border: 1px solid #163b62;
+    }
+    .game-root { position:absolute; inset:0; }
+    .cover { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; pointer-events:none }
+    .cta { position:absolute; left:50%; transform:translateX(-50%); bottom:16px; z-index:2;
+           padding:10px 16px; border:1px solid #ffffff33; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer }
+    .hint { position:absolute; left:12px; top:12px; z-index:3; background:rgba(255,255,255,.92); color:#203050;
+            padding:8px 10px; border-radius:8px; border:1px solid #ccdaff; font:14px/1.2 system-ui; }
+    canvas { image-rendering: pixelated; }
   </style>
 
-  <!-- Style global du site -->
-  <link rel="stylesheet" href="/style.css">
+  <!-- Ton style global -->
+  <link rel="stylesheet" href="/style.css"/>
 
   <!-- Nav + feedback (inchangés) -->
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
 </head>
 <body>
-  <!-- En-tête -->
   <header class="site-header">
     <nav class="site-nav" aria-label="Navigation principale">
       <ul class="menu">
@@ -64,10 +83,10 @@
     <h1>Portfolio</h1>
     <p class="muted">« Visiter » ouvre en nouvel onglet. « Aperçu » tente un embed sécurisé (si autorisé par le site cible).</p>
 
-    <!-- Grille des cartes SITES (inchangée) -->
+    <!-- ===== Grille de tes sites (inchangé) ===== -->
     <div id="portfolioGrid" class="grid-cards"></div>
 
-    <!-- Overlay d’aperçu SITES (inchangé) -->
+    <!-- Aperçu sites (inchangé) -->
     <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
       <div class="panel">
         <header>
@@ -78,118 +97,192 @@
       </div>
     </div>
 
-    <!-- ✳️ Générateur de quiz — désactivé -->
-    <!--
-    <section id="ai-lab" class="card" style="margin-top:18px">
-      ... (commenté)
-    </section>
-    -->
+    <!-- ========== OSSELETS : 3 mini-jeux séparés (sans React/Babel) ========== -->
 
-    <!-- =========================================================
-         OSSELETS — Jeux (LVL1/2/3)
-         ========================================================= -->
-    <section id="ai-lab-game" class="card">
-      <h2>🎮 Runner 2D – Amulettes d’astragale</h2>
-      <p class="muted">Jeu de découverte des usages de l’astragale (amulette, rite, protection).</p>
-
-      <!-- Boutons de lancement -->
-      <div class="row" style="gap:8px;margin-bottom:8px">
-        <button id="osselets-start" class="btn">Lancer le niveau 1</button>
-        <button id="osselets-start-l2" class="btn">Niveau 2</button>
-        <button id="osselets-start-l3" class="btn">Niveau 3</button>
+    <section class="card" id="osselets-mj1">
+      <h2>🎮 Mini-jeu 1 — Runner (collecte d’amulettes)</h2>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn" id="mj1-start">Démarrer</button>
       </div>
-
-      <!-- Conteneur du jeu (agrandi) avec screenshot d’attente -->
-      <div class="game-wrap"
-           style="position:relative;height:clamp(460px, 62vh, 820px);width:100%;
-                  overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
-
-        <!-- 📸 Screenshot d’accueil -->
-        <img id="osselets-cover"
-             src="/assets/games/osselets/audio/img/start-screenshot.webp"
-             alt="Aperçu du jeu Osselets"
-             onerror="this.remove()"
-             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;pointer-events:none" />
-
-        <!-- Bouton Start visible dans le cadre -->
-        <button id="osselets-cta"
-                style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
-                       z-index:3;padding:10px 16px;border:1px solid #ffffff33;border-radius:10px;
-                       background:#0b1f33;color:#e6f1ff;cursor:pointer">
-          Start
-        </button>
-
-        <!-- Point de montage React AU-DESSUS du screenshot -->
-        <div id="osselets-root" style="position:absolute;inset:0;z-index:2"></div>
+      <div class="game-wrap">
+        <img class="cover" src="/assets/games/osselets/audio/img/start-screenshot.webp" alt="" onerror="this.remove()">
+        <button class="cta" id="mj1-cta">Start</button>
+        <div class="game-root" id="mj1-root"></div>
       </div>
     </section>
-    <!-- /OSSELETS -->
+
+    <section class="card" id="osselets-mj2">
+      <h2>🧵 Mini-jeu 2 — Montage de l’amulette</h2>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn" id="mj2-start">Démarrer</button>
+      </div>
+      <div class="game-wrap">
+        <div class="game-root" id="mj2-root"></div>
+      </div>
+    </section>
+
+    <section class="card" id="osselets-mj3">
+      <h2>🧩 Mini-jeu 3 — Osselet 3D (trous opposés)</h2>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn" id="mj3-start">Démarrer</button>
+      </div>
+      <div class="game-wrap">
+        <div class="hint" id="mj3-hint">Clique « Démarrer ». Molette = zoom, glisser = rotation.</div>
+        <div class="game-root" id="mj3-root"></div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
     © Nicolas Tuor — Portfolio
   </footer>
 
-  <!-- Données SITES (inchangé) -->
+  <!-- Données et scripts de tes cartes (inchangé) -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
-
-  <!-- Lab (inchangé) -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel (UMD) — une seule fois -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- Jeux Osselets (TSX compilé côté client) 
-       ⚠️ JSX classique (pas runtime automatique) pour éviter une 2e instance fantôme de React. -->
-  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-runner.tsx"></script>
-  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level2.tsx"></script>
-  <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level3.tsx"></script>
-
-  <!-- Montage / Navigation niveaux (une seule racine React réutilisée) -->
+  <!-- ========== BUS AUDIO GLOBAL (mp3) ========== -->
   <script>
-    (function () {
-      var start1 = document.getElementById('osselets-start');
-      var start2 = document.getElementById('osselets-start-l2');
-      var start3 = document.getElementById('osselets-start-l3');
-      var rootEl = document.getElementById('osselets-root');
-      var cover  = document.getElementById('osselets-cover');
-      var cta    = document.getElementById('osselets-cta');
-
-      // un seul root React réutilisé
-      var root = ReactDOM.createRoot(rootEl);
-
-      // Styles de confort pour le canvas
-      var style = document.createElement('style');
-      style.textContent = `
-        #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
-        #osselets-root canvas { width: 100% !important; height: 100% !important; image-rendering: pixelated; }
-      `;
-      document.head.appendChild(style);
-
-      function mount(Comp) {
-        if (!Comp) return;
-        if (cover) { cover.remove(); cover = null; }
-        if (cta)   { cta.remove();   cta   = null; }
-        root.render(React.createElement(Comp));
-        rootEl.setAttribute('tabindex','0');
-        try { rootEl.focus({ preventScroll:true }); } catch {}
-      }
-
-      window.__OSSELETS_GOTO_LEVEL = function (n) {
-        var Comp = n===2 ? window.AstragalusLevel2
-                 : n===3 ? window.AstragalusLevel3
-                 :         window.AstragalusRunner;
-        mount(Comp);
+    (function(){
+      const w = window;
+      if (w.__OSSELETS_AUDIO__) return;
+      w.__OSSELETS_AUDIO__ = {
+        bgm: null,
+        sfx: new Set(),
+        stopAll(){
+          try { this.bgm?.pause(); this.bgm=null; } catch {}
+          for (const a of this.sfx) { try { a.pause(); } catch {} }
+          this.sfx.clear();
+        },
+        playBgm(url, volume=0.35){
+          try { this.bgm?.pause(); } catch {}
+          const a = new Audio(url); a.loop=true; a.volume=volume; this.bgm=a;
+          a.play().catch(()=>{}); return a;
+        },
+        play(url, volume=0.9){
+          const a = new Audio(url); a.volume=volume;
+          a.play().catch(()=>{}); this.sfx.add(a);
+          a.addEventListener('ended', ()=>this.sfx.delete(a));
+          return a;
+        }
       };
-
-      if (start1) start1.onclick = function(){ mount(window.AstragalusRunner); };
-      if (start2) start2.onclick = function(){ mount(window.AstragalusLevel2); };
-      if (start3) start3.onclick = function(){ mount(window.AstragalusLevel3); };
-      if (cta)    cta.onclick    = function(){ mount(window.AstragalusRunner); };
     })();
+  </script>
+
+  <!-- ========== MINI-JEU 1 (Runner 2D, Canvas) ========== -->
+  <script src="/osselets-mini1.js"></script>
+
+  <!-- ========== MINI-JEU 2 (Montage, Canvas Drag&Drop) ========== -->
+  <script src="/osselets-mini2.js"></script>
+
+  <!-- ========== MINI-JEU 3 (Three.js ES Modules) ========== -->
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+    import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+
+    // expose une fonction globale pour démarrer le mini-jeu 3 (on garde du vanilla ailleurs)
+    window.__startMiniJEU3 = async function(){
+      const root = document.getElementById("mj3-root");
+      const hint = document.getElementById("mj3-hint");
+      root.replaceChildren();
+
+      const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+      root.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.add(new THREE.HemisphereLight(0xffffff,0x8899aa,1.0));
+      const dir = new THREE.DirectionalLight(0xffffff,0.8); dir.position.set(1,1,1); scene.add(dir);
+
+      const camera = new THREE.PerspectiveCamera(45, 16/9, 0.05, 100);
+      camera.position.set(0.8, 0.6, 1.4);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping=true; controls.dampingFactor=0.08; controls.target.set(0,0,0);
+
+      const anchors = []; // {obj, face, num}
+      const FACE_PAIRS = { ventre:"dos", dos:"ventre", bassin:"membres", membres:"bassin" };
+
+      const url = window.OSSELETS_GLTF_URL || "/assets/games/osselets/3d/astragalus.glb";
+      const loader = new GLTFLoader();
+      loader.load(url, (g) => {
+        const root3 = g.scene || g.scenes?.[0];
+        root3.traverse((o) => {
+          if (!o.name) return;
+          const m = /^Hole_(ventre|dos|bassin|membres)_(\d\d)$/i.exec(o.name);
+          if (m) anchors.push({ obj:o, face:m[1].toLowerCase(), num:m[2] });
+        });
+        root3.scale.setScalar(1.0);
+        scene.add(root3);
+        if (hint) hint.textContent = `Trouve des paires opposées — ${anchors.length} trous détectés.`;
+      });
+
+      const raycaster = new THREE.Raycaster();
+      let picked = null;
+      renderer.domElement.addEventListener("pointerdown", (ev)=>{
+        const rect=renderer.domElement.getBoundingClientRect();
+        const mx=(ev.clientX-rect.left)/rect.width*2-1; const my=-((ev.clientY-rect.top)/rect.height*2-1);
+        raycaster.setFromCamera({x:mx,y:my}, camera);
+        const hit = raycaster.intersectObjects(anchors.map(a=>a.obj), true)[0];
+        if (!hit) return;
+        const A = anchors.find(a=>a.obj===hit.object || hit.object?.parent===a.obj);
+        if (!A) return;
+        if (!picked) {
+          picked = A;
+          if (hint) hint.textContent = `Trou choisi : ${A.face} ${A.num}. Clique le trou opposé.`;
+        } else {
+          const expect = FACE_PAIRS[picked.face];
+          if (A.num===picked.num && A.face===expect) {
+            if (hint) hint.textContent = `Bonne paire ${picked.num} (${picked.face} ⇄ ${A.face}).`;
+            const a = new THREE.Vector3(); const b = new THREE.Vector3();
+            picked.obj.getWorldPosition(a); A.obj.getWorldPosition(b);
+            const geom = new THREE.BufferGeometry().setFromPoints([a,b]);
+            const line = new THREE.Line(geom, new THREE.LineBasicMaterial({ color:0x2266ff }));
+            scene.add(line);
+            (window.__OSSELETS_AUDIO__||{}).play?.("/assets/games/osselets/audio/catch-sound.mp3",0.9);
+          } else {
+            if (hint) hint.textContent = `Pas opposés : ${picked.face} ${picked.num} ⇄ ${A.face} ${A.num}. Réessaie.`;
+            (window.__OSSELETS_AUDIO__||{}).play?.("/assets/games/osselets/audio/ouch-sound.mp3",0.7);
+          }
+          picked = null;
+        }
+      });
+
+      const onResize = ()=> {
+        const r = root.getBoundingClientRect();
+        const w = Math.max(16, r.width), h = Math.max(16, r.height);
+        renderer.setSize(w,h,false); camera.aspect = w/h; camera.updateProjectionMatrix();
+      };
+      new ResizeObserver(onResize).observe(root); onResize();
+
+      function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); }
+      loop();
+    }
+
+    // bouton "Démarrer" du mini-jeu 3
+    document.getElementById("mj3-start")?.addEventListener("click", ()=>{
+      (window.__OSSELETS_AUDIO__||{}).stopAll?.();  // stop BGM des autres mini-jeux
+      window.__startMiniJEU3();
+    });
+  </script>
+
+  <!-- Branche les boutons Start des mini-jeux 1 & 2 -->
+  <script>
+    // Mini-jeu 1
+    document.getElementById("mj1-start")?.addEventListener("click", ()=>{
+      window.__startMiniJEU1 && window.__startMiniJEU1();
+    });
+    document.getElementById("mj1-cta")?.addEventListener("click", ()=>{
+      window.__startMiniJEU1 && window.__startMiniJEU1();
+    });
+
+    // Mini-jeu 2
+    document.getElementById("mj2-start")?.addEventListener("click", ()=>{
+      (window.__OSSELETS_AUDIO__||{}).stopAll?.();
+      window.__startMiniJEU2 && window.__startMiniJEU2();
+    });
   </script>
 </body>
 </html>
