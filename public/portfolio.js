@@ -53,52 +53,70 @@
     };
   }
 
-  // --- Overlay (créé si absent dans la page)
+  // --- Overlay : réutilise l'existant (#overlay) sinon crée un fallback compatible
   function ensureOverlay() {
-    let ovl = $("#pfOverlay");
+    // 1) Overlay natif défini dans la page (portfolio.html) :
+    //    <div id="overlay" class="overlay"> ... <iframe id="overlayFrame"> ... <button id="overlayClose">
+    let ovl = $("#overlay");
     if (ovl) return ovl;
 
-    ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
-      el("div", { class:"pf-panel" }, [
-        el("div", { class:"pf-head" }, [
-          el("strong", { id:"pfTitle", text:"" }),
-          el("button", { id:"pfClose", class:"btn" }, T.close)
+    // 2) Si absent (p.ex. autres variantes), on crée un overlay minimal compatible
+    ovl = el("div", { id:"overlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"ovlTitle" }, [
+      el("div", { class:"panel" }, [
+        el("header", {}, [
+          el("strong", { id:"ovlTitle", text:"" }),
+          el("button", { id:"overlayClose", class:"btn" }, T.close)
         ]),
-        el("div", { class:"pf-frame" }, [
-          el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
-        ]),
-        el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked)
+        el("iframe", { id:"overlayFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
       ])
     ]);
     document.body.appendChild(ovl);
     return ovl;
   }
 
+  function ensureBlockedMsg(ovl) {
+    // Ajoute un petit message si la cible bloque l’embed (X-Frame-Options)
+    let msg = $("#pfMsg", ovl);
+    if (!msg) {
+      const panel = ovl.querySelector(".panel") || ovl;
+      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
+      panel.appendChild(msg);
+    }
+    return msg;
+  }
+
   function openOverlay(url, title) {
     const ovl = ensureOverlay();
-    const frame = $("#pfFrame");
-    const titleEl = $("#pfTitle");
-    const msg = $("#pfMsg");
-    const btnClose = $("#pfClose");
+    // Supporte les deux schémas d'IDs (#overlayFrame/#overlayClose ou #pfFrame/#pfClose)
+    const frame = $("#overlayFrame", ovl) || $("#pfFrame", ovl);
+    const titleEl = $("#ovlTitle", ovl) || $("#pfTitle", ovl) || ovl.querySelector("strong");
+    const btnClose = $("#overlayClose", ovl) || $("#pfClose", ovl);
+    const msg = ensureBlockedMsg(ovl);
 
-    titleEl.textContent = title || "";
-    msg.style.display = "none";
-    frame.removeAttribute("src");
+    if (!frame || !btnClose) return; // garde-fou
 
-    ovl.classList.add("show");
+    if (titleEl) titleEl.textContent = title || "";
+    if (msg) msg.style.display = "none";
+
+    // Affiche l’overlay (ne dépend plus d’une classe CSS)
+    ovl.style.display = "flex";
+    ovl.style.alignItems = "center";
+    ovl.style.justifyContent = "center";
     document.body.style.overflow = "hidden";
 
-    // On ne donne pas allow-same-origin pour éviter les alertes du site cible
+    // (re)charge l’iframe
+    frame.removeAttribute("src");
     frame.setAttribute("sandbox", "allow-scripts allow-popups");
     frame.src = url;
 
-    const timer = setTimeout(() => { msg.style.display = "block"; }, 2000);
+    // Si rien n'apparaît au bout de 2s, on montre le message "bloqué"
+    const timer = setTimeout(() => { if (msg) msg.style.display = "block"; }, 2000);
 
     const close = () => {
       clearTimeout(timer);
-      ovl.classList.remove("show");
+      ovl.style.display = "";          // cache l’overlay
       document.body.style.overflow = "";
-      frame.removeAttribute("src");
+      frame.removeAttribute("src");    // stoppe le chargement
       btnClose.removeEventListener("click", close);
       ovl.removeEventListener("click", onBackdrop);
       document.removeEventListener("keydown", onEsc);
