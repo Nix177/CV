@@ -6,7 +6,6 @@
   <title>Portfolio — Nicolas Tuor</title>
   <meta name="description" content="Projets et démos (éducation, IA, jeux pédagogiques)."/>
   <link rel="icon" href="/favicon.ico"/>
-  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
@@ -24,7 +23,7 @@
     .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
     @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
 
-    /* Overlay d’aperçu (sécurisé) */
+    /* Overlay d’aperçu (sécurisé) — PARTIE SITES (inchangée) */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
                display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
     .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
@@ -37,7 +36,7 @@
   <!-- Style global du site -->
   <link rel="stylesheet" href="/style.css">
 
-  <!-- Nav + feedback -->
+  <!-- Nav + feedback (inchangés) -->
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
 </head>
@@ -65,10 +64,10 @@
     <h1>Portfolio</h1>
     <p class="muted">« Visiter » ouvre en nouvel onglet. « Aperçu » tente un embed sécurisé (si autorisé par le site cible).</p>
 
-    <!-- Grille des cartes -->
+    <!-- Grille des cartes SITES (inchangée) -->
     <div id="portfolioGrid" class="grid-cards"></div>
 
-    <!-- Overlay d’aperçu -->
+    <!-- Overlay d’aperçu SITES (inchangé) -->
     <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
       <div class="panel">
         <header>
@@ -79,7 +78,7 @@
       </div>
     </div>
 
-    <!-- ✳️ Générateur de quiz — temporairement désactivé -->
+    <!-- ✳️ Générateur de quiz — désactivé -->
     <!--
     <section id="ai-lab" class="card" style="margin-top:18px">
       ... (commenté)
@@ -100,18 +99,19 @@
         <button id="osselets-start-l3" class="btn">Niveau 3</button>
       </div>
 
-      <!-- Conteneur du jeu avec screenshot d’attente -->
+      <!-- Conteneur du jeu (agrandi) avec screenshot d’attente -->
       <div class="game-wrap"
-           style="position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
+           style="position:relative;height:clamp(460px, 62vh, 820px);width:100%;
+                  overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
 
-        <!-- 📸 Screenshot d’accueil (réserve 72px en bas pour le bouton Start) -->
+        <!-- 📸 Screenshot d’accueil -->
         <img id="osselets-cover"
              src="/assets/games/osselets/audio/img/start-screenshot.webp"
              alt="Aperçu du jeu Osselets"
              onerror="this.remove()"
-             style="position:absolute;top:0;left:0;right:0;bottom:72px;width:100%;height:auto;object-fit:cover;display:block;z-index:1;pointer-events:none" />
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;pointer-events:none" />
 
-        <!-- Bouton Start dans le cadre -->
+        <!-- Bouton Start visible dans le cadre -->
         <button id="osselets-cta"
                 style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
                        z-index:3;padding:10px 16px;border:1px solid #ffffff33;border-radius:10px;
@@ -130,20 +130,20 @@
     © Nicolas Tuor — Portfolio
   </footer>
 
-  <!-- Données -->
+  <!-- Données SITES (inchangé) -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
 
-  <!-- Lab -->
+  <!-- Lab (inchangé) -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel (UMD) -->
+  <!-- React + Babel (UMD) — une seule fois -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!-- Jeux Osselets (TSX compilé côté client) 
-       ⚠️ On force le runtime JSX "classique" (pas automatic) pour éviter une 2e instance invisible de React. -->
+       ⚠️ JSX classique (pas runtime automatique) pour éviter une 2e instance fantôme de React. -->
   <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-runner.tsx"></script>
   <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level2.tsx"></script>
   <script type="text/babel" data-presets="typescript" data-plugins="transform-react-jsx" src="/osselets-level3.tsx"></script>
