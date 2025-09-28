@@ -71,27 +71,10 @@
     .link:hover{background:#0e1b2f}
     .thumb[data-cover]{background-image:linear-gradient(180deg,#0d1524,#0a1220)}
     .thumb.loaded{background-image:var(--img)}
-
-    /* === Cartes Jeux Osselets === */
-    .game-card{background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-      border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:12px; box-shadow:var(--shadow); margin:18px 6px}
-    .game-head{display:flex;align-items:center;justify-content:space-between; gap:8px; padding:4px 6px 10px 6px}
-    .game-actions{display:flex; gap:8px}
-    .game-btn{padding:.45rem .7rem; border:1px solid #2563eb; background:#2563eb; color:#fff; border-radius:10px; font-weight:700; cursor:pointer}
-    .game-btn.alt{border-color:#334155; background:#0c1728}
-    .game-pane{position:relative; width:100%; aspect-ratio:16/9; max-height:560px; border:1px solid rgba(255,255,255,.07);
-      border-radius:12px; overflow:hidden; background:#0b1625}
-    .game-foot{font-size:12px; color:#95a3b6; margin-top:6px}
   </style>
-
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
-
-  <!-- Three.js UMD + add-ons (doc officielle "examples/js/...") -->
-  <script defer src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
-  <script defer src="https://unpkg.com/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
-  <script defer src="https://unpkg.com/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 <header>
@@ -124,7 +107,6 @@
       <a class="chip" href="#edunum">Éducation numérique</a>
       <a class="chip" href="#outils">Outils & divers</a>
       <a class="chip" href="#jeux">Jeux vidéo</a>
-      <a class="chip" href="#osselets">Osselets</a>
     </div>
   </div>
 </header>
@@ -187,54 +169,137 @@
     <h3 style="margin:6px 6px 10px 6px">Sélection hors-Steam</h3>
     <div class="grid" id="grid-games-custom"></div>
   </section>
-
-  <!-- ========= NOUVELLE SECTION : OSSELETS ========= -->
-  <section id="osselets">
-    <h2>Osselets — mini-jeux 3D</h2>
-    <p class="catdesc">Expériences pédagogiques en Three.js. Clique <strong>Lancer</strong> pour démarrer.</p>
-
-    <!-- Level 2 -->
-    <div class="game-card">
-      <div class="game-head">
-        <div class="title">Écrire avec les os — Fil & alphabet</div>
-        <div class="game-actions">
-          <button class="game-btn" onclick="startOsseletsLevel2('#l2-box')">Lancer</button>
-        </div>
-      </div>
-      <div id="l2-box" class="game-pane"></div>
-      <div class="game-foot">Modèle : <code>/assets/games/osselets/level2/3d/astragalus.glb</code> — Étiquettes via <code>letters.json</code>.</div>
-    </div>
-
-    <!-- Level 3 -->
-    <div class="game-card">
-      <div class="game-head">
-        <div class="title">Rouler les os — Vénus, Canis, Senio…</div>
-        <div class="game-actions">
-          <button class="game-btn" onclick="(window.__g3 = startOsseletsLevel3('#l3-box'))">Lancer</button>
-          <button class="game-btn alt" onclick="window.__g3 && window.__g3.launch()">Relancer</button>
-        </div>
-      </div>
-      <div id="l3-box" class="game-pane"></div>
-      <div class="game-foot">Modèle : <code>/assets/games/osselets/level3/3d/astragalus_faces.glb</code> — Score par lecture des faces 1/3/4/6.</div>
-    </div>
-  </section>
 </main>
 
-<!-- ====== TES SCRIPTS EXISTANTS (grilles) ====== -->
 <script>
   const open = (url)=>window.open(url,'_blank','noopener');
 
   /* ==== Données ==== */
-  const ASTRO = [ /* … inchangé … */ ];
-  const DIY = [ /* … inchangé … */ ];
-  const HIST = [ /* … inchangé … */ ];
-  const CRIT = [ /* … inchangé … */ ];
-  const FOOD = [ /* … inchangé … */ ];
-  const EDU = [ /* … inchangé … */ ];
-  const TOOLS = [ /* … inchangé … */ ];
-  const GAMES_CUSTOM = [ /* … inchangé … */ ];
+
+  const ASTRO = [
+    { title:"Images JWST", desc:"Galerie officielle (images libres).", cover:"assets/passions/sites/webb-gallery.webp", badge:"Site", link:{label:"Voir",href:"https://webbtelescope.org/images"} },
+    { title:"Images brutes Curiosity", desc:"Photos RAW du rover MSL.", cover:"assets/passions/sites/curiosity-raw-images.webp", badge:"Site", link:{label:"Voir",href:"https://mars.nasa.gov/msl/multimedia/raw-images/"} },
+    { title:"MAST — Archives", desc:"Hubble, TESS, JWST (catalogues/dl).", cover:"assets/passions/sites/mast-archive-stsci.webp", badge:"Données", link:{label:"Accéder",href:"https://archive.stsci.edu/"} },
+    { title:"Cloudy Nights", desc:"Communauté astro (tests, imagerie).", cover:"assets/passions/sites/cloudynights.webp", badge:"Forum", link:{label:"Forum",href:"https://www.cloudynights.com/"} },
+    { title:"Telescopic Watch", desc:"Guides d’achat télescopes.", cover:"assets/passions/sites/telescopicwatch.webp", badge:"Guide", link:{label:"Voir",href:"https://telescopicwatch.com/"} },
+    { title:"SRT (MIT Haystack)", desc:"Petit radiotélescope éducatif.", cover:"assets/passions/sites/mit-haystack-srt.webp", badge:"Projet", link:{label:"Site",href:"https://www.haystack.mit.edu/haystack-public-outreach/srt-the-small-radio-telescope-for-education/"} },
+    { title:"Ed Ting", desc:"Tests & conseils télescopes.", cover:"assets/passions/youtube/youtube-edting.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@edting"} },
+    { title:"Astrohopper", desc:"Repérage d’objets (mobile).", cover:"assets/passions/sites/astrohopper.webp", badge:"Outil", link:{label:"Essayer",href:"https://artyom-beilis.github.io/astrohopper.html"} },
+    { title:"GAIA Vari", desc:"Variabilité d’étoiles.", cover:"assets/passions/sites/gaia-vari.webp", badge:"Data", link:{label:"Explorer",href:"https://www.gaiavari.space/"} },
+    { title:"NEO Toolkit", desc:"Outils objets géocroiseurs.", cover:"assets/passions/sites/esa-neo-toolkit.webp", badge:"Outil", link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"} },
+    { title:"Optique (PDF)", desc:"Bases et types d’instruments.", cover:"assets/passions/sites/edmundoptics-all-about-telescopes.webp", badge:"Doc", link:{label:"PDF",href:"https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf"} }
+  ];
+
+  const DIY = [
+    { title:"How To Make Armor", desc:"Forge & tôlerie d’armures.", cover:"assets/passions/youtube/youtube-howtomakearmor.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@howtomakearmor"} },
+    { title:"Armour Archive", desc:"Patrons d’armures.", cover:"assets/passions/sites/armour-archive-patterns.webp", badge:"Site", link:{label:"Patrons",href:"https://www.armourarchive.org/patterns/"} },
+    { title:"Clickspring", desc:"Horlogerie & mécanismes.", cover:"assets/passions/youtube/youtube-clickspring.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"} },
+    { title:"Art of Making Things", desc:"Tutos variés (bois, métal…).", cover:"assets/passions/sites/art-of-making-things.webp", badge:"Site", link:{label:"Tutoriels",href:"https://artofmakingthings.com/home"} },
+    { title:"Maison en terre", desc:"Construction en clay.", cover:"assets/passions/youtube/youtube-diy-clay-house.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/o6Z0MxWCbrc"} },
+    { title:"TV recyclée", desc:"Réparer / réutiliser pièces.", cover:"assets/passions/youtube/youtube-diy-recycled-tv.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/qXrn4MqY1Wo"} },
+    { title:"Écosystèmes en bocaux", desc:"Micro-écosystèmes DIY.", cover:"assets/passions/youtube/youtube-diy-ecosystems.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/QTH9m6MDIfc"} },
+    { title:"Cloud chamber", desc:"Détection de particules.", cover:"assets/passions/youtube/youtube-diy-cloud-chamber.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/xky3f1aSkB8"} },
+    { title:"Spaderdabomb (Unity)", desc:"Tutoriels Unity pratiques.", cover:"assets/passions/youtube/youtube-spaderdabomb.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@spaderdabomb"} }
+  ];
+
+  const HIST = [
+    { title:"World War Two", desc:"Chronologie hebdo WWII.", cover:"assets/passions/youtube/youtube-worldwartwo.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@WorldWarTwo"} },
+    { title:"Benn Jordan", desc:"Projets science/son expliqués.", cover:"assets/passions/youtube/youtube-bennjordan.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@BennJordan"} },
+    { title:"Technology Connections", desc:"Technologies du quotidien.", cover:"assets/passions/youtube/youtube-technologyconnections.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TechnologyConnections"} },
+    { title:"Two Minute Papers", desc:"IA & graphismes en 2 min.", cover:"assets/passions/youtube/youtube-twominutepapers.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TwoMinutePapers"} },
+    { title:"Survive History", desc:"Histoire générale.", cover:"assets/passions/youtube/youtube-survivehistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@survivehistory"} },
+    { title:"MegaLag", desc:"Enquêtes techniques & histoire.", cover:"assets/passions/youtube/youtube-megalag.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@MegaLag"} },
+    { title:"Modern Knight", desc:"Armement & histoire.", cover:"assets/passions/youtube/youtube-modernknight.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ModernKnight"} },
+    { title:"Kurzgesagt", desc:"Sciences illustrées.", cover:"assets/passions/youtube/youtube-kurzgesagt.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@kurzgesagt"} }
+  ];
+
+  const CRIT = [
+    { title:"La Tronche en Biais", desc:"Formats réguliers d’esprit critique.", cover:"assets/passions/youtube/youtube-troncheenbiais.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TroncheEnBiais"} },
+    { title:"Hygiène Mentale", desc:"Méthodes, biais, calculs.", cover:"assets/passions/youtube/youtube-hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
+    { title:"Mr Sam", desc:"Enquêtes sourcées.", cover:"assets/passions/youtube/youtube-mrsam.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@mrsam-interrogation"} },
+    { title:"Defakator", desc:"Deepfakes, IA, vérifs.", cover:"assets/passions/youtube/youtube-defakatorofficiel.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@DefakatorOfficiel"} },
+    { title:"G. Milgram", desc:"Enquêtes patientes.", cover:"assets/passions/youtube/youtube-ggmilgram.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ggmilgram"} },
+    { title:"AFIS/REC", desc:"Culture scientifique.", cover:"assets/passions/youtube/youtube-rectoulouse.webp", badge:"Chaînes", links:[{label:"AFIS",href:"https://www.youtube.com/@afis-science"},{label:"REC",href:"https://www.youtube.com/@RECTOULOUSE"}] }
+  ];
+
+  const FOOD = [
+    { title:"John Kirkwood", desc:"Techniques & recettes.", cover:"assets/passions/youtube/youtube-johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
+    { title:"SortedFood", desc:"Tests & astuces.", cover:"assets/passions/youtube/youtube-sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@SortedFood"} },
+    { title:"Tasting History", desc:"Cuisine historique sourcée.", cover:"assets/passions/youtube/youtube-tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TastingHistory"} },
+    { title:"Akis Petretzikis", desc:"Cuisine grecque & plus.", cover:"assets/passions/youtube/youtube-akispetretzikis.webp", badge:"Chaîne", links:[{label:"Chaîne",href:"https://www.youtube.com/@akispetretzikisen"},{label:"Site",href:"https://akispetretzikis.com/en"}] }
+  ];
+
+  const EDU = [
+    {title:"Scratch",desc:"Programmation visuelle.",cover:"assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}},
+    {title:"Snap!",desc:"Scratch avancé.",cover:"assets/passions/sites/snap-berkeley.webp",badge:"Outil",link:{label:"Essayer",href:"https://snap.berkeley.edu/"}},
+    {title:"Blockly Games",desc:"Jeux pour la logique.",cover:"assets/passions/sites/blockly-games.webp",badge:"Jeu",link:{label:"Jouer",href:"https://blockly.games/"}},
+    {title:"Code.org",desc:"Parcours guidés.",cover:"assets/passions/sites/code-org-studio.webp",badge:"Plateforme",link:{label:"Ouvrir",href:"https://studio.code.org/users/sign_in"}},
+    {title:"NetsBlox",desc:"Programmation distribuée.",cover:"assets/passions/sites/netsblox.webp",badge:"Outil",link:{label:"Essayer",href:"https://netsblox.org/"}},
+    {title:"App Inventor",desc:"Apps mobiles blocs.",cover:"assets/passions/sites/appinventor.webp",badge:"Outil",link:{label:"Essayer",href:"https://appinventor.mit.edu/"}},
+    {title:"Alice",desc:"3D & narration.",cover:"assets/passions/sites/alice.webp",badge:"Outil",link:{label:"Ouvrir",href:"https://www.alice.org/"}},
+    {title:"Pencil Code",desc:"Du bloc au texte.",cover:"assets/passions/sites/pencilcode.webp",badge:"Outil",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
+    {title:"MakeCode",desc:"Micro:bit & co.",cover:"assets/passions/sites/makecode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.microsoft.com/en-us/makecode"}},
+    {title:"Vidcode",desc:"Vidéo + JS.",cover:"assets/passions/sites/vidcode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.vidcode.com/"}},
+    {title:"Construct",desc:"Jeux 2D sans code.",cover:"assets/passions/sites/construct.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.construct.net/fr"}},
+    {title:"Compute-it",desc:"Pensée info ludique.",cover:"assets/passions/sites/compute-it.webp",badge:"Jeu",link:{label:"Jouer",href:"https://compute-it.toxicode.fr/"}},
+    {title:"Codingame",desc:"Défis multi-langages.",cover:"assets/passions/sites/codingame.webp",badge:"Défis",link:{label:"Jouer",href:"https://codingame.com/start/"}},
+    {title:"p5.js",desc:"Création visuelle JS.",cover:"assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doc",href:"https://p5js.org/"}},
+    {title:"Thonny",desc:"IDE Python débutant.",cover:"assets/passions/sites/thonny.webp",badge:"Outil",link:{label:"Télécharger",href:"https://thonny.org/"}},
+    {title:"Mu Editor",desc:"IDE Python éducatif.",cover:"assets/passions/sites/mu-editor.webp",badge:"Outil",link:{label:"Télécharger",href:"https://codewith.mu/"}},
+    {title:"TigerJython",desc:"Python pour apprendre.",cover:"assets/passions/sites/tigerjython.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.tigerjython.ch/en"}},
+    {title:"Pyret",desc:"Langage pédagogique.",cover:"assets/passions/sites/pyret.webp",badge:"Langage",link:{label:"Doc",href:"https://pyret.org/"}},
+    {title:"Vittascience",desc:"Capteurs & robotique.",cover:"assets/passions/sites/vittascience.webp",badge:"Plateforme",link:{label:"Découvrir",href:"https://en.vittascience.com/"}},
+    {title:"Micro:bit",desc:"Électronique simple.",cover:"assets/passions/sites/microbit-makecode.webp",badge:"Outil",link:{label:"MakeCode",href:"https://makecode.microbit.org/"}},
+    {title:"cand.li",desc:"Mini-apps pédagogiques.",cover:"assets/passions/sites/candli.webp",badge:"Outil",link:{label:"Voir",href:"https://cand.li/index-fr.html"}},
+    {title:"Sketchware Docs",desc:"Dev Android par blocs.",cover:"assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://sketchware-docs.vercel.app/"}}
+  ];
+
+  const TOOLS = [
+    {title:"Unscreen",desc:"Supprimer fond vidéo.",cover:"assets/passions/sites/unscreen.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.unscreen.com/"}},
+    {title:"AI Experiments",desc:"Expériences IA Google.",cover:"assets/passions/sites/google-ai-experiments.webp",badge:"Galerie",link:{label:"Explorer",href:"https://experiments.withgoogle.com/collection/ai"}},
+    {title:"Remove.bg",desc:"Détourage d’images.",cover:"assets/passions/sites/removebg.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
+    {title:"Axiom",desc:"Automatiser le web.",cover:"assets/passions/sites/axiom-ai.webp",badge:"Outil",link:{label:"Voir",href:"https://axiom.ai/"}},
+    {title:"TinyWow",desc:"Utilitaires tout-en-un.",cover:"assets/passions/sites/tinywow.webp",badge:"Outils",link:{label:"Voir",href:"https://tinywow.com/"}},
+    {title:"OpenFoodFacts",desc:"Base produits ouverte.",cover:"assets/passions/sites/openfoodfacts.webp",badge:"Données",link:{label:"Parcourir",href:"https://world.openfoodfacts.org/"}},
+    {title:"ImportYeti",desc:"Fret & fournisseurs.",cover:"assets/passions/sites/importyeti.webp",badge:"Data",link:{label:"Chercher",href:"https://www.importyeti.com/"}},
+    {title:"Capitol Trades",desc:"Transactions d’élus US.",cover:"assets/passions/sites/capitoltrades.webp",badge:"Data",link:{label:"Parcourir",href:"https://www.capitoltrades.com/trades"}},
+    {title:"Am I Unique?",desc:"Empreinte navigateur.",cover:"assets/passions/sites/amiunique.webp",badge:"Test",link:{label:"Tester",href:"https://amiunique.org/fr/fingerprint"}},
+    {title:"VirusTotal",desc:"Scanner fichiers/URLs.",cover:"assets/passions/sites/virustotal.webp",badge:"Sécu",link:{label:"Scanner",href:"https://www.virustotal.com/gui/home/upload"}},
+    {title:"Scamdoc",desc:"Réputation d’un site.",cover:"assets/passions/sites/scamdoc.webp",badge:"Sécu",link:{label:"Tester",href:"https://fr.scamdoc.com/"}},
+    {title:"Folding@home",desc:"Calcul distribué.",cover:"assets/passions/sites/foldingathome.webp",badge:"Projet",link:{label:"Participer",href:"https://foldingathome.org/"}},
+    {title:"Night Watch",desc:"Restauration Rembrandt.",cover:"assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
+    {title:"OpenRouter",desc:"Hub de modèles IA.",cover:"assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Explorer",href:"https://openrouter.ai/"}},
+    {title:"BBC SFX",desc:"Banque de sons libre.",cover:"assets/passions/sites/bbc-sfx.webp",badge:"Sons",link:{label:"Écouter",href:"https://sound-effects.bbcrewind.co.uk/"}},
+    {title:"PlayPhrase",desc:"Trouver des répliques.",cover:"assets/passions/sites/playphrase.webp",badge:"Outil",link:{label:"Essayer",href:"https://playphrase.me/"}},
+    {title:"Driving Simulator",desc:"Cartes procédurales.",cover:"assets/passions/sites/driving-simulator-framesynthesis.webp",badge:"Démo",link:{label:"Jouer",href:"https://framesynthesis.com/drivingsimulator/maps/"}},
+    {title:"RetroArch",desc:"Frontend d’émulation.",cover:"assets/passions/sites/retroarch.webp",badge:"Outil",link:{label:"Télécharger",href:"https://www.retroarch.com/"}},
+    {title:"CoolThings",desc:"Objets & gadgets.",cover:"assets/passions/sites/coolthings.webp",badge:"Site",link:{label:"Voir",href:"https://coolthings.com/"}},
+    {title:"ThisIsWhyImBroke",desc:"Objets insolites.",cover:"assets/passions/sites/thisiswhyimbroke.webp",badge:"Site",link:{label:"Voir",href:"https://www.thisiswhyimbroke.com/"}},
+    {title:"NVIDIA Playground",desc:"Démos IA NVIDIA.",cover:"assets/passions/sites/nvidia-ai-playground.webp",badge:"Démo",link:{label:"Essayer",href:"https://www.nvidia.com/en-us/research/ai-playground/"}},
+    {title:"Giza 3D",desc:"Exploration 3D Égypte.",cover:"assets/passions/sites/giza3d.webp",badge:"Site",link:{label:"Visiter",href:"http://giza.fas.harvard.edu/giza3d/"}},
+    {title:"Lobbywatch (CH)",desc:"Transparence des lobbys en Suisse.",cover:"assets/passions/sites/lobbywatch.webp",badge:"Data",link:{label:"Parcourir",href:"https://lobbywatch.ch/fr"}}
+  ];
+
+  const GAMES_CUSTOM = [
+    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp"},
+    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
+    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp"},
+    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp"},
+    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp"},
+    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp"},
+    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp"},
+    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp"},
+    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
+    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp"},
+    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp"},
+    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp"},
+    {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp"},
+    {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp"},
+    {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp"}
+  ];
 
   /* ==== Helpers ==== */
+
   function card({title, desc, cover, badge, link, links}) {
     const el = document.createElement('article');
     el.className = 'card';
@@ -263,16 +328,21 @@
       const res = await fetch('data/steam-top40.json', {cache:'no-cache'});
       if(!res.ok) throw new Error('steam-top40.json introuvable');
       const data = await res.json();
+
       data.forEach(g=>{
         const appid = g.appid || g.id || g.appId;
         const cover = appid ? `assets/passions/games/steam/${appid}.webp` : '';
         const store = appid
           ? `https://store.steampowered.com/app/${appid}/`
           : `https://store.steampowered.com/search/?term=${encodeURIComponent(g.name||'')}`;
+
         const el = card({ title:g.name, desc:"", cover, badge:"Steam", link:{label:"Fiche",href:store} });
         root.appendChild(el);
-        const t = el.querySelector('.thumb'); if (t) io.observe(t);
+
+        const t = el.querySelector('.thumb');
+        if (t) io.observe(t);
       });
+
       observeThumbs();
     }catch(e){
       const d = document.createElement('div');
@@ -284,6 +354,7 @@
   }
 
   /* ==== Lazy load covers ==== */
+
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
       if(!e.isIntersecting) return;
@@ -314,165 +385,6 @@
   renderSteam();
   (function waitThenObserve(){ if(document.readyState==='complete') return observeThumbs();
     window.addEventListener('load', observeThumbs, {once:true}); })();
-</script>
-
-<!-- ====== LEVEL 2 (inline, plain JS) ====== -->
-<script>
-(function () {
-  var MODEL_URL   = "/assets/games/osselets/level2/3d/astragalus.glb";
-  var LETTERS_URL = "/assets/games/osselets/level2/3d/letters.json";
-
-  function makeLabelSprite(char) {
-    var size = 128, cvs = document.createElement("canvas"); cvs.width = cvs.height = size;
-    var ctx = cvs.getContext("2d");
-    ctx.fillStyle = "#0ea5e9"; ctx.beginPath(); ctx.arc(size/2, size/2, size*0.40, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#fff"; ctx.font = "bold " + Math.round(size*0.42) + "px ui-sans-serif,system-ui";
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(char, size/2, size/2);
-    var tex = new THREE.CanvasTexture(cvs); tex.anisotropy = 4;
-    var mat = new THREE.SpriteMaterial({ map: tex, depthTest: true, depthWrite: false, transparent: true });
-    var sp = new THREE.Sprite(mat); sp.scale.set(6,6,6); return sp;
-  }
-  function fitToParent(renderer, camera, container) {
-    var w = container.clientWidth || 640, h = container.clientHeight || 360;
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-  }
-  function createL2(container) {
-    var scene = new THREE.Scene(); scene.background = new THREE.Color(0x0d1b2a);
-    var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000); camera.position.set(0, 16, 30);
-    var renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.outputColorSpace = THREE.SRGBColorSpace;
-    container.innerHTML = ""; container.appendChild(renderer.domElement);
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; controls.minDistance=12; controls.maxDistance=60; controls.target.set(0,6,0);
-    var ground = new THREE.Mesh(new THREE.PlaneGeometry(200,200), new THREE.MeshPhongMaterial({ color: 0x36526b }));
-    ground.rotation.x=-Math.PI/2; scene.add(ground);
-    scene.add(new THREE.AmbientLight(0xffffff, .65)); var dir = new THREE.DirectionalLight(0xffffff,.85); dir.position.set(12,18,10); scene.add(dir);
-
-    var loading = document.createElement("div"); loading.style.position="absolute"; loading.style.left="50%"; loading.style.top="50%";
-    loading.style.transform="translate(-50%,-50%)"; loading.style.color="#f1f5f9"; loading.style.font="14px ui-sans-serif,system-ui";
-    loading.textContent="Chargement…"; container.style.position="relative"; container.appendChild(loading);
-
-    var modelRoot=null, labelSprites=[];
-    function addLabels(root, letters){
-      var nodes=[]; root.traverse(function(o){ if(o.name && o.name.toLowerCase().indexOf("hole")===0) nodes.push(o); });
-      var n = Math.min(nodes.length, letters.length), tmp=new THREE.Vector3();
-      for(var i=0;i<n;i++){ var sp=makeLabelSprite(letters[i]); nodes[i].getWorldPosition(tmp); sp.position.copy(tmp).add(new THREE.Vector3(0,0.3,0)); scene.add(sp); labelSprites.push(sp); }
-    }
-    function loadAll(){
-      if(!THREE || !THREE.GLTFLoader){ loading.textContent="GLTFLoader manquant"; return; }
-      var letters=[]; fetch(LETTERS_URL,{cache:"no-store"}).then(r=>r.ok?r.json():[]).then(j=>{ letters=Array.isArray(j)?j:[]; }).finally(function(){
-        var loader=new THREE.GLTFLoader();
-        loader.load(MODEL_URL, function(gltf){
-          if(modelRoot) scene.remove(modelRoot);
-          modelRoot=gltf.scene||gltf.scenes[0]; modelRoot.position.set(0,6,0);
-          modelRoot.traverse(function(o){ if(o.isMesh){ o.material.depthTest=true; o.material.depthWrite=true; } });
-          scene.add(modelRoot);
-          labelSprites.forEach(s=>scene.remove(s)); labelSprites.length=0;
-          if(letters.length) addLabels(modelRoot, letters);
-          loading.remove();
-        }, undefined, function(err){ loading.textContent="Échec GLB"; console.warn("[L2] glb error", err); });
-      });
-    }
-    function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); }
-    function resize(){ fitToParent(renderer,camera,container); }
-    var ro=new ResizeObserver(resize); ro.observe(container); window.addEventListener("resize",resize); resize();
-    loadAll(); loop();
-    return { destroy:function(){ try{ro.disconnect();}catch(e){} window.removeEventListener("resize",resize); container.innerHTML=""; } };
-  }
-  window.startOsseletsLevel2 = function (target) {
-    var el = typeof target==="string" ? document.querySelector(target) : target;
-    if(!el) return; if(el.__l2) el.__l2.destroy(); el.__l2 = createL2(el);
-  };
-})();
-</script>
-
-<!-- ====== LEVEL 3 (inline, plain JS) ====== -->
-<script>
-(function () {
-  var MODEL_URL = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
-
-  function fit(r,c,box){ var w=box.clientWidth||640,h=box.clientHeight||360; r.setPixelRatio(Math.min(2,window.devicePixelRatio||1)); r.setSize(w,h,false); c.aspect=w/h; c.updateProjectionMatrix(); }
-  function choose(a){ return a[(Math.random()*a.length)|0]; }
-
-  function createL3(container){
-    var scene=new THREE.Scene(); scene.background=new THREE.Color(0xf5f7fb);
-    var camera=new THREE.PerspectiveCamera(45,1,.1,1000); camera.position.set(0,26,46);
-    var renderer=new THREE.WebGLRenderer({antialias:true}); renderer.outputColorSpace=THREE.SRGBColorSpace;
-    container.innerHTML=""; container.appendChild(renderer.domElement);
-    var controls=new THREE.OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.minDistance=18; controls.maxDistance=80; controls.target.set(0,6,0);
-    var ground=new THREE.Mesh(new THREE.CircleGeometry(120,64), new THREE.MeshPhongMaterial({color:0xe2e8f0})); ground.rotation.x=-Math.PI/2; scene.add(ground);
-    scene.add(new THREE.AmbientLight(0xffffff,.7)); var d=new THREE.DirectionalLight(0xffffff,.9); d.position.set(20,30,12); scene.add(d);
-
-    var scoreDiv=document.createElement("div"); scoreDiv.style.position="absolute"; scoreDiv.style.right="12px"; scoreDiv.style.top="10px";
-    scoreDiv.style.background="#1f2937"; scoreDiv.style.color="#fff"; scoreDiv.style.padding="6px 10px"; scoreDiv.style.borderRadius="10px"; scoreDiv.style.font="14px ui-sans-serif,system-ui";
-    scoreDiv.textContent="Score : —"; container.style.position="relative"; container.appendChild(scoreDiv);
-
-    var loading=document.createElement("div"); loading.style.position="absolute"; loading.style.left="50%"; loading.style.top="50%";
-    loading.style.transform="translate(-50%,-50%)"; loading.style.color="#475569"; loading.style.font="14px ui-sans-serif,system-ui"; loading.textContent="Chargement du modèle 3D…";
-    container.appendChild(loading);
-
-    var singleDie=null, dice=[];
-    var names=["face_1","face_3","face_4","face_6"];
-    function findAnchors(root){ var out={}; root.traverse(function(o){ if(!o.name)return; var n=o.name.toLowerCase().replace(/\s+/g,""); for(var i=0;i<names.length;i++){ var k=names[i]; if(n.indexOf(k)===0||n.indexOf("anchor_"+k)===0){ out[k.split("_")[1]]=o; } } }); return out; }
-    function cloneDie(){ var root=singleDie.clone(true); scene.add(root); return {root:root, vel:new THREE.Vector3(), targetQuat:new THREE.Quaternion(), anchors:findAnchors(root), settled:false, value:0}; }
-
-    function loadModel(cb){
-      if(!THREE || !THREE.GLTFLoader){ loading.textContent="GLTFLoader manquant"; return; }
-      var loader=new THREE.GLTFLoader();
-      loader.load(MODEL_URL, function(gltf){ singleDie=gltf.scene||gltf.scenes[0];
-        singleDie.traverse(function(o){ if(o.isMesh){ o.material.depthTest=true; o.material.depthWrite=true; }});
-        loading.remove(); if(cb)cb();
-      }, undefined, function(e){ loading.textContent="Échec GLB"; console.warn("[L3] glb error",e); });
-    }
-
-    var up=new THREE.Vector3(0,1,0), tmpQ=new THREE.Quaternion();
-    function pickTopFace(d){ var best={dot:-1,val:0}; for(var k in d.anchors){ var a=d.anchors[k]; a.updateWorldMatrix(true,false);
-        var m=new THREE.Matrix4().extractRotation(a.matrixWorld); var y=new THREE.Vector3(0,1,0).applyMatrix4(m).normalize();
-        var dot=y.dot(up); if(dot>best.dot){ best.dot=dot; best.val=parseInt(k,10);} } return best.val||0; }
-    function quatToPutFaceUp(d, val){ var a=d.anchors[val]; if(!a) return d.root.quaternion.clone(); a.updateWorldMatrix(true,false);
-      var qA=new THREE.Quaternion(); a.getWorldQuaternion(qA); var y=new THREE.Vector3(0,1,0).applyQuaternion(qA).normalize();
-      var qFix=new THREE.Quaternion().setFromUnitVectors(y, up); var qDie=new THREE.Quaternion(); d.root.getWorldQuaternion(qDie); return qFix.multiply(qDie); }
-    function separate(){ for(var i=0;i<dice.length;i++){ for(var j=i+1;j<dice.length;j++){ var a=dice[i].root.position, b=dice[j].root.position;
-          var dx=b.x-a.x, dz=b.z-a.z, dist2=dx*dx+dz*dz, min=6.0; if(dist2<(min*min)){ var d=Math.sqrt(dist2)||0.001, push=(min-d)*0.5, nx=dx/d, nz=dz/d; a.x-=nx*push; a.z-=nz*push; b.x+=nx*push; b.z+=nz*push; } } } }
-
-    function launch(){
-      dice.forEach(d=>scene.remove(d.root)); dice.length=0;
-      for(var i=0;i<4;i++){ var d=cloneDie(); d.root.position.set(-15+i*10+(Math.random()*2-1), 8+Math.random()*2, -4+Math.random()*8);
-        d.root.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,Math.random()*Math.PI);
-        d.vel.set(2+Math.random()*5,0,2+Math.random()*5).multiplyScalar((Math.random()<.5)?1:-1);
-        var v=choose([1,3,4,6]); d.targetQuat.copy(quatToPutFaceUp(d,v)); d.value=v; dice.push(d); }
-      var settleT=0;
-      function step(){
-        var active=false;
-        for(var i=0;i<dice.length;i++){ var di=dice[i];
-          if(!di.settled){
-            di.root.position.y=Math.max(6, di.root.position.y-0.6);
-            di.root.position.addScaledVector(di.vel, 1/60); di.vel.multiplyScalar(0.98);
-            tmpQ.copy(di.targetQuat); di.root.quaternion.slerp(tmpQ, 0.04);
-            var ang=1-Math.abs(di.root.quaternion.dot(tmpQ)); if(ang<0.0008 && di.vel.lengthSq()<0.002) di.settled=true; else active=true;
-          }
-        }
-        separate();
-        if(!active){ settleT+=1/60; if(settleT>0.35){ var sum=0, faces=[]; for(var k=0;k<dice.length;k++){ var f=pickTopFace(dice[k])||dice[k].value; sum+=f; faces.push(f); }
-            scoreDiv.textContent="Score : "+sum+"  (faces "+faces.join(", ")+")"; return; } }
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); }
-    function resize(){ fit(renderer,camera,container); }
-    var ro=new ResizeObserver(resize); ro.observe(container); window.addEventListener("resize",resize); resize();
-    loadModel(function(){ loop(); launch(); });
-
-    return { launch:launch, destroy:function(){ try{ro.disconnect();}catch(e){} window.removeEventListener("resize",resize); container.innerHTML=""; } };
-  }
-
-  window.startOsseletsLevel3=function(target){
-    var el=typeof target==="string"?document.querySelector(target):target; if(!el) return;
-    if(el.__l3) el.__l3.destroy(); el.__l3=createL3(el); return el.__l3;
-  };
-})();
 </script>
 </body>
 </html>
