@@ -1,8 +1,7 @@
 // public/osselets-level3.tsx
-// LEVEL 3 — « Rouler les os » (dés 1/3/4/6)
-// - Modèle : /assets/games/osselets/level3/3d/astragalus_faces.glb (ancres Face_1/3/4/6)
-// - 4 astragales clonés, lancer avec simple physique + lecture de la face orientée vers +Y.
-// - Charge Three/GLTFLoader global (évite “Multiple instances” & material.onBuild errors).
+// LEVEL 3 — « Rouler les os » (dés 1/3/4/6) avec votre modèle : /assets/games/osselets/level3/3d/astragalus_faces.glb
+// 4 astragales clonés, lancer aléatoire, lecture de la face +Y (ancres Face_1/3/4/6).
+// Three/GLTFLoader chargés d’abord en LOCAL (vendor/), sinon CDN, version *pinnée*.
 
 ;(()=> {
   const { useEffect, useRef, useState } = React;
@@ -14,32 +13,54 @@
   const W = 960, H = 540, DPR_MAX = 2.5;
   const COUNT = 4, FLOOR_Y = 0, GRAV = -14.5, REST = 0.45, FRIC = 0.92, AFRIC = 0.94, EPS = 0.18, STABLE_MS = 800;
 
-  /* -------------------- Loader Three global -------------------- */
-  async function injectScript(src){
+  /* -------------------- Loader Three global (identique L2) -------------------- */
+  const VER = "0.158.0";
+  const VENDOR_CANDIDATES = [
+    "/assets/games/osselets/vendor/",
+    "/assets/vendor/",
+    "/vendor/",
+  ];
+  function injectScript(src){
     return new Promise((res, rej) => {
       const s = document.createElement("script");
-      s.src = src; s.async = true; s.onload = res; s.onerror = rej;
+      s.src = src; s.async = true; s.onload = () => res(src); s.onerror = (e)=>rej(e||new Event("error"));
       document.head.appendChild(s);
     });
+  }
+  async function loadFirst(urls, check){
+    for (let i=0;i<urls.length;i++){
+      try { await injectScript(urls[i]); if (!check || check()) return urls[i]; } catch {}
+    }
+    throw new Error("loadFirst failed");
   }
   async function ensureThreeGlobal(){
     if (window.__threeGlobalPromise) return window.__threeGlobalPromise;
     window.__threeGlobalPromise = (async () => {
-      if (window.THREE) {
-        const rev = (window.THREE.REVISION || "158").replace(/[^\d]/g,"");
-        if (!window.THREE.GLTFLoader) {
-          try { await injectScript(`https://unpkg.com/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
-          catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
-        }
-        return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+
+      const local3 = [], localGL=[];
+      for (const base of VENDOR_CANDIDATES){
+        local3.push(base + "three.min.js", base + "build/three.min.js");
+        localGL.push(base + "GLTFLoader.js", base + "examples/js/loaders/GLTFLoader.js");
       }
-      const ver = "0.158.0";
-      try { await injectScript(`https://unpkg.com/three@${ver}/build/three.min.js`); }
-      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/build/three.min.js`); }
-      try { await injectScript(`https://unpkg.com/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
-      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
+      try { await loadFirst(local3, ()=>!!window.THREE); } catch {}
+      if (window.THREE){ try { await loadFirst(localGL, ()=>!!window.THREE.GLTFLoader); } catch {} }
+      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+
+      const cdn3 = [
+        `https://unpkg.com/three@${VER}/build/three.min.js`,
+        `https://cdn.jsdelivr.net/npm/three@${VER}/build/three.min.js`,
+      ];
+      const cdnGL = [
+        `https://unpkg.com/three@${VER}/examples/js/loaders/GLTFLoader.js`,
+        `https://cdn.jsdelivr.net/npm/three@${VER}/examples/js/loaders/GLTFLoader.js`,
+      ];
+      try { await loadFirst(cdn3, ()=>!!window.THREE); } catch (e){ console.error("[L3] three load fail:", e); }
+      if (window.THREE){ try { await loadFirst(cdnGL, ()=>!!window.THREE.GLTFLoader); } catch (e){ console.error("[L3] gltfloader load fail:", e); } }
+
+      if (!(window.THREE && window.THREE.GLTFLoader)) throw new Error("Three/GLTFLoader indisponible");
       return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
-    })().catch((e)=>{ console.error("[L3] Three/GLTFLoader load fail:", e); return null; });
+    })();
     return window.__threeGlobalPromise;
   }
 
@@ -49,9 +70,9 @@
 
   function extractAnchorsFaces(root){
     const out=[];
-    root.traverse(function(n){
+    root.traverse((n)=>{
       const nm=(n.name||"").toLowerCase();
-      var tag=null;
+      let tag=null;
       if (/^face[_\s-]?1$|^f1$|value[_\s-]?1$|valeur[_\s-]?1$/.test(nm)) tag="1";
       else if (/^face[_\s-]?3$|^f3$|value[_\s-]?3$|valeur[_\s-]?3$/.test(nm)) tag="3";
       else if (/^face[_\s-]?4$|^f4$|value[_\s-]?4$|valeur[_\s-]?4$/.test(nm)) tag="4";
@@ -64,8 +85,8 @@
     if (!anchors || !anchors.length) return null;
     const up = new THREE.Vector3(0,1,0), y = new THREE.Vector3(0,1,0);
     const q = new THREE.Quaternion();
-    var best=null, bestDot=-1e9;
-    for (var i=0;i<anchors.length;i++){
+    let best=null, bestDot=-1e9;
+    for (let i=0;i<anchors.length;i++){
       const a=anchors[i];
       a.node.getWorldQuaternion(q);
       const yw = y.clone().applyQuaternion(q).normalize();
@@ -118,7 +139,9 @@
     useEffect(()=>{
       let cancelled=false;
       (async ()=>{
-        const libs = await ensureThreeGlobal();
+        let libs=null;
+        try { libs = await ensureThreeGlobal(); }
+        catch (e){ console.error("[L3] Three/GLTFLoader load fail:", e); setMsg("Three.js/GLTFLoader manquant."); return; }
         if (!libs){ setMsg("Three.js/GLTFLoader manquant."); return; }
         const { THREE } = libs;
         THREEref.current = THREE;
@@ -149,10 +172,10 @@
 
         // Modèle
         const loader=new window.THREE.GLTFLoader();
-        loader.load(MODEL_URL, function(gltf){
+        loader.load(MODEL_URL, (gltf)=>{
           if (cancelled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base){ setMsg("Modèle vide."); return; }
-          base.traverse(function(o){
+          base.traverse((o)=>{
             if(o.isMesh){
               if(!o.material || !o.material.isMeshStandardMaterial)
                 o.material=new THREE.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
@@ -169,8 +192,8 @@
 
           // clones
           const dice=[];
-          for(var i=0;i<COUNT;i++){
-            var g=base.clone(true); scene.add(g);
+          for(let i=0;i<COUNT;i++){
+            const g=base.clone(true); scene.add(g);
             dice.push({
               root:g,
               anchors: extractAnchorsFaces(g),
@@ -184,13 +207,13 @@
           layoutDice();
           setReady(true);
           startLoop();
-        }, undefined, function(err){ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, (err)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
 
         function startLoop(){
           lastRef.current=now();
           function frame(){
             if (cancelled) return;
-            var t=now(), dt=Math.min(32, t-lastRef.current)/1000; lastRef.current=t;
+            const t=now(), dt=Math.min(32, t-lastRef.current)/1000; lastRef.current=t;
             step(dt);
             renderer.render(scene,cameraRef.current);
             reqRef.current=requestAnimationFrame(frame);
@@ -205,8 +228,8 @@
     /* ---------- Physique simple ---------- */
     function layoutDice(){
       const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
-      for(var i=0;i<dice.length;i++){
-        var d=dice[i];
+      for(let i=0;i<dice.length;i++){
+        const d=dice[i];
         d.root.position.set(-2.2 + i*1.5, 0.82, (i%2===0)? -0.6 : 0.7);
         d.root.rotation.set(0, i*0.6, 0);
         d.vel.set(0,0,0); d.angVel.set(0,0,0);
@@ -216,8 +239,8 @@
     }
     function randomThrow(){
       const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
-      for(var i=0;i<dice.length;i++){
-        var d=dice[i];
+      for(let i=0;i<dice.length;i++){
+        const d=dice[i];
         d.root.position.set(-3.5 + i*0.6, 2.2 + Math.random()*0.8, -1.8 + Math.random()*3.4);
         d.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
         d.vel.set(5.2 + Math.random()*2.0, 2.5 + Math.random()*1.2, 1.5 - Math.random()*3.0);
@@ -228,19 +251,19 @@
     }
     function step(dt){
       const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
-      var allStable=true;
-      for(var i=0;i<dice.length;i++){
-        var d=dice[i];
+      let allStable=true;
+      for(let i=0;i<dice.length;i++){
+        const d=dice[i];
         d.vel.y += GRAV*dt;
         d.root.position.addScaledVector(d.vel, dt);
 
-        var r=0.75;
+        const r=0.75;
         if (d.root.position.y - r <= FLOOR_Y){
           d.root.position.y=FLOOR_Y+r;
           if (d.vel.y<0) d.vel.y = -d.vel.y*REST;
           d.vel.x*=FRIC; d.vel.z*=FRIC; d.angVel.multiplyScalar(AFRIC);
         }
-        var X=6.8,Z=4.4;
+        const X=6.8,Z=4.4;
         if (d.root.position.x<-X){ d.root.position.x=-X; d.vel.x= Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x> X){ d.root.position.x= X; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z<-Z){ d.root.position.z=-Z; d.vel.z= Math.abs(d.vel.z)*0.6; }
@@ -252,17 +275,17 @@
         d.vel.multiplyScalar(0.999); d.angVel.multiplyScalar(0.999);
         d.root.updateMatrixWorld(true);
 
-        var speed=d.vel.length()+d.angVel.length();
+        const speed=d.vel.length()+d.angVel.length();
         if (speed<EPS){ if(!d.stableSince) d.stableSince=now(); } else d.stableSince=0;
         if (!(d.stableSince && (now()-d.stableSince>STABLE_MS))) allStable=false;
       }
       if (throwing && allStable){
         setThrowing(false);
-        var out=[]; var map=mapRef.current;
-        for(var j=0;j<dice.length;j++){
-          var d2=dice[j];
-          var tag = topFaceByOrientation(d2.anchors, THREE) || "?";
-          if (map && map.map && map.map[tag]!=null) tag=String(map.map[tag]);
+        const out=[]; const map=mapRef.current && mapRef.current.map;
+        for(let j=0;j<dice.length;j++){
+          const d2=dice[j];
+          let tag = topFaceByOrientation(d2.anchors, THREE) || "?";
+          if (map && map[tag]!=null) tag=String(map[tag]);
           out.push(tag);
         }
         setVals(out);
@@ -277,11 +300,11 @@
           <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8}}>
             <h1 className="text-xl sm:text-2xl" style={{fontWeight:700}}>Rouler les os — Vénus, Canis, Senio…</h1>
             <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
-              <button onClick={function(){ if(ready) randomThrow(); }} disabled={!ready}
+              <button onClick={()=>{ if(ready) randomThrow(); }} disabled={!ready}
                 style={{padding:"10px 14px", border:"1px solid #2563eb", background:"#2563eb", color:"#fff", borderRadius:12, cursor:ready?"pointer":"default", boxShadow:"0 6px 16px rgba(37,99,235,.25)"}}>
                 Lancer
               </button>
-              <button onClick={function(){ layoutDice(); setVals([]); setThrowing(false); setMsg("Réinitialisé. Clique « Lancer »."); }} disabled={!ready}
+              <button onClick={()=>{ layoutDice(); setVals([]); setThrowing(false); setMsg("Réinitialisé. Clique « Lancer »."); }} disabled={!ready}
                 style={{padding:"8px 12px", border:"1px solid #e5e7eb", background:"#fff", borderRadius:12, cursor:ready?"pointer":"default"}}>
                 Réinitialiser
               </button>
@@ -307,7 +330,7 @@
                 <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
                 <div style={{fontSize:14}}>
                   {vals.join("  ")}
-                  <span style={{marginLeft:10, color:"#64748b"}}>Somme: {vals.filter(function(v){return /^\d+$/.test(v);}).map(function(n){return +n;}).reduce(function(a,b){return a+b;},0)}</span>
+                  <span style={{marginLeft:10, color:"#64748b"}}>Somme: {vals.filter((v)=>/^\d+$/.test(v)).map((n)=>+n).reduce((a,b)=>a+b,0)}</span>
                 </div>
                 <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
                   Catégories : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 “6”), Trina (triple), Bina (deux paires), Simple (autres).
