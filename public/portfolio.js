@@ -1,22 +1,31 @@
 /* public/portfolio.js
-   Rendu du portfolio à partir de public/portfolio-data.js (avec i18n).
-   Aperçu = overlay <iframe> sécurisé (sandbox), Visiter = nouvel onglet.
-   Vanilla JS, sans dépendances.
+   Portfolio grid + Preview overlay (sécurisé)
+   - Rendu depuis public/portfolio-data.js
+   - Bouton "Aperçu" -> overlay <iframe sandbox>, message si X-Frame-Options bloque
+   - Compat totale avec portfolio.html existant
 */
 (function () {
   "use strict";
 
-  // Langue de la page
+  // -------- Langue --------
   const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0,2).toLowerCase();
-
-  // Libellés
   const T = ({
-    fr: { preview:"Aperçu", visit:"Visiter", close:"Fermer", blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »." },
-    en: { preview:"Preview", visit:"Visit",  close:"Close",  blocked:"This site denies being embedded. ➜ Use “Visit”." },
-    de: { preview:"Vorschau", visit:"Besuchen", close:"Schließen", blocked:"Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen." }
-  })[htmlLang] || { preview:"Aperçu", visit:"Visiter", close:"Fermer", blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter »." };
+    fr: { preview:"Aperçu", visit:"Visiter", close:"Fermer",
+          blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
+          loading:"Chargement de l’aperçu…" },
+    en: { preview:"Preview", visit:"Visit", close:"Close",
+          blocked:"This site denies being embedded. ➜ Use “Visit”.",
+          loading:"Loading preview…" },
+    de: { preview:"Vorschau", visit:"Besuchen", close:"Schließen",
+          blocked:"Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen.",
+          loading:"Vorschau wird geladen…" }
+  })[htmlLang] || {
+    preview:"Aperçu", visit:"Visiter", close:"Fermer",
+    blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
+    loading:"Chargement de l’aperçu…"
+  };
 
-  // Helpers
+  // -------- Utils DOM --------
   const $  = (s, r=document) => r.querySelector(s);
   const el = (tag, attrs={}, children=[]) => {
     const n = document.createElement(tag);
@@ -33,16 +42,14 @@
     return n;
   };
 
-  // Charge les données (quel que soit l’ancien format)
+  // -------- Données --------
   function loadData() {
-    const d = window.portfolioData
+    const d = (window.portfolioData)
       || (window.PORTFOLIO && window.PORTFOLIO.items)
       || window.PORTFOLIO_ITEMS
       || [];
     return Array.isArray(d) ? d : [];
   }
-
-  // Sélectionne titre/desc/url selon la langue (avec fallback)
   function pickI18n(it) {
     const i = it.i18n || {};
     const L = i[htmlLang] || i.fr || Object.values(i)[0] || {};
@@ -53,29 +60,56 @@
     };
   }
 
-  // --- Overlay : réutilise l'existant (#overlay) sinon crée un fallback compatible
+  // -------- Overlay / Aperçu --------
   function ensureOverlay() {
-    // 1) Overlay natif défini dans la page (portfolio.html) :
-    //    <div id="overlay" class="overlay"> ... <iframe id="overlayFrame"> ... <button id="overlayClose">
+    // 1) Overlay fourni par portfolio.html
+    //    <div id="overlay">... <iframe id="overlayFrame"> ... <button id="overlayClose">
     let ovl = $("#overlay");
-    if (ovl) return ovl;
+    if (!ovl) {
+      // 2) Fallback si absent (autres pages)
+      ovl = el("div", { id:"overlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"ovlTitle" }, [
+        el("div", { class:"panel" }, [
+          el("header", {}, [
+            el("strong", { id:"ovlTitle", text:"" }),
+            el("button", { id:"overlayClose", class:"btn" }, T.close)
+          ]),
+          el("iframe", { id:"overlayFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
+        ])
+      ]);
+      document.body.appendChild(ovl);
+    }
 
-    // 2) Si absent (p.ex. autres variantes), on crée un overlay minimal compatible
-    ovl = el("div", { id:"overlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"ovlTitle" }, [
-      el("div", { class:"panel" }, [
-        el("header", {}, [
-          el("strong", { id:"ovlTitle", text:"" }),
-          el("button", { id:"overlayClose", class:"btn" }, T.close)
-        ]),
-        el("iframe", { id:"overlayFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
-      ])
-    ]);
-    document.body.appendChild(ovl);
+    // Styles inline robustes (ne dépend pas de /style.css)
+    Object.assign(ovl.style, {
+      position: "fixed", inset: "0", display: "none", zIndex: "99999",
+      alignItems: "center", justifyContent: "center", padding: "18px",
+      background: "rgba(0,0,0,.55)"
+    });
+    const panel = ovl.querySelector(".panel") || ovl.firstElementChild || ovl;
+    Object.assign(panel.style, {
+      position: "relative", background: "#0b2237", border: "1px solid #ffffff22",
+      borderRadius: "12px", width: "min(1100px, 100%)", height: "min(78vh, 100%)", overflow: "hidden"
+    });
+
+    // Entête
+    const header = panel.querySelector("header") || panel.insertBefore(el("header", {}), panel.firstChild);
+    Object.assign(header.style, {
+      display:"flex", alignItems:"center", justifyContent:"space-between", gap:"10px",
+      padding:"10px 12px", borderBottom:"1px solid #ffffff22", color:"#fff"
+    });
+    let titleEl = $("#ovlTitle", header); if (!titleEl) titleEl = header.appendChild(el("strong",{id:"ovlTitle"}));
+    let closeBtn = $("#overlayClose", header); if (!closeBtn) closeBtn = header.appendChild(el("button",{id:"overlayClose", class:"btn"}, T.close));
+
+    // Iframe
+    let frame = $("#overlayFrame", panel);
+    if (!frame) frame = panel.appendChild(el("iframe",{id:"overlayFrame", title:T.preview}));
+    Object.assign(frame.style, { width:"100%", height:"calc(100% - 46px)", border:"0", background:"#fff" });
+    frame.setAttribute("sandbox","allow-scripts allow-popups");
+
     return ovl;
   }
 
-  function ensureBlockedMsg(ovl) {
-    // Ajoute un petit message si la cible bloque l’embed (X-Frame-Options)
+  function ensureMsg(ovl) {
     let msg = $("#pfMsg", ovl);
     if (!msg) {
       const panel = ovl.querySelector(".panel") || ovl;
@@ -85,38 +119,54 @@
     return msg;
   }
 
-  function openOverlay(url, title) {
-    const ovl = ensureOverlay();
-    // Supporte les deux schémas d'IDs (#overlayFrame/#overlayClose ou #pfFrame/#pfClose)
-    const frame = $("#overlayFrame", ovl) || $("#pfFrame", ovl);
-    const titleEl = $("#ovlTitle", ovl) || $("#pfTitle", ovl) || ovl.querySelector("strong");
-    const btnClose = $("#overlayClose", ovl) || $("#pfClose", ovl);
-    const msg = ensureBlockedMsg(ovl);
+  function ensureSpinner(ovl) {
+    let sp = $("#pfSpin", ovl);
+    if (!sp) {
+      sp = el("div", { id:"pfSpin", style:"position:absolute;inset:auto 12px 12px auto;background:#0b1f33;color:#e6f1ff;border:1px solid #ffffff33;border-radius:10px;padding:6px 10px;display:none" }, T.loading);
+      (ovl.querySelector(".panel") || ovl).appendChild(sp);
+    }
+    return sp;
+  }
 
-    if (!frame || !btnClose) return; // garde-fou
+  function openOverlay(url, title) {
+    // Garde-fou URL
+    if (!/^https?:\/\//i.test(url)) { window.open(url, "_blank", "noopener"); return; }
+
+    const ovl = ensureOverlay();
+    const panel = ovl.querySelector(".panel") || ovl;
+    const frame = $("#overlayFrame", panel);
+    const titleEl = $("#ovlTitle", ovl) || $("#pfTitle", ovl) || panel.querySelector("strong");
+    const btnClose = $("#overlayClose", ovl) || $("#pfClose", ovl);
+    const msg = ensureMsg(ovl);
+    const spin = ensureSpinner(ovl);
+
+    if (!frame || !btnClose) return;
 
     if (titleEl) titleEl.textContent = title || "";
-    if (msg) msg.style.display = "none";
+    msg.style.display = "none";
+    spin.style.display = "inline-block";
 
-    // Affiche l’overlay (ne dépend plus d’une classe CSS)
     ovl.style.display = "flex";
-    ovl.style.alignItems = "center";
-    ovl.style.justifyContent = "center";
     document.body.style.overflow = "hidden";
 
-    // (re)charge l’iframe
+    // reset & (re)charge
     frame.removeAttribute("src");
-    frame.setAttribute("sandbox", "allow-scripts allow-popups");
+    frame.setAttribute("sandbox","allow-scripts allow-popups");
+    // Détection blocage : on attend un onload ; si jamais déclenché -> message "bloqué"
+    let loaded = false;
+    const onLoad = () => { loaded = true; spin.style.display="none"; };
+    frame.addEventListener("load", onLoad, { once:true });
     frame.src = url;
 
-    // Si rien n'apparaît au bout de 2s, on montre le message "bloqué"
-    const timer = setTimeout(() => { if (msg) msg.style.display = "block"; }, 2000);
+    const timer = setTimeout(() => {
+      if (!loaded) { msg.style.display = "block"; spin.style.display = "none"; }
+    }, 2000);
 
     const close = () => {
       clearTimeout(timer);
-      ovl.style.display = "";          // cache l’overlay
+      ovl.style.display = "none";
       document.body.style.overflow = "";
-      frame.removeAttribute("src");    // stoppe le chargement
+      frame.removeAttribute("src");
       btnClose.removeEventListener("click", close);
       ovl.removeEventListener("click", onBackdrop);
       document.removeEventListener("keydown", onEsc);
@@ -129,7 +179,7 @@
     document.addEventListener("keydown", onEsc);
   }
 
-  // Cartes
+  // -------- Cartes --------
   function makeCard(it) {
     const { title, description, url } = pickI18n(it);
     const img  = it.image || it.thumbnail || null;
@@ -159,7 +209,16 @@
     grid.appendChild(frag);
   }
 
+  // -------- Boot --------
   document.addEventListener("DOMContentLoaded", () => {
     renderGrid(loadData());
+
+    // Filet de sécurité : si un "aperçu" est rendu autrement (ex: <div data-href>), on délègue
+    document.addEventListener("click", (e) => {
+      const n = e.target.closest?.("[data-preview-url]");
+      if (!n) return;
+      e.preventDefault();
+      openOverlay(n.getAttribute("data-preview-url"), n.getAttribute("data-title") || "");
+    }, { passive:false });
   });
 })();
