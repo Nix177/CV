@@ -1,386 +1,271 @@
-/* public/osselets-level3.tsx */
-(function () {
-  const { useEffect, useRef, useState } = React;
+/* L3 — osselets-level3.tsx (isolé) */
+(() => {
+  const ReactL3 = window.React;
+  const { useEffect: useEffectL3, useRef: useRefL3, useState: useStateL3 } = ReactL3;
 
-  type Die = {
-    root: THREE.Object3D;
-    pos: THREE.Vector3;
-    vel: THREE.Vector3;
-    quat: THREE.Quaternion;
-    angVel: THREE.Vector3;
-    radius: number;
-    asleep: boolean;
-  };
+  // ---- charge UMD examples de three (une seule fois) ----
+  function loadScriptOnceL3(id, src) {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById(id)) return resolve();
+      const s = document.createElement("script");
+      s.id = id; s.src = src; s.async = true; s.onload = resolve; s.onerror = () => reject(new Error("fail "+src));
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureThreeExtrasL3() {
+    if (!window.THREE) throw new Error("[L3] THREE global manquant (importe three.min.js avant).");
+    const REV = window.THREE.REVISION || "158";
+    const base = `https://unpkg.com/three@0.${REV}.0/examples/js`;
+    const needs = [];
+    if (!window.THREE.OrbitControls) needs.push(loadScriptOnceL3("__ex_orbit_l3", `${base}/controls/OrbitControls.js`));
+    if (!window.THREE.GLTFLoader)    needs.push(loadScriptOnceL3("__ex_gltf_l3",   `${base}/loaders/GLTFLoader.js`));
+    await Promise.all(needs);
+  }
 
-  const BASE = "/assets/games/osselets/";
-  const MODEL = BASE + "level3/3d/astragalus_faces.glb"; // ton modèle
+  const GLB_CANDIDATES_L3 = [
+    "/assets/games/osselets/models/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus.glb",
+    "/assets/osselets/astragalus.glb",
+  ];
 
-  // Utilitaires
-  const tmpV = new THREE.Vector3();
-  const UP = new THREE.Vector3(0, 1, 0);
+  // valeurs “romaines” sans 2 ni 5 : associe 4 faces (±Y, ±X)
+  const FACE_MAP = [
+    { name:"pranes(+Y)",  n:new THREE.Vector3(0, 1, 0), val:4 },
+    { name:"huption(-Y)", n:new THREE.Vector3(0,-1, 0), val:3 },
+    { name:"ischia(+X)",  n:new THREE.Vector3(1, 0, 0), val:1 },
+    { name:"kôla(-X)",    n:new THREE.Vector3(-1,0, 0), val:6 },
+  ];
 
-  function length2(v: THREE.Vector3) { return v.x*v.x + v.y*v.y + v.z*v.z; }
+  function OsseletsLevel3() {
+    const wrapRef   = useRefL3(null);
+    const rendererR = useRefL3(null);
+    const sceneR    = useRefL3(null);
+    const cameraR   = useRefL3(null);
+    const controlsR = useRefL3(null);
+    const animRef   = useRefL3({ req:0 });
+    const [score, setScore] = useStateL3({ sum:0, by:[] });
 
-  function AstragalusLevel3() {
-    const wrapRef = useRef<HTMLDivElement | null>(null);
-    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-    const sceneRef = useRef<THREE.Scene | null>(null);
-    const controlsRef = useRef<any | null>(null);
-    const diceRef = useRef<Die[]>([]);
-    const facesRef = useRef<{ value: number; node: THREE.Object3D; normal: THREE.Vector3; }[]>([]);
-    const frameRef = useRef<number | null>(null);
-    const [status, setStatus] = useState<"loading"|"ready"|"error">("loading");
-    const [msg, setMsg] = useState<string>("Chargement du modèle 3D…");
-    const [score, setScore] = useState<number | null>(null);
+    // petit “moteur” maison sur sol (pas d’empilement, glisse)
+    const bodiesRef = useRefL3([]);
 
-    // init
-    useEffect(() => {
-      const wrap = wrapRef.current!;
-      if (!wrap || !window.THREE) return;
-
-      // renderer
-      const rnd = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      rnd.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-      rnd.outputEncoding = THREE.sRGBEncoding;
-      rendererRef.current = rnd;
-      wrap.appendChild(rnd.domElement);
-
-      // scene + camera
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf4f6fb);
-      sceneRef.current = scene;
-
-      const cam = new THREE.PerspectiveCamera(45, 16/9, 0.1, 100);
-      cam.position.set(1.9, 1.2, 2.3);
-      cameraRef.current = cam;
-
-      // lights
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x99aacc, 0.9));
-      const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-      dir.position.set(1.2, 2.0, 1.0);
-      dir.castShadow = false;
-      scene.add(dir);
-
-      // ground
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(6, 6),
-        new THREE.MeshPhongMaterial({ color: 0xdee6f5, shininess: 8 })
-      );
-      ground.rotation.x = -Math.PI / 2;
-      ground.position.y = 0;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      // controls
-      const ctrl = new (THREE as any).OrbitControls(cam, rnd.domElement);
-      ctrl.enableDamping = true;
-      ctrl.maxPolarAngle = Math.PI * 0.495;
-      ctrl.target.set(0, 0.18, 0);
-      controlsRef.current = ctrl;
-
-      // resize
-      const onResize = () => {
-        const w = wrap.clientWidth;
-        const h = Math.max(420, Math.floor(w * 9/16));
-        rnd.setSize(w, h, false);
-        cam.aspect = w/h;
-        cam.updateProjectionMatrix();
-      };
-      onResize();
-      const ro = new (window as any).ResizeObserver(onResize);
-      ro.observe(wrap);
-      window.addEventListener("resize", onResize);
-
-      // load model
-      const loader = new (THREE as any).GLTFLoader();
-      loader.load(MODEL, (gltf: any) => {
-        const root = gltf.scene || gltf.scenes?.[0];
-        if (!root) { setStatus("error"); setMsg("Modèle GLB vide."); return; }
-
-        // Normalisation (échelle & centrage)
-        const box = new THREE.Box3().setFromObject(root);
-        const size = new THREE.Vector3(); box.getSize(size);
-        const scale = 0.9 / Math.max(0.001, size.length());
-        root.scale.setScalar(scale);
-        const c = new THREE.Vector3(); new THREE.Box3().setFromObject(root).getCenter(c);
-        root.position.sub(c);
-
-        // Prépare un prototype à cloner pour chaque dé
-        const proto = new THREE.Group();
-        root.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }});
-        proto.add(root);
-
-        // Récupère les ancres de faces si présentes
-        const faces: { value:number; node:THREE.Object3D; normal:THREE.Vector3 }[] = [];
-        const faceRegex = /(face[\s_]?|f_?)(1|3|4|6)/i;
-        proto.traverse((o: any) => {
-          const m = faceRegex.exec(o.name);
-          if (m) {
-            const v = Number(m[2]);
-            faces.push({ value: v, node: o, normal: new THREE.Vector3(0,1,0) });
-          }
-        });
-        // Si on a des ancres, calcule leur normale locale (y+ du nœud)
-        if (faces.length) {
-          faces.forEach(f => {
-            const n = new THREE.Vector3(0, 1, 0);
-            f.node.updateWorldMatrix(true, true);
-            const mat = new THREE.Matrix3().setFromMatrix4(f.node.matrixWorld);
-            f.normal = n.applyMatrix3(mat).normalize();
-          });
-        } else {
-          // Fallback : 4 directions fixes (assez proches des 4 faces nominales)
-          faces.push(
-            { value:1, node: proto, normal: new THREE.Vector3( 0.3,  0.9,  0.1 ).normalize() },
-            { value:3, node: proto, normal: new THREE.Vector3(-0.2,  0.95, 0.25).normalize() },
-            { value:4, node: proto, normal: new THREE.Vector3( 0.2,  0.95,-0.25).normalize() },
-            { value:6, node: proto, normal: new THREE.Vector3(-0.3,  0.9, -0.1).normalize() },
-          );
-        }
-        facesRef.current = faces;
-
-        // Crée 4 dés
-        const dice: Die[] = [];
-        for (let i = 0; i < 4; i++) {
-          const g = proto.clone(true);
-          scene.add(g);
-          const d: Die = {
-            root: g,
-            pos: new THREE.Vector3((i - 1.5) * 0.35, 0.6 + i * 0.02, -0.25 + Math.random() * 0.5),
-            vel: new THREE.Vector3(),
-            quat: new THREE.Quaternion(),
-            angVel: new THREE.Vector3(),
-            radius: 0.17,
-            asleep: false
-          };
-          g.position.copy(d.pos);
-          dice.push(d);
-        }
-        diceRef.current = dice;
-
-        setStatus("ready");
-        setMsg("Prêt. Clique « Lancer » pour jeter les os.");
-      }, undefined, (err: any) => {
-        console.warn("[L3] GLB load error:", err);
-        setStatus("error");
-        setMsg("Impossible de charger le modèle (GLTF).");
-      });
-
-      // loop
-      const loop = () => {
-        stepPhysics(1/60);
-        controlsRef.current?.update();
-        if (rendererRef.current && sceneRef.current && cameraRef.current) {
-          rendererRef.current.render(sceneRef.current, cameraRef.current);
-        }
-        frameRef.current = requestAnimationFrame(loop);
-      };
-      frameRef.current = requestAnimationFrame(loop);
-
-      // cleanup
-      return () => {
-        if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        ro.disconnect();
-        window.removeEventListener("resize", onResize);
-        rnd.dispose();
-        wrap.removeChild(rnd.domElement);
-      };
-    }, []);
-
-    // ===== Physique simple =====
-    const GRAV = -9.81 * 0.25;           // gravité « douce »
-    const RESTITUTION = 0.25;            // rebond
-    const FRICTION = 0.98;               // frottement sol
-    const AIR = 0.995;                   // amortissement air
-    const SEP = 0.55;                    // séparation horizontale (anti-empilement)
-
-    function stepPhysics(dt: number) {
-      const dice = diceRef.current;
-      if (!dice.length) return;
-
-      let allAsleep = true;
-
-      for (let i = 0; i < dice.length; i++) {
-        const d = dice[i];
-
-        // intégration simple (position)
-        d.vel.y += GRAV * dt;
-
-        d.pos.addScaledVector(d.vel, dt);
-        // Rotation (approx. : Euler à partir d’angVel)
-        const ang = d.angVel.clone().multiplyScalar(dt);
-        const dq = new THREE.Quaternion().setFromEuler(new THREE.Euler(ang.x, ang.y, ang.z, "XYZ"));
-        d.quat.multiply(dq);
-
-        // Sol (y=0)
-        if (d.pos.y < 0.0) {
-          d.pos.y = 0.0;
-          if (d.vel.y < 0) d.vel.y *= -RESTITUTION;
-          d.vel.x *= FRICTION;
-          d.vel.z *= FRICTION;
-          d.angVel.multiplyScalar(0.96);
-        }
-
-        // Air drag
-        d.vel.multiplyScalar(AIR);
-        d.angVel.multiplyScalar(AIR);
-
-        // Applique au mesh
-        d.root.position.copy(d.pos);
-        d.root.quaternion.copy(d.quat);
-
-        // Snap quand quasi au repos
-        const moving = (length2(d.vel) > 0.0003) || (length2(d.angVel) > 0.0003) || d.pos.y > 0.001;
-        if (!moving && d.pos.y <= 0.001) {
-          // Cherche la face la plus proche du +Y
-          const best = faceUp(d.root);
-          // ajuste doucement pour que la face soit à plat
-          if (best) {
-            const q = alignNormalToUp(best.normal.clone().applyQuaternion(d.root.quaternion));
-            d.quat.slerp(q.multiply(d.quat), 0.2);
-          }
-          d.asleep = true;
-        } else {
-          d.asleep = false;
-        }
-        if (!d.asleep) allAsleep = false;
-      }
-
-      // Anti-empilement horizontal (simple séparation 2D dans le plan XZ)
-      for (let i = 0; i < dice.length; i++) {
-        for (let j = i + 1; j < dice.length; j++) {
-          const a = dice[i], b = dice[j];
-          const dx = b.pos.x - a.pos.x;
-          const dz = b.pos.z - a.pos.z;
-          const dist2 = dx*dx + dz*dz;
-          const minD = (a.radius + b.radius) * SEP;
-          if (dist2 < minD*minD) {
-            const dist = Math.sqrt(dist2) || 0.0001;
-            const nx = dx / dist, nz = dz / dist;
-            const push = (minD - dist) * 0.5;
-            a.pos.x -= nx * push; a.pos.z -= nz * push;
-            b.pos.x += nx * push; b.pos.z += nz * push;
-            // petit frottement latéral
-            a.vel.x *= 0.95; a.vel.z *= 0.95;
-            b.vel.x *= 0.95; b.vel.z *= 0.95;
-          }
-        }
-      }
-
-      // Score si tout est stoppé
-      if (allAsleep && dice.length) {
-        const values = dice.map(d => {
-          const f = faceUp(d.root);
-          return f ? f.value : 0;
-        });
-        setScore(values.reduce((s, v) => s + v, 0));
-      } else if (score !== null) {
-        setScore(null);
-      }
+    function fitRendererL3() {
+      const wrap = wrapRef.current, renderer = rendererR.current, camera = cameraR.current;
+      if (!wrap || !renderer || !camera) return;
+      const w = wrap.clientWidth, h = wrap.clientHeight || Math.round(w * 9/16);
+      renderer.setSize(w, h, false);
+      camera.aspect = w/h; camera.updateProjectionMatrix();
     }
 
-    function alignNormalToUp(n: THREE.Vector3) {
-      // rotation qui amène n -> +Y
-      const axis = new THREE.Vector3().crossVectors(n, UP);
-      const dot = THREE.MathUtils.clamp(n.dot(UP), -1, 1);
-      const angle = Math.acos(dot);
-      if (axis.lengthSq() < 1e-6 || !isFinite(angle)) return new THREE.Quaternion(); // identité
-      axis.normalize();
-      return new THREE.Quaternion().setFromAxisAngle(axis, angle);
+    async function loadFirstL3(loader, paths) {
+      for (const p of paths) {
+        try { return await loader.loadAsync(p); } catch (e) {}
+      }
+      throw new Error("loadFirst failed");
     }
 
-    function faceUp(obj: THREE.Object3D) {
-      // Compare les normales de faces au +Y dans le monde du dé
-      let best: { value: number; normal: THREE.Vector3; dot: number } | null = null;
-      for (const f of facesRef.current) {
-        const wn = f.normal.clone().applyQuaternion(obj.quaternion).normalize();
-        const d = wn.dot(UP);
-        if (!best || d > best.dot) best = { value: f.value, normal: f.normal.clone(), dot: d };
+    function computeFaceValue(obj) {
+      // choisit la face dont la normale (locale) est la plus proche de +Y monde
+      const up = new THREE.Vector3(0,1,0);
+      const q = obj.quaternion.clone();
+      let best = { dot:-1, val:0, name:"" };
+      for (const f of FACE_MAP) {
+        const n = f.n.clone().applyQuaternion(q);
+        const d = n.dot(up);
+        if (d > best.dot) best = { dot:d, val:f.val, name:f.name };
       }
       return best;
     }
 
-    // ===== Actions =====
-    const throwDice = () => {
-      const dice = diceRef.current;
-      if (!dice.length) return;
-      setScore(null);
-      dice.forEach((d, i) => {
-        d.pos.set((i - 1.5) * 0.32, 0.8 + Math.random()*0.2, -0.2 + Math.random()*0.4);
-        d.vel.set((Math.random()-0.5)*0.8, 1.2 + Math.random()*0.4, (Math.random()-0.5)*0.8);
-        d.quat.set(0,0,0,1);
-        d.angVel.set((Math.random()-0.5)*8, (Math.random()-0.5)*8, (Math.random()-0.5)*8);
-        d.asleep = false;
-        d.root.position.copy(d.pos);
-        d.root.quaternion.copy(d.quat);
-      });
-    };
+    useEffectL3(() => {
+      let stop = false;
 
-    const reset = () => {
-      const dice = diceRef.current;
-      if (!dice.length) return;
-      setScore(null);
-      dice.forEach((d, i) => {
-        d.pos.set((i-1.5)*0.35, 0.18, -0.25 + i*0.12);
-        d.vel.set(0,0,0);
-        d.quat.set(0,0,0,1);
-        d.angVel.set(0,0,0);
-        d.asleep = true;
-        d.root.position.copy(d.pos);
-        d.root.quaternion.copy(d.quat);
-      });
-    };
+      (async () => {
+        await ensureThreeExtrasL3();
+
+        const wrap = wrapRef.current;
+        const scene = sceneR.current = new THREE.Scene();
+        scene.background = new THREE.Color(0xf6f6f6);
+
+        const camera = cameraR.current = new THREE.PerspectiveCamera(55, 16/9, 0.05, 100);
+        camera.position.set(2.0, 1.6, 2.4);
+
+        const renderer = rendererR.current = new THREE.WebGLRenderer({ antialias:true });
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+        wrap.appendChild(renderer.domElement);
+
+        const controls = controlsR.current = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.target.set(0,0.22,0);
+
+        // lumières
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x99aabb, 0.9));
+        const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+        sun.position.set(3,4,2); sun.castShadow = true; scene.add(sun);
+
+        // sol
+        const ground = new THREE.Mesh(
+          new THREE.PlaneGeometry(6, 4),
+          new THREE.MeshStandardMaterial({ color: 0xe7e5e4, roughness: .95, metalness: 0 })
+        );
+        ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+
+        // charge le GLB
+        const loader = new THREE.GLTFLoader();
+        let glb = null;
+        try { glb = await loadFirstL3(loader, GLB_CANDIDATES_L3); }
+        catch (e) { console.warn("[L3] GLB load error:", e); }
+
+        const proto = glb ? (glb.scene || glb.scenes?.[0]) : new THREE.Mesh(
+          new THREE.SphereGeometry(0.13, 32, 20),
+          new THREE.MeshStandardMaterial({ color: 0xd6d3d1 })
+        );
+        proto.traverse?.(n=>{ if (n.isMesh) { n.castShadow = true; n.material.depthTest=true; n.material.depthWrite=true; }});
+
+        // crée 4 osselets
+        const N = 4;
+        const bodies = [];
+        for (let i=0;i<N;i++){
+          const inst = proto.clone(true);
+          const s = 0.22; inst.scale.setScalar(s);
+          scene.add(inst);
+          // état physique simplifié
+          bodies.push({
+            obj: inst,
+            pos: new THREE.Vector3(-0.8 + i*0.55, 0.9 + 0.15*i, -0.3 + 0.12*i),
+            vel: new THREE.Vector3(0,0,0),
+            ang: new THREE.Vector3(0,0,0),
+            angVel: new THREE.Vector3(0,0,0),
+            r: 0.15, // rayon approx pour collision au sol
+            asleep: false
+          });
+        }
+        bodiesRef.current = bodies;
+
+        // fonction lancer
+        const throwAll = () => {
+          const rnd = (a,b)=> a + Math.random()*(b-a);
+          for (const b of bodiesRef.current){
+            b.pos.set(rnd(-0.6,0.6), rnd(0.8,1.2), rnd(-0.4,0.4));
+            b.vel.set(rnd(-0.3,0.3), rnd(0.8,1.6), rnd(-0.3,0.3));
+            b.ang.set(rnd(0,Math.PI*2), rnd(0,Math.PI*2), rnd(0,Math.PI*2));
+            b.angVel.set(rnd(-4,4), rnd(-4,4), rnd(-4,4));
+            b.asleep = false;
+            b.obj.position.copy(b.pos);
+            b.obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
+          }
+        };
+        // exposé pour ton bouton “Lancer”
+        window.L3_throw = throwAll;
+
+        // au chargement : un lancer
+        throwAll();
+
+        // simulation
+        const tmpQ = new THREE.Quaternion();
+        const clock = new THREE.Clock();
+
+        function step(dt) {
+          const g = -9.8, floorY = 0; // sol y=0
+          const REST = 0.35, FRICTION = 0.86;
+
+          // intégration
+          for (const b of bodiesRef.current){
+            if (b.asleep) continue;
+            // vitesses
+            b.vel.y += g * dt;
+            b.pos.addScaledVector(b.vel, dt);
+            b.ang.addScaledVector(b.angVel, dt);
+
+            // collision sol (glisse, pas d’empilement)
+            if (b.pos.y - b.r < floorY){
+              b.pos.y = floorY + b.r;
+              b.vel.y = -b.vel.y * REST;
+              b.vel.x *= FRICTION; b.vel.z *= FRICTION;
+              b.angVel.x *= 0.92; b.angVel.y *= 0.92; b.angVel.z *= 0.92;
+              // arrêt si très lent
+              const sp = Math.hypot(b.vel.x,b.vel.y,b.vel.z);
+              const asp = Math.hypot(b.angVel.x,b.angVel.y,b.angVel.z);
+              if (sp < 0.15 && asp < 0.6) {
+                b.vel.set(0,0,0); b.angVel.set(0,0,0);
+                // snap à la face la plus proche
+                const obj = b.obj;
+                obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
+                const best = computeFaceValue(obj);
+                // on oriente cette face “vers le haut”
+                // trouve la rot delta qui aligne la normale sur +Y
+                const from = FACE_MAP.find(f=>f.val===best.val).n.clone().applyQuaternion(obj.quaternion);
+                const to = new THREE.Vector3(0,1,0);
+                const axis = new THREE.Vector3().crossVectors(from, to).normalize();
+                const angle = Math.acos(Math.max(-1, Math.min(1, from.dot(to))));
+                tmpQ.setFromAxisAngle(axis, angle);
+                obj.quaternion.premultiply(tmpQ);
+                b.asleep = true;
+              }
+            }
+
+            // pas d’empilement : résolution 2D simple (XZ)
+            for (const b2 of bodiesRef.current){
+              if (b===b2) continue;
+              const dx = b.pos.x - b2.pos.x, dz = b.pos.z - b2.pos.z;
+              const dist2 = dx*dx + dz*dz, min = (b.r + b2.r)*1.05;
+              if (dist2 > 0 && dist2 < min*min){
+                const d = Math.sqrt(dist2) || 1e-3;
+                const nx = dx/d, nz = dz/d, push = (min - d) * 0.5;
+                b.pos.x += nx*push; b.pos.z += nz*push;
+                b2.pos.x -= nx*push; b2.pos.z -= nz*push;
+              }
+            }
+
+            // applique aux meshes
+            b.obj.position.copy(b.pos);
+            b.obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
+          }
+
+          // scores quand tout dort
+          if (bodiesRef.current.every(b=>b.asleep)) {
+            const by = bodiesRef.current.map(b => computeFaceValue(b.obj).val);
+            const sum = by.reduce((a,b)=>a+b,0);
+            setScore({ sum, by });
+          } else {
+            setScore(s => (s.by.length ? { sum:0, by:[] } : s));
+          }
+        }
+
+        const frame = () => {
+          const dt = Math.min(0.033, clock.getDelta());
+          controls.update();
+          step(dt);
+          renderer.render(scene, camera);
+          animRef.current.req = requestAnimationFrame(frame);
+        };
+
+        fitRendererL3();
+        const ro = new ResizeObserver(fitRendererL3); ro.observe(wrap);
+        animRef.current.req = requestAnimationFrame(frame);
+
+        return () => {
+          try{ ro.disconnect(); }catch{}
+          cancelAnimationFrame(animRef.current.req);
+          renderer.dispose();
+          wrap.removeChild(renderer.domElement);
+        };
+      })();
+
+      return () => { stop = true; };
+    }, []);
 
     return (
-      <div ref={wrapRef} style={{ width:"100%", minHeight:"54vh", position:"relative" }}>
-        <div style={hud()}>
-          <strong>Rouler les os — Vénus, Canis, Senio…</strong>
-          <span style={{opacity:.8}}>{status === "loading" ? "Chargement…" : "Faces {1,3,4,6}. Lance et lis les faces vers le haut."}</span>
-          <div style={{display:"flex", gap:8, alignItems:"center"}}>
-            <button onClick={throwDice} disabled={status!=="ready"} style={btnPrimary(status==="ready")}>Lancer</button>
-            <button onClick={reset} disabled={status!=="ready"} style={btn()}>Réinitialiser</button>
-            {score!==null && <span className="badge" style={badge()}>Score : {score}</span>}
-          </div>
+      <div ref={wrapRef} style={{position:"relative", width:"100%", height:"min(72vh, 760px)", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden"}}>
+        {/* overlay score */}
+        <div style={{position:"absolute", left:10, top:10, padding:"8px 10px", background:"#ffffffcc", border:"1px solid #e5e7eb", borderRadius:10, fontSize:14}}>
+          <div><strong>Score</strong>: {score.by.length ? score.sum : "—"}</div>
+          {score.by.length ? <div>Faces: {score.by.join(" + ")}</div> : <div>Cliquer “Lancer” pour jeter</div>}
         </div>
       </div>
     );
   }
 
-  // Styles HUD
-  const hud = () => ({
-    position: "absolute" as const,
-    left: 12, top: 12, right: 12,
-    display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between",
-    padding: "8px 10px", borderRadius: 10,
-    border: "1px solid #00000022", background: "rgba(255,255,255,.85)",
-    color: "#0b2237", zIndex: 5
-  });
-  const btn = (disabled=false) => ({
-    padding: "8px 12px",
-    borderRadius: 10,
-    border: "1px solid #223",
-    background: "#0b1f33",
-    color: "#e6f1ff",
-    opacity: disabled ? .6 : 1,
-    cursor: disabled ? "default" : "pointer"
-  } as React.CSSProperties);
-  const btnPrimary = (enabled=true) => ({
-    padding: "8px 12px",
-    borderRadius: 10,
-    border: "1px solid #2563eb",
-    background: enabled ? "#2563eb" : "#445",
-    color: "#fff",
-    cursor: enabled ? "pointer" : "default"
-  } as React.CSSProperties);
-  const badge = () => ({
-    border: "1px solid #223",
-    borderRadius: 999,
-    padding: "4px 10px",
-    fontSize: 14,
-    background: "#0b1f33",
-    color: "#e6f1ff"
-  } as React.CSSProperties);
-
-  (window as any).AstragalusLevel3 = AstragalusLevel3;
+  // export global
+  window.OsseletsLevel3 = OsseletsLevel3;
 })();
