@@ -64,7 +64,7 @@ function loadImage(url) {
   return new Promise((resolve, reject) => {
     const im = new Image();
     im.onload = () => resolve(im);
-    im.onerror = () => reject(new Error(`img load failed: ${url}`));
+    im.onerror = () => reject(new Error("img load failed: " + url));
     im.src = encodeURI(url);
   });
 }
@@ -72,7 +72,7 @@ async function loadImageSmart(file) {
   for (const base of IMG_BASES) {
     try { return await loadImage(base + file); } catch (e) {}
   }
-  logOnce(`img_${file}`, `[osselets] image introuvable: ${file} (essayé: ${IMG_BASES.map(b=>b+file).join(", ")})`);
+  logOnce("img_" + file, "[osselets] image introuvable: " + file + " (essayé: " + IMG_BASES.map(b=>b+file).join(", ") + ")");
   return null;
 }
 async function fetchJSON(file) {
@@ -425,12 +425,13 @@ function AstragalusRunner() {
       setMessage("Vague du ‘mauvais œil’ !");
     }
     if (eyes.current.length){
-      for(const e of eyes.current){
+      for(let i=0;i<eyes.current.length;i++){
+        const e = eyes.current[i];
         if(!e.alive) continue;
         e.x += (e.vx * dt * 60)/60;
         if (rectOverlap(e.x-10,e.y-6,20,12, p.x,p.y,p.w,p.h)) {
           if (wardTimer.current>0){ e.vx=-e.vx*0.6; e.x+=e.vx*4; e.alive=false; }
-          else { p.speedMul=Math.max(0.8,p.speedMul-0.2); setTimeout(()=>{p.speedMul=Math.min(1.2,p.speedMul+0.2);},1500); e.alive=false; playOne(sfxOuchEl); }
+          else { p.speedMul=Math.max(0.8,p.speedMul-0.2); setTimeout(function(){p.speedMul=Math.min(1.2,p.speedMul+0.2);},1500); e.alive=false; playOne(sfxOuchEl); }
         }
       }
       eyes.current = eyes.current.filter(function(e){ return e.alive && e.x>-100; });
@@ -487,7 +488,7 @@ function AstragalusRunner() {
         const b = arr[i];
         if (now <= b.until) drawPickupBubble(ctx, Math.round(b.x - camX), Math.round(b.y - 70), b.text);
       }
-      bubbles.current = arr.filter(b => now <= b.until);
+      bubbles.current = arr.filter(function(b){ return now <= b.until; });
     }
     ctx.restore();
 
@@ -564,7 +565,8 @@ function AstragalusRunner() {
       }
       if (cur) out.push(cur); return out;
     })();
-    const w = Math.max(60, Math.min(maxW, Math.max.apply(null, lines.map(l=>ctx.measureText(l).width)) + pad*2));
+    const widths = lines.map(function(l){ return ctx.measureText(l).width; });
+    const w = Math.max(60, Math.min(maxW, (widths.length ? Math.max.apply(null, widths) : 0) + pad*2));
     const h = lines.length*16 + pad*2 + 8;
 
     // bubble box
@@ -573,4 +575,275 @@ function AstragalusRunner() {
     ctx.lineWidth = 1.5;
     // rounded rect
     ctx.beginPath();
-    const r=8; const x0=-w/2, y0=-h, x1=x0+w, y1=y0+h
+    const r=8; const x0=-w/2, y0=-h, x1=x0+w, y1=y0+h;
+    ctx.moveTo(x0+r,y0);
+    ctx.arcTo(x1,y0,x1,y1,r);
+    ctx.arcTo(x1,y1,x0,y1,r);
+    ctx.arcTo(x0,y1,x0,y0,r);
+    ctx.arcTo(x0,y0,x1,y0,r);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // tail
+    ctx.beginPath();
+    ctx.moveTo(-8, -2);
+    ctx.lineTo(0, 10);
+    ctx.lineTo(8, -2);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // text
+    ctx.fillStyle = "#0f172a";
+    let yy = y0 + pad + 12;
+    for (let i=0;i<lines.length;i++) { ctx.fillText(lines[i], x0 + pad, yy); yy += 16; }
+    ctx.restore();
+  }
+  function drawAmuletMini(ctx,cx,cy, png){
+    ctx.save(); ctx.translate(cx,cy);
+    if (png) { ctx.imageSmoothingEnabled = false; ctx.drawImage(png, -16, -16, 32, 32); }
+    else { ctx.fillStyle="#fff7ed"; ctx.strokeStyle="#7c2d12"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(0,0,10,7,0,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,-4,7,0); ctx.moveTo(-7,0); ctx.quadraticCurveTo(0,4,7,0); ctx.stroke(); }
+    ctx.restore();
+  }
+  function drawBear(ctx, x, y){
+    const ba = bearAnim.current; const W0=64, H0=60; const Wd = Math.round(W0 * BEAR_SCALE), Hd = Math.round(H0 * BEAR_SCALE);
+    ctx.save(); ctx.translate(x, y + H0); // ancrage au sol
+    if (ba && ba.frames && ba.frames.length){
+      const fps = 10 * ANIM_SPEED; let idx = Math.floor((ba.t||0) * fps) % ba.frames.length; if (!isFinite(idx) || idx<0) idx=0;
+      const im = ba.frames[idx]; ctx.imageSmoothingEnabled = false; ctx.drawImage(im, 0,0, im.naturalWidth, im.naturalHeight, 0, -Hd, Wd, Hd);
+    } else {
+      ctx.fillStyle="#78350f"; ctx.fillRect(0, -Hd+20*BEAR_SCALE, Wd, Hd-24*BEAR_SCALE);
+      ctx.beginPath(); ctx.arc(Wd-10*BEAR_SCALE, -Hd+26*BEAR_SCALE, 14*BEAR_SCALE, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle="#fde68a"; ctx.fillRect(Wd-6*BEAR_SCALE, -Hd+22*BEAR_SCALE, 3*BEAR_SCALE, 3*BEAR_SCALE);
+    }
+    ctx.restore();
+  }
+  function drawEvilEye(ctx, x, y){
+    ctx.save(); ctx.translate(x,y);
+    ctx.fillStyle="#1d4ed8"; ctx.beginPath(); ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#93c5fd"; ctx.beginPath(); ctx.ellipse(0,0,9,6,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#0f172a"; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  function drawHero(ctx, x,y,w,h,facing,dirt,runPhase,wardLeft){
+    ctx.save();
+    const dw = Math.round(w * HERO_SCALE_X), dh = Math.round(h * HERO_SCALE_Y);
+    ctx.translate(x + w/2, y + h); // ancrage bas-centre
+    if (wardLeft>0){
+      const pct=Math.min(1,wardLeft/10); const rad=44*HERO_SCALE_Y+6*Math.sin(performance.now()*0.006);
+      const grd=ctx.createRadialGradient(0,0,10, 0,0,rad);
+      grd.addColorStop(0,`rgba(56,189,248,${0.25+0.25*pct})`); grd.addColorStop(1,"rgba(56,189,248,0)");
+      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,rad,0,Math.PI*2); ctx.fill();
+    }
+    const anim = heroAnim.current; const clip = anim && anim.clips ? anim.clips[heroState.current.name] : null;
+    if (clip && clip.frames && clip.frames.length) {
+      const count = clip.frames.length; let fps = Number(clip.fps) || 10; let tt = Number(heroState.current.t) || 0;
+      let idx = Math.floor(tt * fps); if (!isFinite(idx) || idx < 0) idx = 0; idx = clip.loop ? (idx % count) : Math.min(idx, count-1);
+      const fr = clip.frames[idx] || clip.frames[0];
+      if (facing<0){ ctx.scale(-1,1); }
+      const ox = anim && anim.origin ? anim.origin[0] : 0.5, oy = anim && anim.origin ? anim.origin[1] : 1;
+      const dx = -ox * dw, dy = -oy * dh + HERO_FOOT_ADJ_PX; // ↓ corrige le “flottement”
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(fr.image, fr.sx|0, fr.sy|0, fr.sw||fr.image.naturalWidth, fr.sh||fr.image.naturalHeight, dx, dy, dw, dh);
+    } else {
+      if (facing<0){ ctx.scale(-1,1); }
+      const legA = Math.sin(runPhase*8)*6, legB = Math.sin(runPhase*8+Math.PI)*6;
+      ctx.translate(-dw/2, -dh+HERO_FOOT_ADJ_PX);
+      ctx.fillStyle="#1f2937"; ctx.fillRect(10+legA*0.2, dh-16, 8,16); ctx.fillRect(dw-18+legB*0.2, dh-16, 8,16);
+      ctx.fillStyle="#92400e"; ctx.fillRect(10+legA*0.2, dh-2, 10,2); ctx.fillRect(dw-18+legB*0.2, dh-2, 10,2);
+      ctx.fillStyle="#334155"; ctx.fillRect(8,28,dw-16,14);
+      ctx.fillStyle="#e5e7eb"; ctx.beginPath(); ctx.moveTo(12,20); ctx.lineTo(dw-12,20); ctx.lineTo(dw-18,48); ctx.lineTo(18,48); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.moveTo(16+i*8,22); ctx.lineTo(20+i*8,46); ctx.stroke(); }
+      ctx.strokeStyle="#eab308"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(10,36); ctx.lineTo(dw-10,36); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(dw/2-8,22); ctx.quadraticCurveTo(dw/2,18,dw/2+8,22); ctx.stroke();
+      ctx.fillStyle="#f8fafc"; ctx.beginPath(); ctx.arc(dw/2,12,8,0,Math.PI*2); ctx.fill();
+    }
+    if (dirt>0.01){ ctx.globalAlpha=Math.max(0,Math.min(dirt,0.8)); ctx.fillStyle="#9ca3af"; ctx.fillRect(-dw/2,-dh,dw,dh); ctx.globalAlpha=1; }
+    ctx.restore();
+  }
+
+  function drawMountains(ctx, off){
+    ctx.save(); ctx.translate(-off,0);
+    for(let x=-200;x<WORLD_W+WORLD_LEN;x+=420){
+      ctx.fillStyle="#c7d2fe"; ctx.beginPath(); ctx.moveTo(x,380); ctx.lineTo(x+120,260); ctx.lineTo(x+240,380); ctx.closePath(); ctx.fill();
+      ctx.fillStyle="#bfdbfe"; ctx.beginPath(); ctx.moveTo(x+140,380); ctx.lineTo(x+260,280); ctx.lineTo(x+360,380); ctx.closePath(); ctx.fill();
+    } ctx.restore();
+  }
+  function drawOliveTrees(ctx, off){
+    ctx.save(); ctx.translate(-off,0);
+    for(let x=0;x<WORLD_W+WORLD_LEN;x+=260){ ctx.fillStyle="#a78bfa"; ctx.fillRect(x+40,GROUND_Y-60,8,60);
+      ctx.fillStyle="#ddd6fe"; ctx.beginPath(); ctx.ellipse(x+44,GROUND_Y-75,26,16,0,0,Math.PI*2); ctx.fill();
+    } ctx.restore();
+  }
+  function drawFrieze(ctx, off){
+    ctx.save(); ctx.translate(-off,0);
+    for(let x=0;x<WORLD_W+WORLD_LEN;x+=180){ ctx.strokeStyle="#94a3b8"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,GROUND_Y-10);
+      for(let i=0;i<6;i++){ const sx=x+i*24; ctx.lineTo(sx+12,GROUND_Y-18); ctx.lineTo(sx+24,GROUND_Y-10); }
+      ctx.stroke();
+    } ctx.restore();
+  }
+
+  function drawHUD(ctx){
+    // Inventaire amulettes
+    ctx.save(); ctx.globalAlpha=.95; ctx.fillStyle="#fff"; ctx.strokeStyle="#e5e7eb"; ctx.lineWidth=2;
+    ctx.fillRect(12,56,236,62); ctx.strokeRect(12,56,236,62);
+    const slots=[{owned:inv.current.speed,label:"Vitesse",png:amuletsRef.current.speed},
+                 {owned:inv.current.purify,label:"Purif.",png:amuletsRef.current.purify},
+                 {owned:inv.current.ward,label:"Bouclier",png:amuletsRef.current.ward}];
+    for(let i=0;i<slots.length;i++){
+      const x=20+i*64; ctx.strokeStyle="#cbd5e1"; ctx.strokeRect(x,64,56,48);
+      ctx.globalAlpha=slots[i].owned?1:.35; drawAmuletMini(ctx,x+28,88,slots[i].png||undefined); ctx.globalAlpha=1;
+      ctx.fillStyle="#334155"; ctx.font="10px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.fillText(slots[i].label, x+28, 116);
+    }
+    // Indicateur musique
+    ctx.fillStyle = musicOn ? "#16a34a" : "#ef4444"; ctx.beginPath(); ctx.arc(264,70,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#0f172a"; ctx.font="10px ui-sans-serif, system-ui"; ctx.fillText("Musique (M)", 278,74);
+    ctx.restore();
+
+    // Panneau fin (le vrai contenu est en overlay DOM plus bas)
+    if (summaryOpen) {
+      const W = WORLD_W, H = WORLD_H;
+      ctx.save(); ctx.fillStyle="rgba(255,255,255,.95)"; ctx.fillRect(0,0,W,H); ctx.restore();
+    }
+  }
+
+  function drawEduToast(ctx, text){
+    const pad=12, boxW=Math.min(680,WORLD_W-40), x=20, y=20+40; // sous la barre
+    ctx.save(); ctx.globalAlpha=.98; ctx.fillStyle="#ffffff"; ctx.strokeStyle="#cbd5e1"; ctx.lineWidth=2;
+    ctx.fillRect(x,y,boxW,80); ctx.strokeRect(x,y,boxW,80);
+    ctx.fillStyle="#0f172a"; ctx.font="14px ui-sans-serif, system-ui";
+    wrapText(ctx,text,x+12,y+26,boxW-24,18); ctx.restore();
+  }
+
+  function wrapText(ctx, text, x,y, maxW, lh){
+    const words=text.split(" "); let line="";
+    for(let n=0;n<words.length;n++){
+      const test=line+words[n]+" ";
+      if(ctx.measureText(test).width>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+" "; y+=lh; } else line=test;
+    }
+    ctx.fillText(line,x,y);
+  }
+
+  /* ---------- UI / JSX ---------- */
+  const startBtnStyle = {
+    padding:"12px 18px", border:"1px solid #059669", borderRadius:14, background:"#059669",
+    color:"#fff", cursor:"pointer", boxShadow:"0 6px 14px rgba(5,150,105,.25)",
+    position:"absolute", bottom:16, left:"50%", transform:"translateX(-50%)", zIndex:5
+  };
+  const btn = (disabled=false)=>({ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:12, background:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1 });
+  const btnDark = ()=>({ padding:"8px 12px", border:"1px solid #111827", borderRadius:12, background:"#111827", color:"#fff", cursor:"pointer" });
+  const primaryBtn = (disabled=false)=>({ padding:"10px 14px", border:"1px solid #059669", borderRadius:14, background:"#059669", color:"#fff", cursor:disabled?"default":"pointer", opacity: disabled ? .5 : 1, boxShadow:"0 6px 14px rgba(5,150,105,.25)" });
+
+  function TouchBtn(props){ // simple large
+    const events = {
+      onMouseDown: props.onDown, onMouseUp: props.onUp, onMouseLeave: props.onUp,
+      onTouchStart: (e)=>{ e.preventDefault(); props.onDown(); },
+      onTouchEnd:   (e)=>{ e.preventDefault(); props.onUp(); },
+      onPointerDown:(e)=>{ if(e.pointerType!=="mouse") props.onDown(); },
+      onPointerUp:  (e)=>{ if(e.pointerType!=="mouse") props.onUp(); },
+    };
+    return (
+      <button {...events} style={{ pointerEvents:"auto", flex:"1 1 0", padding:"14px 10px", border:"1px solid #e5e7eb", borderRadius:14, background:"#ffffffEE", fontWeight:600 }}>
+        {props.label}
+      </button>
+    );
+  }
+
+  return (
+    <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#fafaf9,#e7e5e4)", color:"#111827"}}>
+      <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
+        <div className="mb-2" style={{display:"flex",gap:8,alignItems:"center",justifyContent:"space-between"}}>
+          <h1 className="text-xl sm:text-2xl" style={{fontWeight:600}}>Runner 2D – Amulettes d’astragale</h1>
+          <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
+            <button onClick={toggleMusic} style={btn()}> {musicOn ? "Musique ON" : "Musique OFF"} </button>
+            <button onClick={()=>setPaused(v=>!v)} disabled={inIntro||summaryOpen} style={primaryBtn(inIntro||summaryOpen)}>{paused ? "Lecture" : "Pause"}</button>
+            <label style={btn()}>
+              <input type="checkbox" checked={mobileMode} onChange={e=>{ setMobileMode(e.target.checked); clearTouchKeys(); }} />
+              <span style={{marginLeft:6}}>Mode mobile</span>
+            </label>
+            {mobileMode && (
+              <label style={btn()}>
+                <input type="checkbox" checked={oneButton} onChange={e=>setOneButton(e.target.checked)} />
+                <span style={{marginLeft:6}}>1 bouton</span>
+              </label>
+            )}
+          </div>
+        </div>
+
+        <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
+          {inIntro ? "Jeu de découverte des usages de l’astragale (amulette, rite, protection)."
+                   : "← → bouger • Espace sauter • P pause • M musique. Sur mobile, active le mode mobile."}
+        </p>
+
+        <div className="bg-white" style={{border:"1px solid #e5e7eb", borderRadius:14, padding:12, boxShadow:"0 6px 16px rgba(0,0,0,.05)"}}>
+          <div ref={wrapperRef} className="w-full" style={{position:"relative", overflow:"hidden", border:"1px solid #e5e7eb", borderRadius:12}}>
+            <canvas ref={canvasRef} />
+
+            {inIntro && <button onClick={startGame} style={startBtnStyle}>Start</button>}
+
+            {summaryOpen && (
+              <div style={{position:"absolute", inset:0, background:"rgba(255,255,255,.95)", backdropFilter:"blur(4px)", display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
+                <div style={{width:"min(860px,100%)", background:"#fff", border:"1px solid #e5e7eb", borderRadius:16, padding:16, boxShadow:"0 8px 24px rgba(0,0,0,.08)"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <h2 style={{fontWeight:600}}>Fin du niveau {level} ✅</h2>
+                    <span style={{fontSize:12, padding:"2px 8px", borderRadius:999, background:"#111827", color:"#fff"}}>Synthèse</span>
+                  </div>
+                  <div style={{display:"grid", gap:12, gridTemplateColumns:"1fr 1fr", marginTop:12}}>
+                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
+                      <h3 style={{fontWeight:600, marginBottom:8}}>Ce que tu as vu</h3>
+                      <ul style={{paddingLeft:18, margin:0}}>
+                        <li>Astragale = <em>talus</em>, os clé du mouvement (pied/cheville).</li>
+                        <li>De l’os au bijou : nettoyage, polissage, perçage → suspension.</li>
+                        <li>Usages amulétistes : purification & apotropaïsme (mauvais œil).</li>
+                        {eduLog.current.slice(-3).map((t,i)=> <li key={i} style={{opacity:.85}}>{t}</li>)}
+                      </ul>
+                    </div>
+                    <div style={{background:"#fafafa", border:"1px solid #e5e7eb", borderRadius:12, padding:12, fontSize:14}}>
+                      <h3 style={{fontWeight:600, marginBottom:8}}>Questions flash</h3>
+                      <ol style={{paddingLeft:18, margin:0}}>
+                        <li>V/F : l’astragale appartient au tarse.</li>
+                        <li>Pourquoi percer l’osselet ?</li>
+                        <li>Donne un usage protecteur évoqué dans le niveau.</li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div style={{display:"flex", gap:8, justifyContent:"end", marginTop:12}}>
+                    <button onClick={()=>{ resetLevel(true); setPaused(false); }} style={btn()}>Revoir la cinématique</button>
+                    <button onClick={()=>{ resetLevel(false); setPaused(false); }} style={btnDark()}>Recommencer</button>
+                    <button onClick={nextLevel} style={primaryBtn(false)}>Prochain niveau →</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {mobileMode && !inIntro && !summaryOpen && (
+              <>
+                {!oneButton && (
+                  <div style={{position:"absolute", left:12, right:12, bottom:12, display:"flex", gap:12, justifyContent:"space-between", pointerEvents:"none"}}>
+                    <TouchBtn label="←" onDown={()=>press("left",true)} onUp={()=>press("left",false)} />
+                    <TouchBtn label="Saut" onDown={()=>press("jump",true)} onUp={()=>press("jump",false)} />
+                    <TouchBtn label="→" onDown={()=>press("right",true)} onUp={()=>press("right",false)} />
+                  </div>
+                )}
+                {oneButton && (
+                  <div onPointerDown={()=>press("jump",true)} onPointerUp={()=>press("jump",false)} style={{position:"absolute", inset:0, pointerEvents:"auto"}} />
+                )}
+              </>
+            )}
+
+            {/* Audio MP3 */}
+            <audio ref={musicEl} preload="auto" src={AUDIO_BASE + AUDIO.music} />
+            <audio ref={sfxJumpEl} preload="auto" src={AUDIO_BASE + AUDIO.jump} />
+            <audio ref={sfxCatchEl} preload="auto" src={AUDIO_BASE + AUDIO.catch} />
+            <audio ref={sfxOuchEl} preload="auto" src={AUDIO_BASE + AUDIO.ouch} />
+          </div>
+
+          <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
+            Héros via <code>hero.anim.json</code>. Ours via <code>bear.anim.json</code> ou fichiers <code>bear(1..6).png</code>/<code>bear (1..6).png</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// @ts-ignore
+window.AstragalusRunner = AstragalusRunner;
