@@ -1,77 +1,148 @@
-<script>
-/* Level 3 — “dés” d’astragale : charge 3D (simple), JS pur */
-(function(){
-  if (window.__OS3_READY) return; window.__OS3_READY = true;
+/* global React, THREE, GLTFLoader, OrbitControls */
+/* Level 3 — Rouler les os : 4 astragales affichées et posées sur un sol */
 
-  var MODEL_URL = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
+(function () {
+  function AstragalusLevel3() {
+    const hostRef = React.useRef(null);
 
-  function ensureThreeAddons(cb){
-    function need(x){ return typeof x === "undefined"; }
-    function load(src, next){
-      var s=document.createElement("script"); s.src=src; s.onload=next; s.onerror=next; document.head.appendChild(s);
-    }
-    var todo = [];
-    if (need(THREE.OrbitControls)) todo.push("https://unpkg.com/three@0.155.0/examples/js/controls/OrbitControls.js");
-    if (need(THREE.GLTFLoader))    todo.push("https://unpkg.com/three@0.155.0/examples/js/loaders/GLTFLoader.js");
-    (function step(){ if(!todo.length) return cb(); load(todo.shift(), step); })();
-  }
+    React.useEffect(() => {
+      const host = hostRef.current;
+      if (!host) return;
 
-  function fit(renderer, camera, host){
-    var w = host.clientWidth  || 640;
-    var h = host.clientHeight || 360;
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
-    renderer.setSize(w,h,false);
-    camera.aspect = w/h; camera.updateProjectionMatrix();
-  }
+      // Base
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b1b2a);
 
-  function startLevel3(host){
-    var scene=new THREE.Scene(); scene.background=new THREE.Color(0xf6f7fb);
-    var camera=new THREE.PerspectiveCamera(45,1,0.1,1000); camera.position.set(0,24,44);
+      const camera = new THREE.PerspectiveCamera(45, 16 / 9, 0.1, 200);
+      camera.position.set(1.2, 0.9, 1.8);
 
-    var renderer=new THREE.WebGLRenderer({antialias:true}); renderer.outputColorSpace=THREE.SRGBColorSpace;
-    host.innerHTML=""; host.appendChild(renderer.domElement);
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      host.appendChild(renderer.domElement);
 
-    var controls=new THREE.OrbitControls(camera,renderer.domElement);
-    controls.enableDamping=true; controls.minDistance=18; controls.maxDistance=80; controls.target.set(0,6,0);
+      // Sol
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(8, 8),
+        new THREE.MeshPhongMaterial({ color: 0x7a8fa0, shininess: 5 })
+      );
+      plane.rotation.x = -Math.PI / 2;
+      plane.receiveShadow = true;
+      scene.add(plane);
 
-    var ground=new THREE.Mesh(new THREE.CircleGeometry(140,64), new THREE.MeshPhongMaterial({color:0xe5e7eb}));
-    ground.rotation.x=-Math.PI/2; scene.add(ground);
-    scene.add(new THREE.AmbientLight(0xffffff,.7));
-    var sun=new THREE.DirectionalLight(0xffffff,.9); sun.position.set(20,30,12); scene.add(sun);
+      // Lumières
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 0.7));
+      const sun = new THREE.DirectionalLight(0xffffff, 0.9);
+      sun.position.set(2.2, 2.6, 1.5);
+      sun.castShadow = true;
+      scene.add(sun);
 
-    var overlay=document.createElement("div");
-    overlay.style.position="absolute"; overlay.style.left="50%"; overlay.style.top="50%";
-    overlay.style.transform="translate(-50%,-50%)"; overlay.style.color="#334155";
-    overlay.style.font="14px ui-sans-serif,system-ui"; overlay.textContent="Chargement du modèle…";
-    host.style.position="relative"; host.appendChild(overlay);
+      // OrbitControls
+      let controls = null;
+      if (THREE && THREE.OrbitControls) {
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.minDistance = 0.6;
+        controls.maxDistance = 4;
+        controls.target.set(0, 0.1, 0);
+      }
 
-    var loader=new THREE.GLTFLoader();
-    loader.load(MODEL_URL, function(gltf){
-      var root=gltf.scene||gltf.scenes[0];
-      root.position.set(0,6,0);
-      root.traverse(function(o){ if(o.isMesh){ o.material.depthTest=true; o.material.depthWrite=true; }});
-      scene.add(root);
-      overlay.remove();
-    }, undefined, function(){ overlay.textContent="Échec de chargement du GLB"; });
+      // Resize
+      function fit() {
+        const w = host.clientWidth || 800;
+        const h = Math.max(host.clientHeight, Math.round(w * 9 / 16));
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      fit();
+      const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
+      if (ro) ro.observe(host);
+      window.addEventListener("resize", fit);
 
-    function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); }
-    function resize(){ fit(renderer,camera,host); }
+      // Charge 1 GLB puis clone 4 fois
+      const modelUrl = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
+      const LoaderCtor = (window.GLTFLoader) || (THREE && THREE.GLTFLoader);
+      if (!LoaderCtor) {
+        scene.add(makeMsg("GLTFLoader manquant", "#ffdddd"));
+      } else {
+        const loader = new LoaderCtor();
+        loader.load(
+          modelUrl,
+          function (gltf) {
+            const src = gltf.scene || gltf.scenes?.[0];
+            if (!src) return;
 
-    var ro=new ResizeObserver(resize); ro.observe(host);
-    window.addEventListener("resize",resize);
-    resize(); loop();
+            src.traverse((n) => {
+              if (n.isMesh) { n.castShadow = true; n.receiveShadow = true; }
+            });
 
-    return { destroy:function(){ try{ro.disconnect();}catch(e){} window.removeEventListener("resize",resize); host.innerHTML=""; } };
-  }
+            const positions = [
+              [-0.6, 0.12,  0.2],
+              [-0.1, 0.14, -0.1],
+              [ 0.4, 0.18,  0.1],
+              [ 0.9, 0.16, -0.2],
+            ];
+            for (let i = 0; i < 4; i++) {
+              const c = src.clone(true);
+              c.position.set(positions[i][0], positions[i][1], positions[i][2]);
+              c.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+              c.scale.set(0.9, 0.9, 0.9);
+              scene.add(c);
+            }
+          },
+          undefined,
+          function () {
+            scene.add(makeMsg("Erreur chargement GLB", "#ffdddd"));
+          }
+        );
+      }
 
-  // API globale
-  window.os3_start = function(selector){
-    ensureThreeAddons(function(){
-      var el = typeof selector==="string" ? document.querySelector(selector) : selector;
-      if (!el) { console.warn("[os3] conteneur introuvable"); return; }
-      if (el.__os3) el.__os3.destroy();
-      el.__os3 = startLevel3(el);
+      // Loop
+      let raf = 0;
+      const tick = () => {
+        if (controls) controls.update();
+        renderer.render(scene, camera);
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+
+      // Cleanup
+      return () => {
+        cancelAnimationFrame(raf);
+        window.removeEventListener("resize", fit);
+        if (ro) ro.disconnect();
+        if (controls && controls.dispose) controls.dispose();
+        renderer.dispose();
+        if (renderer.domElement && renderer.domElement.parentNode) {
+          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        }
+      };
+    }, []);
+
+    return React.createElement("div", {
+      ref: hostRef,
+      style: { width: "100%", minHeight: "54vh", height: "54vh", position: "relative" },
     });
-  };
+  }
+
+  function makeMsg(text, bg) {
+    const c = document.createElement("canvas");
+    const ctx = c.getContext("2d");
+    const pad = 8;
+    ctx.font = "16px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    const w = Math.ceil(ctx.measureText(text).width) + pad * 2;
+    const h = 28;
+    c.width = w; c.height = h;
+    ctx.fillStyle = bg || "rgba(255,255,255,0.95)";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#112233";
+    ctx.fillText(text, pad, 19);
+    const tex = new THREE.CanvasTexture(c);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+    const sp = new THREE.Sprite(mat);
+    sp.position.set(0, 0.05, 0);
+    return sp;
+  }
+
+  window.AstragalusLevel3 = AstragalusLevel3;
 })();
-</script>
