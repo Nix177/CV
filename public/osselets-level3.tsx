@@ -1,53 +1,72 @@
 // public/osselets-level3.tsx
 // LEVEL 3 — « Rouler les os » (dés 1/3/4/6)
 // - Modèle : /assets/games/osselets/level3/3d/astragalus_faces.glb (ancres Face_1/3/4/6)
-// - 4 astragales clonés, lancer avec petite physique “maison” + lecture de la face vers +Y.
-// - Chargement Three/GLTFLoader via ES Modules (docs) et IIFE pour l’isolation.
+// - 4 astragales clonés, lancer avec simple physique + lecture de la face orientée vers +Y.
+// - Charge Three/GLTFLoader global (évite “Multiple instances” & material.onBuild errors).
 
 ;(()=> {
   const { useEffect, useRef, useState } = React;
 
-  const L3_BASE   = "/assets/games/osselets/level3/";
-  const MODEL_URL = L3_BASE + "3d/astragalus_faces.glb";
-  const VALUES_URL= L3_BASE + "3d/values.json";
+  const L3_BASE    = "/assets/games/osselets/level3/";
+  const MODEL_URL  = L3_BASE + "3d/astragalus_faces.glb";
+  const VALUES_URL = L3_BASE + "3d/values.json";
 
   const W = 960, H = 540, DPR_MAX = 2.5;
   const COUNT = 4, FLOOR_Y = 0, GRAV = -14.5, REST = 0.45, FRIC = 0.92, AFRIC = 0.94, EPS = 0.18, STABLE_MS = 800;
 
-  function ensureThreeESM(){
-    if (window.__threeESMPromise) return window.__threeESMPromise;
-    const V = "0.158.0";
-    const threeURL  = `https://unpkg.com/three@${V}/build/three.module.js?module`;
-    const gltfURL   = `https://unpkg.com/three@${V}/examples/jsm/loaders/GLTFLoader.js?module`;
-    window.__threeESMPromise = (async ()=>{
-      const THREE = await import(threeURL);
-      const { GLTFLoader } = await import(gltfURL);
-      return { THREE, GLTFLoader };
-    })().catch((e)=>{ console.error("[L3] three esm load fail:", e); return null; });
-    return window.__threeESMPromise;
+  /* -------------------- Loader Three global -------------------- */
+  async function injectScript(src){
+    return new Promise((res, rej) => {
+      const s = document.createElement("script");
+      s.src = src; s.async = true; s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
   }
+  async function ensureThreeGlobal(){
+    if (window.__threeGlobalPromise) return window.__threeGlobalPromise;
+    window.__threeGlobalPromise = (async () => {
+      if (window.THREE) {
+        const rev = (window.THREE.REVISION || "158").replace(/[^\d]/g,"");
+        if (!window.THREE.GLTFLoader) {
+          try { await injectScript(`https://unpkg.com/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
+          catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
+        }
+        return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+      }
+      const ver = "0.158.0";
+      try { await injectScript(`https://unpkg.com/three@${ver}/build/three.min.js`); }
+      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/build/three.min.js`); }
+      try { await injectScript(`https://unpkg.com/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
+      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
+      return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+    })().catch((e)=>{ console.error("[L3] Three/GLTFLoader load fail:", e); return null; });
+    return window.__threeGlobalPromise;
+  }
+
   function clamp(n,a,b){ return Math.max(a,Math.min(b,n)); }
   const now = ()=> (typeof performance!=="undefined"?performance:Date).now();
-  async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok) return await r.json(); }catch{} return null; }
+  async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok) return await r.json(); }catch(e){} return null; }
 
   function extractAnchorsFaces(root){
-    const out:any[]=[];
-    root.traverse((n:any)=>{
+    const out=[];
+    root.traverse(function(n){
       const nm=(n.name||"").toLowerCase();
-      let tag=null;
+      var tag=null;
       if (/^face[_\s-]?1$|^f1$|value[_\s-]?1$|valeur[_\s-]?1$/.test(nm)) tag="1";
       else if (/^face[_\s-]?3$|^f3$|value[_\s-]?3$|valeur[_\s-]?3$/.test(nm)) tag="3";
       else if (/^face[_\s-]?4$|^f4$|value[_\s-]?4$|valeur[_\s-]?4$/.test(nm)) tag="4";
       else if (/^face[_\s-]?6$|^f6$|value[_\s-]?6$|valeur[_\s-]?6$/.test(nm)) tag="6";
-      if (tag) out.push({ node:n, tag });
+      if (tag) out.push({ node:n, tag:tag });
     });
     return out;
   }
-  function topFaceByOrientation(anchors:any[], THREE:any){
-    if (!anchors?.length) return null;
-    const up = new THREE.Vector3(0,1,0), y = new THREE.Vector3(0,1,0), q = new THREE.Quaternion();
-    let best=null, bestDot=-1e9;
-    for (const a of anchors){
+  function topFaceByOrientation(anchors, THREE){
+    if (!anchors || !anchors.length) return null;
+    const up = new THREE.Vector3(0,1,0), y = new THREE.Vector3(0,1,0);
+    const q = new THREE.Quaternion();
+    var best=null, bestDot=-1e9;
+    for (var i=0;i<anchors.length;i++){
+      const a=anchors[i];
       a.node.getWorldQuaternion(q);
       const yw = y.clone().applyQuaternion(q).normalize();
       const d = yw.dot(up);
@@ -57,23 +76,23 @@
   }
 
   function AstragalusLevel3(){
-    const wrapRef = useRef(null);
+    const wrapRef   = useRef(null);
     const canvasRef = useRef(null);
     const [ready,setReady] = useState(false);
     const [throwing,setThrowing] = useState(false);
-    const [vals,setVals] = useState<string[]>([]);
+    const [vals,setVals] = useState([]);
     const [msg,setMsg] = useState("Lance 4 astragales (faces 1/3/4/6).");
 
     // 3D
-    const THREEref = useRef<any>(null);
-    const rendererRef = useRef<any>(null);
-    const sceneRef = useRef<any>(null);
-    const cameraRef = useRef<any>(null);
-    const baseRef = useRef<any>(null);
-    const diceRef = useRef<any[]>([]);
-    const reqRef = useRef<number>(0);
-    const lastRef = useRef<number>(0);
-    const mapRef = useRef<any>(null);
+    const THREEref = useRef(null);
+    const rendererRef = useRef(null);
+    const sceneRef = useRef(null);
+    const cameraRef = useRef(null);
+    const baseRef = useRef(null);
+    const diceRef = useRef([]);  // {root, anchors, vel, angVel, stableSince}
+    const reqRef = useRef(0);
+    const lastRef = useRef(0);
+    const mapRef = useRef(null);
 
     /* ---------- Resize ---------- */
     useEffect(()=>{
@@ -85,7 +104,7 @@
         const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
         renderer.setPixelRatio(dpr);
         renderer.setSize(w,h,false);
-        (canvas as any).style.width=w+"px"; (canvas as any).style.height=h+"px";
+        canvas.style.width=w+"px"; canvas.style.height=h+"px";
         cam.aspect=w/h; cam.updateProjectionMatrix();
       }
       onResize();
@@ -99,9 +118,9 @@
     useEffect(()=>{
       let cancelled=false;
       (async ()=>{
-        const libs = await ensureThreeESM();
+        const libs = await ensureThreeGlobal();
         if (!libs){ setMsg("Three.js/GLTFLoader manquant."); return; }
-        const { THREE, GLTFLoader } = libs;
+        const { THREE } = libs;
         THREEref.current = THREE;
 
         // Renderer
@@ -115,9 +134,9 @@
         const cam=new THREE.PerspectiveCamera(45,16/9,0.1,100); cam.position.set(6.4,4.7,7.4); cam.lookAt(0,0.7,0);
         sceneRef.current=scene; cameraRef.current=cam;
 
-        scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.7));
+        scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.8));
         const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
-        dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); dir.shadow.camera.near=.5; dir.shadow.camera.far=30;
+        dir.castShadow=true; dir.shadow.mapSize.set(1024,1024);
         scene.add(dir);
 
         const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,22), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
@@ -129,28 +148,29 @@
         mapRef.current = await getJSON(VALUES_URL);
 
         // Modèle
-        const loader=new GLTFLoader();
-        loader.load(MODEL_URL, (gltf:any)=>{
+        const loader=new window.THREE.GLTFLoader();
+        loader.load(MODEL_URL, function(gltf){
           if (cancelled) return;
-          const base=gltf.scene || gltf.scenes?.[0]; if(!base){ setMsg("Modèle vide."); return; }
-          base.traverse((o:any)=>{
+          const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base){ setMsg("Modèle vide."); return; }
+          base.traverse(function(o){
             if(o.isMesh){
               if(!o.material || !o.material.isMeshStandardMaterial)
                 o.material=new THREE.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
-              o.castShadow=true;
+              o.castShadow=true; o.receiveShadow=false;
             }
           });
+          // normalisation
           const box=new THREE.Box3().setFromObject(base);
-          const s = 1.6/Math.max(...box.getSize(new THREE.Vector3()).toArray());
+          const s = 1.6/Math.max.apply(null, box.getSize(new THREE.Vector3()).toArray());
           base.scale.setScalar(s);
           box.setFromObject(base);
           base.position.sub(box.getCenter(new THREE.Vector3()));
           baseRef.current=base;
 
           // clones
-          const dice:any[]=[];
-          for(let i=0;i<COUNT;i++){
-            const g=base.clone(true); scene.add(g);
+          const dice=[];
+          for(var i=0;i<COUNT;i++){
+            var g=base.clone(true); scene.add(g);
             dice.push({
               root:g,
               anchors: extractAnchorsFaces(g),
@@ -164,13 +184,13 @@
           layoutDice();
           setReady(true);
           startLoop();
-        }, undefined, (err:any)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, function(err){ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
 
         function startLoop(){
           lastRef.current=now();
           function frame(){
             if (cancelled) return;
-            const t=now(), dt=Math.min(32, t-lastRef.current)/1000; lastRef.current=t;
+            var t=now(), dt=Math.min(32, t-lastRef.current)/1000; lastRef.current=t;
             step(dt);
             renderer.render(scene,cameraRef.current);
             reqRef.current=requestAnimationFrame(frame);
@@ -179,14 +199,14 @@
         }
       })();
 
-      return ()=>{ cancelled=true; if(reqRef.current) cancelAnimationFrame(reqRef.current); rendererRef.current?.dispose?.(); };
+      return ()=>{ cancelled=true; if(reqRef.current) cancelAnimationFrame(reqRef.current); };
     },[]);
 
     /* ---------- Physique simple ---------- */
     function layoutDice(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
-      for(let i=0;i<dice.length;i++){
-        const d=dice[i];
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      for(var i=0;i<dice.length;i++){
+        var d=dice[i];
         d.root.position.set(-2.2 + i*1.5, 0.82, (i%2===0)? -0.6 : 0.7);
         d.root.rotation.set(0, i*0.6, 0);
         d.vel.set(0,0,0); d.angVel.set(0,0,0);
@@ -195,9 +215,9 @@
       }
     }
     function randomThrow(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
-      for(let i=0;i<dice.length;i++){
-        const d=dice[i];
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      for(var i=0;i<dice.length;i++){
+        var d=dice[i];
         d.root.position.set(-3.5 + i*0.6, 2.2 + Math.random()*0.8, -1.8 + Math.random()*3.4);
         d.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
         d.vel.set(5.2 + Math.random()*2.0, 2.5 + Math.random()*1.2, 1.5 - Math.random()*3.0);
@@ -206,20 +226,21 @@
       }
       setVals([]); setThrowing(true); setMsg("Lancer ! (attendre l’arrêt)");
     }
-    function step(dt:number){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
-      let allStable=true;
-      for(const d of dice){
+    function step(dt){
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      var allStable=true;
+      for(var i=0;i<dice.length;i++){
+        var d=dice[i];
         d.vel.y += GRAV*dt;
         d.root.position.addScaledVector(d.vel, dt);
 
-        const r=0.75;
+        var r=0.75;
         if (d.root.position.y - r <= FLOOR_Y){
           d.root.position.y=FLOOR_Y+r;
           if (d.vel.y<0) d.vel.y = -d.vel.y*REST;
           d.vel.x*=FRIC; d.vel.z*=FRIC; d.angVel.multiplyScalar(AFRIC);
         }
-        const X=6.8,Z=4.4;
+        var X=6.8,Z=4.4;
         if (d.root.position.x<-X){ d.root.position.x=-X; d.vel.x= Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x> X){ d.root.position.x= X; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z<-Z){ d.root.position.z=-Z; d.vel.z= Math.abs(d.vel.z)*0.6; }
@@ -231,17 +252,17 @@
         d.vel.multiplyScalar(0.999); d.angVel.multiplyScalar(0.999);
         d.root.updateMatrixWorld(true);
 
-        const speed=d.vel.length()+d.angVel.length();
+        var speed=d.vel.length()+d.angVel.length();
         if (speed<EPS){ if(!d.stableSince) d.stableSince=now(); } else d.stableSince=0;
         if (!(d.stableSince && (now()-d.stableSince>STABLE_MS))) allStable=false;
       }
-
       if (throwing && allStable){
         setThrowing(false);
-        const out:string[]=[]; const map=mapRef.current;
-        for(const d of dice){
-          let tag = topFaceByOrientation(d.anchors, THREE) || "?";
-          if (map?.map && map.map[tag]!=null) tag=String(map.map[tag]);
+        var out=[]; var map=mapRef.current;
+        for(var j=0;j<dice.length;j++){
+          var d2=dice[j];
+          var tag = topFaceByOrientation(d2.anchors, THREE) || "?";
+          if (map && map.map && map.map[tag]!=null) tag=String(map.map[tag]);
           out.push(tag);
         }
         setVals(out);
@@ -256,11 +277,11 @@
           <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8}}>
             <h1 className="text-xl sm:text-2xl" style={{fontWeight:700}}>Rouler les os — Vénus, Canis, Senio…</h1>
             <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
-              <button onClick={()=>ready && randomThrow()} disabled={!ready}
+              <button onClick={function(){ if(ready) randomThrow(); }} disabled={!ready}
                 style={{padding:"10px 14px", border:"1px solid #2563eb", background:"#2563eb", color:"#fff", borderRadius:12, cursor:ready?"pointer":"default", boxShadow:"0 6px 16px rgba(37,99,235,.25)"}}>
                 Lancer
               </button>
-              <button onClick={()=>{ layoutDice(); setVals([]); setThrowing(false); setMsg("Réinitialisé. Clique « Lancer »."); }} disabled={!ready}
+              <button onClick={function(){ layoutDice(); setVals([]); setThrowing(false); setMsg("Réinitialisé. Clique « Lancer »."); }} disabled={!ready}
                 style={{padding:"8px 12px", border:"1px solid #e5e7eb", background:"#fff", borderRadius:12, cursor:ready?"pointer":"default"}}>
                 Réinitialiser
               </button>
@@ -286,7 +307,7 @@
                 <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
                 <div style={{fontSize:14}}>
                   {vals.join("  ")}
-                  <span style={{marginLeft:10, color:"#64748b"}}>Somme: {vals.filter(v=>/^\d+$/.test(v)).map(Number).reduce((a,b)=>a+b,0)}</span>
+                  <span style={{marginLeft:10, color:"#64748b"}}>Somme: {vals.filter(function(v){return /^\d+$/.test(v);}).map(function(n){return +n;}).reduce(function(a,b){return a+b;},0)}</span>
                 </div>
                 <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
                   Catégories : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 “6”), Trina (triple), Bina (deux paires), Simple (autres).
