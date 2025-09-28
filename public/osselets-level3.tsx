@@ -1,14 +1,14 @@
 /* public/osselets-level3.tsx
    Mini-jeu 3 — « Rouler les os »
-   - Charge /assets/games/osselets/level3/3d/astragalus_faces.glb (Face_1/3/4/6 + alias)
-   - Oriente chaque clone pour amener la face tirée vers +Y
-   - Catégories historiques: Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 "6"), Trina (triple), Bina (deux paires), Simple
-   - Mode "Oracle" = petite interprétation pédagogique (8–12 ans)
+   - Charge /assets/games/osselets/level3/3d/astragalus_faces.glb
+   - Ancres de faces (Face_1/3/4/6, variantes tolérées) → oriente la face tirée vers +Y
+   - Catégories : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 six), Trina (triple), Bina (deux paires), Simple
+   - EXPORT: window.AstragalusLevel3 (le montage est géré par portfolio.html)
 */
 (function (global) {
   const { useEffect, useRef, useState } = React;
 
-  // -------- Bus audio --------
+  // -------- AudioBus --------
   if (!global.AstragalusAudioBus) {
     global.AstragalusAudioBus = {
       _list: [], register(a){ if(a && !this._list.includes(a)) this._list.push(a); },
@@ -25,11 +25,11 @@
       const add=(src)=>new Promise((res)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>res(true); s.onerror=()=>res(false); document.head.appendChild(s); });
       async function tryAny(list){ for(const u of list){ if(await add(u)) return true; } return false; }
       const v="0.149.0";
-      const core = await tryAny([`https://unpkg.com/three@${v}/build/three.min.js`,`https://cdn.jsdelivr.net/npm/three@${v}/build/three.min.js`]);
-      if (!core) return null;
+      const okCore = await tryAny([`https://unpkg.com/three@${v}/build/three.min.js`,`https://cdn.jsdelivr.net/npm/three@${v}/build/three.min.js`]);
+      if (!okCore) return null;
       const okCtrl = await tryAny([`https://unpkg.com/three@${v}/examples/js/controls/OrbitControls.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/controls/OrbitControls.js`]);
       const okGLTF = await tryAny([`https://unpkg.com/three@${v}/examples/js/loaders/GLTFLoader.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/loaders/GLTFLoader.js`]);
-      if (!(okCtrl && okGLTF)) { console.warn("[L3] Three examples indisponibles → fallback 2D"); return null; }
+      if (!(okCtrl && okGLTF)) return null;
       return global.THREE;
     })();
     return global.__THREE_PROMISE__;
@@ -37,14 +37,14 @@
 
   // -------- Config --------
   const W=960,H=540;
-  const ABASE="/assets/games/osselets/audio/"; const AU={ music:"game-music-1.mp3", good:"catch-sound.mp3", bad:"ouch-sound.mp3" };
+  const ABASE="/assets/games/osselets/audio/";
+  const AU={ music:"game-music-1.mp3", good:"catch-sound.mp3", bad:"ouch-sound.mp3" };
   const GLB_PREFERRED="/assets/games/osselets/level3/3d/astragalus_faces.glb";
   const GLB_FALLBACKS=["/assets/games/osselets/3d/astragalus.glb","/assets/games/osselets/level2/3d/astragalus.glb"];
-
   function randFace(){ return [1,3,4,6][(Math.random()*4)|0]; }
   function wrap(ctx, text, x,y,w,lh){ const words=(text||"").split(/\s+/); let line=""; for(const wd of words){ const t=(line?line+" ":"")+wd; if(ctx.measureText(t).width>w && line){ ctx.fillText(line,x,y); line=wd; y+=lh; } else line=t; } if(line) ctx.fillText(line,x,y); }
 
-  function Level3(){
+  function AstragalusLevel3(){
     const hostRef=useRef(null), webglRef=useRef(null), canvasRef=useRef(null), ctxRef=useRef(null);
     const musRef=useRef(null), goodRef=useRef(null), badRef=useRef(null);
     const [musicOn,setMusicOn]=useState(true);
@@ -55,7 +55,7 @@
     const [lastLabel,setLastLabel]=useState("—");
     const [lastMeaning,setLastMeaning]=useState("");
 
-    // stop autres musiques
+    // coupe musique d’autres jeux
     useEffect(()=>{ global.AstragalusAudioBus.stopAll(); },[]);
 
     // DPR
@@ -148,11 +148,10 @@
       const v=vals.slice().sort((a,b)=>a-b);
       const counts=v.reduce((m,x)=>(m[x]=(m[x]||0)+1,m),{});
       const uniq=Object.keys(counts).length;
-      // libellés selon sources antiques (résumé enfant) 
       let res={ label:"Simple", points:1, meaning:"Tir normal. Réessaie pour un meilleur présage." };
-      if (v.join(",")==="1,1,1,1")          res={label:"Canis", points:0, meaning:"Quatre ‘1’ — coup faible. Patience !"};
-      else if (v.join(",")==="1,3,4,6")     res={label:"Vénus", points:6, meaning:"Jet parfait (1-3-4-6) — chance et bon augure !"};
-      else if ((counts[6]||0)>=2)           res={label:"Senio", points:4, meaning:"Plusieurs ‘6’ — puissance (parfois excès)."};
+      if (v.join(",")==="1,1,1,1")                res={label:"Canis", points:0, meaning:"Quatre ‘1’ — coup faible. Patience !"};
+      else if (v.join(",")==="1,3,4,6")           res={label:"Vénus", points:6, meaning:"Jet parfait (1-3-4-6) — bon augure !"};
+      else if ((counts[6]||0)>=2)                 res={label:"Senio", points:4, meaning:"Plusieurs ‘6’ — puissance (parfois excès)."};
       else if (Object.values(counts).some(c=>c===3)) res={label:"Trina", points:3, meaning:"Triple — stabilité mais rigidité."};
       else if (uniq===2 && Object.values(counts).every(c=>c===2)) res={label:"Bina", points:4, meaning:"Deux paires — équilibre fragile."};
 
@@ -171,9 +170,8 @@
         ctx.fillStyle="#cfe2ff"; ctx.font="18px system-ui,Segoe UI,Roboto,Arial";
         ctx.fillText("Rouler les os — 4 astragales (faces 1/3/4/6)", 16, 28);
         ctx.font="16px system-ui,Segoe UI,Roboto,Arial";
-        ctx.fillText("But : comprendre les **faces** et les **catégories** antiques (Vénus, Canis, Senio, Trina, Bina).", 16, 50);
+        ctx.fillText("But : comprendre les faces et les catégories antiques (Vénus, Canis, Senio, Trina, Bina).", 16, 50);
 
-        // résultat
         ctx.font="22px system-ui,Segoe UI,Roboto,Arial"; ctx.fillText(`Tirage : ${rolls.join("  ")}`, 16, H-116);
         ctx.font="18px system-ui,Segoe UI,Roboto,Arial"; ctx.fillText(`Catégorie : ${lastLabel}`, 16, H-86);
         if(mode==="oracle"){ ctx.font="16px system-ui,Segoe UI,Roboto,Arial"; wrap(ctx, `Oracle : ${lastMeaning}`, 16, H-62, W-32, 18); }
@@ -195,3 +193,12 @@
           <button className="btn" onClick={()=>setMode(m=>m==="jeu"?"oracle":"jeu")}>Mode : {mode==="jeu"?"Jeu":"Oracle"}</button>
           <button className="btn" onClick={()=>setMusicOn(v=>!v)}>Musique: {musicOn?"ON":"OFF"}</button>
           <button className="btn" onClick={()=>{ try{ global.AstragalusAudioBus.stopAll(); }catch{} }}>Stop musique</button>
+        </div>
+      </div>
+    );
+  }
+
+  // EXPORT pour le script de montage de portfolio.html
+  global.AstragalusLevel3 = AstragalusLevel3;
+
+})(window);
