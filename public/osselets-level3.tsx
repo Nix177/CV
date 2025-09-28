@@ -1,52 +1,38 @@
 // public/osselets-level3.tsx
-// LEVEL 3 — “Rouler les os” (dés 1/3/4/6)
-// - Modèle: /assets/games/osselets/level3/3d/astragalus_faces.glb
-// - Charge Three + GLTFLoader (une seule fois). Duplique 4 astragales, lance, lit la face du haut par orientation des ancres Face_*
+// LEVEL 3 — « Rouler les os » (dés 1/3/4/6)
+// - Modèle : /assets/games/osselets/level3/3d/astragalus_faces.glb (ancres Face_1/3/4/6)
+// - 4 astragales clonés, lancer avec petite physique “maison” + lecture de la face vers +Y.
+// - Chargement Three/GLTFLoader via ES Modules (docs) et IIFE pour l’isolation.
 
 ;(()=> {
   const { useEffect, useRef, useState } = React;
 
-  const L3_BASE = "/assets/games/osselets/level3/";
+  const L3_BASE   = "/assets/games/osselets/level3/";
   const MODEL_URL = L3_BASE + "3d/astragalus_faces.glb";
-  const VALUES_URL = L3_BASE + "3d/values.json";
+  const VALUES_URL= L3_BASE + "3d/values.json";
 
   const W = 960, H = 540, DPR_MAX = 2.5;
   const COUNT = 4, FLOOR_Y = 0, GRAV = -14.5, REST = 0.45, FRIC = 0.92, AFRIC = 0.94, EPS = 0.18, STABLE_MS = 800;
 
-  // ---- Shared loader (same as L2) ----
-  function loadScript(url){
-    return new Promise((resolve,reject)=>{
-      const s=document.createElement("script");
-      s.src=url; s.async=false;
-      s.onload=()=>resolve(true); s.onerror=()=>reject(new Error("load fail "+url));
-      document.head.appendChild(s);
-    });
+  function ensureThreeESM(){
+    if (window.__threeESMPromise) return window.__threeESMPromise;
+    const V = "0.158.0";
+    const threeURL  = `https://unpkg.com/three@${V}/build/three.module.js?module`;
+    const gltfURL   = `https://unpkg.com/three@${V}/examples/jsm/loaders/GLTFLoader.js?module`;
+    window.__threeESMPromise = (async ()=>{
+      const THREE = await import(threeURL);
+      const { GLTFLoader } = await import(gltfURL);
+      return { THREE, GLTFLoader };
+    })().catch((e)=>{ console.error("[L3] three esm load fail:", e); return null; });
+    return window.__threeESMPromise;
   }
-  function ensureThree(){
-    if (window.__threeReadyPromise) return window.__threeReadyPromise;
-    window.__threeReadyPromise = (async ()=>{
-      let THREE = window.THREE; const ver="0.158.0";
-      if (!THREE){
-        try { await loadScript(`https://unpkg.com/three@${ver}/build/three.min.js`); }
-        catch { await loadScript(`https://cdn.jsdelivr.net/npm/three@${ver}/build/three.min.js`); }
-        THREE = window.THREE;
-      }
-      if (!(THREE && (THREE.GLTFLoader || window.GLTFLoader))){
-        try { await loadScript(`https://unpkg.com/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
-        catch { await loadScript(`https://cdn.jsdelivr.net/npm/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
-      }
-      return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader || window.GLTFLoader };
-    })();
-    return window.__threeReadyPromise;
-  }
-
   function clamp(n,a,b){ return Math.max(a,Math.min(b,n)); }
   const now = ()=> (typeof performance!=="undefined"?performance:Date).now();
   async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok) return await r.json(); }catch{} return null; }
 
   function extractAnchorsFaces(root){
-    const out=[];
-    root.traverse(n=>{
+    const out:any[]=[];
+    root.traverse((n:any)=>{
       const nm=(n.name||"").toLowerCase();
       let tag=null;
       if (/^face[_\s-]?1$|^f1$|value[_\s-]?1$|valeur[_\s-]?1$/.test(nm)) tag="1";
@@ -57,7 +43,7 @@
     });
     return out;
   }
-  function topFaceByOrientation(anchors, THREE){
+  function topFaceByOrientation(anchors:any[], THREE:any){
     if (!anchors?.length) return null;
     const up = new THREE.Vector3(0,1,0), y = new THREE.Vector3(0,1,0), q = new THREE.Quaternion();
     let best=null, bestDot=-1e9;
@@ -75,32 +61,31 @@
     const canvasRef = useRef(null);
     const [ready,setReady] = useState(false);
     const [throwing,setThrowing] = useState(false);
-    const [vals,setVals] = useState([]);
+    const [vals,setVals] = useState<string[]>([]);
     const [msg,setMsg] = useState("Lance 4 astragales (faces 1/3/4/6).");
 
-    // 3D refs
-    const THREEref = useRef(null);
-    const rendererRef = useRef(null);
-    const sceneRef = useRef(null);
-    const cameraRef = useRef(null);
-    const baseRef = useRef(null);
-    const diceRef = useRef([]); // {root, anchors, vel, angVel, stableSince}
-    const reqRef = useRef(0);
-    const lastRef = useRef(0);
-    const mapRef = useRef(null);
+    // 3D
+    const THREEref = useRef<any>(null);
+    const rendererRef = useRef<any>(null);
+    const sceneRef = useRef<any>(null);
+    const cameraRef = useRef<any>(null);
+    const baseRef = useRef<any>(null);
+    const diceRef = useRef<any[]>([]);
+    const reqRef = useRef<number>(0);
+    const lastRef = useRef<number>(0);
+    const mapRef = useRef<any>(null);
 
     /* ---------- Resize ---------- */
     useEffect(()=>{
       function onResize(){
-        const THREE=window.THREE; if(!THREE) return;
+        const THREE=THREEref.current; if(!THREE) return;
         const wrap=wrapRef.current, canvas=canvasRef.current, renderer=rendererRef.current, cam=cameraRef.current;
         if (!wrap || !canvas || !renderer || !cam) return;
-        const w=Math.max(320, wrap.clientWidth|0);
-        const h=Math.round(w*(H/W));
+        const w=Math.max(320, wrap.clientWidth|0), h=Math.round(w*(H/W));
         const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
         renderer.setPixelRatio(dpr);
         renderer.setSize(w,h,false);
-        canvas.style.width=w+"px"; canvas.style.height=h+"px";
+        (canvas as any).style.width=w+"px"; (canvas as any).style.height=h+"px";
         cam.aspect=w/h; cam.updateProjectionMatrix();
       }
       onResize();
@@ -110,11 +95,11 @@
       return ()=>{ if(ro) ro.disconnect(); window.removeEventListener("resize", onResize); };
     },[]);
 
-    /* ---------- Init 3D ---------- */
+    /* ---------- Init ---------- */
     useEffect(()=>{
       let cancelled=false;
       (async ()=>{
-        const libs = await ensureThree().catch(()=>null);
+        const libs = await ensureThreeESM();
         if (!libs){ setMsg("Three.js/GLTFLoader manquant."); return; }
         const { THREE, GLTFLoader } = libs;
         THREEref.current = THREE;
@@ -130,36 +115,31 @@
         const cam=new THREE.PerspectiveCamera(45,16/9,0.1,100); cam.position.set(6.4,4.7,7.4); cam.lookAt(0,0.7,0);
         sceneRef.current=scene; cameraRef.current=cam;
 
-        // lumières
         scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.7));
         const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
         dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); dir.shadow.camera.near=.5; dir.shadow.camera.far=30;
         scene.add(dir);
 
-        // sol
         const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,22), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
         ground.rotation.x=-Math.PI/2; ground.position.y=FLOOR_Y; ground.receiveShadow=true; scene.add(ground);
 
-        // léger anneau
         const ring=new THREE.Mesh(new THREE.RingGeometry(0.01,8,64), new THREE.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:THREE.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.005; scene.add(ring);
 
-        // config optionnelle
         mapRef.current = await getJSON(VALUES_URL);
 
-        // modèle
+        // Modèle
         const loader=new GLTFLoader();
-        loader.load(MODEL_URL, (gltf)=>{
+        loader.load(MODEL_URL, (gltf:any)=>{
           if (cancelled) return;
           const base=gltf.scene || gltf.scenes?.[0]; if(!base){ setMsg("Modèle vide."); return; }
-          base.traverse(o=>{
+          base.traverse((o:any)=>{
             if(o.isMesh){
               if(!o.material || !o.material.isMeshStandardMaterial)
                 o.material=new THREE.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
               o.castShadow=true;
             }
           });
-          // normalisation
           const box=new THREE.Box3().setFromObject(base);
           const s = 1.6/Math.max(...box.getSize(new THREE.Vector3()).toArray());
           base.scale.setScalar(s);
@@ -167,8 +147,8 @@
           base.position.sub(box.getCenter(new THREE.Vector3()));
           baseRef.current=base;
 
-          // clones/dés
-          const dice=[];
+          // clones
+          const dice:any[]=[];
           for(let i=0;i<COUNT;i++){
             const g=base.clone(true); scene.add(g);
             dice.push({
@@ -184,7 +164,7 @@
           layoutDice();
           setReady(true);
           startLoop();
-        }, undefined, (err)=>{ console.error(err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, (err:any)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
 
         function startLoop(){
           lastRef.current=now();
@@ -202,7 +182,7 @@
       return ()=>{ cancelled=true; if(reqRef.current) cancelAnimationFrame(reqRef.current); rendererRef.current?.dispose?.(); };
     },[]);
 
-    /* ---------- Simulation ---------- */
+    /* ---------- Physique simple ---------- */
     function layoutDice(){
       const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
       for(let i=0;i<dice.length;i++){
@@ -226,28 +206,25 @@
       }
       setVals([]); setThrowing(true); setMsg("Lancer ! (attendre l’arrêt)");
     }
-    function step(dt){
+    function step(dt:number){
       const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
       let allStable=true;
       for(const d of dice){
         d.vel.y += GRAV*dt;
         d.root.position.addScaledVector(d.vel, dt);
 
-        // sol
         const r=0.75;
         if (d.root.position.y - r <= FLOOR_Y){
           d.root.position.y=FLOOR_Y+r;
           if (d.vel.y<0) d.vel.y = -d.vel.y*REST;
           d.vel.x*=FRIC; d.vel.z*=FRIC; d.angVel.multiplyScalar(AFRIC);
         }
-        // murs
         const X=6.8,Z=4.4;
         if (d.root.position.x<-X){ d.root.position.x=-X; d.vel.x= Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x> X){ d.root.position.x= X; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z<-Z){ d.root.position.z=-Z; d.vel.z= Math.abs(d.vel.z)*0.6; }
         if (d.root.position.z> Z){ d.root.position.z= Z; d.vel.z=-Math.abs(d.vel.z)*0.6; }
 
-        // rotation
         d.root.rotation.x += d.angVel.x*dt;
         d.root.rotation.y += d.angVel.y*dt;
         d.root.rotation.z += d.angVel.z*dt;
@@ -261,7 +238,7 @@
 
       if (throwing && allStable){
         setThrowing(false);
-        const out=[]; const map=mapRef.current;
+        const out:string[]=[]; const map=mapRef.current;
         for(const d of dice){
           let tag = topFaceByOrientation(d.anchors, THREE) || "?";
           if (map?.map && map.map[tag]!=null) tag=String(map.map[tag]);
@@ -319,7 +296,7 @@
           </div>
 
           <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Modèle utilisé : <code>astragalus_faces.glb</code> — ancres <code>Face_1/3/4/6</code> (ou variantes). Détermination par orientation (+Y de l’ancre vers le haut).
+            Modèle utilisé : <code>astragalus_faces.glb</code> — ancres <code>Face_1/3/4/6</code> (ou variantes). Lecture par orientation (+Y de l’ancre vers le haut).
           </div>
         </div>
       </div>
