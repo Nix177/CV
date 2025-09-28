@@ -1,280 +1,296 @@
-(() => {
-  // ===== Minimal guards =====
-  const T = window.THREE;
-  if (!T) { console.error("[L2] THREE non disponible"); return; }
-  const GLTFCls = window.GLTFLoader || (T && T.GLTFLoader);
-  // ---------- Config ----------
-  const MODEL_CANDIDATES = [
-    "/assets/games/osselets/models/astragalus.glb",
-    "/assets/games/osselets/3d/astragalus.glb",
-    "/assets/games/osselets/audio/img/astragalus.glb",
-  ];
-  const BG_COLOR = 0xf7f6f3;
-  const GROUND_COLOR = 0xe9e7e1;
-  const LETTER_COLOR = "#0f172a";
-  const LETTERS = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ".split(""); // 24
+/* public/osselets-level2.tsx */
+/* global React, ReactDOM, THREE, GLTFLoader */
 
-  // ---------- State ----------
-  let _container = null, _renderer = null, _scene = null, _camera = null, _raf = 0;
-  let _root = null, _bone = null, _drag = null, _ray = null, _mouse = null, _plane = null;
-  let _resizeObs = null, _running = false, _modelUrl = null;
+(function () {
+  const { useEffect, useRef, useState } = React;
 
-  function fitRenderer() {
-    if (!_container || !_renderer) return;
-    const w = _container.clientWidth || 800;
-    const h = _container.clientHeight || 450;
-    _renderer.setSize(w, h, false);
-    _camera.aspect = w / h;
-    _camera.updateProjectionMatrix();
-  }
-
-  function makeRenderer() {
-    const r = new T.WebGLRenderer({ antialias: true, alpha: true });
-    r.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    r.setClearColor(BG_COLOR, 1);
-    return r;
-  }
-
-  // simple orbit (drag = rotation caméra autour de cible)
-  const orbit = {
-    target: new T.Vector3(0, 0.1, 0),
-    phi: Math.PI * 0.22,
-    theta: Math.PI * 0.28,
-    dist: 1.4,
-    update() {
-      const s = Math.max(0.6, Math.min(3.0, this.dist));
-      const x = this.target.x + s * Math.sin(this.theta) * Math.cos(this.phi);
-      const y = this.target.y + s * Math.sin(this.phi);
-      const z = this.target.z + s * Math.cos(this.theta) * Math.cos(this.phi);
-      _camera.position.set(x, y, z);
-      _camera.lookAt(this.target);
-    },
-  };
-
-  function addLights(scene) {
-    scene.add(new T.AmbientLight(0xffffff, 0.75));
-    const dir = new T.DirectionalLight(0xffffff, 1.0);
-    dir.position.set(2, 3, 2);
-    dir.castShadow = true;
-    dir.shadow.mapSize.set(1024, 1024);
-    scene.add(dir);
-  }
-
-  // labels = sprites 2D dessinés sur canvas → depthTest ON pour être masqués par l’osselet
-  function makeLetterSprite(char) {
-    const cvs = document.createElement("canvas");
-    const s = 256;
-    cvs.width = cvs.height = s;
-    const ctx = cvs.getContext("2d");
-    ctx.fillStyle = "rgba(0,0,0,0)";
-    ctx.fillRect(0, 0, s, s);
-    ctx.fillStyle = LETTER_COLOR;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = "bold 180px ui-sans-serif, system-ui";
-    ctx.fillText(char, s / 2, s / 2 + 6);
-    const tex = new T.CanvasTexture(cvs);
-    tex.anisotropy = 4;
-    const mat = new T.SpriteMaterial({ map: tex, depthTest: true, depthWrite: false, transparent: true });
-    const sp = new T.Sprite(mat);
-    sp.scale.set(0.08, 0.08, 0.08);
-    return sp;
-  }
-
-  function placeLetters(scene) {
-    const group = new T.Group();
-    // cercle régulier + un léger bruit pour éviter chevauchement optique
-    const R = 0.5;
-    for (let i = 0; i < 24; i++) {
-      const a = (i / 24) * Math.PI * 2;
-      const sp = makeLetterSprite(LETTERS[i]);
-      const x = Math.cos(a) * R * 0.95;
-      const z = Math.sin(a) * R * 0.95;
-      sp.position.set(x, 0.001, z);
-      group.add(sp);
-    }
-    scene.add(group);
-  }
-
-  function addGround(scene) {
-    const g = new T.PlaneGeometry(4, 4);
-    const m = new T.MeshStandardMaterial({ color: GROUND_COLOR, roughness: 0.95, metalness: 0.0 });
-    const mesh = new T.Mesh(g, m);
-    mesh.receiveShadow = true;
-    mesh.rotation.x = -Math.PI / 2;
-    scene.add(mesh);
-    return mesh;
-  }
-
-  function loadFirst(urls) {
-    return new Promise(async (resolve, reject) => {
-      if (!GLTFCls) return reject(new Error("GLTFLoader indisponible"));
-      const loader = new GLTFCls();
-      let done = false;
-      const tryUrl = (u) =>
-        new Promise((ok, ko) => {
-          loader.load(
-            u,
-            (g) => ok({ ok: true, g, u }),
-            undefined,
-            () => ok({ ok: false, u })
-          );
-        });
-      for (const u of urls) {
-        // eslint-disable-next-line no-await-in-loop
-        const res = await tryUrl(u);
-        if (res.ok) {
-          done = true;
-          resolve(res);
-          break;
-        }
-      }
-      if (!done) reject(new Error("loadFirst failed"));
+  // -------- helpers --------
+  function tryPaths(paths: string[]): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let i = 0;
+      const next = () => {
+        if (i >= paths.length) return reject(new Error("no candidate path"));
+        const url = paths[i++];
+        fetch(url, { method: "HEAD", cache: "no-store" })
+          .then((r) => (r.ok ? resolve(url) : next()))
+          .catch(next);
+      };
+      next();
     });
   }
 
-  function attachDrag(mesh, plane) {
-    _ray = new T.Raycaster();
-    _mouse = new T.Vector2();
-    _drag = {
-      active: false,
-      y: 0.08,
-    };
-    const dom = _renderer.domElement;
-    dom.addEventListener("pointerdown", onDown);
-    dom.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
-    function ndc(ev) {
-      const r = dom.getBoundingClientRect();
-      _mouse.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
-      _mouse.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
-    }
-    function onDown(ev) {
-      ndc(ev);
-      _ray.setFromCamera(_mouse, _camera);
-      const it = _ray.intersectObject(mesh, true);
-      if (it && it.length) {
-        _drag.active = true;
-      }
-    }
-    function onMove(ev) {
-      if (!_drag.active) return;
-      ndc(ev);
-      _ray.setFromCamera(_mouse, _camera);
-      const it = _ray.intersectObject(plane, true);
-      if (it && it.length) {
-        const p = it[0].point;
-        mesh.position.x = p.x;
-        mesh.position.z = p.z;
-        mesh.position.y = _drag.y;
-      }
-    }
-    function onUp() {
-      _drag.active = false;
-    }
-    return () => {
-      dom.removeEventListener("pointerdown", onDown);
-      dom.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
-    };
+  // Crée un sprite texte 3D (lettres grecques), occlus par l’os (depthTest: true)
+  function makeTextSprite(txt: string, size = 38, color = "#172554") {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const pad = 10;
+    ctx.font = `${size}px ui-sans-serif, system-ui`;
+    const w = Math.ceil(ctx.measureText(txt).width) + pad * 2;
+    const h = size + pad * 2;
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.font = `${size}px ui-sans-serif, system-ui`;
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 2;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeRect(0, 0, w, h);
+    ctx.fillStyle = color;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(txt, w / 2, h / 2);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    const mat = new THREE.SpriteMaterial({ map: tex, depthTest: true, depthWrite: false });
+    const spr = new THREE.Sprite(mat);
+    // On fixe l’échelle pour rester lisible
+    const S = 0.25;
+    spr.scale.set((w / h) * S, 1 * S, 1 * S);
+    return spr;
   }
 
-  function frame() {
-    orbit.update();
-    _renderer.render(_scene, _camera);
-    if (_running) _raf = requestAnimationFrame(frame);
-  }
+  const GREEK = [
+    "Α", "Β", "Γ", "Δ", "Ε", "Ζ",
+    "Η", "Θ", "Ι", "Κ", "Λ", "Μ",
+    "Ν", "Ξ", "Ο", "Π", "Ρ", "Σ",
+    "Τ", "Υ", "Φ", "Χ", "Ψ", "Ω",
+  ];
 
-  async function init(container) {
-    _container = typeof container === "string" ? document.querySelector(container) : container;
-    if (!_container) { console.error("[L2] container introuvable"); return; }
+  function AstragalusLevel2() {
+    const hostRef = useRef<HTMLDivElement | null>(null);
+    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+    const sceneRef = useRef<THREE.Scene | null>(null);
+    const camRef = useRef<THREE.PerspectiveCamera | null>(null);
+    const controlsRef = useRef<any>(null);
+    const modelRef = useRef<THREE.Object3D | null>(null);
+    const frameRef = useRef<number | null>(null);
+    const [ready, setReady] = useState(false);
+    const [err, setErr] = useState<string | null>(null);
 
-    // scene
-    _scene = new T.Scene();
-    _scene.fog = new T.Fog(BG_COLOR, 3, 8);
+    useEffect(() => {
+      const host = hostRef.current!;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b1220);
+      sceneRef.current = scene;
 
-    _camera = new T.PerspectiveCamera(45, 16 / 9, 0.01, 100);
-    _renderer = makeRenderer();
-    _renderer.shadowMap.enabled = true;
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+      renderer.outputColorSpace = (THREE as any).SRGBColorSpace || (THREE as any).sRGBEncoding;
+      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      renderer.shadowMap.enabled = true;
+      rendererRef.current = renderer;
+      host.appendChild(renderer.domElement);
 
-    _container.innerHTML = "";
-    _container.appendChild(_renderer.domElement);
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+      camera.position.set(0.9, 0.6, 1.4);
+      camRef.current = camera;
 
-    addLights(_scene);
-    _root = new T.Group();
-    _scene.add(_root);
+      // Eclairage doux
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.6));
+      const key = new THREE.DirectionalLight(0xffffff, 0.8);
+      key.position.set(2, 2.2, 2.5);
+      key.castShadow = true;
+      key.shadow.mapSize.set(1024, 1024);
+      scene.add(key);
 
-    const ground = addGround(_scene);
-    placeLetters(_scene);
+      // Sol
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(6, 6),
+        new THREE.MeshStandardMaterial({ color: 0x0b2439, roughness: 1, metalness: 0 })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
 
-    // plane pour le drag (XZ)
-    _plane = new T.Mesh(
-      new T.PlaneGeometry(10, 10),
-      new T.MeshBasicMaterial({ visible: false })
-    );
-    _plane.rotation.x = -Math.PI / 2;
-    _scene.add(_plane);
+      // OrbitControls (globals examples/js)
+      let controls: any;
+      try {
+        controls = new (THREE as any).OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.minDistance = 0.35;
+        controls.maxDistance = 3.2;
+        controls.target.set(0, 0.18, 0);
+        controlsRef.current = controls;
+      } catch (e) {
+        // Si examples non chargés
+        console.warn("[L2] OrbitControls indisponible :", e);
+      }
 
-    // caméra
-    orbit.dist = 1.35;
-    orbit.phi = Math.PI * 0.28;
-    orbit.theta = Math.PI * 0.28;
-    orbit.target.set(0, 0.06, 0);
-
-    fitRenderer();
-    _resizeObs = new ResizeObserver(fitRenderer);
-    _resizeObs.observe(_container);
-
-    // modèle
-    try {
-      const urls = _modelUrl ? [_modelUrl] : MODEL_CANDIDATES;
-      const { g } = await loadFirst(urls);
-      _bone = g.scene || g.scenes?.[0];
-      _bone.traverse((o) => {
-        if (o.isMesh) {
-          o.castShadow = true;
-          o.receiveShadow = true;
-          if (o.material) {
-            o.material.depthTest = true; // important pour masquer les lettres
-            o.material.depthWrite = true;
-            o.material.transparent = !!o.material.transparent;
-          }
+      // Resize
+      const resize = () => {
+        const w = host.clientWidth || 640;
+        const h = host.clientHeight || 360;
+        renderer.setSize(w, h, false);
+        if (camera) {
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
         }
-      });
-      // échelle & pose
-      const box = new T.Box3().setFromObject(_bone);
-      const size = box.getSize(new T.Vector3()).length();
-      const scale = 0.18 / size;
-      _bone.scale.setScalar(scale);
-      _bone.position.set(0, 0.08, 0);
-      _bone.rotation.set(0.25, 0.3, 0);
-      _root.add(_bone);
+      };
+      resize();
+      const ro = new ResizeObserver(resize);
+      ro.observe(host);
 
-      // drag
-      const detach = attachDrag(_bone, _plane);
-      _bone.userData._detachDrag = detach;
-    } catch (e) {
-      console.error("[L2] GLB load error", e);
-    }
+      // Charge le modèle d’astragale
+      const loader = new (THREE as any).GLTFLoader?.() || new (window as any).GLTFLoader?.();
+      if (!loader) {
+        setErr("GLTFLoader manquant");
+      } else {
+        const candidates = [
+          "/assets/games/osselets/level2/3d/astragalus.glb",
+          "/assets/games/osselets/level3/3d/astragalus.glb",
+          "/assets/games/osselets/3d/astragalus.glb",
+          "/assets/games/osselets/models/astragalus.glb",
+          "/assets/games/osselets/astragalus.glb",
+        ];
+        tryPaths(candidates)
+          .then((url) => new Promise<THREE.Object3D>((resolve, reject) => {
+            loader.load(
+              url,
+              (g: any) => resolve(g.scene || g.scenes?.[0] || g),
+              undefined,
+              reject
+            );
+          }))
+          .then((obj) => {
+            // Matériaux opaques (pour que les lettres soient bien occultées)
+            obj.traverse((n: any) => {
+              if (n.isMesh) {
+                n.castShadow = true;
+                n.receiveShadow = true;
+                if (n.material) {
+                  n.material.depthWrite = true;
+                  n.material.depthTest = true;
+                  n.material.transparent = false;
+                }
+              }
+            });
 
-    _running = true;
-    _raf = requestAnimationFrame(frame);
+            // Normalisation d’échelle
+            const box = new THREE.Box3().setFromObject(obj);
+            const size = new THREE.Vector3();
+            box.getSize(size);
+            const scale = 0.35 / Math.max(0.001, Math.max(size.x, size.y, size.z));
+            obj.scale.setScalar(scale);
+            box.setFromObject(obj);
+            const center = new THREE.Vector3();
+            box.getCenter(center);
+            obj.position.sub(center); // centrer
+            obj.position.y = 0.18;
+            scene.add(obj);
+            modelRef.current = obj;
+
+            // Anneau de 24 lettres autour de l’os (non visibles « à travers » grâce à depthTest)
+            const ringR = 0.75;
+            const group = new THREE.Group();
+            for (let i = 0; i < 24; i++) {
+              const a = (i / 24) * Math.PI * 2;
+              const s = makeTextSprite(GREEK[i], 40);
+              s.position.set(Math.cos(a) * ringR, 0.35, Math.sin(a) * ringR);
+              s.renderOrder = 0; // sous l’os si nécessaire
+              group.add(s);
+            }
+            scene.add(group);
+
+            setReady(true);
+          })
+          .catch((e) => {
+            console.warn("[L2] Échec chargement GLB", e);
+            setErr("Modèle introuvable");
+          });
+      }
+
+      // Boucle
+      const loop = () => {
+        frameRef.current = requestAnimationFrame(loop);
+        if (controlsRef.current) controlsRef.current.update();
+        renderer.render(scene, camera);
+      };
+      loop();
+
+      return () => {
+        if (frameRef.current) cancelAnimationFrame(frameRef.current);
+        if (controlsRef.current) controlsRef.current.dispose?.();
+        ro.disconnect();
+        try { host.removeChild(renderer.domElement); } catch {}
+        renderer.dispose();
+      };
+    }, []);
+
+    // Interaction « saisir / bouger » : translation latérale douce
+    useEffect(() => {
+      const host = hostRef.current!;
+      const renderer = rendererRef.current!;
+      const cam = camRef.current!;
+      const obj = modelRef.current;
+
+      if (!host || !renderer || !cam) return;
+
+      let dragging = false;
+      let lastX = 0;
+      let lastY = 0;
+      const v = new THREE.Vector3();
+
+      const onDown = (e: PointerEvent) => {
+        dragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        host.setPointerCapture(e.pointerId);
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!dragging || !obj) return;
+        const dx = (e.clientX - lastX) / (host.clientWidth || 1);
+        const dy = (e.clientY - lastY) / (host.clientHeight || 1);
+        lastX = e.clientX; lastY = e.clientY;
+
+        // Déplacement dans le plan de la caméra (pan simple)
+        const dist = cam.position.distanceTo(obj.position);
+        v.setFromMatrixColumn(cam.matrix, 0); // x cam
+        v.multiplyScalar(-dx * dist * 0.8);
+        obj.position.add(v);
+
+        v.setFromMatrixColumn(cam.matrix, 1); // y cam
+        v.multiplyScalar(dy * dist * 0.8);
+        obj.position.add(v);
+
+        // Garde hauteur raisonnable
+        obj.position.y = Math.max(0.05, Math.min(0.8, obj.position.y));
+      };
+      const onUp = (e: PointerEvent) => {
+        dragging = false;
+        try { host.releasePointerCapture(e.pointerId); } catch {}
+      };
+
+      host.addEventListener("pointerdown", onDown);
+      host.addEventListener("pointermove", onMove);
+      host.addEventListener("pointerup", onUp);
+      host.addEventListener("pointercancel", onUp);
+
+      return () => {
+        host.removeEventListener("pointerdown", onDown);
+        host.removeEventListener("pointermove", onMove);
+        host.removeEventListener("pointerup", onUp);
+        host.removeEventListener("pointercancel", onUp);
+      };
+    }, [ready]);
+
+    return (
+      <div ref={hostRef} style={{ width: "100%", height: "100%" }}>
+        {!ready && !err && (
+          <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#cfe2ff" }}>
+            Chargement…
+          </div>
+        )}
+        {err && (
+          <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#fecaca" }}>
+            {err}
+          </div>
+        )}
+      </div>
+    );
   }
 
-  function stop() {
-    _running = false;
-    if (_raf) cancelAnimationFrame(_raf);
-    if (_resizeObs && _container) { try { _resizeObs.unobserve(_container); } catch (_) {} }
-    if (_bone?.userData?._detachDrag) _bone.userData._detachDrag();
-    if (_renderer?.domElement?.parentNode) _renderer.domElement.parentNode.removeChild(_renderer.domElement);
-    _renderer?.dispose?.();
-    _scene = _camera = _renderer = _container = null;
-  }
-
-  // --------- Public API ---------
-  window.OsseletsLevel2 = {
-    start: init,
-    stop,
-    setModelUrl(u) { _modelUrl = u; },
-  };
+  // Expose pour le bouton « Lancer »
+  // @ts-ignore
+  (window as any).AstragalusLevel2 = AstragalusLevel2;
 })();
