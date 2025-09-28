@@ -1,8 +1,8 @@
 /* public/portfolio.js
    Portfolio grid + Preview overlay (sécurisé)
-   - Rendu depuis public/portfolio-data.js
+   - Rendu depuis public/portfolio-data.js (ou variables globales équivalentes)
    - Bouton "Aperçu" -> overlay <iframe sandbox>, message si X-Frame-Options bloque
-   - Compat totale avec portfolio.html existant
+   - AUCUNE dépendance supplémentaire. Compatible avec portfolio.html présent.
 */
 (function () {
   "use strict";
@@ -25,7 +25,7 @@
     loading:"Chargement de l’aperçu…"
   };
 
-  // -------- Utils DOM --------
+  // -------- Helpers --------
   const $  = (s, r=document) => r.querySelector(s);
   const el = (tag, attrs={}, children=[]) => {
     const n = document.createElement(tag);
@@ -62,8 +62,7 @@
 
   // -------- Overlay / Aperçu --------
   function ensureOverlay() {
-    // 1) Overlay fourni par portfolio.html
-    //    <div id="overlay">... <iframe id="overlayFrame"> ... <button id="overlayClose">
+    // 1) Overlay déjà fourni par portfolio.html
     let ovl = $("#overlay");
     if (!ovl) {
       // 2) Fallback si absent (autres pages)
@@ -79,7 +78,7 @@
       document.body.appendChild(ovl);
     }
 
-    // Styles inline robustes (ne dépend pas de /style.css)
+    // Styles inline robustes pour passer devant tout (ne dépend pas de style.css)
     Object.assign(ovl.style, {
       position: "fixed", inset: "0", display: "none", zIndex: "99999",
       alignItems: "center", justifyContent: "center", padding: "18px",
@@ -88,10 +87,9 @@
     const panel = ovl.querySelector(".panel") || ovl.firstElementChild || ovl;
     Object.assign(panel.style, {
       position: "relative", background: "#0b2237", border: "1px solid #ffffff22",
-      borderRadius: "12px", width: "min(1100px, 100%)", height: "min(78vh, 100%)", overflow: "hidden"
+      borderRadius: "12px", width: "min(1100px, 100%)", height: "min(78vh, 100%)", overflow: "hidden", display:"flex", flexDirection:"column"
     });
 
-    // Entête
     const header = panel.querySelector("header") || panel.insertBefore(el("header", {}), panel.firstChild);
     Object.assign(header.style, {
       display:"flex", alignItems:"center", justifyContent:"space-between", gap:"10px",
@@ -100,10 +98,9 @@
     let titleEl = $("#ovlTitle", header); if (!titleEl) titleEl = header.appendChild(el("strong",{id:"ovlTitle"}));
     let closeBtn = $("#overlayClose", header); if (!closeBtn) closeBtn = header.appendChild(el("button",{id:"overlayClose", class:"btn"}, T.close));
 
-    // Iframe
     let frame = $("#overlayFrame", panel);
     if (!frame) frame = panel.appendChild(el("iframe",{id:"overlayFrame", title:T.preview}));
-    Object.assign(frame.style, { width:"100%", height:"calc(100% - 46px)", border:"0", background:"#fff" });
+    Object.assign(frame.style, { width:"100%", height:"100%", flex:"1 1 auto", border:"0", background:"#fff" });
     frame.setAttribute("sandbox","allow-scripts allow-popups");
 
     return ovl;
@@ -113,7 +110,7 @@
     let msg = $("#pfMsg", ovl);
     if (!msg) {
       const panel = ovl.querySelector(".panel") || ovl;
-      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
+      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px;color:#e6f1ff" }, T.blocked);
       panel.appendChild(msg);
     }
     return msg;
@@ -129,7 +126,6 @@
   }
 
   function openOverlay(url, title) {
-    // Garde-fou URL
     if (!/^https?:\/\//i.test(url)) { window.open(url, "_blank", "noopener"); return; }
 
     const ovl = ensureOverlay();
@@ -152,7 +148,7 @@
     // reset & (re)charge
     frame.removeAttribute("src");
     frame.setAttribute("sandbox","allow-scripts allow-popups");
-    // Détection blocage : on attend un onload ; si jamais déclenché -> message "bloqué"
+
     let loaded = false;
     const onLoad = () => { loaded = true; spin.style.display="none"; };
     frame.addEventListener("load", onLoad, { once:true });
@@ -196,8 +192,7 @@
       ])
     ]);
 
-    const card = el("div", { class:"p-card" }, [left, right]);
-    return card;
+    return el("div", { class:"p-card" }, [left, right]);
   }
 
   function renderGrid(items) {
@@ -213,7 +208,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     renderGrid(loadData());
 
-    // Filet de sécurité : si un "aperçu" est rendu autrement (ex: <div data-href>), on délègue
+    // Filet de sécurité : si un autre markup déclare data-preview-url
     document.addEventListener("click", (e) => {
       const n = e.target.closest?.("[data-preview-url]");
       if (!n) return;
