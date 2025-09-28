@@ -1,271 +1,361 @@
-/* L3 — osselets-level3.tsx (isolé) */
-(() => {
-  const ReactL3 = window.React;
-  const { useEffect: useEffectL3, useRef: useRefL3, useState: useStateL3 } = ReactL3;
+<!-- osselets-level3.tsx -->
+<script type="text/babel" data-type="module">
+/* global React, ReactDOM, THREE, GLTFLoader, OrbitControls */
 
-  // ---- charge UMD examples de three (une seule fois) ----
-  function loadScriptOnceL3(id, src) {
-    return new Promise((resolve, reject) => {
-      if (document.getElementById(id)) return resolve();
-      const s = document.createElement("script");
-      s.id = id; s.src = src; s.async = true; s.onload = resolve; s.onerror = () => reject(new Error("fail "+src));
-      document.head.appendChild(s);
+(function(){
+  // Candidats pour le modèle "faces"
+  var L3_CANDIDATES = [
+    "/assets/games/osselets/level3/3d/astragalus_faces.glb",
+    "/assets/games/osselets/level3/3d/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus_faces.glb",
+    "/assets/games/osselets/3d/astragalus.glb"
+  ];
+
+  // Noms d’ancres de face attendus dans le GLB (vides orientés +Y local)
+  var FACE_NAMES = ["FACE_1","FACE_2","FACE_3","FACE_4","FACE_5","FACE_6"];
+
+  // valeur de points par face (modifiable si besoin)
+  var FACE_POINTS = { "FACE_1":5, "FACE_2":4, "FACE_3":3, "FACE_4":2, "FACE_5":1, "FACE_6":6 };
+
+  var loader = new (GLTFLoader || THREE.GLTFLoader)();
+
+  function tryPaths(paths){
+    return new Promise(function(resolve, reject){
+      var i=0;
+      function next(){
+        if(i>=paths.length){ reject(new Error("no candidate glb")); return; }
+        var url = paths[i++];
+        loader.load(url, function(g){ g.userData.__src=url; resolve(g); }, undefined, function(){ next(); });
+      }
+      next();
     });
   }
-  async function ensureThreeExtrasL3() {
-    if (!window.THREE) throw new Error("[L3] THREE global manquant (importe three.min.js avant).");
-    const REV = window.THREE.REVISION || "158";
-    const base = `https://unpkg.com/three@0.${REV}.0/examples/js`;
-    const needs = [];
-    if (!window.THREE.OrbitControls) needs.push(loadScriptOnceL3("__ex_orbit_l3", `${base}/controls/OrbitControls.js`));
-    if (!window.THREE.GLTFLoader)    needs.push(loadScriptOnceL3("__ex_gltf_l3",   `${base}/loaders/GLTFLoader.js`));
-    await Promise.all(needs);
-  }
 
-  const GLB_CANDIDATES_L3 = [
-    "/assets/games/osselets/models/astragalus.glb",
-    "/assets/games/osselets/3d/astragalus.glb",
-    "/assets/osselets/astragalus.glb",
-  ];
+  function AstragalusLevel3(){
+    var wrapRef = React.useRef(null);
+    var rendererRef = React.useRef(null);
+    var cameraRef = React.useRef(null);
+    var sceneRef = React.useRef(null);
+    var controlsRef = React.useRef(null);
+    var rafRef = React.useRef(0);
+    var bonesRef = React.useRef([]);   // { root, mesh, faces:{name,obj}, state }
+    var rollingRef = React.useRef(false);
+    var scoreRef = React.useRef(0);
+    var sizeRef = React.useRef({ w:960, h:540, dpr:1 });
 
-  // valeurs “romaines” sans 2 ni 5 : associe 4 faces (±Y, ±X)
-  const FACE_MAP = [
-    { name:"pranes(+Y)",  n:new THREE.Vector3(0, 1, 0), val:4 },
-    { name:"huption(-Y)", n:new THREE.Vector3(0,-1, 0), val:3 },
-    { name:"ischia(+X)",  n:new THREE.Vector3(1, 0, 0), val:1 },
-    { name:"kôla(-X)",    n:new THREE.Vector3(-1,0, 0), val:6 },
-  ];
+    // UI local (affichage score)
+    var _force = React.useReducer(function(x){return x+1;},0)[1];
 
-  function OsseletsLevel3() {
-    const wrapRef   = useRefL3(null);
-    const rendererR = useRefL3(null);
-    const sceneR    = useRefL3(null);
-    const cameraR   = useRefL3(null);
-    const controlsR = useRefL3(null);
-    const animRef   = useRefL3({ req:0 });
-    const [score, setScore] = useStateL3({ sum:0, by:[] });
+    React.useEffect(function(){
+      var wrap = wrapRef.current;
+      if(!wrap) return;
 
-    // petit “moteur” maison sur sol (pas d’empilement, glisse)
-    const bodiesRef = useRefL3([]);
+      var scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf5f5f5);
+      var cam = new THREE.PerspectiveCamera(50, 16/9, 0.01, 50);
+      cam.position.set(1.6, 1.2, 1.6);
+      cameraRef.current = cam;
+      sceneRef.current = scene;
 
-    function fitRendererL3() {
-      const wrap = wrapRef.current, renderer = rendererR.current, camera = cameraR.current;
-      if (!wrap || !renderer || !camera) return;
-      const w = wrap.clientWidth, h = wrap.clientHeight || Math.round(w * 9/16);
-      renderer.setSize(w, h, false);
-      camera.aspect = w/h; camera.updateProjectionMatrix();
-    }
+      var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:"high-performance" });
+      renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.OutputColorSpace || undefined;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping || THREE.NoToneMapping;
+      renderer.physicallyCorrectLights = true;
+      wrap.appendChild(renderer.domElement);
+      rendererRef.current = renderer;
 
-    async function loadFirstL3(loader, paths) {
-      for (const p of paths) {
-        try { return await loader.loadAsync(p); } catch (e) {}
+      // Lumières
+      var hemi = new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.9);
+      scene.add(hemi);
+      var dir = new THREE.DirectionalLight(0xffffff, 1.3);
+      dir.position.set(2,3,1.5);
+      dir.castShadow = true;
+      scene.add(dir);
+
+      // Sol large
+      var ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(4, 4*(9/16)),
+        new THREE.MeshStandardMaterial({ color:0xeaeaea, roughness:1, metalness:0 })
+      );
+      ground.rotation.x = -Math.PI/2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Contrôles
+      var controls = null;
+      try {
+        if (typeof OrbitControls !== "undefined") {
+          controls = new OrbitControls(cam, renderer.domElement);
+        } else if (THREE && THREE.OrbitControls) {
+          controls = new THREE.OrbitControls(cam, renderer.domElement);
+        }
+      } catch(e){}
+      if (controls){
+        controls.enableDamping = true;
+        controls.target.set(0,0,0);
+        controlsRef.current = controls;
       }
-      throw new Error("loadFirst failed");
-    }
 
-    function computeFaceValue(obj) {
-      // choisit la face dont la normale (locale) est la plus proche de +Y monde
-      const up = new THREE.Vector3(0,1,0);
-      const q = obj.quaternion.clone();
-      let best = { dot:-1, val:0, name:"" };
-      for (const f of FACE_MAP) {
-        const n = f.n.clone().applyQuaternion(q);
-        const d = n.dot(up);
-        if (d > best.dot) best = { dot:d, val:f.val, name:f.name };
-      }
-      return best;
-    }
+      // Charger une fois, cloner N fois
+      tryPaths(L3_CANDIDATES).then(function(gltf){
+        var base = gltf.scene || gltf.scenes && gltf.scenes[0];
+        if(!base) throw new Error("GLB sans scene");
+        // Normaliser taille
+        base.updateMatrixWorld(true);
+        var box = new THREE.Box3().setFromObject(base);
+        var size = new THREE.Vector3(); box.getSize(size);
+        var s = 0.35 / Math.max(0.001, Math.max(size.x,size.y,size.z));
+        base.scale.setScalar(s);
 
-    useEffectL3(() => {
-      let stop = false;
+        // Prépare un "prefab" (on ne l'ajoute pas directement)
+        var template = base;
 
-      (async () => {
-        await ensureThreeExtrasL3();
-
-        const wrap = wrapRef.current;
-        const scene = sceneR.current = new THREE.Scene();
-        scene.background = new THREE.Color(0xf6f6f6);
-
-        const camera = cameraR.current = new THREE.PerspectiveCamera(55, 16/9, 0.05, 100);
-        camera.position.set(2.0, 1.6, 2.4);
-
-        const renderer = rendererR.current = new THREE.WebGLRenderer({ antialias:true });
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.shadowMap.enabled = true;
-        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-        wrap.appendChild(renderer.domElement);
-
-        const controls = controlsR.current = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.target.set(0,0.22,0);
-
-        // lumières
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x99aabb, 0.9));
-        const sun = new THREE.DirectionalLight(0xffffff, 1.1);
-        sun.position.set(3,4,2); sun.castShadow = true; scene.add(sun);
-
-        // sol
-        const ground = new THREE.Mesh(
-          new THREE.PlaneGeometry(6, 4),
-          new THREE.MeshStandardMaterial({ color: 0xe7e5e4, roughness: .95, metalness: 0 })
-        );
-        ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
-
-        // charge le GLB
-        const loader = new THREE.GLTFLoader();
-        let glb = null;
-        try { glb = await loadFirstL3(loader, GLB_CANDIDATES_L3); }
-        catch (e) { console.warn("[L3] GLB load error:", e); }
-
-        const proto = glb ? (glb.scene || glb.scenes?.[0]) : new THREE.Mesh(
-          new THREE.SphereGeometry(0.13, 32, 20),
-          new THREE.MeshStandardMaterial({ color: 0xd6d3d1 })
-        );
-        proto.traverse?.(n=>{ if (n.isMesh) { n.castShadow = true; n.material.depthTest=true; n.material.depthWrite=true; }});
-
-        // crée 4 osselets
-        const N = 4;
-        const bodies = [];
-        for (let i=0;i<N;i++){
-          const inst = proto.clone(true);
-          const s = 0.22; inst.scale.setScalar(s);
-          scene.add(inst);
-          // état physique simplifié
-          bodies.push({
-            obj: inst,
-            pos: new THREE.Vector3(-0.8 + i*0.55, 0.9 + 0.15*i, -0.3 + 0.12*i),
-            vel: new THREE.Vector3(0,0,0),
-            ang: new THREE.Vector3(0,0,0),
-            angVel: new THREE.Vector3(0,0,0),
-            r: 0.15, // rayon approx pour collision au sol
-            asleep: false
+        // Fabrique 4 osselets espacés
+        var N = 4;
+        var bones = [];
+        for (var i=0;i<N;i++){
+          var root = template.clone(true);
+          // reset mat refs le cas échéant
+          root.traverse(function(obj){
+            if (obj.isMesh){
+              obj.material = obj.material && obj.material.isMeshStandardMaterial
+                ? obj.material.clone()
+                : new THREE.MeshStandardMaterial({ color:0xdddddd, roughness:0.65, metalness:0.05 });
+              obj.castShadow = true; obj.receiveShadow=true;
+            }
           });
+          // récupérer la première mesh trouvée
+          var mesh=null;
+          root.traverse(function(o){ if(o.isMesh && !mesh) mesh=o; });
+
+          // faces (ancres)
+          var faces = {};
+          root.traverse(function(o){
+            var name=(o.name||"").toUpperCase();
+            for (var k=0;k<FACE_NAMES.length;k++){
+              var nm = FACE_NAMES[k];
+              if (name.indexOf(nm)>=0){ faces[nm]=o; }
+            }
+          });
+
+          root.position.set(-0.9 + i*0.6, 0.05, (i%2? -0.15:0.15));
+          root.rotation.set(0, Math.random()*Math.PI*2, 0);
+          scene.add(root);
+          bones.push({ root:root, mesh:mesh, faces:faces, state:"idle", vel:new THREE.Vector3(), ang:new THREE.Vector3() });
         }
-        bodiesRef.current = bodies;
+        bonesRef.current = bones;
 
-        // fonction lancer
-        const throwAll = () => {
-          const rnd = (a,b)=> a + Math.random()*(b-a);
-          for (const b of bodiesRef.current){
-            b.pos.set(rnd(-0.6,0.6), rnd(0.8,1.2), rnd(-0.4,0.4));
-            b.vel.set(rnd(-0.3,0.3), rnd(0.8,1.6), rnd(-0.3,0.3));
-            b.ang.set(rnd(0,Math.PI*2), rnd(0,Math.PI*2), rnd(0,Math.PI*2));
-            b.angVel.set(rnd(-4,4), rnd(-4,4), rnd(-4,4));
-            b.asleep = false;
-            b.obj.position.copy(b.pos);
-            b.obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
-          }
-        };
-        // exposé pour ton bouton “Lancer”
-        window.L3_throw = throwAll;
+        // lancer immédiat à la première montée
+        rollAll();
 
-        // au chargement : un lancer
-        throwAll();
+        // boucle
+        function frame(){
+          fit();
+          if (controlsRef.current) controlsRef.current.update();
+          stepPhysics();
+          renderer.render(scene, cam);
+          rafRef.current = requestAnimationFrame(frame);
+        }
+        frame();
 
-        // simulation
-        const tmpQ = new THREE.Quaternion();
-        const clock = new THREE.Clock();
+      }).catch(function(err){
+        console.warn("[L3] GLB load error:", err);
+        function frame(){
+          fit();
+          if (controlsRef.current) controlsRef.current.update();
+          renderer.render(scene, cam);
+          rafRef.current = requestAnimationFrame(frame);
+        }
+        frame();
+      });
 
-        function step(dt) {
-          const g = -9.8, floorY = 0; // sol y=0
-          const REST = 0.35, FRICTION = 0.86;
+      function fit(){
+        var wrap = wrapRef.current; if(!wrap) return;
+        var w = wrap.clientWidth || 960;
+        var h = Math.round(w * 9/16);
+        var dpr = Math.min(2.5, window.devicePixelRatio || 1);
+        sizeRef.current = { w:w, h:h, dpr:dpr };
+        renderer.setPixelRatio(dpr);
+        renderer.setSize(w, h, false);
+        cam.aspect = w / h;
+        cam.updateProjectionMatrix();
+      }
 
-          // intégration
-          for (const b of bodiesRef.current){
-            if (b.asleep) continue;
-            // vitesses
-            b.vel.y += g * dt;
-            b.pos.addScaledVector(b.vel, dt);
-            b.ang.addScaledVector(b.angVel, dt);
+      // Physique simple: chute + rotation + frottements + "snap" propre face
+      var tmpQ = new THREE.Quaternion();
+      var up = new THREE.Vector3(0,1,0);
+      function stepPhysics(){
+        var bones = bonesRef.current; if(!bones.length) return;
+        var anyRolling = false;
 
-            // collision sol (glisse, pas d’empilement)
-            if (b.pos.y - b.r < floorY){
-              b.pos.y = floorY + b.r;
-              b.vel.y = -b.vel.y * REST;
-              b.vel.x *= FRICTION; b.vel.z *= FRICTION;
-              b.angVel.x *= 0.92; b.angVel.y *= 0.92; b.angVel.z *= 0.92;
-              // arrêt si très lent
-              const sp = Math.hypot(b.vel.x,b.vel.y,b.vel.z);
-              const asp = Math.hypot(b.angVel.x,b.angVel.y,b.angVel.z);
-              if (sp < 0.15 && asp < 0.6) {
-                b.vel.set(0,0,0); b.angVel.set(0,0,0);
-                // snap à la face la plus proche
-                const obj = b.obj;
-                obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
-                const best = computeFaceValue(obj);
-                // on oriente cette face “vers le haut”
-                // trouve la rot delta qui aligne la normale sur +Y
-                const from = FACE_MAP.find(f=>f.val===best.val).n.clone().applyQuaternion(obj.quaternion);
-                const to = new THREE.Vector3(0,1,0);
-                const axis = new THREE.Vector3().crossVectors(from, to).normalize();
-                const angle = Math.acos(Math.max(-1, Math.min(1, from.dot(to))));
-                tmpQ.setFromAxisAngle(axis, angle);
-                obj.quaternion.premultiply(tmpQ);
-                b.asleep = true;
-              }
-            }
+        for (var i=0;i<bones.length;i++){
+          var b = bones[i];
+          if (b.state==="settled") continue;
+          anyRolling = true;
 
-            // pas d’empilement : résolution 2D simple (XZ)
-            for (const b2 of bodiesRef.current){
-              if (b===b2) continue;
-              const dx = b.pos.x - b2.pos.x, dz = b.pos.z - b2.pos.z;
-              const dist2 = dx*dx + dz*dz, min = (b.r + b2.r)*1.05;
-              if (dist2 > 0 && dist2 < min*min){
-                const d = Math.sqrt(dist2) || 1e-3;
-                const nx = dx/d, nz = dz/d, push = (min - d) * 0.5;
-                b.pos.x += nx*push; b.pos.z += nz*push;
-                b2.pos.x -= nx*push; b2.pos.z -= nz*push;
-              }
-            }
-
-            // applique aux meshes
-            b.obj.position.copy(b.pos);
-            b.obj.rotation.set(b.ang.x, b.ang.y, b.ang.z);
+          // vitesse initiale si state idle → rolling
+          if (b.state==="idle"){
+            b.state="rolling";
+            b.vel.set((Math.random()*0.6+0.4)*(Math.random()<.5?1:-1), 0.0, (Math.random()*0.6+0.4)*(Math.random()<.5?1:-1));
+            b.ang.set((Math.random()*4+2), (Math.random()*4+2), (Math.random()*4+2));
+            // petit lift
+            b.root.position.y = 0.35 + Math.random()*0.15;
           }
 
-          // scores quand tout dort
-          if (bodiesRef.current.every(b=>b.asleep)) {
-            const by = bodiesRef.current.map(b => computeFaceValue(b.obj).val);
-            const sum = by.reduce((a,b)=>a+b,0);
-            setScore({ sum, by });
+          // gravité + déplacement
+          b.root.position.x += b.vel.x * 0.016;
+          b.root.position.z += b.vel.z * 0.016;
+          b.root.position.y += (b.root.position.y>0.05 ? -9.8*0.016*0.35 : 0);
+
+          // rotation continue
+          b.root.rotateX(b.ang.x*0.016);
+          b.root.rotateY(b.ang.y*0.016);
+          b.root.rotateZ(b.ang.z*0.016);
+
+          // friction au sol
+          if (b.root.position.y <= 0.05){
+            b.root.position.y = 0.05;
+            b.vel.multiplyScalar(0.92);
+            b.ang.multiplyScalar(0.90);
           } else {
-            setScore(s => (s.by.length ? { sum:0, by:[] } : s));
+            b.vel.multiplyScalar(0.995);
+            b.ang.multiplyScalar(0.995);
+          }
+
+          // seuil d’arrêt → snap to top face
+          if (b.root.position.y<=0.051 && b.vel.length()<0.08 && b.ang.length()<0.28){
+            snapToTopFace(b);
+            b.state="settled";
           }
         }
 
-        const frame = () => {
-          const dt = Math.min(0.033, clock.getDelta());
-          controls.update();
-          step(dt);
-          renderer.render(scene, camera);
-          animRef.current.req = requestAnimationFrame(frame);
-        };
+        // repoussement horizontal (évite empilement/chevauchement)
+        for (var a=0;a<bones.length;a++){
+          for (var c=a+1;c<bones.length;c++){
+            var A=bones[a].root.position, B=bones[c].root.position;
+            var dx=B.x-A.x, dz=B.z-A.z; var d=Math.sqrt(dx*dx+dz*dz);
+            var minD=0.28;
+            if (d>0 && d<minD){
+              var push=(minD-d)*0.5;
+              var nx=dx/d, nz=dz/d;
+              bones[a].root.position.x -= nx*push;
+              bones[a].root.position.z -= nz*push;
+              bones[c].root.position.x += nx*push;
+              bones[c].root.position.z += nz*push;
+            }
+          }
+        }
 
-        fitRendererL3();
-        const ro = new ResizeObserver(fitRendererL3); ro.observe(wrap);
-        animRef.current.req = requestAnimationFrame(frame);
+        if (!anyRolling && rollingRef.current){
+          rollingRef.current=false;
+          // calcule score total
+          var sum=0;
+          for (var j=0;j<bones.length;j++){
+            var nm = getTopFaceName(bones[j]) || "FACE_6";
+            sum += FACE_POINTS[nm] || 0;
+          }
+          scoreRef.current = sum;
+          _force(); // refresh UI
+        }
+      }
 
-        return () => {
-          try{ ro.disconnect(); }catch{}
-          cancelAnimationFrame(animRef.current.req);
-          renderer.dispose();
-          wrap.removeChild(renderer.domElement);
-        };
-      })();
+      function getTopFaceName(b){
+        // choisit l’ancre dont l’axe local +Y est le plus aligné avec le monde +Y
+        var best=null, bestDot=-1;
+        for (var k=0;k<FACE_NAMES.length;k++){
+          var fn = FACE_NAMES[k];
+          var o = b.faces[fn];
+          if (!o) continue;
+          // normal monde de l’axe Y local
+          var n = new THREE.Vector3(0,1,0);
+          o.updateWorldMatrix(true, false);
+          o.getWorldQuaternion(tmpQ);
+          n.applyQuaternion(tmpQ);
+          var d = n.dot(up);
+          if (d>bestDot){ bestDot=d; best=fn; }
+        }
+        return best;
+      }
 
-      return () => { stop = true; };
+      function snapToTopFace(b){
+        var fn = getTopFaceName(b);
+        if (!fn) return;
+        var o = b.faces[fn];
+
+        // on veut que l’axe Y local de cette face devienne +Y monde
+        var qFace = new THREE.Quaternion();
+        o.updateWorldMatrix(true,false);
+        o.getWorldQuaternion(qFace);
+
+        // vecteur normal actuel
+        var n = new THREE.Vector3(0,1,0).applyQuaternion(qFace);
+        // quaternion qui aligne n sur up
+        var qAlign = new THREE.Quaternion().setFromUnitVectors(n.normalize(), up.clone());
+        // nouvelle orientation de la racine
+        var qRoot = b.root.quaternion.clone();
+        b.root.quaternion.premultiply(qAlign);
+
+        // stabilise au sol
+        b.root.position.y = 0.05;
+        // petite secousse amortie
+        b.vel.setScalar(0);
+        b.ang.setScalar(0);
+      }
+
+      // Lancer tout
+      function rollAll(){
+        var bones = bonesRef.current; if(!bones.length) return;
+        rollingRef.current = true;
+        scoreRef.current = 0; _force();
+        for (var i=0;i<bones.length;i++){
+          var b=bones[i];
+          b.state="idle"; // sera initialisé au prochain step
+          // relance positions de départ (éviter collisions fortes)
+          b.root.position.set(-0.9 + i*0.6, 0.35+Math.random()*0.15, (i%2? -0.15:0.15));
+          b.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+          b.vel.setScalar(0); b.ang.setScalar(0);
+        }
+      }
+
+      // expose un handler pour bouton externe éventuel
+      wrap.__roll = rollAll;
+
+      // boucle & cleanup gérés plus haut
+      function cleanup(){
+        cancelAnimationFrame(rafRef.current||0);
+        rafRef.current = 0;
+        if (controlsRef.current){ controlsRef.current.dispose(); controlsRef.current=null; }
+        if (rendererRef.current){
+          var el = rendererRef.current.domElement;
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+          rendererRef.current.dispose();
+          rendererRef.current=null;
+        }
+        sceneRef.current=null; cameraRef.current=null;
+      }
+      return cleanup;
     }, []);
 
+    // Bouton interne « Lancer » (n’interfère pas avec les boutons globaux)
+    function onRoll(){
+      var wrap = wrapRef.current; if (wrap && wrap.__roll) wrap.__roll();
+    }
+
     return (
-      <div ref={wrapRef} style={{position:"relative", width:"100%", height:"min(72vh, 760px)", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden"}}>
-        {/* overlay score */}
-        <div style={{position:"absolute", left:10, top:10, padding:"8px 10px", background:"#ffffffcc", border:"1px solid #e5e7eb", borderRadius:10, fontSize:14}}>
-          <div><strong>Score</strong>: {score.by.length ? score.sum : "—"}</div>
-          {score.by.length ? <div>Faces: {score.by.join(" + ")}</div> : <div>Cliquer “Lancer” pour jeter</div>}
-        </div>
-      </div>
+      React.createElement("div", {style:{position:"relative", width:"100%", aspectRatio:"16/9", border:"1px solid #e5e7eb", borderRadius:"12px", overflow:"hidden"}},
+        React.createElement("div", {ref:wrapRef, style:{width:"100%", height:"100%"} }),
+        React.createElement("div", {style:{position:"absolute", left:12, top:12, display:"flex", gap:"8px"}},
+          React.createElement("button", {onClick:onRoll, style:{
+            padding:"8px 12px", border:"1px solid #111827", borderRadius:"12px", background:"#111827", color:"#fff", cursor:"pointer"
+          }}, "Lancer"),
+          React.createElement("div", {style:{
+            padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:"12px", background:"#fff", fontWeight:600
+          }}, "Score: ", scoreRef.current)
+        )
+      )
     );
   }
 
-  // export global
-  window.OsseletsLevel3 = OsseletsLevel3;
+  window.AstragalusLevel3 = AstragalusLevel3;
 })();
+</script>
