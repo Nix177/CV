@@ -1,8 +1,7 @@
 // public/osselets-level2.tsx
 // LEVEL 2 — « Écrire avec les os » (24 trous / 4 faces opposées)
-// - Modèle troué : /assets/games/osselets/level2/3d/astragalus.glb (nœuds Hole_*)
-// - Projette les nœuds en 2D (960×540). Fallback cercle si ancres absentes.
-// - Charge Three.js/GLTFLoader UNE SEULE FOIS (global THREE) → pas de double import.
+// Charge Three/GLTFLoader depuis le site (vendor/) d’abord, puis CDN (version *pinnée*),
+// évite les doubles imports, et projette les 24 nœuds Hole_* du GLB en 2D.
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
@@ -15,34 +14,56 @@
   const L2_W = 960, L2_H = 540, DPR_MAX = 2.5;
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
-  /* -------------------- Loader Three global (pas d’ESM) -------------------- */
-  async function injectScript(src){
+  /* -------------------- Loader Three global (CSP-friendly) -------------------- */
+  const VER = "0.158.0";
+  const VENDOR_CANDIDATES = [
+    "/assets/games/osselets/vendor/",
+    "/assets/vendor/",
+    "/vendor/",
+  ];
+  function injectScript(src){
     return new Promise((res, rej) => {
       const s = document.createElement("script");
-      s.src = src; s.async = true; s.onload = res; s.onerror = rej;
+      s.src = src; s.async = true; s.onload = () => res(src); s.onerror = (e)=>rej(e||new Event("error"));
       document.head.appendChild(s);
     });
+  }
+  async function loadFirst(urls, check){
+    for (let i=0;i<urls.length;i++){
+      try { await injectScript(urls[i]); if (!check || check()) return urls[i]; } catch {}
+    }
+    throw new Error("loadFirst failed");
   }
   async function ensureThreeGlobal(){
     if (window.__threeGlobalPromise) return window.__threeGlobalPromise;
     window.__threeGlobalPromise = (async () => {
-      // Si déjà présent, on réutilise
-      if (window.THREE) {
-        const rev = (window.THREE.REVISION || "158").replace(/[^\d]/g,"");
-        if (!window.THREE.GLTFLoader) {
-          try { await injectScript(`https://unpkg.com/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
-          catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@0.${rev}.0/examples/js/loaders/GLTFLoader.js`); }
-        }
-        return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+
+      // 1) tenter LOCAL (même origine) — évite CSP et “multiple instances”
+      const local3 = []; const localGL = [];
+      for (const base of VENDOR_CANDIDATES){
+        local3.push(base + "three.min.js", base + "build/three.min.js");
+        localGL.push(base + "GLTFLoader.js", base + "examples/js/loaders/GLTFLoader.js");
       }
-      // Sinon on charge une seule version
-      const ver = "0.158.0";
-      try { await injectScript(`https://unpkg.com/three@${ver}/build/three.min.js`); }
-      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/build/three.min.js`); }
-      try { await injectScript(`https://unpkg.com/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
-      catch { await injectScript(`https://cdn.jsdelivr.net/npm/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
+      try { await loadFirst(local3, ()=>!!window.THREE); } catch {}
+      if (window.THREE){ try { await loadFirst(localGL, ()=>!!window.THREE.GLTFLoader); } catch {} }
+      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+
+      // 2) CDN (pinné même version)
+      const cdn3 = [
+        `https://unpkg.com/three@${VER}/build/three.min.js`,
+        `https://cdn.jsdelivr.net/npm/three@${VER}/build/three.min.js`,
+      ];
+      const cdnGL = [
+        `https://unpkg.com/three@${VER}/examples/js/loaders/GLTFLoader.js`,
+        `https://cdn.jsdelivr.net/npm/three@${VER}/examples/js/loaders/GLTFLoader.js`,
+      ];
+      try { await loadFirst(cdn3, ()=>!!window.THREE); } catch (e){ console.error("[L2] three load fail:", e); }
+      if (window.THREE){ try { await loadFirst(cdnGL, ()=>!!window.THREE.GLTFLoader); } catch (e){ console.error("[L2] gltfloader load fail:", e); } }
+
+      if (!(window.THREE && window.THREE.GLTFLoader)) throw new Error("Three/GLTFLoader indisponible");
       return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
-    })().catch((e)=>{ console.error("[L2] Three/GLTFLoader load fail:", e); return null; });
+    })();
     return window.__threeGlobalPromise;
   }
 
@@ -107,7 +128,9 @@
     useEffect(()=>{
       let canceled=false;
       (async ()=>{
-        const libs = await ensureThreeGlobal();
+        let libs=null;
+        try { libs = await ensureThreeGlobal(); }
+        catch (e){ console.error("[L2] Three/GLTFLoader load fail:", e); setMsg("Impossible de charger Three.js/GLTFLoader."); return; }
         if (!libs){ setMsg("Impossible de charger Three.js/GLTFLoader."); return; }
         const { THREE } = libs;
         THREEref.current = THREE;
@@ -118,15 +141,11 @@
         rendererRef.current=renderer;
 
         // Scene / Caméra
-        const scene = new THREE.Scene(); scene.background=new THREE.Color(0x0b1220);
+        const scene = new THREE.Scene(); scene.background = null; // transparent pour voir le modèle
         const cam = new THREE.PerspectiveCamera(45,16/9,0.1,50);
         cam.position.set(2.0,1.3,2.3); cam.lookAt(0,0.25,0);
-        scene.add(new THREE.AmbientLight(0xffffff,0.55));
-        const dir = new THREE.DirectionalLight(0xffffff,0.8); dir.position.set(2.5,3.5,2.5); scene.add(dir);
-
-        // sol discret
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(8,4.5), new THREE.MeshBasicMaterial({color:0x071425}));
-        floor.rotation.x=-Math.PI/2; floor.position.y=-0.02; scene.add(floor);
+        scene.add(new THREE.AmbientLight(0xffffff,0.65));
+        const dir = new THREE.DirectionalLight(0xffffff,0.9); dir.position.set(2.5,3.5,2.5); scene.add(dir);
 
         sceneRef.current=scene; cameraRef.current=cam;
 
@@ -140,7 +159,8 @@
           const root = gltf.scene || (gltf.scenes && gltf.scenes[0]);
           if (!root){ setMsg("Modèle vide."); return; }
 
-          root.traverse(function(o){
+          // matériaux standard compatibles (évite onBuild mismatch)
+          root.traverse((o)=>{
             if (o.isMesh){
               o.material = new THREE.MeshStandardMaterial({ color:0xf7efe7, roughness:0.6, metalness:0.05 });
               o.castShadow = false; o.receiveShadow = false;
@@ -159,12 +179,12 @@
 
           // ancres
           const anchors=[];
-          root.traverse(function(n){ if(/^Hole_/i.test(n.name||"")) anchors.push(n); });
+          root.traverse((n)=>{ if(/^Hole_/i.test(n.name||"")) anchors.push(n); });
           anchorsRef.current = anchors;
 
           setReady(true);
           loop();
-        }, undefined, function(err){ console.error("[L2] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, (err)=>{ console.error("[L2] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
 
         function loop(){
           if (canceled) return;
@@ -188,7 +208,7 @@
 
       if (anchors.length===24){
         const wh = sizeRef.current, sx=L2_W/wh.w, sy=L2_H/wh.h;
-        holes.current = anchors.map(function(n,i){
+        holes.current = anchors.map((n,i)=>{
           n.getWorldPosition(v);
           v.project(cam);
           const px=(v.x*0.5+0.5)*wh.w, py=(-v.y*0.5+0.5)*wh.h;
@@ -197,17 +217,17 @@
       } else if (holes.current.length!==24){
         // Fallback cercle
         const cx=L2_W/2, cy=L2_H/2, R=Math.min(L2_W,L2_H)*0.38;
-        holes.current = Array(24).fill(0).map(function(_,i){
+        holes.current = Array(24).fill(0).map((_,i)=>{
           const a=(i/24)*Math.PI*2 - Math.PI/2;
           return { x:cx+Math.cos(a)*R, y:cy+Math.sin(a)*R, label:GREEK[i], index:i };
         });
       }
     }
 
-    /* ---------- HUD (transparent ! ne pas cacher le GL) ---------- */
+    /* ---------- HUD (transparent) ---------- */
     function drawHUD(){
       const ctx=ctxRef.current; if(!ctx) return;
-      ctx.clearRect(0,0,L2_W,L2_H); // PAS de fond opaque — laisse voir le modèle
+      ctx.clearRect(0,0,L2_W,L2_H);
 
       // fil
       ctx.strokeStyle="#60a5fa"; ctx.lineWidth=2;
@@ -219,8 +239,8 @@
       }
 
       // points + lettres
-      for(var i=0;i<holes.current.length;i++){
-        var p=holes.current[i];
+      for(let i=0;i<holes.current.length;i++){
+        const p=holes.current[i];
         ctx.beginPath(); ctx.fillStyle="#0ea5e9"; ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fill();
         ctx.fillStyle="#e6f1ff"; ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle";
         ctx.fillText(p.label,p.x,p.y);
@@ -242,8 +262,8 @@
         const wh=sizeRef.current;
         const cx=(e.clientX-r.left)*(wh.w/r.width), cy=(e.clientY-r.top)*(wh.h/r.height);
         const x=cx*(L2_W/wh.w), y=cy*(L2_H/wh.h);
-        var best=-1,bd=24;
-        for(var i=0;i<holes.current.length;i++){ var p=holes.current[i]; var d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d; best=i;} }
+        let best=-1,bd=24;
+        for(let i=0;i<holes.current.length;i++){ const p=holes.current[i]; const d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d; best=i;} }
         if (best>=0 && bd<24) current.current.push(best);
       }
       const hud=hudRef.current; if (hud) hud.addEventListener("click",onClick);
@@ -251,7 +271,7 @@
     },[]);
 
     function reset(){ current.current.length=0; setMsg("Réinitialisé. Clique les points."); }
-    function nextWord(){ current.current.length=0; setWordIdx(function(i){ return (i+1)%((WORDS.current&&WORDS.current.length)||1); }); }
+    function nextWord(){ current.current.length=0; setWordIdx((i)=> (i+1)%((WORDS.current&&WORDS.current.length)||1)); }
 
     /* ---------- UI ---------- */
     return (
