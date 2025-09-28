@@ -1,3 +1,4 @@
+;(function () {
 /* global React, THREE */
 const { useEffect, useRef, useState } = React;
 
@@ -38,30 +39,26 @@ function fitToParent(renderer, camera, holder) {
 
 // ---- calcul face up & snap
 function computeBestFaceQ(mesh, faceAnchors) {
-  // on cherche l’ancre dont l’axe local +Y est le plus aligné avec +Y monde
   const worldY = new THREE.Vector3(0, 1, 0);
   const qMesh = mesh.quaternion.clone();
   let best = null, bestDot = -1, bestName = null;
 
   for (const a of faceAnchors) {
-    // orientation du +Y de l’ancre dans le monde, une fois le mesh orienté
     const localUp = new THREE.Vector3(0, 1, 0);
-    const q = qMesh.clone().multiply(a.quaternion); // orientation locale -> monde
+    const q = qMesh.clone().multiply(a.quaternion);
     const upWorld = localUp.clone().applyQuaternion(q).normalize();
     const d = upWorld.dot(worldY);
     if (d > bestDot) { bestDot = d; best = upWorld; bestName = a.name; }
   }
   if (!best) return { qTarget: qMesh.clone(), face: null };
 
-  // quaternion pour aligner ce vecteur sur +Y monde
   const qDelta = new THREE.Quaternion().setFromUnitVectors(best, worldY);
   const qTarget = qDelta.multiply(qMesh);
-  // extra: mettre yaw proche de zéro (stabilise la pose)
+
   const e = new THREE.Euler().setFromQuaternion(qTarget);
-  e.z = 0; // pas d’inclinaison latérale
+  e.z = 0; // stabilise latéralement
   qTarget.setFromEuler(e);
 
-  // récupérer l’index face depuis le nom "Face_1|3|4|6"
   let face = null;
   const m = /Face_([1346])/.exec(bestName || "");
   if (m) face = Number(m[1]);
@@ -99,7 +96,6 @@ function OsseletsLevel3() {
     dir.shadow.mapSize.set(1024, 1024);
     scene.add(dir);
 
-    // sol
     const plane = new THREE.Mesh(
       new THREE.PlaneGeometry(20, 8),
       new THREE.MeshStandardMaterial({ color: 0x1a2b3b, roughness: 0.95, metalness: 0 })
@@ -109,38 +105,24 @@ function OsseletsLevel3() {
     plane.position.y = PLANE_Y;
     scene.add(plane);
 
-    // UI fit
     const ro = fitToParent(renderer, camera, holder);
 
-    // données dés
-    const dice = []; // {mesh, vel, avel, settled, face, targetQ, anchors[]}
+    const dice = [];
 
     let frameId;
     let alive = true;
 
-    // charge modèle
     let baseMesh = null;
     let faceAnchors = [];
     (async () => {
       const glb = await loadGLB(L3_MODEL);
-      // cherche premier Mesh
-      glb.scene.traverse((n) => {
-        if (n.isMesh && !baseMesh) {
-          baseMesh = n;
-        }
-      });
+      glb.scene.traverse((n) => { if (n.isMesh && !baseMesh) baseMesh = n; });
       if (!baseMesh) throw new Error("Mesh non trouvé dans le GLB");
 
-      // récupère les ancres "Face_1/3/4/6" (créées comme Empty/Null dans Blender)
       faceAnchors = [];
-      glb.scene.traverse((n) => {
-        if (/^Face_[1346]$/i.test(n.name)) faceAnchors.push(n.clone());
-      });
+      glb.scene.traverse((n) => { if (/^Face_[1346]$/i.test(n.name)) faceAnchors.push(n.clone()); });
       if (!faceAnchors.length) {
-        // fallback : 4 orientations canoniques
-        const mk = (name, e) => {
-          const o = new THREE.Object3D(); o.name = name; o.quaternion.setFromEuler(e); return o;
-        };
+        const mk = (name, e) => { const o = new THREE.Object3D(); o.name = name; o.quaternion.setFromEuler(e); return o; };
         faceAnchors = [
           mk("Face_1", new THREE.Euler(0, 0, 0)),
           mk("Face_3", new THREE.Euler(0, Math.PI * 0.5, 0)),
@@ -149,18 +131,14 @@ function OsseletsLevel3() {
         ];
       }
 
-      // petit plateau de départ
       reset();
       render();
-    })().catch((e) => {
-      console.error("[L3] GLB load error:", e);
-    });
+    })().catch((e) => console.error("[L3] GLB load error:", e));
 
     function spawnDie(x) {
       const m = baseMesh.clone(true);
       m.material = Array.isArray(m.material) ? m.material.map((mtl) => mtl.clone()) : m.material.clone();
       m.castShadow = true;
-      // échelle raisonnable
       const s = 0.55;
       m.scale.setScalar(s);
       m.position.set(x, 0.65, (Math.random() - 0.5) * 0.3);
@@ -179,11 +157,9 @@ function OsseletsLevel3() {
 
     function launch() {
       if (!baseMesh) return;
-      // clear anciens
       dice.forEach((d) => scene.remove(d.mesh));
       dice.length = 0;
 
-      // 4 osselets
       const xs = [-0.45, -0.15, 0.15, 0.45];
       xs.forEach((x) => dice.push(spawnDie(x)));
 
@@ -192,7 +168,6 @@ function OsseletsLevel3() {
     }
 
     function reset() {
-      // plateau vide + 2 exemples posés
       dice.forEach((d) => scene.remove(d.mesh));
       dice.length = 0;
       for (let i = 0; i < 2; i++) {
@@ -206,7 +181,6 @@ function OsseletsLevel3() {
       setScore({ values: [], total: 0 });
     }
 
-    // répulsion 2D simple (évite l’empilement)
     function separateXZ(dt) {
       for (let i = 0; i < dice.length; i++) {
         for (let j = i + 1; j < dice.length; j++) {
@@ -214,7 +188,7 @@ function OsseletsLevel3() {
           const d = b.mesh.position.clone().sub(a.mesh.position);
           d.y = 0;
           const dist = d.length();
-          const minD = 0.30; // rayon approx
+          const minD = 0.30;
           if (dist > 0 && dist < minD) {
             const push = d.normalize().multiplyScalar((minD - dist) * 0.5);
             a.mesh.position.addScaledVector(push, -1);
@@ -224,7 +198,6 @@ function OsseletsLevel3() {
       }
     }
 
-    // integration
     function step(dt) {
       if (!dice.length) return;
 
@@ -242,7 +215,6 @@ function OsseletsLevel3() {
           d.mesh.rotateY(eulerTmp.y);
           d.mesh.rotateZ(eulerTmp.z);
 
-          // collision sol
           if (d.mesh.position.y <= PLANE_Y + 0.001) {
             d.mesh.position.y = PLANE_Y + 0.001;
             d.vel.y = -d.vel.y * BOUNCE;
@@ -250,21 +222,18 @@ function OsseletsLevel3() {
             d.avel.multiplyScalar(0.92);
           }
 
-          // seuil d’endormissement
           const speed = d.vel.length();
           const rotSp = d.avel.length();
           if (d.mesh.position.y <= PLANE_Y + 0.002 && speed < 0.15 && rotSp < 0.35) {
-            // on verrouille vers la face la plus proche du haut
             const { qTarget, face } = computeBestFaceQ(d.mesh, faceAnchors);
             d.targetQ = qTarget;
             d.face = face;
             d.avel.set(0, 0, 0);
             d.vel.multiplyScalar(0.3);
-            d.cool = 0.25; // temps de slerp
+            d.cool = 0.25;
           }
         }
 
-        // slerp vers la pose cible
         if (d.targetQ) {
           d.cool -= dt;
           d.mesh.quaternion.slerp(d.targetQ, 1 - Math.exp(-6 * dt));
@@ -281,7 +250,6 @@ function OsseletsLevel3() {
       }
 
       if (settledAll && busy) {
-        // calc score
         const vals = dice.map((d) => FACE_VALUES[d.face] ?? 0);
         setScore({ values: vals, total: vals.reduce((a, b) => a + b, 0) });
         setBusy(false);
@@ -298,10 +266,7 @@ function OsseletsLevel3() {
     }
     frameId = requestAnimationFrame(render);
 
-    // expose boutons
-    const api = {
-      launch, reset
-    };
+    const api = { launch, reset };
     holder.__l3 = api;
 
     return () => {
@@ -312,12 +277,11 @@ function OsseletsLevel3() {
     };
   }, []);
 
-  // ---- UI
   return (
     <div ref={wrapRef} style={{
       position: "relative",
       width: "100%",
-      height: "min(62vh, 520px)", // 1ère passe, puis ResizeObserver ajuste
+      height: "min(62vh, 520px)",
       borderRadius: 12,
       overflow: "hidden",
       background: "linear-gradient(180deg,#0f1f2f,#0b1826)"
@@ -338,3 +302,4 @@ function OsseletsLevel3() {
 
 // @ts-ignore
 window.OsseletsLevel3 = OsseletsLevel3;
+})(); // <— IIFE
