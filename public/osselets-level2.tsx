@@ -1,8 +1,9 @@
 // public/osselets-level2.tsx
-// LEVEL 2 — “Écrire avec les os” (24 trous / 4 faces opposées)
-// - Charge le modèle troué /assets/games/osselets/level2/3d/astragalus.glb
-// - Projette Hole_* en 2D (960×540) ; fallback cercle si ancres manquantes
-// - Auto-charge Three.js + GLTFLoader UNE SEULE FOIS (CDN unpkg → jsDelivr)
+// LEVEL 2 — « Écrire avec les os » (24 trous / 4 faces opposées)
+// - Utilise le modèle troué: /assets/games/osselets/level2/3d/astragalus.glb
+// - Projette les nœuds Hole_* en 2D (960×540). Fallback cercle si ancres absentes.
+// - Charge Three.js + GLTFLoader UNE SEULE FOIS via CDN UMD (r146: examples/js/...)
+// - Aucune dépendance externe au parent (pas de “Start” ici).
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
@@ -19,28 +20,46 @@
   function loadScript(url){
     return new Promise((resolve,reject)=>{
       const s=document.createElement("script");
-      s.src=url; s.async=false;
+      s.src=url; s.async=false; s.crossOrigin="anonymous";
       s.onload=()=>resolve(true);
       s.onerror=()=>reject(new Error("load fail "+url));
       document.head.appendChild(s);
     });
   }
+  function cdnSeq(urls){
+    return urls.reduce((p,url)=>p.catch(()=>loadScript(url)), Promise.reject());
+  }
   function ensureThree(){
+    // Réutilise si déjà prêt.
     if (window.__threeReadyPromise) return window.__threeReadyPromise;
+
+    // r146 = dernière avec UMD examples/js/GLTFLoader.js
+    const V = "0.146.0";
+    const threeCDNs = [
+      `https://unpkg.com/three@${V}/build/three.min.js`,
+      `https://cdn.jsdelivr.net/npm/three@${V}/build/three.min.js`
+    ];
+    const gltfCDNs = [
+      `https://unpkg.com/three@${V}/examples/js/loaders/GLTFLoader.js`,
+      `https://cdn.jsdelivr.net/npm/three@${V}/examples/js/loaders/GLTFLoader.js`
+    ];
+
     window.__threeReadyPromise = (async ()=>{
-      let THREE = window.THREE;
-      const ver = "0.158.0";
-      if (!THREE){
-        try { await loadScript(`https://unpkg.com/three@${ver}/build/three.min.js`); }
-        catch { await loadScript(`https://cdn.jsdelivr.net/npm/three@${ver}/build/three.min.js`); }
-        THREE = window.THREE;
+      // Si déjà chargé (par une autre section), ne rien refaire.
+      if (window.THREE && (window.THREE.GLTFLoader || window.GLTFLoader)) {
+        return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader || window.GLTFLoader };
       }
-      if (!(THREE && (THREE.GLTFLoader || window.GLTFLoader))){
-        try { await loadScript(`https://unpkg.com/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
-        catch { await loadScript(`https://cdn.jsdelivr.net/npm/three@${ver}/examples/js/loaders/GLTFLoader.js`); }
+      // Three d’abord
+      if (!window.THREE) {
+        await cdnSeq(threeCDNs);
+      }
+      // Puis GLTFLoader UMD
+      if (!(window.THREE && (window.THREE.GLTFLoader || window.GLTFLoader))) {
+        await cdnSeq(gltfCDNs);
       }
       return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader || window.GLTFLoader };
-    })();
+    })().catch((e)=>{ console.error(e); return null; });
+
     return window.__threeReadyPromise;
   }
 
@@ -106,7 +125,7 @@
     useEffect(()=>{
       let cancelled=false;
       (async ()=>{
-        const libs = await ensureThree().catch(()=>null);
+        const libs = await ensureThree();
         if (!libs){ setMsg("Impossible de charger Three.js/GLTFLoader."); return; }
         const { THREE, GLTFLoader } = libs;
 
@@ -178,7 +197,7 @@
 
     /* ---------- Projection trous ---------- */
     function projectHoles(){
-      const libs = window; const THREE=libs.THREE;
+      const THREE=window.THREE;
       const cam = cameraRef.current; if (!THREE || !cam) return;
 
       const anchors = anchorsRef.current||[];
