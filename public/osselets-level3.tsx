@@ -1,193 +1,473 @@
-/* public/osselets-level3.tsx
-   Mini-jeu 3 — « Rouler les os »
-   - Charge exclusivement /assets/games/osselets/level3/3d/astragalus_faces.glb
-     (ancres Face_1, Face_3, Face_4, Face_6) pour afficher 4 astragales en 3D.
-   - Ordonne chaque clone pour que la face tirée pointe vers +Y ; fallback
-     visuel 2D si le GLB manque.
-   - Catégories : Vénus (1-3-4-6), Senio (≥2 six), Trina (triple),
-     Bina (deux paires) et Simple (autres).
-*/
-(function (global) {
-  const { useEffect, useRef, useState } = React;
+// public/osselets-level3.tsx
+// LEVEL 3 — Astragalus 3D (dés antiques 1/3/4/6)
+// - Charge le modèle GLB: /assets/games/osselets/level3/3d/astragalus_faces.glb
+// - Duplique 4 astragales, lance, fait rebondir, s'arrête, lit la face "en haut"
+// - Affiche les valeurs et un petit résumé pédagogique
+//
+// ⚠️ Nécessite Three.js UMD global (window.THREE) et, si possible, GLTFLoader UMD (THREE.GLTFLoader).
+//   N'importe pas des modules "jsm/*" pour éviter le message "Multiple instances of Three.js".
+//   Exemple d’inclusion dans la page :
+//   <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+//   <script src="https://unpkg.com/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  // -------- AudioBus --------
-  if (!global.AstragalusAudioBus) {
-    global.AstragalusAudioBus = {
-      _list: [], register(a){ if(a && !this._list.includes(a)) this._list.push(a); },
-      stopAll(){ this._list.forEach(a=>{ try{ a.pause(); a.currentTime=0; }catch{} }); },
-      muteAll(m){ this._list.forEach(a=>{ try{ a.muted=!!m; }catch{} }); }
-    };
+const { useEffect, useRef, useState } = React;
+
+/* -------------------- Constantes & chemins -------------------- */
+const L3_BASE = "/assets/games/osselets/level3/";
+const MODEL_URL = L3_BASE + "3d/astragalus_faces.glb";
+const VALUES_URL = L3_BASE + "3d/values.json";
+
+const VIEW_W = 960;
+const VIEW_H = 540;
+const DPR_MAX = 2.5;
+
+const DICE_COUNT = 4;        // 4 astragales (classique 1/3/4/6) ; passe à 5 si souhaité
+const FLOOR_Y = 0;
+const GRAVITY = -14.5;       // m/s² "fake"
+const BOUNCE = 0.45;         // restitution
+const FRIC_LIN = 0.92;       // friction linéaire au sol
+const FRIC_ANG = 0.94;       // friction angulaire
+const STOP_EPS = 0.18;       // seuil d’arrêt
+const STOP_STABLE_MS = 800;  // doit rester sous seuil pendant X ms
+
+/* -------------------- Helpers -------------------- */
+function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+function now(){ return (typeof performance!=="undefined"?performance:Date).now(); }
+async function fetchJSONsafe(url){
+  try{ const r=await fetch(url, {cache:"no-store"}); if(r.ok) return await r.json(); }catch(e){}
+  return null;
+}
+
+/* ----- Déduction de valeur: par noms d’ancres ou fallback ----- */
+// On cherche dans la scène des "empties" nommées face_1, face_3, face_4, face_6 (ou variantes).
+function extractFaceAnchors(root, THREE){
+  const list=[];
+  root.traverse(function(n){
+    const nm=(n.name||"").toLowerCase();
+    // autorise: face1, face_1, f1, one, venus, canis, senio, quaterna, bina, etc.
+    let tag=null;
+    if (/face[_\- ]?1$|^f1$|venus/.test(nm)) tag="1";
+    else if (/face[_\- ]?3$|^f3$|trina/.test(nm)) tag="3";
+    else if (/face[_\- ]?4$|^f4$|quater/.test(nm)) tag="4";
+    else if (/face[_\- ]?6$|^f6$|senio|bina/.test(nm)) tag="6";
+    else if (/face|anchor/.test(nm)) tag=nm; // au cas où
+    if (tag) list.push({ node:n, tag });
+  });
+  // Si rien trouvé, on fabrique 6 directions canoniques autour de la bbox
+  if (!list.length){
+    const box=new THREE.Box3().setFromObject(root);
+    const c=box.getCenter(new THREE.Vector3()), e=box.getSize(new THREE.Vector3()).multiplyScalar(0.5);
+    const mk=(x,y,z,tag)=>{ const o=new THREE.Object3D(); o.position.set(c.x+x*e.x,c.y+y*e.y,c.z+z*e.z); root.add(o); return {node:o, tag}; };
+    list.push(mk(0, 1,0,"up"));
+    list.push(mk(0,-1,0,"down"));
+    list.push(mk(1, 0,0,"right"));
+    list.push(mk(-1,0,0,"left"));
+    list.push(mk(0,0, 1,"front"));
+    list.push(mk(0,0,-1,"back"));
   }
+  return list;
+}
 
-  // -------- Loader Three partagé --------
-  function ensureThree(){
-    if (global.__THREE_PROMISE__) return global.__THREE_PROMISE__;
-    global.__THREE_PROMISE__ = new Promise(async (res,rej)=>{
-      if (global.THREE && global.THREE.GLTFLoader && global.THREE.OrbitControls) return res(global.THREE);
-      const add=(src)=>new Promise((r,j)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>r(1); s.onerror=()=>j(new Error("load "+src)); document.head.appendChild(s); });
-      async function tryAll(urls){ for(const u of urls){ try{ await add(u); return true; }catch{} } return false; }
-      const v="0.149.0";
-      if(!(await tryAll([`https://unpkg.com/three@${v}/build/three.min.js`,`https://cdn.jsdelivr.net/npm/three@${v}/build/three.min.js`]))) return rej(new Error("three failed"));
-      if(!(await tryAll([`https://unpkg.com/three@${v}/examples/js/controls/OrbitControls.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/controls/OrbitControls.js`]))) return rej(new Error("controls failed"));
-      if(!(await tryAll([`https://unpkg.com/three@${v}/examples/js/loaders/GLTFLoader.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/loaders/GLTFLoader.js`]))) return rej(new Error("loader failed"));
-      res(global.THREE);
-    });
-    return global.__THREE_PROMISE__;
+// Déduit la "face vers le haut" : on prend l’ancre de plus grand Y en monde.
+function pickTopFace(anchors, THREE){
+  let best=null, bestY=-1e9;
+  const v=new THREE.Vector3();
+  for (let i=0;i<anchors.length;i++){
+    anchors[i].node.getWorldPosition(v);
+    if (v.y>bestY){ bestY=v.y; best=anchors[i]; }
   }
+  return best ? best.tag : null;
+}
 
-  // -------- Config --------
-  const L3_W=960, L3_H=540;
-  const ABASE="/assets/games/osselets/audio/";
-  const AU={ music:"game-music-1.mp3", good:"catch-sound.mp3", bad:"ouch-sound.mp3" };
-  const GLB_PREFERRED="/assets/games/osselets/level3/3d/astragalus_faces.glb";
-  const GLB_FALLBACKS=[]; // aucun fallback : on affiche un fallback 2D si absent
-  function rand(arr){ return arr[(Math.random()*arr.length)|0]; }
-  function wrap(ctx, text, x,y,w,lh){ const words=(text||"").split(/\s+/); let line=""; for(let i=0;i<words.length;i++){ const t=(line?line+" ":"")+words[i]; if(ctx.measureText(t).width>w && line){ ctx.fillText(line,x,y); line=words[i]; y+=lh; } else line=t; } if(line) ctx.fillText(line,x,y); }
+/* -------------------- React Component -------------------- */
+function OsseletsLevel3(){
+  const wrapRef = useRef(null);
+  const canvasRef = useRef(null);
 
-  function AstragalusLevel3(){
-    const hostRef=useRef(null), webglRef=useRef(null), canvasRef=useRef(null), ctxRef=useRef(null);
+  // UI
+  const [ready, setReady] = useState(false);
+  const [values, setValues] = useState([]);      // résultats de lancer: ["1","4","6","3"]
+  const [throwing, setThrowing] = useState(false);
+  const [msg, setMsg] = useState("Lance 4 astragales et lis la face supérieure → valeurs 1,3,4,6.");
 
-    // audio
-    const musRef=useRef(null), goodRef=useRef(null), badRef=useRef(null);
-    const [musicOn,setMusicOn]=useState(true);
-    useEffect(()=>{ global.AstragalusAudioBus.stopAll(); },[]);
-    useEffect(()=>{ try{ musRef.current=new Audio(ABASE+AU.music); musRef.current.loop=true; musRef.current.volume=0.35; global.AstragalusAudioBus.register(musRef.current); if(musicOn) musRef.current.play().catch(()=>{}); }catch{} try{ goodRef.current=new Audio(ABASE+AU.good); global.AstragalusAudioBus.register(goodRef.current);}catch{} try{ badRef.current=new Audio(ABASE+AU.bad); global.AstragalusAudioBus.register(badRef.current);}catch{} return ()=>{ try{ musRef.current?.pause(); }catch{} }; },[]);
-    useEffect(()=>{ const m=musRef.current; if(!m) return; m.muted=!musicOn; if(musicOn){ try{m.play();}catch{} } else m.pause(); },[musicOn]);
+  // internal refs
+  const threeRef = useRef(null);
+  const rendererRef = useRef(null);
+  const sceneRef = useRef(null);
+  const cameraRef = useRef(null);
+  const modelRef = useRef(null); // gltf scene original
+  const diceRef = useRef([]);    // [{root, anchors, vel, angVel, stableSince}]
+  const lastTRef = useRef(0);
+  const rafRef = useRef(0);
+  const valueMapRef = useRef({}); // mapping via values.json optionnel
 
-    // state
-    const [mode,setMode]=useState("jeu"); // "jeu"|"oracle"
-    const [rolls,setRolls]=useState([6,4,3,1]);
-    const [throwing,setThrowing]=useState(false);
-    const [score,setScore]=useState(0);
-    const [lastLabel,setLastLabel]=useState("—");
-    const [lastMeaning,setLastMeaning]=useState("");
-
-    // DPR / responsive
-    useEffect(()=>{
-      const cv=canvasRef.current, ctx=cv.getContext("2d"); ctxRef.current=ctx;
-      function resize(){ const w=hostRef.current?.clientWidth||L3_W, h=Math.round(w*(L3_H/L3_W)), dpr=Math.max(1,Math.min(2.5,global.devicePixelRatio||1)); cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); cv.style.width=w+"px"; cv.style.height=h+"px"; ctx.setTransform(dpr*(w/L3_W),0,0,dpr*(w/L3_W),0,0); }
-      resize(); const ro=window.ResizeObserver?new ResizeObserver(resize):null; ro?.observe(hostRef.current); global.addEventListener("resize",resize);
-      return ()=>{ ro?.disconnect(); global.removeEventListener("resize",resize); };
-    },[]);
-
-    // 3D scene
-    const threeRef = useRef({ scene:null, camera:null, renderer:null, controls:null, base:null, clones:[], facesMap:null, animId:0 });
-    useEffect(()=>{
-      let mounted=true;
-      (async()=>{
-        try{
-          await ensureThree(); const THREE=global.THREE;
-          const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(2.5,global.devicePixelRatio||1)); webglRef.current.appendChild(renderer.domElement);
-          const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(40,16/9,0.1,100); camera.position.set(0.0,1.1,3.2);
-
-          const plane=new THREE.Mesh(new THREE.PlaneGeometry(6,3.6), new THREE.MeshStandardMaterial({color:0x0b3b2e,metalness:0,roughness:1})); plane.rotation.x=-Math.PI/2; plane.position.y=-0.4; scene.add(plane);
-          scene.add(new THREE.AmbientLight(0xffffff,0.95)); const dl=new THREE.DirectionalLight(0xffffff,0.9); dl.position.set(2,3,4); scene.add(dl);
-          const ctrls=new THREE.OrbitControls(camera,renderer.domElement); ctrls.enablePan=false; ctrls.enableZoom=false; ctrls.autoRotate=false;
-          function resize3d(){ const w=hostRef.current?.clientWidth||L3_W, h=Math.round(w*(L3_H/L3_W)); renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); } resize3d();
-
-          const loader=new THREE.GLTFLoader();
-          let glb=null, used="";
-          try { glb = await loader.loadAsync(GLB_PREFERRED); used=GLB_PREFERRED; }
-          catch { for (const p of GLB_FALLBACKS){ try{ glb=await loader.loadAsync(p); used=p; break; }catch{} } }
-          if (!glb) console.warn("[L3] GLB faces introuvable — fallback 2D");
-          else console.log("[L3] GLB chargé:", used);
-
-          const base = glb ? glb.scene : null;
-          if (base) base.traverse((o)=>{ if(o.isMesh){ o.castShadow=false; o.receiveShadow=true; } });
-
-          // récupérer une ancre de face
-          function findFaceNode(root, val){
-            const tries = [`Face_${val}`,`face_${val}`,`FACE_${val}`,`Value_${val}`,`Valeur_${val}`,`${val}`];
-            for (const n of tries){ const obj=root.getObjectByName(n); if (obj) return obj; }
-            let found=null; root.traverse((o)=>{ if(!found && typeof o.name==="string"){ const m=o.name.match(/(?:Face|Value|Valeur|face)?[_-]?([0-9])\b/); if(m && Number(m[1])===val) found=o; } });
-            return found;
-          }
-          const facesMap = base ? { 1:findFaceNode(base,1), 3:findFaceNode(base,3), 4:findFaceNode(base,4), 6:findFaceNode(base,6) } : null;
-
-          const spots=[[-1.5,0],[-0.5,0],[0.5,0],[1.5,0]], clones=[];
-          for(let i=0;i<4;i++){
-            const g = base ? base.clone(true) : new THREE.Mesh(new THREE.DodecahedronGeometry(0.3), new THREE.MeshStandardMaterial({color:0xfde68a}));
-            g.position.set(spots[i][0], -0.2, spots[i][1]);
-            g.rotation.set(Math.random(),Math.random(),Math.random());
-            scene.add(g); clones.push(g);
-          }
-
-          threeRef.current = { scene, camera, renderer, controls:ctrls, base, clones, facesMap, animId:0 };
-          const loop=()=>{ if(!mounted) return; renderer.render(scene,camera); threeRef.current.animId=requestAnimationFrame(loop); }; loop();
-
-          const onR=()=>resize3d(); global.addEventListener("resize",onR);
-          return ()=>{ mounted=false; cancelAnimationFrame(threeRef.current.animId); global.removeEventListener("resize",onR); renderer.dispose(); };
-        }catch(e){ console.error(e); }
-      })();
-    },[]);
-
-    // aligne un clone sur la face tirée (ancre vers +Y)
-    function orientToFace(clone, faceVal){
-      const THREE=global.THREE; const facesMap=threeRef.current.facesMap; if (!facesMap || !facesMap[faceVal]) return;
-      const anchor = clone.getObjectByName(facesMap[faceVal].name); if (!anchor) return;
-      const saved = clone.quaternion.clone(); clone.quaternion.identity(); clone.updateMatrixWorld(true);
-      const v0=new THREE.Vector3(), pA=new THREE.Vector3(), pC=new THREE.Vector3(); anchor.getWorldPosition(pA); clone.getWorldPosition(pC); v0.copy(pA).sub(pC).normalize();
-      const target=new THREE.Vector3(0,1,0); const q=new THREE.Quaternion().setFromUnitVectors(v0,target); clone.quaternion.copy(q.multiply(saved)); clone.updateMatrixWorld(true);
+  // Resize & DPR
+  useEffect(()=>{
+    function onResize(){
+      const THREE = window.THREE;
+      const wrap=wrapRef.current, canvas=canvasRef.current, renderer=rendererRef.current, cam=cameraRef.current;
+      if(!THREE||!wrap||!canvas||!renderer||!cam) return;
+      const w = wrap.clientWidth || VIEW_W;
+      const h = Math.round(w * (VIEW_H / VIEW_W));
+      const dpr = clamp(window.devicePixelRatio||1, 1, DPR_MAX);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(w, h, false);
+      canvas.style.width = w+"px"; canvas.style.height = h+"px";
+      cam.aspect = w/h; cam.updateProjectionMatrix();
     }
+    onResize();
+    const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(onResize) : null;
+    if (ro && wrapRef.current) ro.observe(wrapRef.current);
+    window.addEventListener("resize", onResize);
+    return ()=>{ if(ro) ro.disconnect(); window.removeEventListener("resize", onResize); };
+  }, []);
 
-    function doRoll(){
-      if (throwing) return; setThrowing(true);
-      const start=performance.now(), dur=700;
-      const tick=()=>{
-        const t=performance.now()-start;
-        const vals=[rand([1,3,4,6]),rand([1,3,4,6]),rand([1,3,4,6]),rand([1,3,4,6])];
-        setRolls(vals);
-        // oriente en live si on a la 3D
-        const clones=threeRef.current.clones||[];
-        for (let i=0;i<Math.min(vals.length, clones.length); i++) orientToFace(clones[i], vals[i]);
-        if (t<dur) requestAnimationFrame(tick); else { setThrowing(false); scoreRound(vals); }
-      }; tick();
+  // Init Three scene
+  useEffect(()=>{
+    const THREE = window.THREE;
+    if(!THREE){
+      console.warn("[L3] Pas de Three → impossible d’afficher le 3D.");
+      setMsg("Three.js manquant : ajoute three.min.js + GLTFLoader.js.");
+      return;
     }
+    threeRef.current = THREE;
 
-    function scoreRound(vals){
-      const counts={}; vals.forEach(v=>counts[v]=(counts[v]||0)+1); const uniq=Object.keys(counts).length;
-      let res={ label:"Simple", points:1, meaning:"Lecture modérée : observe le prochain tir." };
-      if (vals.sort().join(",")==="1,3,4,6") res={label:"Vénus", points:6, meaning:"Jet parfait (1·3·4·6) — chance et bon augure."};
-      else if (counts[6]>=2)               res={label:"Senio", points:4, meaning:"Plusieurs 6 — puissance / excès selon contexte."};
-      else if (Object.values(counts).some(c=>c===3)) res={label:"Trina", points:3, meaning:"Triple — stabilité mais rigidité."};
-      else if (uniq===2 && Object.values(counts).every(c=>c===2)) res={label:"Bina", points:4, meaning:"Deux paires — équilibre fragile."};
-      setScore(s=>s+res.points); setLastLabel(res.label); setLastMeaning(res.meaning);
-      try{ (res.points>=4?goodRef:badRef).current?.play(); }catch{}
-    }
+    // Renderer
+    const canvas = canvasRef.current;
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    rendererRef.current = renderer;
 
-    // render 2D UI
-    useEffect(()=>{
-      const ctx=ctxRef.current; let raf;
-      function render(){
-        ctx.clearRect(0,0,L3_W,L3_H);
-        const g=ctx.createLinearGradient(0,0,0,L3_H); g.addColorStop(0,"#f8fafc"); g.addColorStop(1,"#e2e8f0");
-        ctx.fillStyle=g; ctx.fillRect(0,0,L3_W,L3_H);
+    // Scene & camera
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf5f7fb);
+    sceneRef.current = scene;
 
-        ctx.fillStyle="#0f172a"; ctx.font="18px ui-sans-serif, system-ui"; ctx.fillText("Niveau 3 — Rouler les os",16,28);
-        ctx.fillStyle="#0b3b2e"; ctx.fillRect(16, 44, L3_W-32, 300); ctx.strokeStyle="#14532d"; ctx.lineWidth=6; ctx.strokeRect(16, 44, L3_W-32, 300);
+    const cam = new THREE.PerspectiveCamera(45, 16/9, 0.1, 100);
+    cam.position.set(6.5, 4.8, 7.5);
+    cam.lookAt(0, 0.7, 0);
+    cameraRef.current = cam;
 
-        // pips stylisés (fallback visuel si 3D absente)
-        for(let i=0;i<4;i++){ const cx=120+i*((L3_W-240)/3); drawDie(ctx,cx,190,rolls[i],throwing); }
+    // Lights
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x334466, .7); scene.add(hemi);
+    const dir  = new THREE.DirectionalLight(0xffffff, 0.9);
+    dir.position.set(4,7,6);
+    dir.castShadow = true;
+    dir.shadow.mapSize.set(1024,1024);
+    dir.shadow.camera.near=0.5; dir.shadow.camera.far=30;
+    scene.add(dir);
 
-        // panneau
-        drawPanel(ctx);
+    // Ground
+    const groundGeo = new THREE.PlaneGeometry(40, 22);
+    const groundMat = new THREE.MeshStandardMaterial({ color:0xeae7ff, roughness:.95, metalness:0 });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI/2;
+    ground.position.y = FLOOR_Y;
+    ground.receiveShadow = true;
+    scene.add(ground);
 
-        raf=requestAnimationFrame(render);
+    // Soft ring under dice (aesthetic)
+    const ringGeo = new THREE.RingGeometry(0.01, 8.0, 64);
+    const ringMat = new THREE.MeshBasicMaterial({ color:0xdee3ff, transparent:true, opacity:0.25, side:THREE.DoubleSide });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.005;
+    scene.add(ring);
+
+    let cancelled=false;
+
+    (async ()=>{
+      // values.json (facultatif): {"1":1,"3":3,"4":4,"6":6,"names":{"1":"Vénus","3":"Trina","4":"Quaterna","6":"Senio"}}
+      const map = await fetchJSONsafe(VALUES_URL);
+      if (map) valueMapRef.current = map;
+
+      // Loader (UMD)
+      const GLTFLoader = THREE.GLTFLoader || (window.GLTFLoader ? window.GLTFLoader : null);
+      if (!GLTFLoader){
+        setMsg("GLTFLoader non trouvé. Ajoute examples/js/loaders/GLTFLoader.js (UMD).");
+        return;
       }
-      function drawDie(ctx,cx,cy,val,shake){ ctx.save(); const rx=46, ry=26; ctx.fillStyle="rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(cx,cy+ry+12, rx*0.9, ry*0.6, 0, 0, Math.PI*2); ctx.fill(); const j=shake?(Math.random()*3-1.5):0; ctx.translate(j,j); const grd=ctx.createLinearGradient(cx-46,cy-26,cx+46,cy+26); grd.addColorStop(0,"#fefce8"); grd.addColorStop(1,"#fde68a"); ctx.fillStyle=grd; ctx.strokeStyle="#eab308"; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle="#0f172a"; const map={1:[[0,0]],3:[[-16,-8],[0,0],[16,8]],4:[[-16,-8],[-16,8],[16,-8],[16,8]],6:[[-16,-10],[-16,0],[-16,10],[16,-10],[16,0],[16,10]]}; (map[val]||[]).forEach(p=>{ ctx.beginPath(); ctx.arc(cx+p[0], cy+p[1], 5, 0, Math.PI*2); ctx.fill(); }); ctx.restore(); }
-      function drawPanel(ctx){ const x=L3_W-300, y=44, w=284, h=300; ctx.save(); ctx.fillStyle="#f8fafc"; ctx.fillRect(x,y,w,h); ctx.strokeStyle="#94a3b8"; ctx.strokeRect(x,y,w,h); ctx.fillStyle="#0f172a"; ctx.font="16px ui-sans-serif, system-ui"; ctx.fillText("Résultat : "+lastLabel, x+12, y+28); ctx.font="12px ui-sans-serif, system-ui"; wrap(ctx, lastMeaning||"—", x+12, y+50, w-24, 16); ctx.font="12px ui-sans-serif, system-ui"; wrap(ctx, "Ex. : Vénus = 1·3·4·6 / Senio = ≥2 faces 6 / Bina = deux paires / Trina = triple / Simple = autres.", x+12, y+h-68, w-24, 16); zones.current.length=0; btn(ctx,x+8,y+h-92,132,32, throwing?"…":"Lancer",()=>doRoll()); btn(ctx,x+156,y+h-92,120,32, "Mode : "+(mode==="jeu"?"Jeu":"Oracle"),()=>setMode(m=>m==="jeu"?"oracle":"jeu")); btn(ctx,x+8,y+h-48,132,32, "Musique "+(musicOn?"ON":"OFF"),()=>setMusicOn(v=>!v)); btn(ctx,x+156,y+h-48,120,32, "Stop musique",()=>global.AstragalusAudioBus.stopAll()); ctx.restore(); }
-      const zones=useRef?useRef([]):{current:[]}; function btn(ctx,x,y,w,h,label,cb){ ctx.fillStyle="#f8fafc"; ctx.strokeStyle="#94a3b8"; ctx.lineWidth=1.5; ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h); ctx.fillStyle="#0f172a"; ctx.font="13px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(label, x+w/2, y+h/2+1); zones.current.push({x,y,w,h,cb}); }
-      const el=canvasRef.current; function onClick(ev){ const r=el.getBoundingClientRect(); const mx=(ev.clientX-r.left)*(L3_W/r.width), my=(ev.clientY-r.top)*(L3_H/r.height); const z=zones.current.find(z=> mx>=z.x && mx<=z.x+z.w && my>=z.y && my<=z.y+z.h); zones.current.length=0; if(z) z.cb(); }
-      el.addEventListener("click",onClick); render(); return ()=>{ el.removeEventListener("click",onClick); cancelAnimationFrame(raf); };
-    },[rolls,throwing,mode,lastLabel,lastMeaning,score,musicOn]);
+      const loader = new GLTFLoader();
 
-    return (
-      <div ref={hostRef} style={{position:"relative", width:"100%", aspectRatio:"16/9", background:"#071528", border:"1px solid #163b62", borderRadius:12, overflow:"hidden"}}>
-        <div ref={webglRef} style={{position:"absolute", inset:0}} aria-hidden="true"></div>
-        <canvas ref={canvasRef}/>
-      </div>
-    );
+      // Charge modèle
+      loader.load(MODEL_URL, (gltf)=>{
+        if (cancelled) return;
+        const root = gltf.scene || gltf.scenes[0];
+        // Normalise l’échelle et origine au centre
+        const box = new THREE.Box3().setFromObject(root);
+        const size = box.getSize(new THREE.Vector3());
+        const scale = 1.6 / Math.max(size.x, size.y, size.z); // ~taille visuelle
+        root.scale.setScalar(scale);
+        box.setFromObject(root);
+        const c = box.getCenter(new THREE.Vector3());
+        root.position.sub(c); // centre à l'origine
+
+        // Matériaux doux et ombres
+        const tone = new THREE.Color(0xf8f5f2);
+        root.traverse(function(m){
+          if (m.isMesh){
+            m.castShadow = true; m.receiveShadow = false;
+            if (!m.material || m.material.isMeshStandardMaterial!==true){
+              m.material = new THREE.MeshStandardMaterial({ color: tone, metalness:0.05, roughness:0.6 });
+            }else{
+              m.material.metalness = clamp(m.material.metalness||0,0,0.15);
+              m.material.roughness = clamp(m.material.roughness||0.6,0.35,1.0);
+            }
+          }
+        });
+
+        modelRef.current = root;
+
+        // Crée N dés
+        const dice=[];
+        for (let i=0;i<DICE_COUNT;i++){
+          const g = root.clone(true);
+          scene.add(g);
+          const anchors = extractFaceAnchors(g, THREE);
+          dice.push({
+            root:g,
+            anchors:anchors,
+            vel:new THREE.Vector3(),
+            angVel:new THREE.Vector3(),
+            stableSince:0
+          });
+        }
+        diceRef.current = dice;
+        layoutDiceAtRest(); // position initiale lisible
+        setReady(true);
+        animate();
+      },
+      undefined,
+      (err)=>{
+        console.error("GLB load error:", err);
+        setMsg("Échec chargement du modèle 3D. Vérifie le chemin : " + MODEL_URL);
+      });
+    })();
+
+    function animate(){
+      lastTRef.current = now();
+      function frame(){
+        const t=now();
+        const dt = Math.min(32, t - lastTRef.current) / 1000; // s
+        lastTRef.current = t;
+        step(dt);
+        renderer.render(scene, cam);
+        rafRef.current = requestAnimationFrame(frame);
+      }
+      frame();
+    }
+
+    function cleanup(){
+      cancelled=true;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      renderer.dispose();
+      scene.traverse(function(o){
+        if (o.isMesh && o.geometry) o.geometry.dispose?.();
+        if (o.isMesh && o.material){
+          if (Array.isArray(o.material)) o.material.forEach(m=>m.dispose?.());
+          else o.material.dispose?.();
+        }
+      });
+    }
+
+    return cleanup;
+  }, []);
+
+  /* -------------------- Simulation "physique" simplifiée -------------------- */
+  function layoutDiceAtRest(){
+    const THREE = threeRef.current;
+    const dice = diceRef.current;
+    if (!THREE || !dice || !dice.length) return;
+    for (let i=0;i<dice.length;i++){
+      const d = dice[i];
+      // grille simple
+      d.root.position.set(-2.2 + i*1.5, 0.82, (i%2===0)? -0.6 : 0.7);
+      d.root.rotation.set(0, (i*0.6), 0);
+      d.vel.set(0,0,0);
+      d.angVel.set(0,0,0);
+      d.stableSince = now();
+      d.root.updateMatrixWorld(true);
+    }
   }
 
-  global.AstragalusLevel3 = AstragalusLevel3;
-})(window);
+  function randomThrow(){
+    const THREE = threeRef.current;
+    const dice = diceRef.current;
+    if (!THREE || !dice || !dice.length) return;
+
+    // positions & vitesses initiales
+    for (let i=0;i<dice.length;i++){
+      const d = dice[i];
+      d.root.position.set(-3.5 + i*0.6, 2.2 + Math.random()*0.8, -1.8 + Math.random()*3.4);
+      d.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+      d.vel.set(5.2 + Math.random()*2.0, 2.5 + Math.random()*1.2, 1.5 - Math.random()*3.0);
+      d.angVel.set(
+        (-1+Math.random()*2)*6.0,
+        (-1+Math.random()*2)*6.0,
+        (-1+Math.random()*2)*6.0
+      );
+      d.stableSince = 0;
+      d.root.updateMatrixWorld(true);
+    }
+    setValues([]);
+    setThrowing(true);
+    setMsg("Lancer ! Laisse les os se stabiliser…");
+  }
+
+  function step(dt){
+    const THREE = threeRef.current;
+    const dice = diceRef.current;
+    const scene = sceneRef.current;
+    if (!THREE || !dice || !scene) return;
+
+    let allStable = true;
+    for (let i=0;i<dice.length;i++){
+      const d = dice[i];
+      // gravité
+      d.vel.y += GRAVITY * dt;
+
+      // intégration position
+      d.root.position.addScaledVector(d.vel, dt);
+
+      // collisions sol
+      const rApprox = 0.75; // rayon approximatif
+      if (d.root.position.y - rApprox <= FLOOR_Y){
+        d.root.position.y = FLOOR_Y + rApprox;
+        if (d.vel.y < 0) d.vel.y = -d.vel.y * BOUNCE;
+        d.vel.x *= FRIC_LIN; d.vel.z *= FRIC_LIN;
+        d.angVel.multiplyScalar(FRIC_ANG);
+      }
+
+      // Réduction très légère des vitesses (air)
+      d.vel.multiplyScalar(0.999);
+      d.angVel.multiplyScalar(0.999);
+
+      // rotation
+      const av = d.angVel;
+      d.root.rotation.x += av.x * dt;
+      d.root.rotation.y += av.y * dt;
+      d.root.rotation.z += av.z * dt;
+
+      // bordures (boite)
+      const X=6.8, Z=4.4;
+      if (d.root.position.x<-X){ d.root.position.x=-X; d.vel.x= Math.abs(d.vel.x)*0.6; }
+      if (d.root.position.x> X){ d.root.position.x= X; d.vel.x=-Math.abs(d.vel.x)*0.6; }
+      if (d.root.position.z<-Z){ d.root.position.z=-Z; d.vel.z= Math.abs(d.vel.z)*0.6; }
+      if (d.root.position.z> Z){ d.root.position.z= Z; d.vel.z=-Math.abs(d.vel.z)*0.6; }
+
+      d.root.updateMatrixWorld(true);
+
+      // stabilité
+      const speed = d.vel.length() + d.angVel.length();
+      if (speed < STOP_EPS){
+        if (!d.stableSince) d.stableSince = now();
+      }else{
+        d.stableSince = 0;
+      }
+      const stable = d.stableSince && (now() - d.stableSince > STOP_STABLE_MS);
+      if (!stable) allStable = false;
+    }
+
+    if (throwing && allStable){
+      setThrowing(false);
+      // lit les faces
+      const out=[];
+      for (let i=0;i<dice.length;i++){
+        const d=dice[i];
+        const face = pickTopFace(d.anchors, THREE) || "?";
+        out.push(face);
+      }
+      const human = translateFaces(out, valueMapRef.current);
+      setValues(human);
+      setMsg("Résultat : " + human.join("  "));
+    }
+  }
+
+  function translateFaces(tags, map){
+    // map peut contenir : {"map":{"up":"1", "down":"6", ...}} ou direct {"1":1,"3":3...}
+    const norm=[];
+    const nameMap = (map && map.map) ? map.map : null;
+    const fromTag = function(t){
+      if (!t) return "?";
+      const t0 = String(t).toLowerCase();
+      if (nameMap && nameMap[t0]!=null) return String(nameMap[t0]);
+
+      // heuristiques
+      if (t0==="1" || /venus|one|f1$|face[_\- ]?1$/.test(t0)) return "1";
+      if (t0==="3" || /trina|three|f3$|face[_\- ]?3$/.test(t0)) return "3";
+      if (t0==="4" || /quater|four|f4$|face[_\- ]?4$/.test(t0)) return "4";
+      if (t0==="6" || /senio|six|bina|f6$|face[_\- ]?6$/.test(t0)) return "6";
+      // directions…
+      if (/up|top/.test(t0)) return "1";
+      if (/down|bottom/.test(t0)) return "6";
+      if (/left|right|front|back/.test(t0)) return "3"; // arbitraire
+      return "?";
+    };
+    for (let i=0;i<tags.length;i++) norm.push(fromTag(tags[i]));
+    return norm;
+  }
+
+  /* -------------------- UI -------------------- */
+  return (
+    <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#f8fafc,#eef2ff)", color:"#0f172a"}}>
+      <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
+        <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8}}>
+          <h1 className="text-xl sm:text-2xl" style={{fontWeight:700}}>Écrire avec les os — Lancer d’astragales (3D)</h1>
+          <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
+            <button
+              onClick={()=>{ ready ? randomThrow() : null; }}
+              disabled={!ready}
+              style={{padding:"10px 14px", border:"1px solid #2563eb", background:"#2563eb", color:"#fff", borderRadius:12, cursor:ready?"pointer":"default", boxShadow:"0 6px 16px rgba(37,99,235,.25)"}}
+            >
+              Lancer
+            </button>
+            <button
+              onClick={()=>{ layoutDiceAtRest(); setValues([]); setThrowing(false); setMsg("Réinitialisé. Clique ‘Lancer’."); }}
+              disabled={!ready}
+              style={{padding:"8px 12px", border:"1px solid #e5e7eb", background:"#fff", borderRadius:12, cursor:ready?"pointer":"default"}}
+            >
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+
+        <p className="text-sm" style={{color:"#475569", marginBottom:12}}>
+          {msg}
+        </p>
+
+        <div ref={wrapRef} className="w-full" style={{position:"relative", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden", background:"#fff"}}>
+          <canvas ref={canvasRef} />
+          {!ready && (
+            <div style={{position:"absolute", inset:0, display:"grid", placeItems:"center", background:"linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.92))"}}>
+              <div style={{textAlign:"center"}}>
+                <div style={{fontWeight:700, marginBottom:6}}>Chargement du modèle 3D…</div>
+                <div style={{fontSize:12, color:"#64748b"}}>Modèle : <code>level3/3d/astragalus_faces.glb</code></div>
+              </div>
+            </div>
+          )}
+
+          {values && values.length>0 && (
+            <div style={{position:"absolute", left:12, bottom:12, background:"rgba(255,255,255,.96)", border:"1px solid #e5e7eb", borderRadius:12, padding:"10px 12px"}}>
+              <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
+              <div style={{fontSize:14}}>
+                {values.join("  ")}
+                <span style={{marginLeft:10, color:"#64748b"}}>Somme: {values.filter(v=>/^\d+$/.test(v)).map(Number).reduce((a,b)=>a+b,0)}</span>
+              </div>
+              <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
+                Catégories antiques : Vénus (1), Trina (3), Quaterna (4), Senio/Bina (6).
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
+          Ce niveau utilise ton modèle 3D (<code>astragalus_faces.glb</code>) et lit la face supérieure via les ancres <em>face_1</em>, <em>face_3</em>, <em>face_4</em>, <em>face_6</em> si présentes (ou un fallback géométrique).
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// @ts-ignore
+window.OsseletsLevel3 = OsseletsLevel3;
