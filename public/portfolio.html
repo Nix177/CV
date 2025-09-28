@@ -48,7 +48,6 @@
     .game-card h2 { font: 600 24px/1.3 system-ui,Segoe UI,Roboto,Arial; margin:0 0 4px }
     .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
     .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
-    .game-cta { position:absolute; right:12px; bottom:12px; padding:8px 12px; background:#0b1f33; border:1px solid #ffffff33; color:#e6f1ff; border-radius:10px }
     .game-root { min-height: 54vh; outline: none; }
   </style>
 
@@ -101,7 +100,6 @@
         <img class="game-cover" id="cover-runner"
              src="/assets/games/osselets/audio/img/start-screenshot.webp"
              alt="Aperçu — Runner 2D" onerror="this.remove()"/>
-        <button class="game-cta" id="cta-runner">Start</button>
         <div class="game-root" id="root-runner" tabindex="0" aria-label="Jeu Runner 2D"></div>
       </div>
     </section>
@@ -117,7 +115,6 @@
         <img class="game-cover" id="cover-l2"
              src="/assets/games/osselets/audio/img/start-screenshot_2.webp"
              alt="Aperçu — Écrire avec les os" onerror="this.remove()"/>
-        <button class="game-cta" id="cta-l2">Start</button>
         <div class="game-root" id="root-l2" tabindex="0" aria-label="Jeu Écrire avec les os"></div>
       </div>
     </section>
@@ -133,7 +130,6 @@
         <img class="game-cover" id="cover-l3"
              src="/assets/games/osselets/audio/img/start-screenshot_3.webp"
              alt="Aperçu — Rouler les os" onerror="this.remove()"/>
-        <button class="game-cta" id="cta-l3">Start</button>
         <div class="game-root" id="root-l3" tabindex="0" aria-label="Jeu Rouler les os"></div>
       </div>
     </section>
@@ -155,12 +151,13 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <!-- Three.js + examples (GLTFLoader, OrbitControls) for L2/L3 3D -->
   <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  <!-- Jeux Osselets (TypeScript + React via Babel) -->
+  <!-- Jeux Osselets -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
@@ -168,38 +165,29 @@
   <!-- Montage / Navigation (un container par jeu) -->
   <script type="text/babel">
     (function () {
-      function mount(root, cover, cta, Comp) {
-        if (!root || !Comp) return;
+      function mount(root, cover, CompName) {
+        const Comp = window && window[CompName];
+        if (!root || !Comp) { console.warn("[mount] composant introuvable:", CompName); return; }
         if (cover) { cover.style.display = 'none'; cover.remove(); }
-        if (cta)   { cta.style.display   = 'none'; cta.remove(); }
         const r = ReactDOM.createRoot(root);
         r.render(React.createElement(Comp));
         setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
       }
 
       // Runner
-      const btn1 = document.getElementById('btn-start-runner');
-      const cta1 = document.getElementById('cta-runner');
-      const r1   = document.getElementById('root-runner');
-      const cv1  = document.getElementById('cover-runner');
-      if (btn1) btn1.addEventListener('click', ()=> mount(r1, cv1, cta1, window && window.AstragalusRunner));
-      if (cta1) cta1.addEventListener('click', ()=> mount(r1, cv1, cta1, window && window.AstragalusRunner), { once:true });
+      document.getElementById('btn-start-runner')?.addEventListener('click', () =>
+        mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner')
+      );
 
       // L2
-      const btn2 = document.getElementById('btn-start-l2');
-      const cta2 = document.getElementById('cta-l2');
-      const r2   = document.getElementById('root-l2');
-      const cv2  = document.getElementById('cover-l2');
-      if (btn2) btn2.addEventListener('click', ()=> mount(r2, cv2, cta2, window && window.AstragalusLevel2));
-      if (cta2) cta2.addEventListener('click', ()=> mount(r2, cv2, cta2, window && window.AstragalusLevel2), { once:true });
+      document.getElementById('btn-start-l2')?.addEventListener('click', () =>
+        mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2')
+      );
 
       // L3
-      const btn3 = document.getElementById('btn-start-l3');
-      const cta3 = document.getElementById('cta-l3');
-      const r3   = document.getElementById('root-l3');
-      const cv3  = document.getElementById('cover-l3');
-      if (btn3) btn3.addEventListener('click', ()=> mount(r3, cv3, cta3, window && window.AstragalusLevel3));
-      if (cta3) cta3.addEventListener('click', ()=> mount(r3, cv3, cta3, window && window.AstragalusLevel3), { once:true });
+      document.getElementById('btn-start-l3')?.addEventListener('click', () =>
+        mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3')
+      );
     })();
   </script>
 </body>
