@@ -1,3 +1,4 @@
+<!-- public/portfolio.html -->
 <!doctype html>
 <html lang="fr">
 <head>
@@ -16,72 +17,69 @@
   <style>
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
-    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
-    .btn.ghost { background: transparent }
-    .muted { opacity:.9 }
-    .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px }
-    .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
-    @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+    .muted { color: #e6f1ffbb; }
+    .btn { appearance:none; border:1px solid #ffffff33; color:#e6f1ff; background:#0b1f33; padding:8px 12px; border-radius:10px; cursor:pointer }
+    .btn.primary { background:#0f5; color:#012 }
+    .btn.linkish { background:transparent; border-color:transparent; text-decoration:underline }
+    .badge { border:1px solid #ffffff33; border-radius:999px; padding:2px 8px; font-size:12px; opacity:.8 }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px }
+    .card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
+    .card .head { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#e6f1ff }
+    .card .body { padding: 10px 12px; color:#cfe2ff }
+    .card .actions { display:flex; gap:8px; padding:10px 12px; border-top:1px solid #ffffff22 }
+    .hero { display:flex; align-items:center; gap:10px; }
+    .hero .emoji { font-size:22px }
+    header.wrap { padding: 16px; margin: 0 auto; max-width: 1100px; }
+    header.wrap h1 { margin:0; color:#e6f1ff; font: 600 28px/1.2 system-ui,Segoe UI,Roboto,Arial }
+    header.wrap p { margin:6px 0 0; color:#cfe2ff }
+    body { background: radial-gradient(1200px 600px at 50% -10%, #0e2741 0, #071725 60%, #05101b 100%); color:#e6f1ff; font: 16px/1.45 system-ui,Segoe UI,Roboto,Arial }
+    a { color:#90e0ff }
+    .p-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px }
 
-    /* Overlay d’aperçu (sécurisé) */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55);
-               display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
-    .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
-                      width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
-    .overlay .panel header { display:flex; justify-content: space-between; align-items:center; gap:10px;
-                             padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
-    .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
+    /* Aperçu overlay (fallback si style.css absent) */
+    .overlay { position:fixed; inset:0; display:none; z-index:9999; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:18px }
+    .overlay .panel { position:relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px; width:min(1100px, 100%); height:min(78vh, 100%); overflow:hidden; display:flex; flex-direction:column }
+    .overlay header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff }
+    .overlay iframe { width:100%; height:100%; flex:1 1 auto; border:0; background:#fff }
 
-    /* Jeux — containers */
-    .game-card { border:1px solid #163b62; background:#0b2237cc; border-radius:14px; padding:14px 16px; }
-    .game-wrap { position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:14px; background:#071528; border:1px solid #163b62; min-height: 260px; }
-    .game-cover { position:absolute; top:0; left:0; right:0; bottom:72px; width:100%; height:auto; object-fit:cover; display:block; z-index:1; pointer-events:none }
-    .game-cover::after { content:""; position:absolute; inset:auto 0 0 0; height:80px; background:linear-gradient(180deg, rgba(7,21,40,0) 0%, rgba(7,21,40,.85) 100%); }
-    .game-cta { position:absolute; left:50%; bottom:16px; transform:translateX(-50%); z-index:3; padding:10px 16px; border:1px solid #ffffff33; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer }
-    .game-root, .game-root > * { width:100%; height:100%; }
-    .game-root canvas { width:100% !important; height:100% !important; image-rendering: pixelated; }
+    /* Cartes jeux */
+    .game-card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; margin: 28px 0; padding: 14px }
+    .game-card h2 { font: 600 24px/1.3 system-ui,Segoe UI,Roboto,Arial; margin:0 0 4px }
+    .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
+    .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
+    .game-cta { position:absolute; right:12px; bottom:12px; padding:8px 12px; background:#0b1f33; border:1px solid #ffffff33; color:#e6f1ff; border-radius:10px }
+    .game-root { min-height: 54vh; outline: none; }
   </style>
 
-  <!-- Style global du site -->
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- Nav + feedback -->
-  <script defer src="/assets/js/nav.js"></script>
-  <script defer src="/assets/js/feedback.js"></script>
+  <link rel="preload" href="/style.css" as="style"/>
+  <link rel="stylesheet" href="/style.css"/>
 </head>
+
 <body>
-  <!-- En-tête (fallback si JS) -->
-  <header class="site-header">
-    <nav class="site-nav" aria-label="Navigation principale">
-      <ul class="menu">
-        <li><a href="/index.html" class="btn ghost">Accueil</a></li>
-        <li><a href="/cv.html" class="btn ghost">CV</a></li>
-        <li><a href="/portfolio.html" class="btn" aria-current="page">Portfolio</a></li>
-        <li><a href="/passions.html" class="btn ghost">Passions</a></li>
-        <li><a href="/ai-lab.html" class="btn ghost">Labo IA</a></li>
-        <li><a href="/fun-facts.html" class="btn ghost">Idées reçues</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a href="/portfolio.html" class="btn" aria-current="page">FR</a></li>
-        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
-        <li><a href="/portfolio-de.html" class="btn ghost">DE</a></li>
-      </ul>
-    </nav>
+  <header class="wrap">
+    <h1>Portfolio — Nicolas Tuor</h1>
+    <p class="muted">Sélection de projets web (éducation, IA, jeux). Les boutons « Aperçu » ouvrent un site dans un overlay quand c’est autorisé par le site cible.</p>
   </header>
 
   <main class="wrap">
-    <h1>Portfolio</h1>
-    <p class="muted">« Visiter » ouvre en nouvel onglet. « Aperçu » tente un embed sécurisé (si autorisé par le site cible).</p>
 
-    <!-- Grille des cartes -->
-    <div id="portfolioGrid" class="grid-cards"></div>
+    <!-- Grille des sites (les trois sites + autres vignettes) -->
+    <section class="card">
+      <div class="head">
+        <div class="hero"><span class="emoji">🌐</span><strong>Sites</strong></div>
+        <div class="muted">Prévisualisation embarquée si possible</div>
+      </div>
+      <div class="body">
+        <div id="portfolioGrid" class="p-grid"></div>
+      </div>
+    </section>
 
-    <!-- Overlay d’aperçu -->
-    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
+    <!-- Overlay Aperçu -->
+    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle" style="display:none">
       <div class="panel">
         <header>
-          <strong id="ovlTitle">Aperçu</strong>
+          <strong id="ovlTitle"></strong>
           <button id="overlayClose" class="btn">Fermer</button>
         </header>
         <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
@@ -102,16 +100,16 @@
       <div class="game-wrap" id="wrap-runner">
         <img class="game-cover" id="cover-runner"
              src="/assets/games/osselets/audio/img/start-screenshot.webp"
-             alt="Aperçu — Runner Osselets" onerror="this.remove()"/>
+             alt="Aperçu — Runner 2D" onerror="this.remove()"/>
         <button class="game-cta" id="cta-runner">Start</button>
-        <div class="game-root" id="root-runner" tabindex="0" aria-label="Jeu Runner Osselets"></div>
+        <div class="game-root" id="root-runner" tabindex="0" aria-label="Jeu Runner 2D"></div>
       </div>
     </section>
 
     <!-- Jeu 2 : Écrire avec les os -->
     <section class="game-card" id="osselets-l2-card">
       <h2>✍️ Écrire avec les os — Fil & alphabet</h2>
-      <p class="muted">24 trous (6 par face) reliés aux 24 lettres grecques. Suis le fil pour épeler un mot. </p>
+      <p class="muted">24 trous (6 par face) reliés aux 24 lettres grecques. Suis le fil pour épeler un mot.</p>
       <div class="row" style="gap:8px;margin-bottom:8px">
         <button id="btn-start-l2" class="btn">Lancer</button>
       </div>
@@ -157,6 +155,10 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Three.js + examples (GLTFLoader, OrbitControls) for L2/L3 3D -->
+  <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <!-- Jeux Osselets (TypeScript + React via Babel) -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
