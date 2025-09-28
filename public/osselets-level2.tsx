@@ -1,3 +1,4 @@
+;(function () {
 /* global React, THREE */
 const { useEffect, useRef, useState } = React;
 
@@ -34,10 +35,8 @@ function makeLetterSprite(char) {
   const c = document.createElement("canvas");
   c.width = c.height = size;
   const ctx = c.getContext("2d");
-  // disque bleu
   ctx.fillStyle = "#0ea5e9";
   ctx.beginPath(); ctx.arc(size/2, size/2, size*0.46, 0, Math.PI*2); ctx.fill();
-  // lettre blanche
   ctx.fillStyle = "#fff";
   ctx.font = "bold 34px system-ui, -apple-system, Segoe UI, Roboto";
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
@@ -46,7 +45,7 @@ function makeLetterSprite(char) {
   const tex = new THREE.CanvasTexture(c);
   const mtl = new THREE.SpriteMaterial({ map: tex, depthTest: true, depthWrite: false, transparent: true });
   const spr = new THREE.Sprite(mtl);
-  spr.scale.setScalar(0.08); // taille fixe dans la scène
+  spr.scale.setScalar(0.08);
   spr.renderOrder = 2;
   return spr;
 }
@@ -61,7 +60,6 @@ function OsseletsLevel2() {
     const canvas = canvasRef.current;
     if (!holder || !canvas) return;
 
-    // scène de base
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07131f);
 
@@ -73,13 +71,11 @@ function OsseletsLevel2() {
 
     const ro = fitToParent(renderer, camera, holder);
 
-    // lumière
     scene.add(new THREE.HemisphereLight(0xbfdcff, 0x101418, 0.6));
     const key = new THREE.DirectionalLight(0xffffff, 0.9);
     key.position.set(1.5, 1.2, 0.8);
     scene.add(key);
 
-    // sol discret
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(5, 5),
       new THREE.MeshStandardMaterial({ color: 0x0e1e2e, roughness: 1 })
@@ -90,26 +86,21 @@ function OsseletsLevel2() {
     scene.add(ground);
 
     let mesh = null;
-    const letters = []; // {anchor:Object3D, sprite:Sprite}
+    const letters = [];
 
     (async () => {
       const glb = await loadGLB(L2_MODEL);
 
-      // mesh principal
-      glb.scene.traverse((n) => {
-        if (n.isMesh && !mesh) mesh = n;
-      });
+      glb.scene.traverse((n) => { if (n.isMesh && !mesh) mesh = n; });
       if (!mesh) throw new Error("Mesh non trouvé");
       mesh.castShadow = true;
       mesh.position.set(0, -0.05, 0);
       mesh.scale.setScalar(0.9);
       scene.add(mesh);
 
-      // ancres "Hole_*"
       const anchors = [];
       glb.scene.traverse((n) => { if (/^Hole_/i.test(n.name)) anchors.push(n); });
 
-      // une lettre par ancre (max 24)
       for (let i = 0; i < anchors.length && i < 24; i++) {
         const a = anchors[i];
         const s = makeLetterSprite(GREEK[i] || "?");
@@ -135,7 +126,6 @@ function OsseletsLevel2() {
       const dx = (x - last.x) / (holder.clientWidth);
       const dy = (y - last.y) / (holder.clientHeight);
       last.set(x, y);
-      // rotation douce
       mesh.rotation.y -= dx * Math.PI;
       mesh.rotation.x -= dy * Math.PI * 0.6;
       mesh.rotation.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, mesh.rotation.x));
@@ -149,28 +139,20 @@ function OsseletsLevel2() {
     holder.addEventListener("touchmove", onMove, { passive: false });
     holder.addEventListener("touchend", onUp);
 
-    // boucle
     let raf;
     function loop() {
-      // placer/masquer les lettres selon visibilité
       if (mesh && letters.length) {
         const qMesh = mesh.quaternion.clone();
         const camPos = camera.position.clone();
         for (const { anchor, sprite } of letters) {
-          // position monde de l’ancre relative au mesh
           const wp = new THREE.Vector3().setFromMatrixPosition(anchor.matrixWorld);
           sprite.position.copy(wp);
-
-          // normale locale de l’ancre (+Y) -> monde
           const n = new THREE.Vector3(0, 1, 0).applyQuaternion(qMesh.clone().multiply(anchor.quaternion)).normalize();
           const toCam = camPos.clone().sub(wp).normalize();
-          const facing = n.dot(toCam); // >0 => vers caméra
-          const visible = facing > 0.25; // cache l’arrière
-
-          sprite.visible = visible;
+          const facing = n.dot(toCam);
+          sprite.visible = facing > 0.25; // masque l’arrière
         }
       }
-
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     }
@@ -209,3 +191,4 @@ function OsseletsLevel2() {
 
 // @ts-ignore
 window.OsseletsLevel2 = OsseletsLevel2;
+})(); // <— IIFE
