@@ -1,17 +1,18 @@
 /* public/osselets-level2.tsx
-   Mini-jeu 2 — « Écrire avec les os » (astragale percé / fil)
-   - Charge level2/3d/astragalus.glb (trous Hole_<face>_<nn>), projette 2D → 24 points
-   - Fallback cercle si modèle/ancres absents
-   - UI: Mot grec + translittération + indice ; Réinitialiser / Mot suivant / Musique / Stop musique
-   - Loader Three tolérant: ne JETTE PAS "examples failed" → simple fallback 2D
+   Mini-jeu 2 — « Écrire avec les os » (fil + alphabet grec)
+   - Charge /assets/games/osselets/level2/3d/astragalus.glb (trous Hole_<face>_<nn>)
+   - Projette 24 ancres → 2D ; fallback cercle si GLB/ancres indisponibles
+   - Loader Three "souple" (unpkg → jsDelivr) sans throw ; UI Musique/Stop musique
+   - EXPORT: window.AstragalusLevel2 (le montage est géré par portfolio.html)
 */
 (function (global) {
   const { useEffect, useRef, useState } = React;
 
-  // -------- Bus audio partagé --------
+  // -------- AudioBus partagé --------
   if (!global.AstragalusAudioBus) {
     global.AstragalusAudioBus = {
-      _list: [], register(a){ if(a && !this._list.includes(a)) this._list.push(a); },
+      _list: [],
+      register(a){ if(a && !this._list.includes(a)) this._list.push(a); },
       stopAll(){ this._list.forEach(a=>{ try{ a.pause(); a.currentTime=0; }catch{} }); },
       muteAll(m){ this._list.forEach(a=>{ try{ a.muted=!!m; }catch{} }); }
     };
@@ -21,21 +22,15 @@
   async function ensureThreeSoft(){
     if (global.__THREE_PROMISE__) return global.__THREE_PROMISE__;
     global.__THREE_PROMISE__ = (async ()=>{
-      // si déjà présent (y compris examples) → OK
       if (global.THREE && global.THREE.GLTFLoader && global.THREE.OrbitControls) return global.THREE;
-      // charge three, puis tente controls + loader; si échec => on rendra null (fallback 2D)
-      const add=(src)=>new Promise((r)=>(Object.assign(document.createElement("script"),{src,onload:()=>r(true),onerror:()=>r(false)})&&document.head.appendChild(document.scripts[document.scripts.length-1]?.previousSibling||document.head.appendChild(document.createElement('script')))));
-    })(); // on remplace ci-dessus par une version robuste juste après pour clarté
-    // version robuste claire :
-    global.__THREE_PROMISE__ = (async ()=>{
       const add=(src)=>new Promise((res)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>res(true); s.onerror=()=>res(false); document.head.appendChild(s); });
       async function tryAny(list){ for(const u of list){ if(await add(u)) return true; } return false; }
       const v="0.149.0";
-      const core = await tryAny([`https://unpkg.com/three@${v}/build/three.min.js`,`https://cdn.jsdelivr.net/npm/three@${v}/build/three.min.js`]);
-      if (!core) return null;
+      const okCore = await tryAny([`https://unpkg.com/three@${v}/build/three.min.js`,`https://cdn.jsdelivr.net/npm/three@${v}/build/three.min.js`]);
+      if (!okCore) return null;
       const okCtrl = await tryAny([`https://unpkg.com/three@${v}/examples/js/controls/OrbitControls.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/controls/OrbitControls.js`]);
       const okGLTF = await tryAny([`https://unpkg.com/three@${v}/examples/js/loaders/GLTFLoader.js`,`https://cdn.jsdelivr.net/npm/three@${v}/examples/js/loaders/GLTFLoader.js`]);
-      if (!(okCtrl && okGLTF)) { console.warn("[L2] Three examples indisponibles → fallback 2D"); return null; }
+      if (!(okCtrl && okGLTF)) return null; // fallback 2D sans erreur
       return global.THREE;
     })();
     return global.__THREE_PROMISE__;
@@ -50,21 +45,20 @@
     "/assets/games/osselets/level2/astragalus.glb",
     "/assets/games/osselets/3d/astragalus.glb"
   ];
-  const FACES=["ventre","dos","bassin","membres"]; // ordre pédagogique (Aristote) :contentReference[oaicite:2]{index=2}
+  const FACES=["ventre","dos","bassin","membres"];
   const GREEK=["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
-  const LATN =["A","B","G","D","E","Z","Ē","Th","I","K","L","M","N","X","O","P","R","S","T","Y","Ph","Ch","Ps","Ō"];
-  // petits puzzles par défaut; on peut en ajouter via level2/3d/letters.json
   const PUZ=[ {title:"ΝΙΚΗ",latin:"NIKĒ",seq:[12,8,9,6],tip:"Victoire / souhait propitiatoire."},
-              {title:"ΕΛΠΙΣ",latin:"ELPIS",seq:[4,10,15,8,17],tip:"Espoir, présage favorable."},
+              {title:"ΕΛΠΙΣ",latin:"ELPIS",seq:[4,10,15,8,17],tip:"Espoir — bon présage."},
               {title:"ΤΥΧΗ",latin:"TYCHĒ",seq:[18,19,21,6],tip:"Bonne fortune."} ];
 
   function wrap(ctx, text, x,y,w,lh){ const words=(text||"").split(/\s+/); let line=""; for(const wd of words){ const t=(line?line+" ":"")+wd; if(ctx.measureText(t).width>w && line){ ctx.fillText(line,x,y); line=wd; y+=lh; } else line=t; } if(line) ctx.fillText(line,x,y); }
   function loadA(f){ try{ const a=new Audio(ABASE+f); a.preload="auto"; return a; }catch{ return null; } }
 
-  function Level2(){
+  function AstragalusLevel2(){
     const hostRef=useRef(null), webglRef=useRef(null), canvasRef=useRef(null), ctxRef=useRef(null);
     const musRef=useRef(null), okRef=useRef(null), badRef=useRef(null);
     const [musicOn,setMusicOn]=useState(true);
+    const [puz,setPuz]=useState(PUZ[0]);
 
     // coupe les autres musiques
     useEffect(()=>{ global.AstragalusAudioBus.stopAll(); },[]);
@@ -125,17 +119,16 @@
         resize3d();
 
         const loader=new THREE.GLTFLoader();
-        let glb=null, used="";
-        for(const p of GLB_CANDIDATES){ try{ glb=await loader.loadAsync(p); used=p; break; }catch{} }
-        if(!glb){ console.warn("[L2] Aucun GLB — fallback cercle"); fallbackHoles(); return; }
-        else console.log("[L2] GLB trous chargé:", used);
+        let glb=null;
+        for(const p of GLB_CANDIDATES){ try{ glb=await loader.loadAsync(p); break; }catch{} }
+        if(!glb){ fallbackHoles(); return; }
 
         const model=glb.scene; model.traverse(o=>{ if(o.isMesh){ o.castShadow=false; o.receiveShadow=true; } });
         scene.add(model);
 
         const order=[]; FACES.forEach(face=>{ for(let i=1;i<=6;i++) order.push(`Hole_${face}_${String(i).padStart(2,"0")}`); });
         let anchors = order.map(n=>model.getObjectByName(n));
-        if(anchors.some(a=>!a)){ console.warn("[L2] Ancres manquantes → fallback cercle"); fallbackHoles(); anchors=[]; }
+        if(anchors.some(a=>!a)){ fallbackHoles(); anchors=[]; }
 
         const v=new THREE.Vector3();
         function loop(){
@@ -155,8 +148,7 @@
       return ()=>{ mounted=false; };
     },[]);
 
-    // puzzles (peut lire level2/3d/letters.json si dispo pour surcharger)
-    const [puz,setPuz]=useState(PUZ[0]);
+    // tente de lire level2/3d/letters.json pour surcharger PUZ
     useEffect(()=>{ (async()=>{
       try{
         const r=await fetch("/assets/games/osselets/level2/3d/letters.json",{cache:"no-store"});
@@ -167,8 +159,8 @@
     function nextWord(){
       try{ okRef.current && (okRef.current.currentTime=0, okRef.current.play().catch(()=>{})); }catch{}
       setPuz(prev=>{
-        const i=Math.max(0, PUZ.findIndex(p=>p.title===prev.title));
-        return PUZ[(i+1)%PUZ.length];
+        const all=[...PUZ]; const idx=Math.max(0, all.findIndex(p=>p.title===prev.title));
+        return all[(idx+1)%all.length];
       });
     }
 
@@ -179,14 +171,12 @@
         const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0b2334"); g.addColorStop(1,"#0a1b2a");
         ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
 
-        // tapis / zones
         ctx.fillStyle="#0e2a44"; ctx.fillRect(0, H-120, W, 120);
         ctx.fillStyle="#cfe2ff"; ctx.font="18px system-ui,Segoe UI,Roboto,Arial";
         ctx.fillText("Écrire avec les os — Fil & trous (24 lettres / 4 faces opposées)", 16, 28);
         ctx.font="16px system-ui,Segoe UI,Roboto,Arial";
-        ctx.fillText("Règle : entrer par un trou d’une face et ressortir par le **même numéro** sur la face **opposée**.", 16, 50);
+        ctx.fillText("Règle : entrer par un trou d’une face et ressortir par le même numéro sur la face opposée.", 16, 50);
 
-        // points / lettres
         const pts=holes.current;
         for(const h of pts){
           ctx.beginPath(); ctx.arc(h.x, h.y, 10, 0, Math.PI*2); ctx.fillStyle="#103a5f"; ctx.fill(); ctx.strokeStyle="#1c5a8d"; ctx.lineWidth=2; ctx.stroke();
@@ -194,7 +184,6 @@
           ctx.fillText(h.label, h.x, h.y);
         }
 
-        // fil (chemin du mot)
         if(Array.isArray(puz?.seq)){
           ctx.beginPath();
           for(let i=0;i<puz.seq.length;i++){
@@ -204,7 +193,6 @@
           ctx.strokeStyle="#7dd3fc"; ctx.lineWidth=3; ctx.stroke();
         }
 
-        // cartouche mot
         ctx.textAlign="left"; ctx.textBaseline="alphabetic"; ctx.fillStyle="#cfe2ff";
         ctx.font="22px system-ui,Segoe UI,Roboto,Arial"; ctx.fillText(`Mot : ${puz?.title||"—"}  (${puz?.latin||"—"})`, 16, H-78);
         ctx.font="16px system-ui,Segoe UI,Roboto,Arial"; wrap(ctx, `Indice : ${puz?.tip||"—"}`, 16, H-52, W-32, 18);
@@ -229,11 +217,7 @@
     );
   }
 
-  function mountL2(){
-    const el=document.getElementById("osselets-level2"); if(!el) return;
-    ReactDOM.createRoot(el).render(React.createElement(Level2));
-  }
-  if (document.readyState==="loading") document.addEventListener("DOMContentLoaded", mountL2);
-  else mountL2();
+  // EXPORT pour le script de montage de portfolio.html
+  global.AstragalusLevel2 = AstragalusLevel2;
 
 })(window);
