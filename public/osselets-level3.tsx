@@ -1,361 +1,312 @@
-<!-- osselets-level3.tsx -->
-<script type="text/babel" data-type="module">
-/* global React, ReactDOM, THREE, GLTFLoader, OrbitControls */
+(() => {
+  const T = window.THREE;
+  if (!T) { console.error("[L3] THREE non disponible"); return; }
+  const GLTFCls = window.GLTFLoader || (T && T.GLTFLoader);
 
-(function(){
-  // Candidats pour le modèle "faces"
-  var L3_CANDIDATES = [
-    "/assets/games/osselets/level3/3d/astragalus_faces.glb",
-    "/assets/games/osselets/level3/3d/astragalus.glb",
-    "/assets/games/osselets/3d/astragalus_faces.glb",
-    "/assets/games/osselets/3d/astragalus.glb"
+  // ---------- Config ----------
+  const MODEL_CANDIDATES = [
+    "/assets/games/osselets/models/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus.glb",
+    "/assets/games/osselets/audio/img/astragalus.glb",
   ];
+  const BG = 0xf7f6f3;
+  const GROUND = 0xe9e7e1;
+  const COUNT = 4; // mets 5 si tu veux 5 osselets
+  const FACE_VALUES = [1, 3, 4, 6]; // 4 faces “stables”
 
-  // Noms d’ancres de face attendus dans le GLB (vides orientés +Y local)
-  var FACE_NAMES = ["FACE_1","FACE_2","FACE_3","FACE_4","FACE_5","FACE_6"];
+  // ---------- State ----------
+  let _container = null, _renderer = null, _scene = null, _camera = null, _raf = 0;
+  let _resizeObs = null, _running = false, _modelUrl = null;
+  let _root = null, _bones = [], _scoreEl = null;
 
-  // valeur de points par face (modifiable si besoin)
-  var FACE_POINTS = { "FACE_1":5, "FACE_2":4, "FACE_3":3, "FACE_4":2, "FACE_5":1, "FACE_6":6 };
-
-  var loader = new (GLTFLoader || THREE.GLTFLoader)();
-
-  function tryPaths(paths){
-    return new Promise(function(resolve, reject){
-      var i=0;
-      function next(){
-        if(i>=paths.length){ reject(new Error("no candidate glb")); return; }
-        var url = paths[i++];
-        loader.load(url, function(g){ g.userData.__src=url; resolve(g); }, undefined, function(){ next(); });
-      }
-      next();
-    });
+  // physique simplifiée
+  function mkBody(mesh) {
+    return {
+      mesh,
+      v: new T.Vector3(0, 0, 0), // vitesse
+      w: new T.Vector3(0, 0, 0), // vitesse angulaire (rad/s) autour x/y/z
+      settled: false,
+      settleTimer: 0,
+      radius: 0.06,
+    };
   }
 
-  function AstragalusLevel3(){
-    var wrapRef = React.useRef(null);
-    var rendererRef = React.useRef(null);
-    var cameraRef = React.useRef(null);
-    var sceneRef = React.useRef(null);
-    var controlsRef = React.useRef(null);
-    var rafRef = React.useRef(0);
-    var bonesRef = React.useRef([]);   // { root, mesh, faces:{name,obj}, state }
-    var rollingRef = React.useRef(false);
-    var scoreRef = React.useRef(0);
-    var sizeRef = React.useRef({ w:960, h:540, dpr:1 });
+  function fitRenderer() {
+    if (!_container || !_renderer) return;
+    const w = _container.clientWidth || 800;
+    const h = _container.clientHeight || 450;
+    _renderer.setSize(w, h, false);
+    _camera.aspect = w / h;
+    _camera.updateProjectionMatrix();
+  }
+  function makeRenderer() {
+    const r = new T.WebGLRenderer({ antialias: true, alpha: true });
+    r.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    r.setClearColor(BG, 1);
+    r.shadowMap.enabled = true;
+    return r;
+  }
+  function addLights(scene) {
+    scene.add(new T.AmbientLight(0xffffff, 0.7));
+    const d = new T.DirectionalLight(0xffffff, 1.0);
+    d.position.set(2, 3, 2);
+    d.castShadow = true;
+    d.shadow.mapSize.set(1024, 1024);
+    scene.add(d);
+    const h = new T.HemisphereLight(0xffffff, 0x999999, 0.4);
+    scene.add(h);
+  }
+  function addGround(scene) {
+    const g = new T.PlaneGeometry(4, 4);
+    const m = new T.MeshStandardMaterial({ color: GROUND, roughness: 0.95, metalness: 0.0 });
+    const mesh = new T.Mesh(g, m);
+    mesh.receiveShadow = true;
+    mesh.rotation.x = -Math.PI / 2;
+    scene.add(mesh);
+  }
 
-    // UI local (affichage score)
-    var _force = React.useReducer(function(x){return x+1;},0)[1];
+  function makeScoreEl() {
+    const el = document.createElement("div");
+    el.style.position = "absolute";
+    el.style.right = "10px";
+    el.style.top = "10px";
+    el.style.font = "600 14px ui-sans-serif, system-ui";
+    el.style.background = "rgba(255,255,255,.85)";
+    el.style.border = "1px solid #e5e7eb";
+    el.style.borderRadius = "10px";
+    el.style.padding = "8px 10px";
+    el.style.boxShadow = "0 2px 8px rgba(0,0,0,.06)";
+    el.textContent = "Score: –";
+    return el;
+  }
 
-    React.useEffect(function(){
-      var wrap = wrapRef.current;
-      if(!wrap) return;
+  function faceUpIndex(q) {
+    // “snap” vers 4 orientations cibles (à plat sur une face)
+    // cibles = rotations autour X ou Z par quarts de tour depuis l’orientation de base
+    const targets = [
+      new T.Quaternion().setFromEuler(new T.Euler(0, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(Math.PI / 2, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(Math.PI, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(-Math.PI / 2, 0, 0)),
+    ];
+    let best = 0, bestDot = -1;
+    for (let i = 0; i < targets.length; i++) {
+      const d = Math.abs(q.dot(targets[i])); // proximité quaternion
+      if (d > bestDot) { bestDot = d; best = i; }
+    }
+    return best; // 0..3
+  }
 
-      var scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf5f5f5);
-      var cam = new THREE.PerspectiveCamera(50, 16/9, 0.01, 50);
-      cam.position.set(1.6, 1.2, 1.6);
-      cameraRef.current = cam;
-      sceneRef.current = scene;
+  function snapToStable(body) {
+    const m = body.mesh;
+    const qi = faceUpIndex(m.quaternion.clone());
+    const target = [
+      new T.Quaternion().setFromEuler(new T.Euler(0, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(Math.PI / 2, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(Math.PI, 0, 0)),
+      new T.Quaternion().setFromEuler(new T.Euler(-Math.PI / 2, 0, 0)),
+    ][qi];
+    m.quaternion.slerp(target, 0.4);
+    // recoller sur le sol
+    m.position.y = 0.06;
+    return qi;
+  }
 
-      var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:"high-performance" });
-      renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.OutputColorSpace || undefined;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping || THREE.NoToneMapping;
-      renderer.physicallyCorrectLights = true;
-      wrap.appendChild(renderer.domElement);
-      rendererRef.current = renderer;
-
-      // Lumières
-      var hemi = new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.9);
-      scene.add(hemi);
-      var dir = new THREE.DirectionalLight(0xffffff, 1.3);
-      dir.position.set(2,3,1.5);
-      dir.castShadow = true;
-      scene.add(dir);
-
-      // Sol large
-      var ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(4, 4*(9/16)),
-        new THREE.MeshStandardMaterial({ color:0xeaeaea, roughness:1, metalness:0 })
-      );
-      ground.rotation.x = -Math.PI/2;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      // Contrôles
-      var controls = null;
-      try {
-        if (typeof OrbitControls !== "undefined") {
-          controls = new OrbitControls(cam, renderer.domElement);
-        } else if (THREE && THREE.OrbitControls) {
-          controls = new THREE.OrbitControls(cam, renderer.domElement);
+  function resolvePairs(bodies) {
+    // repousser latéralement si chevauchement (approx. sphères)
+    for (let i = 0; i < bodies.length; i++) {
+      for (let j = i + 1; j < bodies.length; j++) {
+        const A = bodies[i], B = bodies[j];
+        const pa = A.mesh.position, pb = B.mesh.position;
+        const dx = pb.x - pa.x, dz = pb.z - pa.z;
+        const dist2 = dx * dx + dz * dz;
+        const minD = A.radius + B.radius;
+        if (dist2 < (minD * minD)) {
+          const d = Math.max(0.001, Math.sqrt(dist2));
+          const nx = dx / d, nz = dz / d;
+          const overlap = minD - d;
+          pa.x -= nx * (overlap * 0.5);
+          pa.z -= nz * (overlap * 0.5);
+          pb.x += nx * (overlap * 0.5);
+          pb.z += nz * (overlap * 0.5);
         }
-      } catch(e){}
-      if (controls){
-        controls.enableDamping = true;
-        controls.target.set(0,0,0);
-        controlsRef.current = controls;
       }
+    }
+  }
 
-      // Charger une fois, cloner N fois
-      tryPaths(L3_CANDIDATES).then(function(gltf){
-        var base = gltf.scene || gltf.scenes && gltf.scenes[0];
-        if(!base) throw new Error("GLB sans scene");
-        // Normaliser taille
-        base.updateMatrixWorld(true);
-        var box = new THREE.Box3().setFromObject(base);
-        var size = new THREE.Vector3(); box.getSize(size);
-        var s = 0.35 / Math.max(0.001, Math.max(size.x,size.y,size.z));
-        base.scale.setScalar(s);
+  function throwBones() {
+    // réinitialiser
+    _bones.forEach((b) => _root.remove(b.mesh));
+    _bones.length = 0;
 
-        // Prépare un "prefab" (on ne l'ajoute pas directement)
-        var template = base;
-
-        // Fabrique 4 osselets espacés
-        var N = 4;
-        var bones = [];
-        for (var i=0;i<N;i++){
-          var root = template.clone(true);
-          // reset mat refs le cas échéant
-          root.traverse(function(obj){
-            if (obj.isMesh){
-              obj.material = obj.material && obj.material.isMeshStandardMaterial
-                ? obj.material.clone()
-                : new THREE.MeshStandardMaterial({ color:0xdddddd, roughness:0.65, metalness:0.05 });
-              obj.castShadow = true; obj.receiveShadow=true;
-            }
-          });
-          // récupérer la première mesh trouvée
-          var mesh=null;
-          root.traverse(function(o){ if(o.isMesh && !mesh) mesh=o; });
-
-          // faces (ancres)
-          var faces = {};
-          root.traverse(function(o){
-            var name=(o.name||"").toUpperCase();
-            for (var k=0;k<FACE_NAMES.length;k++){
-              var nm = FACE_NAMES[k];
-              if (name.indexOf(nm)>=0){ faces[nm]=o; }
-            }
-          });
-
-          root.position.set(-0.9 + i*0.6, 0.05, (i%2? -0.15:0.15));
-          root.rotation.set(0, Math.random()*Math.PI*2, 0);
-          scene.add(root);
-          bones.push({ root:root, mesh:mesh, faces:faces, state:"idle", vel:new THREE.Vector3(), ang:new THREE.Vector3() });
-        }
-        bonesRef.current = bones;
-
-        // lancer immédiat à la première montée
-        rollAll();
-
-        // boucle
-        function frame(){
-          fit();
-          if (controlsRef.current) controlsRef.current.update();
-          stepPhysics();
-          renderer.render(scene, cam);
-          rafRef.current = requestAnimationFrame(frame);
-        }
-        frame();
-
-      }).catch(function(err){
-        console.warn("[L3] GLB load error:", err);
-        function frame(){
-          fit();
-          if (controlsRef.current) controlsRef.current.update();
-          renderer.render(scene, cam);
-          rafRef.current = requestAnimationFrame(frame);
-        }
-        frame();
+    const area = 0.6;
+    for (let i = 0; i < COUNT; i++) {
+      const base = _root.userData._astragalus;
+      const mesh = base.clone(true);
+      mesh.traverse((o) => {
+        if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
       });
+      mesh.position.set(
+        (Math.random() - 0.5) * area,
+        0.4 + Math.random() * 0.2,
+        (Math.random() - 0.5) * area
+      );
+      mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      _root.add(mesh);
 
-      function fit(){
-        var wrap = wrapRef.current; if(!wrap) return;
-        var w = wrap.clientWidth || 960;
-        var h = Math.round(w * 9/16);
-        var dpr = Math.min(2.5, window.devicePixelRatio || 1);
-        sizeRef.current = { w:w, h:h, dpr:dpr };
-        renderer.setPixelRatio(dpr);
-        renderer.setSize(w, h, false);
-        cam.aspect = w / h;
-        cam.updateProjectionMatrix();
-      }
+      const body = mkBody(mesh);
+      body.v.set((Math.random() - 0.5) * 0.6, 0.0, (Math.random() - 0.5) * 0.6);
+      body.w.set((Math.random() - 0.5) * 6.0, (Math.random() - 0.5) * 6.0, (Math.random() - 0.5) * 6.0);
+      _bones.push(body);
+    }
+  }
 
-      // Physique simple: chute + rotation + frottements + "snap" propre face
-      var tmpQ = new THREE.Quaternion();
-      var up = new THREE.Vector3(0,1,0);
-      function stepPhysics(){
-        var bones = bonesRef.current; if(!bones.length) return;
-        var anyRolling = false;
+  function step(dt) {
+    // simple intégration
+    const g = -4.5; // gravité
+    for (const b of _bones) {
+      if (!b.settled) {
+        b.v.y += g * dt;
+        b.mesh.position.addScaledVector(b.v, dt);
+        // sol
+        if (b.mesh.position.y < 0.06) {
+          b.mesh.position.y = 0.06;
+          b.v.y *= -0.25; // rebond amorti
+          b.v.x *= 0.85; b.v.z *= 0.85;
+          b.w.multiplyScalar(0.7);
+        }
+        // friction
+        b.v.x *= 0.993; b.v.z *= 0.993;
+        // rotation
+        const e = new T.Euler(b.w.x * dt, b.w.y * dt, b.w.z * dt, "XYZ");
+        b.mesh.quaternion.multiply(new T.Quaternion().setFromEuler(e));
 
-        for (var i=0;i<bones.length;i++){
-          var b = bones[i];
-          if (b.state==="settled") continue;
-          anyRolling = true;
-
-          // vitesse initiale si state idle → rolling
-          if (b.state==="idle"){
-            b.state="rolling";
-            b.vel.set((Math.random()*0.6+0.4)*(Math.random()<.5?1:-1), 0.0, (Math.random()*0.6+0.4)*(Math.random()<.5?1:-1));
-            b.ang.set((Math.random()*4+2), (Math.random()*4+2), (Math.random()*4+2));
-            // petit lift
-            b.root.position.y = 0.35 + Math.random()*0.15;
+        // near rest ?
+        const lin = Math.hypot(b.v.x, b.v.y, b.v.z);
+        const ang = Math.hypot(b.w.x, b.w.y, b.w.z);
+        if (lin < 0.03 && ang < 0.6) {
+          b.settleTimer += dt;
+          if (b.settleTimer > 0.25) {
+            b.settled = true;
+            // snap progressif
+            snapToStable(b);
           }
-
-          // gravité + déplacement
-          b.root.position.x += b.vel.x * 0.016;
-          b.root.position.z += b.vel.z * 0.016;
-          b.root.position.y += (b.root.position.y>0.05 ? -9.8*0.016*0.35 : 0);
-
-          // rotation continue
-          b.root.rotateX(b.ang.x*0.016);
-          b.root.rotateY(b.ang.y*0.016);
-          b.root.rotateZ(b.ang.z*0.016);
-
-          // friction au sol
-          if (b.root.position.y <= 0.05){
-            b.root.position.y = 0.05;
-            b.vel.multiplyScalar(0.92);
-            b.ang.multiplyScalar(0.90);
-          } else {
-            b.vel.multiplyScalar(0.995);
-            b.ang.multiplyScalar(0.995);
-          }
-
-          // seuil d’arrêt → snap to top face
-          if (b.root.position.y<=0.051 && b.vel.length()<0.08 && b.ang.length()<0.28){
-            snapToTopFace(b);
-            b.state="settled";
-          }
-        }
-
-        // repoussement horizontal (évite empilement/chevauchement)
-        for (var a=0;a<bones.length;a++){
-          for (var c=a+1;c<bones.length;c++){
-            var A=bones[a].root.position, B=bones[c].root.position;
-            var dx=B.x-A.x, dz=B.z-A.z; var d=Math.sqrt(dx*dx+dz*dz);
-            var minD=0.28;
-            if (d>0 && d<minD){
-              var push=(minD-d)*0.5;
-              var nx=dx/d, nz=dz/d;
-              bones[a].root.position.x -= nx*push;
-              bones[a].root.position.z -= nz*push;
-              bones[c].root.position.x += nx*push;
-              bones[c].root.position.z += nz*push;
-            }
-          }
-        }
-
-        if (!anyRolling && rollingRef.current){
-          rollingRef.current=false;
-          // calcule score total
-          var sum=0;
-          for (var j=0;j<bones.length;j++){
-            var nm = getTopFaceName(bones[j]) || "FACE_6";
-            sum += FACE_POINTS[nm] || 0;
-          }
-          scoreRef.current = sum;
-          _force(); // refresh UI
+        } else {
+          b.settleTimer = 0;
         }
       }
+    }
+    // glissement latéral si contact
+    resolvePairs(_bones);
 
-      function getTopFaceName(b){
-        // choisit l’ancre dont l’axe local +Y est le plus aligné avec le monde +Y
-        var best=null, bestDot=-1;
-        for (var k=0;k<FACE_NAMES.length;k++){
-          var fn = FACE_NAMES[k];
-          var o = b.faces[fn];
-          if (!o) continue;
-          // normal monde de l’axe Y local
-          var n = new THREE.Vector3(0,1,0);
-          o.updateWorldMatrix(true, false);
-          o.getWorldQuaternion(tmpQ);
-          n.applyQuaternion(tmpQ);
-          var d = n.dot(up);
-          if (d>bestDot){ bestDot=d; best=fn; }
+    // si tout posé → score
+    if (_bones.length && _bones.every((b) => b.settled)) {
+      let total = 0;
+      for (const b of _bones) {
+        const idx = faceUpIndex(b.mesh.quaternion.clone());
+        total += FACE_VALUES[idx];
+      }
+      if (_scoreEl) _scoreEl.textContent = `Score: ${total}`;
+    } else {
+      if (_scoreEl) _scoreEl.textContent = "Score: …";
+    }
+  }
+
+  function frame(t) {
+    const dt = Math.min(1 / 30, (_renderer.clock?.getDelta?.() ?? 0.016));
+    step(dt);
+    _renderer.render(_scene, _camera);
+    if (_running) _raf = requestAnimationFrame(frame);
+  }
+
+  async function init(container) {
+    _container = typeof container === "string" ? document.querySelector(container) : container;
+    if (!_container) { console.error("[L3] container introuvable"); return; }
+
+    _scene = new T.Scene();
+    _scene.fog = new T.Fog(BG, 3, 8);
+
+    _camera = new T.PerspectiveCamera(45, 16 / 9, 0.01, 100);
+    _renderer = makeRenderer();
+    _renderer.clock = new T.Clock();
+
+    _container.innerHTML = "";
+    _container.appendChild(_renderer.domElement);
+    _scoreEl = makeScoreEl();
+    _container.appendChild(_scoreEl);
+
+    addLights(_scene);
+    addGround(_scene);
+
+    // caméra
+    _camera.position.set(1.1, 0.9, 1.1);
+    _camera.lookAt(0, 0.05, 0);
+
+    // resize
+    fitRenderer();
+    _resizeObs = new ResizeObserver(fitRenderer);
+    _resizeObs.observe(_container);
+
+    _root = new T.Group();
+    _scene.add(_root);
+
+    // charge modèle une fois
+    try {
+      if (!GLTFCls) throw new Error("GLTFLoader indisponible");
+      const loader = new GLTFCls();
+      const urls = _modelUrl ? [_modelUrl] : MODEL_CANDIDATES;
+      const base = await new Promise(async (resolve, reject) => {
+        let ok = null;
+        for (const u of urls) {
+          // eslint-disable-next-line no-await-in-loop
+          ok = await new Promise((o) =>
+            loader.load(u, (g) => o({ g, u }), undefined, () => o(null))
+          );
+          if (ok) break;
         }
-        return best;
-      }
-
-      function snapToTopFace(b){
-        var fn = getTopFaceName(b);
-        if (!fn) return;
-        var o = b.faces[fn];
-
-        // on veut que l’axe Y local de cette face devienne +Y monde
-        var qFace = new THREE.Quaternion();
-        o.updateWorldMatrix(true,false);
-        o.getWorldQuaternion(qFace);
-
-        // vecteur normal actuel
-        var n = new THREE.Vector3(0,1,0).applyQuaternion(qFace);
-        // quaternion qui aligne n sur up
-        var qAlign = new THREE.Quaternion().setFromUnitVectors(n.normalize(), up.clone());
-        // nouvelle orientation de la racine
-        var qRoot = b.root.quaternion.clone();
-        b.root.quaternion.premultiply(qAlign);
-
-        // stabilise au sol
-        b.root.position.y = 0.05;
-        // petite secousse amortie
-        b.vel.setScalar(0);
-        b.ang.setScalar(0);
-      }
-
-      // Lancer tout
-      function rollAll(){
-        var bones = bonesRef.current; if(!bones.length) return;
-        rollingRef.current = true;
-        scoreRef.current = 0; _force();
-        for (var i=0;i<bones.length;i++){
-          var b=bones[i];
-          b.state="idle"; // sera initialisé au prochain step
-          // relance positions de départ (éviter collisions fortes)
-          b.root.position.set(-0.9 + i*0.6, 0.35+Math.random()*0.15, (i%2? -0.15:0.15));
-          b.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-          b.vel.setScalar(0); b.ang.setScalar(0);
+        if (!ok) reject(new Error("load fail")); else resolve(ok.g);
+      });
+      const astr = (base.scene || base.scenes?.[0]).clone(true);
+      astr.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true; o.receiveShadow = true;
+          if (o.material) { o.material.depthTest = true; o.material.depthWrite = true; }
         }
-      }
+      });
+      // scale to ~12cm diag
+      const box = new T.Box3().setFromObject(astr);
+      const size = box.getSize(new T.Vector3()).length();
+      const scale = 0.18 / size;
+      astr.scale.setScalar(scale);
+      astr.position.set(0, 0.06, 0);
+      _root.userData._astragalus = astr;
 
-      // expose un handler pour bouton externe éventuel
-      wrap.__roll = rollAll;
-
-      // boucle & cleanup gérés plus haut
-      function cleanup(){
-        cancelAnimationFrame(rafRef.current||0);
-        rafRef.current = 0;
-        if (controlsRef.current){ controlsRef.current.dispose(); controlsRef.current=null; }
-        if (rendererRef.current){
-          var el = rendererRef.current.domElement;
-          if (el && el.parentNode) el.parentNode.removeChild(el);
-          rendererRef.current.dispose();
-          rendererRef.current=null;
-        }
-        sceneRef.current=null; cameraRef.current=null;
-      }
-      return cleanup;
-    }, []);
-
-    // Bouton interne « Lancer » (n’interfère pas avec les boutons globaux)
-    function onRoll(){
-      var wrap = wrapRef.current; if (wrap && wrap.__roll) wrap.__roll();
+      // premier lancer
+      throwBones();
+    } catch (e) {
+      console.error("[L3] GLB load error:", e);
     }
 
-    return (
-      React.createElement("div", {style:{position:"relative", width:"100%", aspectRatio:"16/9", border:"1px solid #e5e7eb", borderRadius:"12px", overflow:"hidden"}},
-        React.createElement("div", {ref:wrapRef, style:{width:"100%", height:"100%"} }),
-        React.createElement("div", {style:{position:"absolute", left:12, top:12, display:"flex", gap:"8px"}},
-          React.createElement("button", {onClick:onRoll, style:{
-            padding:"8px 12px", border:"1px solid #111827", borderRadius:"12px", background:"#111827", color:"#fff", cursor:"pointer"
-          }}, "Lancer"),
-          React.createElement("div", {style:{
-            padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:"12px", background:"#fff", fontWeight:600
-          }}, "Score: ", scoreRef.current)
-        )
-      )
-    );
+    _running = true;
+    _raf = requestAnimationFrame(frame);
   }
 
-  window.AstragalusLevel3 = AstragalusLevel3;
+  function stop() {
+    _running = false;
+    if (_raf) cancelAnimationFrame(_raf);
+    if (_resizeObs && _container) { try { _resizeObs.unobserve(_container); } catch (_) {} }
+    if (_renderer?.domElement?.parentNode) _renderer.domElement.parentNode.removeChild(_renderer.domElement);
+    if (_scoreEl?.parentNode) _scoreEl.parentNode.removeChild(_scoreEl);
+    _renderer?.dispose?.();
+    _scene = _camera = _renderer = _container = _scoreEl = null;
+    _bones.length = 0;
+  }
+
+  // --------- Public API ---------
+  window.OsseletsLevel3 = {
+    start: init,
+    stop,
+    roll() { if (_root?.userData?._astragalus) throwBones(); },
+    setModelUrl(u) { _modelUrl = u; },
+  };
 })();
-</script>
