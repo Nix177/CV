@@ -1,73 +1,40 @@
 // public/osselets-level2.tsx
 // LEVEL 2 — « Écrire avec les os » (24 trous / 4 faces opposées)
-// - Utilise le modèle troué: /assets/games/osselets/level2/3d/astragalus.glb
-// - Projette les nœuds Hole_* en 2D (960×540). Fallback cercle si ancres absentes.
-// - Charge Three.js + GLTFLoader UNE SEULE FOIS via CDN UMD (r146: examples/js/...)
-// - Aucune dépendance externe au parent (pas de “Start” ici).
+// - Modèle troué : /assets/games/osselets/level2/3d/astragalus.glb (nœuds Hole_*)
+// - Projette les nœuds en 2D (960×540). Fallback cercle si ancres absentes.
+// - Chargement Three.js/GLTFLoader via ES Modules (docs officielles) avec import() et ?module.
+// - Isolé dans une IIFE pour éviter tout “Identifier ... already been declared”.
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
 
   /* -------------------- Chemins & constantes -------------------- */
-  const L2_BASE = "/assets/games/osselets/level2/";
+  const L2_BASE   = "/assets/games/osselets/level2/";
   const MODEL_URL = L2_BASE + "3d/astragalus.glb";
   const LETTERS_URL = L2_BASE + "3d/letters.json"; // optionnel
 
   const L2_W = 960, L2_H = 540, DPR_MAX = 2.5;
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
-  /* -------------------- Loader Three global (une seule fois) -------------------- */
-  function loadScript(url){
-    return new Promise((resolve,reject)=>{
-      const s=document.createElement("script");
-      s.src=url; s.async=false; s.crossOrigin="anonymous";
-      s.onload=()=>resolve(true);
-      s.onerror=()=>reject(new Error("load fail "+url));
-      document.head.appendChild(s);
-    });
-  }
-  function cdnSeq(urls){
-    return urls.reduce((p,url)=>p.catch(()=>loadScript(url)), Promise.reject());
-  }
-  function ensureThree(){
-    // Réutilise si déjà prêt.
-    if (window.__threeReadyPromise) return window.__threeReadyPromise;
-
-    // r146 = dernière avec UMD examples/js/GLTFLoader.js
-    const V = "0.146.0";
-    const threeCDNs = [
-      `https://unpkg.com/three@${V}/build/three.min.js`,
-      `https://cdn.jsdelivr.net/npm/three@${V}/build/three.min.js`
-    ];
-    const gltfCDNs = [
-      `https://unpkg.com/three@${V}/examples/js/loaders/GLTFLoader.js`,
-      `https://cdn.jsdelivr.net/npm/three@${V}/examples/js/loaders/GLTFLoader.js`
-    ];
-
-    window.__threeReadyPromise = (async ()=>{
-      // Si déjà chargé (par une autre section), ne rien refaire.
-      if (window.THREE && (window.THREE.GLTFLoader || window.GLTFLoader)) {
-        return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader || window.GLTFLoader };
-      }
-      // Three d’abord
-      if (!window.THREE) {
-        await cdnSeq(threeCDNs);
-      }
-      // Puis GLTFLoader UMD
-      if (!(window.THREE && (window.THREE.GLTFLoader || window.GLTFLoader))) {
-        await cdnSeq(gltfCDNs);
-      }
-      return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader || window.GLTFLoader };
-    })().catch((e)=>{ console.error(e); return null; });
-
-    return window.__threeReadyPromise;
+  /* -------------------- Loader Three — ES Modules (docs) -------------------- */
+  // https://threejs.org/docs/#examples/en/loaders/GLTFLoader
+  // Import dynamique depuis unpkg avec ?module (réécrit les imports “bare”).
+  function ensureThreeESM(){
+    if (window.__threeESMPromise) return window.__threeESMPromise;
+    const V = "0.158.0";
+    const threeURL  = `https://unpkg.com/three@${V}/build/three.module.js?module`;
+    const gltfURL   = `https://unpkg.com/three@${V}/examples/jsm/loaders/GLTFLoader.js?module`;
+    window.__threeESMPromise = (async ()=>{
+      const THREE = await import(threeURL);
+      const { GLTFLoader } = await import(gltfURL);
+      return { THREE, GLTFLoader };
+    })().catch((e)=>{ console.error("[L2] three esm load fail:", e); return null; });
+    return window.__threeESMPromise;
   }
 
-  /* -------------------- Utils -------------------- */
   const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
   const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
 
-  /* -------------------- Composant -------------------- */
   function AstragalusLevel2(){
     const wrapRef = useRef(null);
     const glCanvasRef = useRef(null);
@@ -79,10 +46,13 @@
     const cameraRef = useRef(null);
     const modelRef = useRef(null);
     const anchorsRef = useRef([]);
-    const sizeRef = useRef({ w:L2_W, h:L2_H, dpr:1 });
+
+    const THREEref = useRef(null);
 
     const holes = useRef([]);           // [{x,y,label,index}]
-    const currentLine = useRef([]);     // indices cliqués
+    const currentLine = useRef<number[]>([]);
+
+    const sizeRef = useRef({ w:L2_W, h:L2_H, dpr:1 });
 
     const [ready,setReady] = useState(false);
     const [msg,setMsg] = useState("24 trous (6 par face) reliés aux 24 lettres grecques. Suis le fil pour épeler un mot.");
@@ -103,11 +73,9 @@
         const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
         sizeRef.current={w,h,dpr};
 
-        // GL
         if (renderer){ renderer.setPixelRatio(dpr); renderer.setSize(w,h,false); glc.style.width=w+"px"; glc.style.height=h+"px"; }
         if (cam){ cam.aspect=w/h; cam.updateProjectionMatrix(); }
 
-        // HUD
         hud.width=Math.floor(w*dpr); hud.height=Math.floor(h*dpr);
         hud.style.width=w+"px"; hud.style.height=h+"px";
         const ctx=hud.getContext("2d");
@@ -123,11 +91,12 @@
 
     /* ---------- Init Three + modèle ---------- */
     useEffect(()=>{
-      let cancelled=false;
+      let canceled=false;
       (async ()=>{
-        const libs = await ensureThree();
+        const libs = await ensureThreeESM();
         if (!libs){ setMsg("Impossible de charger Three.js/GLTFLoader."); return; }
         const { THREE, GLTFLoader } = libs;
+        THREEref.current = THREE;
 
         // Renderer
         const glc=glCanvasRef.current;
@@ -142,49 +111,50 @@
         scene.add(new THREE.AmbientLight(0xffffff,0.55));
         const dir = new THREE.DirectionalLight(0xffffff,0.8); dir.position.set(2.5,3.5,2.5); scene.add(dir);
 
-        // Tapis
         const floor = new THREE.Mesh(new THREE.PlaneGeometry(8,4.5), new THREE.MeshBasicMaterial({color:0x071425}));
         floor.rotation.x=-Math.PI/2; floor.position.y=-0.02; scene.add(floor);
 
         sceneRef.current=scene; cameraRef.current=cam;
 
-        // letters.json optionnel
+        // Config optionnelle
         const cfg = await fetchJSON(LETTERS_URL);
         if (cfg?.words?.length) WORDS.current = cfg.words.slice(0,6);
 
         // Modèle
         const loader = new GLTFLoader();
         loader.load(MODEL_URL, (gltf)=>{
-          if (cancelled) return;
+          if (canceled) return;
           const root = gltf.scene || gltf.scenes?.[0];
           if (!root){ setMsg("Modèle vide."); return; }
 
-          // matière/échelle
           root.traverse(o=>{
+            // matériau simple lisible
             if (o.isMesh){
-              o.material = new libs.THREE.MeshStandardMaterial({ color:0xf7efe7, roughness:0.6, metalness:0.05 });
+              o.material = new THREE.MeshStandardMaterial({ color:0xf7efe7, roughness:0.6, metalness:0.05 });
             }
           });
-          const box=new libs.THREE.Box3().setFromObject(root);
-          const s = 1.2/Math.max(...box.getSize(new libs.THREE.Vector3()).toArray());
+
+          // normalisation
+          const box=new THREE.Box3().setFromObject(root);
+          const s = 1.2/Math.max(...box.getSize(new THREE.Vector3()).toArray());
           root.scale.setScalar(s);
           box.setFromObject(root);
-          root.position.sub(box.getCenter(new libs.THREE.Vector3()));
+          root.position.sub(box.getCenter(new THREE.Vector3()));
           scene.add(root);
           modelRef.current=root;
 
-          // ancres Hole_*
+          // ancres
           const anchors=[];
           root.traverse(n=>{ if(/^Hole_/i.test(n.name)) anchors.push(n); });
           anchorsRef.current = anchors;
 
           setReady(true);
           loop();
-        }, undefined, (err)=>{ console.error(err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, (err)=>{ console.error("[L2] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
 
         function loop(){
-          if (cancelled) return;
-          if (modelRef.current) modelRef.current.rotation.y += 0.0035; // rotation douce
+          if (canceled) return;
+          if (modelRef.current) modelRef.current.rotation.y += 0.0035;
           projectHoles();
           renderer.render(scene,cameraRef.current);
           drawHUD();
@@ -192,16 +162,16 @@
         }
       })();
 
-      return ()=>{ cancelled=true; };
+      return ()=>{ canceled=true; };
     },[]);
 
     /* ---------- Projection trous ---------- */
     function projectHoles(){
-      const THREE=window.THREE;
-      const cam = cameraRef.current; if (!THREE || !cam) return;
-
+      const THREE=THREEref.current; const cam=cameraRef.current;
+      if (!THREE || !cam) return;
       const anchors = anchorsRef.current||[];
       const v = new THREE.Vector3();
+
       if (anchors.length===24){
         const {w,h}=sizeRef.current, sx=L2_W/w, sy=L2_H/h;
         holes.current = anchors.map((n,i)=>{
@@ -211,7 +181,7 @@
           return { x:px*sx, y:py*sy, label:GREEK[i], index:i };
         });
       } else if (holes.current.length!==24){
-        // Fallback cercle
+        // Fallback cercle 2D
         const cx=L2_W/2, cy=L2_H/2, R=Math.min(L2_W,L2_H)*0.38;
         holes.current = Array.from({length:24},(_,i)=>{
           const a=(i/24)*Math.PI*2 - Math.PI/2;
@@ -227,8 +197,8 @@
       const g=ctx.createLinearGradient(0,0,0,L2_H); g.addColorStop(0,"#071425"); g.addColorStop(1,"#05111f");
       ctx.fillStyle=g; ctx.fillRect(0,0,L2_W,L2_H);
 
-      // lignes
-      ctx.strokeStyle="#5eead4"; ctx.lineWidth=2;
+      // fil
+      ctx.strokeStyle="#60a5fa"; ctx.lineWidth=2;
       if (currentLine.current.length>1){
         ctx.beginPath();
         const p0=holes.current[currentLine.current[0]]; ctx.moveTo(p0.x,p0.y);
@@ -243,7 +213,7 @@
         ctx.fillText(p.label,p.x,p.y);
       }
 
-      // pied de page
+      // pied
       const w=WORDS.current[wordIdx]||WORDS.current[0];
       ctx.fillStyle="#e6f1ff"; ctx.font="16px ui-sans-serif, system-ui"; ctx.textAlign="start"; ctx.textBaseline="alphabetic";
       ctx.fillText(`Mot : ${w.gr} (${w.en})`, 16, L2_H-40);
@@ -251,7 +221,7 @@
       ctx.fillText(`Indice : ${w.hint}`, 16, L2_H-18);
     }
 
-    /* ---------- Interactions ---------- */
+    /* ---------- Clics ---------- */
     useEffect(()=>{
       function onClick(e){
         const hud=hudRef.current; if(!hud) return;
