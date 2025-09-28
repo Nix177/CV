@@ -1,75 +1,38 @@
 // public/osselets-level3.tsx
 // LEVEL 3 — « Rouler les os » (dés 1/3/4/6) avec votre modèle : /assets/games/osselets/level3/3d/astragalus_faces.glb
-// 4 astragales clonés, lancer aléatoire, lecture de la face +Y (ancres Face_1/3/4/6).
-// Three/GLTFLoader chargés d’abord en LOCAL (vendor/), sinon CDN, version *pinnée*.
+// ✅ Même pipeline ESM (three@0.158.0 + GLTFLoader), aucune injection <script>, aucune double instance.
+// ✅ 4 astragales clonés, lancer aléatoire, lecture de la face par orientation +Y d’ancres Face_1/3/4/6.
+// ✅ Boutons : Lancer / Réinitialiser. (Pas de “Start” ici.)
 
-;(()=> {
+;(() => {
   const { useEffect, useRef, useState } = React;
 
-  const L3_BASE    = "/assets/games/osselets/level3/";
-  const MODEL_URL  = L3_BASE + "3d/astragalus_faces.glb";
-  const VALUES_URL = L3_BASE + "3d/values.json";
+  const BASE     = "/assets/games/osselets/level3/";
+  const MODEL    = BASE + "3d/astragalus_faces.glb"; // votre modèle faces
+  const VALUESJS = BASE + "3d/values.json";          // mapping optionnel { "1":1, "3":3, ... }
 
-  const W = 960, H = 540, DPR_MAX = 2.5;
+  const VIEW_W = 960, VIEW_H = 540, DPR_MAX = 2.5;
   const COUNT = 4, FLOOR_Y = 0, GRAV = -14.5, REST = 0.45, FRIC = 0.92, AFRIC = 0.94, EPS = 0.18, STABLE_MS = 800;
 
-  /* -------------------- Loader Three global (identique L2) -------------------- */
-  const VER = "0.158.0";
-  const VENDOR_CANDIDATES = [
-    "/assets/games/osselets/vendor/",
-    "/assets/vendor/",
-    "/vendor/",
-  ];
-  function injectScript(src){
-    return new Promise((res, rej) => {
-      const s = document.createElement("script");
-      s.src = src; s.async = true; s.onload = () => res(src); s.onerror = (e)=>rej(e||new Event("error"));
-      document.head.appendChild(s);
-    });
-  }
-  async function loadFirst(urls, check){
-    for (let i=0;i<urls.length;i++){
-      try { await injectScript(urls[i]); if (!check || check()) return urls[i]; } catch {}
-    }
-    throw new Error("loadFirst failed");
-  }
-  async function ensureThreeGlobal(){
-    if (window.__threeGlobalPromise) return window.__threeGlobalPromise;
-    window.__threeGlobalPromise = (async () => {
-      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
+  const THREE_VER = "0.158.0";
+  const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
+  const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
 
-      const local3 = [], localGL=[];
-      for (const base of VENDOR_CANDIDATES){
-        local3.push(base + "three.min.js", base + "build/three.min.js");
-        localGL.push(base + "GLTFLoader.js", base + "examples/js/loaders/GLTFLoader.js");
-      }
-      try { await loadFirst(local3, ()=>!!window.THREE); } catch {}
-      if (window.THREE){ try { await loadFirst(localGL, ()=>!!window.THREE.GLTFLoader); } catch {} }
-      if (window.THREE && window.THREE.GLTFLoader) return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
-
-      const cdn3 = [
-        `https://unpkg.com/three@${VER}/build/three.min.js`,
-        `https://cdn.jsdelivr.net/npm/three@${VER}/build/three.min.js`,
-      ];
-      const cdnGL = [
-        `https://unpkg.com/three@${VER}/examples/js/loaders/GLTFLoader.js`,
-        `https://cdn.jsdelivr.net/npm/three@${VER}/examples/js/loaders/GLTFLoader.js`,
-      ];
-      try { await loadFirst(cdn3, ()=>!!window.THREE); } catch (e){ console.error("[L3] three load fail:", e); }
-      if (window.THREE){ try { await loadFirst(cdnGL, ()=>!!window.THREE.GLTFLoader); } catch (e){ console.error("[L3] gltfloader load fail:", e); } }
-
-      if (!(window.THREE && window.THREE.GLTFLoader)) throw new Error("Three/GLTFLoader indisponible");
-      return { THREE: window.THREE, GLTFLoader: window.THREE.GLTFLoader };
-    })();
-    return window.__threeGlobalPromise;
+  async function ensureThreeOnce(){
+    if ((window as any).__LxThree) return (window as any).__LxThree;
+    const THREE = await import(THREE_URL);
+    const { GLTFLoader } = await import(GLTF_URL);
+    const out = { THREE, GLTFLoader };
+    (window as any).__LxThree = out;
+    return out;
   }
 
   function clamp(n,a,b){ return Math.max(a,Math.min(b,n)); }
   const now = ()=> (typeof performance!=="undefined"?performance:Date).now();
   async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok) return await r.json(); }catch(e){} return null; }
 
-  function extractAnchorsFaces(root){
-    const out=[];
+  function extractFaceAnchors(root){
+    const out=[]; // {node, tag: "1"|"3"|"4"|"6"}
     root.traverse((n)=>{
       const nm=(n.name||"").toLowerCase();
       let tag=null;
@@ -77,19 +40,17 @@
       else if (/^face[_\s-]?3$|^f3$|value[_\s-]?3$|valeur[_\s-]?3$/.test(nm)) tag="3";
       else if (/^face[_\s-]?4$|^f4$|value[_\s-]?4$|valeur[_\s-]?4$/.test(nm)) tag="4";
       else if (/^face[_\s-]?6$|^f6$|value[_\s-]?6$|valeur[_\s-]?6$/.test(nm)) tag="6";
-      if (tag) out.push({ node:n, tag:tag });
+      if (tag) out.push({ node:n, tag });
     });
     return out;
   }
-  function topFaceByOrientation(anchors, THREE){
-    if (!anchors || !anchors.length) return null;
-    const up = new THREE.Vector3(0,1,0), y = new THREE.Vector3(0,1,0);
-    const q = new THREE.Quaternion();
-    let best=null, bestDot=-1e9;
-    for (let i=0;i<anchors.length;i++){
-      const a=anchors[i];
+  function faceUpTag(anchors, THREE){
+    if (!anchors || !anchors.length) return "?";
+    const up = new THREE.Vector3(0,1,0), Y = new THREE.Vector3(0,1,0), q = new THREE.Quaternion();
+    let best="?", bestDot=-1e9;
+    for (const a of anchors){
       a.node.getWorldQuaternion(q);
-      const yw = y.clone().applyQuaternion(q).normalize();
+      const yw = Y.clone().applyQuaternion(q).normalize();
       const d = yw.dot(up);
       if (d>bestDot){ bestDot=d; best=a.tag; }
     }
@@ -97,8 +58,9 @@
   }
 
   function AstragalusLevel3(){
-    const wrapRef   = useRef(null);
+    const wrapRef = useRef(null);
     const canvasRef = useRef(null);
+
     const [ready,setReady] = useState(false);
     const [throwing,setThrowing] = useState(false);
     const [vals,setVals] = useState([]);
@@ -113,19 +75,19 @@
     const diceRef = useRef([]);  // {root, anchors, vel, angVel, stableSince}
     const reqRef = useRef(0);
     const lastRef = useRef(0);
-    const mapRef = useRef(null);
+    const mappingRef = useRef(null);
 
     /* ---------- Resize ---------- */
     useEffect(()=>{
       function onResize(){
         const THREE=THREEref.current; if(!THREE) return;
-        const wrap=wrapRef.current, canvas=canvasRef.current, renderer=rendererRef.current, cam=cameraRef.current;
-        if (!wrap || !canvas || !renderer || !cam) return;
-        const w=Math.max(320, wrap.clientWidth|0), h=Math.round(w*(H/W));
+        const wrap=wrapRef.current, cv=canvasRef.current, r=rendererRef.current, cam=cameraRef.current;
+        if(!wrap||!cv||!r||!cam) return;
+        const w=Math.max(320, wrap.clientWidth|0), h=Math.round(w*(VIEW_H/VIEW_W));
         const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
-        renderer.setPixelRatio(dpr);
-        renderer.setSize(w,h,false);
-        canvas.style.width=w+"px"; canvas.style.height=h+"px";
+        r.setPixelRatio(dpr);
+        r.setSize(w,h,false);
+        cv.style.width=w+"px"; cv.style.height=h+"px";
         cam.aspect=w/h; cam.updateProjectionMatrix();
       }
       onResize();
@@ -140,11 +102,9 @@
       let cancelled=false;
       (async ()=>{
         let libs=null;
-        try { libs = await ensureThreeGlobal(); }
-        catch (e){ console.error("[L3] Three/GLTFLoader load fail:", e); setMsg("Three.js/GLTFLoader manquant."); return; }
-        if (!libs){ setMsg("Three.js/GLTFLoader manquant."); return; }
-        const { THREE } = libs;
-        THREEref.current = THREE;
+        try { libs = await ensureThreeOnce(); }
+        catch (e){ console.error("[L3] import three ESM:", e); setMsg("Three.js/GLTFLoader manquant."); return; }
+        const { THREE, GLTFLoader } = libs; THREEref.current = THREE;
 
         // Renderer
         const renderer=new THREE.WebGLRenderer({ canvas:canvasRef.current, antialias:true, alpha:true });
@@ -157,22 +117,21 @@
         const cam=new THREE.PerspectiveCamera(45,16/9,0.1,100); cam.position.set(6.4,4.7,7.4); cam.lookAt(0,0.7,0);
         sceneRef.current=scene; cameraRef.current=cam;
 
-        scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.8));
+        scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.85));
         const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
-        dir.castShadow=true; dir.shadow.mapSize.set(1024,1024);
-        scene.add(dir);
+        dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); scene.add(dir);
 
         const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,22), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
         ground.rotation.x=-Math.PI/2; ground.position.y=FLOOR_Y; ground.receiveShadow=true; scene.add(ground);
 
         const ring=new THREE.Mesh(new THREE.RingGeometry(0.01,8,64), new THREE.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:THREE.DoubleSide}));
-        ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.005; scene.add(ring);
+        ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.003; scene.add(ring);
 
-        mapRef.current = await getJSON(VALUES_URL);
+        mappingRef.current = await getJSON(VALUESJS);
 
         // Modèle
-        const loader=new window.THREE.GLTFLoader();
-        loader.load(MODEL_URL, (gltf)=>{
+        const loader = new GLTFLoader();
+        loader.load(MODEL, (gltf)=>{
           if (cancelled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base){ setMsg("Modèle vide."); return; }
           base.traverse((o)=>{
@@ -184,7 +143,7 @@
           });
           // normalisation
           const box=new THREE.Box3().setFromObject(base);
-          const s = 1.6/Math.max.apply(null, box.getSize(new THREE.Vector3()).toArray());
+          const s = 1.6/Math.max(...box.getSize(new THREE.Vector3()).toArray());
           base.scale.setScalar(s);
           box.setFromObject(base);
           base.position.sub(box.getCenter(new THREE.Vector3()));
@@ -196,7 +155,7 @@
             const g=base.clone(true); scene.add(g);
             dice.push({
               root:g,
-              anchors: extractAnchorsFaces(g),
+              anchors: extractFaceAnchors(g),
               vel:new THREE.Vector3(),
               angVel:new THREE.Vector3(),
               stableSince:0
@@ -207,7 +166,7 @@
           layoutDice();
           setReady(true);
           startLoop();
-        }, undefined, (err)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement : "+MODEL_URL); });
+        }, undefined, (err)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement du modèle."); });
 
         function startLoop(){
           lastRef.current=now();
@@ -227,7 +186,7 @@
 
     /* ---------- Physique simple ---------- */
     function layoutDice(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
       for(let i=0;i<dice.length;i++){
         const d=dice[i];
         d.root.position.set(-2.2 + i*1.5, 0.82, (i%2===0)? -0.6 : 0.7);
@@ -238,7 +197,7 @@
       }
     }
     function randomThrow(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
       for(let i=0;i<dice.length;i++){
         const d=dice[i];
         d.root.position.set(-3.5 + i*0.6, 2.2 + Math.random()*0.8, -1.8 + Math.random()*3.4);
@@ -250,10 +209,9 @@
       setVals([]); setThrowing(true); setMsg("Lancer ! (attendre l’arrêt)");
     }
     function step(dt){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice||!dice.length) return;
+      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
       let allStable=true;
-      for(let i=0;i<dice.length;i++){
-        const d=dice[i];
+      for(const d of dice){
         d.vel.y += GRAV*dt;
         d.root.position.addScaledVector(d.vel, dt);
 
@@ -281,10 +239,9 @@
       }
       if (throwing && allStable){
         setThrowing(false);
-        const out=[]; const map=mapRef.current && mapRef.current.map;
-        for(let j=0;j<dice.length;j++){
-          const d2=dice[j];
-          let tag = topFaceByOrientation(d2.anchors, THREE) || "?";
+        const out=[]; const map=mappingRef.current && mappingRef.current.map;
+        for(const d of dice){
+          let tag = faceUpTag(d.anchors, THREE) || "?";
           if (map && map[tag]!=null) tag=String(map[tag]);
           out.push(tag);
         }
@@ -330,10 +287,12 @@
                 <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
                 <div style={{fontSize:14}}>
                   {vals.join("  ")}
-                  <span style={{marginLeft:10, color:"#64748b"}}>Somme: {vals.filter((v)=>/^\d+$/.test(v)).map((n)=>+n).reduce((a,b)=>a+b,0)}</span>
+                  <span style={{marginLeft:10, color:"#64748b"}}>
+                    Somme: {vals.filter((v)=>/^\d+$/.test(v)).map((n)=>+n).reduce((a,b)=>a+b,0)}
+                  </span>
                 </div>
                 <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
-                  Catégories : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 “6”), Trina (triple), Bina (deux paires), Simple (autres).
+                  Catégories antiques : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 faces «6»), Trina (triple), Bina (deux paires), Simple (autres).
                 </div>
               </div>
             )}
