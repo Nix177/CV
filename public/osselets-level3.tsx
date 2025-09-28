@@ -1,281 +1,279 @@
-/* public/osselets-level3.tsx */
-/* global React, ReactDOM, THREE, GLTFLoader */
-
+<script>
+/* Level 3 – Lancer 4 astragales (plain JS) */
 (function () {
-  const { useEffect, useRef, useState } = React;
+  var MODEL_URL   = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
+  var VALUES_URL  = "/assets/games/osselets/level3/3d/values.json"; // optionnel
 
-  function tryPaths(paths) {
-    return new Promise((resolve, reject) => {
-      let i = 0;
-      const step = () => {
-        if (i >= paths.length) return reject(new Error("no candidate path"));
-        const url = paths[i++];
-        fetch(url, { method: "HEAD", cache: "no-store" })
-          .then((r) => (r.ok ? resolve(url) : step()))
-          .catch(step);
-      };
-      step();
-    });
+  function fit(renderer, camera, container) {
+    var w = container.clientWidth || 640;
+    var h = container.clientHeight || 360;
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
   }
 
-  // Rotations discrètes (faces stables)
-  var SNAP_ROTATIONS = [
-    new THREE.Euler(0, 0, 0),
-    new THREE.Euler(Math.PI / 2, 0, 0),
-    new THREE.Euler(-Math.PI / 2, 0, 0),
-    new THREE.Euler(0, 0, Math.PI / 2),
-    new THREE.Euler(0, 0, -Math.PI / 2),
-    new THREE.Euler(Math.PI, 0, 0),
-  ];
-  function nearestSnap(q) {
-    var best = 0, bestDot = -Infinity, qt = new THREE.Quaternion();
-    for (var i = 0; i < SNAP_ROTATIONS.length; i++) {
-      qt.setFromEuler(SNAP_ROTATIONS[i]);
-      var d = Math.abs(q.dot(qt));
-      if (d > bestDot) { bestDot = d; best = i; }
-    }
-    return new THREE.Quaternion().setFromEuler(SNAP_ROTATIONS[best]);
-  }
+  function choose(arr) { return arr[(Math.random()*arr.length)|0]; }
 
-  function faceNameFromQuat(q) {
-    var up = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
-    var ax = Math.abs(up.x), ay = Math.abs(up.y), az = Math.abs(up.z);
-    if (ay >= ax && ay >= az) return "Venus (4)";
-    if (ax >= ay && ax >= az) return up.x > 0 ? "Canis (3)" : "Senio (6)";
-    return up.z > 0 ? "Vultures (1)" : "Bina (2)";
-  }
+  function createL3(container) {
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf5f7fb);
 
-  function AstragalusLevel3() {
-    const hostRef = useRef(null);
-    const rendererRef = useRef(null);
-    const sceneRef = useRef(null);
-    const camRef = useRef(null);
-    const bonesRef = useRef([]);
-    const frameRef = useRef(null);
-    const [ready, setReady] = useState(false);
-    const [err, setErr] = useState(null);
-    const [score, setScore] = useState("");
+    var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0, 26, 46);
 
-    function roll() {
-      for (var k = 0; k < bonesRef.current.length; k++) {
-        var b = bonesRef.current[k];
-        b.resting = false;
-        b.vel.set((Math.random() - 0.5) * 1.6, 2 + Math.random() * 1.4, (Math.random() - 0.5) * 1.6);
-        b.av.set((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6);
-        b.mesh.position.set((Math.random() - 0.5) * 0.9, 0.45 + Math.random() * 0.3, (Math.random() - 0.5) * 0.9);
-        b.mesh.quaternion.setFromEuler(new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI));
-        b.targetQ = undefined;
-      }
-      setScore("");
-    }
+    var renderer = new THREE.WebGLRenderer({ antialias:true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    container.innerHTML = "";
+    container.appendChild(renderer.domElement);
 
-    useEffect(function mount() {
-      const host = hostRef.current;
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0b1220);
-      sceneRef.current = scene;
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.minDistance = 18;
+    controls.maxDistance = 80;
+    controls.target.set(0, 6, 0);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
-      if ("outputColorSpace" in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
-      else renderer.outputEncoding = THREE.sRGBEncoding;
-      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-      renderer.shadowMap.enabled = true;
-      rendererRef.current = renderer;
-      host.appendChild(renderer.domElement);
-
-      const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
-      camera.position.set(1.3, 1.1, 1.6);
-      camRef.current = camera;
-
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.7));
-      const key = new THREE.DirectionalLight(0xffffff, 0.85);
-      key.position.set(2, 2.4, 2.2);
-      key.castShadow = true;
-      key.shadow.mapSize.set(1024, 1024);
-      scene.add(key);
-
-      const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(8, 8),
-        new THREE.MeshStandardMaterial({ color: 0x0b2439, roughness: 1, metalness: 0 })
-      );
-      ground.rotation.x = -Math.PI / 2;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      const resize = () => {
-        const w = host.clientWidth || 640;
-        const h = host.clientHeight || Math.round((w * 9) / 16);
-        renderer.setSize(w, h, false);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-      };
-      resize();
-      const ro = new ResizeObserver(resize);
-      ro.observe(host);
-
-      var LoaderCtor = (THREE && THREE.GLTFLoader) || window.GLTFLoader;
-      if (!LoaderCtor) {
-        setErr("GLTFLoader manquant");
-      } else {
-        const loader = new LoaderCtor();
-        const candidates = [
-          "/assets/games/osselets/level3/3d/astragalus.glb",
-          "/assets/games/osselets/3d/astragalus.glb",
-          "/assets/games/osselets/models/astragalus.glb",
-          "/assets/games/osselets/astragalus.glb",
-        ];
-        tryPaths(candidates)
-          .then((url) => new Promise(function (resolve, reject) {
-            loader.load(url, function (g) { resolve(g.scene || (g.scenes && g.scenes[0]) || g); }, undefined, reject);
-          }))
-          .then(function (base) {
-            base.traverse(function (n) {
-              if (n.isMesh) {
-                n.castShadow = true; n.receiveShadow = true;
-                if (n.material) {
-                  n.material.depthWrite = true;
-                  n.material.depthTest = true;
-                  n.material.transparent = false;
-                }
-              }
-            });
-            var bbox = new THREE.Box3().setFromObject(base);
-            var size = new THREE.Vector3();
-            bbox.getSize(size);
-            var scale = 0.22 / Math.max(0.001, Math.max(size.x, size.y, size.z));
-            base.scale.setScalar(scale);
-            bbox.setFromObject(base);
-            var center = new THREE.Vector3();
-            bbox.getCenter(center);
-            base.position.sub(center);
-
-            var N = 4; // mets 5 si tu veux
-            var bones = [];
-            for (var i = 0; i < N; i++) {
-              var obj = base.clone(true);
-              obj.position.set((i - (N - 1) / 2) * 0.35, 0.35 + Math.random() * 0.2, (Math.random() - 0.5) * 0.35);
-              obj.quaternion.setFromEuler(new THREE.Euler(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI));
-              scene.add(obj);
-              bones.push({
-                mesh: obj,
-                vel: new THREE.Vector3((Math.random() - 0.5) * 1.2, 1.6 + Math.random(), (Math.random() - 0.5) * 1.2),
-                av: new THREE.Vector3((Math.random() - 0.5) * 5.0, (Math.random() - 0.5) * 5.0, (Math.random() - 0.5) * 5.0),
-                resting: false,
-                targetQ: undefined,
-              });
-            }
-            bonesRef.current = bones;
-            setReady(true);
-          })
-          .catch(function (e) {
-            console.warn("[L3] Échec chargement GLB", e);
-            setErr("Modèle introuvable");
-          });
-      }
-
-      // Simulation simple
-      var tmpQ = new THREE.Quaternion();
-      var gravity = new THREE.Vector3(0, -9.81, 0);
-      const loop = () => {
-        frameRef.current = requestAnimationFrame(loop);
-        var dt = 1 / 60;
-
-        var bones = bonesRef.current;
-        var allRest = true;
-
-        for (var bi = 0; bi < bones.length; bi++) {
-          var b = bones[bi];
-          if (b.resting) continue;
-          allRest = false;
-
-          b.vel.addScaledVector(gravity, dt * 0.25);
-          b.mesh.position.addScaledVector(b.vel, dt);
-
-          var ax = b.av.clone().multiplyScalar(dt);
-          tmpQ.setFromEuler(new THREE.Euler(ax.x, ax.y, ax.z));
-          b.mesh.quaternion.multiply(tmpQ).normalize();
-
-          if (b.mesh.position.y <= 0.02) {
-            b.mesh.position.y = 0.02;
-            b.vel.y *= -0.25;
-            b.vel.x *= 0.5; b.vel.z *= 0.5;
-            b.av.multiplyScalar(0.5);
-
-            var speed = b.vel.length() + b.av.length();
-            if (speed < 0.25) {
-              if (!b.targetQ) b.targetQ = nearestSnap(b.mesh.quaternion);
-              b.mesh.quaternion.slerp(b.targetQ, 0.2);
-              b.vel.multiplyScalar(0.5);
-              b.av.multiplyScalar(0.5);
-              if (b.mesh.quaternion.angleTo(b.targetQ) < 0.02) {
-                b.mesh.quaternion.copy(b.targetQ);
-                b.resting = true;
-              }
-            }
-          }
-        }
-
-        // anti-empilement
-        for (var i = 0; i < bones.length; i++) {
-          for (var j = i + 1; j < bones.length; j++) {
-            var A = bones[i], C = bones[j];
-            var d = A.mesh.position.clone().sub(C.mesh.position);
-            var dist = d.length();
-            if (dist > 0 && dist < 0.12) {
-              d.normalize();
-              var corr = (0.12 - dist) * 0.5;
-              A.mesh.position.addScaledVector(d, corr);
-              C.mesh.position.addScaledVector(d, -corr);
-              A.vel.addScaledVector(d, corr * 2);
-              C.vel.addScaledVector(d, -corr * 2);
-            }
-          }
-        }
-
-        if (allRest && bones.length) {
-          var labels = bones.map(function (b) { return faceNameFromQuat(b.mesh.quaternion); });
-          setScore(labels.join(" • "));
-        }
-
-        renderer.render(scene, camera);
-      };
-      loop();
-
-      return function cleanup() {
-        if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        ro.disconnect();
-        try { host.removeChild(renderer.domElement); } catch (e) {}
-        renderer.dispose();
-      };
-    }, []);
-
-    return (
-      <div ref={hostRef} style={{ width: "100%", height: "100%", position: "relative", aspectRatio: "16 / 9" }}>
-        {!ready && !err && (
-          <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#cfe2ff" }}>Chargement…</div>
-        )}
-        {err && (
-          <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#fecaca" }}>{err}</div>
-        )}
-        {ready && (
-          <div style={{ position: "absolute", left: 10, bottom: 10, display: "flex", gap: 8 }}>
-            <button onClick={roll} style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff" }}>Lancer</button>
-            <div style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid #334155", background: "#0b2237", color: "#e6f1ff" }}>
-              {score || "—"}
-            </div>
-          </div>
-        )}
-      </div>
+    // sol
+    var ground = new THREE.Mesh(
+      new THREE.CircleGeometry(120, 64),
+      new THREE.MeshPhongMaterial({ color: 0xe2e8f0 })
     );
+    ground.rotation.x = -Math.PI/2;
+    ground.position.y = 0;
+    scene.add(ground);
+
+    // lumières
+    scene.add(new THREE.AmbientLight(0xffffff, .7));
+    var d = new THREE.DirectionalLight(0xffffff, .9);
+    d.position.set(20,30,12);
+    scene.add(d);
+
+    // UI overlay (score)
+    var scoreDiv = document.createElement("div");
+    scoreDiv.style.position = "absolute";
+    scoreDiv.style.right = "12px";
+    scoreDiv.style.top = "10px";
+    scoreDiv.style.background = "#1f2937";
+    scoreDiv.style.color = "#fff";
+    scoreDiv.style.padding = "6px 10px";
+    scoreDiv.style.borderRadius = "10px";
+    scoreDiv.style.font = "14px ui-sans-serif,system-ui";
+    scoreDiv.textContent = "Score: —";
+    container.style.position = "relative";
+    container.appendChild(scoreDiv);
+
+    var loadingText = document.createElement("div");
+    loadingText.style.position="absolute";
+    loadingText.style.left="50%";
+    loadingText.style.top="50%";
+    loadingText.style.transform="translate(-50%,-50%)";
+    loadingText.style.color="#475569";
+    loadingText.style.font="14px ui-sans-serif,system-ui";
+    loadingText.textContent="Chargement du modèle 3D…";
+    container.appendChild(loadingText);
+
+    // assets
+    var glb = null;
+    var singleDie = null; // mesh racine d'un osselet
+    var faceAnchorsNames = ["face_1","face_3","face_4","face_6"]; // en lower
+    var dice = []; // {root, vel, targetQuat, anchors:{1:Object3D,...}}
+
+    function findAnchors(root) {
+      var out = {};
+      root.traverse(function (o) {
+        if (!o.name) return;
+        var n = o.name.toLowerCase().replace(/\s+/g,"");
+        for (var i=0;i<faceAnchorsNames.length;i++){
+          var key = faceAnchorsNames[i];
+          if (n.indexOf(key) === 0 || n.indexOf("anchor_"+key)===0) {
+            var val = key.split("_")[1]; // "1","3","4","6"
+            out[val] = o;
+          }
+        }
+      });
+      return out;
+    }
+
+    function cloneDie() {
+      var root = singleDie.clone(true);
+      scene.add(root);
+      // collecte des ancres par valeur
+      var anchors = findAnchors(root);
+      return { root: root, vel: new THREE.Vector3(), targetQuat: new THREE.Quaternion(), anchors: anchors, settled:false, value:0 };
+    }
+
+    function loadModel(cb) {
+      if (!THREE || !THREE.GLTFLoader) {
+        loadingText.textContent = "GLTFLoader manquant";
+        return;
+      }
+      var loader = new THREE.GLTFLoader();
+      loader.load(
+        MODEL_URL,
+        function (gltf) {
+          glb = gltf;
+          singleDie = gltf.scene || gltf.scenes[0];
+          singleDie.traverse(function (o) {
+            if (o.isMesh) { o.material.depthTest = true; o.material.depthWrite = true; }
+          });
+          loadingText.remove();
+          if (cb) cb();
+        },
+        undefined,
+        function (e) { loadingText.textContent = "Échec GLB"; console.warn("[L3] glb error", e); }
+      );
+    }
+
+    // Physique simple “maison”
+    var tmpQ = new THREE.Quaternion(), up = new THREE.Vector3(0,1,0), v1 = new THREE.Vector3();
+
+    function pickTopFace(die) {
+      // on regarde quelle ancre a l’axe +Y le plus aligné avec +Y monde
+      var best = {dot:-1, val:0, quat:null};
+      for (var k in die.anchors) {
+        var a = die.anchors[k];
+        // orientation actuelle de l'ancre
+        a.updateWorldMatrix(true, false);
+        var m = new THREE.Matrix4().extractRotation(a.matrixWorld);
+        var y = new THREE.Vector3(0,1,0).applyMatrix4(m).normalize();
+        var dot = y.dot(up);
+        if (dot > best.dot) { best.dot = dot; best.val = parseInt(k,10); }
+      }
+      return best.val || 0;
+    }
+
+    function quatToPutFaceUp(die, faceVal) {
+      var a = die.anchors[faceVal];
+      if (!a) return die.root.quaternion.clone();
+      // quaternion monde actuel de l’ancre
+      a.updateWorldMatrix(true,false);
+      var qAnchor = new THREE.Quaternion();
+      a.getWorldQuaternion(qAnchor);
+      // rotation qui aligne l’axe +Y de l’ancre vers +Y monde
+      var yAxis = new THREE.Vector3(0,1,0).applyQuaternion(qAnchor).normalize();
+      var qFix = new THREE.Quaternion().setFromUnitVectors(yAxis, up);
+      // qFinal appliqué au die racine
+      var qDie = new THREE.Quaternion(); die.root.getWorldQuaternion(qDie);
+      return qFix.multiply(qDie);
+    }
+
+    function separateDice(dt) {
+      // repousse horizontalement si trop proches
+      for (var i=0;i<dice.length;i++){
+        for (var j=i+1;j<dice.length;j++){
+          var a = dice[i].root.position, b = dice[j].root.position;
+          var dx = b.x - a.x, dz = b.z - a.z;
+          var dist2 = dx*dx + dz*dz;
+          var min = 6.0; // rayon approx
+          if (dist2 < (min*min)) {
+            var d = Math.sqrt(dist2) || 0.001;
+            var push = (min - d) * 0.5;
+            var nx = dx/d, nz = dz/d;
+            a.x -= nx * push; a.z -= nz * push;
+            b.x += nx * push; b.z += nz * push;
+          }
+        }
+      }
+    }
+
+    function launch() {
+      // reset
+      for (var k=0;k<dice.length;k++) scene.remove(dice[k].root);
+      dice.length = 0;
+
+      // crée 4 dés
+      for (var i=0;i<4;i++){
+        var d = cloneDie();
+        d.root.position.set(-15 + i*10 + (Math.random()*2-1), 8 + Math.random()*2, -4 + Math.random()*8);
+        d.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+        d.vel.set(2+Math.random()*5, 0, 2+Math.random()*5).multiplyScalar( (Math.random()<.5)?1:-1 );
+        // cible : une des valeurs 1/3/4/6
+        var faceVal = choose([1,3,4,6]);
+        d.targetQuat.copy(quatToPutFaceUp(d, faceVal));
+        d.value = faceVal;
+        dice.push(d);
+      }
+
+      // animation “lancé puis stabilisation”
+      var t = 0; var settleT = 0;
+      function step() {
+        t += 1/60;
+        var active = false;
+
+        // mouvement simple
+        for (var i=0;i<dice.length;i++){
+          var d = dice[i];
+          // chute & frottements
+          if (!d.settled) {
+            d.root.position.y -= 0.6; // “gravité”
+            if (d.root.position.y <= 6) { d.root.position.y = 6; }
+            // glisse horizontale
+            d.root.position.addScaledVector(d.vel, 1/60);
+            d.vel.multiplyScalar(0.98);
+            // amortissement rotation vers cible
+            tmpQ.copy(d.targetQuat);
+            d.root.quaternion.slerp(tmpQ, 0.04);
+            // test stabilisation
+            var ang = 1 - Math.abs(d.root.quaternion.dot(tmpQ));
+            if (ang < 0.0008 && d.vel.lengthSq() < 0.002) {
+              d.settled = true;
+            } else {
+              active = true;
+            }
+          }
+        }
+        separateDice(1/60);
+
+        if (!active) settleT += 1/60;
+        if (settleT > 0.35) {
+          // calcul du score affiché (vérifie la face réellement en haut)
+          var sum = 0;
+          for (var i=0;i<dice.length;i++){
+            var real = pickTopFace(dice[i]) || dice[i].value;
+            sum += real;
+          }
+          scoreDiv.textContent = "Score : " + sum + "  (faces " + dice.map(function(d){ return pickTopFace(d)||d.value; }).join(", ") + ")";
+          return; // stop anim
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // resize
+    function doResize() { fit(renderer, camera, container); }
+    var ro = new ResizeObserver(doResize); ro.observe(container);
+    window.addEventListener("resize", doResize);
+    doResize();
+
+    loadModel(function(){
+      renderLoop();
+      launch(); // option : lancé auto à la création
+    });
+
+    return {
+      launch: launch,
+      destroy: function(){
+        try { ro.disconnect(); } catch(e){}
+        window.removeEventListener("resize", doResize);
+        container.innerHTML = "";
+      }
+    };
   }
 
-  // Expose: composant + helpers pour tes boutons « Lancer »
-  window.AstragalusLevel3 = AstragalusLevel3;
-  window.launchOsseletsLevel3 = function (container) {
-    var node = typeof container === "string" ? document.getElementById(container) : container;
-    if (!node) return;
-    if (ReactDOM.createRoot) ReactDOM.createRoot(node).render(React.createElement(AstragalusLevel3));
-    else ReactDOM.render(React.createElement(AstragalusLevel3), node);
+  // API : window.startOsseletsLevel3('#selector' ou HTMLElement)
+  window.startOsseletsLevel3 = function(target){
+    var el = typeof target === "string" ? document.querySelector(target) : target;
+    if (!el) return console.warn("[L3] container introuvable");
+    if (el.__l3) { el.__l3.destroy(); }
+    el.__l3 = createL3(el);
+    return el.__l3;
   };
-  window.startOsseletsLevel3 = window.launchOsseletsLevel3; // alias
 })();
+</script>
