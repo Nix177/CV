@@ -1,236 +1,283 @@
-/* L2 — osselets-level2.tsx (isolé) */
-(() => {
-  const ReactL2 = window.React;
-  const { useEffect: useEffectL2, useRef: useRefL2, useState: useStateL2 } = ReactL2;
+<!-- osselets-level2.tsx -->
+<script type="text/babel" data-type="module">
+/* global React, ReactDOM, THREE, GLTFLoader, OrbitControls */
 
-  // ---- Util: charger une seule fois les scripts UMD des "examples" de three ----
-  function loadScriptOnceL2(id, src) {
-    return new Promise((resolve, reject) => {
-      if (document.getElementById(id)) return resolve();
-      const s = document.createElement("script");
-      s.id = id; s.src = src; s.async = true; s.onload = resolve; s.onerror = () => reject(new Error("fail "+src));
-      document.head.appendChild(s);
+(function(){
+  function tryPaths(paths){
+    return new Promise(function(resolve, reject){
+      var i = 0;
+      function next(){
+        if(i>=paths.length){ reject(new Error("no candidate glb")); return; }
+        var url = paths[i++];
+        loader.load(url, function(g){ g.userData.__src=url; resolve(g); }, undefined, function(){ next(); });
+      }
+      next();
     });
   }
-  async function ensureThreeExtrasL2() {
-    if (!window.THREE) throw new Error("[L2] THREE global manquant (importe three.min.js avant).");
-    const REV = window.THREE.REVISION || "158";
-    const base = `https://unpkg.com/three@0.${REV}.0/examples/js`;
-    const needs = [];
-    if (!window.THREE.OrbitControls) needs.push(loadScriptOnceL2("__ex_orbit_l2", `${base}/controls/OrbitControls.js`));
-    if (!window.THREE.GLTFLoader)    needs.push(loadScriptOnceL2("__ex_gltf_l2",   `${base}/loaders/GLTFLoader.js`));
-    await Promise.all(needs);
-  }
 
-  // --- quelques chemins candidats pour ton modèle (tu peux en ajouter) ---
-  const GLB_CANDIDATES_L2 = [
-    "/assets/games/osselets/models/astragalus.glb",
-    "/assets/games/osselets/3d/astragalus.glb",
-    "/assets/osselets/astragalus.glb",
+  // ====== Config chemins possibles (ne change rien ailleurs) ======
+  var L2_CANDIDATES = [
+    "/assets/games/osselets/level2/3d/astragalus_holes.glb",
+    "/assets/games/osselets/level2/3d/astragalus.glb",
+    "/assets/games/osselets/level3/3d/astragalus_holes.glb",
+    "/assets/games/osselets/level3/3d/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus_holes.glb",
+    "/assets/games/osselets/3d/astragalus.glb"
   ];
 
-  function OsseletsLevel2() {
-    const wrapRef   = useRefL2(null);
-    const started   = useRefL2(false);
-    const rendererR = useRefL2(null);
-    const sceneR    = useRefL2(null);
-    const cameraR   = useRefL2(null);
-    const controlsR = useRefL2(null);
-    const meshRef   = useRefL2(null);  // l’os
-    const dragRef   = useRefL2({ dragging:false, plane:null, offset:new THREE.Vector3() });
-    const animRef   = useRefL2({ req:0 });
+  // étiquettes grecques (24 trous)
+  var GREEK = [
+    "Α","Β","Γ","Δ","Ε","Ζ","Η","Θ",
+    "Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π",
+    "Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"
+  ];
 
-    // labels grecs (24)
-    const GREEK = "Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω".split(",");
+  // Prépare un GLTFLoader global unique (mêmes versions que ton HTML)
+  var loader = new (GLTFLoader || THREE.GLTFLoader)();
 
-    function makeTextSpriteL2(text) {
-      const size = 128, c = document.createElement("canvas"); c.width = c.height = size;
-      const ctx = c.getContext("2d"); ctx.clearRect(0,0,size,size);
-      ctx.fillStyle = "#111"; ctx.textAlign="center"; ctx.textBaseline="middle";
-      ctx.font = "bold 84px ui-sans-serif, system-ui";
-      ctx.fillText(text, size/2, size/2);
-      const tex = new THREE.CanvasTexture(c); tex.minFilter = THREE.LinearFilter;
-      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false });
-      const spr = new THREE.Sprite(mat);
-      spr.scale.set(0.14, 0.14, 1);
-      return spr;
-    }
+  function useResize(fn){
+    React.useEffect(function(){
+      function on(){ fn(); }
+      window.addEventListener("resize", on);
+      return function(){ window.removeEventListener("resize", on); };
+    }, [fn]);
+  }
 
-    function fitRendererL2() {
-      const wrap = wrapRef.current, renderer = rendererR.current, camera = cameraR.current;
-      if (!wrap || !renderer || !camera) return;
-      const w = wrap.clientWidth, h = wrap.clientHeight || Math.round(w * 9/16);
-      renderer.setSize(w, h, false);
-      camera.aspect = w/h; camera.updateProjectionMatrix();
-    }
+  function AstragalusLevel2(){
+    var wrapRef = React.useRef(null);
+    var overlayRef = React.useRef(null);  // div overlay pour les labels
+    var rendererRef = React.useRef(null);
+    var cameraRef = React.useRef(null);
+    var sceneRef = React.useRef(null);
+    var controlsRef = React.useRef(null);
+    var meshRef = React.useRef(null);
+    var anchorsRef = React.useRef([]); // objets 3D d'ancre/trou
+    var rafRef = React.useRef(0);
+    var raycaster = React.useMemo(function(){ return new THREE.Raycaster(); }, []);
+    var v = React.useMemo(function(){ return new THREE.Vector3(); }, []);
+    var sizeRef = React.useRef({ w: 960, h: 540, dpr: 1 });
 
-    async function loadFirstL2(loader, paths) {
-      for (const p of paths) {
-        try { return await loader.loadAsync(p); } catch (e) {}
+    // Création renderer/cam/scène
+    React.useEffect(function(){
+      var wrap = wrapRef.current;
+      if(!wrap) return;
+
+      var scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf5f5f5);
+      var cam = new THREE.PerspectiveCamera(50, 16/9, 0.01, 50);
+      cam.position.set(0.8, 0.5, 1.1);
+      cameraRef.current = cam;
+      sceneRef.current = scene;
+
+      var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:"high-performance" });
+      renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.OutputColorSpace || undefined;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping || THREE.NoToneMapping;
+      renderer.physicallyCorrectLights = true;
+      wrap.appendChild(renderer.domElement);
+      rendererRef.current = renderer;
+
+      // Lumières douces
+      var hemi = new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.8);
+      scene.add(hemi);
+      var dir = new THREE.DirectionalLight(0xffffff, 1.2);
+      dir.position.set(1.5,2,1.2);
+      scene.add(dir);
+
+      // Sol discret (plan 16/9)
+      var plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(4, 4*(9/16)),
+        new THREE.MeshStandardMaterial({ color:0xeeeeee, roughness:1, metalness:0 })
+      );
+      plane.rotation.x = -Math.PI/2;
+      plane.position.y = -0.02;
+      plane.receiveShadow = true;
+      scene.add(plane);
+
+      // OrbitControls si dispo
+      var controls = null;
+      try {
+        if (typeof OrbitControls !== "undefined") {
+          controls = new OrbitControls(cam, renderer.domElement);
+        } else if (THREE && THREE.OrbitControls) {
+          controls = new THREE.OrbitControls(cam, renderer.domElement);
+        }
+      } catch(e){}
+      if (!controls) {
+        // fallback drag très simple
+        var lastX=0,lastY=0,down=false,phi=0,theta=0,r=1.2;
+        renderer.domElement.addEventListener("pointerdown",function(ev){down=true;lastX=ev.clientX;lastY=ev.clientY;});
+        window.addEventListener("pointerup",function(){down=false;});
+        window.addEventListener("pointermove",function(ev){
+          if(!down) return;
+          var dx=(ev.clientX-lastX)*0.005, dy=(ev.clientY-lastY)*0.005;
+          lastX=ev.clientX; lastY=ev.clientY; phi += dx; theta = Math.max(-1.2, Math.min(1.2, theta+dy));
+          cam.position.set(Math.cos(phi)*Math.cos(theta)*r, Math.sin(theta)*r, Math.sin(phi)*Math.cos(theta)*r);
+          cam.lookAt(0,0,0);
+        });
+      } else {
+        controls.enableDamping = true;
+        controls.target.set(0,0,0);
+        controlsRef.current = controls;
       }
-      throw new Error("loadFirst failed");
-    }
 
-    useEffectL2(() => {
-      if (started.current) return;
-      started.current = true;
+      // Chargement GLB (trous/ancres)
+      tryPaths(L2_CANDIDATES).then(function(gltf){
+        var root = gltf.scene || gltf.scenes && gltf.scenes[0];
+        if (!root) throw new Error("GLB sans scene");
+        // scale auto si trop gros/petit
+        root.updateMatrixWorld(true);
+        var box = new THREE.Box3().setFromObject(root);
+        var size = new THREE.Vector3();
+        box.getSize(size);
+        var s = 0.45 / Math.max(0.001, Math.max(size.x,size.y,size.z));
+        root.scale.setScalar(s);
+        root.position.set(0, 0.0, 0);
+        scene.add(root);
 
-      let disposed = false;
-
-      (async () => {
-        await ensureThreeExtrasL2();
-
-        const wrap = wrapRef.current;
-        const scene = sceneR.current = new THREE.Scene();
-        scene.background = new THREE.Color(0xf4f4f5);
-
-        const camera = cameraR.current = new THREE.PerspectiveCamera(50, 16/9, 0.1, 100);
-        camera.position.set(1.4, 0.9, 1.6);
-
-        const renderer = rendererR.current = new THREE.WebGLRenderer({ antialias: true, alpha:false });
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.shadowMap.enabled = true;
-        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-        wrap.appendChild(renderer.domElement);
-
-        const controls = controlsR.current = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.target.set(0, 0.16, 0);
-
-        // lumières
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.9));
-        const dir = new THREE.DirectionalLight(0xffffff, 1.1);
-        dir.position.set(2,3,2); dir.castShadow = true; scene.add(dir);
-
-        // sol
-        const g = new THREE.PlaneGeometry(4, 2.4);
-        const m = new THREE.MeshStandardMaterial({ color: 0xe7e5e4, roughness: .95, metalness: 0 });
-        const ground = new THREE.Mesh(g, m); ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
-
-        // 24 “trous” : on pose des repères + lettres 3D (occlusion OK)
-        const holes = new THREE.Group(); scene.add(holes);
-        const cols = 6, rows = 4, sx = 0.20, sy = 0.20, ox = -((cols-1)*sx)/2, oy = -((rows-1)*sy)/2, y = 0.05;
-        for (let r=0; r<rows; r++){
-          for (let c=0; c<cols; c++){
-            const i = r*cols + c;
-            const spr = makeTextSpriteL2(GREEK[i]);
-            spr.position.set(ox + c*sx, y + 0.001, oy + r*sy);
-            holes.add(spr);
+        // Récup meshes + ancres
+        var mainMesh = null;
+        var anchors = [];
+        root.traverse(function(obj){
+          if (obj.isMesh) {
+            // forcer un StandardMaterial si nécessaire
+            if (!(obj.material && obj.material.isMeshStandardMaterial)) {
+              obj.material = new THREE.MeshStandardMaterial({ color:0xdddddd, roughness:0.65, metalness:0.05 });
+            }
+            obj.castShadow = true;
+            obj.receiveShadow = true;
+            if (!mainMesh) mainMesh = obj;
           }
-        }
-
-        // charge l’osselet (GLB)
-        const loader = new THREE.GLTFLoader();
-        let glb = null;
-        try { glb = await loadFirstL2(loader, GLB_CANDIDATES_L2); }
-        catch (e) { console.warn("[L2] gltfloader load fail:", e); }
-
-        let bone = null;
-        if (glb) {
-          bone = glb.scene || glb.scenes?.[0];
-          bone.traverse(n=>{ if (n.isMesh) { n.castShadow = true; n.material.depthTest = true; n.material.depthWrite = true; }});
-          // taille / pose
-          const s = 0.22;
-          bone.scale.setScalar(s);
-          bone.position.set(-0.6, 0.16, -0.2);
-          bone.rotation.set(0, Math.PI*0.35, 0);
-          scene.add(bone);
-        } else {
-          // fallback visuel
-          const geo = new THREE.SphereGeometry(0.12, 32, 20);
-          const mat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1 });
-          bone = new THREE.Mesh(geo, mat); bone.castShadow = true; bone.position.set(-0.6, 0.12, -0.2);
-          scene.add(bone);
-        }
-        meshRef.current = bone;
-
-        // drag & drop simple (déplace dans le plan XZ)
-        const ray = new THREE.Raycaster();
-        const ndc = new THREE.Vector2();
-        const plane = new THREE.Plane(new THREE.Vector3(0,1,0), -0.12);
-        dragRef.current.plane = plane;
-
-        const onDown = (ev) => {
-          if (!meshRef.current) return;
-          const rect = renderer.domElement.getBoundingClientRect();
-          ndc.x = ((ev.clientX - rect.left) / rect.width)*2 - 1;
-          ndc.y = -((ev.clientY - rect.top) / rect.height)*2 + 1;
-          ray.setFromCamera(ndc, camera);
-          const hits = ray.intersectObject(meshRef.current, true);
-          if (hits.length) {
-            const hit = hits[0];
-            dragRef.current.dragging = true;
-            const p = new THREE.Vector3();
-            ray.ray.intersectPlane(plane, p);
-            dragRef.current.offset.copy(p).sub(meshRef.current.position);
+          var name = (obj.name||"").toLowerCase();
+          if (name.indexOf("anchor")>=0 || name.indexOf("hole")>=0 || name.indexOf("trou")>=0) {
+            anchors.push(obj);
           }
-        };
-        const onMove = (ev) => {
-          if (!dragRef.current.dragging) return;
-          const rect = renderer.domElement.getBoundingClientRect();
-          ndc.x = ((ev.clientX - rect.left) / rect.width)*2 - 1;
-          ndc.y = -((ev.clientY - rect.top) / rect.height)*2 + 1;
-          ray.setFromCamera(ndc, camera);
-          const p = new THREE.Vector3();
-          ray.ray.intersectPlane(plane, p);
-          p.sub(dragRef.current.offset);
-          // limite
-          p.x = Math.max(-1.2, Math.min(1.2, p.x));
-          p.z = Math.max(-0.8, Math.min(0.8, p.z));
-          p.y = meshRef.current.position.y;
-          meshRef.current.position.copy(p);
-        };
-        const onUp = ()=>{ dragRef.current.dragging=false; };
+        });
+        meshRef.current = mainMesh;
+        anchorsRef.current = anchors;
 
-        renderer.domElement.addEventListener("pointerdown", onDown);
-        window.addEventListener("pointermove", onMove);
-        window.addEventListener("pointerup", onUp);
+        // Boucle
+        function frame(){
+          // resize + render
+          fit();
+          if (controlsRef.current) controlsRef.current.update();
+          renderer.render(scene, cam);
+          // labels 2D
+          drawLabels();
+          rafRef.current = requestAnimationFrame(frame);
+        }
+        frame();
+      }).catch(function(err){
+        console.warn("[L2] glb load error:", err);
+        // boucle tout de même (fond + rien)
+        function frame(){
+          fit();
+          renderer.render(scene, cam);
+          rafRef.current = requestAnimationFrame(frame);
+        }
+        frame();
+      });
 
-        // animation
-        const clock = new THREE.Clock();
-        const frame = () => {
-          const dt = clock.getDelta();
-          controls.update();
-          renderer.render(scene, camera);
-          animRef.current.req = requestAnimationFrame(frame);
-        };
-        fitRendererL2();
-        const ro = new ResizeObserver(fitRendererL2); ro.observe(wrap);
-        animRef.current.req = requestAnimationFrame(frame);
+      function fit(){
+        var wrap = wrapRef.current; if(!wrap) return;
+        var w = wrap.clientWidth || 960;
+        var h = Math.round(w * 9/16);
+        var dpr = Math.min(2.5, window.devicePixelRatio || 1);
+        sizeRef.current = { w:w, h:h, dpr:dpr };
+        renderer.setPixelRatio(dpr);
+        renderer.setSize(w, h, false);
+        cam.aspect = w / h;
+        cam.updateProjectionMatrix();
+      }
 
-        // hook global éventuel pour un bouton “Lancer”
-        window.L2_throw = () => {
-          if (!meshRef.current) return;
-          // petite impulsion et rotation
-          meshRef.current.position.y = 0.25;
-          meshRef.current.rotation.x += 0.6 + Math.random()*0.8;
-          meshRef.current.rotation.y += 0.6 + Math.random()*0.8;
-          meshRef.current.rotation.z += 0.6 + Math.random()*0.8;
-        };
+      function drawLabels(){
+        var overlay = overlayRef.current;
+        var mesh = meshRef.current;
+        var anchors = anchorsRef.current;
+        if (!overlay) return;
 
-        // cleanup
-        return () => {
-          try { ro.disconnect(); } catch {}
-          cancelAnimationFrame(animRef.current.req);
-          renderer.domElement.removeEventListener("pointerdown", onDown);
-          window.removeEventListener("pointermove", onMove);
-          window.removeEventListener("pointerup", onUp);
-          renderer.dispose();
-          wrap.removeChild(renderer.domElement);
-        };
-      })();
+        overlay.innerHTML = ""; // simple, on recrée (24 petits éléments)
+        if (!mesh || !anchors || !anchors.length) return;
 
-      return () => {
-        if (disposed) return;
-        disposed = true;
-      };
+        var w = sizeRef.current.w, h = sizeRef.current.h;
+        var cam = cameraRef.current;
+
+        for (var i=0;i<anchors.length;i++){
+          var a = anchors[i];
+          v.copy(a.getWorldPosition(new THREE.Vector3()));
+          // Projection écran
+          v.project(cam);
+          var px = Math.round((v.x*0.5+0.5)*w);
+          var py = Math.round((-v.y*0.5+0.5)*h);
+
+          // Occlusion test: rayon depuis caméra vers l'ancre
+          var ndc = new THREE.Vector2(v.x, v.y);
+          raycaster.setFromCamera(ndc, cam);
+          var inters = raycaster.intersectObject(mesh, true);
+          var visible = true;
+          if (inters && inters.length){
+            var dCamToAnchor = cam.position.distanceTo(a.getWorldPosition(new THREE.Vector3()));
+            var dHit = inters[0].distance;
+            // si on tape le mesh AVANT d'atteindre l'ancre => l'ancre est cachée
+            if (dHit < dCamToAnchor - 0.001) visible = false;
+          }
+
+          if (!visible) continue;
+
+          var label = document.createElement("div");
+          label.textContent = GREEK[i] || (""+(i+1));
+          label.style.position = "absolute";
+          label.style.left = (px - 10) + "px";
+          label.style.top  = (py - 10) + "px";
+          label.style.width = "20px";
+          label.style.height= "20px";
+          label.style.borderRadius = "999px";
+          label.style.display = "flex";
+          label.style.alignItems = "center";
+          label.style.justifyContent = "center";
+          label.style.fontSize = "12px";
+          label.style.fontWeight = "700";
+          label.style.color = "#111827";
+          label.style.background = "rgba(255,255,255,.95)";
+          label.style.boxShadow = "0 1px 3px rgba(0,0,0,.2)";
+          label.style.pointerEvents = "none";
+          overlay.appendChild(label);
+        }
+      }
+
+      function cleanup(){
+        cancelAnimationFrame(rafRef.current||0);
+        rafRef.current = 0;
+        if (controlsRef.current) { controlsRef.current.dispose(); controlsRef.current = null; }
+        if (rendererRef.current){
+          var el = rendererRef.current.domElement;
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+          rendererRef.current.dispose();
+          rendererRef.current = null;
+        }
+        sceneRef.current = null;
+        cameraRef.current = null;
+        meshRef.current = null;
+        anchorsRef.current = [];
+      }
+
+      return cleanup;
     }, []);
 
-    // le conteneur prend toute la place disponible
+    useResize(function(){
+      // forcer un tick de fit au prochain frame (géré dans frame)
+    });
+
     return (
-      <div ref={wrapRef} style={{position:"relative", width:"100%", height:"min(70vh, 720px)", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden"}} />
+      React.createElement("div", {style:{position:"relative", width:"100%", aspectRatio:"16/9", border:"1px solid #e5e7eb", borderRadius:"12px", overflow:"hidden"}},
+        React.createElement("div", {ref:wrapRef, style:{width:"100%", height:"100%"} }),
+        React.createElement("div", {ref:overlayRef, style:{
+          position:"absolute", inset:0, pointerEvents:"none"
+        }})
+      )
     );
   }
 
-  // export global pour ton HTML
-  window.OsseletsLevel2 = OsseletsLevel2;
+  // Expose pour le HTML (bouton LANCER)
+  window.AstragalusLevel2 = AstragalusLevel2;
 })();
+</script>
