@@ -1,285 +1,236 @@
-/* public/osselets-level2.tsx */
-(function () {
-  // Tout est encapsulé : aucune re-déclaration globale possible
-  const { useEffect, useRef, useState } = React;
+/* L2 — osselets-level2.tsx (isolé) */
+(() => {
+  const ReactL2 = window.React;
+  const { useEffect: useEffectL2, useRef: useRefL2, useState: useStateL2 } = ReactL2;
 
-  type V2 = { x: number; y: number };
-  type Hole = { obj: THREE.Object3D; world: THREE.Vector3; label: string; index: number; sprite: THREE.Sprite };
+  // ---- Util: charger une seule fois les scripts UMD des "examples" de three ----
+  function loadScriptOnceL2(id, src) {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById(id)) return resolve();
+      const s = document.createElement("script");
+      s.id = id; s.src = src; s.async = true; s.onload = resolve; s.onerror = () => reject(new Error("fail "+src));
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureThreeExtrasL2() {
+    if (!window.THREE) throw new Error("[L2] THREE global manquant (importe three.min.js avant).");
+    const REV = window.THREE.REVISION || "158";
+    const base = `https://unpkg.com/three@0.${REV}.0/examples/js`;
+    const needs = [];
+    if (!window.THREE.OrbitControls) needs.push(loadScriptOnceL2("__ex_orbit_l2", `${base}/controls/OrbitControls.js`));
+    if (!window.THREE.GLTFLoader)    needs.push(loadScriptOnceL2("__ex_gltf_l2",   `${base}/loaders/GLTFLoader.js`));
+    await Promise.all(needs);
+  }
 
-  const BASE = "/assets/games/osselets/";
-  const MODEL = BASE + "level2/3d/astragalus.glb";
-  const LETTERS = [
-    "Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ",
-    "Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"
+  // --- quelques chemins candidats pour ton modèle (tu peux en ajouter) ---
+  const GLB_CANDIDATES_L2 = [
+    "/assets/games/osselets/models/astragalus.glb",
+    "/assets/games/osselets/3d/astragalus.glb",
+    "/assets/osselets/astragalus.glb",
   ];
 
-  function AstragalusLevel2() {
-    const wrapRef = useRef<HTMLDivElement | null>(null);
-    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-    const sceneRef = useRef<THREE.Scene | null>(null);
-    const controlsRef = useRef<any | null>(null);
-    const frameRef = useRef<number | null>(null);
-    const holesRef = useRef<Hole[]>([]);
-    const lineRef = useRef<THREE.Line | null>(null);
-    const pickingRay = useRef(new THREE.Raycaster());
-    const pointerNDC = useRef(new THREE.Vector2());
-    const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
-    const [msg, setMsg] = useState<string>("Chargement du modèle 3D...");
+  function OsseletsLevel2() {
+    const wrapRef   = useRefL2(null);
+    const started   = useRefL2(false);
+    const rendererR = useRefL2(null);
+    const sceneR    = useRefL2(null);
+    const cameraR   = useRefL2(null);
+    const controlsR = useRefL2(null);
+    const meshRef   = useRefL2(null);  // l’os
+    const dragRef   = useRefL2({ dragging:false, plane:null, offset:new THREE.Vector3() });
+    const animRef   = useRefL2({ req:0 });
 
-    // Layout / resize
-    useEffect(() => {
-      const wrap = wrapRef.current;
-      if (!wrap || !window.THREE) return;
+    // labels grecs (24)
+    const GREEK = "Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω".split(",");
 
-      // Renderer
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-      renderer.outputEncoding = THREE.sRGBEncoding;
-      rendererRef.current = renderer;
-      wrap.appendChild(renderer.domElement);
+    function makeTextSpriteL2(text) {
+      const size = 128, c = document.createElement("canvas"); c.width = c.height = size;
+      const ctx = c.getContext("2d"); ctx.clearRect(0,0,size,size);
+      ctx.fillStyle = "#111"; ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.font = "bold 84px ui-sans-serif, system-ui";
+      ctx.fillText(text, size/2, size/2);
+      const tex = new THREE.CanvasTexture(c); tex.minFilter = THREE.LinearFilter;
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false });
+      const spr = new THREE.Sprite(mat);
+      spr.scale.set(0.14, 0.14, 1);
+      return spr;
+    }
 
-      // Scene & camera
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x081320);
-      sceneRef.current = scene;
+    function fitRendererL2() {
+      const wrap = wrapRef.current, renderer = rendererR.current, camera = cameraR.current;
+      if (!wrap || !renderer || !camera) return;
+      const w = wrap.clientWidth, h = wrap.clientHeight || Math.round(w * 9/16);
+      renderer.setSize(w, h, false);
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+    }
 
-      const cam = new THREE.PerspectiveCamera(40, 16 / 9, 0.1, 100);
-      cam.position.set(0.9, 0.7, 1.4);
-      cameraRef.current = cam;
+    async function loadFirstL2(loader, paths) {
+      for (const p of paths) {
+        try { return await loader.loadAsync(p); } catch (e) {}
+      }
+      throw new Error("loadFirst failed");
+    }
 
-      // Lights
-      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-      const dir = new THREE.DirectionalLight(0xffffff, 0.9);
-      dir.position.set(1.2, 1.4, 0.8);
-      scene.add(dir);
+    useEffectL2(() => {
+      if (started.current) return;
+      started.current = true;
 
-      // Controls
-      const controls = new (THREE as any).OrbitControls(cam, renderer.domElement);
-      controls.enableDamping = true;
-      controls.target.set(0, 0.1, 0);
-      controlsRef.current = controls;
+      let disposed = false;
 
-      const onResize = () => {
-        const w = wrap.clientWidth;
-        const h = Math.max(360, Math.floor(w * 9 / 16)); // 16:9 plein cadre
-        renderer.setSize(w, h, false);
-        cam.aspect = w / h;
-        cam.updateProjectionMatrix();
-      };
-      onResize();
-      const ro = new (window as any).ResizeObserver(onResize);
-      ro.observe(wrap);
-      window.addEventListener("resize", onResize);
+      (async () => {
+        await ensureThreeExtrasL2();
 
-      // Load model
-      const loader = new (THREE as any).GLTFLoader();
-      loader.load(MODEL, (gltf: any) => {
-        const root = gltf.scene || gltf.scenes?.[0];
-        if (!root) {
-          setStatus("error");
-          setMsg("Modèle vide.");
-          return;
-        }
-        root.traverse((o: any) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = true; o.material.depthWrite = true; }});
-        // Mise à l'échelle douce (le modèle d’exemple est petit)
-        const box = new THREE.Box3().setFromObject(root);
-        const size = new THREE.Vector3();
-        box.getSize(size);
-        const targetW = 0.9; // ~90 cm « virtuels »
-        const s = targetW / Math.max(0.001, size.length());
-        root.scale.setScalar(s);
-        // Recentrage
-        const c = new THREE.Vector3();
-        new THREE.Box3().setFromObject(root).getCenter(c);
-        root.position.sub(c);
-        scene.add(root);
+        const wrap = wrapRef.current;
+        const scene = sceneR.current = new THREE.Scene();
+        scene.background = new THREE.Color(0xf4f4f5);
 
-        // ===== Trholes (24) =====
-        // On essaie des noms courants ; sinon fallback cercle
-        const anchorRegex = /(Hole|trou|ancre|anchor)[\s_]?(\d+)?/i;
-        const anchors: THREE.Object3D[] = [];
-        root.traverse((o: any) => {
-          if (anchorRegex.test(o.name)) anchors.push(o);
-        });
+        const camera = cameraR.current = new THREE.PerspectiveCamera(50, 16/9, 0.1, 100);
+        camera.position.set(1.4, 0.9, 1.6);
 
-        let centers: THREE.Vector3[] = [];
-        if (anchors.length >= 24) {
-          // Prend les 24 premiers, ordonnés par nom
-          anchors.sort((a: any, b: any) => (a.name > b.name ? 1 : -1));
-          centers = anchors.slice(0, 24).map(n => n.getWorldPosition(new THREE.Vector3()));
-        } else {
-          // --- Fallback : 24 points en cercle ---
-          centers = [];
-          const r = 0.26, cz = 0; // rayon et léger décalage
-          for (let i = 0; i < 24; i++) {
-            const t = (i / 24) * Math.PI * 2;
-            centers.push(new THREE.Vector3(Math.cos(t) * r, 0.1 + (Math.sin(t) * 0.04), cz + Math.sin(t) * r * 0.8));
+        const renderer = rendererR.current = new THREE.WebGLRenderer({ antialias: true, alpha:false });
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+        renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+        wrap.appendChild(renderer.domElement);
+
+        const controls = controlsR.current = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.target.set(0, 0.16, 0);
+
+        // lumières
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.9));
+        const dir = new THREE.DirectionalLight(0xffffff, 1.1);
+        dir.position.set(2,3,2); dir.castShadow = true; scene.add(dir);
+
+        // sol
+        const g = new THREE.PlaneGeometry(4, 2.4);
+        const m = new THREE.MeshStandardMaterial({ color: 0xe7e5e4, roughness: .95, metalness: 0 });
+        const ground = new THREE.Mesh(g, m); ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+
+        // 24 “trous” : on pose des repères + lettres 3D (occlusion OK)
+        const holes = new THREE.Group(); scene.add(holes);
+        const cols = 6, rows = 4, sx = 0.20, sy = 0.20, ox = -((cols-1)*sx)/2, oy = -((rows-1)*sy)/2, y = 0.05;
+        for (let r=0; r<rows; r++){
+          for (let c=0; c<cols; c++){
+            const i = r*cols + c;
+            const spr = makeTextSpriteL2(GREEK[i]);
+            spr.position.set(ox + c*sx, y + 0.001, oy + r*sy);
+            holes.add(spr);
           }
         }
 
-        // Mat sprite lettres (occlusion par l’os : depthTest = true)
-        const makeSprite = (txt: string) => {
-          const CAN = document.createElement("canvas");
-          CAN.width = 128; CAN.height = 128;
-          const cx = CAN.getContext("2d")!;
-          cx.clearRect(0, 0, 128, 128);
-          cx.fillStyle = "#0ea5e9";
-          cx.beginPath();
-          cx.arc(64, 64, 50, 0, Math.PI * 2);
-          cx.fill();
-          cx.fillStyle = "#fff";
-          cx.font = "bold 64px system-ui,Segoe UI,Arial";
-          cx.textAlign = "center";
-          cx.textBaseline = "middle";
-          cx.fillText(txt, 64, 68);
-          const tex = new THREE.CanvasTexture(CAN);
-          const mat = new THREE.SpriteMaterial({ map: tex, depthTest: true, depthWrite: false, transparent: true });
-          const sp = new THREE.Sprite(mat);
-          sp.scale.set(0.10, 0.10, 0.10);
-          sp.renderOrder = 2; // après l’os mais soumis au depthTest
-          return sp;
+        // charge l’osselet (GLB)
+        const loader = new THREE.GLTFLoader();
+        let glb = null;
+        try { glb = await loadFirstL2(loader, GLB_CANDIDATES_L2); }
+        catch (e) { console.warn("[L2] gltfloader load fail:", e); }
+
+        let bone = null;
+        if (glb) {
+          bone = glb.scene || glb.scenes?.[0];
+          bone.traverse(n=>{ if (n.isMesh) { n.castShadow = true; n.material.depthTest = true; n.material.depthWrite = true; }});
+          // taille / pose
+          const s = 0.22;
+          bone.scale.setScalar(s);
+          bone.position.set(-0.6, 0.16, -0.2);
+          bone.rotation.set(0, Math.PI*0.35, 0);
+          scene.add(bone);
+        } else {
+          // fallback visuel
+          const geo = new THREE.SphereGeometry(0.12, 32, 20);
+          const mat = new THREE.MeshStandardMaterial({ color: 0xd6d3d1 });
+          bone = new THREE.Mesh(geo, mat); bone.castShadow = true; bone.position.set(-0.6, 0.12, -0.2);
+          scene.add(bone);
+        }
+        meshRef.current = bone;
+
+        // drag & drop simple (déplace dans le plan XZ)
+        const ray = new THREE.Raycaster();
+        const ndc = new THREE.Vector2();
+        const plane = new THREE.Plane(new THREE.Vector3(0,1,0), -0.12);
+        dragRef.current.plane = plane;
+
+        const onDown = (ev) => {
+          if (!meshRef.current) return;
+          const rect = renderer.domElement.getBoundingClientRect();
+          ndc.x = ((ev.clientX - rect.left) / rect.width)*2 - 1;
+          ndc.y = -((ev.clientY - rect.top) / rect.height)*2 + 1;
+          ray.setFromCamera(ndc, camera);
+          const hits = ray.intersectObject(meshRef.current, true);
+          if (hits.length) {
+            const hit = hits[0];
+            dragRef.current.dragging = true;
+            const p = new THREE.Vector3();
+            ray.ray.intersectPlane(plane, p);
+            dragRef.current.offset.copy(p).sub(meshRef.current.position);
+          }
+        };
+        const onMove = (ev) => {
+          if (!dragRef.current.dragging) return;
+          const rect = renderer.domElement.getBoundingClientRect();
+          ndc.x = ((ev.clientX - rect.left) / rect.width)*2 - 1;
+          ndc.y = -((ev.clientY - rect.top) / rect.height)*2 + 1;
+          ray.setFromCamera(ndc, camera);
+          const p = new THREE.Vector3();
+          ray.ray.intersectPlane(plane, p);
+          p.sub(dragRef.current.offset);
+          // limite
+          p.x = Math.max(-1.2, Math.min(1.2, p.x));
+          p.z = Math.max(-0.8, Math.min(0.8, p.z));
+          p.y = meshRef.current.position.y;
+          meshRef.current.position.copy(p);
+        };
+        const onUp = ()=>{ dragRef.current.dragging=false; };
+
+        renderer.domElement.addEventListener("pointerdown", onDown);
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", onUp);
+
+        // animation
+        const clock = new THREE.Clock();
+        const frame = () => {
+          const dt = clock.getDelta();
+          controls.update();
+          renderer.render(scene, camera);
+          animRef.current.req = requestAnimationFrame(frame);
+        };
+        fitRendererL2();
+        const ro = new ResizeObserver(fitRendererL2); ro.observe(wrap);
+        animRef.current.req = requestAnimationFrame(frame);
+
+        // hook global éventuel pour un bouton “Lancer”
+        window.L2_throw = () => {
+          if (!meshRef.current) return;
+          // petite impulsion et rotation
+          meshRef.current.position.y = 0.25;
+          meshRef.current.rotation.x += 0.6 + Math.random()*0.8;
+          meshRef.current.rotation.y += 0.6 + Math.random()*0.8;
+          meshRef.current.rotation.z += 0.6 + Math.random()*0.8;
         };
 
-        const holes: Hole[] = centers.map((p, i) => {
-          const sp = makeSprite(LETTERS[i % LETTERS.length]);
-          sp.position.copy(p);
-          scene.add(sp);
-          return { obj: sp, world: p.clone(), label: LETTERS[i % LETTERS.length], index: i, sprite: sp };
-        });
-        holesRef.current = holes;
+        // cleanup
+        return () => {
+          try { ro.disconnect(); } catch {}
+          cancelAnimationFrame(animRef.current.req);
+          renderer.domElement.removeEventListener("pointerdown", onDown);
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", onUp);
+          renderer.dispose();
+          wrap.removeChild(renderer.domElement);
+        };
+      })();
 
-        // Ligne (chemin)
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([]);
-        const lineMat = new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.9, depthTest: true });
-        const line = new THREE.Line(lineGeo, lineMat);
-        line.renderOrder = 3;
-        scene.add(line);
-        lineRef.current = line;
-
-        setStatus("ready");
-        setMsg("Prêt.");
-      }, undefined, (e: any) => {
-        console.warn("[L2] load fail:", e);
-        setStatus("error");
-        setMsg("Impossible de charger le modèle (GLTF).");
-      });
-
-      // Pointer events
-      const picks: THREE.Vector3[] = [];
-      const updateLine = () => {
-        if (!lineRef.current) return;
-        lineRef.current.geometry.dispose();
-        if (picks.length === 0) {
-          lineRef.current.geometry = new THREE.BufferGeometry().setFromPoints([]);
-        } else {
-          lineRef.current.geometry = new THREE.BufferGeometry().setFromPoints(picks);
-        }
-      };
-
-      const onPointer = (e: PointerEvent) => {
-        if (!renderer || !cameraRef.current) return;
-        const rect = renderer.domElement.getBoundingClientRect();
-        pointerNDC.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        pointerNDC.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-        pickingRay.current.setFromCamera(pointerNDC.current, cameraRef.current);
-        // Set pick on sprites
-        let best: { hole: Hole; dist: number } | null = null;
-        for (const h of holesRef.current) {
-          // Ray-sphere approx
-          const to = new THREE.Vector3();
-          const c = h.sprite.getWorldPosition(to);
-          const d = pickingRay.current.ray.distanceToPoint(c);
-          if (d < 0.08 && (!best || d < best.dist)) best = { hole: h, dist: d };
-        }
-        // halo
-        holesRef.current.forEach(h => (h.sprite.material as any).opacity = 1);
-        if (best) (best.hole.sprite.material as any).opacity = 0.75;
-      };
-
-      const onClick = (e: MouseEvent) => {
-        if (!renderer || !cameraRef.current) return;
-        const rect = renderer.domElement.getBoundingClientRect();
-        pointerNDC.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        pointerNDC.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-        pickingRay.current.setFromCamera(pointerNDC.current, cameraRef.current);
-        let best: { hole: Hole; dist: number } | null = null;
-        for (const h of holesRef.current) {
-          const c = h.sprite.getWorldPosition(new THREE.Vector3());
-          const d = pickingRay.current.ray.distanceToPoint(c);
-          if (d < 0.08 && (!best || d < best.dist)) best = { hole: h, dist: d };
-        }
-        if (best) {
-          picks.push(best.hole.sprite.getWorldPosition(new THREE.Vector3()));
-          updateLine();
-        }
-      };
-
-      renderer.domElement.addEventListener("pointermove", onPointer);
-      renderer.domElement.addEventListener("click", onClick);
-
-      // loop
-      const loop = () => {
-        controls.update();
-        renderer.render(scene, cameraRef.current!);
-        frameRef.current = requestAnimationFrame(loop);
-      };
-      frameRef.current = requestAnimationFrame(loop);
-
-      // cleanup
       return () => {
-        if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        renderer.domElement.removeEventListener("pointermove", onPointer);
-        renderer.domElement.removeEventListener("click", onClick);
-        ro.disconnect();
-        window.removeEventListener("resize", onResize);
-        renderer.dispose();
-        wrap.removeChild(renderer.domElement);
+        if (disposed) return;
+        disposed = true;
       };
     }, []);
 
-    const reset = () => {
-      // Réinitialise uniquement la ligne
-      if (lineRef.current) {
-        lineRef.current.geometry.dispose();
-        lineRef.current.geometry = new THREE.BufferGeometry().setFromPoints([]);
-      }
-    };
-
+    // le conteneur prend toute la place disponible
     return (
-      <div ref={wrapRef} style={{ width: "100%", height: "auto", minHeight: "54vh", position: "relative", outline: "none" }}>
-        <div style={{ position: "absolute", left: 12, bottom: 12, display: "flex", gap: 8, zIndex: 5 }}>
-          <button onClick={reset} style={btn()}>Réinitialiser</button>
-        </div>
-        <div style={hud()}>
-          <strong>Écrire avec les os — Fil & alphabet</strong>
-          <span style={{ opacity: .8 }}>{status === "loading" ? msg : "Clique les pastilles pour tracer un fil."}</span>
-        </div>
-      </div>
+      <div ref={wrapRef} style={{position:"relative", width:"100%", height:"min(70vh, 720px)", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden"}} />
     );
   }
 
-  // Petits styles inline
-  const btn = () => ({
-    padding: "8px 12px",
-    border: "1px solid #ffffff44",
-    background: "#0b1f33",
-    color: "#e6f1ff",
-    borderRadius: 10,
-    cursor: "pointer"
-  } as React.CSSProperties);
-
-  const hud = () => ({
-    position: "absolute" as const,
-    left: 12, top: 12, right: 12,
-    display: "flex", alignItems: "center", justifyContent: "space-between",
-    gap: 10, padding: "8px 10px",
-    borderRadius: 10, border: "1px solid #ffffff22", background: "rgba(6,18,30,.55)",
-    color: "#e6f1ff", zIndex: 5
-  });
-
-  // Expose une seule fois
-  (window as any).AstragalusLevel2 = AstragalusLevel2;
+  // export global pour ton HTML
+  window.OsseletsLevel2 = OsseletsLevel2;
 })();
