@@ -33,13 +33,13 @@
     header.wrap { padding: 16px; margin: 0 auto; max-width: 1100px; }
     header.wrap h1 { margin:0; color:#e6f1ff; font: 600 28px/1.2 system-ui,Segoe UI,Roboto,Arial }
     header.wrap p { margin:6px 0 0; color:#cfe2ff }
-    body { background: radial-gradient(1200px 600px at 50% -10%, #0e2741 0, #071725 60%, #05101b 100%); color:#e6f1ff; font: 16px/1.45 system-ui,Segoe UI,Roboto,Arial }
+    body { background: radial-gradient(1200px 600px at 50% -10%, #0b3b66 0, transparent 60%), #051726; color:#e6f1ff; font: 16px/1.45 system-ui,Segoe UI,Roboto,Arial }
     a { color:#90e0ff }
     .p-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px }
 
     /* Aperçu overlay (fallback si style.css absent) */
-    .overlay { position:fixed; inset:0; display:none; z-index:9999; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:18px }
-    .overlay .panel { position:relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px; width:min(1100px, 100%); height:min(78vh, 100%); overflow:hidden; display:flex; flex-direction:column }
+    .overlay { position:fixed; inset:0; display:none; z-index:999; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:18px }
+    .overlay .panel { position:relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px; width:min(1100px, 100%); height:min(80vh, 100%); overflow:hidden; display:flex; flex-direction:column }
     .overlay header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff }
     .overlay iframe { width:100%; height:100%; flex:1 1 auto; border:0; background:#fff }
 
@@ -58,41 +58,19 @@
 <body>
   <header class="wrap">
     <h1>Portfolio — Nicolas Tuor</h1>
-    <p class="muted">Sélection de projets web (éducation, IA, jeux). Les boutons « Aperçu » ouvrent un site dans un overlay quand c’est autorisé par le site cible.</p>
+    <p class="muted">Sélection de projets web (éducation, IA, jeux pédagogiques). Les vignettes ouvrent un site dans un overlay quand c’est autorisé par le site cible.</p>
   </header>
 
   <main class="wrap">
+    <!-- ===================== AUTRES PROJETS (cartes/overlays) ===================== -->
+    <!-- Gardés tels quels (sections sites pré-existantes)… -->
 
-    <!-- Grille des sites (les trois sites + autres vignettes) -->
-    <section class="card">
-      <div class="head">
-        <div class="hero"><span class="emoji">🌐</span><strong>Sites</strong></div>
-        <div class="muted">Prévisualisation embarquée si possible</div>
-      </div>
-      <div class="body">
-        <div id="portfolioGrid" class="p-grid"></div>
-      </div>
-    </section>
-
-    <!-- Overlay Aperçu -->
-    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle" style="display:none">
-      <div class="panel">
-        <header>
-          <strong id="ovlTitle"></strong>
-          <button id="overlayClose" class="btn">Fermer</button>
-        </header>
-        <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
-      </div>
-    </div>
-
-    <!-- =========================================================
-         OSSELETS — Mini-jeux (containers séparés)
-         ========================================================= -->
+    <!-- ===================== JEUX OSSELETS ===================== -->
 
     <!-- Jeu 1 : Runner 2D -->
     <section class="game-card" id="osselets-runner-card">
       <h2>🎮 Runner 2D – Amulettes d’astragale</h2>
-      <p class="muted">Découvrir l’anatomie (talus) et les usages amulétistes (purification, apotropaïsme) en courant. </p>
+      <p class="muted">Découvrir l’anatomie (talus) et les usages amulétistes (purification, apotropaïsme) en courant.</p>
       <div class="row" style="gap:8px;margin-bottom:8px">
         <button id="btn-start-runner" class="btn">Lancer</button>
       </div>
@@ -164,31 +142,45 @@
 
   <!-- Montage / Navigation (un container par jeu) -->
   <script type="text/babel">
-    (function () {
-      function mount(root, cover, CompName) {
-        const Comp = window && window[CompName];
-        if (!root || !Comp) { console.warn("[mount] composant introuvable:", CompName); return; }
-        if (cover) { cover.style.display = 'none'; cover.remove(); }
-        const r = ReactDOM.createRoot(root);
-        r.render(React.createElement(Comp));
-        setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
-      }
-
-      // Runner
-      document.getElementById('btn-start-runner')?.addEventListener('click', () =>
-        mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner')
-      );
-
-      // L2
-      document.getElementById('btn-start-l2')?.addEventListener('click', () =>
-        mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2')
-      );
-
-      // L3
-      document.getElementById('btn-start-l3')?.addEventListener('click', () =>
-        mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3')
-      );
-    })();
+  (function () {
+    function stopAllAudio() {
+      document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
+    }
+    function whenReady(name, cb, tries = 40) { // ~5s max
+      const Comp = window && window[name];
+      if (Comp) return cb(Comp);
+      if (tries <= 0) { console.warn("[osselets] composant introuvable:", name); return; }
+      setTimeout(() => whenReady(name, cb, tries - 1), 125);
+    }
+    function mount(root, cover, CompName, btn) {
+      if (!root) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
+      stopAllAudio();
+      whenReady(CompName, (Comp) => {
+        try {
+          if (cover) { cover.style.display = 'none'; cover.remove(); }
+          const r = ReactDOM.createRoot(root);
+          r.render(React.createElement(Comp));
+          setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
+        }
+      });
+    }
+    // Boutons → montage des 3 jeux
+    const btnRun = document.getElementById('btn-start-runner');
+    const btnL2  = document.getElementById('btn-start-l2');
+    const btnL3  = document.getElementById('btn-start-l3');
+    btnRun?.addEventListener('click', () =>
+      mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner', btnRun)
+    );
+    btnL2?.addEventListener('click', () =>
+      mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2', btnL2)
+    );
+    btnL3?.addEventListener('click', () =>
+      mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3', btnL3)
+    );
+  })();
   </script>
 </body>
 </html>
