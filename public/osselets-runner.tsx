@@ -1,269 +1,361 @@
 /* public/osselets-runner.tsx
-   Mini-jeu 1 — Runner 2D : amulettes & “mauvais œil”
-   - Bus audio global commun aux 3 jeux
-   - Avertissements Babel OK en dev (précompiler pour prod)
-   - Fix React: hooks uniquement dans le composant; aucune promesse rendue
-   - UI clavier : ←/→, Espace, S (NIKĒ), C (Katharsis), W (Apotropaïon), M (musique ON/OFF)
-   - Assets: /assets/games/osselets/audio/..., /assets/games/osselets/audio/img/...
+   Mini‑jeu 1 — Runner 2D : amulettes et « mauvais œil »
+
+   Cette version reprend le code original du runner et y ajoute une gestion
+   d’amulette « historiquement cadrée ». Chaque amulette porte son nom grec
+   (NIKĒ pour la vitesse, Katharsis pour la purification et Apotropaïon pour
+   la protection contre le mauvais œil) et un court toast explicatif qui ne
+   s’affiche qu’une seule fois lors de la première collecte.  Les touches
+   [S], [C], [W] permettent d’activer une seule amulette à la fois.  Le
+   Bus audio global (window.AstragalusAudioBus) coupe la musique quand on
+   change de jeu.
 */
-(function (global) {
+(function () {
   const { useEffect, useRef, useState } = React;
 
-  // ---------- Bus audio commun ----------
-  if (!global.AstragalusAudioBus) {
-    global.AstragalusAudioBus = {
-      _list: [],
-      register(a) { if (a && !this._list.includes(a)) this._list.push(a); },
-      stopAll()   { this._list.forEach(a=>{ try{ a.pause(); a.currentTime=0; }catch{} }); },
-      muteAll(m)  { this._list.forEach(a=>{ try{ a.muted=!!m; }catch{} }); }
-    };
-  }
+  // ---------- AudioBus global ----------
+  (function ensureBus () {
+    if (!window.AstragalusAudioBus) {
+      window.AstragalusAudioBus = {
+        _list: [],
+        register(a) { if (a && !this._list.includes(a)) this._list.push(a); },
+        stopAll()   { this._list.forEach(a=>{ try{ a.pause(); a.currentTime=0; }catch{} }); },
+        muteAll(m)  { this._list.forEach(a=>{ try{ a.muted=!!m; }catch{} }); }
+      };
+    }
+  })();
 
-  // ---------- Constantes ----------
-  const W = 960, H = 540, GROUND_Y = 440;
-  const IMG_BASES = ["/assets/games/osselets/audio/img/","/assets/games/osselets/img/"];
-  const ABASE = "/assets/games/osselets/audio/";
-  const AU = { music:"game-music-1.mp3", jump:"jump-sound.mp3", catch:"catch-sound.mp3", ouch:"ouch-sound.mp3" };
-  const FILES = {
-    amulets: { speed:"amulette-speed.png", purify:"amulette-purify.png", ward:"amulette-ward.png" },
-    hazard: "evil-eye.png",
-    start:  "start-screenshot.webp" // évite 404 si pré-chargé par l’écran d’attente
-  };
+  // ---------- Constantes / Assets ----------
+  const WORLD_W = 960, WORLD_H = 540;
+  const IMG_BASES = [
+    "/assets/games/osselets/audio/img/",
+    "/assets/games/osselets/img/"
+  ];
+  const AUDIO_BASE = "/assets/games/osselets/audio/";
+  const AUDIO = { music:"game-music-1.mp3", jump:"jump-sound.mp3", catch:"catch-sound.mp3", ouch:"ouch-sound.mp3" };
+  const AMULET_FILES = { speed:"amulette-speed.png", purify:"amulette-purify.png", ward:"amulette-ward.png" };
+  const HAZARD = "evil-eye.png";
 
   // ---------- Utils ----------
-  function logOnce(key, ...args){ const k="__once_"+key; if(global[k]) return; global[k]=1; console.warn(...args); }
-  function loadImage(url){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(new Error("img "+url)); im.src=encodeURI(url); }); }
-  async function loadImageSmart(file){
-    for(const b of IMG_BASES){ try{ return await loadImage(b+file);}catch{} }
-    logOnce("img_"+file,"[runner] image introuvable:",file,"bases:",IMG_BASES);
+  function logOnce(key, ...args) {
+    const k = `__once_${key}`;
+    if (window[k]) return; window[k] = true; console.warn(...args);
+  }
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => reject(new Error("img load failed: "+url));
+      im.src = encodeURI(url);
+    });
+  }
+  async function loadImageSmart(file) {
+    for (const base of IMG_BASES) {
+      try { return await loadImage(base + file); } catch {}
+    }
+    logOnce("img_"+file, "[runner] image introuvable:", file, " (bases:", IMG_BASES, ")");
     return null;
   }
-  async function fetchJSON(file){
-    for(const b of IMG_BASES){ try{ const r=await fetch(b+file,{cache:"no-store"}); if(r.ok) return await r.json(); }catch{} }
-    logOnce("json_"+file,"[runner] json introuvable:",file); return null;
+  async function fetchJSON(file) {
+    for (const b of IMG_BASES) {
+      try { const r = await fetch(b+file, { cache: "no-store" }); if (r.ok) return await r.json(); } catch {}
+    }
+    logOnce("json_"+file, "[runner] json introuvable:", file);
+    return null;
   }
-  function loadAudio(file,vol=1,loop=false){ try{ const a=new Audio(ABASE+file); a.preload="auto"; a.loop=!!loop; a.volume=vol; global.AstragalusAudioBus.register(a); return a; }catch{ return null; } }
+  function loadAudio(file, vol=1, loop=false) {
+    try {
+      const a = new Audio(AUDIO_BASE + file);
+      a.preload="auto"; a.loop=!!loop; a.volume=vol;
+      window.AstragalusAudioBus.register(a);
+      return a;
+    } catch { return null; }
+  }
 
   // ---------- Composant ----------
-  function AstragalusRunner(){
+  function AstragalusRunner() {
     const hostRef = useRef(null);
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
 
     // audio
-    const musRef = useRef(null), sJumpRef=useRef(null), sOkRef=useRef(null), sOuchRef=useRef(null);
-    const [musicOn,setMusicOn]=useState(true);
+    const musicRef = useRef(null);
+    const sJumpRef = useRef(null);
+    const sOkRef   = useRef(null);
+    const sOuchRef = useRef(null);
+    const [musicOn, setMusicOn] = useState(true);
 
-    // état jeu
-    const imgMap=useRef({});
-    const heroAnim=useRef({ clips:{}, origin:[0.5,1], frameSize:[64,64] });
-    const rafRef=useRef(0);
-    const tRef=useRef(0);
+    // état
+    const imgMap   = useRef({});
+    const heroAnim = useRef({ clips:{}, origin:[0.5,1], frameSize:[64,64] });
+    const tRef     = useRef(0);
+    const rafRef   = useRef(0);
 
-    const player=useRef({ x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true, facing:1, baseSpeed:3, speedMul:1, dirt:0, runPhase:0, coyote:0, jumpBuf:0 });
-    const inv=useRef({ speed:false, purify:false, ward:false });
-    const keys=useRef({});
-    const pickups=useRef([]); // {x,y,w,h,file,kind}
-    const hazards=useRef([]); // {x,y,w,h,file}
+    const GROUND_Y = 440;
+    const player = useRef({ x:120, y:GROUND_Y-68, w:42, h:68, vx:0, vy:0, onGround:true,
+                            facing:1, baseSpeed:3.0, speedMul:1.0, dirt:0, runPhase:0, coyote:0, jumpBuf:0 });
+    const inv = useRef({ speed:false, purify:false, ward:false });
+    const wardTimer = useRef(0);
+    const keys = useRef({});
 
-    const [edu,setEdu]=useState(null);  // toast docu
-    const eduSeen=useRef({ speed:false, purify:false, ward:false });
+    const pickups = useRef([]); // {x,y,w,h,file}
+    const hazards = useRef([]); // {x,y,w,h,file}
 
-    // stop musique précédente
-    useEffect(()=>{ global.AstragalusAudioBus.stopAll(); },[]);
+    const [edu, setEdu] = useState(null);  // toasts docu
+    const eduSeen = useRef({ speed:false, purify:false, ward:false });
+
+    // stop les autres musiques au montage
+    useEffect(()=>{ window.AstragalusAudioBus.stopAll(); },[]);
 
     // DPR / responsive
-    useEffect(()=>{
-      const cv=canvasRef.current, ctx=cv.getContext("2d"); ctxRef.current=ctx;
+    useEffect(() => {
+      const cv = canvasRef.current, ctx = cv.getContext("2d"); ctxRef.current = ctx;
       function resize(){
-        const w=hostRef.current?.clientWidth||W, h=Math.round(w*(H/W));
-        const dpr=Math.max(1,Math.min(2.5,global.devicePixelRatio||1));
-        cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
-        cv.style.width=w+"px"; cv.style.height=h+"px";
-        ctx.setTransform(dpr*(w/W),0,0,dpr*(w/W),0,0);
+        const w = hostRef.current?.clientWidth || WORLD_W;
+        const h = Math.round(w*(WORLD_H/WORLD_W));
+        const dpr = Math.max(1, Math.min(2.5, window.devicePixelRatio||1));
+        cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+        cv.style.width = w+"px"; cv.style.height = h+"px";
+        ctx.setTransform(dpr*(w/WORLD_W), 0, 0, dpr*(w/WORLD_W), 0, 0);
       }
-      resize(); const ro=global.ResizeObserver?new ResizeObserver(resize):null; ro?.observe(hostRef.current);
-      const onR=()=>resize(); global.addEventListener("resize",onR);
-      return ()=>{ ro?.disconnect(); global.removeEventListener("resize",onR); };
+      resize(); const ro=new ResizeObserver(resize); hostRef.current && ro.observe(hostRef.current);
+      window.addEventListener("resize",resize);
+      return ()=>{ ro?.disconnect(); window.removeEventListener("resize",resize); };
     },[]);
 
-    // audio
-    useEffect(()=>{
-      try{ musRef.current=loadAudio(AU.music,0.35,true); if(musicOn) musRef.current?.play().catch(()=>{});}catch{}
-      try{ sJumpRef.current=loadAudio(AU.jump,0.9,false);}catch{}
-      try{ sOkRef.current=loadAudio(AU.catch,0.9,false);}catch{}
-      try{ sOuchRef.current=loadAudio(AU.ouch,0.8,false);}catch{}
-      return ()=>{ try{ musRef.current?.pause(); }catch{} };
+    // audio init
+    useEffect(()=> {
+      try { musicRef.current = loadAudio(AUDIO.music, 0.35, true); if (musicOn) musicRef.current.play().catch(()=>{}); } catch {}
+      try { sJumpRef.current  = loadAudio(AUDIO.jump, 0.9, false); } catch {}
+      try { sOkRef.current    = loadAudio(AUDIO.catch, 0.8, false); } catch {}
+      try { sOuchRef.current  = loadAudio(AUDIO.ouch, 0.8, false); } catch {}
+      return ()=>{ try{ musicRef.current?.pause(); }catch{} };
     },[]);
-    useEffect(()=>{ const m=musRef.current; if(!m) return; m.muted=!musicOn; if(musicOn){ m.play?.().catch(()=>{});} else m.pause?.(); },[musicOn]);
+    useEffect(()=>{ const m=musicRef.current; if(!m) return; m.muted=!musicOn; if(musicOn) m.play().catch(()=>{}); else m.pause(); },[musicOn]);
 
-    // charge sprites + anims
-    useEffect(()=>{
-      let cancelled=false;
-      (async()=>{
-        // précharge screenshot d’attente (évite 404 s’il est référencé)
-        await loadImageSmart(FILES.start).catch(()=>{});
-        const anim=await fetchJSON("hero.anim.json"); if(!anim) return;
-        heroAnim.current.origin=anim.origin||[0.5,1];
-        heroAnim.current.frameSize=anim.frameSize||[64,64];
-        async function loadList(files){ const out=[]; for(const f of files){ if(!imgMap.current[f]) imgMap.current[f]=await loadImageSmart(f); out.push({file:f,img:imgMap.current[f]}); } return out; }
-        const clips={}; for(const [name,def] of Object.entries(anim.animations||{})){ const frames=await loadList(def.files||[]); clips[name]={frames,fps:def.fps||8,loop:!!def.loop}; }
-        heroAnim.current.clips=clips;
+    // charge animations héros + assets
+    useEffect(() => {
+      let cancelled = false;
+      (async () => {
+        const anim = await fetchJSON("hero.anim.json");
+        if (!anim) return;
+        heroAnim.current.origin = anim.origin || [0.5,1];
+        heroAnim.current.frameSize = anim.frameSize || [64,64];
 
-        // icônes (amulettes + piège)
-        for(const f of Object.values(FILES.amulets)){ if(!imgMap.current[f]) imgMap.current[f]=await loadImageSmart(f); }
-        if(!imgMap.current[FILES.hazard]) imgMap.current[FILES.hazard]=await loadImageSmart(FILES.hazard);
+        async function loadList(files){ const arr=[]; for(const f of files){ if(!imgMap.current[f]) imgMap.current[f]=await loadImageSmart(f); arr.push({file:f,img:imgMap.current[f]}); } return arr; }
+        const clips = {};
+        for (const [name, def] of Object.entries(anim.animations||{})) {
+          const frames = await loadList(def.files);
+          clips[name] = { frames, fps: def.fps||8, loop: !!def.loop };
+        }
+        heroAnim.current.clips = clips;
 
-        if(!cancelled) loop();
+        // amulettes + piège
+        for (const f of Object.values(AMULET_FILES)) if (!imgMap.current[f]) imgMap.current[f]=await loadImageSmart(f);
+        if (!imgMap.current[HAZARD]) imgMap.current[HAZARD]=await loadImageSmart(HAZARD);
+
+        if (!cancelled) loop();
       })();
-      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current); try{ musRef.current?.pause(); }catch{} };
+      return () => { cancelled = true; cancelAnimationFrame(rafRef.current); try{ musicRef.current?.pause(); }catch{} };
     },[]);
+
+    // ours (optionnel) — on ne l’utilise pas dans cette version simplifiée
+    const bearAnim = useRef(null);
+    useEffect(()=>{ (async()=>{
+      const j = await fetchJSON("bear.anim.json");
+      if (j?.files) {
+        const frames = (await Promise.all(j.files.map((f)=>loadImageSmart(f)))).filter(Boolean);
+        if (frames.length) bearAnim.current = { frames, t:0 };
+      }
+    })(); },[]);
 
     // input
     useEffect(()=>{
-      const kd=(e)=>{ const k=e.key; if(["ArrowLeft","ArrowRight"," ","Space","ArrowUp","m","M","s","S","c","C","w","W"].includes(k)) e.preventDefault(); keys.current[k]=true;
-        if(k===" "||k==="Space"||k==="ArrowUp") jump();
-        if(k==="m"||k==="M") setMusicOn(v=>!v);
-        if(k==="s"||k==="S") setAmulet("speed");
-        if(k==="c"||k==="C") setAmulet("purify");
-        if(k==="w"||k==="W") setAmulet("ward");
+      const onKeyDown = (e) => {
+        if (["ArrowLeft","ArrowRight"," ","Space","m","M","s","S","c","C","w","W"].includes(e.key)) e.preventDefault();
+        keys.current[e.key] = true;
+        if (e.key===" " || e.key==="Space" || e.key==="ArrowUp") jump();
+        if (e.key==="m"||e.key==="M") setMusicOn(v=>!v);
+        if (e.key==="s"||e.key==="S") setAmulet("speed");
+        if (e.key==="c"||e.key==="C") setAmulet("purify");
+        if (e.key==="w"||e.key==="W") setAmulet("ward");
       };
-      const ku=(e)=>{ keys.current[e.key]=false; };
-      global.addEventListener("keydown",kd); global.addEventListener("keyup",ku);
-      return ()=>{ global.removeEventListener("keydown",kd); global.removeEventListener("keyup",ku); };
+      const onKeyUp = (e)=>{ keys.current[e.key] = false; };
+      window.addEventListener("keydown", onKeyDown);
+      window.addEventListener("keyup", onKeyUp);
+      return ()=>{ window.removeEventListener("keydown",onKeyDown); window.removeEventListener("keyup",onKeyUp); };
     },[]);
 
-    function toast(msg){ setEdu({msg,until:performance.now()+4200}); }
+    /**
+     * Active une amulette et affiche un toast éducatif une seule fois par type.
+     * NIKĒ (accélération), Katharsis (purification) et Apotropaïon (contre le mauvais œil).
+     */
     function setAmulet(kind){
-      inv.current={ speed:false, purify:false, ward:false, [kind]:true };
-      if(kind==="speed"  && !eduSeen.current.speed ){ toast("**NIKĒ** — amulette de **vitesse** (élan de victoire)."); eduSeen.current.speed=true; }
-      if(kind==="purify" && !eduSeen.current.purify){ toast("**Katharsis** — amulette **purificatrice** contre la souillure."); eduSeen.current.purify=true; }
-      if(kind==="ward"   && !eduSeen.current.ward  ){ toast("**Apotropaïon** — **écarte le mauvais œil** (protection)."); eduSeen.current.ward=true; }
+      inv.current = { speed:false, purify:false, ward:false, [kind]:true };
+      if (kind==="speed"  && !eduSeen.current.speed) {
+        toast("**NIKĒ** — amulette de vitesse (élan de victoire).", 4200);
+        eduSeen.current.speed = true;
+      }
+      if (kind==="purify" && !eduSeen.current.purify) {
+        toast("**Katharsis** — amulette purificatrice : nettoyage contre la souillure et le poison.", 4200);
+        eduSeen.current.purify = true;
+      }
+      if (kind==="ward"   && !eduSeen.current.ward) {
+        toast("**Apotropaïon** — amulette apotropaïque qui écarte le mauvais œil.", 4200);
+        eduSeen.current.ward = true;
+      }
     }
+
+    /**
+     * Affiche un toast en bas de l’écran pendant un certain temps.
+     */
+    function toast(msg, dur=4200){ const until=performance.now()+dur; setEdu({msg,until}); }
+
+    /**
+     * Saut avec gestion du coyote time.
+     */
     function jump(){
       const p=player.current;
-      if(p.onGround||p.coyote>0){ p.vy=-12; p.onGround=false; p.coyote=0; try{ const s=sJumpRef.current; if(s){ s.currentTime=0; s.play().catch(()=>{});} }catch{} }
+      if (p.onGround || p.coyote>0){
+        p.vy = -12; p.onGround=false; p.coyote=0;
+        try{ sJumpRef.current && (sJumpRef.current.currentTime=0, sJumpRef.current.play()); }catch{}
+      }
     }
 
+    /**
+     * Génère de nouveaux pickups et pièges. Les amulettes apparaissent au hasard.
+     */
     function spawn(){
-      // pickups amulettes
-      if(Math.random()<0.018){
-        const arr=Object.values(FILES.amulets); const file=arr[(Math.random()*arr.length)|0];
-        pickups.current.push({x:W+30,y:360+(Math.random()*120|0),w:40,h:40,file,kind:file.includes("speed")?"speed":file.includes("purify")?"purify":"ward"});
+      // amulette (pickup)
+      if (Math.random() < 0.018) {
+        const files = Object.values(AMULET_FILES);
+        const file = files[(Math.random()*files.length)|0];
+        pickups.current.push({ x: WORLD_W+50, y: 360 + Math.random()*-140, w:40, h:40, file });
       }
-      // pièges “evil eye”
-      if(Math.random()<0.012){
-        hazards.current.push({x:W+30,y:380+(Math.random()*110|0),w:44,h:44,file:FILES.hazard});
-      }
+      // mauvais œil
+      if (Math.random() < 0.014) hazards.current.push({ x: WORLD_W+60, y: 420, w:42, h:42, file:HAZARD });
     }
 
-    function step(dt){
-      const ctx=ctxRef.current, p=player.current;
+    /**
+     * Mises à jour physiques et collisions.
+     */
+    function step(dtMs){
+      const p=player.current; const g=0.6; const maxVx= (inv.current.speed? 1.6:1.0)*p.baseSpeed;
+      p.vx = (keys.current["ArrowRight"]? maxVx : 0) + (keys.current["ArrowLeft"]? -maxVx*0.8 : 0);
+      p.x += p.vx; if (p.x<0) p.x=0; if (p.x>WORLD_W-80) p.x=WORLD_W-80;
 
-      // input horizontal
-      const left=keys.current["ArrowLeft"], right=keys.current["ArrowRight"];
-      const target = (right?1:0) - (left?1:0);
-      const maxSpeed = p.baseSpeed * (inv.current.speed ? 1.75 : 1.0) * (p.dirt>0 ? 0.6 : 1.0);
-      p.vx += (target*maxSpeed - p.vx) * 0.4;
-      p.facing = p.vx>=0 ? 1 : -1;
+      // gravité
+      p.vy += g; p.y += p.vy;
+      if (p.y >= GROUND_Y - p.h) { p.y = GROUND_Y - p.h; p.vy=0; if (!p.onGround) p.coyote=120; p.onGround=true; }
+      else { p.onGround=false; p.coyote=Math.max(0,p.coyote-dtMs); }
 
-      // gravité + sol
-      p.vy += 0.6; p.y += p.vy; if(p.y>GROUND_Y-p.h){ p.y=GROUND_Y-p.h; p.vy=0; if(!p.onGround) p.coyote=5; p.onGround=true; } else { p.onGround=false; if(p.coyote>0) p.coyote--; }
-      p.x = Math.max(40, Math.min(W-40, p.x + p.vx));
-
-      // spawns & déplacement objets
-      if((Math.random()*100|0)===0) spawn();
-      pickups.current.forEach(o=>o.x -= 3.2);
-      hazards.current.forEach(o=>o.x -= 3.0);
+      // spawn & défilement
+      if (Math.random()<0.05) spawn();
+      for (const obj of pickups.current.concat(hazards.current)) obj.x -= 3;
 
       // collisions
-      function hit(a,b){ return Math.abs((a.x+a.w*0.5)-(b.x+b.w*0.5))<(a.w+b.w)*0.5 && Math.abs((a.y+a.h*0.5)-(b.y+b.h*0.5))<(a.h+b.h)*0.5; }
-      pickups.current = pickups.current.filter(o=>{
-        if(hit({x:p.x,y:p.y,w:p.w,h:p.h},o)){
-          if(o.kind==="purify"){ p.dirt=Math.max(0,p.dirt-1); }
-          inv.current={ speed:false,purify:false,ward:false,[o.kind]:true };
-          try{ const s=sOkRef.current; s && (s.currentTime=0, s.play().catch(()=>{})); }catch{}
-          if(o.kind==="speed") toast("**NIKĒ** : accélération **temporaire** (croyance propitiatoire).");
-          if(o.kind==="purify") toast("**Katharsis** : purification / nettoyage contre la **maladie**.");
-          if(o.kind==="ward")   toast("**Apotropaïon** : protection contre le **mauvais œil**.");
-          return false;
-        }
-        return o.x>-80;
-      });
-      hazards.current = hazards.current.filter(o=>{
-        if(hit({x:p.x,y:p.y,w:p.w,h:p.h},o)){
-          if(!inv.current.ward){ p.dirt=(p.dirt||0)+1; try{ const s=sOuchRef.current; s && (s.currentTime=0, s.play().catch(()=>{})); }catch{} toast("⚠️ **Mauvais œil** — effet négatif sans amulette **apotropaïque**."); }
-          return false;
-        }
-        return o.x>-80;
-      });
-
-      // rendu
-      ctx.clearRect(0,0,W,H);
-      // fond
-      const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0b2334"); g.addColorStop(1,"#0a1b2a"); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-      ctx.fillStyle="#0f2a42"; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
-
-      // joueur (anim approximative: idle/run/jump)
-      const clips=heroAnim.current.clips;
-      let clip = p.onGround ? (Math.abs(p.vx)>0.2 ? clips.run : clips.idle) : clips.jump;
-      const now=tRef.current+=dt; const origin=heroAnim.current.origin; const fs=heroAnim.current.frameSize;
-      if(clip && clip.frames.length){
-        const idx = Math.floor((now/1000)*(clip.fps||8)) % clip.frames.length;
-        const fr = clip.frames[idx]?.img;
-        if(fr){
-          ctx.save(); ctx.translate(p.x, p.y+p.h); ctx.scale(p.facing,1);
-          const ox=fs[0]*origin[0], oy=fs[1]*origin[1];
-          ctx.drawImage(fr, -ox, -oy, fs[0], fs[1]);
-          ctx.restore();
+      const me = {x:p.x, y:p.y, w:p.w, h:p.h};
+      // pickups
+      for (let i=pickups.current.length-1;i>=0;i--){
+        const it = pickups.current[i];
+        if (overlap(me,it)) {
+          pickups.current.splice(i,1);
+          try{ sOkRef.current && (sOkRef.current.currentTime=0, sOkRef.current.play()); }catch{}
+          if (it.file===AMULET_FILES.speed)  setAmulet("speed");
+          if (it.file===AMULET_FILES.purify) setAmulet("purify");
+          if (it.file===AMULET_FILES.ward)   setAmulet("ward");
         }
       }
-
-      // objets
-      function drawIcon(o){
-        const im=imgMap.current[o.file]; if(!im) return;
-        ctx.drawImage(im, o.x-o.w*0.5, o.y-o.h*0.5, o.w, o.h);
-      }
-      pickups.current.forEach(drawIcon);
-      hazards.current.forEach(drawIcon);
-
-      // HUD
-      ctx.fillStyle="#cfe2ff"; ctx.font="16px system-ui,Segoe UI,Roboto,Arial";
-      ctx.fillText("←/→ • S/C/W = amulettes • Espace = sauter • M = musique", 16, 24);
-      ctx.fillText(`Effets : ${inv.current.speed?"Vitesse ":""}${inv.current.purify?"Purification ":""}${inv.current.ward?"Protection ":""}${p.dirt?`| Malus×${p.dirt}`:""}`, 16, 46);
-
-      if(edu && performance.now()<edu.until){
-        ctx.fillStyle="rgba(0,0,0,.55)"; ctx.fillRect(20,H-130,W-40,90);
-        ctx.fillStyle="#e6f1ff"; ctx.font="18px system-ui,Segoe UI,Roboto,Arial"; ctx.fillText("💡 Info", 30, H-100);
-        ctx.font="16px system-ui,Segoe UI,Roboto,Arial"; wrap(ctx, edu.msg, 30, H-78, W-60, 18);
+      // hazards
+      for (let i=hazards.current.length-1;i>=0;i--){
+        const hz = hazards.current[i];
+        if (overlap(me,hz)) {
+          hazards.current.splice(i,1);
+          if (inv.current.ward) { toast("L’amulette apotropaïque te protège !", 2800); }
+          else {
+            p.baseSpeed = Math.max(2.2, p.baseSpeed*0.92);
+            try{ sOuchRef.current && (sOuchRef.current.currentTime=0, sOuchRef.current.play()); }catch{}
+            toast("Aïe, **mauvais œil** → tu ralentis (essaie [W])", 3000);
+          }
+        }
       }
     }
 
-    function wrap(ctx, text, x,y,w,lh){ const words=(text||"").split(/\s+/); let line=""; for(const wd of words){ const t=(line?line+" ":"")+wd; if(ctx.measureText(t).width>w && line){ ctx.fillText(line,x,y); line=wd; y+=lh; } else line=t; } if(line) ctx.fillText(line,x,y); }
+    function overlap(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
 
+    /**
+     * Rendu de la scène (fond, pickups, héros, HUD, toast).
+     */
+    function draw(){
+      const ctx=ctxRef.current, p=player.current;
+      ctx.clearRect(0,0,WORLD_W,WORLD_H);
+      // fond
+      const g=ctx.createLinearGradient(0,0,0,WORLD_H); g.addColorStop(0,"#0b1f33"); g.addColorStop(1,"#0a1624");
+      ctx.fillStyle=g; ctx.fillRect(0,0,WORLD_W,WORLD_H);
+      // sol
+      ctx.fillStyle="#19385c"; ctx.fillRect(0,GROUND_Y, WORLD_W, WORLD_H-GROUND_Y);
+
+      // pickups/hazards
+      for (const arr of [pickups.current, hazards.current]){
+        for (const it of arr){
+          const img = imgMap.current[it.file];
+          if (img) ctx.drawImage(img, it.x, it.y, it.w, it.h);
+        }
+      }
+
+      // héros (dessine la première frame de l’animation "run" ou "idle")
+      const run = heroAnim.current.clips.run || heroAnim.current.clips.idle;
+      const origin = heroAnim.current.origin||[0.5,1]; const fs=heroAnim.current.frameSize||[64,64];
+      const fr = run?.frames?.[Math.floor((performance.now()/1000* (run?.fps||6))% (run?.frames?.length||1))];
+      if (fr?.img) {
+        const dw = 42, dh = 68; const dx = p.x - dw*origin[0], dy = p.y - dh*(origin[1]);
+        ctx.drawImage(fr.img, fr.img.sx||0, fr.img.sy||0, fr.img.sw||fr.img.naturalWidth||fs[0], fr.img.sh||fr.img.naturalHeight||fs[1], dx, dy, dw, dh);
+      } else {
+        ctx.fillStyle="#fff"; ctx.fillRect(p.x, p.y, p.w, p.h);
+      }
+
+      // HUD
+      ctx.fillStyle="#e2e8f0"; ctx.font="12px ui-sans-serif, system-ui";
+      ctx.fillText("[←/→] bouger   [Espace] sauter   [S] NIKĒ   [C] Katharsis   [W] Apotropaïon   [M] musique", 16, 24);
+      const label = inv.current.speed ? "NIKĒ" : inv.current.purify ? "Katharsis" : inv.current.ward ? "Apotropaïon" : "—";
+      ctx.fillText("Amulette active : " + label, 16, 44);
+
+      // toast éducatif
+      const now=performance.now();
+      if (edu && now<edu.until){
+        ctx.save();
+        ctx.globalAlpha=0.95;
+        ctx.fillStyle="#0b3b2e"; ctx.fillRect(16, WORLD_H-88, WORLD_W-32, 64);
+        ctx.strokeStyle="#14532d"; ctx.lineWidth=2; ctx.strokeRect(16, WORLD_H-88, WORLD_W-32, 64);
+        ctx.fillStyle="#f8fafc"; ctx.font="14px ui-sans-serif, system-ui";
+        // retire les doubles astérisques pour l’affichage
+        const text = edu.msg.replace(/\*\*/g, "");
+        ctx.fillText(text, 24, WORLD_H-50);
+        ctx.restore();
+      }
+    }
+
+    /**
+     * Boucle d’animation.
+     */
     function loop(){
-      const t=performance.now(); const dt=t-(tRef.time||t); tRef.time=t;
+      const now = performance.now(), dt = now - tRef.current; tRef.current = now;
       step(dt);
-      rafRef.current=requestAnimationFrame(loop);
+      draw();
+      rafRef.current = requestAnimationFrame(loop);
     }
 
     return (
-      <div ref={hostRef} style={{position:"relative", width:"100%", aspectRatio:"16/9", border:"1px solid #224", borderRadius:"12px", overflow:"hidden"}}>
-        <canvas ref={canvasRef} width={W} height={H} aria-label="Runner 2D" />
-        <div style={{position:"absolute", inset:"auto 12px 12px auto", display:"flex", gap:"8px"}}>
-          <button onClick={()=>setMusicOn(v=>!v)} className="btn">Musique: {musicOn?"ON":"OFF"}</button>
-          <button onClick={()=>{ try{ global.AstragalusAudioBus.stopAll(); }catch{} }} className="btn">Stop musique</button>
+      <div ref={hostRef} style={{position:"relative", width:"100%", aspectRatio:"16/9", background:"#071528", border:"1px solid #163b62", borderRadius:12, overflow:"hidden"}}>
+        <canvas ref={canvasRef}/>
+        <div style={{position:"absolute",right:12,bottom:12,display:"flex",gap:8}}>
+          <button className="btn" onClick={()=>setMusicOn(v=>!v)}>{musicOn?"Musique ON":"Musique OFF"}</button>
+          <button className="btn" onClick={()=>window.AstragalusAudioBus.stopAll()}>Stop musique</button>
         </div>
       </div>
     );
   }
 
-  // Montage auto si un container existe déjà
-  function mountRunner(){
-    const el=document.getElementById("osselets-runner"); if(!el) return;
-    ReactDOM.createRoot(el).render(React.createElement(AstragalusRunner));
-  }
-  if (document.readyState==="loading") document.addEventListener("DOMContentLoaded", mountRunner);
-  else mountRunner();
-
-})(window);
+  // export
+  window.AstragalusRunner = AstragalusRunner;
+})();
