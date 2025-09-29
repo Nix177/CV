@@ -37,12 +37,11 @@
     a { color:#90e0ff }
     .p-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px }
 
-    /* Aperçu overlay (fallback si style.css absent) */
+    /* Aperçu overlay (fallback si /style.css absent) — non utilisé si ton style.css charge #pfOverlay */
     .overlay { position:fixed; inset:0; display:none; z-index:999; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:18px }
     .overlay .panel { position:relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px; width:min(1100px, 100%); height:min(80vh, 100%); overflow:hidden; display:flex; flex-direction:column }
     .overlay header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff }
     .overlay iframe { width:100%; height:100%; flex:1 1 auto; border:0; background:#fff }
-    /* Permet à portfolio.js d'afficher l'overlay en ajoutant la classe .show */
     .overlay.show { display:flex; }
 
     /* Cartes jeux */
@@ -91,25 +90,19 @@
       <div id="portfolioGrid" class="p-grid"></div>
     </section>
 
-    <!-- OVERLAY APERÇU (IDs “overlay/overlayFrame/overlayClose”) -->
-    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
-      <div class="panel">
-        <header>
-          <strong id="ovlTitle">Aperçu</strong>
-          <button id="overlayClose" class="btn">Fermer</button>
-        </header>
-        <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
-      </div>
-    </div>
-
-    <!-- OVERLAY SHIM (IDs attendus par certains scripts : “pfOverlay/pfFrame/pfClose”) -->
+    <!-- OVERLAY “pf” ALIGNÉ AVEC style.css -->
     <div id="pfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
-      <div class="panel">
-        <header>
+      <div class="pf-panel">
+        <header class="pf-head">
           <strong id="pfTitle">Aperçu</strong>
           <button id="pfClose" class="btn">Fermer</button>
         </header>
-        <iframe id="pfFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
+        <div class="pf-frame">
+          <iframe id="pfFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
+        </div>
+        <div id="pfMsg" class="muted" style="display:none;padding:8px 12px">
+          Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».
+        </div>
       </div>
     </div>
 
