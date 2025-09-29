@@ -57,26 +57,38 @@
 
   <link rel="preload" href="/style.css" as="style"/>
   <link rel="stylesheet" href="/style.css"/>
+  <!-- Scripts communs (comme sur Passions) -->
+  <script defer src="/assets/js/nav.js"></script>
+  <script defer src="/assets/js/feedback.js"></script>
 </head>
 
 <body>
-   <header class="site-header">
-    <nav class="site-nav" aria-label="Main navigation">
-      <ul class="menu">
-        <li><a href="/index.html" class="btn ghost">Accueil</a></li>
-        <li><a href="/cv.html" class="btn ghost">CV</a></li>
-        <li><a href="/portfolio.html" class="btn" aria-current="page">Portfolio</a></li>
-        <li><a href="/passions.html" class="btn ghost">Passions</a></li>
-        <li><a href="/fun-facts.html" class="btn ghost">Idées reçues</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a href="/portfolio.html" class="btn" aria-current="page">FR</a></li>
-        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
-        <li><a href="/portfolio-de.html" class="btn ghost">DE</a></li>
-      </ul>
-    </nav>
+  <!-- HEADER unifié (comme Passions) -->
+  <header>
+    <div class="headwrap">
+      <div class="brand">
+        <div class="logo">N·T</div>
+        <div>Portfolio</div>
+      </div>
+      <nav class="site-nav" aria-label="Navigation">
+        <ul class="menu">
+          <li><a class="btn" href="/index.html">Accueil</a></li>
+          <li><a class="btn" href="/cv.html">CV</a></li>
+          <li><a class="btn" href="/portfolio.html" aria-current="page">Portfolio</a></li>
+          <li><a class="btn" href="/passions.html">Passions</a></li>
+          <li><a class="btn" href="/ai-lab.html">Labo IA</a></li>
+          <li><a class="btn" href="/fun-facts.html">Idées reçues</a></li>
+        </ul>
+        <ul class="lang" aria-label="Langues">
+          <li><a class="lang" href="/portfolio.html" aria-current="page">FR</a></li>
+          <li><a class="lang" href="/portfolio-en.html">EN</a></li>
+          <li><a class="lang" href="/portfolio-de.html">DE</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
+  <!-- HERO -->
   <header class="wrap">
     <h1>Portfolio — Nicolas Tuor</h1>
     <p class="muted">Sélection de projets web (éducation, IA, jeux pédagogiques). Les vignettes ouvrent un site dans un overlay quand c’est autorisé par le site cible.</p>
