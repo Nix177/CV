@@ -1,17 +1,15 @@
+// @ts-nocheck
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// Setup : Three global (UMD) + Babel in-browser (pas de bundler)
-// Points clés :
-//  - Chargement GLTFLoader robuste (global → fetch+eval → <script> injection)
-//  - Caméra orthographique cadrant tout le plateau + bornes anti-sortie
-//  - Score : somme des faces “vers le haut” via ancres Face_1/3/4/6
-
+// - No JSX (build-safe without --jsx)
+// - GLTFLoader robuste (global → fetch+eval → <script>)
+// - Caméra ortho qui garde tout le plateau, bords anti-sortie, score après stabilisation
 ;(()=>{
-  const { useEffect, useRef, useState } = React as any;
-  const T: any = (window as any).THREE;
+  const React = (window as any).React;
+  const T = (window as any).THREE;
 
   const BASE  = "/assets/games/osselets/level3/";
   const GLB   = BASE + "3d/astragalus_faces.glb";
-  const MAPJS = BASE + "3d/values.json"; // optionnel { "map": { "1":1, "3":3, "4":4, "6":6 } }
+  const MAPJS = BASE + "3d/values.json"; // optionnel
 
   const VIEW_W=960, VIEW_H=540, DPR_MAX=2.5;
 
@@ -20,19 +18,15 @@
   const EPS=0.18, STABLE_MS=900, COLL_E=0.25, DOT_LOCK=0.985, NUDGE=0.22;
 
   const RING_OUTER=8.2, FRAME_PAD=1.1;
-
-  const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
 
-  // === GLTFLoader robuste ===
-  async function ensureGLTFLoader(): Promise<any> {
+  async function ensureGLTFLoader() {
     const w = window as any;
     if (!w.THREE) throw new Error("THREE non chargé.");
     if (w.THREE.GLTFLoader) return w.THREE.GLTFLoader;
     if (w.GLTFLoader) { w.THREE.GLTFLoader = w.GLTFLoader; return w.GLTFLoader; }
-
     const url = "https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
-
     try {
       const res = await fetch(url, { mode: "cors", cache: "force-cache" });
       if (!res.ok) throw new Error("fetch GLTFLoader.js failed");
@@ -40,29 +34,22 @@
       const factory = new Function("window","THREE", code + ";return THREE.GLTFLoader || window.GLTFLoader;");
       const Ctor = factory(w, w.THREE);
       if (Ctor) { w.THREE.GLTFLoader = Ctor; return Ctor; }
-    } catch (e) {
-      console.warn("[L3] fetch+eval GLTFLoader a échoué, fallback <script>…", e);
-    }
-
+    } catch {}
     await new Promise<void>((resolve, reject) => {
       if (document.getElementById("__gltfloader_fallback__")) return resolve();
-      const s = document.createElement("script");
-      s.id = "__gltfloader_fallback__";
-      s.src = url; s.async = true; s.crossOrigin = "anonymous";
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error("GLTFLoader non chargé (script)."));
+      const s=document.createElement("script");
+      s.id="__gltfloader_fallback__"; s.src=url; s.async=true; s.crossOrigin="anonymous";
+      s.onload=()=>resolve(); s.onerror=()=>reject(new Error("GLTFLoader non chargé (script)."));
       document.head.appendChild(s);
     });
-
-    const Ctor2 = (w.THREE && w.THREE.GLTFLoader) || w.GLTFLoader;
-    if (Ctor2) { w.THREE.GLTFLoader = Ctor2; return Ctor2; }
-    throw new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader).");
+    const Ctor2=(w.THREE && w.THREE.GLTFLoader) || w.GLTFLoader;
+    if (Ctor2) { w.THREE.GLTFLoader=Ctor2; return Ctor2; }
+    throw new Error("GLTFLoader non trouvé.");
   }
 
-  // ancres de faces
-  function getFaceAnchors(root:any){
-    const out:any[]=[];
-    root.traverse((n:any)=>{
+  function getFaceAnchors(root){
+    const out=[];
+    root.traverse((n)=>{
       const s=(n.name||"").toLowerCase();
       let tag="";
       if (/^(face[_\s-]?1|f1|value[_\s-]?1|valeur[_\s-]?1)$/.test(s)) tag="1";
@@ -73,7 +60,7 @@
     });
     return out;
   }
-  function faceUpInfo(anchors:any[]){
+  function faceUpInfo(anchors){
     if (!anchors?.length) return { tag:"?", dot:-1 };
     const up=new T.Vector3(0,1,0), Y=new T.Vector3(0,1,0), q=new T.Quaternion();
     let best={tag:"?", dot:-2};
@@ -87,40 +74,34 @@
   }
 
   function AstragalusLevel3(){
-    // DOM
-    const wrapRef=useRef<HTMLDivElement|null>(null);
-    const cvRef  =useRef<HTMLCanvasElement|null>(null);
+    const wrapRef=React.useRef(null);
+    const cvRef  =React.useRef(null);
 
-    // 3D
-    const rendererRef=useRef<any>(null);
-    const sceneRef   =useRef<any>(null);
-    const camRef     =useRef<any>(null);
+    const rendererRef=React.useRef(null);
+    const sceneRef   =React.useRef(null);
+    const camRef     =React.useRef(null);
 
-    const diceRef    =useRef<any[]>([]);
-    const boundsRef  =useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
+    const diceRef    =React.useRef([]);
+    const boundsRef  =React.useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
 
-    // anim/état
-    const rafRef     =useRef<number>(0);
-    const lastRef    =useRef<number>(0);
-    const valueMap   =useRef<Record<string,number>>({"1":1,"3":3,"4":4,"6":6});
+    const rafRef     =React.useRef(0);
+    const lastRef    =React.useRef(0);
+    const valueMap   =React.useRef({"1":1,"3":3,"4":4,"6":6});
 
-    const [ready,setReady]=useState(false);
-    const [throwing,setThrowing]=useState(false);
-    const [vals,setVals]=useState<string[]>([]);
-    const [sum,setSum]=useState(0);
+    const [ready,setReady]=React.useState(false);
+    const [throwing,setThrowing]=React.useState(false);
+    const [vals,setVals]=React.useState([]);
+    const [sum,setSum]=React.useState(0);
 
-    // cadrage ORTHO qui garde tout le plateau
     function frameCamera(){
-      const cam=camRef.current!, wrap=wrapRef.current!, r=rendererRef.current!;
+      const cam=camRef.current, wrap=wrapRef.current, r=rendererRef.current;
       const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(VIEW_H/VIEW_W));
       const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
       r.setPixelRatio(dpr); r.setSize(w,h,false);
-
       const aspect=w/h, range=RING_OUTER*FRAME_PAD;
       cam.left=-range*aspect; cam.right=range*aspect; cam.top=range; cam.bottom=-range;
       cam.near=0.1; cam.far=100; cam.updateProjectionMatrix();
       cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
-
       const padX=0.08, padZ=0.08;
       boundsRef.current={
         minX: cam.left*(1-padX),
@@ -130,8 +111,7 @@
       };
     }
 
-    // resize
-    useEffect(()=>{
+    React.useEffect(()=>{
       const onResize=()=>{ if(rendererRef.current && camRef.current && wrapRef.current) frameCamera(); };
       onResize();
       const ro=(window as any).ResizeObserver ? new ResizeObserver(onResize) : null;
@@ -140,16 +120,12 @@
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
-    // init
-    useEffect(()=>{
+    React.useEffect(()=>{
       let cancelled=false;
       (async()=>{
-        if (!T) { console.warn("[L3] THREE absent"); return; }
-
-        // mapping optionnel
+        if (!T) return;
         try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
-
-        const cv=cvRef.current!;
+        const cv=cvRef.current;
         const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
         renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap||renderer.shadowMap.type;
         rendererRef.current=renderer;
@@ -171,32 +147,26 @@
 
         const GLTF = await ensureGLTFLoader();
         const loader = new GLTF();
-        loader.load(GLB,(gltf:any)=>{
+        loader.load(GLB,(gltf)=>{
           if(cancelled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base) return;
-
-          base.traverse((o:any)=>{ if(o.isMesh){
+          base.traverse((o)=>{ if(o.isMesh){
             o.castShadow=true; o.receiveShadow=false;
             if(!o.material || !o.material.isMeshStandardMaterial) o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
           }});
-
-          // 4 osselets
-          const dice:any[]=[];
+          const dice=[];
           for(let i=0;i<COUNT;i++){
             const inst=base.clone(true); scene.add(inst);
             dice.push({ root:inst, anchors:getFaceAnchors(inst), vel:new T.Vector3(), angVel:new T.Vector3(), tStable:0 });
           }
           diceRef.current=dice;
-
           setReady(true);
           animate();
-        }, undefined, (e:any)=>console.warn("[L3] GLB load error", e));
+        }, undefined, (e)=>console.warn("[L3] GLB load error", e));
       })();
-
-      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current); try{ rendererRef.current?.dispose?.(); }catch{} };
+      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current||0); try{ rendererRef.current?.dispose?.(); }catch{} };
     },[]);
 
-    // collisions simplifiées
     function collideAndSeparate(){
       const dice=diceRef.current;
       for(let i=0;i<dice.length;i++){
@@ -210,56 +180,39 @@
             const push=(min-dist)+1e-3;
             a.root.position.x -= nx*push*0.5; a.root.position.z -= nz*push*0.5;
             b.root.position.x += nx*push*0.5; b.root.position.z += nz*push*0.5;
-
             const an=a.vel.x*nx+a.vel.z*nz, bn=b.vel.x*nx+b.vel.z*nz;
             const dv=(bn-an)*COLL_E;
-            a.vel.x+=nx*dv; a.vel.z+=nz*dv;
-            b.vel.x-=nx*dv; b.vel.z-=nz*dv;
+            a.vel.x+=nx*dv; a.vel.z+=nz*dv; b.vel.x-=nx*dv; b.vel.z-=nz*dv;
           }
         }
       }
     }
 
-    // intégration / step
-    function step(dt:number){
+    function step(dt){
       const b=boundsRef.current, dice=diceRef.current;
-
       for(const d of dice){
-        // gravité
         d.vel.y += GRAV*dt;
-
         d.root.position.x += d.vel.x*dt;
         d.root.position.y += d.vel.y*dt;
         d.root.position.z += d.vel.z*dt;
-
-        // sol
         if (d.root.position.y <= YFLOOR + R){
           d.root.position.y = YFLOOR + R;
           if (d.vel.y < 0) d.vel.y = -d.vel.y*REST;
           d.vel.x *= HFR; d.vel.z *= HFR; d.angVel.multiplyScalar(AFR);
         }
-
-        // murs (cadre caméra)
         if (d.root.position.x < b.minX){ d.root.position.x=b.minX; d.vel.x=Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x > b.maxX){ d.root.position.x=b.maxX; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z < b.minZ){ d.root.position.z=b.minZ; d.vel.z=Math.abs(d.vel.z)*0.6; }
         if (d.root.position.z > b.maxZ){ d.root.position.z=b.maxZ; d.vel.z=-Math.abs(d.vel.z)*0.6; }
-
-        // rotation
         d.root.rotation.x += d.angVel.x*dt;
         d.root.rotation.y += d.angVel.y*dt;
         d.root.rotation.z += d.angVel.z*dt;
-
-        // frottements pseudo-aléatoires au contact
         if (d.root.position.y <= YFLOOR + R + 0.002){
           d.vel.x += Math.sin(d.root.position.z*0.25)*0.02*dt;
           d.vel.z += Math.sin(d.root.position.x*0.25)*0.02*dt;
         }
       }
-
       collideAndSeparate();
-
-      // stabilisation + verrouillage face-up
       for(const d of dice){
         const speed=d.vel.length()+d.angVel.length();
         const info=faceUpInfo(d.anchors);
@@ -269,12 +222,11 @@
           else { if (!d.tStable) d.tStable=now(); }
         } else d.tStable=0;
       }
-
       if (throwing){
         const all=dice.every(d=>d.tStable && (now()-d.tStable>STABLE_MS));
         if (all){
           setThrowing(false);
-          const out:string[]=[]; let s=0;
+          const out=[]; let s=0;
           for(const d of dice){
             const info=faceUpInfo(d.anchors);
             const v=valueMap.current[String(info.tag)] ?? 0;
@@ -285,11 +237,10 @@
       }
     }
 
-    // loop
     function animate(){
-      const r=rendererRef.current!, s=sceneRef.current!, c=camRef.current!;
-      const loop=(t:number)=>{
-        const dt=Math.min(0.05, Math.max(0,(t-lastRef.current)/1000)); lastRef.current=t;
+      const r=rendererRef.current, s=sceneRef.current, c=camRef.current;
+      const loop=(t)=>{
+        const dt=Math.min(0.05, Math.max(0,(t-(lastRef.current||t))/1000)); lastRef.current=t;
         step(dt);
         r.render(s,c);
         rafRef.current=requestAnimationFrame(loop);
@@ -297,7 +248,6 @@
       rafRef.current=requestAnimationFrame(loop);
     }
 
-    // UI
     function throwDice(){
       const dice=diceRef.current, b=boundsRef.current;
       for(let i=0;i<dice.length;i++){
@@ -320,25 +270,21 @@
       setVals([]); setSum(0); setThrowing(false);
     }
 
-    return (
-      <div ref={wrapRef} style={{position:"relative"}}>
-        <canvas ref={cvRef} width={VIEW_W} height={VIEW_H} style={{display:"block", borderRadius:12}}/>
-        <div style={{display:"flex", gap:8, marginTop:10}}>
-          <button className="btn" onClick={throwDice}>Lancer</button>
-          <button className="btn" onClick={reset}>Réinitialiser</button>
-          {!ready && <span className="badge" style={{marginLeft:8}}>Chargement…</span>}
-        </div>
-        {vals.length>0 && (
-          <div style={{
-            position:"absolute", left:12, bottom:12,
-            background:"#0b2237cc", border:"1px solid #ffffff22",
-            borderRadius:12, padding:"10px 12px"
-          }}>
-            <div style={{fontWeight:700, marginBottom:4}}>Tirage : {vals.join("  ")}</div>
-            <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum}</b></div>
-          </div>
-        )}
-      </div>
+    return React.createElement(
+      "div",
+      { ref:wrapRef, style:{position:"relative"} },
+      React.createElement("canvas", { ref:cvRef, width:VIEW_W, height:VIEW_H, style:{display:"block", borderRadius:12}}),
+      React.createElement("div", { style:{display:"flex", gap:8, marginTop:10}},
+        React.createElement("button", { className:"btn", onClick:throwDice }, "Lancer"),
+        React.createElement("button", { className:"btn", onClick:reset }, "Réinitialiser"),
+        !ready && React.createElement("span", { className:"badge", style:{marginLeft:8}}, "Chargement…")
+      ),
+      (vals.length>0) && React.createElement(
+        "div",
+        { style:{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px"} },
+        React.createElement("div", { style:{fontWeight:700, marginBottom:4} }, "Tirage : ", vals.join("  ")),
+        React.createElement("div", { style:{fontSize:14} }, "Somme : ", String(sum), " — ", React.createElement("b", null, "Points : ", String(sum)))
+      )
     );
   }
 
