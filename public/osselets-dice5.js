@@ -28,7 +28,7 @@
   const MASS      = 1.0;      // masses égales (impulsions symétriques)
   const GRAV      = -18.0;    // gravité
   const REST      = 0.42;     // restitution au sol
-  const H_FRICT   = 0.88;     // friction horizontale au sol (un peu plus forte)
+  const H_FRICT   = 0.88;     // friction horizontale au sol
   const ANG_FRICT = 0.88;     // friction rotation au sol
   const WALL_E    = 0.55;     // restitution murs
   const COLL_E    = 0.35;     // restitution collision entre osselets
@@ -275,7 +275,7 @@
             const vn = A.vel.x*nx + A.vel.z*nz;
             const wn = B.vel.x*nx + B.vel.z*nz;
 
-            // impulsion (masses égales m, restitution e): p = - (1+e)*(vn - wn) / (1/m + 1/m) = - (1+e)*(vn-wn)/2
+            // impulsion (masses égales, restitution COLL_E)
             const p = - (1 + COLL_E) * (vn - wn) / 2;
             A.vel.x += p*nx; A.vel.z += p*nz;
             B.vel.x -= p*nx; B.vel.z -= p*nz;
@@ -284,8 +284,8 @@
       }
     }
 
-    // Boucle
-    let req=0, last=now(), throwing=false, finished=false, throwT0=0;
+    // --- Boucle d'animation (UNE SEULE déclaration de req ici) ---
+    let req = 0, last = now(), throwing = false, finished = false, throwT0 = 0;
 
     function step(dt){
       for (const d of dice){
@@ -335,7 +335,7 @@
       // collisions horizontales
       collideXZ();
 
-      // Stabilisation / Snap doux (quand vraiment à plat)
+      // Stabilisation / Snap doux
       let allSnapped=true;
       for (const d of dice){
         const speed = d.vel.length() + d.ang.length();
@@ -402,7 +402,7 @@
       renderer.render(scene,cam);
       req=requestAnimationFrame(loop);
     }
-    let req=0; loop();
+    loop(); // <-- on démarre la boucle ici, SANS redéclarer req
 
     // Contrôles
     function doThrow(){
