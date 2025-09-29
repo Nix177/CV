@@ -29,12 +29,20 @@
     .headwrap{max-width:var(--max);margin:0 auto;padding:12px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between}
     .brand{display:flex;gap:.75rem;align-items:center;font-weight:800;letter-spacing:.3px}
     .logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#0a1220,#00060d);
-          color:#fff;border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow)}
-    .brand b{display:inline-grid}
-    .brand small{opacity:.6;font-weight:600;font-size:12px}
-    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:10px;align-items:center}
-    nav a{color:var(--text);text-decoration:none;font-weight:700}
-    .bar{border-top:1px solid rgba(255,255,255,.06);background:rgba(10,18,32,.7)}
+          color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+
+    nav.top{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+    .btn{appearance:none;border:1px solid rgba(255,255,255,.08);background:#0c1728;color:var(--text);text-decoration:none;
+         padding:.45rem .7rem;border-radius:10px;font-weight:600;font-size:14px}
+    .btn:hover{background:#0e1b2f}.btn:active{transform:translateY(1px)}
+
+    /* Lang switch */
+    .langs{display:flex;gap:6px;margin-left:8px}
+    .lang{border:1px solid rgba(255,255,255,.12);background:#0f1d34;color:var(--text);text-decoration:none;
+          padding:.35rem .55rem;border-radius:8px;font-weight:700;font-size:12px;opacity:.9}
+    .lang[aria-current="page"]{background:#143055;border-color:#2a4d77;opacity:1}
+
+    .bar{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);background:rgba(10,18,32,.55)}
     .barwrap{max-width:var(--max);margin:0 auto;padding:10px 18px;display:flex;gap:8px;flex-wrap:wrap}
     .chip{padding:.4rem .7rem;border-radius:999px;background:#0f1d34;border:1px solid #1a2d49;color:var(--text);
           text-decoration:none;font-weight:600;font-size:14px}
@@ -52,11 +60,11 @@
     .card{background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
           border:1px solid rgba(255,255,255,.07);border-radius:var(--br);overflow:hidden;box-shadow:var(--shadow);
           display:flex;flex-direction:column;min-height:320px}
-    .thumb{position:relative;height:180px;background:#0d1524;background-image:var(--img);background-size:cover;background-position:center;border-bottom:1px solid rgba(255,255,255,.07)}
+    .thumb{position:relative;height:180px;background:#0d1524;background-size:cover;background-position:center;border-bottom:1px solid rgba(255,255,255,.07)}
     .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.25))}
     .badge{position:absolute;left:10px;bottom:10px;background:rgba(10,18,32,.8);border:1px solid rgba(255,255,255,.1);
            color:var(--text);font-size:12px;padding:.25rem .5rem;border-radius:8px;backdrop-filter:blur(4px)}
-    .body{padding:12px}.card-title{font-weight:800;margin:.2rem 0 .35rem 0;font-size:18px}.desc{margin:0;color:var(--muted)}
+    .body{padding:12px}.title{font-weight:800;margin:.2rem 0 .35rem 0;font-size:18px}.desc{margin:0;color:var(--muted)}
     .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
     .link{text-decoration:none;color:var(--text);background:#0c1728;border:1px solid rgba(255,255,255,.08);
           padding:.35rem .6rem;border-radius:10px;font-weight:600;font-size:14px}
@@ -64,22 +72,28 @@
     .thumb[data-cover]{background-image:linear-gradient(180deg,#0d1524,#0a1220)}
     .thumb.loaded{background-image:var(--img)}
   </style>
-
-  <!-- ton style global -->
   <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
+  <script defer src="/assets/js/feedback.js"></script>
 </head>
 <body>
 <header>
   <div class="headwrap">
-    <div class="brand">
-      <div class="logo">N·T</div>
-      <div><b>Nicolas Tuor</b><small>Passions & découvertes</small></div>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="/passions.html">FR</a></li>
-        <li><a href="/passions-en.html">EN</a></li>
-        <li><a href="/passions-de.html">DE</a></li>
+    <div class="brand"><div class="logo">N·T</div><div>Passions & découvertes</div></div>
+    <!-- UPDATE: NAV LAYOUT ONLY -->
+    <nav class="site-nav" aria-label="Navigation">
+      <ul class="menu">
+        <li><a class="btn" href="/index.html">Accueil</a></li>
+        <li><a class="btn" href="/cv.html">CV</a></li>
+        <li><a class="btn" href="/portfolio.html">Portfolio</a></li>
+        <li><a class="btn" href="/passions.html" aria-current="page">Passions</a></li>
+        <li><a class="btn" href="/ai-lab.html">Labo IA</a></li>
+        <li><a class="btn" href="/fun-facts.html">Idées reçues</a></li>
+      </ul>
+      <ul class="lang" aria-label="Langues">
+        <li><a class="lang" href="/passions.html" aria-current="page">FR</a></li>
+        <li><a class="lang" href="/passions-en.html">EN</a></li>
+        <li><a class="lang" href="/passions-de.html">DE</a></li>
       </ul>
     </nav>
   </div>
@@ -172,40 +186,88 @@
     { title:"Ed Ting", desc:"Tests & conseils télescopes.", cover:"assets/passions/youtube/youtube-edting.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@edting"} },
     { title:"Astrohopper", desc:"Repérage d’objets (mobile).", cover:"assets/passions/sites/astrohopper.webp", badge:"Outil", link:{label:"Essayer",href:"https://artyom-beilis.github.io/astrohopper.html"} },
     { title:"GAIA Vari", desc:"Variabilité d’étoiles.", cover:"assets/passions/sites/gaia-vari.webp", badge:"Data", link:{label:"Explorer",href:"https://www.gaiavari.space/"} },
-    { title:"NEO Toolkit", desc:"Outils objets géocroiseurs.", cover:"assets/passions/sites/neo-toolkit.webp", badge:"Data", link:{label:"Essayer",href:"https://cneos.jpl.nasa.gov/neo/toolkit.html"} },
-    { title:"Dark Site Finder", desc:"Carte pollution lumineuse.", cover:"assets/passions/sites/darksitefinder.webp", badge:"Carte", link:{label:"Carte",href:"https://darksitefinder.com/maps/world.html"} },
-    { title:"Heavens-Above", desc:"Passages ISS/satellites.", cover:"assets/passions/sites/heavens-above.webp", badge:"Site", link:{label:"Voir",href:"https://www.heavens-above.com/"} }
+    { title:"NEO Toolkit", desc:"Outils objets géocroiseurs.", cover:"assets/passions/sites/esa-neo-toolkit.webp", badge:"Outil", link:{label:"Explorer",href:"https://neo.ssa.esa.int/neo-toolkit"} },
+    { title:"Optique (PDF)", desc:"Bases et types d’instruments.", cover:"assets/passions/sites/edmundoptics-all-about-telescopes.webp", badge:"Doc", link:{label:"PDF",href:"https://www.edmundoptics.com/ViewDocument/All%20About%20Telescopes%202.pdf"} }
   ];
 
   const DIY = [
-    {title:"Clickspring",desc:"Horlogerie, art du métal.",cover:"assets/passions/youtube/youtube-clickspring.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"}},
-    {title:"My Mechanics",desc:"Restauration machines-outils.",cover:"assets/passions/youtube/youtube-mymechanics.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@mymechanics"}},
-    {title:"Fabrique DIY",desc:"Tutoriels variés & makers.",cover:"assets/passions/youtube/youtube-la-fabrique-diy.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@LaFabriquediy"}}
+    { title:"How To Make Armor", desc:"Forge & tôlerie d’armures.", cover:"assets/passions/youtube/youtube-howtomakearmor.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@howtomakearmor"} },
+    { title:"Armour Archive", desc:"Patrons d’armures.", cover:"assets/passions/sites/armour-archive-patterns.webp", badge:"Site", link:{label:"Patrons",href:"https://www.armourarchive.org/patterns/"} },
+    { title:"Clickspring", desc:"Horlogerie & mécanismes.", cover:"assets/passions/youtube/youtube-clickspring.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@Clickspring"} },
+    { title:"Art of Making Things", desc:"Tutos variés (bois, métal…).", cover:"assets/passions/sites/art-of-making-things.webp", badge:"Site", link:{label:"Tutoriels",href:"https://artofmakingthings.com/home"} },
+    { title:"Maison en terre", desc:"Construction en clay.", cover:"assets/passions/youtube/youtube-diy-clay-house.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/o6Z0MxWCbrc"} },
+    { title:"TV recyclée", desc:"Réparer / réutiliser pièces.", cover:"assets/passions/youtube/youtube-diy-recycled-tv.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/qXrn4MqY1Wo"} },
+    { title:"Écosystèmes en bocaux", desc:"Micro-écosystèmes DIY.", cover:"assets/passions/youtube/youtube-diy-ecosystems.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/QTH9m6MDIfc"} },
+    { title:"Cloud chamber", desc:"Détection de particules.", cover:"assets/passions/youtube/youtube-diy-cloud-chamber.webp", badge:"Vidéo", link:{label:"Voir",href:"https://youtu.be/xky3f1aSkB8"} },
+    { title:"Spaderdabomb (Unity)", desc:"Tutoriels Unity pratiques.", cover:"assets/passions/youtube/youtube-spaderdabomb.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@spaderdabomb"} }
   ];
 
   const HIST = [
-    {title:"Historia Civilis",desc:"Rome & monde antique.",cover:"assets/passions/youtube/youtube-historia-civilis.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@HistoriaCivilis"}},
-    {title:"Nota Bene",desc:"Histoires, récits & sources.",cover:"assets/passions/youtube/youtube-nota-bene.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@NotaBeneVideos"}},
-    {title:"Kings and Generals",desc:"Histoire militaire animée.",cover:"assets/passions/youtube/youtube-kings-and-generals.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@KingsandGenerals"}}
+    { title:"World War Two", desc:"Chronologie hebdo WWII.", cover:"assets/passions/youtube/youtube-worldwartwo.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@WorldWarTwo"} },
+    { title:"Benn Jordan", desc:"Projets science/son expliqués.", cover:"assets/passions/youtube/youtube-bennjordan.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@BennJordan"} },
+    { title:"Technology Connections", desc:"Technologies du quotidien.", cover:"assets/passions/youtube/youtube-technologyconnections.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TechnologyConnections"} },
+    { title:"Two Minute Papers", desc:"IA & graphismes en 2 min.", cover:"assets/passions/youtube/youtube-twominutepapers.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TwoMinutePapers"} },
+    { title:"Survive History", desc:"Histoire générale.", cover:"assets/passions/youtube/youtube-survivehistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@survivehistory"} },
+    { title:"MegaLag", desc:"Enquêtes techniques & histoire.", cover:"assets/passions/youtube/youtube-megalag.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@MegaLag"} },
+    { title:"Modern Knight", desc:"Armement & histoire.", cover:"assets/passions/youtube/youtube-modernknight.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ModernKnight"} },
+    { title:"Kurzgesagt", desc:"Sciences illustrées.", cover:"assets/passions/youtube/youtube-kurzgesagt.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@kurzgesagt"} }
   ];
 
   const CRIT = [
-    {title:"Le Monde – Décodeurs",desc:"Fact-checking & data.",cover:"assets/passions/sites/lemonde-decodeurs.webp",badge:"Data",link:{label:"Voir",href:"https://www.lemonde.fr/les-decodeurs/"}},
-    {title:"Science4All",desc:"Maths appliquées & vulgarisation.",cover:"assets/passions/youtube/youtube-science4all.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@Science4All"}}
+    { title:"La Tronche en Biais", desc:"Formats réguliers d’esprit critique.", cover:"assets/passions/youtube/youtube-troncheenbiais.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TroncheEnBiais"} },
+    { title:"Hygiène Mentale", desc:"Méthodes, biais, calculs.", cover:"assets/passions/youtube/youtube-hygienementale.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/c/Hygi%C3%A8neMentale"} },
+    { title:"Mr Sam", desc:"Enquêtes sourcées.", cover:"assets/passions/youtube/youtube-mrsam.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@mrsam-interrogation"} },
+    { title:"Defakator", desc:"Deepfakes, IA, vérifs.", cover:"assets/passions/youtube/youtube-defakatorofficiel.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@DefakatorOfficiel"} },
+    { title:"G. Milgram", desc:"Enquêtes patientes.", cover:"assets/passions/youtube/youtube-ggmilgram.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@ggmilgram"} },
+    { title:"AFIS/REC", desc:"Culture scientifique.", cover:"assets/passions/youtube/youtube-rectoulouse.webp", badge:"Chaînes", links:[{label:"AFIS",href:"https://www.youtube.com/@afis-science"},{label:"REC",href:"https://www.youtube.com/@RECTOULOUSE"}] }
   ];
 
   const FOOD = [
-    {title:"Alex – French Guy Cooking",desc:"Cuisine, science & hacks.",cover:"assets/passions/youtube/youtube-frenchguycooking.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@FrenchGuyCooking"}},
-    {title:"Ethan Chlebowski",desc:"Comprendre la cuisine.",cover:"assets/passions/youtube/youtube-ethan-chlebowski.webp",badge:"Chaîne",link:{label:"Chaîne",href:"https://www.youtube.com/@EthanChlebowski"}}
+    { title:"John Kirkwood", desc:"Techniques & recettes.", cover:"assets/passions/youtube/youtube-johnkirkwood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@JohnKirkwoodProFoodHomemade"} },
+    { title:"SortedFood", desc:"Tests & astuces.", cover:"assets/passions/youtube/youtube-sortedfood.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@SortedFood"} },
+    { title:"Tasting History", desc:"Cuisine historique sourcée.", cover:"assets/passions/youtube/youtube-tastinghistory.webp", badge:"Chaîne", link:{label:"Chaîne",href:"https://www.youtube.com/@TastingHistory"} },
+    { title:"Akis Petretzikis", desc:"Cuisine grecque & plus.", cover:"assets/passions/youtube/youtube-akispetretzikis.webp", badge:"Chaîne", links:[{label:"Chaîne",href:"https://www.youtube.com/@akispetretzikisen"},{label:"Site",href:"https://akispetretzikis.com/en"}] }
   ];
 
   const EDU = [
-    {title:"Khan Academy",desc:"Cours gratuits (multi).",cover:"assets/passions/sites/khan-academy.webp",badge:"Cours",link:{label:"Apprendre",href:"https://www.khanacademy.org/"}},
-    {title:"Scratch",desc:"Apprendre à coder (enfants).",cover:"assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}}
+    {title:"Scratch",desc:"Programmation visuelle.",cover:"assets/passions/sites/scratch.webp",badge:"Outil",link:{label:"Essayer",href:"https://scratch.mit.edu/"}},
+    {title:"Snap!",desc:"Scratch avancé.",cover:"assets/passions/sites/snap-berkeley.webp",badge:"Outil",link:{label:"Essayer",href:"https://snap.berkeley.edu/"}},
+    {title:"Blockly Games",desc:"Jeux pour la logique.",cover:"assets/passions/sites/blockly-games.webp",badge:"Jeu",link:{label:"Jouer",href:"https://blockly.games/"}},
+    {title:"Code.org",desc:"Parcours guidés.",cover:"assets/passions/sites/code-org-studio.webp",badge:"Plateforme",link:{label:"Ouvrir",href:"https://studio.code.org/users/sign_in"}},
+    {title:"NetsBlox",desc:"Programmation distribuée.",cover:"assets/passions/sites/netsblox.webp",badge:"Outil",link:{label:"Essayer",href:"https://netsblox.org/"}},
+    {title:"App Inventor",desc:"Apps mobiles blocs.",cover:"assets/passions/sites/appinventor.webp",badge:"Outil",link:{label:"Essayer",href:"https://appinventor.mit.edu/"}},
+    {title:"Alice",desc:"3D & narration.",cover:"assets/passions/sites/alice.webp",badge:"Outil",link:{label:"Ouvrir",href:"https://www.alice.org/"}},
+    {title:"Pencil Code",desc:"Du bloc au texte.",cover:"assets/passions/sites/pencilcode.webp",badge:"Outil",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
+    {title:"MakeCode",desc:"Micro:bit & co.",cover:"assets/passions/sites/makecode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.microsoft.com/en-us/makecode"}},
+    {title:"Vidcode",desc:"Vidéo + JS.",cover:"assets/passions/sites/vidcode.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.vidcode.com/"}},
+    {title:"Construct",desc:"Jeux 2D sans code.",cover:"assets/passions/sites/construct.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.construct.net/fr"}},
+    {title:"Compute-it",desc:"Pensée info ludique.",cover:"assets/passions/sites/compute-it.webp",badge:"Jeu",link:{label:"Jouer",href:"https://compute-it.toxicode.fr/"}},
+    {title:"Codingame",desc:"Défis multi-langages.",cover:"assets/passions/sites/codingame.webp",badge:"Défis",link:{label:"Jouer",href:"https://codingame.com/start/"}},
+    {title:"p5.js",desc:"Création visuelle JS.",cover:"assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doc",href:"https://p5js.org/"}},
+    {title:"Thonny",desc:"IDE Python débutant.",cover:"assets/passions/sites/thonny.webp",badge:"Outil",link:{label:"Télécharger",href:"https://thonny.org/"}},
+    {title:"Mu Editor",desc:"IDE Python éducatif.",cover:"assets/passions/sites/mu-editor.webp",badge:"Outil",link:{label:"Télécharger",href:"https://codewith.mu/"}},
+    {title:"TigerJython",desc:"Python pour apprendre.",cover:"assets/passions/sites/tigerjython.webp",badge:"Outil",link:{label:"Découvrir",href:"https://www.tigerjython.ch/en"}},
+    {title:"Pyret",desc:"Langage pédagogique.",cover:"assets/passions/sites/pyret.webp",badge:"Langage",link:{label:"Doc",href:"https://pyret.org/"}},
+    {title:"Vittascience",desc:"Capteurs & robotique.",cover:"assets/passions/sites/vittascience.webp",badge:"Plateforme",link:{label:"Découvrir",href:"https://en.vittascience.com/"}},
+    {title:"Micro:bit",desc:"Électronique simple.",cover:"assets/passions/sites/microbit-makecode.webp",badge:"Outil",link:{label:"MakeCode",href:"https://makecode.microbit.org/"}},
+    {title:"cand.li",desc:"Mini-apps pédagogiques.",cover:"assets/passions/sites/candli.webp",badge:"Outil",link:{label:"Voir",href:"https://cand.li/index-fr.html"}},
+    {title:"Sketchware Docs",desc:"Dev Android par blocs.",cover:"assets/passions/sites/sketchware-docs.webp",badge:"Doc",link:{label:"Lire",href:"https://sketchware-docs.vercel.app/"}}
   ];
 
   const TOOLS = [
-    {title:"Operation Night Watch",desc:"La Ronde de nuit en ultra-HD.",cover:"assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
+    {title:"Unscreen",desc:"Supprimer fond vidéo.",cover:"assets/passions/sites/unscreen.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.unscreen.com/"}},
+    {title:"AI Experiments",desc:"Expériences IA Google.",cover:"assets/passions/sites/google-ai-experiments.webp",badge:"Galerie",link:{label:"Explorer",href:"https://experiments.withgoogle.com/collection/ai"}},
+    {title:"Remove.bg",desc:"Détourage d’images.",cover:"assets/passions/sites/removebg.webp",badge:"Outil",link:{label:"Essayer",href:"https://www.remove.bg/fr"}},
+    {title:"Axiom",desc:"Automatiser le web.",cover:"assets/passions/sites/axiom-ai.webp",badge:"Outil",link:{label:"Voir",href:"https://axiom.ai/"}},
+    {title:"TinyWow",desc:"Utilitaires tout-en-un.",cover:"assets/passions/sites/tinywow.webp",badge:"Outils",link:{label:"Voir",href:"https://tinywow.com/"}},
+    {title:"OpenFoodFacts",desc:"Base produits ouverte.",cover:"assets/passions/sites/openfoodfacts.webp",badge:"Données",link:{label:"Parcourir",href:"https://world.openfoodfacts.org/"}},
+    {title:"ImportYeti",desc:"Fret & fournisseurs.",cover:"assets/passions/sites/importyeti.webp",badge:"Data",link:{label:"Chercher",href:"https://www.importyeti.com/"}},
+    {title:"Capitol Trades",desc:"Transactions d’élus US.",cover:"assets/passions/sites/capitoltrades.webp",badge:"Data",link:{label:"Parcourir",href:"https://www.capitoltrades.com/trades"}},
+    {title:"Am I Unique?",desc:"Empreinte navigateur.",cover:"assets/passions/sites/amiunique.webp",badge:"Test",link:{label:"Tester",href:"https://amiunique.org/fr/fingerprint"}},
+    {title:"VirusTotal",desc:"Scanner fichiers/URLs.",cover:"assets/passions/sites/virustotal.webp",badge:"Sécu",link:{label:"Scanner",href:"https://www.virustotal.com/gui/home/upload"}},
+    {title:"Scamdoc",desc:"Réputation d’un site.",cover:"assets/passions/sites/scamdoc.webp",badge:"Sécu",link:{label:"Tester",href:"https://fr.scamdoc.com/"}},
+    {title:"Folding@home",desc:"Calcul distribué.",cover:"assets/passions/sites/foldingathome.webp",badge:"Projet",link:{label:"Participer",href:"https://foldingathome.org/"}},
+    {title:"Night Watch",desc:"Restauration Rembrandt.",cover:"assets/passions/sites/rijksmuseum-night-watch.webp",badge:"Doc",link:{label:"Voir",href:"https://www.rijksmuseum.nl/en/stories/operation-night-watch"}},
     {title:"OpenRouter",desc:"Hub de modèles IA.",cover:"assets/passions/sites/openrouter.webp",badge:"IA",link:{label:"Explorer",href:"https://openrouter.ai/"}},
     {title:"BBC SFX",desc:"Banque de sons libre.",cover:"assets/passions/sites/bbc-sfx.webp",badge:"Sons",link:{label:"Écouter",href:"https://sound-effects.bbcrewind.co.uk/"}},
     {title:"PlayPhrase",desc:"Trouver des répliques.",cover:"assets/passions/sites/playphrase.webp",badge:"Outil",link:{label:"Essayer",href:"https://playphrase.me/"}},
@@ -219,21 +281,21 @@
   ];
 
   const GAMES_CUSTOM = [
-    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp", link:{label:"Fiche",href:"#"}},
-    {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp", link:{label:"Fiche",href:"#"}}
+    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp"},
+    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
+    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp"},
+    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp"},
+    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp"},
+    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp"},
+    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp"},
+    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp"},
+    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
+    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp"},
+    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp"},
+    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp"},
+    {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp"},
+    {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp"},
+    {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp"}
   ];
 
   /* ==== Helpers ==== */
@@ -244,7 +306,7 @@
     el.innerHTML = `
       <div class="thumb" data-cover="${cover || ''}"><span class="badge">${badge || ''}</span></div>
       <div class="body">
-        <div class="card-title">${escapeHtml(title)}</div>
+        <div class="title">${escapeHtml(title)}</div>
         ${desc ? `<p class="desc">${escapeHtml(desc)}</p>` : ''}
         <div class="links"></div>
       </div>`;
