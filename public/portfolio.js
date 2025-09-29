@@ -1,8 +1,8 @@
 /* public/portfolio.js
    Portfolio grid + Preview overlay (sécurisé)
    - Rendu depuis public/portfolio-data.js (ou variables globales équivalentes)
-   - Bouton "Aperçu" -> overlay <iframe sandbox>, message si X-Frame-Options bloque
-   - AUCUNE dépendance supplémentaire.
+   - Bouton "Aperçu" -> overlay #pfOverlay <iframe sandbox>, message si X-Frame-Options/CSP bloque
+   - AUCUNE dépendance supplémentaire. Ne touche qu’aux aperçus.
 */
 (function () {
   "use strict";
@@ -60,72 +60,49 @@
     };
   }
 
-  // -------- Overlay / Aperçu --------
+  // -------- Overlay / Aperçu (aligne avec style.css : #pfOverlay + .show) --------
   function toAbsoluteUrl(url) {
     try { return new URL(url, location.href).toString(); }
     catch { return url; }
   }
 
-  // Préfère #pfOverlay (aligne avec style.css), sinon #overlay
-  function getOverlayElements() {
-    // Variante stylée par le CSS: #pfOverlay + .show + échelle iframe
+  function getPfOverlay() {
     let ovl = $("#pfOverlay");
-    if (ovl) {
-      const panel = ovl.querySelector(".pf-panel") || ovl.querySelector(".panel") || ovl;
-      const head  = ovl.querySelector(".pf-head")  || ovl.querySelector("header");
-      const frameWrap = ovl.querySelector(".pf-frame");
-      let frame = $("#pfFrame", ovl) || ovl.querySelector("iframe");
-      let title = $("#pfTitle", ovl) || (head && head.querySelector("strong"));
-      let close = $("#pfClose", ovl) || (head && head.querySelector("button"));
-
-      // petits correctifs si markup simplifié
-      if (!frame && panel) frame = panel.appendChild(el("iframe", { id:"pfFrame" }));
-      if (frame) {
-        frame.setAttribute("title", T.preview);
-        frame.setAttribute("sandbox","allow-scripts allow-popups");
-      }
-      return { kind:"pf", ovl, panel, frame, title, close };
-    }
-
-    // Fallback générique: #overlay
-    ovl = $("#overlay");
     if (!ovl) {
-      ovl = el("div", { id:"overlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"ovlTitle" }, [
-        el("div", { class:"panel" }, [
-          el("header", {}, [
-            el("strong", { id:"ovlTitle", text:"" }),
-            el("button", { id:"overlayClose", class:"btn" }, T.close)
+      // Sécurise si markup absent : construit un minimum compatible avec ton CSS
+      ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
+        el("div", { class:"pf-panel" }, [
+          el("header", { class:"pf-head" }, [
+            el("strong", { id:"pfTitle", text:"" }),
+            el("button", { id:"pfClose", class:"btn" }, T.close)
           ]),
-          el("iframe", { id:"overlayFrame", title:T.preview, sandbox:"allow-scripts allow-popups" })
+          el("div", { class:"pf-frame" }, [
+            el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-same-origin allow-popups" })
+          ]),
+          el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked)
         ])
       ]);
       document.body.appendChild(ovl);
     }
-    const panel = ovl.querySelector(".panel") || ovl;
-    const frame = $("#overlayFrame", ovl) || panel.querySelector("iframe");
-    const title = $("#ovlTitle", ovl) || panel.querySelector("strong");
-    const close = $("#overlayClose", ovl) || panel.querySelector("button");
-    // Styles inline robustes
-    Object.assign(ovl.style, {
-      position:"fixed", inset:"0", zIndex:"99999",
-      alignItems:"center", justifyContent:"center", padding:"18px",
-      background:"rgba(0,0,0,.55)"
-    });
-    Object.assign(panel.style, {
-      position:"relative", background:"#0b2237", border:"1px solid #ffffff22",
-      borderRadius:"12px", width:"min(1100px, 100%)", height:"min(78vh, 100%)",
-      overflow:"hidden", display:"flex", flexDirection:"column"
-    });
-    if (frame) Object.assign(frame.style, { width:"100%", height:"100%", flex:"1 1 auto", border:0, background:"#fff" });
 
-    return { kind:"overlay", ovl, panel, frame, title, close };
+    const frame = $("#pfFrame", ovl) || ovl.querySelector("iframe");
+    const title = $("#pfTitle", ovl) || ovl.querySelector("strong");
+    const close = $("#pfClose", ovl) || ovl.querySelector("button");
+
+    if (frame) {
+      frame.setAttribute("title", T.preview);
+      // Ajoute allow-same-origin pour maximiser les chances d’affichage des sites qui l’autorisent
+      frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
+      Object.assign(frame.style, { width:"100%", height:"100%", border:"0", background:"#fff" });
+    }
+    return { ovl, frame, title, close };
   }
 
   function ensureMsg(ovl) {
     let msg = $("#pfMsg", ovl);
     if (!msg) {
       const host = ovl.querySelector(".pf-panel, .panel") || ovl;
-      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px;color:#e6f1ff" }, T.blocked);
+      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
       host.appendChild(msg);
     }
     return msg;
@@ -144,7 +121,7 @@
     if (!url) return;
     url = toAbsoluteUrl(url);
 
-    const { kind, ovl, frame, title: titleEl, close } = getOverlayElements();
+    const { ovl, frame, title: titleEl, close } = getPfOverlay();
     if (!ovl || !frame || !close) return;
 
     const msg  = ensureMsg(ovl);
@@ -154,31 +131,26 @@
     msg.style.display = "none";
     spin.style.display = "inline-block";
 
-    // Affiche selon le type d’overlay
-    if (kind === "pf") {
-      ovl.classList.add("show");           // correspond à #pfOverlay.show { display:flex; }
-    } else {
-      ovl.style.setProperty("display", "flex", "important");
-    }
+    ovl.classList.add("show");       // ton CSS affiche #pfOverlay quand .show est présent
     document.body.style.overflow = "hidden";
 
-    // reset & (re)charge
+    // (re)charge l’iframe
     frame.removeAttribute("src");
-    frame.setAttribute("sandbox","allow-scripts allow-popups");
+    frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
 
     let loaded = false;
-    const onLoad = () => { loaded = true; spin.style.display="none"; };
+    const onLoad = () => { loaded = true; spin.style.display = "none"; };
     frame.addEventListener("load", onLoad, { once:true });
     frame.src = url;
 
+    // Si toujours pas chargé après 2s, on affiche le message "refusé"
     const timer = setTimeout(() => {
       if (!loaded) { msg.style.display = "block"; spin.style.display = "none"; }
     }, 2000);
 
     const closeAll = () => {
       clearTimeout(timer);
-      if (kind === "pf") ovl.classList.remove("show");
-      else ovl.style.setProperty("display", "none", "important");
+      ovl.classList.remove("show");
       document.body.style.overflow = "";
       frame.removeAttribute("src");
       close.removeEventListener("click", closeAll);
@@ -193,7 +165,7 @@
     document.addEventListener("keydown", onEsc);
   }
 
-  // -------- Cartes --------
+  // -------- Cartes (inchangé) --------
   function makeCard(it) {
     const { title, description, url } = pickI18n(it);
     const img  = it.image || it.thumbnail || null;
@@ -226,7 +198,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     renderGrid(loadData());
 
-    // Filet de sécurité : si un autre markup déclare data-preview-url
+    // Filet de sécurité : autres markups avec data-preview-url
     document.addEventListener("click", (e) => {
       const n = e.target.closest?.("[data-preview-url]");
       if (!n) return;
