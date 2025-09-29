@@ -1,18 +1,19 @@
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// - AUCUN import/ESM. Utilise window.THREE (CDN).
-// - Attente robuste du loader avec fallback d’injection si absent.
-// - Caméra ORTHO responsive qui garde tout le plateau visible + bornes anti-sortie.
-// - Score = somme des faces vers le haut via ancres Face_1/3/4/6 (ou variantes).
+// Setup : Three global (UMD) + Babel in-browser (pas de bundler)
+// Points clés :
+//  - Chargement GLTFLoader robuste (global → fetch+eval → <script> injection)
+//  - Caméra orthographique cadrant tout le plateau + bornes anti-sortie
+//  - Score : somme des faces “vers le haut” via ancres Face_1/3/4/6
 
 ;(()=>{
-  const { useEffect, useRef, useState } = React;
-  const T = (window as any).THREE as any;
+  const { useEffect, useRef, useState } = React as any;
+  const T: any = (window as any).THREE;
 
   const BASE  = "/assets/games/osselets/level3/";
   const GLB   = BASE + "3d/astragalus_faces.glb";
-  const MAPJS = BASE + "3d/values.json"; // optionnel
+  const MAPJS = BASE + "3d/values.json"; // optionnel { "map": { "1":1, "3":3, "4":4, "6":6 } }
 
-  const W=960,H=540,DPR_MAX=2.5;
+  const VIEW_W=960, VIEW_H=540, DPR_MAX=2.5;
 
   const COUNT=4, R=0.75, YFLOOR=0;
   const GRAV=-14.5, REST=0.45, HFR=0.92, AFR=0.94;
@@ -23,35 +24,42 @@
   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
 
-  function injectScriptOnce(src: string, id: string) {
-    return new Promise<void>((resolve, reject) => {
-      if (document.getElementById(id)) return resolve();
-      const s = document.createElement("script");
-      s.id = id; s.src = src; s.async = true; s.crossOrigin = "anonymous";
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error("GLTFLoader load error"));
-      document.head.appendChild(s);
-    });
-  }
-
+  // === GLTFLoader robuste ===
   async function ensureGLTFLoader(): Promise<any> {
     const w = window as any;
-    const THREE = w.THREE;
-    let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
-    if (typeof Ctor === "function") {
-      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
-      return Ctor;
-    }
+    if (!w.THREE) throw new Error("THREE non chargé.");
+    if (w.THREE.GLTFLoader) return w.THREE.GLTFLoader;
+    if (w.GLTFLoader) { w.THREE.GLTFLoader = w.GLTFLoader; return w.GLTFLoader; }
+
     const url = "https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
-    await injectScriptOnce(url, "__gltfloader_fallback__");
-    Ctor = (w.THREE?.GLTFLoader) || w.GLTFLoader;
-    if (typeof Ctor === "function") {
-      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
-      return Ctor;
+
+    try {
+      const res = await fetch(url, { mode: "cors", cache: "force-cache" });
+      if (!res.ok) throw new Error("fetch GLTFLoader.js failed");
+      const code = await res.text();
+      const factory = new Function("window","THREE", code + ";return THREE.GLTFLoader || window.GLTFLoader;");
+      const Ctor = factory(w, w.THREE);
+      if (Ctor) { w.THREE.GLTFLoader = Ctor; return Ctor; }
+    } catch (e) {
+      console.warn("[L3] fetch+eval GLTFLoader a échoué, fallback <script>…", e);
     }
-    throw new Error("GLTFLoader introuvable après injection (réseau/CSP ?).");
+
+    await new Promise<void>((resolve, reject) => {
+      if (document.getElementById("__gltfloader_fallback__")) return resolve();
+      const s = document.createElement("script");
+      s.id = "__gltfloader_fallback__";
+      s.src = url; s.async = true; s.crossOrigin = "anonymous";
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("GLTFLoader non chargé (script)."));
+      document.head.appendChild(s);
+    });
+
+    const Ctor2 = (w.THREE && w.THREE.GLTFLoader) || w.GLTFLoader;
+    if (Ctor2) { w.THREE.GLTFLoader = Ctor2; return Ctor2; }
+    throw new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader).");
   }
 
+  // ancres de faces
   function getFaceAnchors(root:any){
     const out:any[]=[];
     root.traverse((n:any)=>{
@@ -79,9 +87,11 @@
   }
 
   function AstragalusLevel3(){
+    // DOM
     const wrapRef=useRef<HTMLDivElement|null>(null);
     const cvRef  =useRef<HTMLCanvasElement|null>(null);
 
+    // 3D
     const rendererRef=useRef<any>(null);
     const sceneRef   =useRef<any>(null);
     const camRef     =useRef<any>(null);
@@ -89,8 +99,9 @@
     const diceRef    =useRef<any[]>([]);
     const boundsRef  =useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
 
-    const rafRef     =useRef(0);
-    const lastRef    =useRef(0);
+    // anim/état
+    const rafRef     =useRef<number>(0);
+    const lastRef    =useRef<number>(0);
     const valueMap   =useRef<Record<string,number>>({"1":1,"3":3,"4":4,"6":6});
 
     const [ready,setReady]=useState(false);
@@ -98,10 +109,10 @@
     const [vals,setVals]=useState<string[]>([]);
     const [sum,setSum]=useState(0);
 
-    // --- cadrage ORTHO qui garde tout le plateau visible ---
+    // cadrage ORTHO qui garde tout le plateau
     function frameCamera(){
       const cam=camRef.current!, wrap=wrapRef.current!, r=rendererRef.current!;
-      const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(H/W));
+      const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(VIEW_H/VIEW_W));
       const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
       r.setPixelRatio(dpr); r.setSize(w,h,false);
 
@@ -119,7 +130,7 @@
       };
     }
 
-    // --- Resize observer ---
+    // resize
     useEffect(()=>{
       const onResize=()=>{ if(rendererRef.current && camRef.current && wrapRef.current) frameCamera(); };
       onResize();
@@ -129,7 +140,7 @@
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
-    // --- Init 3D / chargement modèle ---
+    // init
     useEffect(()=>{
       let cancelled=false;
       (async()=>{
@@ -158,7 +169,7 @@
         const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
 
-        const GLTF = await ensureGLTFLoader(); // ← robuste
+        const GLTF = await ensureGLTFLoader();
         const loader = new GLTF();
         loader.load(GLB,(gltf:any)=>{
           if(cancelled) return;
@@ -169,25 +180,23 @@
             if(!o.material || !o.material.isMeshStandardMaterial) o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
           }});
 
+          // 4 osselets
           const dice:any[]=[];
           for(let i=0;i<COUNT;i++){
             const inst=base.clone(true); scene.add(inst);
             dice.push({ root:inst, anchors:getFaceAnchors(inst), vel:new T.Vector3(), angVel:new T.Vector3(), tStable:0 });
           }
           diceRef.current=dice;
+
           setReady(true);
           animate();
         }, undefined, (e:any)=>console.warn("[L3] GLB load error", e));
       })();
 
-      return ()=>{ 
-        cancelled=true; 
-        cancelAnimationFrame(rafRef.current);
-        try{ rendererRef.current?.dispose?.(); }catch{}
-      };
+      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current); try{ rendererRef.current?.dispose?.(); }catch{} };
     },[]);
 
-    // --- collisions simplifiées ---
+    // collisions simplifiées
     function collideAndSeparate(){
       const dice=diceRef.current;
       for(let i=0;i<dice.length;i++){
@@ -211,32 +220,37 @@
       }
     }
 
-    // --- step / intégration ---
+    // intégration / step
     function step(dt:number){
       const b=boundsRef.current, dice=diceRef.current;
 
       for(const d of dice){
+        // gravité
         d.vel.y += GRAV*dt;
 
         d.root.position.x += d.vel.x*dt;
         d.root.position.y += d.vel.y*dt;
         d.root.position.z += d.vel.z*dt;
 
+        // sol
         if (d.root.position.y <= YFLOOR + R){
           d.root.position.y = YFLOOR + R;
           if (d.vel.y < 0) d.vel.y = -d.vel.y*REST;
           d.vel.x *= HFR; d.vel.z *= HFR; d.angVel.multiplyScalar(AFR);
         }
 
+        // murs (cadre caméra)
         if (d.root.position.x < b.minX){ d.root.position.x=b.minX; d.vel.x=Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x > b.maxX){ d.root.position.x=b.maxX; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z < b.minZ){ d.root.position.z=b.minZ; d.vel.z=Math.abs(d.vel.z)*0.6; }
         if (d.root.position.z > b.maxZ){ d.root.position.z=b.maxZ; d.vel.z=-Math.abs(d.vel.z)*0.6; }
 
+        // rotation
         d.root.rotation.x += d.angVel.x*dt;
         d.root.rotation.y += d.angVel.y*dt;
         d.root.rotation.z += d.angVel.z*dt;
 
+        // frottements pseudo-aléatoires au contact
         if (d.root.position.y <= YFLOOR + R + 0.002){
           d.vel.x += Math.sin(d.root.position.z*0.25)*0.02*dt;
           d.vel.z += Math.sin(d.root.position.x*0.25)*0.02*dt;
@@ -245,6 +259,7 @@
 
       collideAndSeparate();
 
+      // stabilisation + verrouillage face-up
       for(const d of dice){
         const speed=d.vel.length()+d.angVel.length();
         const info=faceUpInfo(d.anchors);
@@ -270,7 +285,7 @@
       }
     }
 
-    // --- loop ---
+    // loop
     function animate(){
       const r=rendererRef.current!, s=sceneRef.current!, c=camRef.current!;
       const loop=(t:number)=>{
@@ -282,7 +297,7 @@
       rafRef.current=requestAnimationFrame(loop);
     }
 
-    // --- UI ---
+    // UI
     function throwDice(){
       const dice=diceRef.current, b=boundsRef.current;
       for(let i=0;i<dice.length;i++){
@@ -307,14 +322,18 @@
 
     return (
       <div ref={wrapRef} style={{position:"relative"}}>
-        <canvas ref={cvRef} width={W} height={H} style={{display:"block", borderRadius:12}}/>
+        <canvas ref={cvRef} width={VIEW_W} height={VIEW_H} style={{display:"block", borderRadius:12}}/>
         <div style={{display:"flex", gap:8, marginTop:10}}>
           <button className="btn" onClick={throwDice}>Lancer</button>
           <button className="btn" onClick={reset}>Réinitialiser</button>
           {!ready && <span className="badge" style={{marginLeft:8}}>Chargement…</span>}
         </div>
         {vals.length>0 && (
-          <div style={{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px"}}>
+          <div style={{
+            position:"absolute", left:12, bottom:12,
+            background:"#0b2237cc", border:"1px solid #ffffff22",
+            borderRadius:12, padding:"10px 12px"
+          }}>
             <div style={{fontWeight:700, marginBottom:4}}>Tirage : {vals.join("  ")}</div>
             <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum}</b></div>
           </div>
