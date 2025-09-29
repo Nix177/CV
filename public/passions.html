@@ -64,7 +64,7 @@
     .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.25))}
     .badge{position:absolute;left:10px;bottom:10px;background:rgba(10,18,32,.8);border:1px solid rgba(255,255,255,.1);
            color:var(--text);font-size:12px;padding:.25rem .5rem;border-radius:8px;backdrop-filter:blur(4px)}
-    .body{padding:12px}.title{font-weight:800;margin:.2rem 0 .35rem 0;font-size:18px}.desc{margin:0;color:var(--muted)}
+.body{padding:12px}.card .title{font-weight:800;margin:.2rem 0 .35rem 0;font-size:18px;line-height:1.2}.desc{margin:0;color:var(--muted)}
     .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
     .link{text-decoration:none;color:var(--text);background:#0c1728;border:1px solid rgba(255,255,255,.08);
           padding:.35rem .6rem;border-radius:10px;font-weight:600;font-size:14px}
@@ -280,23 +280,24 @@
     {title:"Lobbywatch (CH)",desc:"Transparence des lobbys en Suisse.",cover:"assets/passions/sites/lobbywatch.webp",badge:"Data",link:{label:"Parcourir",href:"https://lobbywatch.ch/fr"}}
   ];
 
-  const GAMES_CUSTOM = [
-    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp"},
-    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
-    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp"},
-    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp"},
-    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp"},
-    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp"},
-    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp"},
-    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp"},
-    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
-    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp"},
-    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp"},
-    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp"},
-    {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp"},
-    {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp"},
-    {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp"}
-  ];
+ const GAMES_CUSTOM = [
+  {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp", link:{label:"Fiche", href:"https://robertsspaceindustries.com/en/"}},
+  {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp", link:{label:"Fiche", href:"https://heroesofthestorm.blizzard.com/fr-fr/"}},
+  {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp", link:{label:"Fiche", href:"https://worldofwarcraft.blizzard.com/fr-fr/"}},
+  {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp", link:{label:"Fiche", href:"https://store.steampowered.com/app/264710/Subnautica/"}},
+  {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp", link:{label:"Fiche", href:"https://genshin.hoyoverse.com/fr/"}},
+  {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp", link:{label:"Fiche", href:"https://www.farming-simulator.com/"}},
+  {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp", link:{label:"Fiche", href:"https://www.elitedangerous.com/"}},
+  {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp", link:{label:"Fiche", href:"https://store.steampowered.com/app/738520/Breathedge/"}},
+  {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp", link:{label:"Fiche", href:"https://store.steampowered.com/agecheck/app/617290/"}},
+  {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp", link:{label:"Fiche", href:"https://store.steampowered.com/agecheck/app/1252330/"}},
+  {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp", link:{label:"Fiche", href:"https://www.minecraft.net/fr-fr"}},
+  {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp", link:{label:"Fiche", href:"https://store.steampowered.com/app/288470/Fable_Anniversary/"}},
+  {title:"Jeux N64 (classiques)", cover:"assets/passions/games/custom/n64-classics-cover.webp", link:{label:"Fiche", href:"#"}},
+  {title:"Xbox Classic (sélection)", cover:"assets/passions/games/custom/xbox-classics-cover.webp", link:{label:"Fiche", href:"#"}},
+  {title:"…et bien d’autres", cover:"assets/passions/games/custom/and-others-cover.webp", link:{label:"Fiche", href:"#"}}
+];
+
 
   /* ==== Helpers ==== */
 
