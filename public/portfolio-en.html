@@ -11,34 +11,48 @@
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
+
+  <!-- Base styles (fallback if /style.css is not loaded) -->
   <style>
-    /* Fallback styles (works even without the full site.css) */
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
-    .btn { padding:8px 12px; border:1px solid #ffffff22; border-radius:10px; background:#0b1f33; color:#e6f1ff; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
-    .btn.ghost { background: transparent }
-    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ffffff33; font-size:.85em; opacity:.9 }
-    .muted { opacity:.9 }
-    .card { border:1px solid #ffffff22; border-radius:14px; background:#0b2237cc; padding:14px 16px }
-    .grid-cards { display:grid; gap:12px; grid-template-columns: 1fr; }
-    @media (min-width: 840px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+    .muted { color: #e6f1ffbb; }
+    .btn { appearance:none; border:1px solid #ffffff33; color:#e6f1ff; background:#0b1f33; padding:8px 12px; border-radius:10px; cursor:pointer; text-decoration:none }
+    .btn.primary { background:#0f5; color:#012 }
+    .btn.linkish { background:transparent; border-color:transparent; text-decoration:underline }
+    .badge { border:1px solid #ffffff33; border-radius:999px; padding:2px 8px; font-size:12px; opacity:.8 }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px }
+    .card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
+    .card .head { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#e6f1ff }
+    .card .body { padding: 10px 12px; color:#cfe2ff }
+    .card .actions { display:flex; gap:8px; padding:10px 12px; border-top:1px solid #ffffff22 }
+    .hero { display:flex; align-items:center; gap:10px; }
+    .hero .emoji { font-size:22px }
+    header.wrap { padding: 16px; margin: 0 auto; max-width: 1100px; }
+    header.wrap h1 { margin:0; color:#e6f1ff; font: 600 28px/1.2 system-ui,Segoe UI,Roboto,Arial }
+    header.wrap p { margin:6px 0 0; color:#cfe2ff }
+    body { background: radial-gradient(1200px 600px at 50% -10%, #0b3b66 0, transparent 60%), #051726; color:#e6f1ff; font: 16px/1.45 system-ui,Segoe UI,Roboto,Arial }
+    a { color:#90e0ff }
+    .p-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px }
 
-    /* Secure preview overlay (no allow-same-origin) */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,55);
-               display: none; z-index: 60; align-items: center; justify-content: center; padding: 18px; }
-    .overlay .panel { position: relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px;
-                      width: min(1100px, 100%); height: min(78vh, 100%); overflow: hidden; }
-    .overlay .panel header { display:flex; justify-content: space-between; align-items:center; gap:10px;
-                             padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff; }
-    .overlay iframe { width:100%; height: calc(100% - 46px); border:0; background:#fff; }
+    /* Centered NAV (alignment only) */
+    .site-nav { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; }
+    .site-nav .menu, .site-nav .lang { display:flex; justify-content:center; gap:8px; list-style:none; padding:0; margin:0; }
+
+    /* Game cards */
+    .game-card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; margin: 28px 0; padding: 14px }
+    .game-card h2 { font: 600 24px/1.3 system-ui,Segoe UI,Roboto,Arial; margin:0 0 4px }
+    .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
+    .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
+    .game-root { min-height: 54vh; outline: none; }
   </style>
-  <link rel="stylesheet" href="/style.css">
-  <script defer src="/assets/js/nav.js"></script>
-  <script defer src="/assets/js/feedback.js"></script>
+
+  <link rel="preload" href="/style.css" as="style"/>
+  <link rel="stylesheet" href="/style.css"/>
 </head>
+
 <body>
-  <!-- Local header (hidden by nav.js when JS enabled) -->
   <header class="site-header">
     <nav class="site-nav" aria-label="Main navigation">
       <ul class="menu">
@@ -46,7 +60,6 @@
         <li><a href="/cv-en.html" class="btn ghost">CV</a></li>
         <li><a href="/portfolio-en.html" class="btn" aria-current="page">Portfolio</a></li>
         <li><a href="/passions-en.html" class="btn ghost">Passions</a></li>
-        <li><a href="/ai-lab-en.html" class="btn ghost">AI Lab</a></li>
         <li><a href="/fun-facts-en.html" class="btn ghost">Common Misconceptions</a></li>
       </ul>
       <ul class="lang">
@@ -57,116 +70,145 @@
     </nav>
   </header>
 
+  <header class="wrap">
+    <h1>Portfolio — Nicolas Tuor</h1>
+    <p class="muted">Selection of web projects (education, AI, learning games). Thumbnails open a site in an overlay when the target allows embedding.</p>
+  </header>
+
   <main class="wrap">
-    <h1>Portfolio</h1>
-    <p class="muted">“Visit” opens in a new tab. “Preview” tries a secure embed (if the target site allows it).</p>
+    <!-- ===================== PROJECTS (cards/overlays) ===================== -->
+    <section id="sites">
+      <div id="portfolioGrid" class="p-grid"></div>
+    </section>
 
-    <!-- Cards grid -->
-    <div id="portfolioGrid" class="grid-cards"></div>
-
-    <!-- Preview overlay -->
-    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
-      <div class="panel">
-        <header>
-          <strong id="ovlTitle">Preview</strong>
-          <button id="overlayClose" class="btn">Close</button>
+    <!-- OVERLAY PREVIEW (single, aligned with JS/CSS) -->
+    <div id="pfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
+      <div class="pf-panel">
+        <header class="pf-head">
+          <strong id="pfTitle">Preview</strong>
+          <button id="pfClose" class="btn">Close</button>
         </header>
-        <iframe id="overlayFrame" title="Preview" sandbox="allow-scripts allow-popups"></iframe>
+        <div class="pf-frame">
+          <iframe id="pfFrame" title="Preview" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
+        </div>
+        <div id="pfMsg" class="muted" style="display:none;padding:8px 12px">
+          This site blocks embedded previews. ➜ Use “Visit”.
+        </div>
       </div>
     </div>
 
-    <!-- BEGIN AI-LAB-MERGE -->
-    <section id="ai-lab" class="card" style="margin-top:18px">
-      <h2>🧪 AI Lab — quiz generator</h2>
-      <div class="row" style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
-        <div>
-          <label for="q-theme">Theme</label>
-          <select id="q-theme" class="input">
-            <option value="ancient-history">History — Antiquity</option>
-            <option value="science">Science</option>
-            <option value="language">Language</option>
-            <option value="arts">Arts</option>
-          </select>
-        </div>
-        <div class="row">
-          <label for="q-age">Age / Level</label>
-          <select id="q-age" class="input"><option>Lower secondary</option><option>Upper secondary</option></select>
-          <label for="q-count" style="margin-left:8px">Questions</label>
-          <input id="q-count" class="input" type="number" min="3" max="10" value="5"/>
-        </div>
+    <!-- ===================== ASTRAGALUS GAMES ===================== -->
+
+    <!-- Game 1: Runner 2D -->
+    <section class="game-card" id="osselets-runner-card">
+      <h2>🎮 Runner 2D – Astragalus amulets: these three games are still early prototypes</h2>
+      <p class="muted">Discover the anatomy (talus) and amulet uses (purification, apotropaic) while running.</p>
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <button id="btn-start-runner" class="btn">Start</button>
       </div>
-      <div class="stack" style="margin-top:10px">
-        <button id="q-generate" class="btn">Generate</button>
-        <div id="q-status" class="muted"></div>
-      </div>
-      <div id="q-output" style="margin-top:12px"></div>
-    </section>
-
-    <section id="ai-lab-game" class="card">
-      <h2>🎮 Jacks — mini-game</h2>
-      <p class="muted">Playable demo embedded in a fixed container.</p>
-
-      <!-- Start button -->
-      <button id="osselets-start" class="btn">Start</button>
-
-      <!-- Taller container so the game fully shows -->
-      <div class="game-wrap"
-           style="position:relative;height:clamp(600px,78vh,1000px);overflow:hidden;border-radius:14px;background:#071528;border:1px solid #163b62">
-        <div id="osselets-root"></div>
+      <div class="game-wrap" id="wrap-runner">
+        <img class="game-cover" id="cover-runner"
+             src="/assets/games/osselets/audio/img/start-screenshot.webp"
+             alt="Preview — Runner 2D" onerror="this.remove()"/>
+        <div class="game-root" id="root-runner" tabindex="0" aria-label="Runner 2D game"></div>
       </div>
     </section>
-    <!-- END AI-LAB-MERGE -->
+
+    <!-- Game 2: Write with the bones -->
+    <section class="game-card" id="osselets-l2-card">
+      <h2>✍️ Write with the bones — Thread & alphabet</h2>
+      <p class="muted">24 holes (6 per side) mapped to the 24 Greek letters. Follow the thread to spell a word.</p>
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <button id="btn-start-l2" class="btn">Start</button>
+      </div>
+      <div class="game-wrap" id="wrap-l2">
+        <img class="game-cover" id="cover-l2"
+             src="/assets/games/osselets/audio/img/start_screenshot_2.webp"
+             alt="Preview — Write with the bones" onerror="this.remove()"/>
+        <div class="game-root" id="root-l2" tabindex="0" aria-label="Write with the bones game"></div>
+      </div>
+    </section>
+
+    <!-- Game 3: Roll the bones -->
+    <section class="game-card" id="osselets-l3-card">
+      <h2>🎲 Roll the bones — Venus, Canis, Senio…</h2>
+      <p class="muted">Throw 4 astragali (faces {1,3,4,6}). Game mode (score) or Oracle (symbolic reading).</p>
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <button id="btn-start-l3" class="btn">Start</button>
+      </div>
+      <div class="game-wrap" id="wrap-l3">
+        <img class="game-cover" id="cover-l3"
+             src="/assets/games/osselets/audio/img/start_screenshot_3.webp"
+             alt="Preview — Roll the bones" onerror="this.remove()"/>
+        <div class="game-root" id="root-l3" tabindex="0" aria-label="Roll the bones game"></div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
     © Nicolas Tuor — Portfolio
   </footer>
 
-  <!-- Data must be loaded BEFORE the script -->
+  <!-- Data -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
 
-  <!-- BEGIN AI-LAB-SCRIPTS -->
+  <!-- Lab -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel for the game -->
+  <!-- React + Babel (UMD) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Runner (TypeScript + React via Babel) -->
-  <script type="text/babel"
-          data-presets="typescript,react"
-          data-plugins="transform-typescript"
-          src="/osselets-runner.tsx"></script>
+  <!-- Three.js + examples (GLTFLoader, OrbitControls) -->
+  <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  <!-- Click-to-mount -->
-  <script type="text/babel" data-presets="react">
-    (function () {
-      var startBtn = document.getElementById('osselets-start');
-      var root = document.getElementById('osselets-root');
+  <!-- Astragalus games -->
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
+  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
 
-      var style = document.createElement('style');
-      style.textContent = `
-        #osselets-root, #osselets-root > * { width: 100%; height: 100%; }
-        #osselets-root canvas { width: 100% !important; height: 100% !important; image-rendering: pixelated; }
-      `;
-      document.head.appendChild(style);
-
-      function mountRunner() {
-        // @ts-ignore
-        var Comp = (window && window.AstragalusRunner) ? window.AstragalusRunner : null;
-        if (!root || !Comp) { console.warn('AstragalusRunner not initialized.'); return; }
-        var r = ReactDOM.createRoot(root);
-        r.render(React.createElement(Comp));
-        if (startBtn) { startBtn.disabled = true; startBtn.textContent = 'Running…'; }
-        root.setAttribute('tabindex', '0');
-        setTimeout(function(){ try{ root.focus({preventScroll:true}); }catch(e){ root.focus(); } }, 50);
-      }
-
-      if (startBtn) startBtn.addEventListener('click', mountRunner, { once: true });
-    })();
+  <!-- Mount / Navigation (one container per game) -->
+  <script type="text/babel">
+  (function () {
+    function stopAllAudio() {
+      document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
+    }
+    function whenReady(name, cb, tries = 40) {
+      const Comp = window && window[name];
+      if (Comp) return cb(Comp);
+      if (tries <= 0) { console.warn("[osselets] component not found:", name); return; }
+      setTimeout(() => whenReady(name, cb, tries - 1), 125);
+    }
+    function mount(root, cover, CompName, btn) {
+      if (!root) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Loading…"; }
+      stopAllAudio();
+      whenReady(CompName, (Comp) => {
+        try {
+          if (cover) { cover.style.display = 'none'; cover.remove(); }
+          const r = ReactDOM.createRoot(root);
+          r.render(React.createElement(Comp));
+          setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = "Start"; }
+        }
+      });
+    }
+    document.getElementById('btn-start-runner')?.addEventListener('click', () =>
+      mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner', document.getElementById('btn-start-runner'))
+    );
+    document.getElementById('btn-start-l2')?.addEventListener('click', () =>
+      mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2', document.getElementById('btn-start-l2'))
+    );
+    document.getElementById('btn-start-l3')?.addEventListener('click', () =>
+      mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3', document.getElementById('btn-start-l3'))
+    );
+  })();
   </script>
-  <!-- END AI-LAB-SCRIPTS -->
 </body>
 </html>
