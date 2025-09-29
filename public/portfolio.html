@@ -49,6 +49,10 @@
     .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
     .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
     .game-root { min-height: 54vh; outline: none; }
+
+    /* NAV centrée (ne touche que l'alignement) */
+    .site-nav { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; }
+    .site-nav .menu, .site-nav .lang { display:flex; justify-content:center; gap:8px; list-style:none; padding:0; margin:0; }
   </style>
 
   <link rel="preload" href="/style.css" as="style"/>
@@ -80,7 +84,21 @@
 
   <main class="wrap">
     <!-- ===================== AUTRES PROJETS (cartes/overlays) ===================== -->
-    <!-- Gardés tels quels (sections sites pré-existantes)… -->
+    <!-- CONTENEUR REQUIS PAR portfolio.js : -->
+    <section id="sites">
+      <div id="portfolioGrid" class="p-grid"></div>
+    </section>
+
+    <!-- OVERLAY APERÇU (nécessaire pour le bouton “Aperçu”) -->
+    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
+      <div class="panel">
+        <header>
+          <strong id="ovlTitle">Aperçu</strong>
+          <button id="overlayClose" class="btn">Fermer</button>
+        </header>
+        <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
+      </div>
+    </div>
 
     <!-- ===================== JEUX OSSELETS ===================== -->
 
