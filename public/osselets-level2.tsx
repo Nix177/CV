@@ -1,36 +1,49 @@
 // Jeu 2 — Écrire avec les os (24 trous → 24 lettres)
-// - Aucun import/ESM. Utilise window.THREE fourni par <script> CDN.
-// - Attente robuste de GLTFLoader (supporte window.GLTFLoader et window.THREE.GLTFLoader).
+// - AUCUN import/ESM. Utilise window.THREE fourni par <script> CDN.
+// - Attente robuste du loader (cherche THREE.GLTFLoader et window.GLTFLoader).
+// - Fallback : injecte GLTFLoader.js si absent, puis réessaie.
 // - Occlusion correcte : raycaster caméra→trou ; si un mesh est avant le trou, la lettre est masquée.
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
   const T = (window as any).THREE as any;
 
-  // --- Constantes / assets (conserver les chemins existants) ---
+  // --- Constantes / assets (garde tes chemins) ---
   const GLB = "/assets/games/osselets/level2/3d/astragalus.glb";
   const W = 960, H = 540, DPR_MAX = 2.5;
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
-  // --- Récupération robuste du constructeur GLTFLoader (UMD examples/js) ---
-  function getGLTFLoaderCtor(maxTries = 60, delay = 100): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let tries = 0;
-      const tick = () => {
-        const w = window as any;
-        const THREE = w.THREE;
-        let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
-        if (typeof Ctor === "function") {
-          if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor; // normalisation
-          return resolve(Ctor);
-        }
-        if (++tries >= maxTries) {
-          return reject(new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader)."));
-        }
-        setTimeout(tick, delay);
-      };
-      tick();
+  // --- utilitaires loader (tolérant + fallback d’injection) ---
+  function injectScriptOnce(src: string, id: string) {
+    return new Promise<void>((resolve, reject) => {
+      if (document.getElementById(id)) return resolve();
+      const s = document.createElement("script");
+      s.id = id; s.src = src; s.async = true; s.crossOrigin = "anonymous";
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("GLTFLoader load error"));
+      document.head.appendChild(s);
     });
+  }
+
+  async function ensureGLTFLoader(): Promise<any> {
+    const w = window as any;
+    const THREE = w.THREE;
+    // 1) déjà présent ?
+    let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
+    if (typeof Ctor === "function") {
+      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
+      return Ctor;
+    }
+    // 2) fallback : injecter le script examples/js (même version que ta page)
+    const url = "https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
+    await injectScriptOnce(url, "__gltfloader_fallback__");
+    // 3) re-check
+    Ctor = (w.THREE?.GLTFLoader) || w.GLTFLoader;
+    if (typeof Ctor === "function") {
+      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
+      return Ctor;
+    }
+    throw new Error("GLTFLoader introuvable après injection (vérifie le réseau/CSP).");
   }
 
   function AstragalusLevel2() {
@@ -87,9 +100,10 @@
         const cv=glRef.current!, hud=hudRef.current!;
         if(!cv||!hud) return;
 
-        const GLTF = await getGLTFLoaderCtor(); // ← robust
+        const GLTF = await ensureGLTFLoader(); // ← robuste
         const renderer=new T.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
-        renderer.outputColorSpace=T.SRGBColorSpace||renderer.outputEncoding; // compat
+        if ("outputColorSpace" in renderer) renderer.outputColorSpace=T.SRGBColorSpace;
+        else renderer.outputEncoding = T.sRGBEncoding;
         renderer.setPixelRatio(view.current.dpr);
         renderer.setSize(view.current.w, view.current.h,false);
         rendererRef.current=renderer;
@@ -126,7 +140,7 @@
           scene.add(root);
           modelRef.current=root;
 
-          // Trouver les 24 "Hole_*" (priorité) ; sinon fallback sur premiers enfants
+          // 24 "Hole_*" si disponibles
           const anchors:any[]=[];
           root.traverse((n:any)=>{ const nm=(n.name||"").toLowerCase(); if(/^hole[\s_-]?/.test(nm)) anchors.push(n); });
           anchorsRef.current=(anchors.length>=24?anchors.slice(0,24):anchors);
@@ -147,7 +161,6 @@
       return ()=>{
         cancelled=true;
         cancelAnimationFrame(rafRef.current);
-        // best-effort cleanup
         try { rendererRef.current?.dispose?.(); } catch {}
       };
     },[]);
@@ -175,7 +188,7 @@
       holes.current=anchors.map((n:any,i:number)=>{
         n.getWorldPosition(world);
 
-        // occlusion : premier hit avant le trou -> caché
+        // occlusion : 1er hit avant le trou -> caché
         let hidden=false;
         dir.copy(world).sub(camPos).normalize();
         rc.set(camPos,dir);
@@ -215,6 +228,5 @@
     );
   }
 
-  // Expose global pour le script de montage
   (window as any).AstragalusLevel2 = AstragalusLevel2;
 })();
