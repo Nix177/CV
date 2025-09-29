@@ -1,6 +1,6 @@
 // /osselets-dice5.js — Lancer de 5 osselets (anchors ventre/dos/bassin/membres)
 // - Pur JS (aucun JSX/TS requis).
-// - Three + GLTFLoader via import() (esm.sh, CORS OK), chargés une seule fois.
+// - Three + GLTFLoader via import() (esm.sh), chargés une seule fois.
 // - Lancer = rotation aléatoire + "snap" vers la face dont l’ancre pointe le plus vers +Y monde.
 // - Score = somme des 5 valeurs + détection de combos (sur 4 parmi 5).
 
@@ -28,7 +28,6 @@
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
   const fetchJSON = (u) => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
 
-  // Détecte les ancres de faces dans un clone
   function collectFaceAnchors(root) {
     const map = {}; // { ventre, dos, bassin, membres }
     root.traverse(n => {
@@ -43,7 +42,6 @@
     return map;
   }
 
-  // Face "vers le haut" d'après les ancres (max dot avec +Y monde)
   function faceUp(anchors, THREE) {
     if (!anchors) return { key: null, dot: -2, node: null };
     const Y = new THREE.Vector3(0, 1, 0);
@@ -59,13 +57,13 @@
     return best;
   }
 
-  // Snap : aligne l'axe +Y de l’ancre gagnante vers +Y monde
+  // Aligne l’axe +Y de l’ancre gagnante vers +Y monde
   function snapToFace(die, anchorNode, THREE) {
     const qw = die.quaternion.clone();
     const qAnchor = new THREE.Quaternion(); anchorNode.getWorldQuaternion(qAnchor);
     const upW = new THREE.Vector3(0,1,0).applyQuaternion(qAnchor).normalize();
     const qAlign = new THREE.Quaternion().setFromUnitVectors(upW, new THREE.Vector3(0,1,0));
-    return qAlign.multiply(qw); // quaternion cible
+    return qAlign.multiply(qw);
   }
 
   // Quaternion aléatoire uniforme
@@ -80,7 +78,6 @@
     );
   }
 
-  // Combos (cherche dans tous les 4 parmi 5)
   function detectCombos(values, combos) {
     if (!combos) return [];
     const res = [];
@@ -104,12 +101,12 @@
     return res;
   }
 
-  // Jeu (API publique : window.OsseletsDice5.mount({root:Element}))
+  // Jeu (API publique : window.OsseletsDice5.mount(rootEl))
   async function mount(rootEl) {
     const { THREE, GLTFLoader } = await libs();
-    const THREE_REF = THREE; // ➜ on réutilise partout, plus de await/libs en plein milieu
+    const T = THREE; // référence unique
 
-    // UI container
+    // UI (overlay pour éviter tout clipping)
     rootEl.innerHTML = "";
     rootEl.style.position = "relative";
 
@@ -119,7 +116,7 @@
     rootEl.appendChild(canvas);
 
     const ui = document.createElement("div");
-    ui.style.cssText = "display:flex;gap:8px;margin-top:10px";
+    ui.style.cssText = "position:absolute;left:12px;top:12px;display:flex;gap:8px;z-index:10";
     const btnThrow = document.createElement("button");
     btnThrow.className = "btn"; btnThrow.textContent = "Lancer";
     const btnReset = document.createElement("button");
@@ -132,18 +129,18 @@
     rootEl.appendChild(hud);
 
     // Renderer & scène
-    const renderer = new THREE_REF.WebGLRenderer({ canvas, antialias:true, alpha:false });
+    const renderer = new T.WebGLRenderer({ canvas, antialias:true, alpha:false });
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE_REF.PCFSoftShadowMap;
+    renderer.shadowMap.type = T.PCFSoftShadowMap;
     const dpr = clamp(window.devicePixelRatio || 1, 1, VIEW.DPR_MAX);
     renderer.setPixelRatio(dpr);
     renderer.setSize(VIEW.W, VIEW.H, false);
 
-    const scene = new THREE_REF.Scene();
-    scene.background = new THREE_REF.Color(0xf5f7fb);
+    const scene = new T.Scene();
+    scene.background = new T.Color(0xf5f7fb);
 
     // Caméra ortho (cadre plateau complet)
-    const cam = new THREE_REF.OrthographicCamera(-10,10,10,-10,0.1,100);
+    const cam = new T.OrthographicCamera(-10,10,10,-10,0.1,100);
     function frameCamera() {
       const w = Math.max(320, rootEl.clientWidth|0);
       const h = Math.round(w * (VIEW.H/VIEW.W));
@@ -159,29 +156,29 @@
     const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(frameCamera) : null;
     if (ro) ro.observe(rootEl); window.addEventListener("resize", frameCamera);
 
-    scene.add(new THREE_REF.HemisphereLight(0xffffff,0x334466,.85));
-    const dir = new THREE_REF.DirectionalLight(0xffffff,1);
+    scene.add(new T.HemisphereLight(0xffffff,0x334466,.85));
+    const dir = new T.DirectionalLight(0xffffff,1);
     dir.position.set(4,7,6); dir.castShadow=true;
     dir.shadow.mapSize?.set?.(1024,1024);
     scene.add(dir);
 
-    const ground = new THREE_REF.Mesh(
-      new THREE_REF.PlaneGeometry(40,22),
-      new THREE_REF.MeshStandardMaterial({color:0xeae7ff, roughness:.95, metalness:0})
+    const ground = new T.Mesh(
+      new T.PlaneGeometry(40,22),
+      new T.MeshStandardMaterial({color:0xeae7ff, roughness:.95, metalness:0})
     );
     ground.rotation.x = -Math.PI/2; ground.position.y = 0; ground.receiveShadow = true;
     scene.add(ground);
 
-    const ring = new THREE_REF.Mesh(
-      new THREE_REF.RingGeometry(0.01, RING.outer, 64),
-      new THREE_REF.MeshBasicMaterial({color:0xdee3ff, transparent:true, opacity:.25, side:THREE_REF.DoubleSide})
+    const ring = new T.Mesh(
+      new T.RingGeometry(0.01, RING.outer, 64),
+      new T.MeshBasicMaterial({color:0xdee3ff, transparent:true, opacity:.25, side:T.DoubleSide})
     );
     ring.rotation.x = -Math.PI/2; ring.position.y = 0.003; scene.add(ring);
 
-    // Chargement config valeurs/combos
+    // Config valeurs/combos
     const cfg = await fetchJSON(CFG) || { values:{ventre:1,bassin:3,membres:4,dos:6}, combos:null, ui:{hint:""} };
 
-    // Chargement du modèle
+    // Modèle
     const loader = new GLTFLoader();
     const base = await new Promise((res,rej)=>{
       loader.load(MODEL, gltf => {
@@ -190,7 +187,7 @@
         root.traverse(o=>{
           if (o.isMesh){
             if (!o.material || !o.material.isMeshStandardMaterial)
-              o.material = new THREE_REF.MeshStandardMaterial({color:0xf7efe7, roughness:.6, metalness:.05});
+              o.material = new T.MeshStandardMaterial({color:0xf7efe7, roughness:.6, metalness:.05});
             o.castShadow = true; o.receiveShadow = false;
           }
         });
@@ -198,14 +195,13 @@
       }, undefined, err=>rej(err));
     });
 
-    // Instanciation des 5 osselets
+    // 5 osselets (clones)
     const dice = [];
     for (let i=0;i<COUNT;i++){
       const inst = base.clone(true);
       scene.add(inst);
       dice.push({ root:inst, anchors:collectFaceAnchors(inst), val:0 });
     }
-    // Placement initial
     const X0=-4, Z0=-1.2, step=2.0;
     dice.forEach((d,i)=>{ d.root.position.set(X0+i*step, 1.2+(i%2)*.2, Z0+(i%3)*.5); d.root.rotation.set(Math.random(),Math.random(),Math.random()); });
 
@@ -214,41 +210,36 @@
     function renderLoop(){ renderer.render(scene, cam); req=requestAnimationFrame(renderLoop); }
     renderLoop();
 
-    // Tween rotation (slerp)
+    // Tween rotation (méthode d’instance — pas de Quaternion.slerp statique)
     async function tweenRotation(die, qFrom, qTo, durMs) {
       const t0 = performance.now();
-      const tmp = new THREE_REF.Quaternion();
+      const tmp = new T.Quaternion();
       return new Promise(resolve=>{
         (function step(){
           const t = (performance.now()-t0)/durMs;
           const k = t>=1 ? 1 : (1 - Math.pow(1 - t, 3)); // easeOutCubic
-          THREE_REF.Quaternion.slerp(qFrom, qTo, tmp, clamp(k,0,1));
+          tmp.copy(qFrom).slerp(qTo, clamp(k,0,1));
           die.quaternion.copy(tmp);
           if (k<1) requestAnimationFrame(step); else resolve();
         })();
       });
     }
 
-    // Lancer : spin aléatoire + snap vers faceUp
     async function doThrow() {
       btnThrow.disabled = true; btnReset.disabled = true; hud.style.display="none";
 
       // 1) spin aléatoire ~0.9s
-      const spins = dice.map(d => ({
-        die: d.root,
-        q0: d.root.quaternion.clone(),
-        qs: randomQuat(THREE_REF)
-      }));
+      const spins = dice.map(d => ({ die:d.root, q0:d.root.quaternion.clone(), qs:randomQuat(T) }));
       await Promise.all(spins.map(s => tweenRotation(s.die, s.q0, s.qs, 900)));
 
-      // 2) snap vers la faceUp ~0.28s + calcul valeurs
+      // 2) snap vers faceUp ~0.28s + valeurs
       const values = [];
       for (const d of dice) {
         d.root.updateMatrixWorld(true);
-        const info = faceUp(d.anchors, THREE_REF);
-        const key = info.key; // ventre|bassin|membres|dos
+        const info = faceUp(d.anchors, T);
+        const key = info.key;
         if (key && info.node) {
-          const qTarget = snapToFace(d.root, info.node, THREE_REF);
+          const qTarget = snapToFace(d.root, info.node, T);
           await tweenRotation(d.root, d.root.quaternion.clone(), qTarget, 280);
           d.val = cfg.values[key] ?? 0;
         } else {
@@ -282,7 +273,6 @@
     btnThrow.addEventListener("click", doThrow);
     btnReset.addEventListener("click", doReset);
 
-    // API pour démonter proprement
     return {
       destroy() {
         cancelAnimationFrame(req);
