@@ -1,8 +1,9 @@
-// /public/osselets-dice5.js — Lancer de 5 osselets (Three.js + cannon-es)
-// - Physique réaliste: gravité, rebonds, frottements, collisions + murs.
-// - Lancer = reset complet des bodies, impulsion linéaire + rotation initiale.
-// - Snap vers la face dont l'ancre pointe le plus vers +Y monde (forcé à 3 s).
-// - Score = somme + combos selon /assets/games/osselets/level3/3d/values.json
+// /public/osselets-dice5.js — 5 osselets 3D (Three.js + cannon-es) plateau rigide + score
+// - Plateau "board" avec rebords visuels et murs physiques (Box) ultra stables.
+// - Reset total avant chaque lancer, impulsion linéaire + spin.
+// - Pivot du modèle recentré + scale auto pour matcher la sphère physique (RADIUS).
+// - Détection de la face vers le haut via ancres (ventre/dos/bassin/membres).
+// - Snap à l'arrêt (ou snap forcé à 3 s) → calcul des valeurs + combos (JSON).
 //
 // API globale: window.OsseletsDice5.mount(rootEl)
 
@@ -10,50 +11,62 @@ const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
 (() => {
-  // ---------- Imports (ESM, une seule fois) ----------
+  // -------- Imports ESM (cachés globalement) --------
   const THREE_VER = "0.158.0";
   const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
   const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
   const CANNON_URL= `https://esm.sh/cannon-es@0.20.0`;
 
   async function loadLibs(){
-    if (window.__OX_PHYS) return window.__OX_PHYS;
+    if (window.__OX_PHYS_V2) return window.__OX_PHYS_V2;
     const THREE = await import(THREE_URL);
     const { GLTFLoader } = await import(GLTF_URL);
     const CANNON = await import(CANNON_URL);
-    window.__OX_PHYS = { THREE, GLTFLoader, CANNON };
-    return window.__OX_PHYS;
+    window.__OX_PHYS_V2 = { THREE, GLTFLoader, CANNON };
+    return window.__OX_PHYS_V2;
   }
 
-  // ---------- Constantes ----------
+  // -------- Constantes / tuning --------
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
   const COUNT = 5;
 
-  // Plateau
+  // Plateau & physique
   const FLOOR_Y  = 0.0;
-  const RADIUS   = 0.75;   // sphère approx pour collisions
-  const ARENA_X  = 11.0;
-  const ARENA_Z  = 7.0;
+  const ARENA_X  = 10.5;   // demi-largeur plateau
+  const ARENA_Z  = 6.5;    // demi-profondeur plateau
+  const RIM_H    = 1.2;    // hauteur rebord visuel/physique
+  const RIM_T    = 0.6;    // épaisseur rebord
 
-  // Physique
+  // Le modèle est ramené à ce rayon sphérique physique
+  const RADIUS   = 0.75;   // rayon de collision (sphère Cannon)
+
+  // Physique stricte
   const GRAVITY_Y   = -18.0;
   const RESTITUTION = 0.42;
-  const FRICTION    = 0.3;
-  const LIN_DAMP    = 0.24;
-  const ANG_DAMP    = 0.28;
+  const FRICTION    = 0.35;
+  const LIN_DAMP    = 0.28;
+  const ANG_DAMP    = 0.30;
+  const SOLVER_ITER = 20;
+  const SOLVER_TOL  = 1e-3;
 
-  // Stabilité + snap
-  const SPEED_EPS     = 0.35;
-  const SLEEP_TIME    = 0.75;
-  const FORCE_SNAP_MS = 3000;
+  // Anti-tunneling / stabilisation
+  const FIXED_DT    = 1/90;    // pas de base
+  const MAX_SUB     = 10;      // sous-pas max
+  const MAX_VEL     = 18.0;    // clamps
+  const MAX_ANG     = 18.0;
+
+  // Détection d'arrêt + snap
+  const SPEED_EPS     = 0.33;
+  const SLEEP_TIME    = 0.75;  // s
   const DOT_LOCK      = 0.985;
+  const FORCE_SNAP_MS = 3000;
 
-  // Lancer (impulsions)
+  // Lancer
   const THROW_POS = { x0:-4.8, z0:-1.3, step: 2.25, y: 2.7 };
-  const IMPULSE_V = { x: 5.6, y: 3.7, z: 2.2 };
-  const SPIN_W    = 6.8;
+  const IMPULSE_V = { x: 5.9, y: 4.0, z: 2.4 };
+  const SPIN_W    = 7.2;
 
-  // ---------- Utils ----------
+  // -------- Utils --------
   const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
   const now   = ()=>performance.now();
   const randpm= (m)=>(-m + Math.random()*(2*m));
@@ -108,7 +121,28 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     return res;
   }
 
-  // ---------- Jeu principal ----------
+  // Recentre + met à l’échelle un clone du modèle pour que le pivot = centre et taille ≈ RADIUS
+  function buildCenteredTemplate(baseRoot, THREE){
+    const root = baseRoot.clone(true);
+    // calc BBox
+    const box = new THREE.Box3().setFromObject(root);
+    const size= new THREE.Vector3(); box.getSize(size);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    // scale pour matcher le rayon physique
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const targetDiameter = 2*RADIUS;
+    const scale = (maxDim > 1e-6) ? targetDiameter/maxDim : 1.0;
+
+    // pivot à l'origine, root recentré & mis à l’échelle
+    const pivot = new THREE.Group();
+    root.position.sub(center);
+    root.scale.setScalar(scale);
+    pivot.add(root);
+
+    return { pivot, inner: root };
+  }
+
+  // -------- Game --------
   async function mount(rootEl){
     const { THREE, GLTFLoader, CANNON } = await loadLibs();
     const T = THREE, C = CANNON;
@@ -130,11 +164,11 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     hud.style.cssText="position:absolute;left:12px;bottom:12px;background:#0b2237cc;border:1px solid #ffffff22;border-radius:12px;padding:10px 12px;font-size:14px;display:none;max-width:min(96%,680px)";
     rootEl.appendChild(hud);
 
-    // Renderer / Scene / Caméra ortho
+    // Renderer / Scene / Camera
     const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
 
-    const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
+    const scene=new T.Scene(); scene.background=new T.Color(0xeef2f8);
     const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100); cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
 
     function frame(){
@@ -151,64 +185,74 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     if (ro) ro.observe(rootEl); window.addEventListener("resize", frame);
     frame();
 
-    scene.add(new T.HemisphereLight(0xffffff,0x334466,.85));
-    const dir=new T.DirectionalLight(0xffffff,1); dir.position.set(4,7,6); dir.castShadow=true;
+    // Lumières
+    scene.add(new T.HemisphereLight(0xffffff,0x334466,.9));
+    const dir=new T.DirectionalLight(0xffffff,1.05); dir.position.set(4,8,6); dir.castShadow=true;
     dir.shadow.mapSize?.set?.(1024,1024); scene.add(dir);
 
-    const groundMesh=new T.Mesh(
-      new T.PlaneGeometry(42,24),
-      new T.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0})
-    );
-    groundMesh.rotation.x=-Math.PI/2; groundMesh.position.y=FLOOR_Y; groundMesh.receiveShadow=true; scene.add(groundMesh);
+    // ---- Plateau visuel solide (board + rebords) ----
+    const boardMat = new T.MeshStandardMaterial({ color:0xeae7ff, roughness:.95, metalness:0 });
+    const board = new T.Mesh(new T.BoxGeometry(ARENA_X*2, 0.4, ARENA_Z*2), boardMat);
+    board.position.y = FLOOR_Y - 0.2; board.receiveShadow = true; scene.add(board);
 
-    const ring=new T.Mesh(
-      new T.RingGeometry(0.01, Math.max(ARENA_X,ARENA_Z)-1.0, 64),
-      new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide})
-    );
-    ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.003; scene.add(ring);
+    const rimMat = new T.MeshStandardMaterial({ color:0xced7f2, roughness:.7, metalness:0 });
+    function mkRim(x, z, w, h, d){
+      const m=new T.Mesh(new T.BoxGeometry(w,h,d), rimMat);
+      m.castShadow=true; m.receiveShadow=true; m.position.set(x, FLOOR_Y + h/2, z);
+      scene.add(m); return m;
+    }
+    // 4 rebords (un peu épais pour la robustesse)
+    mkRim( 0,  ARENA_Z+RIM_T/2, ARENA_X*2+RIM_T*2, RIM_H, RIM_T); // haut
+    mkRim( 0, -ARENA_Z-RIM_T/2, ARENA_X*2+RIM_T*2, RIM_H, RIM_T); // bas
+    mkRim( ARENA_X+RIM_T/2, 0,  RIM_T, RIM_H, ARENA_Z*2+RIM_T*2); // droite
+    mkRim(-ARENA_X-RIM_T/2, 0,  RIM_T, RIM_H, ARENA_Z*2+RIM_T*2); // gauche
 
-    // Monde physique
+    // ---- Monde physique très rigide ----
     const world=new C.World({ gravity: new C.Vec3(0, GRAVITY_Y, 0) });
+    world.solver.iterations = SOLVER_ITER;
+    world.solver.tolerance  = SOLVER_TOL;
     world.broadphase = new C.SAPBroadphase(world);
 
     const matGround=new C.Material("ground");
     const matDice  =new C.Material("dice");
     world.addContactMaterial(new C.ContactMaterial(matGround, matDice, {
       friction: FRICTION,
-      restitution: RESTITUTION
+      restitution: RESTITUTION,
+      contactEquationStiffness: 1e7,
+      contactEquationRelaxation: 3
     }));
 
-    // Sol (plane)
-    const groundBody=new C.Body({ mass:0, material:matGround });
-    groundBody.addShape(new C.Plane());
-    groundBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
-    groundBody.position.set(0, FLOOR_Y, 0);
-    world.addBody(groundBody);
+    // Board physique (Box)
+    const boardBody = new C.Body({
+      mass:0, material:matGround,
+      shape: new C.Box(new C.Vec3(ARENA_X, 0.2, ARENA_Z)),
+      position: new C.Vec3(0, FLOOR_Y - 0.2, 0)
+    });
+    world.addBody(boardBody);
 
-    // Murs invisibles (4 plans)
-    function addWall(nx, nz, px, pz){
+    // Rebords physiques (4 Box)
+    function addWallBox(x, y, z, hx, hy, hz){
       const b=new C.Body({ mass:0, material:matGround });
-      b.addShape(new C.Plane());
-      const angleY = Math.atan2(nx, nz);
-      b.quaternion.setFromEuler(0, angleY, 0);
-      b.position.set(px, FLOOR_Y + 0.0, pz);
+      b.addShape(new C.Box(new C.Vec3(hx,hy,hz)));
+      b.position.set(x,y,z);
       world.addBody(b);
+      return b;
     }
-    addWall( 0, -1,  0,  ARENA_Z);
-    addWall( 0,  1,  0, -ARENA_Z);
-    addWall(-1,  0,  ARENA_X, 0);
-    addWall( 1,  0, -ARENA_X, 0);
+    addWallBox( 0, FLOOR_Y + RIM_H/2,  ARENA_Z+RIM_T/2,  ARENA_X+RIM_T, RIM_H/2, RIM_T/2);
+    addWallBox( 0, FLOOR_Y + RIM_H/2, -ARENA_Z-RIM_T/2,  ARENA_X+RIM_T, RIM_H/2, RIM_T/2);
+    addWallBox( ARENA_X+RIM_T/2, FLOOR_Y + RIM_H/2, 0,  RIM_T/2, RIM_H/2, ARENA_Z+RIM_T);
+    addWallBox(-ARENA_X-RIM_T/2, FLOOR_Y + RIM_H/2, 0,  RIM_T/2, RIM_H/2, ARENA_Z+RIM_T);
 
-    // Config valeurs/combos
+    // ---- Config valeurs/combos ----
     const cfg = await fetchJSON(CFG_PATH) || {
       values: { ventre:1, bassin:3, membres:4, dos:6 },
       combos: null,
       ui: { hint: "" }
     };
 
-    // Modèle
+    // ---- Modèle ----
     const loader=new GLTFLoader();
-    const baseRoot = await new Promise((res,rej)=>{
+    const rawRoot = await new Promise((res,rej)=>{
       loader.load(MODEL_PATH, (gltf)=>{
         const root=gltf.scene || (gltf.scenes && gltf.scenes[0]);
         if (!root) return rej(new Error("Modèle vide"));
@@ -223,11 +267,15 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
       }, undefined, err=>rej(err));
     });
 
-    // Dés (mesh + body)
-    const dice=[]; // { mesh, anchors, body, snapped, value, snapTime }
+    // Template recentré/échellonné (pour spin sur soi-même + cohérence rayon physique)
+    const template = buildCenteredTemplate(rawRoot, T);
+
+    // ---- Dés (mesh pivoté + body sphère) ----
+    const dice=[]; // { pivot, inner, anchors, body, snapped, value, snapTime }
     for (let i=0;i<COUNT;i++){
-      const mesh=baseRoot.clone(true);
-      scene.add(mesh);
+      const pivot = template.pivot.clone(true);
+      scene.add(pivot);
+      const anchors = collectFaceAnchors(pivot); // ancres sous le pivot
 
       const body=new C.Body({
         mass: 1,
@@ -243,23 +291,19 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
       world.addBody(body);
 
       dice.push({
-        mesh,
-        anchors: collectFaceAnchors(mesh),
-        body,
-        snapped:false,
-        value:0,
-        snapTime:0
+        pivot, inner: pivot.children[0],
+        anchors, body,
+        snapped:false, value:0, snapTime:0
       });
     }
 
     function syncMeshFromBody(d){
-      const b=d.body, m=d.mesh;
+      const b=d.body, m=d.pivot;
       m.position.set(b.position.x, b.position.y, b.position.z);
       m.quaternion.set(b.quaternion.x, b.quaternion.y, b.quaternion.z, b.quaternion.w);
     }
 
     function hardResetBody(b, x, y, z){
-      // -> reset complet AVANT un nouveau lancer
       b.velocity.set(0,0,0);
       b.angularVelocity.set(0,0,0);
       b.force.set(0,0,0);
@@ -286,28 +330,47 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     }
     placeRowRandom();
 
-    // Boucle rendu/physique
-    let req=0, lastT=now(), throwing=false, finished=false, tThrow=0;
-    function step(dt){
-      const fixed = 1/60, sub = Math.max(1, Math.min(5, Math.round(dt/fixed)));
-      world.step(fixed, dt, sub);
+    // ---- Boucle physique/rendu ultra stable ----
+    let req=0, acc=0, last=now(), throwing=false, finished=false, tThrow=0;
 
-      for (const d of dice) syncMeshFromBody(d);
+    function clampBody(b){
+      const v=b.velocity, w=b.angularVelocity;
+      const lv=Math.hypot(v.x,v.y,v.z);
+      if (lv>MAX_VEL){
+        const k=MAX_VEL/lv; v.scale(k,v);
+      }
+      const la=Math.hypot(w.x,w.y,w.z);
+      if (la>MAX_ANG){
+        const k=MAX_ANG/la; w.scale(k,w);
+      }
+    }
 
+    function physicsUpdate(dt){
+      // sous-pas fixes
+      acc += dt;
+      let steps=0;
+      while (acc >= FIXED_DT && steps < MAX_SUB){
+        for (const d of dice) clampBody(d.body);
+        world.step(FIXED_DT);
+        acc -= FIXED_DT; steps++;
+      }
+
+      // sync, snap, score
       let allSnapped=true;
       for (const d of dice){
+        syncMeshFromBody(d);
         if (d.snapped) continue;
 
         const isSlow = d.body.velocity.length() + d.body.angularVelocity.length() < SPEED_EPS*1.1;
         const info = faceUp(d.anchors, T);
 
         if (isSlow && info.dot >= DOT_LOCK){
-          // Snap doux
-          const qTarget = makeSnapQuaternion(d.mesh, info.node, T);
+          // Snap immédiat
+          const qTarget = makeSnapQuaternion(d.pivot, info.node, T);
           d.body.velocity.set(0,0,0);
           d.body.angularVelocity.set(0,0,0);
           d.body.quaternion.set(qTarget.x, qTarget.y, qTarget.z, qTarget.w);
-          d.mesh.quaternion.copy(qTarget);
+          d.pivot.quaternion.copy(qTarget);
           d.snapped=true;
           d.value = (cfg.values && cfg.values[info.key]) ?? 0;
           d.snapTime = now();
@@ -316,16 +379,16 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         }
       }
 
-      // Snap forcé
       if (throwing && !finished && (now()-tThrow) > FORCE_SNAP_MS){
+        // Snap forcé
         for (const d of dice){
           if (d.snapped) continue;
           const info = faceUp(d.anchors, T);
-          const qTarget = info.node ? makeSnapQuaternion(d.mesh, info.node, T) : d.mesh.quaternion;
+          const qTarget = info.node ? makeSnapQuaternion(d.pivot, info.node, T) : d.pivot.quaternion;
           d.body.velocity.set(0,0,0);
           d.body.angularVelocity.set(0,0,0);
           d.body.quaternion.set(qTarget.x, qTarget.y, qTarget.z, qTarget.w);
-          d.mesh.quaternion.copy(qTarget);
+          d.pivot.quaternion.copy(qTarget);
           d.snapped=true;
           d.value = (cfg.values && cfg.values[info.key]) ?? 0;
           d.snapTime = now();
@@ -348,16 +411,17 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     }
 
     function loop(){
-      const t=now(), dt=Math.min(0.08, Math.max(0,(t-lastT)/1000)); lastT=t;
-      step(dt);
+      const t=now();
+      const dt=Math.min(0.08, Math.max(0,(t-last)/1000)); last=t;
+      physicsUpdate(dt);
       renderer.render(scene,cam);
       req=requestAnimationFrame(loop);
     }
     loop();
 
-    // Contrôles
+    // ---- Contrôles ----
     function doThrow(){
-      // RESET COMPLET avant nouveau lancer
+      // reset total AVANT chaque lancer
       dice.forEach((d,i)=>{
         hardResetBody(
           d.body,
@@ -372,12 +436,12 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
       btnThrow.disabled=true; btnReset.disabled=true; hud.style.display="none";
       finished=false; throwing=true; tThrow=now();
 
-      // Nouvelle impulsion (pas d'héritage de l'ancien mouvement)
+      // impulsion & spin (autour de leur propre centre)
       dice.forEach((d)=>{
         d.body.velocity.set(
-          IMPULSE_V.x + Math.random()*1.7,
-          IMPULSE_V.y + Math.random()*1.1,
-          (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.1)
+          IMPULSE_V.x + Math.random()*1.8,
+          IMPULSE_V.y + Math.random()*1.2,
+          (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.2)
         );
         d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
         d.body.wakeUp();
