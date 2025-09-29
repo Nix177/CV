@@ -1,46 +1,57 @@
 // Jeu 2 — Écrire avec les os (24 trous → 24 lettres)
-// Robuste : n’injecte rien ; attend THREE.GLTFLoader déjà chargé par la page
-// Occlusion réelle (raycaster caméra→trou) : lettre masquée si cachée par la géométrie
+// - Aucun import/ESM. Utilise window.THREE fourni par <script> CDN.
+// - Attente robuste de GLTFLoader (supporte window.GLTFLoader et window.THREE.GLTFLoader).
+// - Occlusion correcte : raycaster caméra→trou ; si un mesh est avant le trou, la lettre est masquée.
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
-  const T = (window as any).THREE as typeof THREE;
+  const T = (window as any).THREE as any;
 
+  // --- Constantes / assets (conserver les chemins existants) ---
   const GLB = "/assets/games/osselets/level2/3d/astragalus.glb";
   const W = 960, H = 540, DPR_MAX = 2.5;
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
-  function waitForGLTFLoader(maxTries = 40, delay = 100): Promise<any> {
+  // --- Récupération robuste du constructeur GLTFLoader (UMD examples/js) ---
+  function getGLTFLoaderCtor(maxTries = 60, delay = 100): Promise<any> {
     return new Promise((resolve, reject) => {
       let tries = 0;
       const tick = () => {
-        const ctor = (window as any)?.THREE?.GLTFLoader;
-        if (typeof ctor === "function") return resolve(ctor);
-        if (++tries >= maxTries) return reject(new Error("GLTFLoader non trouvé sur window.THREE (vérifie l’ordre des <script>)."));
+        const w = window as any;
+        const THREE = w.THREE;
+        let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
+        if (typeof Ctor === "function") {
+          if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor; // normalisation
+          return resolve(Ctor);
+        }
+        if (++tries >= maxTries) {
+          return reject(new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader)."));
+        }
         setTimeout(tick, delay);
       };
       tick();
     });
   }
 
-  function L2(){
+  function AstragalusLevel2() {
     const wrapRef = useRef<HTMLDivElement|null>(null);
     const glRef   = useRef<HTMLCanvasElement|null>(null);
     const hudRef  = useRef<HTMLCanvasElement|null>(null);
 
-    const rendererRef = useRef<THREE.WebGLRenderer|null>(null);
-    const sceneRef    = useRef<THREE.Scene|null>(null);
-    const camRef      = useRef<THREE.PerspectiveCamera|null>(null);
-    const modelRef    = useRef<THREE.Object3D|null>(null);
-    const anchorsRef  = useRef<THREE.Object3D[]>([]);
-    const rayRef      = useRef<THREE.Raycaster|null>(null);
+    const rendererRef = useRef<any>(null);
+    const sceneRef    = useRef<any>(null);
+    const camRef      = useRef<any>(null);
+    const modelRef    = useRef<any>(null);
+    const anchorsRef  = useRef<any[]>([]);
+    const rayRef      = useRef<any>(null);
     const ctxRef      = useRef<CanvasRenderingContext2D|null>(null);
     const view        = useRef({ w:W, h:H, dpr:1 });
 
     const holes = useRef<{x:number;y:number;label:string;hidden:boolean}[]>([]);
+    const rafRef = useRef<number>(0);
     const [ready,setReady] = useState(false);
 
-    // Resize
+    // --- Resize / DPR ---
     useEffect(()=>{
       const onResize=()=>{
         const w=Math.max(320,(wrapRef.current?.clientWidth ?? W)|0);
@@ -68,18 +79,17 @@
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
-    // Init 3D
+    // --- Init 3D & modèle ---
     useEffect(()=>{
       let cancelled=false;
       (async()=>{
+        if (!T) { console.warn("[L2] THREE absent"); return; }
         const cv=glRef.current!, hud=hudRef.current!;
-        if(!cv||!hud||!T) return;
+        if(!cv||!hud) return;
 
-        // ⚠️ attend GLTFLoader global (pas d’injection)
-        await waitForGLTFLoader();
-
+        const GLTF = await getGLTFLoaderCtor(); // ← robust
         const renderer=new T.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
-        renderer.outputColorSpace=T.SRGBColorSpace;
+        renderer.outputColorSpace=T.SRGBColorSpace||renderer.outputEncoding; // compat
         renderer.setPixelRatio(view.current.dpr);
         renderer.setSize(view.current.w, view.current.h,false);
         rendererRef.current=renderer;
@@ -91,9 +101,9 @@
         const dir=new T.DirectionalLight(0xffffff,.9); dir.position.set(2.4,3.3,2.6); scene.add(dir);
         sceneRef.current=scene; camRef.current=cam;
 
-        rayRef.current=new T.Raycaster(undefined as any, undefined as any, 0.01, 100);
+        rayRef.current=new T.Raycaster(undefined, undefined, 0.01, 100);
 
-        const loader = new (T as any).GLTFLoader();
+        const loader = new GLTF();
         loader.load(GLB,(gltf:any)=>{
           if (cancelled) return;
           const root=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!root) return;
@@ -102,6 +112,7 @@
             if (o.isMesh){
               if(!o.material || !o.material.isMeshStandardMaterial)
                 o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
+              o.castShadow=false; o.receiveShadow=false;
             }
           });
 
@@ -115,9 +126,10 @@
           scene.add(root);
           modelRef.current=root;
 
-          const anchors:THREE.Object3D[]=[];
-          root.traverse((n:any)=>{ const nm=(n.name||"").toLowerCase(); if(/^hole[_\s-]?/.test(nm)) anchors.push(n); });
-          anchorsRef.current=anchors.slice(0,24);
+          // Trouver les 24 "Hole_*" (priorité) ; sinon fallback sur premiers enfants
+          const anchors:any[]=[];
+          root.traverse((n:any)=>{ const nm=(n.name||"").toLowerCase(); if(/^hole[\s_-]?/.test(nm)) anchors.push(n); });
+          anchorsRef.current=(anchors.length>=24?anchors.slice(0,24):anchors);
 
           setReady(true);
           animate();
@@ -128,20 +140,27 @@
           if (modelRef.current) modelRef.current.rotation.y += 0.0038;
           project(); drawHUD();
           renderer.render(scene, cam);
-          requestAnimationFrame(animate);
+          rafRef.current = requestAnimationFrame(animate);
         }
       })();
-      return ()=>{ cancelled=true; };
+
+      return ()=>{
+        cancelled=true;
+        cancelAnimationFrame(rafRef.current);
+        // best-effort cleanup
+        try { rendererRef.current?.dispose?.(); } catch {}
+      };
     },[]);
 
-    // Projection + occlusion
+    // --- Projection écran + Occlusion ---
     function project(){
-      const cam=camRef.current!, rc=rayRef.current!, model=modelRef.current!;
+      const cam=camRef.current, rc=rayRef.current, model=modelRef.current;
       const anchors=anchorsRef.current||[];
       const {w,h}=view.current;
       if (!cam || !rc || !model) return;
 
       if (!anchors.length){
+        // fallback : cercle régulier
         holes.current=new Array(24).fill(0).map((_,i)=>{
           const t=(i/24)*Math.PI*2, R=220;
           return { x:W/2+Math.cos(t)*R, y:H/2+Math.sin(t)*R, label:GREEK[i], hidden:false };
@@ -153,10 +172,10 @@
       const world=new T.Vector3(), dir=new T.Vector3(), v=new T.Vector3();
       const sx=W/w, sy=H/h;
 
-      holes.current=anchors.map((n,i)=>{
+      holes.current=anchors.map((n:any,i:number)=>{
         n.getWorldPosition(world);
 
-        // occlusion : si hit avant la distance trou → caché
+        // occlusion : premier hit avant le trou -> caché
         let hidden=false;
         dir.copy(world).sub(camPos).normalize();
         rc.set(camPos,dir);
@@ -190,12 +209,12 @@
     return (
       <div ref={wrapRef} style={{position:"relative"}}>
         <canvas ref={glRef}  width={W} height={H} style={{display:"block", borderRadius:12, background:"transparent"}}/>
-        <canvas ref={hudRef} width={W} height={H} style={{position:"absolute", inset:0}}/>
+        <canvas ref={hudRef} width={W} height={H} style={{position:"absolute", inset:0, pointerEvents:"none"}}/>
         {!ready && <div style={{marginTop:8, fontSize:12, color:"#9bb2d4"}}>Chargement du modèle…</div>}
       </div>
     );
   }
 
-  // @ts-ignore
-  (window as any).AstragalusLevel2 = L2;
+  // Expose global pour le script de montage
+  (window as any).AstragalusLevel2 = AstragalusLevel2;
 })();
