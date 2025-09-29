@@ -203,9 +203,7 @@
       if (tries <= 0) { console.warn("[osselets] composant introuvable:", name); return; }
       setTimeout(() => whenReady(name, cb, tries - 1), 125);
     }
-
-    // (1) Autoriser des props au montage
-    function mount(root, cover, CompName, btn, props) {
+    function mount(root, cover, CompName, btn) {
       if (!root) return;
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
       stopAllAudio();
@@ -213,34 +211,23 @@
         try {
           if (cover) { cover.style.display = 'none'; cover.remove(); }
           const r = ReactDOM.createRoot(root);
-          r.render(React.createElement(Comp, props || {}));
+          r.render(React.createElement(Comp));
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
         }
       });
     }
-
     // Boutons → montage des 3 jeux
     const btnRun = document.getElementById('btn-start-runner');
     const btnL2  = document.getElementById('btn-start-l2');
     const btnL3  = document.getElementById('btn-start-l3');
-
     btnRun?.addEventListener('click', () =>
       mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner', btnRun)
     );
-
-    // (2) L2 : 1er clic = preview, clics suivants = play
-    btnL2?.addEventListener('click', () => {
-      const root  = document.getElementById('root-l2');
-      const cover = document.getElementById('cover-l2');
-      const stage = (window.__L2Stage === 'play') ? 'play' : 'preview'; // 1er clic => preview, 2e+ => play
-      // compat: exposer aussi en global si le composant le lit
-      window.__L2Stage = 'play';
-      window.ASTRAGALUS_L2_STAGE = stage;
-      mount(root, cover, 'AstragalusLevel2', btnL2, { stage });
-    });
-
+    btnL2?.addEventListener('click', () =>
+      mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2', btnL2)
+    );
     btnL3?.addEventListener('click', () =>
       mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3', btnL3)
     );
