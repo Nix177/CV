@@ -18,15 +18,15 @@ window.portfolioData = [
     i18n: {
       fr: {
         title: "AdWall — mur d'affiches éducatives",
-        description: "Mur numérique pour ressources, critères et rappels (classe et école)."
+        description: "Mur numérique pour tests sur les google ads (en cours)."
       },
       en: {
         title: "AdWall — educational poster wall",
-        description: "Digital wall for resources, success criteria and reminders (class & school)."
+        description: "Digital wall for Google Ads testing (in progress)."
       },
       de: {
         title: "AdWall — Plakatwand für den Unterricht",
-        description: "Digitale Wand für Materialien, Erfolgskriterien und Erinnerungen (Klasse & Schule)."
+        description: "Digitale Wand für Google-Ads-Tests (in Arbeit)."
       }
     }
   },
@@ -36,18 +36,18 @@ window.portfolioData = [
     tags: ["Web", "Generator", "Docs"],
     i18n: {
       fr: {
-        title: "Documate — générateur de docs pédagogiques",
-        description: "Séquences, rubriques et supports rapides.",
+        title: "Documate — explication de documents",
+        description: "Explique à partir de texte, photo, fichiers, avec chatbot.",
         url: "https://documate.work/fr/"
       },
       en: {
-        title: "Documate — teaching document generator",
-        description: "Sequences, rubrics and handouts in minutes.",
+        title: "Documate — explain documents",
+        description: "Explain documents from text, pictures, files; with chatbot.",
         url: "https://documate.work/"
       },
       de: {
-        title: "Documate — Generator für Unterrichtsdokumente",
-        description: "Sequenzen, Beurteilungsraster und Unterlagen in wenigen Minuten.",
+        title: "Documate — Dokumente erklären",
+        description: "Dokumente aus Text, Bildern und Dateien erklären – mit Chatbot.",
         url: "https://documate.work/de/"
       }
     }
@@ -58,18 +58,18 @@ window.portfolioData = [
     tags: ["JS", "Demo", "GitHub Pages"],
     i18n: {
       fr: {
-        title: "PetNames — mini-app JS",
-        description: "Nommer des personnages / mascottes en classe.",
+        title: "PetNames — mini-app JS, IA",
+        description: "Nommer des animaux de compagnie / personnages / mascottes.",
         url: "https://petnamegenerator.github.io/petname/?lang=fr"
       },
       en: {
-        title: "PetNames — tiny JS app",
-        description: "Name classroom characters / mascots.",
+        title: "PetNames — tiny JS app, AI",
+        description: "Name pets / characters / mascots.",
         url: "https://petnamegenerator.github.io/petname/?lang=en"
       },
       de: {
-        title: "PetNames — kleine JS-App",
-        description: "Namen für Figuren / Maskottchen im Unterricht.",
+        title: "PetNames — kleine JS/KI-App",
+        description: "Haustiere / Figuren / Maskottchen benennen.",
         url: "https://petnamegenerator.github.io/petname/?lang=de"
       }
     }
