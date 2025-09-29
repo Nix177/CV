@@ -1,8 +1,8 @@
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// - THREE global + examples/js/loaders/GLTFLoader.js  ⇒ new THREE.GLTFLoader()
-// - Caméra ORTHOGRAPHIQUE qui s’ajuste au viewport pour garder tout le plateau visible
-// - Murs dynamiques issus du frustum (intersection plan-sol)
-// - Score = somme des faces vers le haut (ancres Face_1/3/4/6)
+// - THREE global
+// - GLTFLoader détecté + fallback injection si nécessaire (évite "not a constructor")
+// - Caméra ORTHO qui cadre tout le plateau et borne les murs dynamiquement
+// - Score = somme des faces “vers le haut” (ancres Face_1/3/4/6)
 
 ;(()=>{
   const { useEffect, useRef, useState } = React;
@@ -10,20 +10,31 @@
 
   const BASE  = "/assets/games/osselets/level3/";
   const GLB   = BASE + "3d/astragalus_faces.glb";
-  const MAPJS = BASE + "3d/values.json"; // optionnel: {"map":{"1":1,"3":3,"4":4,"6":6}}
+  const MAPJS = BASE + "3d/values.json";
 
-  const W=960, H=540, DPR_MAX=2.5;
+  const W=960,H=540,DPR_MAX=2.5;
 
   const COUNT=4, R=0.75, YFLOOR=0;
   const GRAV=-14.5, REST=0.45, HFR=0.92, AFR=0.94;
   const EPS=0.18, STABLE_MS=900, COLL_E=0.25, DOT_LOCK=0.985, NUDGE=0.22;
 
-  // Rayon du plateau (anneau décoratif) → la caméra se cadre sur cette taille
-  const RING_OUTER = 8.2;
-  const FRAME_PAD  = 1.1;              // 10% de marge
+  const RING_OUTER=8.2, FRAME_PAD=1.1;
 
   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
+
+  async function ensureGLTFLoader(): Promise<any> {
+    const win = window as any;
+    if (win.THREE?.GLTFLoader) return win.THREE.GLTFLoader;
+    if (win.GLTFLoader) return win.GLTFLoader;
+    await new Promise<void>((res,rej)=>{
+      const s=document.createElement('script');
+      s.src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
+      s.onload=()=>res(); s.onerror=()=>rej(new Error("GLTFLoader load error"));
+      document.head.appendChild(s);
+    });
+    return (win.THREE?.GLTFLoader || win.GLTFLoader);
+  }
 
   function getFaceAnchors(root:any){
     const out:any[]=[];
@@ -52,70 +63,59 @@
   }
 
   function L3(){
-    const wrapRef = useRef<HTMLDivElement|null>(null);
-    const cvRef   = useRef<HTMLCanvasElement|null>(null);
+    const wrapRef=useRef<HTMLDivElement|null>(null);
+    const cvRef  =useRef<HTMLCanvasElement|null>(null);
 
-    const rendererRef=useRef<T.WebGLRenderer|null>(null);
-    const sceneRef   = useRef<T.Scene|null>(null);
-    const cameraRef  = useRef<T.OrthographicCamera|null>(null);
+    const rendererRef=useRef<THREE.WebGLRenderer|null>(null);
+    const sceneRef   =useRef<THREE.Scene|null>(null);
+    const camRef     =useRef<THREE.OrthographicCamera|null>(null);
 
-    const diceRef    = useRef<any[]>([]);
-    const boundsRef  = useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
+    const diceRef    =useRef<any[]>([]);
+    const boundsRef  =useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
 
-    const rafRef     = useRef(0);
-    const lastRef    = useRef(0);
-    const valueMap   = useRef<Record<string,number>>({"1":1,"3":3,"4":4,"6":6});
+    const rafRef     =useRef(0);
+    const lastRef    =useRef(0);
+    const valueMap   =useRef<Record<string,number>>({"1":1,"3":3,"4":4,"6":6});
 
-    const [ready,setReady]     = useState(false);
-    const [throwing,setThrow]  = useState(false);
-    const [vals,setVals]       = useState<string[]>([]);
-    const [sum,setSum]         = useState(0);
+    const [ready,setReady]=useState(false);
+    const [throwing,setThrowing]=useState(false);
+    const [vals,setVals]=useState<string[]>([]);
+    const [sum,setSum]=useState(0);
 
-    // Cadre caméra orthographique pour voir tout le plateau
     function frameCamera(){
-      const cam=cameraRef.current!, wrap=wrapRef.current!, r=rendererRef.current!;
+      const cam=camRef.current!, wrap=wrapRef.current!, r=rendererRef.current!;
       const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(H/W));
       const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
-
       r.setPixelRatio(dpr); r.setSize(w,h,false);
-      const aspect = w/h;
-      const range  = RING_OUTER * FRAME_PAD;
-      cam.left   = -range * aspect;
-      cam.right  =  range * aspect;
-      cam.top    =  range;
-      cam.bottom = -range;
-      cam.near   = 0.1; cam.far = 100;
-      cam.updateProjectionMatrix();
 
-      // position : vue 3/4 douce, toujours centrée
-      cam.position.set(0, 16, 12);
-      cam.lookAt(0, 0.7, 0);
-      // bornes pour “murs invisibles” (on garde 8% de marge)
-      const padX = 0.08, padZ = 0.08;
-      boundsRef.current = {
-        minX: cam.left   * (1-padX),
-        maxX: cam.right  * (1-padX),
-        minZ: cam.bottom * (1-padZ),
-        maxZ: cam.top    * (1-padZ)
+      const aspect=w/h, range=RING_OUTER*FRAME_PAD;
+      cam.left=-range*aspect; cam.right=range*aspect; cam.top=range; cam.bottom=-range;
+      cam.near=0.1; cam.far=100; cam.updateProjectionMatrix();
+      cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
+
+      const padX=0.08, padZ=0.08;
+      boundsRef.current={
+        minX: cam.left*(1-padX),
+        maxX: cam.right*(1-padX),
+        minZ: cam.bottom*(1-padZ),
+        maxZ: cam.top*(1-padZ)
       };
     }
 
-    // Resize
     useEffect(()=>{
-      const onResize=()=>{ if(rendererRef.current && cameraRef.current && wrapRef.current){ frameCamera(); } };
+      const onResize=()=>{ if(rendererRef.current && camRef.current && wrapRef.current) frameCamera(); };
       onResize();
-      const ro = (window as any).ResizeObserver ? new ResizeObserver(onResize) : null;
+      const ro=(window as any).ResizeObserver ? new ResizeObserver(onResize) : null;
       if (ro && wrapRef.current) ro.observe(wrapRef.current);
       window.addEventListener('resize', onResize);
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
-    // Init
     useEffect(()=>{
       let cancelled=false;
       (async()=>{
-        // map optionnelle
-        try{ const res=await fetch(MAPJS,{cache:"no-store"}); if(res.ok){ const j=await res.json(); if(j?.map) valueMap.current=j.map; } }catch{}
+        // mapping optionnel
+        try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
 
         const cv=cvRef.current!;
         const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
@@ -124,8 +124,7 @@
 
         const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
         const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100);
-        sceneRef.current=scene; cameraRef.current=cam;
-
+        sceneRef.current=scene; camRef.current=cam;
         frameCamera();
 
         scene.add(new T.HemisphereLight(0xffffff,0x334466,.85));
@@ -138,10 +137,9 @@
         const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
 
-        // Loader global (non-ESM)
-        const loaderCtor = (T as any).GLTFLoader;
-        if (typeof loaderCtor !== "function") { console.error("[L3] GLTFLoader introuvable sur THREE."); return; }
-        const loader = new loaderCtor();
+        const GLTFCtor = await ensureGLTFLoader();
+        if (typeof GLTFCtor !== "function"){ console.error("[L3] GLTFLoader indisponible."); return; }
+        const loader=new (GLTFCtor as any)();
 
         loader.load(GLB,(gltf:any)=>{
           if(cancelled) return;
@@ -151,7 +149,6 @@
             if(!o.material || !o.material.isMeshStandardMaterial) o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
           }});
 
-          // 4 clones
           const dice:any[]=[];
           for(let i=0;i<COUNT;i++){
             const inst=base.clone(true); scene.add(inst);
@@ -160,7 +157,7 @@
           diceRef.current=dice;
           setReady(true);
           animate();
-        },undefined,(e:any)=>console.warn("[L3] GLB load error", e));
+        }, undefined, (e:any)=>console.warn("[L3] GLB load error", e));
       })();
       return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current); };
     },[]);
@@ -232,9 +229,9 @@
       }
 
       if (throwing){
-        const all = dice.every(d => d.tStable && (now()-d.tStable > STABLE_MS));
+        const all=dice.every(d=>d.tStable && (now()-d.tStable>STABLE_MS));
         if (all){
-          setThrow(false);
+          setThrowing(false);
           const out:string[]=[]; let s=0;
           for(const d of dice){
             const info=faceUpInfo(d.anchors);
@@ -247,7 +244,7 @@
     }
 
     function animate(){
-      const r=rendererRef.current!, s=sceneRef.current!, c=cameraRef.current!;
+      const r=rendererRef.current!, s=sceneRef.current!, c=camRef.current!;
       const loop=(t:number)=>{
         const dt=Math.min(0.05, Math.max(0,(t-lastRef.current)/1000)); lastRef.current=t;
         step(dt);
@@ -267,7 +264,7 @@
         d.angVel.set((-1+Math.random()*2)*6.0, (-1+Math.random()*2)*6.0, (-1+Math.random()*2)*6.0);
         d.tStable=0;
       }
-      setVals([]); setSum(0); setThrow(true);
+      setVals([]); setSum(0); setThrowing(true);
     }
     function reset(){
       const dice=diceRef.current, b=boundsRef.current;
@@ -276,7 +273,7 @@
         d.root.position.set((b.minX+b.maxX)/2 - 2 + Math.random()*4, 1.6 + Math.random()*0.6, (b.minZ+b.maxZ)/2 - 1 + Math.random()*2);
         d.root.rotation.set(Math.random(),Math.random(),Math.random());
       }
-      setVals([]); setSum(0); setThrow(false);
+      setVals([]); setSum(0); setThrowing(false);
     }
 
     return (
