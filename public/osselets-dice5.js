@@ -1,7 +1,7 @@
-// osselets-dice5.js — Lancer de 5 osselets (anchors ventre/dos/bassin/membres)
-// - Aucune dépendance JSX/TS : pur JS.
-// - Three + GLTFLoader via import() (esm.sh, CORS OK), scoping interne (pas de conflit).
-// - Lancer = rotation aléatoire + snap vers la face dont l’ancre pointe le plus vers +Y monde.
+// /osselets-dice5.js — Lancer de 5 osselets (anchors ventre/dos/bassin/membres)
+// - Pur JS (aucun JSX/TS requis).
+// - Three + GLTFLoader via import() (esm.sh, CORS OK), chargés une seule fois.
+// - Lancer = rotation aléatoire + "snap" vers la face dont l’ancre pointe le plus vers +Y monde.
 // - Score = somme des 5 valeurs + détection de combos (sur 4 parmi 5).
 
 (() => {
@@ -11,10 +11,10 @@
   const COUNT = 5;
   const RING  = { outer: 8.2, pad: 1.1 };
 
+  // Chargement Three + GLTFLoader (une seule fois, scope isolé)
   const THREE_VER = "0.158.0";
   const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
   const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
-
   async function libs() {
     const w = window;
     if (w.__OX_THREE) return w.__OX_THREE;
@@ -24,9 +24,11 @@
     return w.__OX_THREE;
   }
 
+  // Utils
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
   const fetchJSON = (u) => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
 
+  // Détecte les ancres de faces dans un clone
   function collectFaceAnchors(root) {
     const map = {}; // { ventre, dos, bassin, membres }
     root.traverse(n => {
@@ -41,6 +43,7 @@
     return map;
   }
 
+  // Face "vers le haut" d'après les ancres (max dot avec +Y monde)
   function faceUp(anchors, THREE) {
     if (!anchors) return { key: null, dot: -2, node: null };
     const Y = new THREE.Vector3(0, 1, 0);
@@ -56,17 +59,17 @@
     return best;
   }
 
+  // Snap : aligne l'axe +Y de l’ancre gagnante vers +Y monde
   function snapToFace(die, anchorNode, THREE) {
-    // Aligne l’axe +Y de l’ancre gagnante vers +Y monde
     const qw = die.quaternion.clone();
     const qAnchor = new THREE.Quaternion(); anchorNode.getWorldQuaternion(qAnchor);
     const upW = new THREE.Vector3(0,1,0).applyQuaternion(qAnchor).normalize();
     const qAlign = new THREE.Quaternion().setFromUnitVectors(upW, new THREE.Vector3(0,1,0));
-    return qAlign.multiply(qw);
+    return qAlign.multiply(qw); // quaternion cible
   }
 
+  // Quaternion aléatoire uniforme
   function randomQuat(THREE) {
-    // Quaternion aléatoire uniforme
     const u1 = Math.random(), u2 = Math.random(), u3 = Math.random();
     const s1 = Math.sqrt(1 - u1), s2 = Math.sqrt(u1);
     return new THREE.Quaternion(
@@ -77,6 +80,7 @@
     );
   }
 
+  // Combos (cherche dans tous les 4 parmi 5)
   function detectCombos(values, combos) {
     if (!combos) return [];
     const res = [];
@@ -100,8 +104,10 @@
     return res;
   }
 
+  // Jeu (API publique : window.OsseletsDice5.mount({root:Element}))
   async function mount(rootEl) {
     const { THREE, GLTFLoader } = await libs();
+    const THREE_REF = THREE; // ➜ on réutilise partout, plus de await/libs en plein milieu
 
     // UI container
     rootEl.innerHTML = "";
@@ -126,18 +132,18 @@
     rootEl.appendChild(hud);
 
     // Renderer & scène
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
+    const renderer = new THREE_REF.WebGLRenderer({ canvas, antialias:true, alpha:false });
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE_REF.PCFSoftShadowMap;
     const dpr = clamp(window.devicePixelRatio || 1, 1, VIEW.DPR_MAX);
     renderer.setPixelRatio(dpr);
     renderer.setSize(VIEW.W, VIEW.H, false);
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf5f7fb);
+    const scene = new THREE_REF.Scene();
+    scene.background = new THREE_REF.Color(0xf5f7fb);
 
     // Caméra ortho (cadre plateau complet)
-    const cam = new THREE.OrthographicCamera(-10,10,10,-10,0.1,100);
+    const cam = new THREE_REF.OrthographicCamera(-10,10,10,-10,0.1,100);
     function frameCamera() {
       const w = Math.max(320, rootEl.clientWidth|0);
       const h = Math.round(w * (VIEW.H/VIEW.W));
@@ -153,22 +159,22 @@
     const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(frameCamera) : null;
     if (ro) ro.observe(rootEl); window.addEventListener("resize", frameCamera);
 
-    scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.85));
-    const dir = new THREE.DirectionalLight(0xffffff,1);
+    scene.add(new THREE_REF.HemisphereLight(0xffffff,0x334466,.85));
+    const dir = new THREE_REF.DirectionalLight(0xffffff,1);
     dir.position.set(4,7,6); dir.castShadow=true;
     dir.shadow.mapSize?.set?.(1024,1024);
     scene.add(dir);
 
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(40,22),
-      new THREE.MeshStandardMaterial({color:0xeae7ff, roughness:.95, metalness:0})
+    const ground = new THREE_REF.Mesh(
+      new THREE_REF.PlaneGeometry(40,22),
+      new THREE_REF.MeshStandardMaterial({color:0xeae7ff, roughness:.95, metalness:0})
     );
     ground.rotation.x = -Math.PI/2; ground.position.y = 0; ground.receiveShadow = true;
     scene.add(ground);
 
-    const ring = new THREE.Mesh(
-      new THREE.RingGeometry(0.01, RING.outer, 64),
-      new THREE.MeshBasicMaterial({color:0xdee3ff, transparent:true, opacity:.25, side:THREE.DoubleSide})
+    const ring = new THREE_REF.Mesh(
+      new THREE_REF.RingGeometry(0.01, RING.outer, 64),
+      new THREE_REF.MeshBasicMaterial({color:0xdee3ff, transparent:true, opacity:.25, side:THREE_REF.DoubleSide})
     );
     ring.rotation.x = -Math.PI/2; ring.position.y = 0.003; scene.add(ring);
 
@@ -184,7 +190,7 @@
         root.traverse(o=>{
           if (o.isMesh){
             if (!o.material || !o.material.isMeshStandardMaterial)
-              o.material = new THREE.MeshStandardMaterial({color:0xf7efe7, roughness:.6, metalness:.05});
+              o.material = new THREE_REF.MeshStandardMaterial({color:0xf7efe7, roughness:.6, metalness:.05});
             o.castShadow = true; o.receiveShadow = false;
           }
         });
@@ -211,44 +217,38 @@
     // Tween rotation (slerp)
     async function tweenRotation(die, qFrom, qTo, durMs) {
       const t0 = performance.now();
-      const tmp = new THREE.Quaternion();
+      const tmp = new THREE_REF.Quaternion();
       return new Promise(resolve=>{
         (function step(){
           const t = (performance.now()-t0)/durMs;
           const k = t>=1 ? 1 : (1 - Math.pow(1 - t, 3)); // easeOutCubic
-          THREE.Quaternion.slerp(qFrom, qTo, tmp, clamp(k,0,1));
+          THREE_REF.Quaternion.slerp(qFrom, qTo, tmp, clamp(k,0,1));
           die.quaternion.copy(tmp);
           if (k<1) requestAnimationFrame(step); else resolve();
         })();
       });
     }
 
-    function randomQuat(THREE){
-      const u1 = Math.random(), u2 = Math.random(), u3 = Math.random();
-      const s1 = Math.sqrt(1 - u1), s2 = Math.sqrt(u1);
-      return new THREE.Quaternion(
-        s1 * Math.sin(2*Math.PI*u2),
-        s1 * Math.cos(2*Math.PI*u2),
-        s2 * Math.sin(2*Math.PI*u3),
-        s2 * Math.cos(2*Math.PI*u3)
-      );
-    }
-
+    // Lancer : spin aléatoire + snap vers faceUp
     async function doThrow() {
       btnThrow.disabled = true; btnReset.disabled = true; hud.style.display="none";
 
       // 1) spin aléatoire ~0.9s
-      const spins = dice.map(d => ({ die:d.root, q0:d.root.quaternion.clone(), qs:randomQuat((await libs()).THREE) }));
+      const spins = dice.map(d => ({
+        die: d.root,
+        q0: d.root.quaternion.clone(),
+        qs: randomQuat(THREE_REF)
+      }));
       await Promise.all(spins.map(s => tweenRotation(s.die, s.q0, s.qs, 900)));
 
       // 2) snap vers la faceUp ~0.28s + calcul valeurs
       const values = [];
       for (const d of dice) {
         d.root.updateMatrixWorld(true);
-        const info = faceUp(d.anchors, (await libs()).THREE);
-        const key = info.key;
+        const info = faceUp(d.anchors, THREE_REF);
+        const key = info.key; // ventre|bassin|membres|dos
         if (key && info.node) {
-          const qTarget = snapToFace(d.root, info.node, (await libs()).THREE);
+          const qTarget = snapToFace(d.root, info.node, THREE_REF);
           await tweenRotation(d.root, d.root.quaternion.clone(), qTarget, 280);
           d.val = cfg.values[key] ?? 0;
         } else {
