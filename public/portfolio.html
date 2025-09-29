@@ -194,23 +194,47 @@
   <!-- Montage / Navigation (un container par jeu) -->
   <script type="text/babel">
   (function () {
+    // Registre des racines React pour fermer proprement les autres jeux
+    const roots = new Map();
+
     function stopAllAudio() {
       document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
     }
-    function whenReady(name, cb, tries = 40) { // ~5s max
+
+    // Attendre la présence d'un export global (ex: "AstragalusRunner")
+    function waitForGlobal(name, cb, tries = 40) { // ~5s max
       const Comp = window && window[name];
       if (Comp) return cb(Comp);
       if (tries <= 0) { console.warn("[osselets] composant introuvable:", name); return; }
-      setTimeout(() => whenReady(name, cb, tries - 1), 125);
+      setTimeout(() => waitForGlobal(name, cb, tries - 1), 125);
     }
+
+    function unmountAllExcept(keepId) {
+      for (const [id, r] of roots.entries()) {
+        if (id === keepId) continue;
+        try { r.unmount?.(); } catch {}
+        roots.delete(id);
+      }
+      stopAllAudio();
+    }
+
     function mount(root, cover, CompName, btn) {
       if (!root) return;
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
+
       stopAllAudio();
-      whenReady(CompName, (Comp) => {
+      unmountAllExcept(root.id);
+
+      waitForGlobal(CompName, (Comp) => {
         try {
+          // retirer la cover si présente
           if (cover) { cover.style.display = 'none'; cover.remove(); }
+          // démonter une éventuelle instance précédente sur ce root
+          const prev = roots.get(root.id);
+          if (prev) { try { prev.unmount?.(); } catch {} }
+
           const r = ReactDOM.createRoot(root);
+          roots.set(root.id, r);
           r.render(React.createElement(Comp));
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
         } finally {
@@ -218,6 +242,7 @@
         }
       });
     }
+
     // Boutons → montage des 3 jeux
     const btnRun = document.getElementById('btn-start-runner');
     const btnL2  = document.getElementById('btn-start-l2');
