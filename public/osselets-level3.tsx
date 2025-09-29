@@ -286,4 +286,13 @@
         {vals.length>0 && (
           <div style={{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px"}}>
             <div style={{fontWeight:700, marginBottom:4}}>Tirage : {vals.join("  ")}</div>
-            <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum
+            <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum}</b></div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // @ts-ignore
+  (window as any).AstragalusLevel3 = L3;
+})();
