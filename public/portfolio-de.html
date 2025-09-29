@@ -36,9 +36,12 @@
     a { color:#90e0ff }
     .p-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px }
 
-    /* Zentrierte NAV (nur Ausrichtung) */
-    .site-nav { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; }
-    .site-nav .menu, .site-nav .lang { display:flex; justify-content:center; gap:8px; list-style:none; padding:0; margin:0; }
+    /* Preview-Overlay */
+    .overlay { position:fixed; inset:0; display:none; z-index:999; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:18px }
+    .overlay.show { display:flex; }
+    .pf-panel { position:relative; background:#0b2237; border:1px solid #ffffff22; border-radius:12px; width:min(1100px, 100%); height:min(80vh, 100%); overflow:hidden; display:flex; flex-direction:column }
+    .pf-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid #ffffff22; color:#fff }
+    .pf-frame iframe { width:100%; height:100%; border:0; background:#fff; display:block }
 
     /* Spielkarten */
     .game-card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; margin: 28px 0; padding: 14px }
@@ -50,25 +53,32 @@
 
   <link rel="preload" href="/style.css" as="style"/>
   <link rel="stylesheet" href="/style.css"/>
+  <!-- Globaler Header wird per JS injiziert (gleiche Buttons/Effekte wie Index/Passions) -->
+  <script defer src="/assets/js/nav.js"></script>
+  <script defer src="/assets/js/feedback.js"></script>
 </head>
 
 <body>
-  <header class="site-header">
-    <nav class="site-nav" aria-label="Hauptnavigation">
-      <ul class="menu">
-        <li><a href="/index-de.html" class="btn ghost">Startseite</a></li>
-        <li><a href="/cv-de.html" class="btn ghost">Lebenslauf</a></li>
-        <li><a href="/portfolio-de.html" class="btn" aria-current="page">Portfolio</a></li>
-        <li><a href="/passions-de.html" class="btn ghost">Leidenschaften</a></li>
-        <li><a href="/fun-facts-de.html" class="btn ghost">Irrtümer</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a href="/portfolio.html" class="btn ghost">FR</a></li>
-        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
-        <li><a href="/portfolio-de.html" class="btn" aria-current="page">DE</a></li>
-      </ul>
-    </nav>
-  </header>
+  <!-- Die globale Navigation (Menü + Sprachen) wird von /assets/js/nav.js eingefügt -->
+  <!-- Lokaler Fallback nur ohne JavaScript sichtbar -->
+  <noscript>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Hauptnavigation">
+        <ul class="menu">
+          <li><a href="/index-de.html" class="btn ghost">Startseite</a></li>
+          <li><a href="/cv-de.html" class="btn ghost">Lebenslauf</a></li>
+          <li><a href="/portfolio-de.html" class="btn" aria-current="page">Portfolio</a></li>
+          <li><a href="/passions-de.html" class="btn ghost">Leidenschaften</a></li>
+          <li><a href="/fun-facts-de.html" class="btn ghost">Irrtümer</a></li>
+        </ul>
+        <ul class="lang">
+          <li><a href="/portfolio.html" class="btn ghost">FR</a></li>
+          <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
+          <li><a href="/portfolio-de.html" class="btn" aria-current="page">DE</a></li>
+        </ul>
+      </nav>
+    </header>
+  </noscript>
 
   <header class="wrap">
     <h1>Portfolio — Nicolas Tuor</h1>
