@@ -2,7 +2,7 @@
    Portfolio grid + Preview overlay (sécurisé)
    - Rendu depuis public/portfolio-data.js (ou variables globales équivalentes)
    - Bouton "Aperçu" -> overlay #pfOverlay <iframe sandbox>, message si X-Frame-Options/CSP bloque
-   - AUCUNE dépendance supplémentaire. Ne touche qu’aux aperçus.
+   - Ne touche qu’aux aperçus.
 */
 (function () {
   "use strict";
@@ -60,7 +60,7 @@
     };
   }
 
-  // -------- Overlay / Aperçu (aligne avec style.css : #pfOverlay + .show) --------
+  // -------- Overlay / Aperçu --------
   function toAbsoluteUrl(url) {
     try { return new URL(url, location.href).toString(); }
     catch { return url; }
@@ -69,7 +69,6 @@
   function getPfOverlay() {
     let ovl = $("#pfOverlay");
     if (!ovl) {
-      // Sécurise si markup absent : construit un minimum compatible avec ton CSS
       ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
         el("div", { class:"pf-panel" }, [
           el("header", { class:"pf-head" }, [
@@ -77,7 +76,7 @@
             el("button", { id:"pfClose", class:"btn" }, T.close)
           ]),
           el("div", { class:"pf-frame" }, [
-            el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-same-origin allow-popups" })
+            el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-popups allow-same-origin" })
           ]),
           el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked)
         ])
@@ -91,8 +90,7 @@
 
     if (frame) {
       frame.setAttribute("title", T.preview);
-      // Ajoute allow-same-origin pour maximiser les chances d’affichage des sites qui l’autorisent
-      frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
+      frame.setAttribute("sandbox", "allow-scripts allow-popups allow-same-origin");
       Object.assign(frame.style, { width:"100%", height:"100%", border:"0", background:"#fff" });
     }
     return { ovl, frame, title, close };
@@ -101,7 +99,7 @@
   function ensureMsg(ovl) {
     let msg = $("#pfMsg", ovl);
     if (!msg) {
-      const host = ovl.querySelector(".pf-panel, .panel") || ovl;
+      const host = ovl.querySelector(".pf-panel") || ovl;
       msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
       host.appendChild(msg);
     }
@@ -112,7 +110,7 @@
     let sp = $("#pfSpin", ovl);
     if (!sp) {
       sp = el("div", { id:"pfSpin", style:"position:absolute;inset:auto 12px 12px auto;background:#0b1f33;color:#e6f1ff;border:1px solid #ffffff33;border-radius:10px;padding:6px 10px;display:none" }, T.loading);
-      (ovl.querySelector(".pf-panel, .panel") || ovl).appendChild(sp);
+      (ovl.querySelector(".pf-panel") || ovl).appendChild(sp);
     }
     return sp;
   }
@@ -131,19 +129,21 @@
     msg.style.display = "none";
     spin.style.display = "inline-block";
 
-    ovl.classList.add("show");       // ton CSS affiche #pfOverlay quand .show est présent
+    // Ouvre (classe + style forcé pour contrer tout display:none !important)
+    ovl.classList.add("show");
+    ovl.style.setProperty("display", "flex", "important");
     document.body.style.overflow = "hidden";
 
-    // (re)charge l’iframe
+    // Charge l’iframe
     frame.removeAttribute("src");
-    frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
+    frame.setAttribute("sandbox", "allow-scripts allow-popups allow-same-origin");
 
     let loaded = false;
     const onLoad = () => { loaded = true; spin.style.display = "none"; };
     frame.addEventListener("load", onLoad, { once:true });
     frame.src = url;
 
-    // Si toujours pas chargé après 2s, on affiche le message "refusé"
+    // Timeout: si pas load() en 2s, on affiche le message (XFO/CSP probable)
     const timer = setTimeout(() => {
       if (!loaded) { msg.style.display = "block"; spin.style.display = "none"; }
     }, 2000);
@@ -151,6 +151,7 @@
     const closeAll = () => {
       clearTimeout(timer);
       ovl.classList.remove("show");
+      ovl.style.removeProperty("display");
       document.body.style.overflow = "";
       frame.removeAttribute("src");
       close.removeEventListener("click", closeAll);
@@ -165,7 +166,7 @@
     document.addEventListener("keydown", onEsc);
   }
 
-  // -------- Cartes (inchangé) --------
+  // -------- Cartes --------
   function makeCard(it) {
     const { title, description, url } = pickI18n(it);
     const img  = it.image || it.thumbnail || null;
@@ -198,7 +199,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     renderGrid(loadData());
 
-    // Filet de sécurité : autres markups avec data-preview-url
+    // Filet de sécurité : éléments avec data-preview-url
     document.addEventListener("click", (e) => {
       const n = e.target.closest?.("[data-preview-url]");
       if (!n) return;
