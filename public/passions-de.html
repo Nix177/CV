@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nicolas Tuor — Leidenschaften & Entdeckungen</title>
 
-  <!-- UPDATE: hreflang -->
+  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/passions.html">
   <link rel="alternate" hreflang="en" href="/passions-en.html">
   <link rel="alternate" hreflang="de" href="/passions-de.html">
@@ -16,7 +16,6 @@
   <meta name="theme-color" content="#0a1220" />
 
   <style>
-    /* same CSS */
     :root{--bg:#0a1220;--card:#0c1628;--text:#eef3f8;--muted:#a7b7cb;--accent:#14b8a6;--shadow:0 10px 30px rgba(0,0,0,.35);--br:16px;--gap:16px;--max:1200px}
     *{box-sizing:border-box} html,body{height:100%} html{scroll-behavior:smooth}
     body{margin:0;color:var(--text);background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
@@ -61,7 +60,6 @@
 <header>
   <div class="headwrap">
     <div class="brand"><div class="logo">N·T</div><div>Leidenschaften & Entdeckungen</div></div>
-    <!-- UPDATE: NAV LAYOUT ONLY -->
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
         <li><a class="btn" href="/index-de.html">Startseite</a></li>
@@ -215,10 +213,10 @@
     {title:"App Inventor",desc:"Mobile Apps mit Blöcken.",cover:"assets/passions/sites/appinventor.webp",badge:"Tool",link:{label:"Testen",href:"https://appinventor.mit.edu/"}},
     {title:"Alice",desc:"3D-Geschichten & Spiele.",cover:"assets/passions/sites/alice.webp",badge:"Tool",link:{label:"Öffnen",href:"https://www.alice.org/"}},
     {title:"Pencil Code",desc:"Vom Block zum Text.",cover:"assets/passions/sites/pencilcode.webp",badge:"Tool",link:{label:"Code",href:"https://lemarg.pencilcode.net/edit/"}},
-    {title:"MakeCode",desc:"Micro:bit & mehr.",cover:"assets/passions/sites/makecode.webp",badge:"Tool",link:{label:"Testen",href:"https://www.microsoft.com/en-us/makecode"}},
-    {title:"Vidcode",desc:"Video + JavaScript.",cover:"assets/passions/sites/vidcode.webp",badge:"Tool",link:{label:"Testen",href:"https://www.vidcode.com/"}},
+    {title:"MakeCode",desc:"Micro:bit & Co.",cover:"assets/passions/sites/makecode.webp",badge:"Tool",link:{label:"Testen",href:"https://www.microsoft.com/en-us/makecode"}},
+    {title:"Vidcode",desc:"Video + JS.",cover:"assets/passions/sites/vidcode.webp",badge:"Tool",link:{label:"Testen",href:"https://www.vidcode.com/"}},
     {title:"Construct",desc:"2D-Spiele ohne Code.",cover:"assets/passions/sites/construct.webp",badge:"Tool",link:{label:"Entdecken",href:"https://www.construct.net/fr"}},
-    {title:"Compute-it",desc:"Algorithmen spielerisch.",cover:"assets/passions/sites/compute-it.webp",badge:"Spiel",link:{label:"Spielen",href:"https://compute-it.toxicode.fr/"}},
+    {title:"Compute-it",desc:"Spiele zum algorithmischen Denken.",cover:"assets/passions/sites/compute-it.webp",badge:"Spiel",link:{label:"Spielen",href:"https://compute-it.toxicode.fr/"}},
     {title:"Codingame",desc:"Mehrsprachen-Challenges.",cover:"assets/passions/sites/codingame.webp",badge:"Challenges",link:{label:"Spielen",href:"https://codingame.com/start/"}},
     {title:"p5.js",desc:"Kreatives Coden.",cover:"assets/passions/sites/p5js.webp",badge:"Lib",link:{label:"Doku",href:"https://p5js.org/"}},
     {title:"Thonny",desc:"Einsteiger-IDE für Python.",cover:"assets/passions/sites/thonny.webp",badge:"Tool",link:{label:"Download",href:"https://thonny.org/"}},
@@ -258,24 +256,24 @@
   ];
 
   const GAMES_CUSTOM = [
-    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp"},
-    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp"},
-    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp"},
-    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp"},
-    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp"},
-    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp"},
-    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp"},
-    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp"},
-    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp"},
-    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp"},
-    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp"},
-    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp"},
-    {title:"N64-Klassiker", cover:"assets/passions/games/custom/n64-classics-cover.webp"},
-    {title:"Xbox-Klassiker", cover:"assets/passions/games/custom/xbox-classics-cover.webp"},
-    {title:"…und mehr", cover:"assets/passions/games/custom/and-others-cover.webp"}
+    {title:"Star Citizen", cover:"assets/passions/games/custom/star-citizen-cover.webp", link:{label:"Seite", href:"https://robertsspaceindustries.com/en/"}},
+    {title:"Heroes of the Storm", cover:"assets/passions/games/custom/heroes-of-the-storm-cover.webp", link:{label:"Seite", href:"https://heroesofthestorm.blizzard.com/de-de/"}},
+    {title:"World of Warcraft", cover:"assets/passions/games/custom/world-of-warcraft-cover.webp", link:{label:"Seite", href:"https://worldofwarcraft.blizzard.com/de-de/"}},
+    {title:"Subnautica", cover:"assets/passions/games/custom/subnautica-cover.webp", link:{label:"Store", href:"https://store.steampowered.com/app/264710/Subnautica/"}},
+    {title:"Genshin Impact", cover:"assets/passions/games/custom/genshin-impact-cover.webp", link:{label:"Seite", href:"https://genshin.hoyoverse.com/de/"}},
+    {title:"Farming Simulator", cover:"assets/passions/games/custom/farming-simulator-cover.webp", link:{label:"Seite", href:"https://www.farming-simulator.com/"}},
+    {title:"Elite Dangerous", cover:"assets/passions/games/custom/elite-dangerous-cover.webp", link:{label:"Seite", href:"https://www.elitedangerous.com/"}},
+    {title:"Breathedge", cover:"assets/passions/games/custom/breathedge-cover.webp", link:{label:"Store", href:"https://store.steampowered.com/app/738520/Breathedge/"}},
+    {title:"Remnant: From the Ashes", cover:"assets/passions/games/custom/remnant-from-the-ashes-cover.webp", link:{label:"Store", href:"https://store.steampowered.com/agecheck/app/617290/"}},
+    {title:"Deathloop", cover:"assets/passions/games/custom/deathloop-cover.webp", link:{label:"Store", href:"https://store.steampowered.com/agecheck/app/1252330/"}},
+    {title:"Minecraft", cover:"assets/passions/games/custom/minecraft-cover.webp", link:{label:"Seite", href:"https://www.minecraft.net/de-de"}},
+    {title:"Fable", cover:"assets/passions/games/custom/fable-cover.webp", link:{label:"Store", href:"https://store.steampowered.com/app/288470/Fable_Anniversary/"}},
+    {title:"N64-Klassiker", cover:"assets/passions/games/custom/n64-classics-cover.webp", link:{label:"Seite", href:"#"}},
+    {title:"Xbox-Klassiker", cover:"assets/passions/games/custom/xbox-classics-cover.webp", link:{label:"Seite", href:"#"}},
+    {title:"…und mehr", cover:"assets/passions/games/custom/and-others-cover.webp", link:{label:"Seite", href:"#"}}
   ];
 
-  /* helpers / lazy-load / steam (wie FR, deutsche Labels) */
+  /* helpers / lazy-load / steam */
   function card({title, desc, cover, badge, link, links}){
     const el=document.createElement('article'); el.className='card';
     el.innerHTML=`<div class="thumb" data-cover="${cover||''}"><span class="badge">${badge||''}</span></div>
