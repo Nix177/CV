@@ -1,7 +1,7 @@
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// - Aucun import/ESM. Utilise window.THREE (CDN).
-// - Attente robuste de GLTFLoader (window.GLTFLoader ou window.THREE.GLTFLoader).
-// - Caméra ORTHO responsive qui garde tout le plateau visible + "murs" implicites via bornes ; pseudo-physique légère.
+// - AUCUN import/ESM. Utilise window.THREE (CDN).
+// - Attente robuste du loader avec fallback d’injection si absent.
+// - Caméra ORTHO responsive qui garde tout le plateau visible + bornes anti-sortie.
 // - Score = somme des faces vers le haut via ancres Face_1/3/4/6 (ou variantes).
 
 ;(()=>{
@@ -18,29 +18,38 @@
   const GRAV=-14.5, REST=0.45, HFR=0.92, AFR=0.94;
   const EPS=0.18, STABLE_MS=900, COLL_E=0.25, DOT_LOCK=0.985, NUDGE=0.22;
 
-  const RING_OUTER=8.2, FRAME_PAD=1.1; // frustum cible
+  const RING_OUTER=8.2, FRAME_PAD=1.1;
 
   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
 
-  function getGLTFLoaderCtor(maxTries = 60, delay = 100): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let tries = 0;
-      const tick = () => {
-        const w = window as any;
-        const THREE = w.THREE;
-        let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
-        if (typeof Ctor === "function") {
-          if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor; // normalisation
-          return resolve(Ctor);
-        }
-        if (++tries >= maxTries) {
-          return reject(new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader)."));
-        }
-        setTimeout(tick, delay);
-      };
-      tick();
+  function injectScriptOnce(src: string, id: string) {
+    return new Promise<void>((resolve, reject) => {
+      if (document.getElementById(id)) return resolve();
+      const s = document.createElement("script");
+      s.id = id; s.src = src; s.async = true; s.crossOrigin = "anonymous";
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("GLTFLoader load error"));
+      document.head.appendChild(s);
     });
+  }
+
+  async function ensureGLTFLoader(): Promise<any> {
+    const w = window as any;
+    const THREE = w.THREE;
+    let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
+    if (typeof Ctor === "function") {
+      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
+      return Ctor;
+    }
+    const url = "https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
+    await injectScriptOnce(url, "__gltfloader_fallback__");
+    Ctor = (w.THREE?.GLTFLoader) || w.GLTFLoader;
+    if (typeof Ctor === "function") {
+      if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor;
+      return Ctor;
+    }
+    throw new Error("GLTFLoader introuvable après injection (réseau/CSP ?).");
   }
 
   function getFaceAnchors(root:any){
@@ -126,7 +135,7 @@
       (async()=>{
         if (!T) { console.warn("[L3] THREE absent"); return; }
 
-        // mapping optionnel (externe)
+        // mapping optionnel
         try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
 
         const cv=cvRef.current!;
@@ -149,7 +158,7 @@
         const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
 
-        const GLTF = await getGLTFLoaderCtor(); // ← robust
+        const GLTF = await ensureGLTFLoader(); // ← robuste
         const loader = new GLTF();
         loader.load(GLB,(gltf:any)=>{
           if(cancelled) return;
