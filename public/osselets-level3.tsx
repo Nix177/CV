@@ -1,15 +1,16 @@
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// Robuste : attend THREE.GLTFLoader (pas d’injection)
-// Caméra ORTHO qui garde tout le plateau visible + murs dynamiques
-// Score = somme des faces “vers le haut” (ancres Face_1/3/4/6)
+// - Aucun import/ESM. Utilise window.THREE (CDN).
+// - Attente robuste de GLTFLoader (window.GLTFLoader ou window.THREE.GLTFLoader).
+// - Caméra ORTHO responsive qui garde tout le plateau visible + "murs" implicites via bornes ; pseudo-physique légère.
+// - Score = somme des faces vers le haut via ancres Face_1/3/4/6 (ou variantes).
 
 ;(()=>{
   const { useEffect, useRef, useState } = React;
-  const T = (window as any).THREE as typeof THREE;
+  const T = (window as any).THREE as any;
 
   const BASE  = "/assets/games/osselets/level3/";
   const GLB   = BASE + "3d/astragalus_faces.glb";
-  const MAPJS = BASE + "3d/values.json";
+  const MAPJS = BASE + "3d/values.json"; // optionnel
 
   const W=960,H=540,DPR_MAX=2.5;
 
@@ -17,18 +18,25 @@
   const GRAV=-14.5, REST=0.45, HFR=0.92, AFR=0.94;
   const EPS=0.18, STABLE_MS=900, COLL_E=0.25, DOT_LOCK=0.985, NUDGE=0.22;
 
-  const RING_OUTER=8.2, FRAME_PAD=1.1;
+  const RING_OUTER=8.2, FRAME_PAD=1.1; // frustum cible
 
   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
 
-  function waitForGLTFLoader(maxTries = 40, delay = 100): Promise<any> {
+  function getGLTFLoaderCtor(maxTries = 60, delay = 100): Promise<any> {
     return new Promise((resolve, reject) => {
       let tries = 0;
       const tick = () => {
-        const ctor = (window as any)?.THREE?.GLTFLoader;
-        if (typeof ctor === "function") return resolve(ctor);
-        if (++tries >= maxTries) return reject(new Error("GLTFLoader non trouvé sur window.THREE."));
+        const w = window as any;
+        const THREE = w.THREE;
+        let Ctor = THREE?.GLTFLoader || w.GLTFLoader;
+        if (typeof Ctor === "function") {
+          if (THREE && !THREE.GLTFLoader) THREE.GLTFLoader = Ctor; // normalisation
+          return resolve(Ctor);
+        }
+        if (++tries >= maxTries) {
+          return reject(new Error("GLTFLoader non trouvé (ni window.THREE.GLTFLoader ni window.GLTFLoader)."));
+        }
         setTimeout(tick, delay);
       };
       tick();
@@ -61,13 +69,13 @@
     return best;
   }
 
-  function L3(){
+  function AstragalusLevel3(){
     const wrapRef=useRef<HTMLDivElement|null>(null);
     const cvRef  =useRef<HTMLCanvasElement|null>(null);
 
-    const rendererRef=useRef<THREE.WebGLRenderer|null>(null);
-    const sceneRef   =useRef<THREE.Scene|null>(null);
-    const camRef     =useRef<THREE.OrthographicCamera|null>(null);
+    const rendererRef=useRef<any>(null);
+    const sceneRef   =useRef<any>(null);
+    const camRef     =useRef<any>(null);
 
     const diceRef    =useRef<any[]>([]);
     const boundsRef  =useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
@@ -81,6 +89,7 @@
     const [vals,setVals]=useState<string[]>([]);
     const [sum,setSum]=useState(0);
 
+    // --- cadrage ORTHO qui garde tout le plateau visible ---
     function frameCamera(){
       const cam=camRef.current!, wrap=wrapRef.current!, r=rendererRef.current!;
       const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(H/W));
@@ -101,6 +110,7 @@
       };
     }
 
+    // --- Resize observer ---
     useEffect(()=>{
       const onResize=()=>{ if(rendererRef.current && camRef.current && wrapRef.current) frameCamera(); };
       onResize();
@@ -110,18 +120,18 @@
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
+    // --- Init 3D / chargement modèle ---
     useEffect(()=>{
       let cancelled=false;
       (async()=>{
-        // ⚠️ attend GLTFLoader global
-        await waitForGLTFLoader();
+        if (!T) { console.warn("[L3] THREE absent"); return; }
 
-        // mapping optionnel
+        // mapping optionnel (externe)
         try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
 
         const cv=cvRef.current!;
         const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
-        renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+        renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap||renderer.shadowMap.type;
         rendererRef.current=renderer;
 
         const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
@@ -131,7 +141,7 @@
 
         scene.add(new T.HemisphereLight(0xffffff,0x334466,.85));
         const dir=new T.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
-        dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); scene.add(dir);
+        dir.castShadow=true; dir.shadow.mapSize?.set?.(1024,1024); scene.add(dir);
 
         const ground=new T.Mesh(new T.PlaneGeometry(40,22), new T.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
         ground.rotation.x=-Math.PI/2; ground.position.y=YFLOOR; ground.receiveShadow=true; scene.add(ground);
@@ -139,12 +149,14 @@
         const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
 
-        const loader = new (T as any).GLTFLoader();
+        const GLTF = await getGLTFLoaderCtor(); // ← robust
+        const loader = new GLTF();
         loader.load(GLB,(gltf:any)=>{
           if(cancelled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base) return;
 
-          base.traverse((o:any)=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=false;
+          base.traverse((o:any)=>{ if(o.isMesh){
+            o.castShadow=true; o.receiveShadow=false;
             if(!o.material || !o.material.isMeshStandardMaterial) o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
           }});
 
@@ -158,9 +170,15 @@
           animate();
         }, undefined, (e:any)=>console.warn("[L3] GLB load error", e));
       })();
-      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current); };
+
+      return ()=>{ 
+        cancelled=true; 
+        cancelAnimationFrame(rafRef.current);
+        try{ rendererRef.current?.dispose?.(); }catch{}
+      };
     },[]);
 
+    // --- collisions simplifiées ---
     function collideAndSeparate(){
       const dice=diceRef.current;
       for(let i=0;i<dice.length;i++){
@@ -184,6 +202,7 @@
       }
     }
 
+    // --- step / intégration ---
     function step(dt:number){
       const b=boundsRef.current, dice=diceRef.current;
 
@@ -242,6 +261,7 @@
       }
     }
 
+    // --- loop ---
     function animate(){
       const r=rendererRef.current!, s=sceneRef.current!, c=camRef.current!;
       const loop=(t:number)=>{
@@ -253,6 +273,7 @@
       rafRef.current=requestAnimationFrame(loop);
     }
 
+    // --- UI ---
     function throwDice(){
       const dice=diceRef.current, b=boundsRef.current;
       for(let i=0;i<dice.length;i++){
@@ -293,6 +314,5 @@
     );
   }
 
-  // @ts-ignore
-  (window as any).AstragalusLevel3 = L3;
+  (window as any).AstragalusLevel3 = AstragalusLevel3;
 })();
