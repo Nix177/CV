@@ -1,3 +1,6 @@
+Basé sur ta version FR actuelle et le menu de la version EN comme référence, voici **`public/portfolio.html` complet** avec **uniquement** l’ajout/retour du menu en haut (liens FR, sélecteur de langue).
+
+```html
 <!-- public/portfolio.html -->
 <!doctype html>
 <html lang="fr">
@@ -19,9 +22,10 @@
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
     .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
     .muted { color: #e6f1ffbb; }
-    .btn { appearance:none; border:1px solid #ffffff33; color:#e6f1ff; background:#0b1f33; padding:8px 12px; border-radius:10px; cursor:pointer }
+    .btn { appearance:none; border:1px solid #ffffff33; color:#e6f1ff; background:#0b1f33; padding:8px 12px; border-radius:10px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px }
     .btn.primary { background:#0f5; color:#012 }
     .btn.linkish { background:transparent; border-color:transparent; text-decoration:underline }
+    .btn.ghost { background:transparent }
     .badge { border:1px solid #ffffff33; border-radius:999px; padding:2px 8px; font-size:12px; opacity:.8 }
     .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px }
     .card { background:#0b2237; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
@@ -56,6 +60,24 @@
 </head>
 
 <body>
+  <!-- === MENU (ajouté) === -->
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Navigation principale">
+      <ul class="menu">
+        <li><a href="/index.html" class="btn ghost">Accueil</a></li>
+        <li><a href="/cv.html" class="btn ghost">CV</a></li>
+        <li><a href="/portfolio.html" class="btn" aria-current="page">Portfolio</a></li>
+        <li><a href="/passions.html" class="btn ghost">Passions</a></li>
+        <li><a href="/fun-facts.html" class="btn ghost">Idées reçues</a></li>
+      </ul>
+      <ul class="lang">
+        <li><a href="/portfolio.html" class="btn" aria-current="page">FR</a></li>
+        <li><a href="/portfolio-en.html" class="btn ghost">EN</a></li>
+        <li><a href="/portfolio-de.html" class="btn ghost">DE</a></li>
+      </ul>
+    </nav>
+  </header>
+
   <header class="wrap">
     <h1>Portfolio — Nicolas Tuor</h1>
     <p class="muted">Sélection de projets web (éducation, IA, jeux pédagogiques). Les vignettes ouvrent un site dans un overlay quand c’est autorisé par le site cible.</p>
@@ -184,3 +206,4 @@
   </script>
 </body>
 </html>
+```
