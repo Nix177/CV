@@ -1,55 +1,44 @@
-// @ts-nocheck
-// Jeu 3 — Rouler les os (faces 1/3/4/6)
-// - No JSX (build-safe without --jsx)
-// - GLTFLoader robuste (global → fetch+eval → <script>)
-// - Caméra ortho qui garde tout le plateau, bords anti-sortie, score après stabilisation
-;(()=>{
-  const React = (window as any).React;
-  const T = (window as any).THREE;
+// osselets-level3.tsx  —  Jeu 3 : « Rouler les os » (4 astragales, faces 1/3/4/6)
+// Objectif : fonctionner sans <script> GLTFLoader, sans CORS unpkg, sans JSX.
+// -> Three + GLTFLoader chargés via import() dynamique (esm.sh), 100% encapsulé.
 
-  const BASE  = "/assets/games/osselets/level3/";
-  const GLB   = BASE + "3d/astragalus_faces.glb";
-  const MAPJS = BASE + "3d/values.json"; // optionnel
+;(() => {
+  const { useEffect, useRef, useState } = (window as any).React;
 
-  const VIEW_W=960, VIEW_H=540, DPR_MAX=2.5;
+  // ----------------- Config & assets -----------------
+  const VIEW_W = 960, VIEW_H = 540, DPR_MAX = 2.5;
+  const COUNT = 4;          // nb. d'osselets
+  const R = 0.75;           // rayon approx.
+  const FLOOR_Y = 0.0;
+  const GRAV = -14.5, REST = 0.45, HFR = 0.92, AFR = 0.94;
+  const EPS = 0.18, STABLE_MS = 900, COLL_E = 0.25, DOT_LOCK = 0.985, NUDGE = 0.22;
+  const RING_OUTER = 8.2, FRAME_PAD = 1.1;
 
-  const COUNT=4, R=0.75, YFLOOR=0;
-  const GRAV=-14.5, REST=0.45, HFR=0.92, AFR=0.94;
-  const EPS=0.18, STABLE_MS=900, COLL_E=0.25, DOT_LOCK=0.985, NUDGE=0.22;
+  const BASE = "/assets/games/osselets/level3/";
+  const GLB  = BASE + "3d/astragalus_faces.glb";
+  const MAP  = BASE + "3d/values.json"; // optionnel { "map": { "1":1, "3":3, "4":4, "6":6 } }
 
-  const RING_OUTER=8.2, FRAME_PAD=1.1;
-  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-  const now=()=>performance.now();
+  // Three version (esm.sh a les bons headers CORS)
+  const THREE_VER = "0.149.0";
+  const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
+  const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
 
-  async function ensureGLTFLoader() {
+  const clamp = (n:number, a:number, b:number)=>Math.max(a, Math.min(b, n));
+  const now   = ()=>performance.now();
+
+  // Cache partagé inter-jeux (si tu ajoutes L2 plus tard avec la même stratégie)
+  async function ensureThreeOnce(): Promise<{THREE:any, GLTFLoader:any}> {
     const w = window as any;
-    if (!w.THREE) throw new Error("THREE non chargé.");
-    if (w.THREE.GLTFLoader) return w.THREE.GLTFLoader;
-    if (w.GLTFLoader) { w.THREE.GLTFLoader = w.GLTFLoader; return w.GLTFLoader; }
-    const url = "https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
-    try {
-      const res = await fetch(url, { mode: "cors", cache: "force-cache" });
-      if (!res.ok) throw new Error("fetch GLTFLoader.js failed");
-      const code = await res.text();
-      const factory = new Function("window","THREE", code + ";return THREE.GLTFLoader || window.GLTFLoader;");
-      const Ctor = factory(w, w.THREE);
-      if (Ctor) { w.THREE.GLTFLoader = Ctor; return Ctor; }
-    } catch {}
-    await new Promise<void>((resolve, reject) => {
-      if (document.getElementById("__gltfloader_fallback__")) return resolve();
-      const s=document.createElement("script");
-      s.id="__gltfloader_fallback__"; s.src=url; s.async=true; s.crossOrigin="anonymous";
-      s.onload=()=>resolve(); s.onerror=()=>reject(new Error("GLTFLoader non chargé (script)."));
-      document.head.appendChild(s);
-    });
-    const Ctor2=(w.THREE && w.THREE.GLTFLoader) || w.GLTFLoader;
-    if (Ctor2) { w.THREE.GLTFLoader=Ctor2; return Ctor2; }
-    throw new Error("GLTFLoader non trouvé.");
+    if (w.__OsseletsThree) return w.__OsseletsThree;
+    const THREE = await import(THREE_URL);
+    const { GLTFLoader } = await import(GLTF_URL);
+    w.__OsseletsThree = { THREE, GLTFLoader };
+    return w.__OsseletsThree;
   }
 
-  function getFaceAnchors(root){
-    const out=[];
-    root.traverse((n)=>{
+  function getFaceAnchors(root:any, THREE:any){
+    const out:any[]=[];
+    root.traverse((n:any)=>{
       const s=(n.name||"").toLowerCase();
       let tag="";
       if (/^(face[_\s-]?1|f1|value[_\s-]?1|valeur[_\s-]?1)$/.test(s)) tag="1";
@@ -60,9 +49,9 @@
     });
     return out;
   }
-  function faceUpInfo(anchors){
+  function faceUpInfo(anchors:any[], THREE:any){
     if (!anchors?.length) return { tag:"?", dot:-1 };
-    const up=new T.Vector3(0,1,0), Y=new T.Vector3(0,1,0), q=new T.Quaternion();
+    const up=new THREE.Vector3(0,1,0), Y=new THREE.Vector3(0,1,0), q=new THREE.Quaternion();
     let best={tag:"?", dot:-2};
     for(const a of anchors){
       a.node.getWorldQuaternion(q);
@@ -74,99 +63,125 @@
   }
 
   function AstragalusLevel3(){
-    const wrapRef=React.useRef(null);
-    const cvRef  =React.useRef(null);
+    // DOM
+    const wrapRef = useRef<any>(null);
+    const cvRef   = useRef<any>(null);
 
-    const rendererRef=React.useRef(null);
-    const sceneRef   =React.useRef(null);
-    const camRef     =React.useRef(null);
+    // 3D
+    const THREEref   = useRef<any>(null);
+    const renderer   = useRef<any>(null);
+    const scene      = useRef<any>(null);
+    const camera     = useRef<any>(null);
 
-    const diceRef    =React.useRef([]);
-    const boundsRef  =React.useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
+    // Jeu
+    const diceRef    = useRef<any[]>([]);
+    const boundsRef  = useRef({minX:-6.8,maxX:6.8,minZ:-4.4,maxZ:4.4});
+    const mapRef     = useRef<any>({"1":1,"3":3,"4":4,"6":6});
 
-    const rafRef     =React.useRef(0);
-    const lastRef    =React.useRef(0);
-    const valueMap   =React.useRef({"1":1,"3":3,"4":4,"6":6});
+    // Anim
+    const reqRef     = useRef<number>(0);
+    const lastRef    = useRef<number>(0);
 
-    const [ready,setReady]=React.useState(false);
-    const [throwing,setThrowing]=React.useState(false);
-    const [vals,setVals]=React.useState([]);
-    const [sum,setSum]=React.useState(0);
+    // UI
+    const [ready,setReady] = useState(false);
+    const [throwing,setThrowing] = useState(false);
+    const [vals,setVals] = useState<string[]>([]);
+    const [sum,setSum]   = useState(0);
 
     function frameCamera(){
-      const cam=camRef.current, wrap=wrapRef.current, r=rendererRef.current;
+      const THREE=THREEref.current; if(!THREE) return;
+      const cam=camera.current, r=renderer.current, wrap=wrapRef.current;
+      if(!cam || !r || !wrap) return;
       const w=Math.max(320,(wrap.clientWidth|0)), h=Math.round(w*(VIEW_H/VIEW_W));
       const dpr=clamp(window.devicePixelRatio||1,1,DPR_MAX);
       r.setPixelRatio(dpr); r.setSize(w,h,false);
+
+      // Ortho qui cadre tout le plateau
       const aspect=w/h, range=RING_OUTER*FRAME_PAD;
       cam.left=-range*aspect; cam.right=range*aspect; cam.top=range; cam.bottom=-range;
       cam.near=0.1; cam.far=100; cam.updateProjectionMatrix();
       cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
+
       const padX=0.08, padZ=0.08;
-      boundsRef.current={
+      boundsRef.current = {
         minX: cam.left*(1-padX),
         maxX: cam.right*(1-padX),
         minZ: cam.bottom*(1-padZ),
-        maxZ: cam.top*(1-padZ)
+        maxZ: cam.top*(1-padZ),
       };
     }
 
-    React.useEffect(()=>{
-      const onResize=()=>{ if(rendererRef.current && camRef.current && wrapRef.current) frameCamera(); };
+    // Resize
+    useEffect(()=>{
+      const onResize=()=>frameCamera();
       onResize();
-      const ro=(window as any).ResizeObserver ? new ResizeObserver(onResize) : null;
+      const ro = (window as any).ResizeObserver ? new ResizeObserver(onResize) : null;
       if (ro && wrapRef.current) ro.observe(wrapRef.current);
       window.addEventListener('resize', onResize);
       return ()=>{ ro?.disconnect(); window.removeEventListener('resize', onResize); };
     },[]);
 
-    React.useEffect(()=>{
-      let cancelled=false;
+    // Init
+    useEffect(()=>{
+      let canceled=false;
       (async()=>{
-        if (!T) return;
-        try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
+        const { THREE, GLTFLoader } = await ensureThreeOnce();
+        THREEref.current = THREE;
+
+        // Renderer & scene
         const cv=cvRef.current;
-        const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false});
-        renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap||renderer.shadowMap.type;
-        rendererRef.current=renderer;
+        const r=new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:false});
+        r.shadowMap.enabled=true; r.shadowMap.type=THREE.PCFSoftShadowMap;
+        r.setPixelRatio(clamp(window.devicePixelRatio||1,1,DPR_MAX));
+        r.setSize(VIEW_W,VIEW_H,false);
+        renderer.current=r;
 
-        const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
-        const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100);
-        sceneRef.current=scene; camRef.current=cam;
-        frameCamera();
+        const sc=new THREE.Scene(); sc.background=new THREE.Color(0xf5f7fb);
+        scene.current=sc;
+        const cam=new THREE.OrthographicCamera(-10,10,10,-10,0.1,100);
+        camera.current=cam; frameCamera();
 
-        scene.add(new T.HemisphereLight(0xffffff,0x334466,.85));
-        const dir=new T.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
-        dir.castShadow=true; dir.shadow.mapSize?.set?.(1024,1024); scene.add(dir);
+        sc.add(new THREE.HemisphereLight(0xffffff,0x334466,.85));
+        const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
+        dir.castShadow=true; dir.shadow.mapSize?.set?.(1024,1024); sc.add(dir);
 
-        const ground=new T.Mesh(new T.PlaneGeometry(40,22), new T.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
-        ground.rotation.x=-Math.PI/2; ground.position.y=YFLOOR; ground.receiveShadow=true; scene.add(ground);
+        const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,22), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
+        ground.rotation.x=-Math.PI/2; ground.position.y=FLOOR_Y; ground.receiveShadow=true; sc.add(ground);
 
-        const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
-        ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
+        const ring=new THREE.Mesh(new THREE.RingGeometry(0.01,RING_OUTER,64), new THREE.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:THREE.DoubleSide}));
+        ring.rotation.x=-Math.PI/2; ring.position.y=FLOOR_Y+0.003; sc.add(ring);
 
-        const GLTF = await ensureGLTFLoader();
-        const loader = new GLTF();
-        loader.load(GLB,(gltf)=>{
-          if(cancelled) return;
+        // mapping (facultatif)
+        try{ const res=await fetch(MAP,{cache:"no-store"}); if(res.ok){ const j=await res.json(); if(j?.map) mapRef.current=j.map; } }catch{}
+
+        // Modèle
+        const loader=new GLTFLoader();
+        loader.load(GLB,(gltf:any)=>{
+          if (canceled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base) return;
-          base.traverse((o)=>{ if(o.isMesh){
+
+          base.traverse((o:any)=>{ if(o.isMesh){
             o.castShadow=true; o.receiveShadow=false;
-            if(!o.material || !o.material.isMeshStandardMaterial) o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
+            if(!o.material || !o.material.isMeshStandardMaterial) o.material=new THREE.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
           }});
-          const dice=[];
+
+          // 4 osselets (clones)
+          const dice:any[]=[];
           for(let i=0;i<COUNT;i++){
-            const inst=base.clone(true); scene.add(inst);
-            dice.push({ root:inst, anchors:getFaceAnchors(inst), vel:new T.Vector3(), angVel:new T.Vector3(), tStable:0 });
+            const inst=base.clone(true); sc.add(inst);
+            dice.push({ root:inst, anchors:getFaceAnchors(inst,THREE), vel:new THREE.Vector3(), angVel:new THREE.Vector3(), tStable:0 });
           }
           diceRef.current=dice;
+
           setReady(true);
           animate();
-        }, undefined, (e)=>console.warn("[L3] GLB load error", e));
+        }, undefined, (e:any)=>console.warn("[L3] GLB load error", e));
       })();
-      return ()=>{ cancelled=true; cancelAnimationFrame(rafRef.current||0); try{ rendererRef.current?.dispose?.(); }catch{} };
+
+      return ()=>{ canceled=true; cancelAnimationFrame(reqRef.current); try{ renderer.current?.dispose?.(); }catch{} };
     },[]);
 
+    // Collisions (approx sphères, dans le plan XZ)
     function collideAndSeparate(){
       const dice=diceRef.current;
       for(let i=0;i<dice.length;i++){
@@ -180,56 +195,68 @@
             const push=(min-dist)+1e-3;
             a.root.position.x -= nx*push*0.5; a.root.position.z -= nz*push*0.5;
             b.root.position.x += nx*push*0.5; b.root.position.z += nz*push*0.5;
+
             const an=a.vel.x*nx+a.vel.z*nz, bn=b.vel.x*nx+b.vel.z*nz;
             const dv=(bn-an)*COLL_E;
-            a.vel.x+=nx*dv; a.vel.z+=nz*dv; b.vel.x-=nx*dv; b.vel.z-=nz*dv;
+            a.vel.x+=nx*dv; a.vel.z+=nz*dv;
+            b.vel.x-=nx*dv; b.vel.z-=nz*dv;
           }
         }
       }
     }
 
-    function step(dt){
+    // Step
+    function step(dt:number){
+      const THREE=THREEref.current; if(!THREE) return;
       const b=boundsRef.current, dice=diceRef.current;
+
       for(const d of dice){
         d.vel.y += GRAV*dt;
         d.root.position.x += d.vel.x*dt;
         d.root.position.y += d.vel.y*dt;
         d.root.position.z += d.vel.z*dt;
-        if (d.root.position.y <= YFLOOR + R){
-          d.root.position.y = YFLOOR + R;
+
+        if (d.root.position.y <= FLOOR_Y + R){
+          d.root.position.y = FLOOR_Y + R;
           if (d.vel.y < 0) d.vel.y = -d.vel.y*REST;
           d.vel.x *= HFR; d.vel.z *= HFR; d.angVel.multiplyScalar(AFR);
         }
+
         if (d.root.position.x < b.minX){ d.root.position.x=b.minX; d.vel.x=Math.abs(d.vel.x)*0.6; }
         if (d.root.position.x > b.maxX){ d.root.position.x=b.maxX; d.vel.x=-Math.abs(d.vel.x)*0.6; }
         if (d.root.position.z < b.minZ){ d.root.position.z=b.minZ; d.vel.z=Math.abs(d.vel.z)*0.6; }
         if (d.root.position.z > b.maxZ){ d.root.position.z=b.maxZ; d.vel.z=-Math.abs(d.vel.z)*0.6; }
+
         d.root.rotation.x += d.angVel.x*dt;
         d.root.rotation.y += d.angVel.y*dt;
         d.root.rotation.z += d.angVel.z*dt;
-        if (d.root.position.y <= YFLOOR + R + 0.002){
+
+        if (d.root.position.y <= FLOOR_Y + R + 0.002){
           d.vel.x += Math.sin(d.root.position.z*0.25)*0.02*dt;
           d.vel.z += Math.sin(d.root.position.x*0.25)*0.02*dt;
         }
       }
+
       collideAndSeparate();
+
       for(const d of dice){
         const speed=d.vel.length()+d.angVel.length();
-        const info=faceUpInfo(d.anchors);
+        const info=faceUpInfo(d.anchors, THREE);
         if (speed < EPS){
-          if (d.root.position.y > YFLOOR + R + 1e-3){ d.vel.y -= 0.2; d.tStable=0; }
+          if (d.root.position.y > FLOOR_Y + R + 1e-3){ d.vel.y -= 0.2; d.tStable=0; }
           else if (info.dot < DOT_LOCK){ d.angVel.x += (Math.random()-.5)*NUDGE*dt*60; d.angVel.z += (Math.random()-.5)*NUDGE*dt*60; d.tStable=0; }
           else { if (!d.tStable) d.tStable=now(); }
         } else d.tStable=0;
       }
+
       if (throwing){
         const all=dice.every(d=>d.tStable && (now()-d.tStable>STABLE_MS));
         if (all){
           setThrowing(false);
-          const out=[]; let s=0;
+          const out:string[]=[]; let s=0;
           for(const d of dice){
-            const info=faceUpInfo(d.anchors);
-            const v=valueMap.current[String(info.tag)] ?? 0;
+            const info=faceUpInfo(d.anchors, THREE);
+            const v = (mapRef.current && mapRef.current[String(info.tag)]) ?? 0;
             out.push(String(info.tag)); s+=v;
           }
           setVals(out); setSum(s);
@@ -238,16 +265,17 @@
     }
 
     function animate(){
-      const r=rendererRef.current, s=sceneRef.current, c=camRef.current;
-      const loop=(t)=>{
+      const r=renderer.current, sc=scene.current, cam=camera.current;
+      const loop=(t:number)=>{
         const dt=Math.min(0.05, Math.max(0,(t-(lastRef.current||t))/1000)); lastRef.current=t;
         step(dt);
-        r.render(s,c);
-        rafRef.current=requestAnimationFrame(loop);
+        r.render(sc,cam);
+        reqRef.current=requestAnimationFrame(loop);
       };
-      rafRef.current=requestAnimationFrame(loop);
+      reqRef.current=requestAnimationFrame(loop);
     }
 
+    // UI
     function throwDice(){
       const dice=diceRef.current, b=boundsRef.current;
       for(let i=0;i<dice.length;i++){
@@ -270,21 +298,34 @@
       setVals([]); setSum(0); setThrowing(false);
     }
 
-    return React.createElement(
-      "div",
-      { ref:wrapRef, style:{position:"relative"} },
-      React.createElement("canvas", { ref:cvRef, width:VIEW_W, height:VIEW_H, style:{display:"block", borderRadius:12}}),
-      React.createElement("div", { style:{display:"flex", gap:8, marginTop:10}},
-        React.createElement("button", { className:"btn", onClick:throwDice }, "Lancer"),
-        React.createElement("button", { className:"btn", onClick:reset }, "Réinitialiser"),
-        !ready && React.createElement("span", { className:"badge", style:{marginLeft:8}}, "Chargement…")
-      ),
-      (vals.length>0) && React.createElement(
-        "div",
-        { style:{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px"} },
-        React.createElement("div", { style:{fontWeight:700, marginBottom:4} }, "Tirage : ", vals.join("  ")),
-        React.createElement("div", { style:{fontSize:14} }, "Somme : ", String(sum), " — ", React.createElement("b", null, "Points : ", String(sum)))
-      )
+    // Pas de JSX (évite erreurs TS/--jsx). On construit l’arbre à la main.
+    const controls = (ready
+      ? [
+          (window as any).React.createElement("button", { key:"l", className:"btn", onClick:() => throwDice() }, "Lancer"),
+          (window as any).React.createElement("button", { key:"r", className:"btn", onClick:() => reset() }, "Réinitialiser"),
+        ]
+      : [(window as any).React.createElement("span", { key:"c", className:"badge", style:{marginLeft:8} }, "Chargement…")]
+    );
+
+    const resultBox = (vals.length>0
+      ? (window as any).React.createElement(
+          "div",
+          { style:{
+              position:"absolute", left:12, bottom:12,
+              background:"#0b2237cc", border:"1px solid #ffffff22",
+              borderRadius:12, padding:"10px 12px"
+            }},
+          (window as any).React.createElement("div",{style:{fontWeight:700, marginBottom:4}}, "Tirage : " + vals.join("  ")),
+          (window as any).React.createElement("div",{style:{fontSize:14}}, `Somme : ${sum} — `, (window as any).React.createElement("b", null, `Points : ${sum}`))
+        )
+      : null
+    );
+
+    return (window as any).React.createElement(
+      "div", { ref:wrapRef, style:{position:"relative"} },
+      (window as any).React.createElement("canvas", { ref:cvRef, width:VIEW_W, height:VIEW_H, style:{display:"block", borderRadius:12} }),
+      (window as any).React.createElement("div", { style:{display:"flex", gap:8, marginTop:10} }, ...controls),
+      resultBox
     );
   }
 
