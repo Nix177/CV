@@ -194,9 +194,6 @@
   <!-- Montage / Navigation (un container par jeu) -->
   <script type="text/babel">
   (function () {
-    // Registre des racines React pour fermer les autres jeux
-    const ROOTS = (window.__OSSELETS_ROOTS ||= {});
-
     function stopAllAudio() {
       document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
     }
@@ -206,35 +203,22 @@
       if (tries <= 0) { console.warn("[osselets] composant introuvable:", name); return; }
       setTimeout(() => whenReady(name, cb, tries - 1), 125);
     }
-    function unmountAll(exceptId) {
-      for (const key of Object.keys(ROOTS)) {
-        if (key === exceptId) continue;
-        try { ROOTS[key]?.unmount?.(); } catch {}
-        delete ROOTS[key];
-        const el = document.getElementById(key);
-        if (el) el.innerHTML = "";
-      }
-      stopAllAudio();
-    }
-    function mount(root, cover, CompName, btn, props) {
+    function mount(root, cover, CompName, btn) {
       if (!root) return;
-      const id = root.id || Math.random().toString(36).slice(2);
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
       stopAllAudio();
-      unmountAll(id); // <-- ferme les autres jeux
       whenReady(CompName, (Comp) => {
         try {
           if (cover) { cover.style.display = 'none'; cover.remove(); }
           const r = ReactDOM.createRoot(root);
-          ROOTS[id] = r; // enregistre la racine
-          r.render(React.createElement(Comp, props || {}));
+          r.render(React.createElement(Comp));
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
         }
       });
     }
-    // Boutons → montage des 3 jeux (inchangé côté API publique)
+    // Boutons → montage des 3 jeux
     const btnRun = document.getElementById('btn-start-runner');
     const btnL2  = document.getElementById('btn-start-l2');
     const btnL3  = document.getElementById('btn-start-l3');
