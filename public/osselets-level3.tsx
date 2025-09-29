@@ -1,8 +1,7 @@
 // Jeu 3 — Rouler les os (faces 1/3/4/6)
-// - THREE global
-// - GLTFLoader détecté + fallback injection si nécessaire (évite "not a constructor")
-// - Caméra ORTHO qui cadre tout le plateau et borne les murs dynamiquement
-// - Score = somme des faces “vers le haut” (ancres Face_1/3/4/6)
+// Robuste : attend THREE.GLTFLoader (pas d’injection)
+// Caméra ORTHO qui garde tout le plateau visible + murs dynamiques
+// Score = somme des faces “vers le haut” (ancres Face_1/3/4/6)
 
 ;(()=>{
   const { useEffect, useRef, useState } = React;
@@ -23,17 +22,17 @@
   const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
   const now=()=>performance.now();
 
-  async function ensureGLTFLoader(): Promise<any> {
-    const win = window as any;
-    if (win.THREE?.GLTFLoader) return win.THREE.GLTFLoader;
-    if (win.GLTFLoader) return win.GLTFLoader;
-    await new Promise<void>((res,rej)=>{
-      const s=document.createElement('script');
-      s.src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
-      s.onload=()=>res(); s.onerror=()=>rej(new Error("GLTFLoader load error"));
-      document.head.appendChild(s);
+  function waitForGLTFLoader(maxTries = 40, delay = 100): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let tries = 0;
+      const tick = () => {
+        const ctor = (window as any)?.THREE?.GLTFLoader;
+        if (typeof ctor === "function") return resolve(ctor);
+        if (++tries >= maxTries) return reject(new Error("GLTFLoader non trouvé sur window.THREE."));
+        setTimeout(tick, delay);
+      };
+      tick();
     });
-    return (win.THREE?.GLTFLoader || win.GLTFLoader);
   }
 
   function getFaceAnchors(root:any){
@@ -114,6 +113,9 @@
     useEffect(()=>{
       let cancelled=false;
       (async()=>{
+        // ⚠️ attend GLTFLoader global
+        await waitForGLTFLoader();
+
         // mapping optionnel
         try{ const r=await fetch(MAPJS,{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j?.map) valueMap.current=j.map; } }catch{}
 
@@ -137,10 +139,7 @@
         const ring=new T.Mesh(new T.RingGeometry(0.01,RING_OUTER,64), new T.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:T.DoubleSide}));
         ring.rotation.x=-Math.PI/2; ring.position.y=YFLOOR+0.003; scene.add(ring);
 
-        const GLTFCtor = await ensureGLTFLoader();
-        if (typeof GLTFCtor !== "function"){ console.error("[L3] GLTFLoader indisponible."); return; }
-        const loader=new (GLTFCtor as any)();
-
+        const loader = new (T as any).GLTFLoader();
         loader.load(GLB,(gltf:any)=>{
           if(cancelled) return;
           const base=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!base) return;
@@ -287,13 +286,4 @@
         {vals.length>0 && (
           <div style={{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px"}}>
             <div style={{fontWeight:700, marginBottom:4}}>Tirage : {vals.join("  ")}</div>
-            <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum}</b></div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // @ts-ignore
-  (window as any).AstragalusLevel3 = L3;
-})();
+            <div style={{fontSize:14}}>Somme&nbsp;: {sum} — <b>Points&nbsp;: {sum
