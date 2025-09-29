@@ -43,20 +43,19 @@
     return out;
   }
 
-  /* -------------------- Utils -------------------- */
-  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-  const now   = ()=> (typeof performance!=="undefined"?performance:Date).now();
-  async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok) return await r.json(); }catch{} return null; }
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const now=()=>performance.now();
+  const getJSON=(u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
 
-  function extractFaceAnchors(root){
-    const out=[]; // {node, tag: "1"|"3"|"4"|"6"}
-    root.traverse((n)=>{
+  function getFaceAnchors(root:any){
+    const out:any[]=[];
+    root.traverse((n:any)=>{
       const nm=(n.name||"").toLowerCase();
-      let tag=null;
-      if (/^face[_\s-]?1$|^f1$|value[_\s-]?1$|valeur[_\s-]?1$/.test(nm)) tag="1";
-      else if (/^face[_\s-]?3$|^f3$|value[_\s-]?3$|valeur[_\s-]?3$/.test(nm)) tag="3";
-      else if (/^face[_\s-]?4$|^f4$|value[_\s-]?4$|valeur[_\s-]?4$/.test(nm)) tag="4";
-      else if (/^face[_\s-]?6$|^f6$|value[_\s-]?6$|valeur[_\s-]?6$/.test(nm)) tag="6";
+      let tag="";
+      if (/^face[_\s-]?1$|^f1$|^value[_\s-]?1$|^valeur[_\s-]?1$/.test(nm)) tag="1";
+      else if (/^face[_\s-]?3$|^f3$|^value[_\s-]?3$|^valeur[_\s-]?3$/.test(nm)) tag="3";
+      else if (/^face[_\s-]?4$|^f4$|^value[_\s-]?4$|^valeur[_\s-]?4$/.test(nm)) tag="4";
+      else if (/^face[_\s-]?6$|^f6$|^value[_\s-]?6$|^valeur[_\s-]?6$/.test(nm)) tag="6";
       if (tag) out.push({ node:n, tag });
     });
     return out;
@@ -96,6 +95,36 @@
     const reqRef       = useRef<number>(0);
     const lastRef      = useRef<number>(0);
     const mappingRef   = useRef<any>(null);
+    const boundsRef    = useRef({ minX:-6.8, maxX:6.8, minZ:-4.4, maxZ:4.4 });
+
+    function updateBoundsFromCamera(){
+      const THREE=THREEref.current, cam=cameraRef.current; if(!THREE||!cam) return;
+      const planeY = FLOOR_Y + RADIUS;
+      const camPos = new THREE.Vector3(); cam.getWorldPosition(camPos);
+      const ndcs   = [[-1,-1],[1,-1],[1,1],[-1,1]];
+      const xs:number[] = [], zs:number[] = [];
+      for (const [nx,ny] of ndcs){
+        const p = new THREE.Vector3(nx,ny,0.5).unproject(cam);
+        const dir = p.sub(camPos);
+        if (Math.abs(dir.y) < 1e-4) continue;
+        const t = (planeY - camPos.y) / dir.y;
+        if (t > 0){
+          const hit = camPos.clone().addScaledVector(dir, t);
+          xs.push(hit.x); zs.push(hit.z);
+        }
+      }
+      if (xs.length && zs.length){
+        const padX=0.08, padZ=0.08;
+        const minX=Math.min(...xs), maxX=Math.max(...xs);
+        const minZ=Math.min(...zs), maxZ=Math.max(...zs);
+        boundsRef.current = {
+          minX: minX + (maxX-minX)*padX,
+          maxX: maxX - (maxX-minX)*padX,
+          minZ: minZ + (maxZ-minZ)*padZ,
+          maxZ: maxZ - (maxZ-minZ)*padZ
+        };
+      }
+    }
 
     /* ---------- Resize ---------- */
     useEffect(()=>{
@@ -109,6 +138,7 @@
         r.setSize(w,h,false);
         cv.style.width=w+"px"; cv.style.height=h+"px";
         cam.aspect=w/h; cam.updateProjectionMatrix();
+        updateBoundsFromCamera();
       }
       onResize();
       const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(onResize) : null;
@@ -117,31 +147,33 @@
       return ()=>{ if(ro) ro.disconnect(); window.removeEventListener("resize", onResize); };
     },[]);
 
-    /* ---------- Init ---------- */
+    /* ---------- Init Three ---------- */
     useEffect(()=>{
       let cancelled=false;
       (async ()=>{
-        let libs=null;
-        try { libs = await ensureThreeOnce(); }
-        catch (e){ console.error("[L3] import three ESM:", e); setMsg("Three.js/GLTFLoader manquant."); return; }
-        const { THREE, GLTFLoader } = libs; THREEref.current = THREE;
+        const { THREE, GLTFLoader } = await ensureThreeOnce();
+        THREEref.current=THREE;
 
         // Renderer
-        const renderer=new THREE.WebGLRenderer({ canvas:canvasRef.current, antialias:true, alpha:true });
-        renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-        renderer.toneMapping=THREE.ACESFilmicToneMapping;
+        const cv=canvasRef.current;
+        const renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:false});
+        renderer.setPixelRatio(clamp(window.devicePixelRatio||1,1,DPR_MAX));
+        renderer.setSize(VIEW_W,VIEW_H,false);
+        renderer.shadowMap.enabled=true;
+        renderer.shadowMap.type=THREE.PCFSoftShadowMap;
         rendererRef.current=renderer;
 
         // Scene/cam
         const scene=new THREE.Scene(); scene.background=new THREE.Color(0xf5f7fb);
         const cam=new THREE.PerspectiveCamera(45,16/9,0.1,100); cam.position.set(6.4,4.7,7.4); cam.lookAt(0,0.7,0);
         sceneRef.current=scene; cameraRef.current=cam;
+        updateBoundsFromCamera();
 
         scene.add(new THREE.HemisphereLight(0xffffff,0x334466,.85));
         const dir=new THREE.DirectionalLight(0xffffff,1); dir.position.set(4,7,6);
         dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); scene.add(dir);
 
-        const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,22), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
+        const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,20), new THREE.MeshStandardMaterial({color:0xeae7ff,roughness:.95,metalness:0}));
         ground.rotation.x=-Math.PI/2; ground.position.y=FLOOR_Y; ground.receiveShadow=true; scene.add(ground);
 
         const ring=new THREE.Mesh(new THREE.RingGeometry(0.01,8,64), new THREE.MeshBasicMaterial({color:0xdee3ff,transparent:true,opacity:.25,side:THREE.DoubleSide}));
@@ -161,64 +193,33 @@
               o.castShadow=true; o.receiveShadow=false;
             }
           });
-          // normalisation
-          const box=new THREE.Box3().setFromObject(base);
-          const s = 1.6/Math.max(...box.getSize(new THREE.Vector3()).toArray());
-          base.scale.setScalar(s);
-          box.setFromObject(base);
-          base.position.sub(box.getCenter(new THREE.Vector3()));
           baseRef.current=base;
+          scene.add(base);
 
-          // clones
+          // créer 4 clones (os)
           const dice:any[]=[];
           for(let i=0;i<COUNT;i++){
-            const g=base.clone(true); scene.add(g);
+            const inst=base.clone(true);
+            scene.add(inst);
             dice.push({
-              root:g,
-              anchors: extractFaceAnchors(g),
+              root:inst,
+              anchors:getFaceAnchors(inst),
               vel:new THREE.Vector3(),
               angVel:new THREE.Vector3(),
               stableSince:0
             });
           }
           diceRef.current=dice;
-
-          layoutDice();
           setReady(true);
-          startLoop();
-        }, undefined, (err)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement du modèle."); });
-
-        function startLoop(){
-          lastRef.current=now();
-          function frame(){
-            if (cancelled) return;
-            const t=now(), dt=Math.min(32, t-lastRef.current)/1000; lastRef.current=t;
-            step(dt);
-            renderer.render(scene,cameraRef.current);
-            reqRef.current=requestAnimationFrame(frame);
-          }
-          frame();
-        }
+          animate();
+        }, undefined, (err)=>{ console.error("[L3] GLB load error:", err); setMsg("Échec chargement modèle."); });
       })();
-
-      return ()=>{ cancelled=true; if(reqRef.current) cancelAnimationFrame(reqRef.current); };
+      return ()=>{ cancelled=true; cancelAnimationFrame(reqRef.current||0); };
     },[]);
 
-    /* ---------- Physique & collisions ---------- */
-    function layoutDice(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
-      for(let i=0;i<dice.length;i++){
-        const d=dice[i];
-        d.root.position.set(-2.2 + i*1.5, 0.82, (i%2===0)? -0.6 : 0.7);
-        d.root.rotation.set(0, i*0.6, 0);
-        d.vel.set(0,0,0); d.angVel.set(0,0,0);
-        d.stableSince=now();
-        d.root.updateMatrixWorld(true);
-      }
-    }
-
-    function randomThrow(){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
+    function throwDice(){
+      const THREE=THREEref.current; if(!THREE) return;
+      const dice=diceRef.current||[];
       for(let i=0;i<dice.length;i++){
         const d=dice[i];
         d.root.position.set(-3.5 + i*0.6, 2.2 + Math.random()*0.8, -1.8 + Math.random()*3.4);
@@ -251,45 +252,42 @@
 
             // échanges des composantes normales (simple restitution)
             const va=a.vel, vb=b.vel;
-            const vaN = va.x*nx + va.z*nz;
-            const vbN = vb.x*nx + vb.z*nz;
-            const m    = (vaN + vbN)/2;
-            const aImp = (m - vaN)*(1+COLL_E);
-            const bImp = (m - vbN)*(1+COLL_E);
-            va.x += aImp*nx; va.z += aImp*nz;
-            vb.x += bImp*nx; vb.z += bImp*nz;
-
-            // la pièce la plus haute reçoit une petite impulsion verticale négative pour « glisser »
-            if (Math.abs(dy) < RADIUS*1.3){
-              if (pa.y > pb.y) a.vel.y -= 0.4; else b.vel.y -= 0.4;
-            }
+            const vn = va.x*nx + va.z*nz;
+            const wn = vb.x*nx + vb.z*nz;
+            const dv = (wn - vn)*COLL_E;
+            va.x += nx*dv; va.z += nz*dv;
+            vb.x -= nx*dv; vb.z -= nz*dv;
           }
         }
       }
     }
 
     function step(dt:number){
-      const THREE=THREEref.current, dice=diceRef.current; if(!THREE||!dice?.length) return;
-
-      // 1) Intégration + interaction sol
+      const THREE=THREEref.current; if(!THREE) return;
+      const dice=diceRef.current||[];
       for(const d of dice){
+        // gravité
         d.vel.y += GRAV*dt;
-        d.root.position.addScaledVector(d.vel, dt);
 
-        // sol (plan)
-        if (d.root.position.y - RADIUS <= FLOOR_Y){
+        // intégration
+        d.root.position.x += d.vel.x*dt;
+        d.root.position.y += d.vel.y*dt;
+        d.root.position.z += d.vel.z*dt;
+
+        // sol
+        if (d.root.position.y <= FLOOR_Y + RADIUS){
           d.root.position.y = FLOOR_Y + RADIUS;
           if (d.vel.y < 0) d.vel.y = -d.vel.y * REST;
           d.vel.x *= H_FRICT; d.vel.z *= H_FRICT;
           d.angVel.multiplyScalar(ANG_FRICT);
         }
 
-        // murs invisibles
-        const X=6.8,Z=4.4;
-        if (d.root.position.x<-X){ d.root.position.x=-X; d.vel.x= Math.abs(d.vel.x)*0.6; }
-        if (d.root.position.x> X){ d.root.position.x= X; d.vel.x=-Math.abs(d.vel.x)*0.6; }
-        if (d.root.position.z<-Z){ d.root.position.z=-Z; d.vel.z= Math.abs(d.vel.z)*0.6; }
-        if (d.root.position.z> Z){ d.root.position.z= Z; d.vel.z=-Math.abs(d.vel.z)*0.6; }
+        // murs invisibles (calculés depuis la caméra)
+        const b = boundsRef.current;
+        if (d.root.position.x < b.minX){ d.root.position.x = b.minX; d.vel.x = Math.abs(d.vel.x)*0.6; }
+        if (d.root.position.x > b.maxX){ d.root.position.x = b.maxX; d.vel.x = -Math.abs(d.vel.x)*0.6; }
+        if (d.root.position.z < b.minZ){ d.root.position.z = b.minZ; d.vel.z = Math.abs(d.vel.z)*0.6; }
+        if (d.root.position.z > b.maxZ){ d.root.position.z = b.maxZ; d.vel.z = -Math.abs(d.vel.z)*0.6; }
 
         // rotation
         d.root.rotation.x += d.angVel.x*dt;
@@ -301,12 +299,8 @@
           d.vel.x += Math.sin(d.root.position.z*0.25)*0.02*dt;
           d.vel.z += Math.sin(d.root.position.x*0.25)*0.02*dt;
         }
-
-        d.vel.multiplyScalar(0.999); d.angVel.multiplyScalar(0.999);
-        d.root.updateMatrixWorld(true);
       }
 
-      // 2) Collisions entre osselets (anti-empilement)
       collideAndSeparate();
 
       // 3) Stabilisation : si quasi immobile mais pas « face vers haut », on pousse un chouïa
@@ -339,68 +333,75 @@
       if (throwing && allStable){
         setThrowing(false);
         const map = (mappingRef.current && mappingRef.current.map) || { "1":1, "3":3, "4":4, "6":6 };
-        const res:string[]=[];
+        const out:string[]=[];
         let s=0;
         for(const d of dice){
           const info = faceUpInfo(d.anchors, THREE);
-          const val  = map[String(info.tag)] ?? "?";
-          res.push(String(val));
-          if (typeof val==="number" || /^\d+$/.test(String(val))) s += Number(val);
+          const v = map[info.tag] ?? 0;
+          out.push(String(info.tag));
+          s += v;
         }
-        setVals(res); setSum(s);
-        setMsg("Résultat : " + res.join("  "));
+        setVals(out); setSum(s);
+        setMsg("Résultat !");
       }
     }
 
-    /* ---------- UI ---------- */
+    function animate(){
+      const r=rendererRef.current, scene=sceneRef.current, cam=cameraRef.current, THREE=THREEref.current;
+      let last=lastRef.current||0;
+      const loop=(t:number)=>{
+        const dt=Math.min(0.05, Math.max(0, (t-last)/1000)); last=t; lastRef.current=t;
+        step(dt);
+        r.render(scene,cam);
+        reqRef.current=requestAnimationFrame(loop);
+      };
+      reqRef.current=requestAnimationFrame(loop);
+    }
+
+    function reset(){
+      const dice=diceRef.current||[];
+      for(const d of dice){
+        d.vel.set(0,0,0); d.angVel.set(0,0,0); d.stableSince=0;
+        d.root.position.set(-4+Math.random()*8, 1.5+Math.random()*0.5, -2+Math.random()*4);
+        d.root.rotation.set(Math.random(),Math.random(),Math.random());
+        d.root.updateMatrixWorld(true);
+      }
+      setThrowing(false); setVals([]); setSum(0); setMsg("Prêt.");
+    }
+
     return (
-      <div className="min-h-screen w-full" style={{background:"linear-gradient(135deg,#f8fafc,#eef2ff)", color:"#0f172a"}}>
-        <div className="max-w-5xl mx-auto" style={{padding:"16px"}}>
-          <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", gap:12, marginBottom:8}}>
-            <h1 className="text-xl sm:text-2xl" style={{fontWeight:700}}>Rouler les os — Vénus, Canis, Senio…</h1>
-            <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
-              <button onClick={()=>{ if(ready) randomThrow(); }} disabled={!ready}
-                style={{padding:"10px 14px", border:"1px solid #2563eb", background:"#2563eb", color:"#fff", borderRadius:12, cursor:ready?"pointer":"default", boxShadow:"0 6px 16px rgba(37,99,235,.25)"}}>
-                Lancer
-              </button>
-              <button onClick={()=>{ layoutDice(); setVals([]); setSum(0); setThrowing(false); setMsg("Réinitialisé. Clique « Lancer »."); }} disabled={!ready}
-                style={{padding:"8px 12px", border:"1px solid #e5e7eb", background:"#fff", borderRadius:12, cursor:ready?"pointer":"default"}}>
-                Réinitialiser
-              </button>
+      <div ref={wrapRef} style={{position:"relative"}}>
+        <canvas ref={canvasRef} width={VIEW_W} height={VIEW_H} style={{display:"block", borderRadius:12}}/>
+
+        <div style={{display:"flex", gap:8, marginTop:10}}>
+          <button onClick={throwDice} className="btn">Lancer</button>
+          <button onClick={reset} className="btn">Réinitialiser</button>
+          {!ready && (
+            <div style={{marginLeft:10, color:"#64748b", display:"inline-flex", alignItems:"center", gap:8}}>
+              <span className="badge">Chargement…</span>
+              <div>
+                <div style={{fontWeight:700, marginBottom:6}}>Chargement du modèle 3D…</div>
+                <div style={{fontSize:12, color:"#64748b"}}>Modèle : <code>level3/3d/astragalus_faces.glb</code></div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {vals.length>0 && (
+          <div style={{position:"absolute", left:12, bottom:12, background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px", maxWidth:"min(96%,640px)"}}>
+            <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
+            <div style={{fontSize:14}}>
+              {vals.join("  ")}
+              <span style={{marginLeft:10, color:"#64748b"}}>Somme&nbsp;: {sum} — Points&nbsp;: {sum}</span>
+            </div>
+            <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
+              Catégories antiques (indicatif) : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 × «6»), Trina (triple), Bina (2 paires), Simple (autres).
             </div>
           </div>
+        )}
 
-          <p className="text-sm" style={{color:"#475569", marginBottom:12}}>{msg}</p>
-
-          <div ref={wrapRef} style={{position:"relative", border:"1px solid #e5e7eb", borderRadius:12, overflow:"hidden", background:"#fff"}}>
-            <canvas ref={canvasRef} />
-
-            {!ready && (
-              <div style={{position:"absolute", inset:0, display:"grid", placeItems:"center", background:"linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.92))"}}>
-                <div style={{textAlign:"center"}}>
-                  <div style={{fontWeight:700, marginBottom:6}}>Chargement du modèle 3D…</div>
-                  <div style={{fontSize:12, color:"#64748b"}}>Modèle : <code>level3/3d/astragalus_faces.glb</code></div>
-                </div>
-              </div>
-            )}
-
-            {vals.length>0 && (
-              <div style={{position:"absolute", left:12, bottom:12, background:"rgba(255,255,255,.96)", border:"1px solid #e5e7eb", borderRadius:12, padding:"10px 12px", maxWidth:"min(96%,640px)"}}>
-                <div style={{fontWeight:600, marginBottom:4}}>Tirage</div>
-                <div style={{fontSize:14}}>
-                  {vals.join("  ")}
-                  <span style={{marginLeft:10, color:"#64748b"}}>Somme&nbsp;: {sum}</span>
-                </div>
-                <div style={{fontSize:12, color:"#64748b", marginTop:4}}>
-                  Catégories antiques (indicatif) : Vénus (1-3-4-6), Canis (1-1-1-1), Senio (≥2 × «6»), Trina (triple), Bina (2 paires), Simple (autres).
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
-            Modèle : <code>astragalus_faces.glb</code> — ancres <code>Face_1/3/4/6</code> (ou variantes). Lecture par orientation (+Y de l’ancre vers le haut). Anti-empilement par collisions horizontales et micro-bascules jusqu’à une face bien à plat.
-          </div>
+        <div style={{fontSize:12, color:"#6b7280", marginTop:8}}>
+          Modèle : <code>astragalus_faces.glb</code> — ancres <code>Face_1/3/4/6</code>. Physique simple avec collisions horizontales et micro-bascules jusqu’à une face bien à plat.
         </div>
       </div>
     );
