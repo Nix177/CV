@@ -49,42 +49,42 @@
     .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
     .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
     .game-root { min-height: 54vh; outline: none; }
-
-    /* NAV centrée (ne touche que l'alignement) */
-    .site-nav { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; }
-    .site-nav .menu, .site-nav .lang { display:flex; justify-content:center; gap:8px; list-style:none; padding:0; margin:0; }
   </style>
 
   <link rel="preload" href="/style.css" as="style"/>
   <link rel="stylesheet" href="/style.css"/>
-  <!-- Scripts communs (comme sur Passions) -->
+  <!-- Scripts communs -->
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
 </head>
 
 <body>
-  <!-- HEADER unifié (comme Passions) -->
+  <!-- Le header global (menu + langues) est injecté par /assets/js/nav.js -->
   <header>
     <div class="headwrap">
       <div class="brand">
         <div class="logo">N·T</div>
         <div>Portfolio</div>
       </div>
-      <nav class="site-nav" aria-label="Navigation">
-        <ul class="menu">
-          <li><a class="btn" href="/index.html">Accueil</a></li>
-          <li><a class="btn" href="/cv.html">CV</a></li>
-          <li><a class="btn" href="/portfolio.html" aria-current="page">Portfolio</a></li>
-          <li><a class="btn" href="/passions.html">Passions</a></li>
-          <li><a class="btn" href="/ai-lab.html">Labo IA</a></li>
-          <li><a class="btn" href="/fun-facts.html">Idées reçues</a></li>
-        </ul>
-        <ul class="lang" aria-label="Langues">
-          <li><a class="lang" href="/portfolio.html" aria-current="page">FR</a></li>
-          <li><a class="lang" href="/portfolio-en.html">EN</a></li>
-          <li><a class="lang" href="/portfolio-de.html">DE</a></li>
-        </ul>
-      </nav>
+
+      <!-- Fallback no-JS : nav locale affichée uniquement si JavaScript est désactivé -->
+      <noscript>
+        <nav class="site-nav" aria-label="Navigation">
+          <ul class="menu">
+            <li><a class="btn" href="/index.html">Accueil</a></li>
+            <li><a class="btn" href="/cv.html">CV</a></li>
+            <li><a class="btn" href="/portfolio.html" aria-current="page">Portfolio</a></li>
+            <li><a class="btn" href="/passions.html">Passions</a></li>
+            <li><a class="btn" href="/ai-lab.html">Labo IA</a></li>
+            <li><a class="btn" href="/fun-facts.html">Idées reçues</a></li>
+          </ul>
+          <ul class="lang" aria-label="Langues">
+            <li><a class="lang" href="/portfolio.html" aria-current="page">FR</a></li>
+            <li><a class="lang" href="/portfolio-en.html">EN</a></li>
+            <li><a class="lang" href="/portfolio-de.html">DE</a></li>
+          </ul>
+        </nav>
+      </noscript>
     </div>
   </header>
 
