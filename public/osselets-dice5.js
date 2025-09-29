@@ -1,15 +1,14 @@
-// /public/osselets-dice5.js — Lancer de 5 osselets avec gravité + snap de face
-// - Pur JS (aucun JSX/TS requis).
-// - Three + GLTFLoader via import() (esm.sh), chargés une seule fois.
-// - Physique simple : gravité, rebonds sur le sol, frictions, murs, collisions XZ entre osselets.
-// - Lancer = impulsion linéaire + angulaire; stabilisation; snap vers la face dont l’ancre (+Y) est la plus proche de +Y monde.
-// - Score = somme des 5 valeurs + combos (les combos sont reconnus comme *sous-multiensembles* des 5 valeurs).
+// /public/osselets-dice5.js — Lancer de 5 osselets avec gravité, collisions et force-snap (3 s)
+// - Pur JS. Three + GLTFLoader via import() (esm.sh), chargés une seule fois.
+// - Gravité + rebonds + frottements + collisions XZ (masses égales).
+// - Snap: aligne l’ancre (+Y local) la plus proche de +Y monde. Forcé après 3 s si besoin.
+// - Score = somme + combos (vus comme sous-multiensembles des 5 valeurs).
 //
-// Modèle et config (garde tes chemins) :
+// Garde tes chemins:
 //   MODEL : /assets/games/osselets/level3/3d/astragalus_faces.glb
 //   CFG   : /assets/games/osselets/level3/3d/values.json
 //
-// Usage : window.OsseletsDice5.mount(rootEl)
+// API: window.OsseletsDice5.mount(rootEl)
 
 (() => {
   /* -------------------- Chemins & options -------------------- */
@@ -21,26 +20,32 @@
 
   // Plateau (caméra ortho => tout visible)
   const FLOOR_Y   = 0.0;
-  const RADIUS    = 0.75;      // rayon approx. « boule » d’osselet
-  const RING_OUT  = 8.4;       // visuel (anneau)
-  const PAD       = 1.15;      // marge autour
+  const RADIUS    = 0.75;     // rayon approx. « boule » d’osselet
+  const RING_OUT  = 8.4;
+  const PAD       = 1.15;
 
   // Physique
-  const GRAV      = -18.0;     // gravité
-  const REST      = 0.45;      // restitution au sol
-  const H_FRICT   = 0.92;      // friction horizontale au sol
-  const ANG_FRICT = 0.94;      // friction rotation au sol
-  const WALL_E    = 0.55;      // restitution murs
-  const COLL_E    = 0.25;      // restitution entre osselets (dans XZ)
-  const EPS_SPEED = 0.22;      // quasi immobile
-  const STABLE_MS = 800;       // temps immobile pour considérer « stable »
-  const DOT_LOCK  = 0.985;     // face vraiment « vers le haut »
-  const EDGE_NUDGE= 0.22;      // coup de pouce si posé sur une arête
+  const MASS      = 1.0;      // masses égales (impulsions symétriques)
+  const GRAV      = -18.0;    // gravité
+  const REST      = 0.42;     // restitution au sol
+  const H_FRICT   = 0.88;     // friction horizontale au sol (un peu plus forte)
+  const ANG_FRICT = 0.88;     // friction rotation au sol
+  const WALL_E    = 0.55;     // restitution murs
+  const COLL_E    = 0.35;     // restitution collision entre osselets
+  const EPS_SPEED = 0.18;     // seuil « quasi immobile »
+  const DEAD_V    = 0.015;    // dead-zone vitesse horizontale
+  const DEAD_W    = 0.10;     // dead-zone vitesse angulaire
+  const STABLE_MS = 800;      // temps immobile avant stable
+  const DOT_LOCK  = 0.985;    // face vraiment « vers le haut »
+  const EDGE_NUDGE= 0.22;     // petit torque si posé sur arête
 
-  // Lancer
+  // Timeout anti-roulis: force snap passé ce délai
+  const FORCE_SNAP_MS = 3000;
+
+  // Lancer (position + impulsions)
   const THROW_POS = { x0:-4.8, z0:-1.3, step: 2.25, y: 2.7 };
-  const IMPULSE_V = { x: 5.4, y: 3.4, z: 2.1 };   // vitesses de base (ajout random)
-  const SPIN_W    = 6.5;                          // spin angulaire de base
+  const IMPULSE_V = { x: 5.6, y: 3.7, z: 2.2 };  // base
+  const SPIN_W    = 6.8;
 
   /* -------------------- Three ESM (version pinnée) -------------------- */
   const THREE_VER = "0.158.0";
@@ -58,11 +63,11 @@
   /* -------------------- Utils -------------------- */
   const clamp  = (n,a,b)=>Math.max(a,Math.min(b,n));
   const now    = ()=>performance.now();
-  const randpm = (m)=>(-m + Math.random()*(2*m));     // [-m, +m]
+  const randpm = (m)=>(-m + Math.random()*(2*m));
   const getJSON= (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
 
   function collectFaceAnchors(root){
-    const out={}; // ventre, bassin, membres, dos
+    const out={};
     root.traverse(n=>{
       const s=(n.name||"").toLowerCase();
       const flat=s.replace(/[_\s-]+/g,"");
@@ -75,7 +80,6 @@
     return out;
   }
 
-  // Detecte la face « la plus vers le haut » d’après l’axe +Y de chaque ancre
   function faceUp(anchors, THREE){
     const up = new THREE.Vector3(0,1,0);
     const q  = new THREE.Quaternion();
@@ -83,22 +87,20 @@
     for (const k of ["ventre","bassin","membres","dos"]){
       const a=anchors[k]; if(!a) continue;
       a.getWorldQuaternion(q);
-      const ay = new THREE.Vector3(0,1,0).applyQuaternion(q).normalize();
+      const ay=new THREE.Vector3(0,1,0).applyQuaternion(q).normalize();
       const d = ay.dot(up);
       if (d>best.dot) best = { key:k, dot:d, node:a };
     }
     return best;
   }
 
-  // Aligne l’axe +Y monde de l’ancre choisie vers le +Y monde (snap)
-  function applySnapQuaternionToDie(die, anchorNode, THREE){
+  function makeSnapQuaternion(die, anchorNode, THREE){
     const qAnchorW = new THREE.Quaternion(); anchorNode.getWorldQuaternion(qAnchorW);
     const anchorUpW= new THREE.Vector3(0,1,0).applyQuaternion(qAnchorW).normalize();
     const qDelta   = new THREE.Quaternion().setFromUnitVectors(anchorUpW, new THREE.Vector3(0,1,0));
-    die.quaternion.premultiply(qDelta);
+    return die.quaternion.clone().premultiply(qDelta);
   }
 
-  // Tween slerp (instance)
   async function slerpTo(die, THREE, qTo, ms){
     const qFrom = die.quaternion.clone();
     const tmp   = new THREE.Quaternion();
@@ -106,7 +108,7 @@
     return new Promise(res=>{
       (function step(){
         const t = (now()-t0)/ms;
-        const k = t>=1 ? 1 : (1 - Math.pow(1 - t, 3)); // easeOutCubic
+        const k = t>=1 ? 1 : (1 - Math.pow(1 - t, 3));
         tmp.copy(qFrom).slerp(qTo, clamp(k,0,1));
         die.quaternion.copy(tmp);
         if (k<1) requestAnimationFrame(step); else res();
@@ -114,19 +116,33 @@
     });
   }
 
+  function detectCombos(values, combos){
+    if (!combos) return [];
+    const res=[];
+    const count = arr => arr.reduce((m,v)=>(m[v]=(m[v]||0)+1, m), {});
+    const V=count(values);
+    for (const [name, want] of Object.entries(combos)){
+      const W=count(Array.isArray(want)?want:[want]);
+      let ok=true;
+      for (const k in W){ if ((V[k]||0) < W[k]) { ok=false; break; } }
+      if (ok) res.push(name);
+    }
+    return res;
+  }
+
   /* -------------------- Jeu -------------------- */
   async function mount(rootEl){
     const { THREE, GLTFLoader } = await libs();
     const T = THREE;
 
-    // UI minimale
+    // UI
     rootEl.innerHTML=""; rootEl.style.position="relative";
     const canvas=document.createElement("canvas");
     canvas.width=VIEW.W; canvas.height=VIEW.H;
     canvas.style.cssText="display:block;border-radius:12px;";
     rootEl.appendChild(canvas);
 
-    const ctrl = document.createElement("div");
+    const ctrl=document.createElement("div");
     ctrl.style.cssText="position:absolute;left:12px;top:12px;display:flex;gap:8px;z-index:10";
     const btnThrow=document.createElement("button"); btnThrow.className="btn"; btnThrow.textContent="Lancer";
     const btnReset=document.createElement("button"); btnReset.className="btn"; btnReset.textContent="Réinitialiser";
@@ -136,9 +152,14 @@
     hud.style.cssText="position:absolute;left:12px;bottom:12px;background:#0b2237cc;border:1px solid #ffffff22;border-radius:12px;padding:10px 12px;font-size:14px;display:none;max-width:min(96%,680px)";
     rootEl.appendChild(hud);
 
-    // Renderer, scene, cam ortho (tout le plateau toujours visible)
+    // Renderer / scene / cam ortho
     const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+
+    const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
+    const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100); cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
+
+    const boundsRef={ minX:-10, maxX:10, minZ:-6, maxZ:6 };
     function frame(){
       const w=Math.max(320, rootEl.clientWidth|0);
       const h=Math.round(w*(VIEW.H/VIEW.W));
@@ -147,12 +168,28 @@
       canvas.style.width=w+"px"; canvas.style.height=h+"px";
       const aspect=w/h;
       cam.left=-RING_OUT*PAD*aspect; cam.right=RING_OUT*PAD*aspect;
-      cam.top=RING_OUT*PAD; cam.bottom=-RING_OUT*PAD;
-      cam.updateProjectionMatrix();
-    }
-    const scene=new T.Scene(); scene.background=new T.Color(0xf5f7fb);
-    const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100); cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
+      cam.top=RING_OUT*PAD; cam.bottom=-RING_OUT*PAD; cam.updateProjectionMatrix();
 
+      // recalc murs au niveau du sol
+      const camPos=new T.Vector3(); cam.getWorldPosition(camPos);
+      const ndcs=[[-1,-1],[1,-1],[1,1],[-1,1]], xs=[], zs=[];
+      for (const [nx,ny] of ndcs){
+        const p=new T.Vector3(nx,ny,0.5).unproject(cam), dir=p.sub(camPos);
+        if (Math.abs(dir.y)<1e-4) continue;
+        const t=(FLOOR_Y+RADIUS - camPos.y)/dir.y; if (t>0){
+          const hit=camPos.clone().addScaledVector(dir,t); xs.push(hit.x); zs.push(hit.z);
+        }
+      }
+      if (xs.length && zs.length){
+        const padX=0.06, padZ=0.06;
+        const minX=Math.min(...xs), maxX=Math.max(...xs);
+        const minZ=Math.min(...zs), maxZ=Math.max(...zs);
+        boundsRef.minX = minX + (maxX-minX)*padX;
+        boundsRef.maxX = maxX - (maxX-minX)*padX;
+        boundsRef.minZ = minZ + (maxZ-minZ)*padZ;
+        boundsRef.maxZ = maxZ - (maxZ-minZ)*padZ;
+      }
+    }
     const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(frame) : null;
     if (ro) ro.observe(rootEl); window.addEventListener("resize", frame);
     frame();
@@ -191,8 +228,8 @@
       }, undefined, err=>rej(err));
     });
 
-    // Instanciation des 5 osselets
-    const dice = [];  // { root, anchors, vel:Vec3, ang:Vec3, stableSince, snapped, value }
+    // Instanciation
+    const dice = []; // {root, anchors, vel, ang, stableSince, snapped, value}
     for (let i=0;i<COUNT;i++){
       const r=baseRoot.clone(true);
       scene.add(r);
@@ -207,86 +244,55 @@
       });
     }
 
-    // Positionnement de départ
     function placeRowRandom(){
       dice.forEach((d,i)=>{
-        d.root.position.set(
-          THROW_POS.x0 + i*THROW_POS.step,
-          1.2 + (i%2)*.18,
-          THROW_POS.z0 + (i%3)*.55
-        );
+        d.root.position.set(THROW_POS.x0 + i*THROW_POS.step, 1.2 + (i%2)*.18, THROW_POS.z0 + (i%3)*.55);
         d.root.rotation.set(Math.random(),Math.random(),Math.random());
         d.vel.set(0,0,0); d.ang.set(0,0,0);
-        d.stableSince = 0; d.snapped=false; d.value=0;
+        d.stableSince=0; d.snapped=false; d.value=0;
         d.root.updateMatrixWorld(true);
       });
     }
     placeRowRandom();
 
-    // Murs selon la frustum de la caméra sur le plan du sol
-    const boundsRef={ minX:-10, maxX:10, minZ:-6, maxZ:6 };
-    function updateBoundsFromCam(){
-      const camPos=new T.Vector3(); cam.getWorldPosition(camPos);
-      const ndcs=[[-1,-1],[1,-1],[1,1],[-1,1]];
-      const xs=[], zs=[];
-      for (const [nx,ny] of ndcs){
-        const p=new T.Vector3(nx,ny,0.5).unproject(cam);
-        const dir=p.sub(camPos);
-        if (Math.abs(dir.y)<1e-4) continue;
-        const t=(FLOOR_Y+RADIUS - camPos.y)/dir.y;
-        if (t>0){
-          const hit=camPos.clone().addScaledVector(dir, t);
-          xs.push(hit.x); zs.push(hit.z);
-        }
-      }
-      if (xs.length && zs.length){
-        const padX=0.06, padZ=0.06;
-        const minX=Math.min(...xs), maxX=Math.max(...xs);
-        const minZ=Math.min(...zs), maxZ=Math.max(...zs);
-        boundsRef.minX = minX + (maxX-minX)*padX;
-        boundsRef.maxX = maxX - (maxX-minX)*padX;
-        boundsRef.minZ = minZ + (maxZ-minZ)*padZ;
-        boundsRef.maxZ = maxZ - (maxZ-minZ)*padZ;
-      }
-    }
-    updateBoundsFromCam();
-
-    // Collisions horizontales simplifiées (sphère vs sphère sur XZ)
+    // Collisions XZ (sphères) avec impulsion restitution masses égales
     function collideXZ(){
       for (let i=0;i<dice.length;i++){
         for (let j=i+1;j<dice.length;j++){
           const A=dice[i], B=dice[j];
-          const ax=A.root.position.x, az=A.root.position.z;
-          const bx=B.root.position.x, bz=B.root.position.z;
-          const dx=bx-ax, dz=bz-az;
-          const dist=Math.hypot(dx,dz);
-          const min=2*RADIUS*0.98;
+          const pa=A.root.position, pb=B.root.position;
+          const dx=pb.x-pa.x, dz=pb.z-pa.z;
+          const dist=Math.hypot(dx,dz), min=2*RADIUS*0.98;
           if (dist < min){
             const nx = dist>1e-6 ? dx/dist : 1, nz = dist>1e-6 ? dz/dist : 0;
             const overlap=(min-dist)+1e-3;
-            // sépare 50/50
-            A.root.position.x -= nx*overlap*0.5; A.root.position.z -= nz*overlap*0.5;
-            B.root.position.x += nx*overlap*0.5; B.root.position.z += nz*overlap*0.5;
-            // restitution le long de la normale
+
+            // séparation 50/50
+            pa.x -= nx*overlap*0.5; pa.z -= nz*overlap*0.5;
+            pb.x += nx*overlap*0.5; pb.z += nz*overlap*0.5;
+
+            // composantes normales
             const vn = A.vel.x*nx + A.vel.z*nz;
             const wn = B.vel.x*nx + B.vel.z*nz;
-            const dv = (wn - vn)*COLL_E;
-            A.vel.x += nx*dv; A.vel.z += nz*dv;
-            B.vel.x -= nx*dv; B.vel.z -= nz*dv;
+
+            // impulsion (masses égales m, restitution e): p = - (1+e)*(vn - wn) / (1/m + 1/m) = - (1+e)*(vn-wn)/2
+            const p = - (1 + COLL_E) * (vn - wn) / 2;
+            A.vel.x += p*nx; A.vel.z += p*nz;
+            B.vel.x -= p*nx; B.vel.z -= p*nz;
           }
         }
       }
     }
 
-    // Boucle d’intégration
-    let req=0, last=now(), throwing=false, finished=false;
+    // Boucle
+    let req=0, last=now(), throwing=false, finished=false, throwT0=0;
+
     function step(dt){
-      // gravité + intégration
       for (const d of dice){
         // gravité
         d.vel.y += GRAV*dt;
 
-        // int pos
+        // intégration position
         const p=d.root.position;
         p.x += d.vel.x*dt; p.y += d.vel.y*dt; p.z += d.vel.z*dt;
 
@@ -294,8 +300,17 @@
         if (p.y <= FLOOR_Y + RADIUS){
           p.y = FLOOR_Y + RADIUS;
           if (d.vel.y < 0) d.vel.y = -d.vel.y*REST;
+
+          // frottements renforcés à l’appui
           d.vel.x *= H_FRICT; d.vel.z *= H_FRICT;
           d.ang.multiplyScalar(ANG_FRICT);
+
+          // dead-zone
+          if (Math.abs(d.vel.x) < DEAD_V) d.vel.x = 0;
+          if (Math.abs(d.vel.z) < DEAD_V) d.vel.z = 0;
+          if (Math.abs(d.ang.x) < DEAD_W) d.ang.x = 0;
+          if (Math.abs(d.ang.y) < DEAD_W) d.ang.y = 0;
+          if (Math.abs(d.ang.z) < DEAD_W) d.ang.z = 0;
         }
 
         // murs
@@ -305,55 +320,68 @@
         if (p.z < b.minZ){ p.z=b.minZ; d.vel.z = Math.abs(d.vel.z)*WALL_E; }
         if (p.z > b.maxZ){ p.z=b.maxZ; d.vel.z = -Math.abs(d.vel.z)*WALL_E; }
 
-        // rotation continue
+        // rotation
         d.root.rotation.x += d.ang.x*dt;
         d.root.rotation.y += d.ang.y*dt;
         d.root.rotation.z += d.ang.z*dt;
 
-        // micro pente pour aider à se coucher
+        // pente quasi nulle pour aider à se coucher
         if (p.y <= FLOOR_Y + RADIUS + 0.002){
           d.vel.x += Math.sin(p.z*0.25)*0.02*dt;
           d.vel.z += Math.sin(p.x*0.25)*0.02*dt;
         }
       }
 
-      // collisions horizontalisées
+      // collisions horizontales
       collideXZ();
 
-      // Stabilisation / Snap
+      // Stabilisation / Snap doux (quand vraiment à plat)
       let allSnapped=true;
       for (const d of dice){
         const speed = d.vel.length() + d.ang.length();
         if (speed < EPS_SPEED){
           if (!d.stableSince) d.stableSince = now();
-          // posé sur arête -> petit torque
+
           if (!d.snapped){
             const info = faceUp(d.anchors, T);
-            if (info.dot < DOT_LOCK){
+            if (info.dot >= DOT_LOCK){
+              const qTarget = makeSnapQuaternion(d.root, info.node, T);
+              const qBefore = d.root.quaternion.clone();
+              d.ang.set(0,0,0);
+              slerpTo(d.root, T, qTarget, 240).then(()=>{
+                d.snapped = true;
+                d.value = (cfg.values && cfg.values[info.key]) ?? 0;
+              });
+            } else {
+              // petit torque si posé sur une arête
               d.ang.x += randpm(EDGE_NUDGE)*dt*60;
               d.ang.z += randpm(EDGE_NUDGE)*dt*60;
-            } else {
-              // snap doux une seule fois
-              const qBefore = d.root.quaternion.clone();
-              applySnapQuaternionToDie(d.root, info.node, T);
-              const qTarget = d.root.quaternion.clone();
-              d.root.quaternion.copy(qBefore);
-              d.ang.set(0,0,0);
-              // tween rapide
-              slerpTo(d.root, T, qTarget, 260).then(()=>{
-                d.snapped = true;
-                d.value = cfg.values[info.key] ?? 0;
-              });
             }
           }
         } else {
           d.stableSince = 0;
-          allSnapped = false;
+          allSnapped=false;
         }
         if (!d.snapped) allSnapped=false;
       }
 
-      // Fin de lancer -> afficher score
+      // Force-snap après 3 s si encore pas à plat
+      if (throwing && !finished && (now()-throwT0) > FORCE_SNAP_MS){
+        for (const d of dice){
+          if (d.snapped) continue;
+          const info = faceUp(d.anchors, T);
+          if (info.node){
+            const qTarget = makeSnapQuaternion(d.root, info.node, T);
+            d.vel.set(0,0,0); d.ang.set(0,0,0);
+            d.root.quaternion.copy(qTarget);
+            d.snapped=true;
+            d.value = (cfg.values && cfg.values[info.key]) ?? 0;
+          }
+        }
+        allSnapped = true;
+      }
+
+      // Fin de lancer -> score
       if (throwing && allSnapped && !finished){
         finished=true; throwing=false;
         const vals=dice.map(d=>d.value||0);
@@ -374,41 +402,22 @@
       renderer.render(scene,cam);
       req=requestAnimationFrame(loop);
     }
-    loop();
+    let req=0; loop();
 
-    // Combos = sous-multiensembles (ex: [1,3,4,6] présent parmi 5 valeurs)
-    function detectCombos(values, combos){
-      if (!combos) return [];
-      const res=[];
-      const count = arr => arr.reduce((m,v)=>(m[v]=(m[v]||0)+1, m), {});
-      const V=count(values);
-      for (const [name, want] of Object.entries(combos)){
-        const W=count(Array.isArray(want)?want:[want]);
-        let ok=true;
-        for (const k in W){ if ((V[k]||0) < W[k]) { ok=false; break; } }
-        if (ok) res.push(name);
-      }
-      return res;
-    }
-
-    // Lancer
+    // Contrôles
     function doThrow(){
       btnThrow.disabled=true; btnReset.disabled=true; hud.style.display="none";
-      finished=false; throwing=true;
-      updateBoundsFromCam();
+      finished=false; throwing=true; throwT0=now();
+      frame(); // rafraîchit les murs
       dice.forEach((d,i)=>{
-        // position de départ
-        d.root.position.set(
-          THROW_POS.x0 + i*THROW_POS.step,
-          THROW_POS.y + Math.random()*0.6,
-          THROW_POS.z0 + (i%3)*.65
-        );
+        d.root.position.set(THROW_POS.x0 + i*THROW_POS.step,
+                            THROW_POS.y + Math.random()*0.7,
+                            THROW_POS.z0 + (i%3)*.65);
         d.root.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-        // impulsions
         d.vel.set(
-          IMPULSE_V.x + Math.random()*1.6,
-          IMPULSE_V.y + Math.random()*0.9,
-          (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.0)
+          IMPULSE_V.x + Math.random()*1.7,
+          IMPULSE_V.y + Math.random()*1.1,
+          (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.1)
         );
         d.ang.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
         d.stableSince=0; d.snapped=false; d.value=0;
