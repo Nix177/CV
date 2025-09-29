@@ -1,9 +1,9 @@
 // /public/osselets-dice5.js — Lancer de 5 osselets avec gravité + snap de face
 // - Pur JS (aucun JSX/TS requis).
 // - Three + GLTFLoader via import() (esm.sh), chargés une seule fois.
-// - Physique simple : gravité, rebonds sur le sol, frictions, murs, séparations entre osselets (sphère ~ RADIUS).
+// - Physique simple : gravité, rebonds sur le sol, frictions, murs, collisions XZ entre osselets.
 // - Lancer = impulsion linéaire + angulaire; stabilisation; snap vers la face dont l’ancre (+Y) est la plus proche de +Y monde.
-// - Score = somme des 5 valeurs + combos (si fournis).
+// - Score = somme des 5 valeurs + combos (les combos sont reconnus comme *sous-multiensembles* des 5 valeurs).
 //
 // Modèle et config (garde tes chemins) :
 //   MODEL : /assets/games/osselets/level3/3d/astragalus_faces.glb
@@ -192,7 +192,7 @@
     });
 
     // Instanciation des 5 osselets
-    const dice = [];  // { root, anchors, vel:Vec3, ang:Vec3, stableSince, snapped }
+    const dice = [];  // { root, anchors, vel:Vec3, ang:Vec3, stableSince, snapped, value }
     for (let i=0;i<COUNT;i++){
       const r=baseRoot.clone(true);
       scene.add(r);
@@ -376,13 +376,17 @@
     }
     loop();
 
-    // Détection combos (sur tous les 5; si tu veux 4 parmi 5, change chooseK)
+    // Combos = sous-multiensembles (ex: [1,3,4,6] présent parmi 5 valeurs)
     function detectCombos(values, combos){
       if (!combos) return [];
       const res=[];
-      const eqMulti=(a,b)=>{const x=[...a].sort((m,n)=>m-n), y=[...b].sort((m,n)=>m-n); return x.length===y.length && x.every((v,i)=>v===y[i]);};
+      const count = arr => arr.reduce((m,v)=>(m[v]=(m[v]||0)+1, m), {});
+      const V=count(values);
       for (const [name, want] of Object.entries(combos)){
-        if (eqMulti(values, want)) res.push(name);
+        const W=count(Array.isArray(want)?want:[want]);
+        let ok=true;
+        for (const k in W){ if ((V[k]||0) < W[k]) { ok=false; break; } }
+        if (ok) res.push(name);
       }
       return res;
     }
@@ -406,9 +410,7 @@
           IMPULSE_V.y + Math.random()*0.9,
           (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.0)
         );
-        d.ang.set(
-          randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W)
-        );
+        d.ang.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
         d.stableSince=0; d.snapped=false; d.value=0;
         d.root.updateMatrixWorld(true);
       });
