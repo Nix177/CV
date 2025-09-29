@@ -2,7 +2,7 @@
    Portfolio grid + Preview overlay (sécurisé)
    - Rendu depuis public/portfolio-data.js (ou variables globales équivalentes)
    - Bouton "Aperçu" -> overlay #pfOverlay <iframe sandbox>, message si X-Frame-Options/CSP bloque
-   - Ne touche qu’aux aperçus.
+   - AUCUNE dépendance supplémentaire. Ne touche qu’aux aperçus.
 */
 (function () {
   "use strict";
@@ -33,7 +33,8 @@
       if (v == null) continue;
       if (k === "class") n.className = v;
       else if (k === "text") n.textContent = v;
-      else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
+      // ⬇️ FIX: normaliser le nom d'événement en minuscules
+      else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2).toLowerCase(), v);
       else n.setAttribute(k, v);
     }
     (Array.isArray(children) ? children : [children]).forEach(c => {
@@ -60,7 +61,7 @@
     };
   }
 
-  // -------- Overlay / Aperçu --------
+  // -------- Overlay / Aperçu (UNIQUEMENT #pfOverlay) --------
   function toAbsoluteUrl(url) {
     try { return new URL(url, location.href).toString(); }
     catch { return url; }
@@ -69,6 +70,7 @@
   function getPfOverlay() {
     let ovl = $("#pfOverlay");
     if (!ovl) {
+      // Fallback si markup absent : on construit celui attendu par le CSS
       ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
         el("div", { class:"pf-panel" }, [
           el("header", { class:"pf-head" }, [
@@ -99,7 +101,7 @@
   function ensureMsg(ovl) {
     let msg = $("#pfMsg", ovl);
     if (!msg) {
-      const host = ovl.querySelector(".pf-panel") || ovl;
+      const host = ovl.querySelector(".pf-panel, .panel") || ovl;
       msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
       host.appendChild(msg);
     }
@@ -110,7 +112,7 @@
     let sp = $("#pfSpin", ovl);
     if (!sp) {
       sp = el("div", { id:"pfSpin", style:"position:absolute;inset:auto 12px 12px auto;background:#0b1f33;color:#e6f1ff;border:1px solid #ffffff33;border-radius:10px;padding:6px 10px;display:none" }, T.loading);
-      (ovl.querySelector(".pf-panel") || ovl).appendChild(sp);
+      (ovl.querySelector(".pf-panel, .panel") || ovl).appendChild(sp);
     }
     return sp;
   }
@@ -129,21 +131,19 @@
     msg.style.display = "none";
     spin.style.display = "inline-block";
 
-    // Ouvre (classe + style forcé pour contrer tout display:none !important)
-    ovl.classList.add("show");
-    ovl.style.setProperty("display", "flex", "important");
+    ovl.classList.add("show");       // ton CSS affiche #pfOverlay quand .show est présent
     document.body.style.overflow = "hidden";
 
-    // Charge l’iframe
+    // (re)charge l’iframe
     frame.removeAttribute("src");
-    frame.setAttribute("sandbox", "allow-scripts allow-popups allow-same-origin");
+    frame.setAttribute("sandbox","allow-scripts allow-popups allow-same-origin");
 
     let loaded = false;
     const onLoad = () => { loaded = true; spin.style.display = "none"; };
     frame.addEventListener("load", onLoad, { once:true });
     frame.src = url;
 
-    // Timeout: si pas load() en 2s, on affiche le message (XFO/CSP probable)
+    // Si toujours pas chargé après 2s, on affiche le message "refusé"
     const timer = setTimeout(() => {
       if (!loaded) { msg.style.display = "block"; spin.style.display = "none"; }
     }, 2000);
@@ -151,7 +151,6 @@
     const closeAll = () => {
       clearTimeout(timer);
       ovl.classList.remove("show");
-      ovl.style.removeProperty("display");
       document.body.style.overflow = "";
       frame.removeAttribute("src");
       close.removeEventListener("click", closeAll);
@@ -199,7 +198,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     renderGrid(loadData());
 
-    // Filet de sécurité : éléments avec data-preview-url
+    // Filet de sécurité : autres markups avec data-preview-url
     document.addEventListener("click", (e) => {
       const n = e.target.closest?.("[data-preview-url]");
       if (!n) return;
