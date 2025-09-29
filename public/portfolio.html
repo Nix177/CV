@@ -91,7 +91,7 @@
       <div id="portfolioGrid" class="p-grid"></div>
     </section>
 
-    <!-- OVERLAY APERÇU (nécessaire pour le bouton “Aperçu”) -->
+    <!-- OVERLAY APERÇU (IDs “overlay/overlayFrame/overlayClose”) -->
     <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
       <div class="panel">
         <header>
@@ -99,6 +99,17 @@
           <button id="overlayClose" class="btn">Fermer</button>
         </header>
         <iframe id="overlayFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
+      </div>
+    </div>
+
+    <!-- OVERLAY SHIM (IDs attendus par certains scripts : “pfOverlay/pfFrame/pfClose”) -->
+    <div id="pfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
+      <div class="panel">
+        <header>
+          <strong id="pfTitle">Aperçu</strong>
+          <button id="pfClose" class="btn">Fermer</button>
+        </header>
+        <iframe id="pfFrame" title="Aperçu" sandbox="allow-scripts allow-popups"></iframe>
       </div>
     </div>
 
