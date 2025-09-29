@@ -1,7 +1,6 @@
 // Jeu 2 — Écrire avec les os (24 trous → 24 lettres)
-// - THREE global (chargé par ta page)
-// - GLTFLoader détecté de manière robuste (+ fallback injection si absent)
-// - Occlusion réelle : si un mesh masque un trou, le point est pâle et la lettre n’est pas dessinée.
+// Robuste : n’injecte rien ; attend THREE.GLTFLoader déjà chargé par la page
+// Occlusion réelle (raycaster caméra→trou) : lettre masquée si cachée par la géométrie
 
 ;(() => {
   const { useEffect, useRef, useState } = React;
@@ -11,18 +10,17 @@
   const W = 960, H = 540, DPR_MAX = 2.5;
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
-  async function ensureGLTFLoader(): Promise<any> {
-    const win = window as any;
-    if (win.THREE?.GLTFLoader) return win.THREE.GLTFLoader;
-    if (win.GLTFLoader) return win.GLTFLoader;
-    // Fallback : injecte le script des examples (même version que THREE de ta page)
-    await new Promise<void>((res,rej)=>{
-      const s=document.createElement('script');
-      s.src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js";
-      s.onload=()=>res(); s.onerror=()=>rej(new Error("GLTFLoader load error"));
-      document.head.appendChild(s);
+  function waitForGLTFLoader(maxTries = 40, delay = 100): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let tries = 0;
+      const tick = () => {
+        const ctor = (window as any)?.THREE?.GLTFLoader;
+        if (typeof ctor === "function") return resolve(ctor);
+        if (++tries >= maxTries) return reject(new Error("GLTFLoader non trouvé sur window.THREE (vérifie l’ordre des <script>)."));
+        setTimeout(tick, delay);
+      };
+      tick();
     });
-    return (win.THREE?.GLTFLoader || win.GLTFLoader);
   }
 
   function L2(){
@@ -77,6 +75,9 @@
         const cv=glRef.current!, hud=hudRef.current!;
         if(!cv||!hud||!T) return;
 
+        // ⚠️ attend GLTFLoader global (pas d’injection)
+        await waitForGLTFLoader();
+
         const renderer=new T.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
         renderer.outputColorSpace=T.SRGBColorSpace;
         renderer.setPixelRatio(view.current.dpr);
@@ -92,10 +93,7 @@
 
         rayRef.current=new T.Raycaster(undefined as any, undefined as any, 0.01, 100);
 
-        const GLTFCtor = await ensureGLTFLoader();
-        if (typeof GLTFCtor !== "function"){ console.error("[L2] GLTFLoader indisponible."); return; }
-        const loader=new (GLTFCtor as any)();
-
+        const loader = new (T as any).GLTFLoader();
         loader.load(GLB,(gltf:any)=>{
           if (cancelled) return;
           const root=gltf.scene || (gltf.scenes && gltf.scenes[0]); if(!root) return;
@@ -158,7 +156,7 @@
       holes.current=anchors.map((n,i)=>{
         n.getWorldPosition(world);
 
-        // occlusion : si un hit est avant le trou → hidden
+        // occlusion : si hit avant la distance trou → caché
         let hidden=false;
         dir.copy(world).sub(camPos).normalize();
         rc.set(camPos,dir);
