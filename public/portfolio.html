@@ -6,6 +6,7 @@
   <title>Portfolio — Nicolas Tuor</title>
   <meta name="description" content="Projets et démos (éducation, IA, jeux pédagogiques)."/>
   <link rel="icon" href="/favicon.ico"/>
+
   <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
@@ -48,7 +49,7 @@
     .game-card h2 { font: 600 24px/1.3 system-ui,Segoe UI,Roboto,Arial; margin:0 0 4px }
     .game-wrap { position:relative; border:1px solid #ffffff22; border-radius:12px; overflow:hidden }
     .game-cover { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#04121f }
-    .game-root { min-height: 54vh; outline: none; /* pour le drag/pinch natif */ touch-action: none; }
+    .game-root { min-height: 54vh; outline: none; }
   </style>
 
   <link rel="preload" href="/style.css" as="style"/>
@@ -59,15 +60,10 @@
 </head>
 
 <body>
-  <!-- Le header global (menu + langues) est injecté par /assets/js/nav.js -->
+  <!-- Header global -->
   <header>
     <div class="headwrap">
-      <div class="brand">
-        <div class="logo">N·T</div>
-        <div>Portfolio</div>
-      </div>
-
-      <!-- Fallback no-JS : nav locale affichée uniquement si JavaScript est désactivé -->
+      <div class="brand"><div class="logo">N·T</div><div>Portfolio</div></div>
       <noscript>
         <nav class="site-nav" aria-label="Navigation">
           <ul class="menu">
@@ -94,12 +90,12 @@
   </header>
 
   <main class="wrap">
-    <!-- ===================== AUTRES PROJETS (cartes/overlays) ===================== -->
+    <!-- ===================== AUTRES PROJETS ===================== -->
     <section id="sites">
       <div id="portfolioGrid" class="p-grid"></div>
     </section>
 
-    <!-- OVERLAY APERÇU (UN SEUL, aligné JS/CSS) -->
+    <!-- OVERLAY APERÇU -->
     <div id="pfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
       <div class="pf-panel">
         <header class="pf-head">
@@ -116,7 +112,6 @@
     </div>
 
     <!-- ===================== JEUX OSSELETS ===================== -->
-
     <!-- Jeu 1 : Runner 2D -->
     <section class="game-card" id="osselets-runner-card">
       <h2>🎮 Runner 2D – Amulettes d’astragale: ces trois jeux sont encore des ébauches en développement</h2>
@@ -161,7 +156,6 @@
         <div class="game-root" id="root-l3" tabindex="0" aria-label="Jeu Rouler les os"></div>
       </div>
     </section>
-
   </main>
 
   <footer class="wrap" style="margin:24px 0 40px;opacity:.8">
@@ -180,7 +174,8 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Three.js + examples (GLTFLoader, OrbitControls) : une seule instance pour tous les jeux -->
+  <!-- Three.js + examples (GLTFLoader, OrbitControls) for L2/L3 3D -->
+  <!-- NOTE: on garde la 0.149.0 globale pour éviter CORS avec les examples/ -->
   <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -188,65 +183,64 @@
   <!-- Jeux Osselets -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
 
-  <!-- L2 passe en JS pur (évite une seconde instance de Three.js et active les interactions/édition) -->
-  <script src="/osselets-level2.js?v=build-v3" defer></script>
+  <!-- L2 passe en JS (avec cache-buster + flag debug) -->
+  <script>window.__L2_DEBUG = true; console.info("[HTML] __L2_DEBUG=on");</script>
+  <script src="/osselets-level2.js?v=debug-v3" defer></script>
 
-  <!-- L3 reste comme avant (React/TSX) -->
+  <!-- L3 (React/TSX) -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
 
   <!-- Montage / Navigation (supporte React ET jeux externes) -->
   <script type="text/babel">
   (function () {
-    // Registres des instances montées
-    const reactRoots = new Map();        // id -> ReactRoot
-    const externalGames = new Map();     // id -> { destroy() }
+    const reactRoots   = new Map();   // id -> ReactRoot
+    const externalApps = new Map();   // id -> { destroy() }
 
     function stopAllAudio() {
       document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
     }
 
     function unmountAllExcept(keepId) {
-      // React
       for (const [id, r] of reactRoots.entries()) {
         if (id === keepId) continue;
         try { r.unmount?.(); } catch {}
         reactRoots.delete(id);
       }
-      // Externes
-      for (const [id, api] of externalGames.entries()) {
+      for (const [id, api] of externalApps.entries()) {
         if (id === keepId) continue;
         try { api.destroy?.(); } catch {}
-        externalGames.delete(id);
+        externalApps.delete(id);
       }
       stopAllAudio();
     }
 
-    function waitForGlobal(name, cb, tries = 40) { // ~5s
+    function waitForGlobal(name, cb, tries = 60) { // ~7.5s
       const g = window && window[name];
       if (g) return cb(g);
-      if (tries <= 0) { console.warn("[osselets] global introuvable:", name); return; }
+      if (tries <= 0) { console.error("[HTML] Global introuvable:", name); return; }
       setTimeout(() => waitForGlobal(name, cb, tries - 1), 125);
     }
 
-    // Montages spécialisés
     function mountReact(root, cover, CompName, btn) {
       if (!root) return;
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
-
+      console.group("[HTML] mountReact", CompName, "→", root.id);
       unmountAllExcept(root.id);
-
       waitForGlobal(CompName, (Comp) => {
         try {
           if (cover) { cover.style.display = 'none'; cover.remove(); }
           const prev = reactRoots.get(root.id);
           if (prev) { try { prev.unmount?.(); } catch {} }
-
           const r = ReactDOM.createRoot(root);
           reactRoots.set(root.id, r);
           r.render(React.createElement(Comp));
+          console.info("[HTML] React rendu:", CompName);
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } catch (e) {
+          console.error("[HTML] mountReact error", e);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
+          console.groupEnd();
         }
       });
     }
@@ -254,25 +248,28 @@
     function mountExternal(root, cover, GlobalApiName, btn) {
       if (!root) return;
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
-
+      console.group("[HTML] mountExternal", GlobalApiName, "→", root.id);
       unmountAllExcept(root.id);
-
       waitForGlobal(GlobalApiName, async (API) => {
         try {
           if (cover) { cover.style.display = 'none'; cover.remove(); }
-          const prev = externalGames.get(root.id);
+          const prev = externalApps.get(root.id);
           if (prev) { try { prev.destroy?.(); } catch {} }
-
-          const handle = await API.mount(root); // doit retourner { destroy() }
-          externalGames.set(root.id, handle || {});
+          console.info("[HTML] Appel", GlobalApiName + ".mount(root)");
+          const handle = await API.mount(root);
+          externalApps.set(root.id, handle || {});
+          console.info("[HTML] mountExternal OK:", !!handle);
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } catch (e) {
+          console.error("[HTML] mountExternal error", e);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
+          console.groupEnd();
         }
       });
     }
 
-    // Boutons → montage des 3 jeux
+    // Boutons
     const btnRun = document.getElementById('btn-start-runner');
     const btnL2  = document.getElementById('btn-start-l2');
     const btnL3  = document.getElementById('btn-start-l3');
