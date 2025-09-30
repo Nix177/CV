@@ -1,47 +1,43 @@
-// /public/osselets-level2.js
-// LEVEL 2 — « Écrire avec les os » (24 trous / 4 faces opposées)
-// - Pur JS (aucun JSX/TS).
-// - Imports ESM (three + GLTFLoader) via esm.sh, mais **réutilise** si déjà chargés (ex: L3).
-// - Modèle: /assets/games/osselets/level2/3d/astragalus.glb, ancres "Hole_*" (24).
-// - Occlusion réelle: lettres **non visibles** à travers l’os (raycaster).
-// - HUD 2D cliquable (fil, mot, indice). Boutons: Réinitialiser / Mot suivant.
-//
-// API globale: window.OsseletsLevel2.mount(rootEl)
-
+// /public/osselets-level2.js  — build: debug-v3
 (() => {
-  const MODEL_PATH   = "/assets/games/osselets/level2/3d/astragalus.glb";
-  const WORDS_JSON   = "/assets/games/osselets/level2/3d/letters.json";
-  const VIEW         = { W: 960, H: 540, DPR_MAX: 2.5 };
+  const MODEL_PATH = "/assets/games/osselets/level2/3d/astragalus.glb";
+  const WORDS_JSON = "/assets/games/osselets/level2/3d/letters.json";
+  const VIEW       = { W: 960, H: 540, DPR_MAX: 2.5 };
 
-  // ------- Imports / réutilisation -------
   const THREE_VER = "0.158.0";
   const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
   const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
 
+  const DBG = !!window.__L2_DEBUG;
+  const log  = (...a)=>{ if (DBG) console.log("[L2]", ...a); };
+  const info = (...a)=>{ if (DBG) console.info("[L2]", ...a); };
+  const warn = (...a)=>{ if (DBG) console.warn("[L2]", ...a); };
+  const err  = (...a)=>{ if (DBG) console.error("[L2]", ...a); };
+
+  info("script loaded, ts:", Date.now());
+
   async function ensureThreeGLTF(){
-    // 1) Si le L3 a déjà importé (Three + GLTFLoader + Cannon)
+    // 1) Réutilisation paquet physique v2 s'il existe
     if (window.__OX_PHYS_V2) {
       const { THREE, GLTFLoader } = window.__OX_PHYS_V2;
-      if (THREE && GLTFLoader) return { THREE, GLTFLoader };
+      if (THREE && GLTFLoader) { info("using __OX_PHYS_V2"); return { THREE, GLTFLoader }; }
     }
-    // 2) Si la page a injecté THREE & GLTFLoader en global (scripts <script>)
+    // 2) Globaux déjà injectés (ton HTML) — évite les imports ESM et le warning "multiple instances"
     if (window.THREE && window.GLTFLoader) {
+      info("using window.THREE + window.GLTFLoader (0.149.0)");
       return { THREE: window.THREE, GLTFLoader: window.GLTFLoader };
     }
-    // 3) Sinon, import ESM (et mémorise pour réutilisation)
-    if (window.__LxThree) return window.__LxThree;
+    // 3) Fallback ESM
+    if (window.__LxThree) { info("using cached __LxThree"); return window.__LxThree; }
+    info("importing ESM three@%s", THREE_VER);
     const THREE = await import(THREE_URL);
     const { GLTFLoader } = await import(GLTF_URL);
     window.__LxThree = { THREE, GLTFLoader };
     return window.__LxThree;
   }
 
-  // ------- Utils -------
   const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
   const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
-
-  // Alphabet grec (fallback si pas de JSON)
-  const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
   function buildCenteredTemplate(baseRoot, THREE){
     const root = baseRoot.clone(true);
@@ -49,13 +45,13 @@
     const size = new THREE.Vector3(); box.getSize(size);
     const center = new THREE.Vector3(); box.getCenter(center);
     const pivot = new THREE.Group();
-    root.position.sub(center); // pivot au centre
-    // scale léger (optionnel) — on stabilise la taille dans la vue
-    const target = 1.6; // taille approx. max
+    root.position.sub(center);
+    const target = 1.6;
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
     const scale  = target / maxDim;
     root.scale.setScalar(scale);
     pivot.add(root);
+    info("normalize: maxDim=%.3f scale=%.3f center=", maxDim, scale, center);
     return { pivot, inner: root };
   }
 
@@ -65,8 +61,8 @@
       const nm = (n.name||"").toLowerCase();
       if (/^hole[_\s-]?/.test(nm)) list.push(n);
     });
-    // Tri stable par nom → ordre déterministe (associé aux 24 lettres)
     list.sort((a,b)=> (a.name||"").localeCompare(b.name||""));
+    info("anchors Hole_* found:", list.length, list.map(n=>n.name));
     return list;
   }
 
@@ -89,213 +85,222 @@
     };
   }
 
-  // -------- Jeu / Montage --------
   async function mount(rootEl){
-    const { THREE, GLTFLoader } = await ensureThreeGLTF();
-    const T = THREE;
+    console.group("[L2] mount()");
+    try {
+      const { THREE, GLTFLoader } = await ensureThreeGLTF();
+      const T = THREE;
 
-    // UI / Canvases
-    rootEl.innerHTML = "";
-    rootEl.style.position = "relative";
+      rootEl.innerHTML = "";
+      rootEl.style.position = "relative";
 
-    const cv3d = document.createElement("canvas");
-    cv3d.width = VIEW.W; cv3d.height = VIEW.H;
-    cv3d.style.cssText = "display:block;border-radius:12px;background:transparent;";
-    rootEl.appendChild(cv3d);
+      const cv3d = document.createElement("canvas");
+      cv3d.width = VIEW.W; cv3d.height = VIEW.H;
+      cv3d.style.cssText = "display:block;border-radius:12px;background:transparent;";
+      rootEl.appendChild(cv3d);
 
-    const hud = document.createElement("canvas");
-    hud.width = VIEW.W; hud.height = VIEW.H;
-    hud.style.cssText = "position:absolute;inset:0;pointer-events:auto;";
-    rootEl.appendChild(hud);
+      const hud = document.createElement("canvas");
+      hud.width = VIEW.W; hud.height = VIEW.H;
+      hud.style.cssText = "position:absolute;inset:0;pointer-events:auto;z-index:3;";
+      rootEl.appendChild(hud);
 
-    const ui = document.createElement("div");
-    ui.style.cssText = "display:flex;gap:8px;margin-top:10px";
-    const btnReset = document.createElement("button"); btnReset.className="btn"; btnReset.textContent="Réinitialiser";
-    const btnNext  = document.createElement("button"); btnNext.className="btn"; btnNext.textContent="Mot suivant";
-    // petit panneau d’info
-    const info = document.createElement("div");
-    info.style.cssText = "font-size:12px;color:#9cc0ff;margin-top:8px";
-    info.textContent = "Modèle : level2/3d/astragalus.glb — nœuds Hole_* (24). Occlusion réelle, fil cliquable.";
-    rootEl.appendChild(ui); ui.append(btnReset, btnNext); rootEl.appendChild(info);
+      const ui = document.createElement("div");
+      ui.style.cssText = "position:absolute;left:12px;bottom:12px;display:flex;gap:8px;z-index:4;align-items:center";
+      const btnReset = document.createElement("button"); btnReset.className="btn"; btnReset.textContent="Réinitialiser";
+      const btnNext  = document.createElement("button"); btnNext.className="btn"; btnNext.textContent="Mot suivant";
+      ui.append(btnReset, btnNext); rootEl.appendChild(ui);
 
-    // Renderer / Scene / Camera
-    const renderer = new T.WebGLRenderer({ canvas: cv3d, antialias: true, alpha: true });
-    const scene = new T.Scene(); scene.background = null;
-    const cam   = new T.PerspectiveCamera(45, 16/9, 0.1, 50);
-    cam.position.set(2.0, 1.3, 2.3); cam.lookAt(0, 0.25, 0);
+      const foot = document.createElement("div");
+      foot.style.cssText="position:absolute;left:12px;bottom:64px;z-index:4;font-size:12px;color:#9cc0ff";
+      foot.textContent = "Modèle : level2/3d/astragalus.glb — nœuds Hole_* (24). Occlusion réelle, fil cliquable.";
+      rootEl.appendChild(foot);
 
-    scene.add(new T.AmbientLight(0xffffff, .7));
-    const dir = new T.DirectionalLight(0xffffff, .9); dir.position.set(2.4, 3.3, 2.6); scene.add(dir);
+      // Renderer/Scene/Camera
+      const renderer = new T.WebGLRenderer({ canvas: cv3d, antialias: true, alpha: true });
+      const scene = new T.Scene(); scene.background = null;
+      const cam   = new T.PerspectiveCamera(45, 16/9, 0.1, 50);
+      cam.position.set(2.0, 1.3, 2.3); cam.lookAt(0, 0.25, 0);
+      scene.add(new T.AmbientLight(0xffffff, .7));
+      const dir = new T.DirectionalLight(0xffffff, .9); dir.position.set(2.4, 3.3, 2.6); scene.add(dir);
 
-    // Responsive
-    let view = { w: VIEW.W, h: VIEW.H, dpr: 1 };
-    function onResize(){
-      const w = Math.max(320, rootEl.clientWidth|0);
-      const h = Math.round(w * (VIEW.H/VIEW.W));
-      const d = clamp(window.devicePixelRatio||1, 1, VIEW.DPR_MAX);
-      view = { w, h, dpr: d };
+      let view = { w: VIEW.W, h: VIEW.H, dpr: 1 };
+      function onResize(){
+        const w = Math.max(320, rootEl.clientWidth|0);
+        const h = Math.round(w * (VIEW.H/VIEW.W));
+        const d = clamp(window.devicePixelRatio||1, 1, VIEW.DPR_MAX);
+        view = { w,h,dpr:d };
+        renderer.setPixelRatio(d);
+        renderer.setSize(w, h, false);
+        cv3d.style.width = w+"px"; cv3d.style.height = h+"px";
+        hud.width  = Math.floor(w*d);
+        hud.height = Math.floor(h*d);
+        hud.style.width  = w+"px";
+        hud.style.height = h+"px";
+        const ctx = hud.getContext("2d");
+        ctx.setTransform((w*d)/VIEW.W, 0, 0, (h*d)/VIEW.H, 0, 0);
+        cam.aspect = w/h; cam.updateProjectionMatrix();
+        log("resize:", {w,h,dpr:d});
+      }
+      onResize();
+      const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(onResize) : null;
+      if (ro) ro.observe(rootEl); window.addEventListener("resize", onResize);
 
-      renderer.setPixelRatio(d);
-      renderer.setSize(w, h, false);
-      cv3d.style.width = w+"px"; cv3d.style.height = h+"px";
+      // Words
+      const wordsCfg = await fetchJSON(WORDS_JSON);
+      const WORDS = (wordsCfg && wordsCfg.words && wordsCfg.words.length)
+        ? wordsCfg.words.slice(0, 24)
+        : [
+            { gr:"ΕΛΠΙΣ", en:"ELPIS", hint:"Espoir — bon présage." },
+            { gr:"ΝΙΚΗ",  en:"NIKĒ",  hint:"Victoire — élan de réussite." },
+            { gr:"ΜΑΤΙ",  en:"MATI",  hint:"« Mauvais œil » — apotropaïon." }
+          ];
+      let wordIdx = 0;
+      log("words loaded:", WORDS.length);
 
-      hud.width = Math.floor(w*d); hud.height = Math.floor(h*d);
-      hud.style.width = w+"px"; hud.style.height = h+"px";
+      // Model load + progress
+      const loader = new GLTFLoader();
+      const root = await new Promise((res,rej)=>{
+        loader.load(
+          MODEL_PATH,
+          (gltf)=>{
+            const r = gltf.scene || (gltf.scenes && gltf.scenes[0]);
+            if (!r) return rej(new Error("Modèle vide"));
+            r.traverse(o=>{
+              if (o.isMesh){
+                if (!o.material || !o.material.isMeshStandardMaterial)
+                  o.material = new T.MeshStandardMaterial({ color:0xf7efe7, roughness:.6, metalness:.05 });
+              }
+            });
+            res(r);
+          },
+          (xhr)=>{ log("GLB progress:", xhr?.loaded, "/", xhr?.total); },
+          (e)=>{ rej(e); }
+        );
+      }).catch(e=>{ err("GLB load failed:", e); throw e; });
+
+      // Pivot centré
+      const { pivot } = buildCenteredTemplate(root, T);
+      scene.add(pivot);
+
+      // Anchors
+      let anchors = collectHoles(pivot);
+      if (anchors.length !== 24) {
+        warn(`expected 24 holes, got ${anchors.length} — using circular fallback`);
+        anchors = [];
+        for (let i=0;i<24;i++){
+          const g=new T.Object3D();
+          const t=(i/24)*Math.PI*2, R=0.9;
+          g.position.set(Math.cos(t)*R, 0, Math.sin(t)*R);
+          pivot.add(g); anchors.push(g);
+        }
+      }
+
+      // Projection + occlusion
       const ctx = hud.getContext("2d");
-      ctx.setTransform((w*d)/VIEW.W, 0, 0, (h*d)/VIEW.H, 0, 0);
+      const isHidden = makeRayOcclusion(T, cam, pivot);
+      let path = [];
 
-      cam.aspect = w/h; cam.updateProjectionMatrix();
-    }
-    onResize();
-    const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(onResize) : null;
-    if (ro) ro.observe(rootEl); window.addEventListener("resize", onResize);
-
-    // Données mots (optionnel)
-    const wordsCfg = await fetchJSON(WORDS_JSON);
-    const WORDS = (wordsCfg && wordsCfg.words && wordsCfg.words.length)
-      ? wordsCfg.words.slice(0, 24)  // sanity
-      : [
-          { gr:"ΕΛΠΙΣ", en:"ELPIS", hint:"Espoir — bon présage." },
-          { gr:"ΝΙΚΗ",  en:"NIKĒ",  hint:"Victoire — élan de réussite." },
-          { gr:"ΜΑΤΙ",  en:"MATI",  hint:"« Mauvais œil » — apotropaïon." }
-        ];
-    let wordIdx = 0;
-
-    // Modèle
-    const loader = new GLTFLoader();
-    const root = await new Promise((res,rej)=>{
-      loader.load(MODEL_PATH, (gltf)=>{
-        const r = gltf.scene || (gltf.scenes && gltf.scenes[0]);
-        if (!r) return rej(new Error("Modèle vide"));
-        r.traverse(o=>{
-          if (o.isMesh){
-            if (!o.material || !o.material.isMeshStandardMaterial)
-              o.material = new T.MeshStandardMaterial({ color:0xf7efe7, roughness:.6, metalness:.05 });
-          }
-        });
-        res(r);
-      }, undefined, err=>rej(err));
-    });
-
-    // Pivot centré (tourne autour de lui-même → cohérence visuelle)
-    const { pivot, inner } = buildCenteredTemplate(root, T);
-    scene.add(pivot);
-
-    // Collecte des 24 ancres
-    const anchors = collectHoles(pivot);
-    const has24 = anchors.length === 24;
-
-    // Projo + occlusion
-    const ctx = hud.getContext("2d");
-    const isHidden = makeRayOcclusion(T, cam, pivot);
-
-    // État du tracé (indices d’ancres cliquées)
-    let path = [];
-
-    function drawHUD(){
-      ctx.clearRect(0,0,VIEW.W,VIEW.H);
-
-      const w = WORDS[wordIdx] || WORDS[0];
-
-      // Fil
-      ctx.strokeStyle = "#60a5fa"; ctx.lineWidth = 2;
-      if (path.length > 1){
-        ctx.beginPath();
-        const p0 = anchors[path[0]];
-        if (p0){
-          const wp0 = new T.Vector3(); p0.getWorldPosition(wp0);
-          const s0 = projectWorldToCanvas(T, cam, wp0, VIEW.W, VIEW.H);
-          ctx.moveTo(s0.x, s0.y);
+      function drawHUD(){
+        ctx.clearRect(0,0,VIEW.W,VIEW.H);
+        // Fil
+        ctx.strokeStyle="#60a5fa"; ctx.lineWidth=2;
+        if (path.length>1){
+          ctx.beginPath();
+          const wp0 = new T.Vector3(); anchors[path[0]].getWorldPosition(wp0);
+          let s = projectWorldToCanvas(T, cam, wp0, VIEW.W, VIEW.H);
+          ctx.moveTo(s.x,s.y);
           for (let i=1;i<path.length;i++){
-            const pi = anchors[path[i]]; if (!pi) continue;
-            const wpi = new T.Vector3(); pi.getWorldPosition(wpi);
-            const si  = projectWorldToCanvas(T, cam, wpi, VIEW.W, VIEW.H);
-            ctx.lineTo(si.x, si.y);
+            const wpi = new T.Vector3(); anchors[path[i]].getWorldPosition(wpi);
+            s = projectWorldToCanvas(T, cam, wpi, VIEW.W, VIEW.H);
+            ctx.lineTo(s.x,s.y);
           }
           ctx.stroke();
         }
+        // Points + lettres
+        let hiddenCount=0;
+        for (let i=0;i<anchors.length;i++){
+          const wp = new T.Vector3(); anchors[i].getWorldPosition(wp);
+          const scr = projectWorldToCanvas(T, cam, wp, VIEW.W, VIEW.H);
+          const hidden = isHidden(wp); if (hidden) hiddenCount++;
+          ctx.beginPath();
+          ctx.fillStyle = hidden ? "rgba(14,165,233,.35)" : "#0ea5e9";
+          ctx.arc(scr.x, scr.y, 10, 0, Math.PI*2); ctx.fill();
+          if (!hidden){
+            const GREEK=["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
+            ctx.fillStyle="#e6f1ff";
+            ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle";
+            ctx.fillText(GREEK[i], scr.x, scr.y);
+          }
+        }
+        log("hud drawn: hidden", hiddenCount, "/", anchors.length);
+        // Pied
+        const w = WORDS[wordIdx] || WORDS[0];
+        ctx.fillStyle="#e6f1ff"; ctx.font="16px ui-sans-serif, system-ui";
+        ctx.textAlign="start"; ctx.textBaseline="alphabetic";
+        ctx.fillText(`Mot : ${w.gr} (${w.en})`, 16, VIEW.H-40);
+        ctx.fillStyle="#9cc0ff"; ctx.font="12px ui-sans-serif, system-ui";
+        ctx.fillText(`Indice : ${w.hint}`, 16, VIEW.H-18);
       }
 
-      // Points + lettres (masque si occlus)
-      for (let i=0;i<anchors.length;i++){
-        const a = anchors[i];
-        const wp = new T.Vector3(); a.getWorldPosition(wp);
-        const s  = projectWorldToCanvas(T, cam, wp, VIEW.W, VIEW.H);
-        const hidden = isHidden(wp);
-
-        // pastille
-        ctx.beginPath();
-        ctx.fillStyle = hidden ? "rgba(14,165,233,.35)" : "#0ea5e9";
-        ctx.arc(s.x, s.y, 10, 0, Math.PI*2); ctx.fill();
-
-        // étiquette (si pas masquée)
-        if (!hidden){
-          ctx.fillStyle = "#e6f1ff";
-          ctx.font = "12px ui-sans-serif, system-ui";
-          ctx.textAlign = "center"; ctx.textBaseline = "middle";
-          const lab = has24 ? GREEK[i] : String(i+1);
-          ctx.fillText(lab, s.x, s.y);
+      function onClick(e){
+        const r = hud.getBoundingClientRect();
+        const px = (e.clientX - r.left) * (view.w / r.width);
+        const py = (e.clientY - r.top)  * (view.h / r.height);
+        const x = px * (VIEW.W / view.w);
+        const y = py * (VIEW.H / view.h);
+        let best=-1, bd=1e9, bestScr=null;
+        for (let i=0;i<anchors.length;i++){
+          const wp = new T.Vector3(); anchors[i].getWorldPosition(wp);
+          if (isHidden(wp)) continue;
+          const scr = projectWorldToCanvas(T, cam, wp, VIEW.W, VIEW.H);
+          const d = Math.hypot(scr.x-x, scr.y-y);
+          if (d<bd){ bd=d; best=i; bestScr=scr; }
+        }
+        if (best>=0 && bd<24){
+          path.push(best);
+          log("click → hole", best, "dist", Math.round(bd), "at", bestScr);
+        } else {
+          log("click ignored dist", Math.round(bd));
         }
       }
+      hud.addEventListener("click", onClick);
 
-      // Pied : mot + indice
-      ctx.fillStyle="#e6f1ff"; ctx.font="16px ui-sans-serif, system-ui";
-      ctx.textAlign="start"; ctx.textBaseline="alphabetic";
-      ctx.fillText("Mot : " + w.gr + " (" + w.en + ")", 16, VIEW.H - 40);
-      ctx.fillStyle="#9cc0ff"; ctx.font="12px ui-sans-serif, system-ui";
-      ctx.fillText("Indice : " + w.hint, 16, VIEW.H - 18);
-    }
+      btnReset.addEventListener("click", ()=>{ path=[]; log("reset path"); });
+      btnNext .addEventListener("click", ()=>{ wordIdx=(wordIdx+1)%WORDS.length; path=[]; log("next word", wordIdx); });
 
-    // Clic HUD → plus proche ancre visible
-    function onClick(e){
-      const r = hud.getBoundingClientRect();
-      const px = (e.clientX - r.left) * (view.w / r.width);
-      const py = (e.clientY - r.top)  * (view.h / r.height);
-      const x = px * (VIEW.W / view.w);
-      const y = py * (VIEW.H / view.h);
-      let best = -1, bd = 9999;
-
-      for (let i=0;i<anchors.length;i++){
-        const a = anchors[i];
-        const wp = new T.Vector3(); a.getWorldPosition(wp);
-        if (isHidden(wp)) continue; // pas cliquable si masqué
-        const s  = projectWorldToCanvas(T, cam, wp, VIEW.W, VIEW.H);
-        const d = Math.hypot(s.x - x, s.y - y);
-        if (d < bd){ bd = d; best = i; }
+      let req = 0;
+      function loop(){
+        // rotation douce autour de son centre
+        pivot.rotation.y += 0.0035;
+        renderer.render(scene, cam);
+        drawHUD();
+        req = requestAnimationFrame(loop);
       }
-      if (best >= 0 && bd < 24) { path.push(best); }
-    }
-    hud.addEventListener("click", onClick);
+      renderer.setPixelRatio(clamp(window.devicePixelRatio||1,1,VIEW.DPR_MAX));
+      renderer.setSize(view.w, view.h, false);
+      loop();
 
-    // Boutons
-    btnReset.addEventListener("click", ()=>{ path = []; });
-    btnNext .addEventListener("click", ()=>{ wordIdx = (wordIdx + 1) % WORDS.length; path = []; });
+      // expose pour test en console
+      window.__L2 = { renderer, scene, cam, pivot, anchors, click:onClick, destroy };
 
-    // Loop
-    let req = 0;
-    function loop(){
-      pivot.rotation.y += 0.0035; // rotation douce (le pivot est centré → tourne sur lui-même)
-      renderer.render(scene, cam);
-      drawHUD();
-      req = requestAnimationFrame(loop);
-    }
-    // Première mise au point (projections correctes)
-    renderer.setPixelRatio(clamp(window.devicePixelRatio||1,1,VIEW.DPR_MAX));
-    renderer.setSize(view.w, view.h, false);
-    loop();
-
-    // API destroy
-    return {
-      destroy(){
+      function destroy(){
         try { cancelAnimationFrame(req); } catch {}
         ro?.disconnect(); window.removeEventListener("resize", onResize);
         try { renderer.dispose(); } catch {}
         hud.removeEventListener("click", onClick);
         rootEl.innerHTML = "";
+        log("destroyed");
       }
-    };
+
+      console.groupEnd();
+      return { destroy };
+    } catch (e) {
+      err("mount failed:", e);
+      console.groupEnd();
+      throw e;
+    }
   }
 
-  // Expose
   window.OsseletsLevel2 = { mount };
+  info("global set: window.OsseletsLevel2");
 })();
