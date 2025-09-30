@@ -1,8 +1,10 @@
-/* /osselets-level2.tsx — JEU 2 « Écrire avec les os »
-   - Centrage & cadrage robustes (pivot + framing caméra).
-   - Panneau de contrôles (flèches) pour tourner/pivoter, déplacer (pan) et zoomer.
-   - Lettres projetées + occlusion réelle + fil des clics (mot grec).
-   - Aucun <script> ajouté : imports ESM (three + GLTFLoader) en cache global.
+/* /osselets-level2.tsx — JEU 2 « Écrire avec les os » (version complète)
+   - Centrage solide (pivot au centre du mesh) + cadrage caméra auto.
+   - Occlusion réelle (raycaster) : les lettres masquées ne s’affichent pas ni ne sont cliquables.
+   - Tracé du “fil” en cliquant des trous (mode LIBRE) ou selon un MOT (mode MOT).
+   - Panneau latéral EDITABLE : 24 lettres associées aux 24 trous (persistées en localStorage).
+   - Pavé de navigation (flèches) + raccourcis: ←→ (yaw), ↑↓ (pitch), Shift+↑/↓ (pan Z), A/D/W/S (pan), +/− (zoom), R (recentrer).
+   - AUCUN <script> ajouté : import() ESM (three + GLTFLoader) avec cache global pour éviter les doubles imports.
 */
 
 ;(() => {
@@ -11,7 +13,8 @@
   /* -------------------- Chemins & constantes -------------------- */
   const BASE      = "/assets/games/osselets/level2/";
   const MODEL     = BASE + "3d/astragalus.glb";
-  const WORDS_JS  = BASE + "3d/letters.json"; // optionnel
+  const WORDS_JS  = BASE + "3d/letters.json";        // optionnel (mots)
+  const MAP_KEY   = "osselets-l2-map-v1";            // mapping lettres ↔ trous (24)
   const CANVAS_W  = 960, CANVAS_H = 540, DPR_MAX = 2.5;
 
   const SNAP_PX   = 20;      // rayon de snap écran (sélection trou)
@@ -22,14 +25,14 @@
   const IDLE_SPIN = 0.0020;  // rotation lente auto quand inactif
 
   const HUD_FONT  = "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial";
-  const GREEK     = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
+  const GREEK_DEF = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
 
   /* -------------------- Three ESM (version unique & cache global) -------------------- */
   const THREE_VER = "0.158.0";
   const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
   const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
   async function ensureThreeOnce(){
-    const w = window;
+    const w = window as any;
     if (w.__LxThree) return w.__LxThree; // { THREE, GLTFLoader }
     const THREE = await import(THREE_URL);
     const { GLTFLoader } = await import(GLTF_URL);
@@ -39,29 +42,29 @@
   }
 
   /* -------------------- Utils -------------------- */
-  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-  const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
-  function setCtxFont(ctx, sizePx, weight=400){ ctx.font = `${weight} ${sizePx}px ${HUD_FONT}`; }
-  function fmtMs(ms){ const s=Math.floor(ms/1000), m=(s/60)|0; return (m?`${m}m `:"")+`${s%60}s`; }
+  const clamp = (n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+  const fetchJSON = (u:string)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
+  function setCtxFont(ctx:CanvasRenderingContext2D, sizePx:number, weight=400){ ctx.font = `${weight} ${sizePx}px ${HUD_FONT}`; }
+  function fmtMs(ms:number){ const s=Math.floor(ms/1000), m=(s/60)|0; return (m?`${m}m `:"")+`${s%60}s`; }
 
   /* -------------------- Composant principal -------------------- */
   function AstragalusLevel2(){
-    const wrapRef     = React.useRef(null);
-    const glRef       = React.useRef(null);
-    const hudRef      = React.useRef(null);
+    const wrapRef     = React.useRef<HTMLDivElement|null>(null);
+    const glRef       = React.useRef<HTMLCanvasElement|null>(null);
+    const hudRef      = React.useRef<HTMLCanvasElement|null>(null);
 
-    const rendererRef = React.useRef(null);
-    const sceneRef    = React.useRef(null);
-    const cameraRef   = React.useRef(null);
+    const rendererRef = React.useRef<any>(null);
+    const sceneRef    = React.useRef<any>(null);
+    const cameraRef   = React.useRef<any>(null);
 
-    const pivotRef    = React.useRef(null);  // pivot (au centre du modèle)
-    const modelRef    = React.useRef(null);  // mesh root (enfant du pivot)
-    const anchorsRef  = React.useRef([]);    // 24 nodes Hole_*
-    const holesRef    = React.useRef([]);    // {x,y,label,index,hidden}
+    const pivotRef    = React.useRef<any>(null);  // pivot (au centre du modèle)
+    const modelRef    = React.useRef<any>(null);  // mesh root (enfant du pivot)
+    const anchorsRef  = React.useRef<any[]>([]);  // 24 nodes Hole_*
+    const holesRef    = React.useRef<any[]>([]);  // {x,y,label,index,hidden}
 
-    const ctxRef      = React.useRef(null);
-    const THREEref    = React.useRef(null);
-    const rayRef      = React.useRef(null);
+    const ctxRef      = React.useRef<CanvasRenderingContext2D|null>(null);
+    const THREEref    = React.useRef<any>(null);
+    const rayRef      = React.useRef<any>(null);
 
     const viewRef     = React.useRef({ w:CANVAS_W, h:CANVAS_H, dpr:1 });
     const dragRef     = React.useRef({ down:false, last:0 });
@@ -70,18 +73,29 @@
     // Jeu / progression
     const [ready, setReady]       = React.useState(false);
     const [muted, setMuted]       = React.useState(false);
-    const [msg, setMsg]           = React.useState("Relie les trous visibles pour épeler le mot.");
+    const [msg, setMsg]           = React.useState("Relie les trous visibles pour tracer le fil.");
     const [wordIdx, setWordIdx]   = React.useState(0);
-    const seqRef                  = React.useRef([]);     // indices choisis
+    const [mode, setMode]         = React.useState<"mot"|"libre">("mot");
+    const seqRef                  = React.useRef<number[]>([]);  // indices cliqués
     const startTimeRef            = React.useRef(0);
     const errCountRef             = React.useRef(0);
     const [scoreStr, setScoreStr] = React.useState("");
+    const [openMap, setOpenMap]   = React.useState(false);
+    const [spellStr, setSpellStr] = React.useState("");          // mot en cours (mode LIBRE)
 
-    const WORDS = React.useRef([
+    // Mots (optionnel)
+    const WORDS = React.useRef<{gr:string,en:string,hint?:string}[]>([
       { gr:"ΕΛΠΙΣ", en:"ELPIS", hint:"Espoir — bon présage." },
       { gr:"ΝΙΚΗ",  en:"NIKĒ",  hint:"Victoire — élan de réussite." },
       { gr:"ΜΑΤΙ",  en:"MATI",  hint:"« Mauvais œil » — apotropaïon." }
     ]);
+
+    // Mapping lettres ↔ trous (24) — éditable & persistant
+    const [mapArr, setMapArr] = React.useState<string[]>(
+      (()=>{ try{ const m=JSON.parse(localStorage.getItem(MAP_KEY)||"[]"); if(Array.isArray(m)&&m.length===24) return m; }catch{} return [...GREEK_DEF]; })()
+    );
+    const mapRef = React.useRef<string[]>(mapArr);
+    React.useEffect(()=>{ mapRef.current = mapArr; try{ localStorage.setItem(MAP_KEY, JSON.stringify(mapArr)); }catch{} drawHUD(); }, [mapArr]);
 
     /* ---------- Resize ---------- */
     React.useEffect(()=>{
@@ -125,7 +139,7 @@
         rayRef.current   = new THREE.Raycaster(undefined, undefined, 0.01, 100);
 
         // Renderer
-        const gl = glRef.current;
+        const gl = glRef.current!;
         const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias:true, alpha:true });
         renderer.setPixelRatio(viewRef.current.dpr);
         renderer.setSize(viewRef.current.w, viewRef.current.h, false);
@@ -151,18 +165,18 @@
         pivotRef.current = pivot;
         scene.add(pivot);
 
-        // Words optionnels
+        // Mots optionnels
         const cfg = await fetchJSON(WORDS_JS);
-        if (cfg?.words?.length) WORDS.current = cfg.words.slice(0, 12);
+        if (cfg?.words?.length) WORDS.current = cfg.words.slice(0, 24);
 
         // Modèle
         const loader = new GLTFLoader();
-        loader.load(MODEL, (gltf)=>{
+        loader.load(MODEL, (gltf:any)=>{
           if (canceled) return;
           const root = gltf.scene || (gltf.scenes && gltf.scenes[0]);
           if (!root){ setMsg("Modèle vide."); return; }
 
-          root.traverse(o=>{
+          root.traverse((o:any)=>{
             if (o.isMesh){
               if (!o.material || !o.material.isMeshStandardMaterial){
                 o.material = new THREE.MeshStandardMaterial({ color:0xf3f6fb, roughness:.6, metalness:.05 });
@@ -174,7 +188,7 @@
           // Normalisation : scale + recentrer -> origine du pivot
           const box = new THREE.Box3().setFromObject(root);
           const size = box.getSize(new THREE.Vector3());
-          const scale = 1.28 / Math.max(size.x, size.y, size.z);
+          const scale = 1.35 / Math.max(size.x, size.y, size.z);
           root.scale.setScalar(scale);
           box.setFromObject(root);
           const center = box.getCenter(new THREE.Vector3());
@@ -182,8 +196,10 @@
           pivot.add(root);
 
           // Collecter ancres Hole_*
-          const anchors = [];
-          root.traverse(n=>{ if(/^hole[_\s-]?/i.test(n.name||"")) anchors.push(n); });
+          const anchors:any[] = [];
+          root.traverse((n:any)=>{ if(/^hole[_\s-]?/i.test(n.name||"")) anchors.push(n); });
+          // tri par nom pour ordre déterministe
+          anchors.sort((a:any,b:any)=> (a.name||"").localeCompare(b.name||""));
           anchorsRef.current = anchors;
           modelRef.current   = root;
 
@@ -193,12 +209,9 @@
 
           // Démarrer jeu
           setReady(true);
-          seqRef.current = [];
-          errCountRef.current = 0;
-          startTimeRef.current = performance.now();
-
+          resetSeq();
           animate();
-        }, undefined, (err)=>{ console.error("[L2] GLB load error", err); setMsg("Échec chargement du modèle."); fallbackCircle(); });
+        }, undefined, (err:any)=>{ console.error("[L2] GLB load error", err); setMsg("Échec chargement du modèle."); fallbackCircle(); });
 
       })();
 
@@ -223,17 +236,16 @@
     },[]);
 
     /* ---------- Cadrage / centrage caméra ---------- */
-    function frameCameraToObject(cam, object3D, THREE, fit=1.2){
+    function frameCameraToObject(cam:any, object3D:any, THREE:any, fit=1.2){
       const box   = new THREE.Box3().setFromObject(object3D);
       const size  = box.getSize(new THREE.Vector3());
       const center= box.getCenter(new THREE.Vector3());
 
-      // cam lookAt le centre du pivot (0,0,0) => recentrer pivot en monde
       pivotRef.current.position.set(0,0,0);
       cam.lookAt(0,0,0);
 
       // distance pour contenir la plus grande dimension dans le FOV vertical
-      const maxDim = Math.max(size.y, size.x / cam.aspect, size.z); // sécurité aspect
+      const maxDim = Math.max(size.y, size.x / cam.aspect, size.z);
       const dist   = (maxDim*fit) / (2*Math.tan(cam.fov*Math.PI/360));
       cam.position.set(0, dist*0.72, dist); // légère plongée
       cam.near = Math.max(0.02, dist*0.02);
@@ -256,7 +268,7 @@
         const rc     = rayRef.current;
         const model  = modelRef.current;
 
-        holesRef.current = anchors.map((n,i)=>{
+        holesRef.current = anchors.map((n:any,i:number)=>{
           n.getWorldPosition(world);
 
           // occlusion : un triangle plus proche que l'ancre => hidden
@@ -273,7 +285,8 @@
 
           v.copy(world).project(cam);
           const px = (v.x*0.5+0.5) * w, py = (-v.y*0.5+0.5) * h;
-          return { x:px*sx, y:py*sy, label:GREEK[i], index:i, hidden };
+          const label = mapRef.current[i] || "";
+          return { x:px*sx, y:py*sy, label, index:i, hidden };
         });
       } else {
         fallbackCircle();
@@ -283,13 +296,13 @@
     function fallbackCircle(){
       holesRef.current = new Array(24).fill(0).map((_,i)=>{
         const t = (i/24)*Math.PI*2, R = 220;
-        return { x:CANVAS_W/2 + Math.cos(t)*R, y:CANVAS_H/2 + Math.sin(t)*R, label:GREEK[i], index:i, hidden:false };
+        return { x:CANVAS_W/2 + Math.cos(t)*R, y:CANVAS_H/2 + Math.sin(t)*R, label:(mapRef.current[i]||""), index:i, hidden:false };
       });
     }
 
     /* ---------- HUD dessin ---------- */
     function drawHUD(){
-      const ctx = ctxRef.current; if (!ctx) return;
+      const ctx = ctxRef.current!; if (!ctx) return;
       ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
 
       // fil (séquence en cours)
@@ -308,37 +321,43 @@
       // points + lettres visibles
       for (const p of holesRef.current){
         ctx.beginPath();
-        ctx.fillStyle = p.hidden ? "rgba(14,165,233,.32)" : "#0ea5e9";
+        ctx.fillStyle = p.hidden ? "rgba(14,165,233,.28)" : "#0ea5e9";
         ctx.arc(p.x,p.y,10,0,Math.PI*2); ctx.fill();
         if (!p.hidden){
           ctx.fillStyle = "#e6f1ff";
           setCtxFont(ctx, 12, 700);
           ctx.textAlign="center"; ctx.textBaseline="middle";
-          ctx.fillText(p.label, p.x, p.y);
+          ctx.fillText(p.label || "", p.x, p.y);
         }
       }
 
-      // Pied de page : mot & hint & score
-      const w = WORDS.current[wordIdx] || WORDS.current[0];
-      setCtxFont(ctx, 16, 800);
-      ctx.fillStyle="#e6f1ff"; ctx.textAlign="start"; ctx.textBaseline="alphabetic";
-      ctx.fillText("Mot : " + w.gr + " (" + w.en + ")", 16, CANVAS_H-54);
+      // Pied : mot & hint & score / épellation (mode LIBRE)
+      if (mode==="mot"){
+        const w = WORDS.current[wordIdx] || WORDS.current[0];
+        setCtxFont(ctx, 16, 800);
+        ctx.fillStyle="#e6f1ff"; ctx.textAlign="start"; ctx.textBaseline="alphabetic";
+        ctx.fillText("Mot : " + w.gr + " (" + w.en + ")", 16, CANVAS_H-56);
 
-      setCtxFont(ctx, 12, 500);
-      ctx.fillStyle="#9cc0ff";
-      ctx.fillText("Indice : " + (w.hint||""), 16, CANVAS_H-34);
+        setCtxFont(ctx, 12, 500);
+        ctx.fillStyle="#9cc0ff";
+        ctx.fillText("Indice : " + (w.hint||""), 16, CANVAS_H-36);
 
-      if (scoreStr){
-        setCtxFont(ctx, 12, 700);
-        ctx.fillStyle="#b0f1a1";
-        ctx.fillText(scoreStr, 16, CANVAS_H-14);
+        if (scoreStr){
+          setCtxFont(ctx, 12, 700);
+          ctx.fillStyle="#b0f1a1";
+          ctx.fillText(scoreStr, 16, CANVAS_H-16);
+        }
+      } else {
+        setCtxFont(ctx, 14, 700);
+        ctx.fillStyle="#e6f1ff"; ctx.textAlign="start"; ctx.textBaseline="alphabetic";
+        ctx.fillText("Épellation : " + (spellStr||"—"), 16, CANVAS_H-24);
       }
     }
 
     /* ---------- Sélection clic/drag ---------- */
     React.useEffect(()=>{
-      function pick(event){
-        const hud = hudRef.current; if (!hud) return { x:0, y:0, ok:false };
+      function pick(event:PointerEvent){
+        const hud = hudRef.current!; if (!hud) return { x:0, y:0, ok:false };
         const r = hud.getBoundingClientRect();
         const { w, h } = viewRef.current;
         const px = (event.clientX - r.left) * (w / r.width);
@@ -347,7 +366,7 @@
         const y  = py * (CANVAS_H / h);
         return { x, y, ok:true };
       }
-      function nearestHole(x,y){
+      function nearestHole(x:number,y:number){
         let best=-1, bd=9999;
         for (let i=0;i<holesRef.current.length;i++){
           const p = holesRef.current[i]; if (!p || p.hidden) continue;
@@ -357,37 +376,46 @@
         return (bd <= SNAP_PX) ? best : -1;
       }
 
-      function onDown(e){
+      function onDown(e:PointerEvent){
         const p = pick(e); if (!p.ok) return;
         dragRef.current.down = true; dragRef.current.last = performance.now();
         trySelectAt(p.x,p.y,true);
       }
-      function onMove(e){
+      function onMove(e:PointerEvent){
         if (!dragRef.current.down) return;
         const p = pick(e); if (!p.ok) return;
         trySelectAt(p.x,p.y,false);
       }
       function onUp(){ dragRef.current.down = false; }
 
-      function trySelectAt(x,y, allowRepeat){
+      function trySelectAt(x:number,y:number, allowRepeat:boolean){
         const idx = nearestHole(x,y); if (idx<0) return;
-        const expected = letterIndexExpected();
         if (!allowRepeat && seqRef.current.length && seqRef.current[seqRef.current.length-1]===idx) return;
 
+        lastInteractRef.current = performance.now();
+
+        if (mode==="libre"){
+          seqRef.current.push(idx);
+          const label = (mapRef.current[idx]||"");
+          setSpellStr(s => s + (label||""));
+          if (!muted) try{ playClick(1); }catch{}
+          return;
+        }
+
+        // mode "mot" → guidage
+        const expected = letterIndexExpected();
         if (idx === expected){
           seqRef.current.push(idx);
-          lastInteractRef.current = performance.now();
           if (!muted) try{ playClick(1); }catch{}
           checkCompletion();
         } else {
           errCountRef.current++;
-          lastInteractRef.current = performance.now();
           if (!muted) try{ playClick(0); }catch{}
           flashMessage("Mauvais trou : essaie encore.", 800);
         }
       }
 
-      const hud = hudRef.current;
+      const hud = hudRef.current!;
       if (hud){
         hud.addEventListener("pointerdown", onDown);
         hud.addEventListener("pointermove", onMove);
@@ -400,14 +428,15 @@
           window.removeEventListener("pointerup", onUp);
         }
       };
-    },[muted, wordIdx]);
+    },[muted, wordIdx, mode]);
 
     /* ---------- Logique de mot & score ---------- */
     function letterIndexExpected(){
       const w = WORDS.current[wordIdx] || WORDS.current[0];
       const pos = seqRef.current.length;
       const ch  = (w.gr || "").normalize("NFC").charAt(pos);
-      const idx = GREEK.indexOf(ch);
+      // on cherche la lettre dans le mapping courant (première occurrence)
+      const idx = mapRef.current.findIndex(L => (L||"") === ch);
       return idx >= 0 ? idx : -1;
     }
 
@@ -432,9 +461,9 @@
       } catch {}
     }
 
-    function flashMessage(s, ms=900){
+    function flashMessage(s:string, ms=900){
       setMsg(s);
-      setTimeout(()=>setMsg("Relie les trous visibles pour épeler le mot."), ms);
+      setTimeout(()=>setMsg("Relie les trous visibles pour tracer le fil."), ms);
     }
 
     function resetSeq(){
@@ -442,6 +471,7 @@
       errCountRef.current = 0;
       startTimeRef.current = performance.now();
       setScoreStr("");
+      setSpellStr("");
     }
 
     function nextWord(){
@@ -452,17 +482,17 @@
     /* ---------- Contrôles manuels (flèches + clavier) ---------- */
     function bumpInteract(){ lastInteractRef.current = performance.now(); }
 
-    function rotateY(sign){ const p=pivotRef.current; if(!p) return; p.rotation.y += sign * (ROT_Y_DEG*Math.PI/180); bumpInteract(); }
-    function rotateX(sign){
+    function rotateY(sign:number){ const p=pivotRef.current; if(!p) return; p.rotation.y += sign * (ROT_Y_DEG*Math.PI/180); bumpInteract(); }
+    function rotateX(sign:number){
       const p=pivotRef.current; if(!p) return;
       p.rotation.x = clamp(p.rotation.x + sign*(ROT_X_DEG*Math.PI/180), -Math.PI/2+0.05, Math.PI/2-0.05);
       bumpInteract();
     }
-    function pan(dx, dz){
+    function pan(dx:number, dz:number){
       const p=pivotRef.current; if(!p) return;
       p.position.x += dx; p.position.z += dz; bumpInteract();
     }
-    function zoom(sign){
+    function zoom(sign:number){
       const cam=cameraRef.current; if(!cam) return;
       const dir = new (THREEref.current).Vector3(0,0,-1).applyQuaternion(cam.quaternion);
       cam.position.addScaledVector(dir, sign*ZOOM_STEP);
@@ -477,7 +507,7 @@
     }
 
     React.useEffect(()=>{
-      function onKey(e){
+      function onKey(e:KeyboardEvent){
         if (e.defaultPrevented) return;
         const k = e.key;
         if (k==="ArrowLeft"){ rotateY(+1); e.preventDefault(); }
@@ -497,13 +527,64 @@
     },[]);
 
     /* ---------- Audio (léger bip) ---------- */
-    function playClick(ok){
-      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    function playClick(ok:number){
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.type="sine"; o.frequency.value = ok ? 660 : 240;
       g.gain.value = 0.06; o.connect(g); g.connect(ctx.destination);
       o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, 120);
+    }
+
+    /* ---------- Panneau mapping éditable ---------- */
+    function MappingPanel(){
+      const [local, setLocal] = React.useState<string[]>(mapArr);
+
+      function apply(){
+        const clean = local.map(s => (s||"").trim().slice(0,2).toUpperCase());
+        setMapArr(clean);
+      }
+      function resetDefault(){
+        setLocal([...GREEK_DEF]); setMapArr([...GREEK_DEF]);
+      }
+      React.useEffect(()=>setLocal(mapArr), [openMap]);
+
+      return h("div", {
+        style:{
+          position:"absolute", right:12, top:12, width: openMap ? 260 : 46,
+          background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:"12px",
+          padding: openMap ? "10px" : "6px", transition:"width .18s ease"
+        }
+      },
+        openMap
+          ? h(React.Fragment, null,
+              h("div", { style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8} },
+                h("strong", null, "Lettres (24)"),
+                h("button", { className:"btn", onClick:()=>setOpenMap(false) }, "Fermer")
+              ),
+              h("div", { style:{maxHeight: "56vh", overflow:"auto", borderTop:"1px solid #ffffff22", paddingTop:8} },
+                local.map((val, i)=> h("div", { key:i, style:{display:"grid",gridTemplateColumns:"36px 1fr",gap:8,alignItems:"center",marginBottom:6} },
+                  h("span", { className:"badge", style:{textAlign:"center"} }, (i+1).toString().padStart(2,"0")),
+                  h("input", {
+                    value:val||"",
+                    onChange:(e:any)=>{ const v=[...local]; v[i]=(e.target.value||"").toUpperCase().slice(0,2); setLocal(v); },
+                    placeholder:GREEK_DEF[i],
+                    style:{ width:"100%", padding:"6px 8px", borderRadius:8, border:"1px solid #2d3b52", background:"#0b1f33", color:"#e6f1ff" }
+                  })
+                ))
+              ),
+              h("div", { style:{display:"flex", gap:8, marginTop:8} },
+                h("button", { className:"btn", onClick:apply }, "Appliquer"),
+                h("button", { className:"btn", onClick:resetDefault }, "Réinit.")
+              ),
+              h("div", { style:{fontSize:12, color:"#9bb2d4", marginTop:6} },
+                "Associe une lettre à chaque trou (persisté localement)."
+              )
+            )
+          : h("button", { className:"btn", onClick:()=>setOpenMap(true), title:"Éditer les lettres" }, "📝")
+      );
     }
 
     /* ---------- UI React (sans JSX) ---------- */
@@ -512,30 +593,41 @@
       h("canvas", { ref:glRef, width:CANVAS_W, height:CANVAS_H, style:{ display:"block", borderRadius:12, background:"transparent" }}),
       h("canvas", { ref:hudRef, width:CANVAS_W, height:CANVAS_H, style:{ position:"absolute", inset:0, pointerEvents:"auto" }}),
 
-      // Toolbar principale
+      // Barre haute (mode, actions)
       h("div", { style:{ display:"flex", gap:8, marginTop:10, alignItems:"center", flexWrap:"wrap" } },
         h("button", { className:"btn", onClick:resetSeq }, "Réinitialiser"),
-        h("button", { className:"btn", onClick:()=>{ seqRef.current.pop(); setScoreStr(""); } }, "Annuler"),
-        h("button", { className:"btn", onClick:nextWord }, "Mot suivant"),
-        h("span", { className:"badge", style:{ marginLeft:6, opacity:.85 } }, ready ? "Prêt." : "Chargement…"),
+        h("button", { className:"btn", onClick:()=>{ seqRef.current.pop(); if(mode==="libre") setSpellStr(s=>s.slice(0,-1)); setScoreStr(""); } }, "Annuler"),
+        h("button", { className:"btn", onClick:nextWord, disabled: mode!=="mot" }, "Mot suivant"),
+        h("label", { className:"badge", style:{ marginLeft:6, opacity:.85 } }, ready ? "Prêt." : "Chargement…"),
         h("span", { className:"badge", style:{ opacity:.85 } }, msg),
         h("label", { style:{ display:"inline-flex", alignItems:"center", gap:6, marginLeft:10 }},
-          h("input", {
-            type:"checkbox",
-            checked:muted,
-            onChange:(e)=>setMuted(!!e.target.checked)
-          }),
-          "Silence"
+          h("input", { type:"checkbox", checked:muted, onChange:(e:any)=>setMuted(!!e.target.checked) }), "Silence"
+        ),
+        h("div", { style:{marginLeft:"auto", display:"inline-flex", alignItems:"center", gap:8} },
+          h("label", { className:"badge" }, "Mode"),
+          h("button", {
+            className:"btn",
+            onClick:()=>{ setMode("mot"); resetSeq(); },
+            style:{ background: mode==="mot" ? "#198754" : "#0b1f33", borderColor:"#2d3b52" }
+          }, "Mot"),
+          h("button", {
+            className:"btn",
+            onClick:()=>{ setMode("libre"); resetSeq(); },
+            style:{ background: mode==="libre" ? "#198754" : "#0b1f33", borderColor:"#2d3b52" }
+          }, "Libre")
         )
       ),
 
-      // Panneau « flèches » : rotation / pan / zoom / centrer
+      // Panneau mapping éditable (dépliable)
+      h(MappingPanel, null),
+
+      // Pavé « flèches » : rotation / pan / zoom / centrer
       h("div", {
         style:{
-          position:"absolute", right:12, bottom:12, display:"grid",
+          position:"absolute", right: openMap ? 280 : 12, bottom:12, display:"grid",
           gridTemplateColumns:"repeat(3, 36px)", gap:"6px",
           background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:"12px",
-          padding:"10px"
+          padding:"10px", transition:"right .18s ease"
         }
       },
         // Ligne 1 (pitch + pan avant)
@@ -550,7 +642,7 @@
         h("button", { className:"btn", title:"Tourner (pitch −)", onClick:()=>rotateX(-1) }, "⟱"),
         h("button", { className:"btn", title:"Reculer (pan +Z)", onClick:()=>pan(0,+PAN_STEP) }, "↓"),
         h("button", { className:"btn", title:"Zoom −", onClick:()=>zoom(+1) }, "−"),
-        // Ligne 4 (pan gauche / bascule latérale / pan droite)
+        // Ligne 4 (pan gauche / note / pan droite)
         h("button", { className:"btn", title:"Gauche (pan −X)", onClick:()=>pan(-PAN_STEP,0) }, "←"),
         h("span",   { style:{ display:"inline-flex", alignItems:"center", justifyContent:"center", color:"#9bb2d4" } }, "Nav"),
         h("button", { className:"btn", title:"Droite (pan +X)", onClick:()=>pan(+PAN_STEP,0) }, "→")
