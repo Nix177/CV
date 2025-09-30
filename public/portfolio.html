@@ -187,54 +187,82 @@
 
   <!-- Jeux Osselets -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
+  <!-- L2 passe en JS (sans React/Babel) -->
+  <script src="/osselets-level2.js" defer></script>
+  <!-- L3 reste comme avant (si tu souhaites le migrer aussi plus tard, on fera pareil que L2) -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
 
-  <!-- Montage / Navigation (un container par jeu) -->
+  <!-- Montage / Navigation (supporte React ET jeux externes) -->
   <script type="text/babel">
   (function () {
-    // Registre des racines React pour fermer proprement les autres jeux
-    const roots = new Map();
+    // Registres des instances montées
+    const reactRoots = new Map();        // id -> ReactRoot
+    const externalGames = new Map();     // id -> { destroy() }
 
     function stopAllAudio() {
       document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
     }
 
-    // Attendre la présence d'un export global (ex: "AstragalusRunner")
-    function waitForGlobal(name, cb, tries = 40) { // ~5s max
-      const Comp = window && window[name];
-      if (Comp) return cb(Comp);
-      if (tries <= 0) { console.warn("[osselets] composant introuvable:", name); return; }
-      setTimeout(() => waitForGlobal(name, cb, tries - 1), 125);
-    }
-
     function unmountAllExcept(keepId) {
-      for (const [id, r] of roots.entries()) {
+      // React
+      for (const [id, r] of reactRoots.entries()) {
         if (id === keepId) continue;
         try { r.unmount?.(); } catch {}
-        roots.delete(id);
+        reactRoots.delete(id);
+      }
+      // Externes
+      for (const [id, api] of externalGames.entries()) {
+        if (id === keepId) continue;
+        try { api.destroy?.(); } catch {}
+        externalGames.delete(id);
       }
       stopAllAudio();
     }
 
-    function mount(root, cover, CompName, btn) {
+    function waitForGlobal(name, cb, tries = 40) { // ~5s
+      const g = window && window[name];
+      if (g) return cb(g);
+      if (tries <= 0) { console.warn("[osselets] global introuvable:", name); return; }
+      setTimeout(() => waitForGlobal(name, cb, tries - 1), 125);
+    }
+
+    // Montages spécialisés
+    function mountReact(root, cover, CompName, btn) {
       if (!root) return;
       if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
 
-      stopAllAudio();
       unmountAllExcept(root.id);
 
       waitForGlobal(CompName, (Comp) => {
         try {
-          // retirer la cover si présente
           if (cover) { cover.style.display = 'none'; cover.remove(); }
-          // démonter une éventuelle instance précédente sur ce root
-          const prev = roots.get(root.id);
+          const prev = reactRoots.get(root.id);
           if (prev) { try { prev.unmount?.(); } catch {} }
 
           const r = ReactDOM.createRoot(root);
-          roots.set(root.id, r);
+          reactRoots.set(root.id, r);
           r.render(React.createElement(Comp));
+          setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
+        }
+      });
+    }
+
+    function mountExternal(root, cover, GlobalApiName, btn) {
+      if (!root) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Chargement…"; }
+
+      unmountAllExcept(root.id);
+
+      waitForGlobal(GlobalApiName, async (API) => {
+        try {
+          if (cover) { cover.style.display = 'none'; cover.remove(); }
+          const prev = externalGames.get(root.id);
+          if (prev) { try { prev.destroy?.(); } catch {} }
+
+          const handle = await API.mount(root); // doit retourner { destroy() }
+          externalGames.set(root.id, handle || {});
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Lancer"; }
@@ -246,14 +274,34 @@
     const btnRun = document.getElementById('btn-start-runner');
     const btnL2  = document.getElementById('btn-start-l2');
     const btnL3  = document.getElementById('btn-start-l3');
+
     btnRun?.addEventListener('click', () =>
-      mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner', btnRun)
+      mountReact(
+        document.getElementById('root-runner'),
+        document.getElementById('cover-runner'),
+        'AstragalusRunner',
+        btnRun
+      )
     );
+
+    // L2 = jeu externe (pur JS)
     btnL2?.addEventListener('click', () =>
-      mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2', btnL2)
+      mountExternal(
+        document.getElementById('root-l2'),
+        document.getElementById('cover-l2'),
+        'OsseletsLevel2',
+        btnL2
+      )
     );
+
+    // L3 reste en React/TSX tant que tu ne le migreras pas
     btnL3?.addEventListener('click', () =>
-      mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3', btnL3)
+      mountReact(
+        document.getElementById('root-l3'),
+        document.getElementById('cover-l3'),
+        'AstragalusLevel3',
+        btnL3
+      )
     );
   })();
   </script>
