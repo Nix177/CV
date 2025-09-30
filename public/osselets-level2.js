@@ -4,6 +4,7 @@
  * Fix 1 — Alignement pastilles:
  *   - HUD dimensionné sur le drawing buffer du renderer
  *   - Contexte 2D mis à l’échelle (ctx.setTransform) pour dessiner en px CSS
+ *   - **Caméra.aspect mis à jour à chaque resize** (+ updateProjectionMatrix)
  *
  * Fix 2 — Fil initial:
  *   - Génération automatique d’un chemin à partir du mot (WORDS[wordIdx].gr)
@@ -218,6 +219,10 @@
 
       renderer.setPixelRatio(dpr);
       renderer.setSize(w,h,false);
+
+      // >>> IMPORTANT : cam.aspect à jour <<<
+      cam.aspect = w / h;
+      cam.updateProjectionMatrix();
 
       // HUD = exactement la taille du drawing buffer
       const db = new THREE.Vector2();
