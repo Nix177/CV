@@ -1,439 +1,503 @@
-;(() => {
-  console.info("[L2] build v2 loaded");
+/* ============================================================================
+ * Osselets Level 2 - "Écrire avec les os"
+ * 
+ * Jeu interactif avec modèle 3D d'astragale (osselet grec)
+ * - 24 trous avec lettres grecques assignées
+ * - Rotation interactive de l'os
+ * - Fil pour relier les lettres et écrire des mots
+ * - Occlusion réelle des trous cachés
+ * - Édition des lettres par trou
+ * 
+ * IMPORTANT: Utilise THREE et GLTFLoader chargés globalement dans portfolio.html
+ * ==========================================================================*/
 
-  const { useEffect, useRef, useState, useMemo } = React;
+(() => {
+  const DEBUG = window.__L2_DEBUG || /[?&]__L2_DEBUG=on\b/.test(location.search);
+  const log = (...a) => DEBUG && console.log('[L2]', ...a);
 
-  // -------------------- Chemins --------------------
-  const BASE   = "/assets/games/osselets/level2/";
-  const MODEL  = BASE + "3d/astragalus.glb";
-  const WORDSJ = BASE + "3d/letters.json"; // optionnel, format { words:[{gr,en,hint}], letters:["Α","Β",... 24] }
+  /* ----------------------- Configuration ----------------------- */
+  const BASE = "/assets/games/osselets/level2/";
+  const MODEL = BASE + "3d/astragalus.glb";
+  const WORDS_JS = BASE + "3d/letters.json";
 
-  // -------------------- Constantes vue/HUD --------------------
-  const CANVAS_W = 960, CANVAS_H = 540, DPR_MAX = 2.5;
-  const DOT_R   = 12;   // rayon (HUD) pour sélection de trou
-  const CLICK_R = 22;   // tolérance de clic
-  const STROKE  = "#60a5fa";
-  const DOT     = "#0ea5e9";
-  const DOT_OCC = "rgba(14,165,233,.35)";
+  const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
 
-  // -------------------- Utils --------------------
-  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-  const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
-  const hasGlobal = (k)=>typeof window!=="undefined" && window[k];
+  // Paramètres visuels HUD
+  const DOT_R = 11;
+  const HIT_R = 22;
+  const DOT_A = 0.95;
+  const DOT_A_H = 0.40;
 
-  function getThree() {
-    const T = hasGlobal("THREE") && window.THREE;
-    if (!T) throw new Error("THREE global manquant. Vérifie <script three.min.js>.");
-    return T;
+  // Contrôles
+  const ROT_STEP = 0.08;
+  const ZOOM_MIN = 0.9, ZOOM_MAX = 1.8;
+
+  // Alphabet grec par défaut
+  const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
+
+  /* ----------------------- Utilitaires ----------------------- */
+  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+  const fetchJSON = (u) => fetch(u, {cache: "no-store"}).then(r => r.ok ? r.json() : null).catch(() => null);
+
+  function checkThreeJS() {
+    if (typeof THREE === 'undefined') {
+      throw new Error('THREE.js non chargé. Vérifiez que <script three.min.js> est présent avant osselets-level2.js');
+    }
+    if (typeof THREE.GLTFLoader === 'undefined') {
+      throw new Error('GLTFLoader non chargé. Vérifiez que GLTFLoader.js est chargé.');
+    }
+    log('Three.js r' + THREE.REVISION + ' détecté');
+    return true;
   }
-  function getLoader() {
-    const T = getThree();
-    const GL = (T && T.GLTFLoader) || window.GLTFLoader;
-    if (!GL) throw new Error("GLTFLoader global manquant. Vérifie <script examples/js/loaders/GLTFLoader.js>.");
-    return GL;
-  }
-  function getOrbitControls() {
-    const T = getThree();
-    return (T && T.OrbitControls) || window.OrbitControls || null;
+
+  function frameToObject(cam, obj, margin = 1.25) {
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = cam.fov * (Math.PI / 180);
+    let dist = (maxDim / 2) / Math.tan(fov / 2);
+    dist *= margin;
+
+    cam.position.set(center.x + dist * 0.8, center.y + dist * 0.6, center.z + dist);
+    cam.near = dist / 100;
+    cam.far = dist * 10;
+    cam.lookAt(center);
+    cam.updateProjectionMatrix();
+    cam.updateMatrixWorld(true);
   }
 
-  // Collecte 24 ancres "Hole_*" (toutes faces confondues)
+  function normalizeAndCenter(target, aimMaxDim = 2.2) {
+    const box = new THREE.Box3().setFromObject(target);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = (maxDim > 0.0001) ? (aimMaxDim / maxDim) : 1;
+    target.position.sub(center);
+    target.scale.setScalar(scale);
+    target.updateMatrixWorld(true);
+    log('Normalisation: maxDim=%.3f scale=%.3f', maxDim, scale);
+  }
+
   function collectHoles(root) {
-    const list = [];
-    root.traverse(n=>{
-      const nm = (n.name||"");
-      if(/^hole([_\s-].*)?$/i.test(nm)) list.push(n);
+    const out = [];
+    root.traverse(n => {
+      const nm = (n.name || '');
+      if (/^hole[_\s-]?/i.test(nm)) out.push(n);
     });
-    // tri stable par nom pour garder un ordre déterministe
-    list.sort((a,b)=> (a.name||"").localeCompare(b.name||""));
-    return list;
+    out.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    return out;
   }
 
-  // Projette un point 3D vers pixels HUD + occlusion par raycast
-  function projectNode(node, cam, T, sceneRoot, hudW, hudH) {
-    const v = new T.Vector3(); node.getWorldPosition(v);
-    // occlusion (ray depuis caméra -> point)
-    let hidden = false;
-    if (sceneRoot && cam) {
-      const camPos = new T.Vector3(); cam.getWorldPosition(camPos);
-      const dir = v.clone().sub(camPos).normalize();
-      const rc = new T.Raycaster(camPos, dir, 0.001, 100);
-      const hits = rc.intersectObject(sceneRoot, true);
-      if (hits && hits.length) {
-        const dHole = camPos.distanceTo(v);
-        if (hits[0].distance < dHole - 1e-3) hidden = true;
+  function makeUI() {
+    const style = 'border:1px solid #2d3b52;background:#0b1f33;color:#e6f1ff;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:ui-sans-serif,system-ui;font-size:14px;';
+    
+    const createButton = (text, title = '') => {
+      const b = document.createElement('button');
+      b.className = 'btn';
+      b.style.cssText = style;
+      b.textContent = text;
+      b.title = title;
+      return b;
+    };
+
+    const uiBar = document.createElement('div');
+    uiBar.style.cssText = 'position:absolute;left:18px;bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:4;';
+
+    const labelBox = document.createElement('div');
+    labelBox.style.cssText = 'color:#e6f1ff;font-size:14px;background:#0b2237cc;padding:10px 14px;border-radius:10px;border:1px solid #ffffff22;';
+    labelBox.innerHTML = '<div style="font-weight:600;margin-bottom:4px;">Mot : —</div><div style="font-size:12px;opacity:.8;">Cliquez sur les trous pour créer un fil</div>';
+
+    const btnReset = createButton('Réinitialiser', 'Efface le fil et réinitialise la vue');
+    const btnNext = createButton('Mot suivant', 'Passe au mot suivant');
+    const btnEdit = createButton('✎ Éditer lettres', 'Modifier les lettres assignées aux trous');
+
+    uiBar.append(labelBox, btnReset, btnNext, btnEdit);
+
+    const pad = document.createElement('div');
+    pad.style.cssText = 'position:absolute;right:18px;bottom:18px;display:grid;grid-template-columns:repeat(3,44px);grid-auto-rows:44px;gap:10px;background:#0b2237cc;border:1px solid #ffffff22;border-radius:12px;padding:14px;z-index:4;';
+    
+    const makePadBtn = (txt, title = '') => {
+      const b = document.createElement('button');
+      b.className = 'btn';
+      b.style.cssText = 'width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;' + style;
+      b.textContent = txt;
+      b.title = title;
+      return b;
+    };
+
+    const up = makePadBtn('↑', 'Rotation haut');
+    const dw = makePadBtn('↓', 'Rotation bas');
+    const lf = makePadBtn('←', 'Rotation gauche');
+    const rg = makePadBtn('→', 'Rotation droite');
+    const rs = makePadBtn('↻', 'Réinitialiser rotation');
+    const zi = makePadBtn('+', 'Zoom avant');
+    const zo = makePadBtn('−', 'Zoom arrière');
+
+    pad.appendChild(document.createElement('div'));
+    pad.appendChild(up);
+    pad.appendChild(document.createElement('div'));
+    pad.appendChild(lf);
+    pad.appendChild(rs);
+    pad.appendChild(rg);
+    pad.appendChild(zo);
+    pad.appendChild(dw);
+    pad.appendChild(zi);
+
+    return { uiBar, pad, labelBox, btnReset, btnNext, btnEdit, up, dw, lf, rg, rs, zi, zo };
+  }
+
+  /* ----------------------- Jeu principal ----------------------- */
+  async function mount(rootEl) {
+    log('Initialisation du jeu...');
+
+    try {
+      checkThreeJS();
+    } catch (err) {
+      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;font-family:system-ui;">${err.message}</div>`;
+      return { destroy: () => {} };
+    }
+
+    rootEl.innerHTML = '';
+    rootEl.style.cssText = 'position:relative;max-width:100%;';
+
+    const gl = document.createElement('canvas');
+    gl.width = VIEW.W;
+    gl.height = VIEW.H;
+    gl.style.cssText = 'display:block;border-radius:12px;background:transparent;width:100%;height:auto;';
+    rootEl.appendChild(gl);
+
+    const hud = document.createElement('canvas');
+    hud.width = VIEW.W;
+    hud.height = VIEW.H;
+    hud.style.cssText = 'position:absolute;inset:0;pointer-events:auto;z-index:3;';
+    rootEl.appendChild(hud);
+
+    const ui = makeUI();
+    rootEl.append(ui.uiBar, ui.pad);
+
+    const panel = document.createElement('div');
+    panel.style.cssText = 'position:absolute;right:18px;top:18px;width:280px;max-height:70vh;overflow:auto;background:#0b2237cc;border:1px solid #ffffff22;border-radius:12px;padding:12px;display:none;z-index:5;';
+    rootEl.appendChild(panel);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.sRGBEncoding;
+    renderer.setPixelRatio(clamp(devicePixelRatio || 1, 1, VIEW.DPR_MAX));
+    renderer.setSize(VIEW.W, VIEW.H, false);
+
+    const scene = new THREE.Scene();
+    scene.background = null;
+    
+    const cam = new THREE.PerspectiveCamera(45, VIEW.W / VIEW.H, 0.01, 100);
+    
+    scene.add(new THREE.AmbientLight(0xffffff, 0.78));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.95);
+    dir.position.set(2.4, 3.4, 2.6);
+    scene.add(dir);
+
+    const pivot = new THREE.Group();
+    scene.add(pivot);
+
+    const cfg = await fetchJSON(WORDS_JS);
+    const WORDS = (cfg?.words?.length) ? cfg.words : [
+      { gr: "ΕΛΠΙΣ", en: "ELPIS", hint: "Espoir — bon présage." },
+      { gr: "ΝΙΚΗ", en: "NIKĒ", hint: "Victoire — élan de réussite." },
+      { gr: "ΜΑΤΙ", en: "MATI", hint: "« Mauvais œil » — apotropaïon." }
+    ];
+    const LETTERS = (cfg?.letters?.length === 24) ? cfg.letters : GREEK.slice();
+    let wordIdx = 0;
+
+    function updateWordLabel() {
+      const w = WORDS[wordIdx % WORDS.length];
+      ui.labelBox.innerHTML = `<div style="font-weight:600;margin-bottom:4px;">Mot : ${w.gr} (${w.en})</div><div style="font-size:12px;opacity:.8;">Indice : ${w.hint}</div>`;
+    }
+    updateWordLabel();
+
+    const loader = new THREE.GLTFLoader();
+    let root;
+    try {
+      root = await new Promise((resolve, reject) => {
+        loader.load(
+          MODEL,
+          (gltf) => {
+            const r = gltf.scene || (gltf.scenes && gltf.scenes[0]);
+            if (!r) return reject(new Error('Modèle vide'));
+            
+            r.traverse(o => {
+              if (o.isMesh) {
+                if (!o.material || !o.material.isMeshStandardMaterial) {
+                  o.material = new THREE.MeshStandardMaterial({
+                    color: 0xf7efe7,
+                    roughness: 0.62,
+                    metalness: 0.05
+                  });
+                }
+                o.castShadow = false;
+                o.receiveShadow = false;
+              }
+            });
+            resolve(r);
+          },
+          (progress) => {
+            if (progress.lengthComputable) {
+              log('Chargement:', Math.round(progress.loaded / progress.total * 100) + '%');
+            }
+          },
+          reject
+        );
+      });
+    } catch (err) {
+      console.error('[L2] Erreur chargement modèle:', err);
+      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;font-family:system-ui;">Erreur: Impossible de charger le modèle 3D.<br><small>Chemin: ${MODEL}</small><br><small>${err.message}</small></div>`;
+      return { destroy: () => {} };
+    }
+
+    const modelWrap = new THREE.Group();
+    modelWrap.add(root);
+    pivot.add(modelWrap);
+
+    normalizeAndCenter(modelWrap, 2.25);
+    frameToObject(cam, modelWrap, 1.35);
+
+    const anchors = collectHoles(modelWrap);
+    log('Trous trouvés:', anchors.length, anchors.map(a => a.name));
+    
+    if (anchors.length === 0) {
+      console.warn('[L2] Aucun trou trouvé! Création de trous virtuels...');
+      for (let i = 0; i < 24; i++) {
+        const dummy = new THREE.Object3D();
+        const angle = (i / 24) * Math.PI * 2;
+        const radius = 0.9;
+        dummy.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
+        dummy.name = `Hole_${i + 1}`;
+        modelWrap.add(dummy);
+        anchors.push(dummy);
+      }
+    } else if (anchors.length !== 24) {
+      console.warn(`[L2] ${anchors.length} trous trouvés (24 attendus)`);
+    }
+
+    const ctx = hud.getContext('2d');
+    const currentPath = [];
+    const hiddenFlags = new Array(anchors.length).fill(false);
+    const worldPos = anchors.map(() => new THREE.Vector3());
+    const ray = new THREE.Raycaster(undefined, undefined, 0.01, 100);
+
+    function syncSizes() {
+      const w = Math.max(320, rootEl.clientWidth | 0);
+      const h = Math.round(w * (VIEW.H / VIEW.W));
+      const dpr = clamp(devicePixelRatio || 1, 1, VIEW.DPR_MAX);
+
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(w, h, false);
+
+      const db = new THREE.Vector2();
+      renderer.getDrawingBufferSize(db);
+      hud.width = db.x | 0;
+      hud.height = db.y | 0;
+      hud.style.width = w + 'px';
+      hud.style.height = h + 'px';
+
+      cam.aspect = w / h;
+      cam.updateProjectionMatrix();
+      
+      log('Redimensionnement:', { w, h, dpr });
+    }
+    syncSizes();
+
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncSizes) : null;
+    if (ro) ro.observe(rootEl);
+    window.addEventListener('resize', syncSizes);
+
+    function projectHolesAndOcclusion() {
+      pivot.updateMatrixWorld(true);
+      cam.updateMatrixWorld(true);
+
+      const camPos = new THREE.Vector3();
+      cam.getWorldPosition(camPos);
+      const dir = new THREE.Vector3();
+
+      for (let i = 0; i < anchors.length; i++) {
+        anchors[i].getWorldPosition(worldPos[i]);
+
+        hiddenFlags[i] = false;
+        dir.copy(worldPos[i]).sub(camPos).normalize();
+        ray.set(camPos, dir);
+        const hits = ray.intersectObject(modelWrap, true);
+        
+        if (hits?.length) {
+          const dHole = camPos.distanceTo(worldPos[i]);
+          if (hits[0].distance < dHole - 1e-3) {
+            hiddenFlags[i] = true;
+          }
+        }
       }
     }
-    // projection
-    const p = v.clone().project(cam);
-    const x = ( p.x * 0.5 + 0.5) * hudW;
-    const y = (-p.y * 0.5 + 0.5) * hudH;
-    return { x, y, hidden };
-  }
 
-  // Recentre & normalise l’échelle
-  function normalizeRoot(root, T, targetSize=1.6) {
-    const box = new T.Box3().setFromObject(root);
-    const size = box.getSize(new T.Vector3());
-    const maxS = Math.max(size.x,size.y,size.z) || 1;
-    const s = targetSize / maxS;
-    root.scale.setScalar(s);
-    box.setFromObject(root);
-    const c = box.getCenter(new T.Vector3());
-    root.position.sub(c);  // centre à l’origine
-    root.updateMatrixWorld(true);
-  }
+    function worldToHud(x, y, z) {
+      const v = new THREE.Vector3(x, y, z).project(cam);
+      const px = (v.x * 0.5 + 0.5) * hud.width;
+      const py = (-v.y * 0.5 + 0.5) * hud.height;
+      return { x: px, y: py };
+    }
 
-  // UI helpers
-  function Button({onClick, children, title, style}) {
-    return (
-      <button onClick={onClick} title={title}
-        style={{border:"1px solid #2d3b52", background:"#0b1f33", color:"#e6f1ff", padding:"8px 12px",
-                borderRadius:10, cursor:"pointer", ...style}}>
-        {children}
-      </button>
-    );
-  }
+    function drawHUD() {
+      ctx.clearRect(0, 0, hud.width, hud.height);
 
-  function AstragalusLevel2() {
-    const wrapRef = useRef(null);
-    const glRef   = useRef(null);
-    const hudRef  = useRef(null);
-
-    // Three refs
-    const rendererRef = useRef(null);
-    const sceneRef    = useRef(null);
-    const cameraRef   = useRef(null);
-    const modelRef    = useRef(null);
-    const orbitRef    = useRef(null);
-
-    // Données “trous”
-    const holesRef   = useRef([]);           // Array<THREE.Object3D> (length 24)
-    const projRef    = useRef([]);           // positions projetées (x,y,hidden)
-    const lettersRef = useRef([]);           // 24 lettres configurables
-    const pathRef    = useRef([]);           // indices sélectionnés (fil)
-    const ctxRef     = useRef(null);
-
-    // État UI
-    const [ready, setReady] = useState(false);
-    const [msg, setMsg]     = useState("24 trous (6 par face) reliés aux 24 lettres grecques. Suis le fil pour épeler un mot.");
-    const [wordIdx, setWordIdx] = useState(0);
-    const [showLetters, setShowLetters] = useState(false);
-    const [showDebug, setShowDebug] = useState(false);
-
-    const wordsRef = useRef([
-      { gr:"ΕΛΠΙΣ", en:"ELPIS", hint:"Espoir — bon présage." },
-      { gr:"ΝΙΚΗ",  en:"NIKĒ",  hint:"Victoire — élan de réussite." },
-      { gr:"ΜΑΤΙ",  en:"MATI",  hint:"« Mauvais œil » — apotropaïon." }
-    ]);
-
-    const T = useMemo(()=>{ try { return getThree(); } catch(e){ console.error(e); return null; } }, []);
-    const Controls = useMemo(()=> getOrbitControls(), []);
-
-    // --------------- Resize ---------------
-    useEffect(()=>{
-      function onResize() {
-        const wrap=wrapRef.current, gl=glRef.current, hud=hudRef.current, r=rendererRef.current, cam=cameraRef.current;
-        if (!wrap || !gl || !hud || !r || !cam) return;
-        const w = Math.max(320, wrap.clientWidth|0);
-        const h = Math.round(w*(CANVAS_H/CANVAS_W));
-        const dpr = clamp(window.devicePixelRatio||1,1,DPR_MAX);
-        r.setPixelRatio(dpr);
-        r.setSize(w,h,false);
-        gl.style.width=w+"px"; gl.style.height=h+"px";
-        hud.width=Math.floor(w*dpr); hud.height=Math.floor(h*dpr);
-        hud.style.width=w+"px"; hud.style.height=h+"px";
-        cam.aspect=w/h; cam.updateProjectionMatrix();
-
-        const ctx=hud.getContext("2d"); ctx.setTransform((w*dpr)/CANVAS_W,0,0,(h*dpr)/CANVAS_H,0,0);
-        ctxRef.current=ctx;
-      }
-      onResize();
-      const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(onResize) : null;
-      if (ro && wrapRef.current) ro.observe(wrapRef.current);
-      window.addEventListener("resize", onResize);
-      return ()=>{ if (ro) ro.disconnect(); window.removeEventListener("resize", onResize); }
-    },[]);
-
-    // --------------- Init Three + modèle ---------------
-    useEffect(()=>{
-      let canceled=false;
-      (async ()=>{
-        if (!T) return;
-        let GL;
-        try { GL = getLoader(); } catch(e){ setMsg("GLTFLoader introuvable."); console.error(e); return; }
-
-        // Renderer/Scene/Camera
-        const gl=glRef.current, hud=hudRef.current;
-        const r = new T.WebGLRenderer({canvas:gl, antialias:true, alpha:true});
-        r.outputColorSpace = T.SRGBColorSpace;
-        rendererRef.current = r;
-
-        const scene = new T.Scene(); scene.background=null;
-        sceneRef.current=scene;
-
-        const cam = new T.PerspectiveCamera(45,16/9,0.1,60);
-        cam.position.set(2.2,1.35,2.6); cam.lookAt(0,0.25,0);
-        cameraRef.current=cam;
-
-        // Lumières
-        scene.add(new T.AmbientLight(0xffffff,.7));
-        const dir = new T.DirectionalLight(0xffffff,.9); dir.position.set(2.8,3.3,2.6);
-        scene.add(dir);
-
-        // OrbitControls (si présent)
-        if (Controls) {
-          const oc = new Controls(cam, gl);
-          oc.enableDamping = true;
-          oc.dampingFactor = 0.06;
-          oc.enablePan = false;
-          oc.minDistance = 1.2;
-          oc.maxDistance = 6.0;
-          oc.minPolarAngle = 0.3;
-          oc.maxPolarAngle = Math.PI/2 - 0.12;
-          orbitRef.current = oc;
-        }
-
-        // Charger éventuels mots/lettres
-        try {
-          const cfg = await fetchJSON(WORDSJ);
-          if (cfg?.words?.length) wordsRef.current = cfg.words.slice(0, 8);
-          if (cfg?.letters?.length === 24) lettersRef.current = cfg.letters.slice();
-        } catch {}
-
-        // Modèle
-        const loader = new GL();
-        loader.load(MODEL, (gltf)=>{
-          if (canceled) return;
-          const root = gltf.scene || (gltf.scenes && gltf.scenes[0]);
-          if (!root){ setMsg("Modèle vide."); return; }
-
-          // Matériaux simples
-          root.traverse(o=>{
-            if (o.isMesh){
-              if (!o.material || !o.material.isMeshStandardMaterial)
-                o.material = new T.MeshStandardMaterial({ color:0xf7efe7, roughness:.6, metalness:.05 });
-              o.castShadow=false; o.receiveShadow=false;
-            }
-          });
-
-          normalizeRoot(root, T, 1.7);
-          scene.add(root);
-          modelRef.current=root;
-
-          const holes = collectHoles(root);
-          // si moins de 24: fallback cercle virtuel
-          if (holes.length !== 24) {
-            console.warn(`[L2] ${holes.length} trous detectés; fallback cercle.`);
-            const fake = [];
-            for(let i=0;i<24;i++){
-              const g=new T.Object3D();
-              const t=(i/24)*Math.PI*2, R=0.9;
-              g.position.set(Math.cos(t)*R, 0, Math.sin(t)*R);
-              root.add(g); fake.push(g);
-            }
-            holesRef.current=fake;
-          } else {
-            holesRef.current=holes;
-          }
-
-          // lettres par défaut (grec) si non fourni
-          if (lettersRef.current.length!==24) {
-            lettersRef.current = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
-          }
-
-          setReady(true);
-          animate();
-        }, undefined, (err)=>{ console.error("[L2] load error",err); setMsg("Échec chargement modèle."); });
-
-        function animate(){
-          let stop=false;
-          (function loop(){
-            if (stop) return;
-            orbitRef.current?.update?.();
-            renderHUD();
-            r.render(scene, cam);
-            requestAnimationFrame(loop);
-          })();
-          return ()=>{ stop=true; };
-        }
-
-      })();
-      return ()=>{ canceled=true; };
-    },[]);
-
-    // --------------- HUD : projection + dessin ---------------
-    function renderHUD() {
-      const ctx=ctxRef.current, cam=cameraRef.current, model=modelRef.current;
-      const gl=glRef.current, hud=hudRef.current;
-      if (!ctx || !cam || !gl || !hud) return;
-
-      const w=hud.width, h=hud.height; // pixels device
-      // On dessine en coordonnées “figuratives” (CANVAS_W/H) grâce au setTransform
-      ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
-
-      // Projeter trous
-      const T3 = T; if (!T3) return;
-      const list = holesRef.current||[];
-      projRef.current = list.map(n => projectNode(n, cam, T3, model, CANVAS_W, CANVAS_H));
-
-      // Lignes (fil)
-      ctx.strokeStyle=STROKE; ctx.lineWidth=2;
-      if (pathRef.current.length>1) {
+      if (currentPath.length > 0) {
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'rgba(96,165,250,0.92)';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         ctx.beginPath();
-        const first = projRef.current[pathRef.current[0]];
-        ctx.moveTo(first.x, first.y);
-        for (let i=1;i<pathRef.current.length;i++){
-          const p = projRef.current[pathRef.current[i]];
-          ctx.lineTo(p.x,p.y);
+        
+        for (let k = 0; k < currentPath.length; k++) {
+          const idx = currentPath[k];
+          const wp = worldPos[idx];
+          const p = worldToHud(wp.x, wp.y, wp.z);
+          if (k === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
         }
         ctx.stroke();
       }
 
-      // Points + lettres
-      const letters = lettersRef.current;
-      for (let i=0;i<projRef.current.length;i++){
-        const p = projRef.current[i];
+      for (let i = 0; i < anchors.length; i++) {
+        const wp = worldPos[i];
+        const scr = worldToHud(wp.x, wp.y, wp.z);
+        const alpha = hiddenFlags[i] ? DOT_A_H : DOT_A;
+
         ctx.beginPath();
-        ctx.fillStyle = p.hidden ? DOT_OCC : DOT;
-        ctx.arc(p.x,p.y, DOT_R, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+        ctx.arc(scr.x, scr.y, DOT_R, 0, Math.PI * 2);
         ctx.fill();
 
-        if (!p.hidden) {
-          ctx.fillStyle="#e6f1ff";
-          ctx.font="12px ui-sans-serif, system-ui"; ctx.textAlign="center"; ctx.textBaseline="middle";
-          ctx.fillText(letters[i] || "", p.x, p.y);
+        if (!hiddenFlags[i] || alpha > 0.3) {
+          ctx.fillStyle = 'rgba(230,241,255,1)';
+          ctx.font = `${Math.round(DOT_R * 1.2)}px ui-sans-serif, system-ui, -apple-system, Segoe UI`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const letter = LETTERS[i % LETTERS.length] || '';
+          ctx.fillText(letter, scr.x, scr.y + 0.5);
         }
       }
     }
 
-    // --------------- Interactions ---------------
-    // Click sur HUD → ajoute un trou proche au chemin (si visible)
-    useEffect(()=>{
-      function onClick(e){
-        const hud=hudRef.current; if (!hud) return;
-        const r=hud.getBoundingClientRect();
-        const scaleX = CANVAS_W / r.width, scaleY = CANVAS_H / r.height;
-        const x=(e.clientX - r.left)*scaleX, y=(e.clientY - r.top)*scaleY;
-        // trouver le trou le plus proche
-        let best=-1, bd=1e9;
-        for (let i=0;i<projRef.current.length;i++){
-          const p=projRef.current[i];
-          if (!p || p.hidden) continue; // pas clic sur trous cachés
-          const d=Math.hypot(p.x-x, p.y-y);
-          if (d<bd){ bd=d; best=i; }
-        }
-        if (best>=0 && bd<CLICK_R) {
-          pathRef.current.push(best);
+    function pickNearest(clientX, clientY) {
+      const rect = hud.getBoundingClientRect();
+      const px = (clientX - rect.left) * (hud.width / rect.width);
+      const py = (clientY - rect.top) * (hud.height / rect.height);
+      
+      let best = -1, bd = Infinity;
+      for (let i = 0; i < anchors.length; i++) {
+        if (hiddenFlags[i]) continue;
+        const wp = worldPos[i];
+        const p = worldToHud(wp.x, wp.y, wp.z);
+        const d = Math.hypot(p.x - px, p.y - py);
+        if (d < bd) {
+          bd = d;
+          best = i;
         }
       }
-      const hud=hudRef.current; if (hud) hud.addEventListener("click", onClick);
-      return ()=>{ if (hud) hud.removeEventListener("click", onClick); };
-    },[]);
-
-    // Nudge (flèches UI) : petites rotations/orients
-    function nudge(dx=0, dy=0){
-      const cam=cameraRef.current, target=new T.Vector3(0,0,0);
-      if (!cam) return;
-      const off = new T.Spherical().setFromVector3(cam.position.clone().sub(target));
-      off.theta += dx; // gauche/droite
-      off.phi   = clamp(off.phi + dy, 0.3, Math.PI/2 - 0.12);
-      cam.position.copy(new T.Vector3().setFromSpherical(off).add(target));
-      cam.lookAt(target);
+      return (bd <= HIT_R) ? best : -1;
     }
 
-    // Recentrer (en cas d’offset modèle)
-    function recenter() {
-      const root=modelRef.current; if (!root || !T) return;
-      normalizeRoot(root, T, 1.7);
+    hud.addEventListener('click', (e) => {
+      const idx = pickNearest(e.clientX, e.clientY);
+      if (idx >= 0) {
+        currentPath.push(idx);
+        log('Trou sélectionné:', idx, LETTERS[idx]);
+      }
+    });
+
+    hud.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      if (currentPath.length > 0) {
+        const removed = currentPath.pop();
+        log('Trou retiré:', removed);
+      }
+    });
+
+    function reset() {
+      currentPath.length = 0;
+      pivot.rotation.set(0, 0, 0);
+      frameToObject(cam, modelWrap, 1.35);
+      cam.zoom = 1;
+      cam.updateProjectionMatrix();
+      log('Reset effectué');
     }
 
-    function resetPath(){ pathRef.current=[]; }
-    function nextWord(){ setWordIdx(i=>(i+1)%(wordsRef.current.length||1)); resetPath(); }
+    ui.btnReset.addEventListener('click', reset);
+    ui.btnNext.addEventListener('click', () => {
+      wordIdx = (wordIdx + 1) % WORDS.length;
+      updateWordLabel();
+      reset();
+    });
 
-    // --------------- Panneaux (Lettres & Debug) ---------------
-    function LettersPanel(){
-      const [local, setLocal] = useState(lettersRef.current.slice(0,24));
-      function apply(){ lettersRef.current = local.slice(0,24); }
-      return (
-        <div style={panelStyle}>
-          <div style={panelHead}>Lettres (24 trous)</div>
-          <div style={{display:"grid", gridTemplateColumns:"repeat(6, 1fr)", gap:8, maxHeight:220, overflow:"auto"}}>
-            {local.map((v,i)=>(
-              <div key={i} style={{display:"flex", gap:6, alignItems:"center"}}>
-                <span style={{opacity:.7, width:22, textAlign:"right"}}>{String(i+1).padStart(2,"0")}</span>
-                <input value={v} onChange={e=>{
-                  const s=e.target.value.trim(); const x=s.length? s[0].toUpperCase() : "";
-                  const nxt=local.slice(); nxt[i]=x; setLocal(nxt);
-                }} style={inpStyle} maxLength={2}/>
-              </div>
-            ))}
-          </div>
-          <div style={{display:"flex", gap:8, marginTop:10}}>
-            <Button onClick={apply}>Appliquer</Button>
-            <Button onClick={()=>setLocal(["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"])}>Grec par défaut</Button>
-          </div>
-        </div>
-      );
+    function rebuildPanel() {
+      panel.innerHTML = '<div style="font-weight:700;margin-bottom:10px;color:#e6f1ff;">Lettres par trou</div>';
+      const list = document.createElement('div');
+      list.style.cssText = 'display:grid;grid-template-columns:1fr 70px;gap:8px;';
+      
+      for (let i = 0; i < Math.min(anchors.length, 24); i++) {
+        const lab = document.createElement('div');
+        lab.style.cssText = 'color:#9bb2d4;font-size:12px;padding:6px 0;';
+        lab.textContent = anchors[i]?.name || `Trou ${i + 1}`;
+        
+        const inp = document.createElement('input');
+        inp.value = LETTERS[i] || '';
+        inp.maxLength = 2;
+        inp.style.cssText = 'width:70px;background:#001225;color:#e6f1ff;border:1px solid #ffffff25;border-radius:8px;padding:6px 8px;font-size:14px;text-align:center;';
+        inp.addEventListener('input', () => {
+          LETTERS[i] = inp.value.toUpperCase().slice(0, 2);
+        });
+        
+        list.append(lab, inp);
+      }
+      panel.appendChild(list);
     }
 
-    function DebugPanel(){
-      return (
-        <div style={panelStyle}>
-          <div style={panelHead}>Debug</div>
-          <div style={{display:"flex", flexDirection:"column", gap:8}}>
-            <Button onClick={recenter}>Recentrer modèle</Button>
-            <Button onClick={()=>nudge(-0.08,0)}>◀︎</Button>
-            <Button onClick={()=>nudge(+0.08,0)}>▶︎</Button>
-            <Button onClick={()=>nudge(0,-0.06)}>▲</Button>
-            <Button onClick={()=>nudge(0,+0.06)}>▼</Button>
-            {orbitRef.current && <div style={{opacity:.7, fontSize:12}}>Astuce: souris pour tourner (OrbitControls).</div>}
-          </div>
-        </div>
-      );
-    }
+    ui.btnEdit.addEventListener('click', () => {
+      const show = panel.style.display === 'none';
+      if (show) rebuildPanel();
+      panel.style.display = show ? 'block' : 'none';
+    });
 
-    const panelStyle = {
-      position:"absolute", left:12, bottom:86, zIndex:5,
-      background:"#0b2237cc", border:"1px solid #ffffff22", borderRadius:12, padding:"10px 12px",
-      width: "min(92vw, 480px)", color:"#e6f1ff"
-    } as any;
-    const panelHead = { fontWeight:700, marginBottom:8 } as any;
-    const inpStyle  = { width:40, padding:"6px 8px", borderRadius:8, border:"1px solid #2d3b52", background:"#0b1f33", color:"#e6f1ff" } as any;
+    ui.up.addEventListener('click', () => { pivot.rotation.x += ROT_STEP; });
+    ui.dw.addEventListener('click', () => { pivot.rotation.x -= ROT_STEP; });
+    ui.lf.addEventListener('click', () => { pivot.rotation.y -= ROT_STEP; });
+    ui.rg.addEventListener('click', () => { pivot.rotation.y += ROT_STEP; });
+    ui.rs.addEventListener('click', reset);
+    ui.zi.addEventListener('click', () => {
+      cam.zoom = clamp(cam.zoom * 1.12, ZOOM_MIN, ZOOM_MAX);
+      cam.updateProjectionMatrix();
+    });
+    ui.zo.addEventListener('click', () => {
+      cam.zoom = clamp(cam.zoom / 1.12, ZOOM_MIN, ZOOM_MAX);
+      cam.updateProjectionMatrix();
+    });
 
-    // --------------- Rendu JSX ---------------
-    const w = wordsRef.current[wordIdx] || wordsRef.current[0];
+    let raf = 0;
+    (function loop() {
+      projectHolesAndOcclusion();
+      renderer.render(scene, cam);
+      drawHUD();
+      raf = requestAnimationFrame(loop);
+    })();
 
-    return (
-      <div ref={wrapRef} style={{position:"relative"}}>
-        {/* Canvas 3D */}
-        <canvas ref={glRef} width={CANVAS_W} height={CANVAS_H} style={{display:"block", borderRadius:12, background:"transparent"}}/>
-        {/* HUD au-dessus (z-index + pointer-events ON) */}
-        <canvas ref={hudRef} width={CANVAS_W} height={CANVAS_H}
-          style={{position:"absolute", inset:0, pointerEvents:"auto", zIndex:3}}/>
+    log('✓ Jeu initialisé avec succès');
 
-        {/* Barre d’actions (gauche bas) */}
-        <div style={{position:"absolute", left:12, bottom:12, display:"flex", gap:8, zIndex:4, alignItems:"center"}}>
-          <div>
-            <div style={{fontWeight:600, marginBottom:4}}>Mot : {w.gr} ({w.en})</div>
-            <div style={{fontSize:12, opacity:.8}}>Indice : {w.hint}</div>
-          </div>
-        </div>
-
-        {/* Boutons actions (droite bas) */}
-        <div style={{position:"absolute", right:12, bottom:12, display:"flex", gap:8, flexWrap:"wrap", zIndex:4}}>
-          <Button onClick={resetPath}>Réinitialiser</Button>
-          <Button onClick={nextWord}>Mot suivant</Button>
-          <Button onClick={()=>setShowLetters(v=>!v)}>Lettres…</Button>
-          <Button onClick={()=>setShowDebug(v=>!v)}>Debug…</Button>
-        </div>
-
-        {showLetters && <LettersPanel/>}
-        {showDebug && <DebugPanel/>}
-      </div>
-    );
+    return {
+      destroy() {
+        cancelAnimationFrame(raf);
+        ro?.disconnect();
+        window.removeEventListener('resize', syncSizes);
+        try { renderer.dispose(); } catch {}
+        rootEl.innerHTML = '';
+        log('Jeu détruit');
+      }
+    };
   }
 
-  // @ts-ignore
-  window.AstragalusLevel2 = AstragalusLevel2;
+  window.OsseletsLevel2 = { mount };
+  log('✓ Script chargé - Usage: await OsseletsLevel2.mount(element)');
 })();
