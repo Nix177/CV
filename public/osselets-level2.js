@@ -7,6 +7,8 @@
  * - Fil pour relier les lettres et écrire des mots
  * - Occlusion réelle des trous cachés
  * - Édition des lettres par trou
+ * 
+ * IMPORTANT: Requiert Three.js et GLTFLoader chargés globalement
  * ==========================================================================*/
 
 (() => {
@@ -19,9 +21,6 @@
   const WORDS_JS = BASE + "3d/letters.json";
 
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
-  const THREE_VER = "0.158.0";
-  const THREE_URL = `https://cdn.jsdelivr.net/npm/three@${THREE_VER}/build/three.module.js`;
-  const GLTF_URL = `https://cdn.jsdelivr.net/npm/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
 
   // Paramètres visuels HUD
   const DOT_R = 11;
@@ -40,23 +39,52 @@
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
   const fetchJSON = (u) => fetch(u, {cache: "no-store"}).then(r => r.ok ? r.json() : null).catch(() => null);
 
-  async function loadLibs() {
-    const w = window;
-    if (w.__L2_LIBS) return w.__L2_LIBS;
-    log('Chargement Three.js v%s', THREE_VER);
-    
-    try {
-      const THREE = await import(THREE_URL);
-      const { GLTFLoader } = await import(GLTF_URL);
-      w.__L2_LIBS = { THREE, GLTFLoader };
-      return w.__L2_LIBS;
-    } catch (err) {
-      console.error('[L2] Erreur chargement Three.js:', err);
-      throw new Error('Impossible de charger Three.js. Vérifiez votre connexion.');
+  // Vérifie que Three.js est chargé
+  function checkThreeJS() {
+    if (typeof THREE === 'undefined') {
+      throw new Error('THREE.js non trouvé. Assurez-vous que Three.js est chargé avant ce script.');
     }
+    if (typeof THREE.GLTFLoader === 'undefined') {
+      throw new Error('GLTFLoader non trouvé. Assurez-vous que GLTFLoader.js est chargé.');
+    }
+    log('Three.js version:', THREE.REVISION);
+    return true;
   }
 
-  function frameToObject(THREE, cam, obj, margin = 1.25) {
+  // Charge dynamiquement Three.js si nécessaire
+  async function ensureThreeJS() {
+    if (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') {
+      return true;
+    }
+
+    log('Chargement dynamique de Three.js...');
+    
+    // Charge Three.js
+    if (typeof THREE === 'undefined') {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js';
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Échec du chargement de Three.js'));
+        document.head.appendChild(script);
+      });
+    }
+
+    // Charge GLTFLoader
+    if (typeof THREE.GLTFLoader === 'undefined') {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/GLTFLoader.js';
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Échec du chargement de GLTFLoader'));
+        document.head.appendChild(script);
+      });
+    }
+
+    return checkThreeJS();
+  }
+
+  function frameToObject(cam, obj, margin = 1.25) {
     const box = new THREE.Box3().setFromObject(obj);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
@@ -73,7 +101,7 @@
     cam.updateMatrixWorld(true);
   }
 
-  function normalizeAndCenter(THREE, target, aimMaxDim = 2.2) {
+  function normalizeAndCenter(target, aimMaxDim = 2.2) {
     const box = new THREE.Box3().setFromObject(target);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
@@ -159,14 +187,11 @@
   async function mount(rootEl) {
     log('Initialisation du jeu...');
 
-    // Chargement des bibliothèques
-    let THREE, GLTFLoader;
+    // Vérifie/charge Three.js
     try {
-      const libs = await loadLibs();
-      THREE = libs.THREE;
-      GLTFLoader = libs.GLTFLoader;
+      await ensureThreeJS();
     } catch (err) {
-      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;">${err.message}</div>`;
+      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;font-family:system-ui;">${err.message}</div>`;
       return { destroy: () => {} };
     }
 
@@ -196,7 +221,7 @@
 
     // Initialisation Three.js
     const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true });
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.sRGBEncoding;
     renderer.setPixelRatio(clamp(devicePixelRatio || 1, 1, VIEW.DPR_MAX));
     renderer.setSize(VIEW.W, VIEW.H, false);
 
@@ -230,7 +255,7 @@
     updateWordLabel();
 
     // Chargement du modèle
-    const loader = new GLTFLoader();
+    const loader = new THREE.GLTFLoader();
     let root;
     try {
       root = await new Promise((resolve, reject) => {
@@ -255,13 +280,17 @@
             });
             resolve(r);
           },
-          undefined,
+          (progress) => {
+            if (progress.lengthComputable) {
+              log('Chargement:', Math.round(progress.loaded / progress.total * 100) + '%');
+            }
+          },
           reject
         );
       });
     } catch (err) {
       console.error('[L2] Erreur chargement modèle:', err);
-      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;">Erreur: Impossible de charger le modèle 3D.<br>Vérifiez le chemin: ${MODEL}</div>`;
+      rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b1f33;border-radius:12px;font-family:system-ui;">Erreur: Impossible de charger le modèle 3D.<br><small>Chemin: ${MODEL}</small><br><small>${err.message}</small></div>`;
       return { destroy: () => {} };
     }
 
@@ -269,14 +298,26 @@
     modelWrap.add(root);
     pivot.add(modelWrap);
 
-    normalizeAndCenter(THREE, modelWrap, 2.25);
-    frameToObject(THREE, cam, modelWrap, 1.35);
+    normalizeAndCenter(modelWrap, 2.25);
+    frameToObject(cam, modelWrap, 1.35);
 
     // Collecte des anchors
     const anchors = collectHoles(modelWrap);
     log('Trous trouvés:', anchors.length, anchors.map(a => a.name));
     
-    if (anchors.length !== 24) {
+    if (anchors.length === 0) {
+      console.warn('[L2] Aucun trou trouvé! Création de trous virtuels...');
+      // Crée 24 trous virtuels en cercle
+      for (let i = 0; i < 24; i++) {
+        const dummy = new THREE.Object3D();
+        const angle = (i / 24) * Math.PI * 2;
+        const radius = 0.9;
+        dummy.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
+        dummy.name = `Hole_${i + 1}`;
+        modelWrap.add(dummy);
+        anchors.push(dummy);
+      }
+    } else if (anchors.length !== 24) {
       console.warn(`[L2] ${anchors.length} trous trouvés (24 attendus)`);
     }
 
@@ -414,21 +455,28 @@
 
     hud.addEventListener('click', (e) => {
       const idx = pickNearest(e.clientX, e.clientY);
-      if (idx >= 0) currentPath.push(idx);
+      if (idx >= 0) {
+        currentPath.push(idx);
+        log('Trou sélectionné:', idx, LETTERS[idx]);
+      }
     });
 
     hud.addEventListener('contextmenu', (e) => {
       e.preventDefault();
-      currentPath.pop();
+      if (currentPath.length > 0) {
+        const removed = currentPath.pop();
+        log('Trou retiré:', removed);
+      }
     });
 
     // Contrôles
     function reset() {
       currentPath.length = 0;
       pivot.rotation.set(0, 0, 0);
-      frameToObject(THREE, cam, modelWrap, 1.35);
+      frameToObject(cam, modelWrap, 1.35);
       cam.zoom = 1;
       cam.updateProjectionMatrix();
+      log('Reset effectué');
     }
 
     ui.btnReset.addEventListener('click', reset);
@@ -492,7 +540,7 @@
       raf = requestAnimationFrame(loop);
     })();
 
-    log('Jeu initialisé avec succès');
+    log('✓ Jeu initialisé avec succès');
 
     return {
       destroy() {
@@ -501,12 +549,12 @@
         window.removeEventListener('resize', syncSizes);
         try { renderer.dispose(); } catch {}
         rootEl.innerHTML = '';
+        log('Jeu détruit');
       }
     };
   }
 
   // API globale
   window.OsseletsLevel2 = { mount };
-  log('Script chargé, prêt à l\'utilisation');
-  log('Usage: await OsseletsLevel2.mount(document.getElementById("game"))');
+  log('✓ Script chargé - Usage: await OsseletsLevel2.mount(element)');
 })();
