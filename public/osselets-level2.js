@@ -123,7 +123,14 @@
 
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
-        waitForGlobal('GLTFLoader', async (GLTFLoader) => {
+        // GLTFLoader est exposé via THREE.GLTFLoader avec unpkg
+        const GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+        if (!GLTFLoader) {
+          console.error('[L2] THREE.GLTFLoader introuvable');
+          rootEl.innerHTML = '<div style="color:#ff6b6b;padding:20px;text-align:center;">GLTFLoader non chargé</div>';
+          return;
+        }
+        log('GLTFLoader trouvé');
           
           // DOM setup
           rootEl.innerHTML = '';
