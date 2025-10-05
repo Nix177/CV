@@ -66,22 +66,34 @@
     const refreshBtn = document.getElementById("refresh");
     const showMeta = document.getElementById("showMeta");
 
+    async function fetchFirstOk(urls) {
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (r.ok) return await r.json();
+        } catch {}
+      }
+      throw new Error("Aucune source disponible");
+    }
+
     async function load() {
       try {
-        // Le workflow génère /public/news/feed.json → servi comme /news/feed.json
-        const res = await fetch("/news/feed.json", { cache: "no-store" });
-        if (!res.ok) throw new Error("feed.json introuvable");
-        const data = await res.json();
+        // 1) fichier statique déployé   2) API fallback   3) GitHub raw (secours)
+        const data = await fetchFirstOk([
+          "/news/feed.json",
+          "/api/news",
+          "https://raw.githubusercontent.com/Nix177/CV/main/public/news/feed.json"
+        ]);
         render(data);
       } catch (e) {
-        grid.innerHTML = "<p class='err'>Pas encore de données. Le flux sera généré au premier passage de l'action planifiée.</p>";
+        grid.innerHTML = "<p class='err'>Pas encore de données. Réessaie dans une minute.</p>";
         stamp.textContent = "—";
       }
     }
 
     function render(data) {
       grid.innerHTML = "";
-      stamp.textContent = `Généré le ${new Date(data.generatedAt).toLocaleString()}. ${data.totalPublished} sélection(s).`;
+      stamp.textContent = `Généré le ${new Date(data.generatedAt).toLocaleString()}. ${data.totalPublished ?? (data.items?.length || 0)} sélection(s).`;
       (data.items || []).forEach(it => {
         const tpl = document.getElementById("card-tpl").content.cloneNode(true);
         const a = document.createElement("a");
