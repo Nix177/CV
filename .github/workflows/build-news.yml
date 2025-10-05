@@ -1,39 +1,59 @@
 name: Build news feed
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "7 */3 * * 1-5"   # toutes les 3h (UTC), jours ouvrés
-  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-news
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check OPENAI_API_KEY secret
+        run: |
+          if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "::error::Missing OPENAI_API_KEY repository secret"
+            exit 1
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
-      - name: Install deps
-        run: npm ci || npm i
+      - name: Install deps (lock-aware) + safety net
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i
+          fi
+          # filet de sécurité si des deps manquent dans package.json
+          npm i --no-save rss-parser openai cheerio
 
       - name: Build news feed
-        run: npm run build:news
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: gpt-4o-mini
           NEWS_SCORE_MIN: "70"
           NEWS_MAX_ITEMS: "60"
+        run: node tools/build-news.mjs
 
-      - name: Commit feed.json
+      - name: Commit feed.json (only if changed)
         run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
           git add public/news/feed.json
-          git diff --cached --quiet || git commit -m "news: update feed.json"
-          git push
+          git diff --cached --quiet && echo "No changes to commit." || (git commit -m "news: update feed.json" && git push)
