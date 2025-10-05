@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Tech News — Éducation numérique & IA</title>
+  <meta name="description" content="Sélection automatique des actualités importantes (éducation numérique, IA, politiques, standards)."/>
+  <style>
+    :root { --fg:#111; --muted:#666; --card:#fff; --line:#e6e6e6; --bg:#fafafa; }
+    @media (prefers-color-scheme: dark) {
+      :root { --fg:#eaeaea; --muted:#9aa0a6; --card:#151515; --line:#2a2a2a; --bg:#0b0b0b; }
+    }
+    * { box-sizing:border-box }
+    html,body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+    header { max-width:980px; margin:24px auto 8px; padding:0 16px }
+    h1 { margin:0 0 8px; font-size:clamp(1.4rem,2vw + 1rem,2rem) }
+    .sub { margin:0 0 12px; color:var(--muted) }
+    .toolbar { display:flex; gap:12px; align-items:center; margin:8px 0 }
+    button { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer }
+    button:hover { filter:brightness(1.05) }
+    .chk { color:var(--muted); font-size:0.95rem }
+    .stamp { color:var(--muted); font-size:0.9rem; margin:4px 0 0 }
+
+    .grid { max-width:980px; margin:0 auto; padding:16px; display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px }
+    .card { border:1px solid var(--line); border-radius:14px; background:var(--card); padding:14px }
+    .card h2 { font-size:1.05rem; margin:0 0 6px; }
+    .card h2 a { color:inherit; text-decoration:none }
+    .card h2 a:hover { text-decoration:underline }
+    .meta { color:var(--muted); font-size:0.9rem; margin:0 0 8px }
+    .r { margin:0 0 8px }
+    .tags { display:flex; flex-wrap:wrap; gap:6px }
+    .tag { border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:0.85rem }
+    .err,.info { color:var(--muted); padding:16px }
+    footer { max-width:980px; margin:8px auto 32px; padding:0 16px; color:var(--muted); font-size:0.9rem }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tech News</h1>
+    <p class="sub">Actus “haute importance” : régulation, politiques publiques, standards, rapports, cybersécurité.</p>
+    <div class="toolbar">
+      <button id="refresh">Actualiser</button>
+      <label class="chk"><input type="checkbox" id="showMeta"/> Afficher les métadonnées</label>
+    </div>
+    <p id="stamp" class="stamp">—</p>
+  </header>
+
+  <main id="grid" class="grid" aria-live="polite"></main>
+
+  <template id="card-tpl">
+    <article class="card">
+      <h2 class="t"></h2>
+      <p class="meta"></p>
+      <p class="r"></p>
+      <p class="tags"></p>
+    </article>
+  </template>
+
+  <footer>
+    <p>Sources : organismes & revues reconnues (UNESCO, OCDE, CNIL, NCSC, EDUCAUSE, etc.).</p>
+  </footer>
+
+  <script>
+    const grid = document.getElementById("grid");
+    const stamp = document.getElementById("stamp");
+    const refreshBtn = document.getElementById("refresh");
+    const showMeta = document.getElementById("showMeta");
+
+    async function load() {
+      try {
+        // Le workflow génère /public/news/feed.json → servi comme /news/feed.json
+        const res = await fetch("/news/feed.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("feed.json introuvable");
+        const data = await res.json();
+        render(data);
+      } catch (e) {
+        grid.innerHTML = "<p class='err'>Pas encore de données. Le flux sera généré au premier passage de l'action planifiée.</p>";
+        stamp.textContent = "—";
+      }
+    }
+
+    function render(data) {
+      grid.innerHTML = "";
+      stamp.textContent = `Généré le ${new Date(data.generatedAt).toLocaleString()}. ${data.totalPublished} sélection(s).`;
+      (data.items || []).forEach(it => {
+        const tpl = document.getElementById("card-tpl").content.cloneNode(true);
+        const a = document.createElement("a");
+        a.href = it.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = it.title;
+        tpl.querySelector(".t").appendChild(a);
+
+        const d = it.published ? new Date(it.published) : null;
+        const meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""}${showMeta.checked ? ` • score ${it.score}` : ""}`;
+        tpl.querySelector(".meta").textContent = meta;
+
+        tpl.querySelector(".r").textContent = it.resume_fr || "";
+        tpl.querySelector(".tags").innerHTML = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
+        grid.appendChild(tpl);
+      });
+
+      if (!data.items || !data.items.length) {
+        grid.innerHTML = "<p class='info'>Aucune actualité au-dessus du seuil pour l’instant.</p>";
+      }
+    }
+
+    refreshBtn.addEventListener("click", load);
+    showMeta.addEventListener("change", load);
+    load();
+  </script>
+</body>
+</html>
