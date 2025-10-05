@@ -4,8 +4,8 @@ import { SOURCES } from "./sources.mjs";
 import { readFeedMaybe, dedupe } from "./rss-utils.mjs";
 
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
-const SCORE_THRESHOLD = parseInt(process.env.NEWS_SCORE_MIN ?? "70", 10); // garde >= 70
-const MAX_ITEMS_TOTAL = parseInt(process.env.NEWS_MAX_ITEMS ?? "60", 10); // borne haute agrégée
+const SCORE_THRESHOLD = parseInt(process.env.NEWS_SCORE_MIN ?? "70", 10); // >= 70
+const MAX_ITEMS_TOTAL = parseInt(process.env.NEWS_MAX_ITEMS ?? "60", 10); // borne haute
 const OUTPUT_PATH = "public/news/feed.json";
 
 function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
@@ -14,51 +14,43 @@ async function gatherAll() {
   const results = await Promise.all(SOURCES.map(readFeedMaybe));
   const all = results.flatMap(r => r.items);
   const unique = dedupe(all);
-  // Tri par date (nulls en bas), garde une borne haute pour la requête OpenAI
   unique.sort((a,b) => (new Date(b.published || 0)) - (new Date(a.published || 0)));
   return unique.slice(0, MAX_ITEMS_TOTAL);
 }
 
 function buildBatchedInput(items) {
-  // Entrées batched pour Responses API (JSON structuré)
   return items.map(it => ({
     role: "user",
     content: [
       { type: "text", text:
         "Tu es un assistant de veille pour l'éducation numérique/IA. " +
-        "Retourne STRICTEMENT du JSON respectant le schéma: " +
-        "{score:int[0..100], resume_fr:string[2-3 phrases], tags:string[2..5]}.\n" +
-        "Grille de score: A) impact politique/réglementaire/standards (40), " +
+        "Retourne STRICTEMENT du JSON suivant pour CHAQUE entrée: " +
+        "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5]}.\n" +
+        "Grille score: A) impact politique/réglementaire/standards (40), " +
         "B) portée internationale/institution majeure (25), " +
         "C) nouveauté étayée par source/rapport (20), " +
-        "D) impact direct écoles/universités/enseignants (15). "
+        "D) impact direct écoles/universités/enseignants (15)."
       },
-      { type: "input_text", text:
-        `${it.title}\n${it.url}\n${it.snippet || ""}`
-      }
+      { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
     ]
   }));
 }
 
-function safeParseArray(jsonText) {
-  try { const v = JSON.parse(jsonText); return Array.isArray(v) ? v : null; }
-  catch { return null; }
+function safeParseArray(txt) {
+  try { const v = JSON.parse(txt); return Array.isArray(v) ? v : null; } catch { return null; }
 }
 
 function extractJsonArrayFromResponses(resp) {
-  // openai.responses.create => on tente différentes voies selon la version du SDK
+  // openai.responses.create : selon SDK, le JSON structuré peut se trouver dans output_text
   if (resp?.output_text) {
     const arr = safeParseArray(resp.output_text);
     if (arr) return arr;
   }
-  // Parcours des blocs "output"
   try {
     const texts = [];
     for (const blk of resp.output || []) {
       for (const c of blk.content || []) {
-        if (c.type === "output_text" || c.type === "text") {
-          texts.push(c.text);
-        }
+        if (c.type === "output_text" || c.type === "text") texts.push(c.text);
       }
     }
     const joined = texts.join("\n");
@@ -74,7 +66,7 @@ async function analyzeWithOpenAI(items) {
 
   const resp = await openai.responses.create({
     model: OPENAI_MODEL,
-    instructions: "Respecte exactement le schéma JSON demandé, sans texte hors JSON.",
+    instructions: "Respecte EXACTEMENT le schéma JSON demandé, sans texte hors JSON.",
     input: inputBlocks,
     max_output_tokens: 3500,
     response_format: {
@@ -117,9 +109,7 @@ function attachAnalyses(items, analyses) {
 }
 
 async function main() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
-  }
+  if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
 
   const gathered = await gatherAll();
   let analyzed;
@@ -128,8 +118,7 @@ async function main() {
     analyzed = attachAnalyses(gathered, analyses);
   } catch (e) {
     console.error("OpenAI analysis failed:", e.message);
-    // Fallback: pas de score, résumés = snippet
-    analyzed = attachAnalyses(gathered, []);
+    analyzed = attachAnalyses(gathered, []); // fallback: score 0 + snippet
   }
 
   const filtered = analyzed
@@ -150,7 +139,4 @@ async function main() {
   console.log(`OK: wrote ${filtered.length} items to ${OUTPUT_PATH}`);
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+main().catch(err => { console.error(err); process.exit(1); });
