@@ -52,6 +52,7 @@ jobs:
           OPENAI_MODEL: gpt-4o-mini
           NEWS_SCORE_MIN: "70"
           NEWS_MAX_ITEMS: "60"
+          NEWS_MIN_PUBLISH: "8"   # publie au moins 8 cartes même si seuil non atteint
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
@@ -72,4 +73,15 @@ jobs:
           else
             git commit -m "news: update feed.json"
             git push
+          fi
+
+      - name: Trigger Vercel redeploy (optional)
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -n "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "Triggering Vercel redeploy…"
+            curl -s -X POST "$VERCEL_DEPLOY_HOOK_URL" >/dev/null || true
+          else
+            echo "No VERCEL_DEPLOY_HOOK_URL secret set — skipping."
           fi
