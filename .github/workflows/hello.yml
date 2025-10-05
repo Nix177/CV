@@ -1,0 +1,11 @@
+name: Hello (sanity check)
+
+on:
+  workflow_dispatch:  # bouton "Run workflow"
+  push:               # au prochain commit
+
+jobs:
+  hi:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Actions are enabled ✅"
