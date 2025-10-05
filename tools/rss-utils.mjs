@@ -7,8 +7,8 @@ export function canonicalUrl(u) {
   try {
     const url = new URL(u);
     url.hash = "";
-    // enlève certains paramètres "tracking"
-    ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","mc_cid","mc_eid"].forEach(p => url.searchParams.delete(p));
+    ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","mc_cid","mc_eid"]
+      .forEach(p => url.searchParams.delete(p));
     return url.toString();
   } catch { return (u || "").trim(); }
 }
@@ -40,7 +40,6 @@ export async function discoverFeed(pageUrl) {
 }
 
 export async function readFeedMaybe(source) {
-  // Si l'URL n’est pas manifestement un flux, tente la découverte.
   let feedUrl = source.url;
   if (!/(\.xml|\.rss|\.atom)(\?|$)/i.test(feedUrl) && !/\/feed\/?(\?|$)/i.test(feedUrl)) {
     const discovered = await discoverFeed(feedUrl);
@@ -51,7 +50,7 @@ export async function readFeedMaybe(source) {
     const feed = await parser.parseURL(feedUrl);
     const items = (feed.items || [])
       .filter(it => it.title && it.link)
-      .slice(0, 7) // borne haute par source
+      .slice(0, 7)
       .map(it => ({
         source: source.name,
         title: (it.title || "").trim(),
@@ -60,7 +59,7 @@ export async function readFeedMaybe(source) {
         snippet: ((it.contentSnippet || it.summary || it.content || "").replace(/\s+/g, " ").trim()).slice(0, 600)
       }));
     return { ok: true, items };
-  } catch (e) {
+  } catch {
     return {
       ok: false,
       items: [{
