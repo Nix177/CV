@@ -6,9 +6,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "echo \"No build needed (static site + Vercel functions)\""
+    "build": "echo \"No build needed (static site + Vercel functions)\"",
+    "build:news": "node tools/build-news.mjs"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "openai": "^4.57.0",
+    "rss-parser": "^3.12.0"
   }
 }
