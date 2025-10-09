@@ -15,8 +15,50 @@ const PROFILES_RAW     = (process.env.NEWS_PROFILES || "").trim();
 const PROFILES         = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
   .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
 
-// Optionnel : override des poids (R,P,I,M), ex: "40,25,20,15"
+// Option : override des poids (R,P,I,M), ex: "40,25,20,15"
 const CUSTOM_WEIGHTS_RAW = (process.env.NEWS_CUSTOM_WEIGHTS || "").trim();
+
+// --------- Labels/Descriptions/Keywords ----------
+const LABELS = {
+  research:     process.env.NEWS_LABEL_RESEARCH     || "Recherche",
+  policy:       process.env.NEWS_LABEL_POLICY       || "Politiques",
+  institution:  process.env.NEWS_LABEL_INSTITUTION  || "Institution",
+  impact:       process.env.NEWS_LABEL_IMPACT       || "Impact",
+};
+
+const DESCS = {
+  research:     process.env.NEWS_DESC_RESEARCH     || "articles/journaux, conférences, CFP, résultats scientifiques",
+  policy:       process.env.NEWS_DESC_POLICY       || "lois, régulations, standards, cadres, gouvernance",
+  institution:  process.env.NEWS_DESC_INSTITUTION  || "communiqués des grandes agences et autorités (UNESCO, OCDE, CNIL, ministères…)",
+  impact:       process.env.NEWS_DESC_IMPACT       || "impact direct pour la classe/enseignants/universités/EdTech",
+};
+
+function splitKeys(s, fallback) {
+  const base = (s && s.trim()) ? s : fallback;
+  return base.split(",").map(x => x.trim()).filter(Boolean);
+}
+
+const KEYS = {
+  research: splitKeys(process.env.NEWS_KEYS_RESEARCH,
+    "arxiv,preprint,doi,journal,conference,proceedings,workshop,submission,cfp,acceptance,springer,wiley,nature,frontiers,acm,ieee"),
+  policy: splitKeys(process.env.NEWS_KEYS_POLICY,
+    "ai act,regulation,régulation,policy,politique,standard,framework,guidance,law,act,ordonnance,décret,ethics,ethical"),
+  institution: splitKeys(process.env.NEWS_KEYS_INSTITUTION,
+    "unesco,oecd,ocde,cnil,edps,ncsc,minist,commission,nsf,ukri,ies,european commission"),
+  impact: splitKeys(process.env.NEWS_KEYS_IMPACT,
+    "school,education,teacher,enseignant,k-12,universit,student,pupil,mooc,classroom,edtech"),
+};
+
+function mkRegex(keys){
+  const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  return new RegExp("(" + escaped.join("|") + ")", "i");
+}
+const RX = {
+  research: mkRegex(KEYS.research),
+  policy:   mkRegex(KEYS.policy),
+  institution: mkRegex(KEYS.institution),
+  impact:   mkRegex(KEYS.impact),
+};
 
 // --------- HELPERS ----------
 function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
@@ -60,8 +102,8 @@ async function gatherAll() {
 
 // --- LLM prompt helpers ---
 function buildPromptWeights(W) {
-  return `Pondérations (total 100): RECHERCHE ${W.research}, POLITIQUES/RÉGULATION ${W.policy}, ` +
-         `INSTITUTION ${W.institution}, IMPACT direct écoles/universités/enseignants ${W.impact}.`;
+  return `Pondérations (total 100) — ${LABELS.research}: ${W.research}, ${LABELS.policy}: ${W.policy}, ${LABELS.institution}: ${W.institution}, ${LABELS.impact}: ${W.impact}.` +
+  `\nDéfinitions: ${LABELS.research} = ${DESCS.research}; ${LABELS.policy} = ${DESCS.policy}; ${LABELS.institution} = ${DESCS.institution}; ${LABELS.impact} = ${DESCS.impact}.`;
 }
 
 function buildBatchedInput(items, W) {
@@ -69,13 +111,16 @@ function buildBatchedInput(items, W) {
     role: "user",
     content: [
       { type: "text", text:
-        "Tu es un assistant de veille pour l'éducation numérique/IA. " +
-        "Retourne STRICTEMENT du JSON pour CHAQUE entrée, schéma: " +
+        "Tu es un assistant de veille pour l'éducation numérique/IA.\n" +
+        "Retourne STRICTEMENT un JSON par entrée, schéma:\n" +
         "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5], " +
-        " breakdown:{research:int,policy:int,institution:int,impact:int}, reason:string(1 phrase)}.\n" +
+        " breakdown: object<number>, reason:string(1 phrase)}.\n" +
+        "Le champ breakdown DOIT contenir les clés EXACTES: research, policy, institution, impact (entiers 0..100), " +
+        "où les clés correspondent aux catégories décrites ci-dessous.\n" +
         buildPromptWeights(W) +
-        " Priorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
-        "(ii) politiques/régulation majeures, (iii) communiqués d'institutions de premier plan."
+        "\nPriorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
+        "(ii) politiques/régulation/standards/éthique/philosophie si configuré, " +
+        "(iii) communiqués d'institutions de premier plan."
       },
       { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
     ]
@@ -107,7 +152,6 @@ async function analyzeWithOpenAI(items, W) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const inputBlocks = buildBatchedInput(items, W);
 
-  // Responses API → 'text.format' pour Structured Outputs
   const resp = await openai.responses.create({
     model: OPENAI_MODEL,
     instructions: "Respecte EXACTEMENT le schéma JSON demandé, sans texte hors JSON.",
@@ -132,14 +176,12 @@ async function analyzeWithOpenAI(items, W) {
                 reason: { type: "string" },
                 breakdown: {
                   type: "object",
-                  additionalProperties: false,
-                  required: ["research","policy","institution","impact"],
-                  properties: {
-                    research: { type: "integer", minimum: 0, maximum: 100 },
-                    policy:   { type: "integer", minimum: 0, maximum: 100 },
-                    institution: { type: "integer", minimum: 0, maximum: 100 },
-                    impact:   { type: "integer", minimum: 0, maximum: 100 }
-                  }
+                  additionalProperties: {
+                    type: "integer",
+                    minimum: 0,
+                    maximum: 100
+                  },
+                  required: ["research","policy","institution","impact"]
                 }
               }
             }
@@ -180,12 +222,12 @@ function makeHeuristic(W){
   return function scoreWithBreakdown(x) {
     const t = `${x.title} ${x.source}`.toLowerCase();
     const bd = { research:0, policy:0, institution:0, impact:0 };
-    if (/\b(arxiv|preprint|doi|journal|conference|proceedings|workshop|submission|cfp|acceptance|springer|wiley|nature|frontiers|acm|ieee)\b/.test(t)) bd.research += W.research;
-    if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|standard|framework|guidance|law|act|ordonnance|décret)\b/.test(t)) bd.policy   += W.policy;
-    if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|solar|solaresearch|ies|us dept|edm|sigcse)\b/.test(t))  bd.institution += W.institution;
-    if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) bd.impact     += W.impact;
+    if (RX.research.test(t))    bd.research    += W.research;
+    if (RX.policy.test(t))      bd.policy      += W.policy;
+    if (RX.institution.test(t)) bd.institution += W.institution;
+    if (RX.impact.test(t))      bd.impact      += W.impact;
     const score = Math.min(100, bd.research + bd.policy + bd.institution + bd.impact);
-    const reason = `Heuristique: R=${bd.research}, P=${bd.policy}, I=${bd.institution}, M=${bd.impact}.`;
+    const reason = `Heuristique: ${LABELS.research}=${bd.research}, ${LABELS.policy}=${bd.policy}, ${LABELS.institution}=${bd.institution}, ${LABELS.impact}=${bd.impact}.`;
     return { score, breakdown: bd, reason };
   };
 }
@@ -283,7 +325,14 @@ async function buildForProfile(profile, gathered) {
     threshold: SCORE_THRESHOLD,
     totalAnalyzed: analyzed.length,
     totalPublished: selected.length,
-    debug: { analysisFailed, minPublish: MIN_PUBLISH, weightsUsed: W },
+    debug: {
+      analysisFailed,
+      minPublish: MIN_PUBLISH,
+      weightsUsed: W,
+      labelsUsed: LABELS,
+      descUsed: DESCS,
+      keysUsed: KEYS
+    },
     items: selected
   };
 
