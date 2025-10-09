@@ -32,6 +32,8 @@
     .pager a, .pager span, .toolbar .chip { padding:6px 10px; border:1px solid var(--line); border-radius:10px; background: var(--surface); color: var(--text); text-decoration:none; }
     .pager .current { font-weight:700; background: color-mix(in oklab, var(--surface), #fff 6%); }
     .muted { color: var(--muted); }
+    .reason { font-size:.9rem; color: var(--muted); margin: 0; }
+    .bd { font-variant-numeric: tabular-nums; }
   </style>
 </head>
 <body>
@@ -70,6 +72,12 @@
           <option value="policy">Politiques</option>
         </select>
       </label>
+
+      <label title="Seuil de score (0 à 100). Les cartes sous ce seuil sont masquées.">
+        Seuil
+        <input type="range" id="th" min="0" max="100" step="5" style="vertical-align:middle">
+        <span id="thVal" class="bd">—</span>
+      </label>
     </div>
 
     <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
@@ -88,6 +96,7 @@
       <p class="meta"></p>
       <p class="r"></p>
       <p class="tags"></p>
+      <p class="reason"></p>
     </article>
   </template>
 
@@ -105,6 +114,8 @@
     const viewPagesBtn = document.getElementById("viewPages");
     const viewDaysBtn  = document.getElementById("viewDays");
     const profileSel   = document.getElementById("profile");
+    const thSlider     = document.getElementById("th");
+    const thVal        = document.getElementById("thVal");
 
     const VIEW = (params.get("view") || "pages");
     const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
@@ -115,6 +126,8 @@
 
     const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
     profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
+
+    let THRESH = clampInt(params.get("t") || "0", 0, 100); // 0 par défaut; on ajustera après le fetch si t absent
 
     pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
     qInput.value = FILTER;
@@ -151,6 +164,16 @@
       try {
         const data = await fetchFirstOk(makeUrls(profileSel.value));
         DATA = data;
+
+        // si aucun ?t dans l'URL, on initialise le seuil au threshold du feed
+        if (!params.has("t")) {
+          THRESH = clampInt(String(DATA.threshold ?? 65), 0, 100);
+          thSlider.value = String(THRESH); thVal.textContent = THRESH;
+          history.replaceState(null, "", "?"+buildQS());
+        } else {
+          thSlider.value = String(THRESH); thVal.textContent = THRESH;
+        }
+
         render();
       } catch (e) {
         grid.innerHTML = "<p class='muted'>Pas encore de données. Réessaie dans une minute.</p>";
@@ -160,12 +183,17 @@
 
     function filterItems(items) {
       const q = FILTER.toLowerCase();
-      if (!q) return items;
-      return items.filter(it =>
-        (it.title||"").toLowerCase().includes(q) ||
-        (it.source||"").toLowerCase().includes(q) ||
-        (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
-      );
+      let out = items;
+      if (q) {
+        out = out.filter(it =>
+          (it.title||"").toLowerCase().includes(q) ||
+          (it.source||"").toLowerCase().includes(q) ||
+          (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
+        );
+      }
+      // filtre par seuil utilisateur
+      out = out.filter(it => (it.score ?? 0) >= THRESH);
+      return out;
     }
 
     function groupByDay(items) {
@@ -197,6 +225,7 @@
       p.set("view", VIEW);
       p.set("n", PAGE_SIZE);
       p.set("profile", profileSel.value);
+      p.set("t", THRESH);
       if (FILTER) p.set("q", FILTER);
       if (VIEW === "pages") p.set("p", PAGE);
       if (VIEW === "days")  p.set("d", DAY_INDEX);
@@ -214,7 +243,8 @@
       stamp.textContent =
         `Généré le ${new Date(DATA.generatedAt).toLocaleString()}. ` +
         `${DATA.totalPublished ?? total} sélection(s).` +
-        (showMeta.checked && DATA.profile ? ` • profil: ${DATA.profile}` : "") +
+        ` • profil: ${DATA.profile}` +
+        ` • seuil: ${THRESH}` +
         (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI indisponible" : "");
 
       grid.innerHTML = "";
@@ -260,11 +290,18 @@
         tpl.querySelector(".t").appendChild(a);
 
         const d = it.published ? new Date(it.published) : null;
-        const meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""}${showMeta.checked ? ` • score ${it.score}` : ""}`;
+        const breakdown = it.breakdown || {};
+        const bdStr = showMeta.checked && breakdown
+          ? ` • R/P/I/M: ${breakdown.research|0}/${breakdown.policy|0}/${breakdown.institution|0}/${breakdown.impact|0}`
+          : "";
+        const meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""}${showMeta.checked ? ` • score ${it.score}${bdStr}` : ""}`;
         tpl.querySelector(".meta").textContent = meta;
 
         tpl.querySelector(".r").textContent = it.resume_fr || "";
         tpl.querySelector(".tags").innerHTML = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
+
+        // Raison (LLM ou heuristique), visible seulement si Métadonnées cochée
+        tpl.querySelector(".reason").textContent = showMeta.checked && it.reason ? it.reason : "";
         grid.appendChild(tpl);
       });
     }
@@ -299,6 +336,14 @@
       params.set("profile", profileSel.value);
       params.set("p", "1"); params.set("d", "1");
       url.search = params.toString(); location.href = url.toString();
+    });
+
+    thSlider.addEventListener("input", () => {
+      THRESH = clampInt(thSlider.value, 0, 100);
+      thVal.textContent = THRESH;
+      params.set("t", String(THRESH));
+      history.replaceState(null, "", "?"+buildQS());
+      render();
     });
 
     load();
