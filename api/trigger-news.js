@@ -5,6 +5,7 @@ export default async function handler(req, res) {
       res.status(405).json({ error: "Method not allowed" });
       return;
     }
+
     const {
       use_openai = true,
       model,
@@ -14,24 +15,24 @@ export default async function handler(req, res) {
       output_cap = "60",
       max_items = "100",
       custom_weights = "",
-      // overrides bucket "policy" (ex. Philosophie)
       bucket_policy_label = "",
       bucket_policy_desc = "",
       bucket_policy_keywords = "",
       run_key
     } = req.body || {};
 
-    const owner  = process.env.GH_REPO_OWNER || "";
-    const repo   = process.env.GH_REPO_NAME  || "";
+    // --- support des deux conventions d'ENV ---
+    const owner  = process.env.GH_REPO_OWNER || process.env.GITHUB_OWNER || "";
+    const repo   = process.env.GH_REPO_NAME  || process.env.GITHUB_REPO  || "";
     const file   = process.env.GH_WORKFLOW_FILE || ".github/workflows/build-news.yml";
-    const token  = process.env.GH_WORKFLOW_TOKEN || "";
+    const token  = process.env.GH_WORKFLOW_TOKEN || process.env.GITHUB_TOKEN || "";
     const branch = process.env.GH_REPO_BRANCH || "main";
 
     const missing = [];
-    if (!owner) missing.push("GH_REPO_OWNER");
-    if (!repo) missing.push("GH_REPO_NAME");
-    if (!file) missing.push("GH_WORKFLOW_FILE");
-    if (!token) missing.push("GH_WORKFLOW_TOKEN");
+    if (!owner) missing.push("GH_REPO_OWNER|GITHUB_OWNER");
+    if (!repo)  missing.push("GH_REPO_NAME|GITHUB_REPO");
+    if (!file)  missing.push("GH_WORKFLOW_FILE");
+    if (!token) missing.push("GH_WORKFLOW_TOKEN|GITHUB_TOKEN");
     if (missing.length) {
       res.status(400).json({ error: "Missing GitHub env vars", missing });
       return;
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
 
     const inputs = {
       use_openai: String(use_openai) === "false" ? "false" : "true",
-      model: model || undefined,                          // laissé au défaut du workflow si non fourni
+      model: model || undefined, // si non fourni → défaut dans le workflow
       profile,
       score_min: String(score_min),
       min_publish: String(min_publish),
@@ -49,11 +50,10 @@ export default async function handler(req, res) {
       max_items: String(max_items),
       custom_weights: String(custom_weights || ""),
       bucket_policy_label: String(bucket_policy_label || ""),
-      bucket_policy_desc: String(bucket_policy_desc || ""),
+      bucket_policy_desc:  String(bucket_policy_desc  || ""),
       bucket_policy_keywords: String(bucket_policy_keywords || ""),
       run_key: key
     };
-    // supprime les undefined pour un body propre
     Object.keys(inputs).forEach(k => inputs[k] === undefined && delete inputs[k]);
 
     const body = { ref: branch, inputs };
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
     );
 
     if (r.status !== 204) {
-      const txt = await r.text().catch(()=> "");
+      const txt = await r.text().catch(() => "");
       res.status(502).json({ error: "GitHub dispatch failed", status: r.status, details: txt });
       return;
     }
