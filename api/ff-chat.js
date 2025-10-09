@@ -53,7 +53,7 @@ ${cards
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5',
+        model: 'gpt-4o-mini',
         temperature: 0.2,
         messages: [
           { role: 'system', content: sys },
