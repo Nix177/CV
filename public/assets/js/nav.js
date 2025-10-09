@@ -17,6 +17,8 @@
     { slug: 'passions',  label: { fr: 'Passions',       en: 'Passions',              de: 'Leidenschaften' } },
     { slug: 'chatbot',   label: { fr: 'Chatbot',        en: 'Chatbot',               de: 'Chatbot' } },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
+{ slug: 'tech-news', label: { fr: 'Tech News', en: 'Tech News', de: 'Tech News' } },
+
   ];
   const KNOWN = new Set(PAGES.map(p => p.slug));
 
