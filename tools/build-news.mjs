@@ -1,23 +1,43 @@
 import fs from "fs/promises";
 import OpenAI from "openai";
+import * as cheerio from "cheerio";
 import { SOURCES } from "./sources.mjs";
 import { readFeedMaybe, dedupe } from "./rss-utils.mjs";
 
 const OPENAI_MODEL     = process.env.OPENAI_MODEL || "gpt-4o-mini";
-const SCORE_THRESHOLD  = parseInt(process.env.NEWS_SCORE_MIN  ?? "70", 10); // Score mini “haute importance”
-const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS  ?? "60", 10); // Limite d’items analysés
-const MIN_PUBLISH      = parseInt(process.env.NEWS_MIN_PUBLISH ?? "8", 10); // **Nouveau**: minimum d’items publiés (fallback)
+const SCORE_THRESHOLD  = parseInt(process.env.NEWS_SCORE_MIN   ?? "70", 10);
+const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS   ?? "80", 10);
+const MIN_PUBLISH      = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
+const OUTPUT_CAP       = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
+const PROFILE          = (process.env.NEWS_PROFILE || "research").toLowerCase(); // research|balanced|policy
 const OUTPUT_PATH      = "public/news/feed.json";
 
+// Pondérations par profil
+const WEIGHTS = {
+  research: { research: 40, policy: 25, institution: 20, impact: 15 },
+  balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
+  policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
+};
+const W = WEIGHTS[PROFILE] || WEIGHTS.research;
+
 function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
+function host(u) { try { return new URL(u).hostname; } catch { return ""; } }
+function favicon(u, size=128) {
+  const h = host(u);
+  return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : "";
+}
 
 async function gatherAll() {
   const results = await Promise.all(SOURCES.map(readFeedMaybe));
   const all = results.flatMap(r => r.items);
   const unique = dedupe(all);
-  // Tri par date (nulls en bas), borne haute
   unique.sort((a,b) => (new Date(b.published || 0)) - (new Date(a.published || 0)));
   return unique.slice(0, MAX_ITEMS_TOTAL);
+}
+
+function buildPromptWeights() {
+  return `Pondérations (total 100): RECHERCHE ${W.research}, POLITIQUES/RÉGULATION ${W.policy}, ` +
+         `INSTITUTION ${W.institution}, IMPACT direct écoles/universités/enseignants ${W.impact}.`;
 }
 
 function buildBatchedInput(items) {
@@ -26,30 +46,24 @@ function buildBatchedInput(items) {
     content: [
       { type: "text", text:
         "Tu es un assistant de veille pour l'éducation numérique/IA. " +
-        "Retourne STRICTEMENT du JSON pour CHAQUE entrée, conformément à ce schéma: " +
+        "Retourne STRICTEMENT du JSON pour CHAQUE entrée, schéma: " +
         "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5]}.\n" +
-        "Grille: A) impact politique/réglementaire/standards (40), " +
-        "B) portée internationale/institution majeure (25), " +
-        "C) nouveauté étayée par source/rapport (20), " +
-        "D) impact direct écoles/universités/enseignants (15)."
+        buildPromptWeights() +
+        " Signale surtout: (i) articles/journaux/confs (nouveaux résultats, CFP, proceedings), " +
+        "(ii) politiques/régulation majeures, (iii) communiqués d'institutions de premier plan."
       },
       { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
     ]
   }));
 }
 
-function safeParseArray(txt) {
-  try { const v = JSON.parse(txt); return Array.isArray(v) ? v : null; }
-  catch { return null; }
-}
+function safeParseArray(txt) { try { const v = JSON.parse(txt); return Array.isArray(v) ? v : null; } catch { return null; } }
 
 function extractJsonArrayFromResponses(resp) {
-  // 1) Certaines versions exposent directement output_text
   if (resp?.output_text) {
     const arr = safeParseArray(resp.output_text);
     if (arr) return arr;
   }
-  // 2) Sinon on agrège les blocs output[].content[].text
   try {
     const texts = [];
     for (const blk of resp.output || []) {
@@ -67,7 +81,6 @@ function extractJsonArrayFromResponses(resp) {
 async function analyzeWithOpenAI(items) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const inputBlocks = buildBatchedInput(items);
-
   const resp = await openai.responses.create({
     model: OPENAI_MODEL,
     instructions: "Respecte EXACTEMENT le schéma JSON demandé, sans texte hors JSON.",
@@ -93,7 +106,6 @@ async function analyzeWithOpenAI(items) {
       }
     }
   });
-
   return extractJsonArrayFromResponses(resp);
 }
 
@@ -112,21 +124,63 @@ function attachAnalyses(items, analyses) {
   });
 }
 
+// Heuristique locale (si OpenAI échoue)
 function localHeuristicScore(x) {
-  // Heuristique simple si OpenAI échoue : mots-clés + source
   const t = `${x.title} ${x.source}`.toLowerCase();
   let s = 0;
-  if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|strategie|strategy|guideline|standard|framework)\b/.test(t)) s += 40;
-  if (/\b(oecd|unesco|european commission|cnil|edps|ncsc|federal|minist(er|ry)|university|educause)\b/.test(t)) s += 25;
-  if (/\b(report|rapport|study|étude|white ?paper|guidance|decision|décision|announcement)\b/.test(t)) s += 20;
-  if (/\b(school|education|teacher|enseignant|universit|student|pupil|école)\b/.test(t)) s += 15;
+  if (/\b(arxiv|preprint|doi|journal|conference|proceedings|workshop|submission|cfp|acceptance|springer|wiley|nature|frontiers|acm|ieee)\b/.test(t)) s += W.research;
+  if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|standard|framework|guidance|law|act|ordonnance|décret)\b/.test(t)) s += W.policy;
+  if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|sola(research)|ies|us dept|european commission|edm|sigcse|solar)\b/.test(t)) s += W.institution;
+  if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) s += W.impact;
   return Math.min(100, s);
 }
 
-async function main() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
+// --- Thumbnails (og:image / twitter:image) ---
+async function fetchHtml(url, ms = 7000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "EduNewsBot/1.0" } });
+    const ct = r.headers.get("content-type") || "";
+    if (!r.ok || !ct.includes("text/html")) return null;
+    return await r.text();
+  } catch { return null; }
+  finally { clearTimeout(tid); }
+}
+
+function absUrl(pageUrl, src) { try { return new URL(src, pageUrl).toString(); } catch { return null; } }
+
+async function findThumbnail(u) {
+  const html = await fetchHtml(u);
+  if (!html) return favicon(u);
+  const $ = cheerio.load(html);
+  const cand = [
+    $('meta[property="og:image"]').attr("content"),
+    $('meta[name="twitter:image"]').attr("content"),
+    $('link[rel="image_src"]').attr("href")
+  ].filter(Boolean).map(x => absUrl(u, x));
+  return cand[0] || favicon(u);
+}
+
+async function enrichThumbnails(items, concurrency = 10) {
+  const top = items.slice(0, 40); // limite requêtes
+  let i = 0;
+  async function worker() {
+    while (i < top.length) {
+      const idx = i++;
+      const it = top[idx];
+      try { it.image = await findThumbnail(it.url); }
+      catch { it.image = favicon(it.url); }
+    }
   }
+  await Promise.all(Array.from({ length: concurrency }, worker));
+  // Fallback favicon pour le reste
+  items.slice(40).forEach(it => { it.image = favicon(it.url); });
+}
+
+// --- Main ---
+async function main() {
+  if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
 
   const gathered = await gatherAll();
 
@@ -138,7 +192,6 @@ async function main() {
   } catch (e) {
     console.error("OpenAI analysis failed:", e.message);
     analysisFailed = true;
-    // Fallback : scoring heuristique local pour ne pas tout filtrer à 0
     analyzed = gathered.map(it => ({
       title: it.title,
       url: it.url,
@@ -150,39 +203,35 @@ async function main() {
     }));
   }
 
-  // Tri par score décroissant, puis date
-  const scored = [...analyzed].sort((a,b) => (b.score - a.score) || ((new Date(b.published||0)) - (new Date(a.published||0))));
+  // Tri par score puis date
+  const ranked = [...analyzed].sort((a,b) =>
+    (b.score - a.score) || ((new Date(b.published||0)) - (new Date(a.published||0)))
+  );
 
-  // 1) Filtre principal (seuil)
-  let selected = scored.filter(x => (x.score ?? 0) >= SCORE_THRESHOLD);
-
-  // 2) Fallback contrôlé : si rien (ou trop peu), on complète avec les meilleurs restants
-  let fallbackUsed = false;
+  // Filtre/seuil + fallback "minimum publié"
+  let selected = ranked.filter(x => (x.score ?? 0) >= SCORE_THRESHOLD);
   if (selected.length < MIN_PUBLISH) {
-    const need = MIN_PUBLISH - selected.length;
-    const rest = scored.filter(x => !selected.includes(x)).slice(0, need);
-    if (rest.length > 0) {
-      fallbackUsed = true;
-      selected = selected.concat(rest);
-    }
+    selected = selected.concat(ranked.filter(x => !selected.includes(x)).slice(0, MIN_PUBLISH - selected.length));
   }
+  selected = selected.slice(0, OUTPUT_CAP);
 
-  // Cap de sécurité (30)
-  selected = selected.slice(0, 30);
+  // Thumbnails
+  await enrichThumbnails(selected);
 
   const payload = {
     generatedAt: new Date().toISOString(),
     model: OPENAI_MODEL,
+    profile: PROFILE,
     threshold: SCORE_THRESHOLD,
     totalAnalyzed: analyzed.length,
     totalPublished: selected.length,
-    debug: { analysisFailed, fallbackUsed, minPublish: MIN_PUBLISH },
+    debug: { analysisFailed, minPublish: MIN_PUBLISH },
     items: selected
   };
 
   await fs.mkdir("public/news", { recursive: true });
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(payload, null, 2), "utf8");
-  console.log(`OK: wrote ${selected.length} items to ${OUTPUT_PATH} (failed=${analysisFailed}, fallback=${fallbackUsed})`);
+  console.log(`OK: wrote ${selected.length} items to ${OUTPUT_PATH} (profile=${PROFILE})`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
