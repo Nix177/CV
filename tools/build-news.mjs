@@ -10,11 +10,13 @@ const SCORE_THRESHOLD  = parseInt(process.env.NEWS_SCORE_MIN   ?? "65", 10);
 const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS   ?? "100", 10);
 const MIN_PUBLISH_DEF  = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
 const OUTPUT_CAP_DEF   = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
-// Single profile fallback + multi-profiles list (comma-separated)
 const PROFILE_DEFAULT  = (process.env.NEWS_PROFILE || "balanced").toLowerCase();
 const PROFILES_RAW     = (process.env.NEWS_PROFILES || "").trim();
 const PROFILES         = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
   .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+
+// Optionnel : override des poids (R,P,I,M), ex: "40,25,20,15"
+const CUSTOM_WEIGHTS_RAW = (process.env.NEWS_CUSTOM_WEIGHTS || "").trim();
 
 // --------- HELPERS ----------
 function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
@@ -22,12 +24,30 @@ function toHttps(u) { if (!u) return u; if (u.startsWith("//")) return "https:"+
 function host(u) { try { return new URL(u).hostname; } catch { return ""; } }
 function favicon(u, size=128) { const h=host(u); return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : ""; }
 function absUrl(pageUrl, src){ try{ return new URL(src, pageUrl).toString(); }catch{ return null; } }
+const clamp = (x,a,b)=> Math.max(a, Math.min(b, x|0));
 
-const WEIGHTS = {
+const DEFAULT_W = {
   research: { research: 40, policy: 25, institution: 20, impact: 15 },
   balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
   policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
 };
+
+function parseCustomWeights(raw){
+  if (!raw) return null;
+  const parts = raw.split(",").map(x => clamp(parseInt(x,10), 0, 100));
+  if (parts.length !== 4) return null;
+  const s = parts.reduce((a,b)=>a+b,0);
+  if (s <= 0) return null;
+  const k = 100/s;
+  const [r,p,i,m] = parts.map(v => Math.round(v*k));
+  return { research:r, policy:p, institution:i, impact:m };
+}
+
+function getWeights(profile){
+  const override = parseCustomWeights(CUSTOM_WEIGHTS_RAW);
+  if (override) return override;
+  return DEFAULT_W[profile] || DEFAULT_W.balanced;
+}
 
 // --- gather feeds ---
 async function gatherAll() {
@@ -165,7 +185,7 @@ function makeHeuristic(W){
     if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|solar|solaresearch|ies|us dept|edm|sigcse)\b/.test(t))  bd.institution += W.institution;
     if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) bd.impact     += W.impact;
     const score = Math.min(100, bd.research + bd.policy + bd.institution + bd.impact);
-    const reason = `Heuristique: research=${bd.research}, policy=${bd.policy}, institution=${bd.institution}, impact=${bd.impact}.`;
+    const reason = `Heuristique: R=${bd.research}, P=${bd.policy}, I=${bd.institution}, M=${bd.impact}.`;
     return { score, breakdown: bd, reason };
   };
 }
@@ -213,7 +233,7 @@ async function enrichThumbnails(items, concurrency = 10) {
 
 // --------- BUILD FOR ONE PROFILE ----------
 async function buildForProfile(profile, gathered) {
-  const W = WEIGHTS[profile] || WEIGHTS.balanced;
+  const W = getWeights(profile);
   const MIN_PUBLISH = MIN_PUBLISH_DEF;
   const OUTPUT_CAP  = OUTPUT_CAP_DEF;
 
@@ -263,7 +283,7 @@ async function buildForProfile(profile, gathered) {
     threshold: SCORE_THRESHOLD,
     totalAnalyzed: analyzed.length,
     totalPublished: selected.length,
-    debug: { analysisFailed, minPublish: MIN_PUBLISH },
+    debug: { analysisFailed, minPublish: MIN_PUBLISH, weightsUsed: W },
     items: selected
   };
 
