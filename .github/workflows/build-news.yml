@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       profile:
-        description: 'Profil de scoring (balanced|research|policy)'
+        description: 'Profil par défaut si NEWS_PROFILES est vide (balanced|research|policy)'
         type: choice
         options: [balanced, research, policy]
         default: balanced
@@ -39,7 +39,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,10 +68,14 @@ jobs:
           npm i
           npm i --no-save rss-parser openai cheerio
 
-      - name: Build news feed
+      - name: Build news feed(s)
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: gpt-4o-mini
+          # Liste des profils à produire séparés par virgules.
+          # Mets "balanced,research,policy" pour 3 flux ou "balanced" pour un seul.
+          NEWS_PROFILES: ${{ vars.NEWS_PROFILES || 'balanced,research,policy' }}
+          # Valeurs par défaut (peuvent être surchargées via inputs)
           NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
           NEWS_MIN_PUBLISH: ${{ inputs.min_publish || '12' }}
@@ -80,23 +83,26 @@ jobs:
           NEWS_MAX_ITEMS: "100"
         run: node tools/build-news.mjs
 
-      - name: Ensure feed exists
+      - name: Ensure feeds exist
         run: |
           mkdir -p public/news
-          if [ ! -f public/news/feed.json ]; then
-            echo '{"generatedAt":"1970-01-01T00:00:00.000Z","model":"placeholder","threshold":65,"totalAnalyzed":0,"totalPublished":0,"items":[]}' > public/news/feed.json
-          fi
+          for f in feed.json feed-balanced.json feed-research.json feed-policy.json; do
+            if [ ! -f "public/news/$f" ]; then
+              echo '{"generatedAt":"1970-01-01T00:00:00.000Z","model":"placeholder","threshold":65,"totalAnalyzed":0,"totalPublished":0,"items":[]}' > "public/news/$f"
+            fi
+          done
+          ls -la public/news
           head -n 20 public/news/feed.json || true
 
-      - name: Commit feed.json (only if changed)
+      - name: Commit feeds (only if changed)
         run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
-          git add public/news/feed.json
+          git add public/news/feed*.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "news: update feed.json"
+            git commit -m "news: update feeds"
             git push
           fi
 
