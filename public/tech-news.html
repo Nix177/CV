@@ -6,7 +6,6 @@
   <title>Tech News — Éducation numérique & IA</title>
   <meta name="description" content="Sélection automatique des actualités importantes (éducation numérique, IA, recherches, conférences, politiques, standards)."/>
 
-  <!-- adopte le thème + la nav globale existants -->
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
 
@@ -33,10 +32,6 @@
     .pager a, .pager span, .toolbar .chip { padding:6px 10px; border:1px solid var(--line); border-radius:10px; background: var(--surface); color: var(--text); text-decoration:none; }
     .pager .current { font-weight:700; background: color-mix(in oklab, var(--surface), #fff 6%); }
     .muted { color: var(--muted); }
-    .soft { margin: 16px 0; }
-
-    .filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    input[type="search"]{ max-width: 280px; }
   </style>
 </head>
 <body>
@@ -54,21 +49,17 @@
       <a href="#" data-view="days"  class="chip" id="viewDays">Par jours</a>
 
       <span class="sep">|</span>
-      <div class="filters">
-        <label class="select">
-          Page size
-          <select id="pageSize">
-            <option>10</option>
-            <option selected>20</option>
-            <option>30</option>
-            <option>50</option>
-          </select>
-        </label>
-        <label>
-          Filtrer
-          <input type="search" id="q" placeholder="titre, source, tag…">
-        </label>
-      </div>
+      <label class="select">Page size
+        <select id="pageSize">
+          <option>10</option>
+          <option selected>20</option>
+          <option>30</option>
+          <option>50</option>
+        </select>
+      </label>
+      <label>Filtrer
+        <input type="search" id="q" placeholder="titre, source, tag…">
+      </label>
     </div>
 
     <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
@@ -91,7 +82,6 @@
   </template>
 
   <script>
-    // ----- Helpers URL params
     const url = new URL(location.href);
     const params = url.searchParams;
     const grid = document.getElementById("grid");
@@ -105,7 +95,6 @@
     const viewPagesBtn = document.getElementById("viewPages");
     const viewDaysBtn  = document.getElementById("viewDays");
 
-    // read params
     const VIEW = (params.get("view") || "pages");
     const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
     let PAGE_SIZE = PAGE_SIZE_DEFAULT;
@@ -113,7 +102,6 @@
     let DAY_INDEX = clampInt(params.get("d") || "1", 1, 9999);
     let DATA = null, FILTER = (params.get("q") || "").trim();
 
-    // UI init
     pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
     qInput.value = FILTER;
     (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
@@ -122,6 +110,8 @@
     const dayFmt = new Intl.DateTimeFormat('sv-SE', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' });
 
     function clampInt(v, a, b){ v = parseInt(v,10); return isFinite(v) ? Math.max(a, Math.min(b, v)) : a; }
+
+    function toHttps(u){ if(!u) return u; if(u.startsWith("//")) return "https:"+u; if(u.startsWith("http://")) return "https://"+u.slice(7); return u; }
 
     async function fetchFirstOk(urls) {
       for (const u of urls) {
@@ -166,9 +156,7 @@
         if (!map.has(key)) map.set(key, []);
         map.get(key).push(it);
       }
-      // tri interne récent->ancien
       for (const arr of map.values()) arr.sort((a,b)=> new Date(b.published||0) - new Date(a.published||0));
-      // liste de jours récents->anciens
       const days = Array.from(map.keys()).sort((a,b)=> b.localeCompare(a));
       return { map, days };
     }
@@ -202,7 +190,6 @@
       const itemsAll = filterItems(DATA?.items || []);
       const total = itemsAll.length;
 
-      // header stamp
       stamp.textContent =
         `Généré le ${new Date(DATA.generatedAt).toLocaleString()}. ` +
         `${DATA.totalPublished ?? total} sélection(s).` +
@@ -217,17 +204,15 @@
         if (PAGE > pages) PAGE = pages;
         const start = (PAGE-1) * PAGE_SIZE;
         renderSlice(itemsAll.slice(start, start + PAGE_SIZE));
-        const qs = buildQS({ p: undefined }); // base QS sans p
+        const qs = buildQS({ p: undefined });
         pagerTop.innerHTML = pagerLinks(pages, PAGE, qs);
         pagerBottom.innerHTML = pagerTop.innerHTML;
       } else {
-        // days mode
         const { map, days } = groupByDay(itemsAll);
         const dPages = Math.max(1, days.length);
         if (DAY_INDEX > dPages) DAY_INDEX = dPages;
         const dayKey = days[DAY_INDEX-1];
-        const dayItems = map.get(dayKey) || [];
-        renderSlice(dayItems);
+        renderSlice(map.get(dayKey) || []);
         const qs = buildQS({ d: undefined });
         pagerTop.innerHTML = pagerLinks(dPages, DAY_INDEX, qs, "◀ Jour préc.", "Jour suiv. ▶");
         pagerBottom.innerHTML = pagerTop.innerHTML;
@@ -244,8 +229,9 @@
         const img = tpl.querySelector(".thumb");
         try {
           const h = new URL(it.url).hostname;
-          img.src = it.image || `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=128`;
-        } catch { img.src = it.image || ""; }
+          const fallback = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=128`;
+          img.src = toHttps(it.image || fallback);
+        } catch { img.src = toHttps(it.image || ""); }
         img.alt = it.source ? `Image — ${it.source}` : "Image";
 
         const a = document.createElement("a");
@@ -262,9 +248,9 @@
       });
     }
 
-    // --- UI events
+    // UI
     refreshBtn.addEventListener("click", load);
-    showMeta.addEventListener("change", render);
+    showMeta.addEventListener("change", () => render());
     pageSizeSel.addEventListener("change", () => {
       PAGE_SIZE = clampInt(pageSizeSel.value, 5, 100);
       params.set("n", String(PAGE_SIZE));
@@ -274,7 +260,6 @@
     qInput.addEventListener("input", () => {
       FILTER = qInput.value.trim();
       if (FILTER) params.set("q", FILTER); else params.delete("q");
-      // on reste sur la vue courante et on réinitialise à la première page/jour
       if (VIEW === "pages") params.set("p", "1"); else params.set("d","1");
       history.replaceState(null, "", "?"+params.toString());
       render();
