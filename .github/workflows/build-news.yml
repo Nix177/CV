@@ -9,6 +9,9 @@ on:
         type: choice
         options: [ "true", "false" ]
         default: "true"
+      model:
+        description: 'Modèle (gpt-5 | gpt-5-mini | gpt-4o-mini …)'
+        default: 'gpt-5'
       profile:
         description: 'Profil (balanced|research|policy)'
         type: choice
@@ -29,8 +32,18 @@ on:
       custom_weights:
         description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
         default: ''
+      # --- overrides pour "policy" -> "philosophie" (ou autre)
+      bucket_policy_label:
+        description: 'Libellé bucket P (ex: Philosophie)'
+        default: ''
+      bucket_policy_desc:
+        description: 'Description bucket P (phrase courte)'
+        default: ''
+      bucket_policy_keywords:
+        description: 'Mots-clés bucket P, séparés par des virgules'
+        default: ''
       run_key:
-        description: 'Identifiant client (UUID)'
+        description: 'Identifiant client (UI)'
         default: ''
   schedule:
     - cron: "7 */3 * * 1-5"
@@ -68,13 +81,17 @@ jobs:
       - name: Build news feed
         env:
           OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || 'DUMMY_KEY' }}
-          OPENAI_MODEL: gpt-4o-mini
+          OPENAI_MODEL:   ${{ inputs.model || 'gpt-5' }}
           NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
           NEWS_MIN_PUBLISH: ${{ inputs.min_publish || '12' }}
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
+          # --- overrides bucket "policy"
+          NEWS_LABEL_POLICY:   ${{ inputs.bucket_policy_label    || '' }}
+          NEWS_DESC_POLICY:    ${{ inputs.bucket_policy_desc     || '' }}
+          NEWS_KEYS_POLICY:    ${{ inputs.bucket_policy_keywords || '' }}
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
