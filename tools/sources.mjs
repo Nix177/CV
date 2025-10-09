@@ -1,7 +1,8 @@
-// 21 sources d’origine (politiques + institutions) + 12 orientées recherche/confs.
-// Les URLs "pages news" sont auto-détectées en RSS/Atom via rss-utils.
+// Mix institutions/policy + recherche/confs + outils/LLM.
+// Les pages "News" sont auto-transformées en RSS (auto-discovery) via rss-utils.
+
 export const SOURCES = [
-  // --- existantes (politiques/institutions) ---
+  // --- Institutions / policy / éducation ---
   { name: "EDUCAUSE – Teaching & Learning", url: "https://er.educause.edu/channels/teaching-learning/rss" },
   { name: "EDUCAUSE – Policy",             url: "https://er.educause.edu/channels/policy/rss" },
   { name: "Hechinger Report – EdTech",     url: "https://hechingerreport.org/tags/education-technology/feed/" },
@@ -25,13 +26,13 @@ export const SOURCES = [
   { name: "Brookings – Brown Center Chalkboard", url: "https://www.brookings.edu/blog/brown-center-chalkboard/" },
   { name: "Times Higher Education – News",     url: "https://www.timeshighereducation.com/news" },
 
-  // --- NOUVEAU : recherche / conférences / journaux ---
-  // arXiv ciblé "education / learning analytics / AI for education"
+  // --- Recherche / conférences / journaux ---
+  // arXiv ciblé
   { name: "arXiv – cs.HC + education", url: "https://export.arxiv.org/api/query?search_query=all:education+AND+cat:cs.HC&max_results=25&sortBy=submittedDate&sortOrder=descending" },
   { name: "arXiv – cs.LG + learning analytics", url: "https://export.arxiv.org/api/query?search_query=all:(learning%20analytics)+AND+cat:cs.LG&max_results=25&sortBy=submittedDate&sortOrder=descending" },
   { name: "arXiv – cs.AI + education/MOOC", url: "https://export.arxiv.org/api/query?search_query=all:(education%20OR%20MOOC%20OR%20classroom)+AND+cat:cs.AI&max_results=25&sortBy=submittedDate&sortOrder=descending" },
 
-  // Sociétés / conférences
+  // Sociétés / confs
   { name: "SoLAR – Society for Learning Analytics Research (News)", url: "https://www.solaresearch.org/news" },
   { name: "EDM Society (Educational Data Mining)", url: "https://educationaldatamining.org/" },
   { name: "SIGCSE (ACM) – News", url: "https://sigcse.org/sigcse/news" },
@@ -43,24 +44,15 @@ export const SOURCES = [
   { name: "Frontiers in Education",           url: "https://www.frontiersin.org/journals/education/rss" },
   { name: "Journal of Learning Analytics (JLA)", url: "https://learning-analytics.info/" },
 
-  // Autres sources utiles
-  { name: "IES (US) – Institute of Education Sciences – Blog", url: "https://ies.ed.gov/blogs/feed" },
-  { name: "EdSurge – Articles", url: "https://www.edsurge.com/articles.rss" },
-  { name: "ICDE – Latest news", url: "https://www.icde.org/latest-news" },
-  { name: "SIGCHI – News", url: "https://sigchi.org/news" },
-
-  // --- Tech/LLM/outils (RSS fiables) ---
-{ name: "Google AI Blog",                 url: "https://ai.googleblog.com/atom.xml" },
-{ name: "Microsoft Research Blog",        url: "https://www.microsoft.com/en-us/research/feed/" },
-{ name: "DeepMind Blog",                  url: "https://deepmind.google/discover/blog/?format=rss" },
-{ name: "The Gradient (ML essays)",       url: "https://thegradient.pub/rss/" },
-{ name: "Nature Machine Intelligence",    url: "https://www.nature.com/natmachintell.rss" },
-{ name: "IEEE Spectrum – AI",             url: "https://spectrum.ieee.org/topic/artificial-intelligence/rss" },
-{ name: "Papers with Code – Trending",    url: "https://paperswithcode.com/trending/rss" },
-// arXiv focalisés LLM/NLP
-{ name: "arXiv – cs.CL (NLP/LLM)",        url: "https://export.arxiv.org/api/query?search_query=cat:cs.CL&max_results=25&sortBy=submittedDate&sortOrder=descending" },
-// EdTech produits/services (modéré)
-{ name: "EdTech Magazine (Higher Ed)",    url: "https://edtechmagazine.com/higher/rss.xml" },
-{ name: "Google for Education – Blog",    url: "https://blog.google/outreach-initiatives/education/rss/" }
-
+  // --- Tech / LLM / outils ---
+  { name: "Google AI Blog",              url: "https://ai.googleblog.com/atom.xml" },
+  { name: "Microsoft Research Blog",     url: "https://www.microsoft.com/en-us/research/feed/" },
+  { name: "DeepMind Blog",               url: "https://deepmind.google/discover/blog/?format=rss" },
+  { name: "The Gradient (ML essays)",    url: "https://thegradient.pub/rss/" },
+  { name: "Nature Machine Intelligence", url: "https://www.nature.com/natmachintell.rss" },
+  { name: "IEEE Spectrum – AI",          url: "https://spectrum.ieee.org/topic/artificial-intelligence/rss" },
+  { name: "Papers with Code – Trending", url: "https://paperswithcode.com/trending/rss" },
+  { name: "arXiv – cs.CL (NLP/LLM)",     url: "https://export.arxiv.org/api/query?search_query=cat:cs.CL&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+  { name: "EdTech Magazine (Higher Ed)", url: "https://edtechmagazine.com/higher/rss.xml" },
+  { name: "Google for Education – Blog", url: "https://blog.google/outreach-initiatives/education/rss/" }
 ];
