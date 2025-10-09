@@ -21,18 +21,21 @@ export default async function handler(req, res) {
       run_key
     } = req.body || {};
 
-    // --- support des deux conventions d'ENV ---
+    // ---- ENV avec fallback sur tes variables "GITHUB_*" ----
     const owner  = process.env.GH_REPO_OWNER || process.env.GITHUB_OWNER || "";
     const repo   = process.env.GH_REPO_NAME  || process.env.GITHUB_REPO  || "";
-    const file   = process.env.GH_WORKFLOW_FILE || ".github/workflows/build-news.yml";
+    const fileIn = process.env.GH_WORKFLOW_FILE || "build-news.yml"; // accepte .github/workflows/build-news.yml
     const token  = process.env.GH_WORKFLOW_TOKEN || process.env.GITHUB_TOKEN || "";
     const branch = process.env.GH_REPO_BRANCH || "main";
+
+    // GitHub attend ID ou NOM DE FICHIER, pas un chemin -> on extrait le basename
+    const workflowFile = fileIn.split("/").pop();
 
     const missing = [];
     if (!owner) missing.push("GH_REPO_OWNER|GITHUB_OWNER");
     if (!repo)  missing.push("GH_REPO_NAME|GITHUB_REPO");
-    if (!file)  missing.push("GH_WORKFLOW_FILE");
     if (!token) missing.push("GH_WORKFLOW_TOKEN|GITHUB_TOKEN");
+    if (!workflowFile) missing.push("GH_WORKFLOW_FILE");
     if (missing.length) {
       res.status(400).json({ error: "Missing GitHub env vars", missing });
       return;
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
 
     const inputs = {
       use_openai: String(use_openai) === "false" ? "false" : "true",
-      model: model || undefined, // si non fourni → défaut dans le workflow
+      model: model || undefined, // si non fourni -> défaut dans le workflow
       profile,
       score_min: String(score_min),
       min_publish: String(min_publish),
@@ -58,24 +61,28 @@ export default async function handler(req, res) {
 
     const body = { ref: branch, inputs };
 
-    const r = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(file)}/dispatches`,
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "application/vnd.github+json",
-          "X-GitHub-Api-Version": "2022-11-28",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-      }
-    );
+    const ghUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(workflowFile)}/dispatches`;
+    const r = await fetch(ghUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
 
     if (r.status !== 204) {
       const txt = await r.text().catch(() => "");
-      res.status(502).json({ error: "GitHub dispatch failed", status: r.status, details: txt });
-      return;
+      // remonte le message lisible au front
+      return res.status(502).json({
+        error: "GitHub dispatch failed",
+        status: r.status,
+        details: txt.slice(0, 800),
+        hint:
+          "Vérifie le token (Actions: Read & write), le nom du workflow (basename) et la branche."
+      });
     }
 
     res.status(200).json({ ok: true, run_key: key });
