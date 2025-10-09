@@ -6,12 +6,17 @@ export default async function handler(req, res) {
     }
     const {
       use_openai = true,
+      model = "gpt-5",
       profile = "balanced",
       score_min = "65",
       min_publish = "12",
       output_cap = "60",
       max_items = "100",
-      custom_weights = "",   // "R,P,I,M"
+      custom_weights = "",
+      // overrides bucket P
+      bucket_policy_label = "",
+      bucket_policy_desc = "",
+      bucket_policy_keywords = "",
       run_key
     } = req.body || {};
 
@@ -20,8 +25,13 @@ export default async function handler(req, res) {
     const file  = process.env.GH_WORKFLOW_FILE || ".github/workflows/build-news.yml";
     const token = process.env.GH_WORKFLOW_TOKEN;
 
-    if (!owner || !repo || !file || !token) {
-      res.status(500).json({ error: "Missing GH_* env vars on server" });
+    const missing = [];
+    if (!owner) missing.push("GH_REPO_OWNER");
+    if (!repo) missing.push("GH_REPO_NAME");
+    if (!file) missing.push("GH_WORKFLOW_FILE");
+    if (!token) missing.push("GH_WORKFLOW_TOKEN");
+    if (missing.length) {
+      res.status(400).json({ error: "Missing GitHub env vars", missing });
       return;
     }
 
@@ -31,12 +41,16 @@ export default async function handler(req, res) {
       ref: "main",
       inputs: {
         use_openai: String(use_openai) === "false" ? "false" : "true",
+        model,
         profile,
         score_min: String(score_min),
         min_publish: String(min_publish),
         output_cap: String(output_cap),
         max_items: String(max_items),
         custom_weights: String(custom_weights || ""),
+        bucket_policy_label: String(bucket_policy_label || ""),
+        bucket_policy_desc: String(bucket_policy_desc || ""),
+        bucket_policy_keywords: String(bucket_policy_keywords || ""),
         run_key: key
       }
     };
