@@ -2,8 +2,32 @@ name: Build news feed
 
 on:
   workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Profil de scoring (balanced|research|policy)'
+        type: choice
+        options: [balanced, research, policy]
+        default: balanced
+        required: false
+      score_min:
+        description: 'Score minimum'
+        default: '65'
+        required: false
+      min_publish:
+        description: 'Minimum d’items publiés'
+        default: '12'
+        required: false
+      output_cap:
+        description: 'Cap d’items dans le feed'
+        default: '60'
+        required: false
   schedule:
     - cron: "7 */3 * * 1-5"   # toutes les 3h (UTC), jours ouvrés
+  push:
+    branches: [ main ]
+    paths:
+      - 'tools/**'
+      - '.github/workflows/build-news.yml'
 
 permissions:
   contents: write
@@ -42,19 +66,18 @@ jobs:
 
       - name: Install deps (sans lockfile)
         run: |
-          npm i          # installe les deps de package.json
-          # filet de sécurité si openai/rss-parser/cheerio ne sont pas listés
+          npm i
           npm i --no-save rss-parser openai cheerio
 
       - name: Build news feed
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: gpt-4o-mini
-          NEWS_PROFILE: balanced         # <-- mix policy + recherche/outils/LLM
-          NEWS_SCORE_MIN: "65"           # <-- léger assouplissement pour capter + d'outils/LLM
+          NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
+          NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
+          NEWS_MIN_PUBLISH: ${{ inputs.min_publish || '12' }}
+          NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS: "100"
-          NEWS_MIN_PUBLISH: "12"         # publie au moins 12 cartes si peu d’items au-dessus du seuil
-          NEWS_OUTPUT_CAP: "60"          # jusqu’à 60 items dans le feed (3 pages de 20)
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
