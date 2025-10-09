@@ -36,9 +36,23 @@
     .bd { font-variant-numeric: tabular-nums; }
     .weights { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
     .weights .row { display:flex; gap:8px; align-items:center; }
-    .weights input[type="range"]{ width:160px; }
+    .weights input[type="range"]{ width:140px; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     details.explain { margin-top: 8px; }
+
+    /* overlay build */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5);
+      display: none; align-items:center; justify-content:center;
+      z-index: 9999;
+    }
+    .dialog {
+      background: var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:18px; width: min(520px, 92vw); color: var(--text); box-shadow: var(--shadow);
+    }
+    .progress { width:100%; height:10px; border:1px solid var(--line); border-radius:999px; overflow:hidden; margin:10px 0 0; background: var(--surface); }
+    .bar { height:100%; width:0%; background: linear-gradient(90deg, #7aa2f7, #a0c2ff); transition: width .5s ease; }
+    .rowb { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   </style>
 </head>
 <body>
@@ -86,20 +100,17 @@
     </div>
 
     <details class="explain">
-      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
+      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ? (R/P/I/M)</summary>
       <div class="muted" style="margin-top:6px">
-        <p><strong>Score d’une actu</strong> = somme pondérée de 4 facteurs :</p>
+        <p><strong>Score d’une actu</strong> = somme pondérée de 4 facteurs (<span class="mono">R/P/I/M</span>) :</p>
         <ul>
-          <li><strong>Recherche</strong> (articles, journaux, conférences, CFP…)</li>
-          <li><strong>Politiques</strong> (lois, régulations, standards, cadres)</li>
-          <li><strong>Institution</strong> (grandes agences, ministères, CNIL/NCSC/OCDE/UNESCO…)</li>
-          <li><strong>Impact</strong> direct (écoles, enseignants, universités, salle de classe, EdTech)</li>
+          <li><strong>R — Recherche</strong> : articles/journaux, conférences, CFP, résultats scientifiques.</li>
+          <li><strong>P — Politiques</strong> : lois, régulations, standards, cadres/“frameworks”.</li>
+          <li><strong>I — Institutions</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
+          <li><strong>M — Impact</strong> : impact direct pour la classe/enseignants/universités/EdTech.</li>
         </ul>
-        <p>Le builder enregistre un <em>décompte par facteur</em> (<code>breakdown</code> R/P/I/M). Par défaut, les poids dépendent du <em>profil</em> choisi
-          (Mix, Recherche, Politiques). Ici, vous pouvez définir des <strong>poids personnalisés</strong> : on recompose le score localement
-          avec votre jeu de poids, sans régénérer le flux.</p>
-        <p class="mono">score_perso = clamp_0..100( R×wR + P×wP + I×wI + M×wM )</p>
-        <p>Le <strong>seuil</strong> est simplement la valeur minimale d’affichage : les actus en dessous sont masquées.</p>
+        <p>Le flux stocke le <em>décompte</em> par facteur (<code>breakdown</code> R/P/I/M). Le profil choisi (Mix/Recherche/Politiques) donne un
+           jeu de poids par défaut. Vous pouvez définir des <strong>poids personnalisés</strong> ci-dessous et même <strong>reconstruire</strong> le flux avec ces poids.</p>
       </div>
     </details>
 
@@ -129,6 +140,9 @@
       </div>
 
       <button id="resetW" class="btn">Réinitialiser poids (profil)</button>
+      <span class="sep">|</span>
+      <label class="chip"><input type="checkbox" id="buildAI" checked> Qualité (OpenAI)</label>
+      <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids</button>
     </div>
 
     <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
@@ -139,6 +153,19 @@
     <div id="grid" class="grid" aria-live="polite"></div>
     <div id="pagerBottom" class="pager"></div>
   </main>
+
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Construction du flux">
+    <div class="dialog">
+      <div class="rowb">
+        <strong id="ovlTitle">Construction du flux…</strong>
+        <span id="ovlStatus" class="muted"></span>
+      </div>
+      <div class="progress"><div id="ovlBar" class="bar" style="width:0%"></div></div>
+      <p class="muted" style="margin:8px 0 0;">
+        Cela lance un job GitHub Actions (provision du runner, installation des deps, scraping, analyse).
+      </p>
+    </div>
+  </div>
 
   <template id="card-tpl">
     <article class="card">
@@ -152,9 +179,9 @@
   </template>
 
   <script>
-    // ---------- State & Elements ----------
     const url = new URL(location.href);
     const params = url.searchParams;
+
     const grid = document.getElementById("grid");
     const stamp = document.getElementById("stamp");
     const refreshBtn = document.getElementById("refresh");
@@ -180,6 +207,12 @@
     const wMVal = document.getElementById("wMVal");
     const weightsSum = document.getElementById("weightsSum");
     const resetW = document.getElementById("resetW");
+    const buildAI = document.getElementById("buildAI");
+    const rebuildBtn = document.getElementById("rebuild");
+
+    const overlay = document.getElementById("overlay");
+    const ovlBar = document.getElementById("ovlBar");
+    const ovlStatus = document.getElementById("ovlStatus");
 
     const VIEW = (params.get("view") || "pages");
     const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
@@ -194,19 +227,16 @@
     function clampInt(v, a, b){ v = parseInt(v,10); return isFinite(v) ? Math.max(a, Math.min(b, v)) : a; }
     function toHttps(u){ if(!u) return u; if(u.startsWith("//")) return "https:"+u; if(u.startsWith("http://")) return "https://"+u.slice(7); return u; }
 
-    // ---------- Default weights by profile ----------
     const DEFAULT_W = {
-      research: { research: 40, policy: 25, institution: 20, impact: 15 },
-      balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
-      policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
+      research: [40,25,20,15],
+      balanced: [35,35,15,15],
+      policy:   [25,40,20,15],
     };
 
-    // initial profile + threshold
     const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
     profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
     let THRESH = clampInt(params.get("t") || "0", 0, 100);
 
-    // custom weights (saved per profile)
     const customKey = (p)=> `newsWeights_${p}`;
     const customFlagKey = (p)=> `newsWeightsEnabled_${p}`;
     function readCustomRaw(p){
@@ -221,12 +251,10 @@
       return v ? v==="1" : false;
     }
 
-    // globals
     let DATA = null;
-    let RAW_W = readCustomRaw(profileSel.value) || defaultsToRaw(profileSel.value); // [r,p,i,m]
+    let RAW_W = readCustomRaw(profileSel.value) || DEFAULT_W[profileSel.value];
     let USE_CUSTOM = readCustomEnabled(profileSel.value);
 
-    // ---------- UI init ----------
     pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
     qInput.value = FILTER;
     (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
@@ -234,7 +262,6 @@
     [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
     updateWeightsLabels();
 
-    // ---------- Data fetching ----------
     function makeUrls(profile) {
       const fname = (profile === "balanced") ? "feed.json" : `feed-${profile}.json`;
       return [
@@ -272,48 +299,32 @@
       }
     }
 
-    // ---------- Scoring ----------
-    function defaultsToRaw(profile){
-      const d = DEFAULT_W[profile] || DEFAULT_W.balanced;
-      return [d.research, d.policy, d.institution, d.impact];
-    }
-
+    function defaultsToRaw(profile){ return DEFAULT_W[profile] || DEFAULT_W.balanced; }
     function normWeights(arr){
       const s = arr.reduce((a,b)=>a+b,0);
       if (s <= 0) return [25,25,25,25];
       const k = 100/s;
       return arr.map(v => Math.round(v*k));
     }
-
-    function currentWeights(){
-      // normalized to sum 100
-      return USE_CUSTOM ? normWeights(RAW_W) : defaultsToRaw(profileSel.value);
-    }
-
-    function getDefaultWeights(profile){
-      const d = DEFAULT_W[profile] || DEFAULT_W.balanced;
-      return [d.research, d.policy, d.institution, d.impact]; // [R,P,I,M]
-    }
+    function currentWeights(){ return USE_CUSTOM ? normWeights(RAW_W) : defaultsToRaw(profileSel.value); }
+    function getDefaultWeights(profile){ return defaultsToRaw(profile); }
 
     function calcUserScore(item){
-      // If breakdown absent, fallback to feed score
       const bd = item.breakdown || {};
       const sumBD = (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0);
       if (sumBD <= 0) return item.score|0;
 
-      // infer signals (0..1) from breakdown and DEFAULT weights used at build time
-      const def = getDefaultWeights(DATA?.profile || "balanced"); // numbers [R,P,I,M]
+      const def = getDefaultWeights(DATA?.profile || "balanced"); // [R,P,I,M]
       const signalR = def[0] ? Math.min(1, (bd.research|0)   / def[0]) : 0;
       const signalP = def[1] ? Math.min(1, (bd.policy|0)     / def[1]) : 0;
       const signalI = def[2] ? Math.min(1, (bd.institution|0)/ def[2]) : 0;
       const signalM = def[3] ? Math.min(1, (bd.impact|0)     / def[3]) : 0;
 
-      const [wR,wP,wI,wM] = currentWeights();
-      const score = (signalR*wR) + (signalP*wP) + (signalI*wI) + (signalM*wM);
+      const [wR1,wP1,wI1,wM1] = currentWeights();
+      const score = (signalR*wR1) + (signalP*wP1) + (signalI*wI1) + (signalM*wM1);
       return Math.max(0, Math.min(100, Math.round(score)));
     }
 
-    // ---------- Filtering, grouping, rendering ----------
     function filterItems(items) {
       const q = (params.get("q") || "").trim().toLowerCase();
       const th = THRESH;
@@ -325,7 +336,6 @@
           (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
         );
       }
-      // re-score per user weights
       out = out.map(it => ({ ...it, _userScore: calcUserScore(it) }))
                .filter(it => (it._userScore ?? 0) >= th);
       return out;
@@ -435,14 +445,11 @@
 
         const d = it.published ? new Date(it.published) : null;
 
-        // Show personal score; indicate original if different and meta enabled
         const personal = it._userScore ?? it.score;
         let meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""} • score ${personal}`;
         if (showMeta.checked && typeof it.score === "number" && it.score !== personal) {
           meta += ` (feed ${it.score})`;
         }
-
-        // Breakdown & reason if meta
         if (showMeta.checked) {
           const bd = it.breakdown || {};
           meta += ` • R/P/I/M: ${(bd.research|0)}/${(bd.policy|0)}/${(bd.institution|0)}/${(bd.impact|0)}`;
@@ -456,7 +463,7 @@
       });
     }
 
-    // ---------- Events ----------
+    // --------- UI events ---------
     refreshBtn.addEventListener("click", load);
     showMeta.addEventListener("change", render);
 
@@ -481,14 +488,13 @@
       else { params.set("d","1"); params.delete("p"); }
       url.search = params.toString(); location.href = url.toString();
     }
-    viewPagesBtn.addEventListener("click", (e)=>{ e.preventDefault(); switchView("pages"); });
-    viewDaysBtn.addEventListener("click", (e)=>{ e.preventDefault(); switchView("days"); });
+    document.getElementById("viewPages").addEventListener("click", (e)=>{ e.preventDefault(); switchView("pages"); });
+    document.getElementById("viewDays").addEventListener("click", (e)=>{ e.preventDefault(); switchView("days"); });
 
     profileSel.addEventListener("change", () => {
       localStorage.setItem("newsProfile", profileSel.value);
-      // reset custom weights to profile defaults (but keep the flag & raw if user wants)
       if (!USE_CUSTOM) {
-        RAW_W = defaultsToRaw(profileSel.value);
+        RAW_W = DEFAULT_W[profileSel.value];
         [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
         updateWeightsLabels();
       }
@@ -526,7 +532,7 @@
     });
 
     resetW.addEventListener("click", () => {
-      RAW_W = defaultsToRaw(profileSel.value);
+      RAW_W = DEFAULT_W[profileSel.value];
       [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
       localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
       params.set("w", currentWeights().join(","));
@@ -534,6 +540,88 @@
       updateWeightsLabels();
       render();
     });
+
+    // --------- Trigger workflow from UI ----------
+    rebuildBtn.addEventListener("click", async () => {
+      try {
+        // show overlay
+        showOverlay("Envoi de la requête…", 10);
+
+        const weights = currentWeights().join(",");
+        const body = {
+          use_openai: buildAI.checked,
+          profile: profileSel.value,
+          score_min: String(THRESH || 65),
+          min_publish: "12",
+          output_cap: "60",
+          max_items: "100",
+          custom_weights: weights
+        };
+
+        const r = await fetch("/api/trigger-news", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const j = await r.json();
+        if (!r.ok || !j.ok) throw new Error(j.error || "Échec de la création du run");
+
+        const key = j.run_key;
+        // poll status
+        await pollRun(key);
+
+        // reload feed une fois terminé
+        await load();
+        hideOverlay();
+      } catch (e) {
+        showOverlay("Erreur: " + (e.message || e), 100);
+        setTimeout(hideOverlay, 4000);
+      }
+    });
+
+    function showOverlay(txt, pct){
+      overlay.style.display = "flex";
+      ovlStatus.textContent = txt || "";
+      ovlBar.style.width = (pct||0) + "%";
+    }
+    function hideOverlay(){ overlay.style.display = "none"; }
+
+    async function pollRun(key){
+      let pct = 20;
+      showOverlay("Run créé, en attente du runner…", pct);
+      const start = Date.now();
+
+      while (true) {
+        await new Promise(r => setTimeout(r, 4000));
+
+        const r = await fetch(`/api/check-news?run_key=${encodeURIComponent(key)}`, { cache:"no-store" });
+        const j = await r.json();
+        if (!j.found) {
+          pct = Math.min(50, pct+5);
+          showOverlay("Run en file d'attente…", pct);
+          continue;
+        }
+        if (j.status === "queued") {
+          pct = Math.min(60, pct+5);
+          showOverlay("Queued…", pct);
+          continue;
+        }
+        if (j.status === "in_progress") {
+          // barre progresse lentement pendant l'install & build
+          pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000)); // approx
+          showOverlay("En cours d'exécution…", pct);
+          continue;
+        }
+        if (j.status === "completed") {
+          if (j.conclusion === "success") {
+            showOverlay("Terminé ✔ — actualisation du flux…", 100);
+          } else {
+            throw new Error("Run terminé avec l'état: " + j.conclusion);
+          }
+          break;
+        }
+      }
+    }
 
     function updateWeightsLabels(){
       const [r,p,i,m] = currentWeights();
