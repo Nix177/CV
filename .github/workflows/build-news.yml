@@ -32,7 +32,7 @@ on:
       custom_weights:
         description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
         default: ''
-      # --- overrides pour "policy" -> "philosophie" (ou autre)
+      # overrides pour renommer "policy" (ex: Philosophie)
       bucket_policy_label:
         description: 'Libellé bucket P (ex: Philosophie)'
         default: ''
@@ -45,8 +45,10 @@ on:
       run_key:
         description: 'Identifiant client (UI)'
         default: ''
+
   schedule:
-    - cron: "7 */3 * * 1-5"
+    - cron: "7 */3 * * 1-5"   # toutes les 3h UTC, jours ouvrés
+
   push:
     branches: [ main ]
     paths:
@@ -65,7 +67,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -88,10 +91,10 @@ jobs:
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
-          # --- overrides bucket "policy"
-          NEWS_LABEL_POLICY:   ${{ inputs.bucket_policy_label    || '' }}
-          NEWS_DESC_POLICY:    ${{ inputs.bucket_policy_desc     || '' }}
-          NEWS_KEYS_POLICY:    ${{ inputs.bucket_policy_keywords || '' }}
+          # overrides bucket "policy"
+          NEWS_LABEL_POLICY: ${{ inputs.bucket_policy_label    || '' }}
+          NEWS_DESC_POLICY:  ${{ inputs.bucket_policy_desc     || '' }}
+          NEWS_KEYS_POLICY:  ${{ inputs.bucket_policy_keywords || '' }}
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
