@@ -29,6 +29,7 @@ const WEIGHTS = {
   policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
 };
 
+// --- gather feeds ---
 async function gatherAll() {
   const results = await Promise.all(SOURCES.map(readFeedMaybe));
   const all = results.flatMap(r => r.items);
@@ -37,6 +38,7 @@ async function gatherAll() {
   return unique.slice(0, MAX_ITEMS_TOTAL);
 }
 
+// --- LLM prompt helpers ---
 function buildPromptWeights(W) {
   return `Pondérations (total 100): RECHERCHE ${W.research}, POLITIQUES/RÉGULATION ${W.policy}, ` +
          `INSTITUTION ${W.institution}, IMPACT direct écoles/universités/enseignants ${W.impact}.`;
@@ -49,7 +51,8 @@ function buildBatchedInput(items, W) {
       { type: "text", text:
         "Tu es un assistant de veille pour l'éducation numérique/IA. " +
         "Retourne STRICTEMENT du JSON pour CHAQUE entrée, schéma: " +
-        "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5]}.\n" +
+        "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5], " +
+        " breakdown:{research:int,policy:int,institution:int,impact:int}, reason:string(1 phrase)}.\n" +
         buildPromptWeights(W) +
         " Priorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
         "(ii) politiques/régulation majeures, (iii) communiqués d'institutions de premier plan."
@@ -62,7 +65,6 @@ function buildBatchedInput(items, W) {
 function safeParseArray(txt){ try{ const v=JSON.parse(txt); return Array.isArray(v) ? v : null; }catch{ return null; } }
 
 function extractJsonArrayFromResponses(resp) {
-  // SDK Responses API: output_text (flat) OU output[].content[].text
   if (resp?.output_text) {
     const arr = safeParseArray(resp.output_text);
     if (arr) return arr;
@@ -85,8 +87,7 @@ async function analyzeWithOpenAI(items, W) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const inputBlocks = buildBatchedInput(items, W);
 
-  // ⚠️ Responses API : le format est maintenant sous text.format (plus sous response_format)
-  // https://platform.openai.com/docs/assistants/migration (voir 'Text inputs and outputs' / Structured Outputs)
+  // Responses API → 'text.format' pour Structured Outputs
   const resp = await openai.responses.create({
     model: OPENAI_MODEL,
     instructions: "Respecte EXACTEMENT le schéma JSON demandé, sans texte hors JSON.",
@@ -103,11 +104,23 @@ async function analyzeWithOpenAI(items, W) {
             items: {
               type: "object",
               additionalProperties: false,
-              required: ["score", "resume_fr", "tags"],
+              required: ["score", "resume_fr", "tags", "breakdown", "reason"],
               properties: {
                 score: { type: "integer", minimum: 0, maximum: 100 },
                 resume_fr: { type: "string" },
-                tags: { type: "array", minItems: 2, maxItems: 5, items: { type: "string" } }
+                tags: { type: "array", minItems: 2, maxItems: 5, items: { type: "string" } },
+                reason: { type: "string" },
+                breakdown: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: ["research","policy","institution","impact"],
+                  properties: {
+                    research: { type: "integer", minimum: 0, maximum: 100 },
+                    policy:   { type: "integer", minimum: 0, maximum: 100 },
+                    institution: { type: "integer", minimum: 0, maximum: 100 },
+                    impact:   { type: "integer", minimum: 0, maximum: 100 }
+                  }
+                }
               }
             }
           }
@@ -121,27 +134,39 @@ async function analyzeWithOpenAI(items, W) {
 function attachAnalyses(items, analyses) {
   return items.map((it, i) => {
     const a = analyses?.[i] || {};
+    const bd = a.breakdown || {};
+    const score = typeof a.score === "number" ? a.score :
+      Math.min(100, (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0));
     return {
       title: it.title,
       url: it.url,
       source: it.source,
       published: it.published ? toISO(it.published) : null,
-      score: typeof a.score === "number" ? a.score : 0,
+      score,
       resume_fr: a.resume_fr || it.snippet || "",
-      tags: Array.isArray(a.tags) && a.tags.length ? a.tags.slice(0,5) : []
+      tags: Array.isArray(a.tags) && a.tags.length ? a.tags.slice(0,5) : [],
+      breakdown: {
+        research: bd.research|0,
+        policy: bd.policy|0,
+        institution: bd.institution|0,
+        impact: bd.impact|0
+      },
+      reason: a.reason || ""
     };
   });
 }
 
 function makeHeuristic(W){
-  return function localHeuristicScore(x) {
+  return function scoreWithBreakdown(x) {
     const t = `${x.title} ${x.source}`.toLowerCase();
-    let s = 0;
-    if (/\b(arxiv|preprint|doi|journal|conference|proceedings|workshop|submission|cfp|acceptance|springer|wiley|nature|frontiers|acm|ieee)\b/.test(t)) s += W.research;
-    if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|standard|framework|guidance|law|act|ordonnance|décret)\b/.test(t)) s += W.policy;
-    if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|solar|solaresearch|ies|us dept|edm|sigcse)\b/.test(t)) s += W.institution;
-    if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) s += W.impact;
-    return Math.min(100, s);
+    const bd = { research:0, policy:0, institution:0, impact:0 };
+    if (/\b(arxiv|preprint|doi|journal|conference|proceedings|workshop|submission|cfp|acceptance|springer|wiley|nature|frontiers|acm|ieee)\b/.test(t)) bd.research += W.research;
+    if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|standard|framework|guidance|law|act|ordonnance|décret)\b/.test(t)) bd.policy   += W.policy;
+    if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|solar|solaresearch|ies|us dept|edm|sigcse)\b/.test(t))  bd.institution += W.institution;
+    if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) bd.impact     += W.impact;
+    const score = Math.min(100, bd.research + bd.policy + bd.institution + bd.impact);
+    const reason = `Heuristique: research=${bd.research}, policy=${bd.policy}, institution=${bd.institution}, impact=${bd.impact}.`;
+    return { score, breakdown: bd, reason };
   };
 }
 
@@ -172,7 +197,7 @@ async function findThumbnail(u) {
 }
 
 async function enrichThumbnails(items, concurrency = 10) {
-  const top = items.slice(0, 40); // limite requêtes
+  const top = items.slice(0, 40);
   let i = 0;
   async function worker() {
     while (i < top.length) {
@@ -189,7 +214,6 @@ async function enrichThumbnails(items, concurrency = 10) {
 // --------- BUILD FOR ONE PROFILE ----------
 async function buildForProfile(profile, gathered) {
   const W = WEIGHTS[profile] || WEIGHTS.balanced;
-  const localScore = makeHeuristic(W);
   const MIN_PUBLISH = MIN_PUBLISH_DEF;
   const OUTPUT_CAP  = OUTPUT_CAP_DEF;
 
@@ -202,15 +226,22 @@ async function buildForProfile(profile, gathered) {
   } catch (e) {
     console.error(`[${profile}] OpenAI analysis failed:`, e?.message || e);
     analysisFailed = true;
-    analyzed = gathered.map(it => ({
-      title: it.title,
-      url: it.url,
-      source: it.source,
-      published: it.published ? toISO(it.published) : null,
-      score: localScore(it),
-      resume_fr: it.snippet || "",
-      tags: []
-    }));
+
+    const local = makeHeuristic(W);
+    analyzed = gathered.map(it => {
+      const s = local(it);
+      return {
+        title: it.title,
+        url: it.url,
+        source: it.source,
+        published: it.published ? toISO(it.published) : null,
+        score: s.score,
+        resume_fr: it.snippet || "",
+        tags: [],
+        breakdown: s.breakdown,
+        reason: s.reason
+      };
+    });
   }
 
   const ranked = [...analyzed].sort((a,b) =>
@@ -238,7 +269,6 @@ async function buildForProfile(profile, gathered) {
 
   await fs.mkdir("public/news", { recursive: true });
 
-  // balanced => écrit 2 fichiers (compat)
   if (profile === "balanced") {
     await fs.writeFile("public/news/feed.json", JSON.stringify(payload, null, 2), "utf8");
     await fs.writeFile("public/news/feed-balanced.json", JSON.stringify(payload, null, 2), "utf8");
@@ -254,11 +284,8 @@ async function main() {
   if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
 
   const gathered = await gatherAll();
-
-  // déduplique et journalise
   console.log(`Gathered ${gathered.length} unique items (max=${MAX_ITEMS_TOTAL}).`);
 
-  // profils à produire
   const wanted = Array.from(new Set(PROFILES)).filter(p => ["balanced","research","policy"].includes(p));
   if (!wanted.length) wanted.push(PROFILE_DEFAULT);
 
