@@ -27,7 +27,7 @@ export async function discoverFeed(pageUrl) {
       return new URL(alt.attr("href"), pageUrl).toString();
     }
 
-    // Heuristique WordPress: /feed/
+    // WP heuristic: /feed/
     try {
       const guess = new URL(pageUrl);
       const feed = `${guess.origin}${guess.pathname.replace(/\/$/, "")}/feed/`;
