@@ -1,3 +1,4 @@
+// api/trigger-news.js
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
@@ -6,24 +7,25 @@ export default async function handler(req, res) {
     }
     const {
       use_openai = true,
-      model = "gpt-5",
+      model,
       profile = "balanced",
       score_min = "65",
       min_publish = "12",
       output_cap = "60",
       max_items = "100",
       custom_weights = "",
-      // overrides bucket P
+      // overrides bucket "policy" (ex. Philosophie)
       bucket_policy_label = "",
       bucket_policy_desc = "",
       bucket_policy_keywords = "",
       run_key
     } = req.body || {};
 
-    const owner = process.env.GH_REPO_OWNER;
-    const repo  = process.env.GH_REPO_NAME;
-    const file  = process.env.GH_WORKFLOW_FILE || ".github/workflows/build-news.yml";
-    const token = process.env.GH_WORKFLOW_TOKEN;
+    const owner  = process.env.GH_REPO_OWNER || "";
+    const repo   = process.env.GH_REPO_NAME  || "";
+    const file   = process.env.GH_WORKFLOW_FILE || ".github/workflows/build-news.yml";
+    const token  = process.env.GH_WORKFLOW_TOKEN || "";
+    const branch = process.env.GH_REPO_BRANCH || "main";
 
     const missing = [];
     if (!owner) missing.push("GH_REPO_OWNER");
@@ -37,34 +39,38 @@ export default async function handler(req, res) {
 
     const key = run_key || (Date.now().toString(36) + Math.random().toString(36).slice(2,8));
 
-    const body = {
-      ref: "main",
-      inputs: {
-        use_openai: String(use_openai) === "false" ? "false" : "true",
-        model,
-        profile,
-        score_min: String(score_min),
-        min_publish: String(min_publish),
-        output_cap: String(output_cap),
-        max_items: String(max_items),
-        custom_weights: String(custom_weights || ""),
-        bucket_policy_label: String(bucket_policy_label || ""),
-        bucket_policy_desc: String(bucket_policy_desc || ""),
-        bucket_policy_keywords: String(bucket_policy_keywords || ""),
-        run_key: key
-      }
+    const inputs = {
+      use_openai: String(use_openai) === "false" ? "false" : "true",
+      model: model || undefined,                          // laissé au défaut du workflow si non fourni
+      profile,
+      score_min: String(score_min),
+      min_publish: String(min_publish),
+      output_cap: String(output_cap),
+      max_items: String(max_items),
+      custom_weights: String(custom_weights || ""),
+      bucket_policy_label: String(bucket_policy_label || ""),
+      bucket_policy_desc: String(bucket_policy_desc || ""),
+      bucket_policy_keywords: String(bucket_policy_keywords || ""),
+      run_key: key
     };
+    // supprime les undefined pour un body propre
+    Object.keys(inputs).forEach(k => inputs[k] === undefined && delete inputs[k]);
 
-    const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(file)}/dispatches`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
+    const body = { ref: branch, inputs };
+
+    const r = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(file)}/dispatches`,
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      }
+    );
 
     if (r.status !== 204) {
       const txt = await r.text().catch(()=> "");
