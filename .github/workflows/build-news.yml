@@ -32,15 +32,8 @@ on:
       custom_weights:
         description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
         default: ''
-      # overrides pour renommer "policy" (ex: Philosophie)
-      bucket_policy_label:
-        description: 'Libellé bucket P (ex: Philosophie)'
-        default: ''
-      bucket_policy_desc:
-        description: 'Description bucket P (phrase courte)'
-        default: ''
-      bucket_policy_keywords:
-        description: 'Mots-clés bucket P, séparés par des virgules'
+      policy_overrides:
+        description: 'JSON: {"label":"…","desc":"…","keywords":"a,b,c"}'
         default: ''
       run_key:
         description: 'Identifiant client (UI)'
@@ -81,6 +74,19 @@ jobs:
           npm i
           npm i --no-save rss-parser openai cheerio
 
+      # Décode policy_overrides JSON => exporte NEWS_LABEL_POLICY / NEWS_DESC_POLICY / NEWS_KEYS_POLICY
+      - name: Apply policy overrides (optional)
+        if: ${{ inputs.policy_overrides != '' }}
+        run: |
+          cat > /tmp/policy.json <<'JSON'
+          ${{ inputs.policy_overrides }}
+          JSON
+          if jq -e . >/dev/null 2>&1 < /tmp/policy.json; then
+            jq -r '"NEWS_LABEL_POLICY="+(.label//""), "NEWS_DESC_POLICY="+(.desc//""), "NEWS_KEYS_POLICY="+(.keywords//"")' /tmp/policy.json >> "$GITHUB_ENV"
+          else
+            echo "Policy overrides not valid JSON, skipping."
+          fi
+
       - name: Build news feed
         env:
           OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || 'DUMMY_KEY' }}
@@ -91,10 +97,8 @@ jobs:
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
-          # overrides bucket "policy"
-          NEWS_LABEL_POLICY: ${{ inputs.bucket_policy_label    || '' }}
-          NEWS_DESC_POLICY:  ${{ inputs.bucket_policy_desc     || '' }}
-          NEWS_KEYS_POLICY:  ${{ inputs.bucket_policy_keywords || '' }}
+          # Ces 3 variables seront présentes si policy_overrides JSON était fourni (étape précédente)
+          # NEWS_LABEL_POLICY / NEWS_DESC_POLICY / NEWS_KEYS_POLICY
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
