@@ -30,7 +30,7 @@ on:
         description: 'Max d’items à analyser'
         default: '100'
       custom_weights:
-        description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
+        description: 'Poids personnalisés R,P/I/M (ex: 45,25,15,15)'
         default: ''
       policy_overrides:
         description: 'JSON: {"label":"…","desc":"…","keywords":"a,b,c"}'
@@ -40,7 +40,7 @@ on:
         default: ''
 
   schedule:
-    - cron: "7 */3 * * 1-5"   # toutes les 3h UTC, jours ouvrés
+    - cron: "7 */3 * * 1-5"
 
   push:
     branches: [ main ]
@@ -87,9 +87,9 @@ jobs:
             echo "Policy overrides not valid JSON, skipping."
           fi
 
-      - name: Build news feed
+      - name: Build news feed (with log)
         env:
-          OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || 'DUMMY_KEY' }}
+          OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || '' }}
           OPENAI_MODEL:   ${{ inputs.model || 'gpt-5' }}
           NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
@@ -97,11 +97,26 @@ jobs:
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
-          # Ces 3 variables seront présentes si policy_overrides JSON était fourni (étape précédente)
-          # NEWS_LABEL_POLICY / NEWS_DESC_POLICY / NEWS_KEYS_POLICY
-        run: node tools/build-news.mjs
+          # Panneau "Qualité (OpenAI)" -> SKIP si pas de clef ou désactivé
+          NEWS_USE_OPENAI:   ${{ inputs.use_openai }}
+        run: |
+          set -o pipefail
+          mkdir -p logs
+          echo "== ENV DIAG ==" | tee -a logs/build-news.log
+          echo "NEWS_PROFILE=$NEWS_PROFILE" | tee -a logs/build-news.log
+          echo "NEWS_SCORE_MIN=$NEWS_SCORE_MIN" | tee -a logs/build-news.log
+          echo "NEWS_MIN_PUBLISH=$NEWS_MIN_PUBLISH" | tee -a logs/build-news.log
+          echo "NEWS_OUTPUT_CAP=$NEWS_OUTPUT_CAP" | tee -a logs/build-news.log
+          echo "NEWS_MAX_ITEMS=$NEWS_MAX_ITEMS" | tee -a logs/build-news.log
+          echo "NEWS_CUSTOM_WEIGHTS=$NEWS_CUSTOM_WEIGHTS" | tee -a logs/build-news.log
+          if [ -z "$OPENAI_API_KEY" ] || [ "$NEWS_USE_OPENAI" != "true" ]; then
+            echo "OpenAI disabled for this run" | tee -a logs/build-news.log
+            export OPENAI_API_KEY=""
+          fi
+          node tools/build-news.mjs 2>&1 | tee -a logs/build-news.log
+        continue-on-error: true
 
-      - name: Ensure feed exists
+      - name: Ensure feed exists (never fail)
         run: |
           mkdir -p public/news
           if [ ! -f public/news/feed.json ]; then
@@ -113,10 +128,20 @@ jobs:
         run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
-          git add public/news/feed*.json
+          git add public/news/feed*.json || true
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "news: update feed(s)"
             git push
           fi
+
+      - name: Upload logs & feed (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-build-${{ github.run_id }}
+          path: |
+            logs/build-news.log
+            public/news/feed*.json
+          if-no-files-found: warn
