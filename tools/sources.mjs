@@ -47,5 +47,20 @@ export const SOURCES = [
   { name: "IES (US) – Institute of Education Sciences – Blog", url: "https://ies.ed.gov/blogs/feed" },
   { name: "EdSurge – Articles", url: "https://www.edsurge.com/articles.rss" },
   { name: "ICDE – Latest news", url: "https://www.icde.org/latest-news" },
-  { name: "SIGCHI – News", url: "https://sigchi.org/news" }
+  { name: "SIGCHI – News", url: "https://sigchi.org/news" },
+
+  // --- Tech/LLM/outils (RSS fiables) ---
+{ name: "Google AI Blog",                 url: "https://ai.googleblog.com/atom.xml" },
+{ name: "Microsoft Research Blog",        url: "https://www.microsoft.com/en-us/research/feed/" },
+{ name: "DeepMind Blog",                  url: "https://deepmind.google/discover/blog/?format=rss" },
+{ name: "The Gradient (ML essays)",       url: "https://thegradient.pub/rss/" },
+{ name: "Nature Machine Intelligence",    url: "https://www.nature.com/natmachintell.rss" },
+{ name: "IEEE Spectrum – AI",             url: "https://spectrum.ieee.org/topic/artificial-intelligence/rss" },
+{ name: "Papers with Code – Trending",    url: "https://paperswithcode.com/trending/rss" },
+// arXiv focalisés LLM/NLP
+{ name: "arXiv – cs.CL (NLP/LLM)",        url: "https://export.arxiv.org/api/query?search_query=cat:cs.CL&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+// EdTech produits/services (modéré)
+{ name: "EdTech Magazine (Higher Ed)",    url: "https://edtechmagazine.com/higher/rss.xml" },
+{ name: "Google for Education – Blog",    url: "https://blog.google/outreach-initiatives/education/rss/" }
+
 ];
