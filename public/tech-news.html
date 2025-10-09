@@ -40,6 +40,11 @@
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     details.explain { margin-top: 8px; }
 
+    /* Advanced panel */
+    details#adv summary { list-style: none; }
+    details#adv[open] > div { margin-top: 8px; }
+    details#adv input { margin-left: 6px; }
+
     /* overlay build */
     .overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,.5);
@@ -143,6 +148,25 @@
       <span class="sep">|</span>
       <label class="chip"><input type="checkbox" id="buildAI" checked> Qualité (OpenAI)</label>
       <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids</button>
+
+      <span class="sep">|</span>
+      <details class="chip" id="adv">
+        <summary>Avancé (renommer P)</summary>
+        <div style="padding:10px; border:1px solid var(--border); border-radius:10px; background:var(--surface);">
+          <label>Libellé P
+            <input id="pLabel" type="text" placeholder="ex: Philosophie" style="min-width:220px">
+          </label>
+          <br>
+          <label>Mots-clés P (séparés par des virgules)
+            <input id="pKeys" type="text" placeholder="ex: philosophy,ethics,epistemology" style="min-width:420px">
+          </label>
+          <br>
+          <label>Description P
+            <input id="pDesc" type="text" placeholder="phrase courte" style="min-width:420px">
+          </label>
+          <p class="muted" id="pCur">P actuel: Politiques — mots-clés par défaut.</p>
+        </div>
+      </details>
     </div>
 
     <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
@@ -209,6 +233,12 @@
     const resetW = document.getElementById("resetW");
     const buildAI = document.getElementById("buildAI");
     const rebuildBtn = document.getElementById("rebuild");
+
+    // Advanced overrides (bucket P)
+    const pLabelInput = document.getElementById("pLabel");
+    const pKeysInput  = document.getElementById("pKeys");
+    const pDescInput  = document.getElementById("pDesc");
+    const pCur        = document.getElementById("pCur");
 
     const overlay = document.getElementById("overlay");
     const ovlBar = document.getElementById("ovlBar");
@@ -280,6 +310,25 @@
       throw new Error("Aucune source disponible");
     }
 
+    function updateLabelsExplain() {
+      const L = DATA?.debug?.labelsUsed || { research:"Recherche", policy:"Politiques", institution:"Institution", impact:"Impact" };
+      const D = DATA?.debug?.descUsed   || {};
+      const explain = document.querySelector("details.explain .muted");
+      if (explain) {
+        const ul = explain.querySelector("ul");
+        if (ul) {
+          ul.innerHTML = `
+            <li><strong>R — ${L.research}</strong> : ${D.research || "articles/journaux, conférences, CFP, résultats scientifiques."}</li>
+            <li><strong>P — ${L.policy}</strong> : ${D.policy   || "lois, régulations, standards, cadres/“frameworks”."}</li>
+            <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."} </li>
+            <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour la classe/enseignants/universités/EdTech."}</li>
+          `;
+        }
+      }
+      // note sous le panneau avancé
+      pCur.textContent = `P actuel: ${L.policy}${D.policy ? " — " + D.policy : ""}`;
+    }
+
     async function load() {
       try {
         const data = await fetchFirstOk(makeUrls(profileSel.value));
@@ -292,6 +341,7 @@
         } else {
           thSlider.value = String(THRESH); thVal.textContent = THRESH;
         }
+        updateLabelsExplain();
         render();
       } catch (e) {
         grid.innerHTML = "<p class='muted'>Pas encore de données. Réessaie dans une minute.</p>";
@@ -550,12 +600,17 @@
         const weights = currentWeights().join(",");
         const body = {
           use_openai: buildAI.checked,
+          // modèle : par défaut côté API/Workflow (gpt-5). Ajoute un select si tu veux choisir ici.
           profile: profileSel.value,
           score_min: String(THRESH || 65),
           min_publish: "12",
           output_cap: "60",
           max_items: "100",
-          custom_weights: weights
+          custom_weights: weights,
+          // overrides de la catégorie P
+          bucket_policy_label: (pLabelInput.value || "").trim(),
+          bucket_policy_desc:  (pDescInput.value  || "").trim(),
+          bucket_policy_keywords: (pKeysInput.value || "").trim()
         };
 
         const r = await fetch("/api/trigger-news", {
