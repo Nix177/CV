@@ -6,11 +6,26 @@ import { readFeedMaybe, dedupe } from "./rss-utils.mjs";
 
 const OPENAI_MODEL     = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const SCORE_THRESHOLD  = parseInt(process.env.NEWS_SCORE_MIN   ?? "70", 10);
-const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS   ?? "80", 10);
+const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS   ?? "100", 10);
 const MIN_PUBLISH      = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
 const OUTPUT_CAP       = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
-const PROFILE          = (process.env.NEWS_PROFILE || "research").toLowerCase(); // research|balanced|policy
+const PROFILE          = (process.env.NEWS_PROFILE || "balanced").toLowerCase(); // balanced|research|policy
 const OUTPUT_PATH      = "public/news/feed.json";
+
+// --- helpers ---
+function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
+function toHttps(u) {
+  if (!u) return u;
+  if (u.startsWith("//")) return "https:" + u;
+  if (u.startsWith("http://")) return "https://" + u.slice(7);
+  return u;
+}
+function host(u) { try { return new URL(u).hostname; } catch { return ""; } }
+function favicon(u, size=128) {
+  const h = host(u);
+  return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : "";
+}
+function absUrl(pageUrl, src) { try { return new URL(src, pageUrl).toString(); } catch { return null; } }
 
 // Pondérations par profil
 const WEIGHTS = {
@@ -18,15 +33,9 @@ const WEIGHTS = {
   balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
   policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
 };
-const W = WEIGHTS[PROFILE] || WEIGHTS.research;
+const W = WEIGHTS[PROFILE] || WEIGHTS.balanced;
 
-function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
-function host(u) { try { return new URL(u).hostname; } catch { return ""; } }
-function favicon(u, size=128) {
-  const h = host(u);
-  return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : "";
-}
-
+// --- aggregation ---
 async function gatherAll() {
   const results = await Promise.all(SOURCES.map(readFeedMaybe));
   const all = results.flatMap(r => r.items);
@@ -49,7 +58,7 @@ function buildBatchedInput(items) {
         "Retourne STRICTEMENT du JSON pour CHAQUE entrée, schéma: " +
         "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5]}.\n" +
         buildPromptWeights() +
-        " Signale surtout: (i) articles/journaux/confs (nouveaux résultats, CFP, proceedings), " +
+        " Priorise: (i) articles/journaux/confs (nouveaux résultats, CFP, proceedings), " +
         "(ii) politiques/régulation majeures, (iii) communiqués d'institutions de premier plan."
       },
       { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
@@ -130,12 +139,12 @@ function localHeuristicScore(x) {
   let s = 0;
   if (/\b(arxiv|preprint|doi|journal|conference|proceedings|workshop|submission|cfp|acceptance|springer|wiley|nature|frontiers|acm|ieee)\b/.test(t)) s += W.research;
   if (/\b(ai act|regulation|régulation|policy|politi(que|cs)|standard|framework|guidance|law|act|ordonnance|décret)\b/.test(t)) s += W.policy;
-  if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|sola(research)|ies|us dept|european commission|edm|sigcse|solar)\b/.test(t)) s += W.institution;
+  if (/\b(unesc|oecd|cnil|edps|ncsc|minist|commission|solar|solaresearch|ies|us dept|edm|sigcse)\b/.test(t)) s += W.institution;
   if (/\b(school|education|teacher|enseignant|k-?12|universit|student|pupil|mooc|classroom|edtech)\b/.test(t)) s += W.impact;
   return Math.min(100, s);
 }
 
-// --- Thumbnails (og:image / twitter:image) ---
+// --- Thumbnails (HTTPS only) ---
 async function fetchHtml(url, ms = 7000) {
   const ctrl = new AbortController();
   const tid = setTimeout(() => ctrl.abort(), ms);
@@ -148,8 +157,6 @@ async function fetchHtml(url, ms = 7000) {
   finally { clearTimeout(tid); }
 }
 
-function absUrl(pageUrl, src) { try { return new URL(src, pageUrl).toString(); } catch { return null; } }
-
 async function findThumbnail(u) {
   const html = await fetchHtml(u);
   if (!html) return favicon(u);
@@ -158,8 +165,9 @@ async function findThumbnail(u) {
     $('meta[property="og:image"]').attr("content"),
     $('meta[name="twitter:image"]').attr("content"),
     $('link[rel="image_src"]').attr("href")
-  ].filter(Boolean).map(x => absUrl(u, x));
-  return cand[0] || favicon(u);
+  ].filter(Boolean).map(x => toHttps(absUrl(u, x)));
+  const httpsImg = cand.find(x => x && x.startsWith("https://"));
+  return httpsImg || favicon(u);
 }
 
 async function enrichThumbnails(items, concurrency = 10) {
@@ -174,7 +182,6 @@ async function enrichThumbnails(items, concurrency = 10) {
     }
   }
   await Promise.all(Array.from({ length: concurrency }, worker));
-  // Fallback favicon pour le reste
   items.slice(40).forEach(it => { it.image = favicon(it.url); });
 }
 
@@ -203,19 +210,16 @@ async function main() {
     }));
   }
 
-  // Tri par score puis date
   const ranked = [...analyzed].sort((a,b) =>
     (b.score - a.score) || ((new Date(b.published||0)) - (new Date(a.published||0)))
   );
 
-  // Filtre/seuil + fallback "minimum publié"
   let selected = ranked.filter(x => (x.score ?? 0) >= SCORE_THRESHOLD);
   if (selected.length < MIN_PUBLISH) {
     selected = selected.concat(ranked.filter(x => !selected.includes(x)).slice(0, MIN_PUBLISH - selected.length));
   }
   selected = selected.slice(0, OUTPUT_CAP);
 
-  // Thumbnails
   await enrichThumbnails(selected);
 
   const payload = {
