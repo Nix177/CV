@@ -1,4 +1,5 @@
 name: Build news feed
+run-name: Build news • ${{ inputs.run_key || 'manual' }}
 
 on:
   workflow_dispatch:
@@ -8,27 +9,31 @@ on:
         type: choice
         options: [ "true", "false" ]
         default: "true"
-        required: false
       profile:
         description: 'Profil (balanced|research|policy)'
         type: choice
         options: [balanced, research, policy]
         default: balanced
-        required: false
       score_min:
         description: 'Score minimum'
         default: '65'
-        required: false
       min_publish:
         description: 'Minimum d’items publiés'
         default: '12'
-        required: false
       output_cap:
         description: 'Cap d’items dans le feed'
         default: '60'
-        required: false
+      max_items:
+        description: 'Max d’items à analyser'
+        default: '100'
+      custom_weights:
+        description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
+        default: ''
+      run_key:
+        description: 'Identifiant client (UUID)'
+        default: ''
   schedule:
-    - cron: "7 */3 * * 1-5"   # toutes les 3h (UTC), jours ouvrés
+    - cron: "7 */3 * * 1-5"
   push:
     branches: [ main ]
     paths:
@@ -47,37 +52,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Debug repo state
-        run: |
-          echo "branch = $GITHUB_REF_NAME"
-          ls -la .
-          ls -la tools || true
-          ls -la public || true
-          ls -la public/news || true
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
-      - name: Install deps (sans lockfile)
+      - name: Install deps
         run: |
           npm i
           npm i --no-save rss-parser openai cheerio
 
       - name: Build news feed
         env:
-          # 👉 si use_openai=false, on met une fausse clé pour forcer l’heuristique (pas de coût modèle)
           OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || 'DUMMY_KEY' }}
           OPENAI_MODEL: gpt-4o-mini
           NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
           NEWS_MIN_PUBLISH: ${{ inputs.min_publish || '12' }}
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
-          NEWS_MAX_ITEMS: "100"
+          NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
+          NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
         run: node tools/build-news.mjs
 
       - name: Ensure feed exists
@@ -88,7 +85,7 @@ jobs:
           fi
           head -n 30 public/news/feed.json || true
 
-      - name: Commit feed.json (only if changed)
+      - name: Commit feed(s) if changed
         run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
@@ -98,14 +95,4 @@ jobs:
           else
             git commit -m "news: update feed(s)"
             git push
-          fi
-
-      - name: Trigger Vercel redeploy (optional)
-        env:
-          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
-        run: |
-          if [ -n "$VERCEL_DEPLOY_HOOK_URL" ]; then
-            curl -s -X POST "$VERCEL_DEPLOY_HOOK_URL" >/dev/null || true
-          else
-            echo "No VERCEL_DEPLOY_HOOK_URL secret set — skipping."
           fi
