@@ -1,6 +1,7 @@
-// api/news.js  (Vercel serverless function, format ESM)
+// api/news.js  (Vercel serverless function - ESM)
 export default async function handler(req, res) {
   try {
+    // ↳ adapte owner/repo/branch si besoin
     const githubRaw = "https://raw.githubusercontent.com/Nix177/CV/main/public/news/feed.json";
     const r = await fetch(githubRaw, { headers: { "User-Agent": "cv-site-news/1.0" } });
     if (!r.ok) {
