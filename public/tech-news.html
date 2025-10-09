@@ -34,6 +34,11 @@
     .muted { color: var(--muted); }
     .reason { font-size:.9rem; color: var(--muted); margin: 0; }
     .bd { font-variant-numeric: tabular-nums; }
+    .weights { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .weights .row { display:flex; gap:8px; align-items:center; }
+    .weights input[type="range"]{ width:160px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    details.explain { margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -80,6 +85,52 @@
       </label>
     </div>
 
+    <details class="explain">
+      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
+      <div class="muted" style="margin-top:6px">
+        <p><strong>Score d’une actu</strong> = somme pondérée de 4 facteurs :</p>
+        <ul>
+          <li><strong>Recherche</strong> (articles, journaux, conférences, CFP…)</li>
+          <li><strong>Politiques</strong> (lois, régulations, standards, cadres)</li>
+          <li><strong>Institution</strong> (grandes agences, ministères, CNIL/NCSC/OCDE/UNESCO…)</li>
+          <li><strong>Impact</strong> direct (écoles, enseignants, universités, salle de classe, EdTech)</li>
+        </ul>
+        <p>Le builder enregistre un <em>décompte par facteur</em> (<code>breakdown</code> R/P/I/M). Par défaut, les poids dépendent du <em>profil</em> choisi
+          (Mix, Recherche, Politiques). Ici, vous pouvez définir des <strong>poids personnalisés</strong> : on recompose le score localement
+          avec votre jeu de poids, sans régénérer le flux.</p>
+        <p class="mono">score_perso = clamp_0..100( R×wR + P×wP + I×wI + M×wM )</p>
+        <p>Le <strong>seuil</strong> est simplement la valeur minimale d’affichage : les actus en dessous sont masquées.</p>
+      </div>
+    </details>
+
+    <div class="weights" id="weightsBar">
+      <label class="chip"><input type="checkbox" id="useCustom"> Poids personnalisés</label>
+      <span id="weightsSum" class="muted">Poids (normés) —</span>
+
+      <div class="row">
+        <span>R</span>
+        <input type="range" id="wR" min="0" max="100" step="5">
+        <span id="wRVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>P</span>
+        <input type="range" id="wP" min="0" max="100" step="5">
+        <span id="wPVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>I</span>
+        <input type="range" id="wI" min="0" max="100" step="5">
+        <span id="wIVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>M</span>
+        <input type="range" id="wM" min="0" max="100" step="5">
+        <span id="wMVal" class="bd">—</span>
+      </div>
+
+      <button id="resetW" class="btn">Réinitialiser poids (profil)</button>
+    </div>
+
     <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
   </header>
 
@@ -101,6 +152,7 @@
   </template>
 
   <script>
+    // ---------- State & Elements ----------
     const url = new URL(location.href);
     const params = url.searchParams;
     const grid = document.getElementById("grid");
@@ -117,6 +169,18 @@
     const thSlider     = document.getElementById("th");
     const thVal        = document.getElementById("thVal");
 
+    const useCustom    = document.getElementById("useCustom");
+    const wR = document.getElementById("wR");
+    const wP = document.getElementById("wP");
+    const wI = document.getElementById("wI");
+    const wM = document.getElementById("wM");
+    const wRVal = document.getElementById("wRVal");
+    const wPVal = document.getElementById("wPVal");
+    const wIVal = document.getElementById("wIVal");
+    const wMVal = document.getElementById("wMVal");
+    const weightsSum = document.getElementById("weightsSum");
+    const resetW = document.getElementById("resetW");
+
     const VIEW = (params.get("view") || "pages");
     const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
     let PAGE_SIZE = PAGE_SIZE_DEFAULT;
@@ -124,23 +188,53 @@
     let DAY_INDEX = clampInt(params.get("d") || "1", 1, 9999);
     let FILTER = (params.get("q") || "").trim();
 
-    const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
-    profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
-
-    let THRESH = clampInt(params.get("t") || "0", 0, 100); // 0 par défaut; on ajustera après le fetch si t absent
-
-    pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
-    qInput.value = FILTER;
-    (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
-
     const tz = "Europe/Zurich";
     const dayFmt = new Intl.DateTimeFormat('sv-SE', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' });
 
     function clampInt(v, a, b){ v = parseInt(v,10); return isFinite(v) ? Math.max(a, Math.min(b, v)) : a; }
     function toHttps(u){ if(!u) return u; if(u.startsWith("//")) return "https:"+u; if(u.startsWith("http://")) return "https://"+u.slice(7); return u; }
 
-    let DATA = null;
+    // ---------- Default weights by profile ----------
+    const DEFAULT_W = {
+      research: { research: 40, policy: 25, institution: 20, impact: 15 },
+      balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
+      policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
+    };
 
+    // initial profile + threshold
+    const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
+    profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
+    let THRESH = clampInt(params.get("t") || "0", 0, 100);
+
+    // custom weights (saved per profile)
+    const customKey = (p)=> `newsWeights_${p}`;
+    const customFlagKey = (p)=> `newsWeightsEnabled_${p}`;
+    function readCustomRaw(p){
+      const qs = params.get("w");
+      if (qs) return qs.split(",").map(n=>clampInt(n,0,100));
+      const s = localStorage.getItem(customKey(p));
+      return s ? s.split(",").map(n=>clampInt(n,0,100)) : null;
+    }
+    function readCustomEnabled(p){
+      if (params.has("cw")) return params.get("cw")==="1";
+      const v = localStorage.getItem(customFlagKey(p));
+      return v ? v==="1" : false;
+    }
+
+    // globals
+    let DATA = null;
+    let RAW_W = readCustomRaw(profileSel.value) || defaultsToRaw(profileSel.value); // [r,p,i,m]
+    let USE_CUSTOM = readCustomEnabled(profileSel.value);
+
+    // ---------- UI init ----------
+    pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
+    qInput.value = FILTER;
+    (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
+    useCustom.checked = USE_CUSTOM;
+    [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
+    updateWeightsLabels();
+
+    // ---------- Data fetching ----------
     function makeUrls(profile) {
       const fname = (profile === "balanced") ? "feed.json" : `feed-${profile}.json`;
       return [
@@ -149,7 +243,6 @@
         `https://raw.githubusercontent.com/Nix177/CV/main/public/news/${fname}`
       ];
     }
-
     async function fetchFirstOk(urls) {
       for (const u of urls) {
         try {
@@ -165,7 +258,6 @@
         const data = await fetchFirstOk(makeUrls(profileSel.value));
         DATA = data;
 
-        // si aucun ?t dans l'URL, on initialise le seuil au threshold du feed
         if (!params.has("t")) {
           THRESH = clampInt(String(DATA.threshold ?? 65), 0, 100);
           thSlider.value = String(THRESH); thVal.textContent = THRESH;
@@ -173,7 +265,6 @@
         } else {
           thSlider.value = String(THRESH); thVal.textContent = THRESH;
         }
-
         render();
       } catch (e) {
         grid.innerHTML = "<p class='muted'>Pas encore de données. Réessaie dans une minute.</p>";
@@ -181,8 +272,51 @@
       }
     }
 
+    // ---------- Scoring ----------
+    function defaultsToRaw(profile){
+      const d = DEFAULT_W[profile] || DEFAULT_W.balanced;
+      return [d.research, d.policy, d.institution, d.impact];
+    }
+
+    function normWeights(arr){
+      const s = arr.reduce((a,b)=>a+b,0);
+      if (s <= 0) return [25,25,25,25];
+      const k = 100/s;
+      return arr.map(v => Math.round(v*k));
+    }
+
+    function currentWeights(){
+      // normalized to sum 100
+      return USE_CUSTOM ? normWeights(RAW_W) : defaultsToRaw(profileSel.value);
+    }
+
+    function getDefaultWeights(profile){
+      const d = DEFAULT_W[profile] || DEFAULT_W.balanced;
+      return [d.research, d.policy, d.institution, d.impact]; // [R,P,I,M]
+    }
+
+    function calcUserScore(item){
+      // If breakdown absent, fallback to feed score
+      const bd = item.breakdown || {};
+      const sumBD = (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0);
+      if (sumBD <= 0) return item.score|0;
+
+      // infer signals (0..1) from breakdown and DEFAULT weights used at build time
+      const def = getDefaultWeights(DATA?.profile || "balanced"); // numbers [R,P,I,M]
+      const signalR = def[0] ? Math.min(1, (bd.research|0)   / def[0]) : 0;
+      const signalP = def[1] ? Math.min(1, (bd.policy|0)     / def[1]) : 0;
+      const signalI = def[2] ? Math.min(1, (bd.institution|0)/ def[2]) : 0;
+      const signalM = def[3] ? Math.min(1, (bd.impact|0)     / def[3]) : 0;
+
+      const [wR,wP,wI,wM] = currentWeights();
+      const score = (signalR*wR) + (signalP*wP) + (signalI*wI) + (signalM*wM);
+      return Math.max(0, Math.min(100, Math.round(score)));
+    }
+
+    // ---------- Filtering, grouping, rendering ----------
     function filterItems(items) {
-      const q = FILTER.toLowerCase();
+      const q = (params.get("q") || "").trim().toLowerCase();
+      const th = THRESH;
       let out = items;
       if (q) {
         out = out.filter(it =>
@@ -191,8 +325,9 @@
           (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
         );
       }
-      // filtre par seuil utilisateur
-      out = out.filter(it => (it.score ?? 0) >= THRESH);
+      // re-score per user weights
+      out = out.map(it => ({ ...it, _userScore: calcUserScore(it) }))
+               .filter(it => (it._userScore ?? 0) >= th);
       return out;
     }
 
@@ -226,6 +361,9 @@
       p.set("n", PAGE_SIZE);
       p.set("profile", profileSel.value);
       p.set("t", THRESH);
+      p.set("cw", USE_CUSTOM ? "1" : "0");
+      p.set("w", currentWeights().join(","));
+      const FILTER = (qInput.value || "").trim();
       if (FILTER) p.set("q", FILTER);
       if (VIEW === "pages") p.set("p", PAGE);
       if (VIEW === "days")  p.set("d", DAY_INDEX);
@@ -234,6 +372,11 @@
         p.set(k, v);
       }
       return p.toString();
+    }
+
+    function weightsLabel(){
+      const [r,p,i,m] = currentWeights();
+      return `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
     }
 
     function render() {
@@ -245,6 +388,7 @@
         `${DATA.totalPublished ?? total} sélection(s).` +
         ` • profil: ${DATA.profile}` +
         ` • seuil: ${THRESH}` +
+        ` • ${weightsLabel()}` +
         (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI indisponible" : "");
 
       grid.innerHTML = "";
@@ -290,38 +434,47 @@
         tpl.querySelector(".t").appendChild(a);
 
         const d = it.published ? new Date(it.published) : null;
-        const breakdown = it.breakdown || {};
-        const bdStr = showMeta.checked && breakdown
-          ? ` • R/P/I/M: ${breakdown.research|0}/${breakdown.policy|0}/${breakdown.institution|0}/${breakdown.impact|0}`
-          : "";
-        const meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""}${showMeta.checked ? ` • score ${it.score}${bdStr}` : ""}`;
+
+        // Show personal score; indicate original if different and meta enabled
+        const personal = it._userScore ?? it.score;
+        let meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""} • score ${personal}`;
+        if (showMeta.checked && typeof it.score === "number" && it.score !== personal) {
+          meta += ` (feed ${it.score})`;
+        }
+
+        // Breakdown & reason if meta
+        if (showMeta.checked) {
+          const bd = it.breakdown || {};
+          meta += ` • R/P/I/M: ${(bd.research|0)}/${(bd.policy|0)}/${(bd.institution|0)}/${(bd.impact|0)}`;
+        }
         tpl.querySelector(".meta").textContent = meta;
 
         tpl.querySelector(".r").textContent = it.resume_fr || "";
         tpl.querySelector(".tags").innerHTML = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
-
-        // Raison (LLM ou heuristique), visible seulement si Métadonnées cochée
         tpl.querySelector(".reason").textContent = showMeta.checked && it.reason ? it.reason : "";
         grid.appendChild(tpl);
       });
     }
 
-    // UI
+    // ---------- Events ----------
     refreshBtn.addEventListener("click", load);
     showMeta.addEventListener("change", render);
+
     pageSizeSel.addEventListener("change", () => {
       PAGE_SIZE = clampInt(pageSizeSel.value, 5, 100);
       params.set("n", String(PAGE_SIZE));
       if (VIEW === "pages") params.set("p", "1");
       url.search = params.toString(); location.href = url.toString();
     });
+
     qInput.addEventListener("input", () => {
-      FILTER = qInput.value.trim();
-      if (FILTER) params.set("q", FILTER); else params.delete("q");
+      const q = qInput.value.trim();
+      if (q) params.set("q", q); else params.delete("q");
       if (VIEW === "pages") params.set("p", "1"); else params.set("d","1");
-      history.replaceState(null, "", "?"+params.toString());
+      history.replaceState(null, "", "?"+buildQS());
       render();
     });
+
     function switchView(v) {
       params.set("view", v);
       if (v === "pages") { params.set("p","1"); params.set("n", String(PAGE_SIZE)); params.delete("d"); }
@@ -333,6 +486,12 @@
 
     profileSel.addEventListener("change", () => {
       localStorage.setItem("newsProfile", profileSel.value);
+      // reset custom weights to profile defaults (but keep the flag & raw if user wants)
+      if (!USE_CUSTOM) {
+        RAW_W = defaultsToRaw(profileSel.value);
+        [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
+        updateWeightsLabels();
+      }
       params.set("profile", profileSel.value);
       params.set("p", "1"); params.set("d", "1");
       url.search = params.toString(); location.href = url.toString();
@@ -346,6 +505,43 @@
       render();
     });
 
+    useCustom.addEventListener("change", () => {
+      USE_CUSTOM = useCustom.checked;
+      localStorage.setItem(customFlagKey(profileSel.value), USE_CUSTOM ? "1" : "0");
+      params.set("cw", USE_CUSTOM ? "1" : "0");
+      history.replaceState(null, "", "?"+buildQS());
+      updateWeightsLabels();
+      render();
+    });
+
+    [wR,wP,wI,wM].forEach((el, idx) => {
+      el.addEventListener("input", () => {
+        RAW_W[idx] = clampInt(el.value, 0, 100);
+        localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
+        params.set("w", currentWeights().join(","));
+        history.replaceState(null, "", "?"+buildQS());
+        updateWeightsLabels();
+        render();
+      });
+    });
+
+    resetW.addEventListener("click", () => {
+      RAW_W = defaultsToRaw(profileSel.value);
+      [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
+      localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
+      params.set("w", currentWeights().join(","));
+      history.replaceState(null, "", "?"+buildQS());
+      updateWeightsLabels();
+      render();
+    });
+
+    function updateWeightsLabels(){
+      const [r,p,i,m] = currentWeights();
+      weightsSum.textContent = `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
+      wRVal.textContent = r; wPVal.textContent = p; wIVal.textContent = i; wMVal.textContent = m;
+    }
+
+    // ---------- Start ----------
     load();
   </script>
 </body>
