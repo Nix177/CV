@@ -30,7 +30,7 @@ on:
         description: 'Max d’items à analyser'
         default: '100'
       custom_weights:
-        description: 'Poids personnalisés R,P/I/M (ex: 45,25,15,15)'
+        description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
         default: ''
       policy_overrides:
         description: 'JSON: {"label":"…","desc":"…","keywords":"a,b,c"}'
@@ -67,11 +67,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          # ⚠️ pas de cache npm tant qu'il n'y a pas de lockfile dans le repo
 
       - name: Install deps
         run: |
-          npm i
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i
+          fi
           npm i --no-save rss-parser openai cheerio
 
       # Décode policy_overrides JSON => exporte NEWS_LABEL_POLICY / NEWS_DESC_POLICY / NEWS_KEYS_POLICY
@@ -97,18 +101,14 @@ jobs:
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
-          # Panneau "Qualité (OpenAI)" -> SKIP si pas de clef ou désactivé
           NEWS_USE_OPENAI:   ${{ inputs.use_openai }}
         run: |
           set -o pipefail
           mkdir -p logs
           echo "== ENV DIAG ==" | tee -a logs/build-news.log
-          echo "NEWS_PROFILE=$NEWS_PROFILE" | tee -a logs/build-news.log
-          echo "NEWS_SCORE_MIN=$NEWS_SCORE_MIN" | tee -a logs/build-news.log
-          echo "NEWS_MIN_PUBLISH=$NEWS_MIN_PUBLISH" | tee -a logs/build-news.log
-          echo "NEWS_OUTPUT_CAP=$NEWS_OUTPUT_CAP" | tee -a logs/build-news.log
-          echo "NEWS_MAX_ITEMS=$NEWS_MAX_ITEMS" | tee -a logs/build-news.log
-          echo "NEWS_CUSTOM_WEIGHTS=$NEWS_CUSTOM_WEIGHTS" | tee -a logs/build-news.log
+          echo "MODEL=$OPENAI_MODEL" | tee -a logs/build-news.log
+          echo "PROFILE=$NEWS_PROFILE SCORE_MIN=$NEWS_SCORE_MIN MIN_PUBLISH=$NEWS_MIN_PUBLISH CAP=$NEWS_OUTPUT_CAP MAX=$NEWS_MAX_ITEMS" | tee -a logs/build-news.log
+          echo "CUSTOM_WEIGHTS=$NEWS_CUSTOM_WEIGHTS USE_OPENAI=$NEWS_USE_OPENAI" | tee -a logs/build-news.log
           if [ -z "$OPENAI_API_KEY" ] || [ "$NEWS_USE_OPENAI" != "true" ]; then
             echo "OpenAI disabled for this run" | tee -a logs/build-news.log
             export OPENAI_API_KEY=""
