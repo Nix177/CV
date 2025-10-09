@@ -1,15 +1,14 @@
-// 21 sources (6 d'origine + 15 ajouts). Certaines sont des pages "News":
-// rss-utils détectera automatiquement un flux <link rel="alternate" ...> ou tentera /feed/.
+// 21 sources d’origine (politiques + institutions) + 12 orientées recherche/confs.
+// Les URLs "pages news" sont auto-détectées en RSS/Atom via rss-utils.
 export const SOURCES = [
-  // --- 6 d'origine ---
+  // --- existantes (politiques/institutions) ---
   { name: "EDUCAUSE – Teaching & Learning", url: "https://er.educause.edu/channels/teaching-learning/rss" },
   { name: "EDUCAUSE – Policy",             url: "https://er.educause.edu/channels/policy/rss" },
   { name: "Hechinger Report – EdTech",     url: "https://hechingerreport.org/tags/education-technology/feed/" },
   { name: "UNESCO-UNEVOC (TVET)",          url: "http://www.unevoc.unesco.org/unevoc_news.xml" },
   { name: "OECD Education & Skills Today", url: "https://oecdedutoday.com/feed/" },
-  { name: "NCSC Suisse – Actus",           url: "https://www.ncsc.admin.ch/ncsc/fr/home.html" }, // auto-discovery
+  { name: "NCSC Suisse – Actus",           url: "https://www.ncsc.admin.ch/ncsc/fr/home.html" },
 
-  // --- 15 ajouts "haut niveau" ---
   { name: "UNESCO GEM – World Education Blog", url: "https://world-education-blog.org/" },
   { name: "European Schoolnet – News",         url: "https://www.eun.org/news" },
   { name: "Jisc (UK) – News",                  url: "https://www.jisc.ac.uk/news/all" },
@@ -24,5 +23,29 @@ export const SOURCES = [
   { name: "US Dept. of Education – Blog",      url: "https://blog.ed.gov/" },
   { name: "The Conversation (UK) – Education", url: "https://theconversation.com/uk/education" },
   { name: "Brookings – Brown Center Chalkboard", url: "https://www.brookings.edu/blog/brown-center-chalkboard/" },
-  { name: "Times Higher Education – News",     url: "https://www.timeshighereducation.com/news" }
+  { name: "Times Higher Education – News",     url: "https://www.timeshighereducation.com/news" },
+
+  // --- NOUVEAU : recherche / conférences / journaux ---
+  // arXiv ciblé "education / learning analytics / AI for education"
+  { name: "arXiv – cs.HC + education", url: "https://export.arxiv.org/api/query?search_query=all:education+AND+cat:cs.HC&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+  { name: "arXiv – cs.LG + learning analytics", url: "https://export.arxiv.org/api/query?search_query=all:(learning%20analytics)+AND+cat:cs.LG&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+  { name: "arXiv – cs.AI + education/MOOC", url: "https://export.arxiv.org/api/query?search_query=all:(education%20OR%20MOOC%20OR%20classroom)+AND+cat:cs.AI&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+
+  // Sociétés / conférences
+  { name: "SoLAR – Society for Learning Analytics Research (News)", url: "https://www.solaresearch.org/news" },
+  { name: "EDM Society (Educational Data Mining)", url: "https://educationaldatamining.org/" },
+  { name: "SIGCSE (ACM) – News", url: "https://sigcse.org/sigcse/news" },
+  { name: "ACM Learning @ Scale", url: "https://learningatscale.acm.org/" },
+  { name: "IAIED – News (AIED Society)", url: "https://iaied.org/news" },
+
+  // Journaux
+  { name: "npj Science of Learning (Nature)", url: "https://www.nature.com/npjscilearn.rss" },
+  { name: "Frontiers in Education",           url: "https://www.frontiersin.org/journals/education/rss" },
+  { name: "Journal of Learning Analytics (JLA)", url: "https://learning-analytics.info/" },
+
+  // Autres sources utiles
+  { name: "IES (US) – Institute of Education Sciences – Blog", url: "https://ies.ed.gov/blogs/feed" },
+  { name: "EdSurge – Articles", url: "https://www.edsurge.com/articles.rss" },
+  { name: "ICDE – Latest news", url: "https://www.icde.org/latest-news" },
+  { name: "SIGCHI – News", url: "https://sigchi.org/news" }
 ];
