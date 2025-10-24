@@ -10,10 +10,10 @@ on:
         options: [ "true", "false" ]
         default: "true"
       model:
-        description: 'Modèle (gpt-5 | gpt-5-mini | gpt-4o-mini …)'
+        description: 'Modèle'
         default: 'gpt-5'
       profile:
-        description: 'Profil (balanced|research|policy)'
+        description: 'Profil'
         type: choice
         options: [balanced, research, policy]
         default: balanced
@@ -30,17 +30,16 @@ on:
         description: 'Max d’items à analyser'
         default: '100'
       custom_weights:
-        description: 'Poids personnalisés R,P,I,M (ex: 45,25,15,15)'
+        description: 'Poids R,P,I,M (ex: 45,25,15,15)'
         default: ''
       policy_overrides:
-        description: 'JSON: {"label":"…","desc":"…","keywords":"a,b,c"}'
+        description: 'JSON: {"label":"…","desc":"…","keywords":"…"}'
         default: ''
       run_key:
         description: 'Identifiant client (UI)'
         default: ''
-
   schedule:
-    - cron: "7 */3 * * 1-5"
+    - cron: "7 6 * * *"   # tous les jours à 06:07 UTC
 
   push:
     branches: [ main ]
