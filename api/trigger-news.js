@@ -71,6 +71,8 @@ export default async function handler(req, res) {
       output_cap: String(output_cap),
       max_items: String(max_items),
       custom_weights: String(custom_weights || ""),
+      publish_target,   // <= NEW
+      run_key: key,
       policy_overrides: po || undefined,
       run_key: key
     };
