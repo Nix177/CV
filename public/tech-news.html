@@ -147,7 +147,8 @@
       <button id="resetW" class="btn">Réinitialiser poids (profil)</button>
       <span class="sep">|</span>
       <label class="chip"><input type="checkbox" id="buildAI" checked> Qualité (OpenAI)</label>
-      <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids (peut prendre 5min)</button>
+      <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids</button>
+      <label class="chip"><input type="checkbox" id="preview"> Prévisualiser (n’écrase pas le flux)</label>
 
       <span class="sep">|</span>
       <details class="chip" id="adv">
@@ -233,6 +234,7 @@
     const resetW = document.getElementById("resetW");
     const buildAI = document.getElementById("buildAI");
     const rebuildBtn = document.getElementById("rebuild");
+    const previewChk = document.getElementById("preview");
 
     // Advanced overrides (bucket P)
     const pLabelInput = document.getElementById("pLabel");
@@ -250,6 +252,9 @@
     let PAGE = clampInt(params.get("p") || "1", 1, 9999);
     let DAY_INDEX = clampInt(params.get("d") || "1", 1, 9999);
     let FILTER = (params.get("q") || "").trim();
+    let PREVIEW = params.get("preview") === "1";
+
+    previewChk.checked = PREVIEW;
 
     const tz = "Europe/Zurich";
     const dayFmt = new Intl.DateTimeFormat('sv-SE', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' });
@@ -293,11 +298,12 @@
     updateWeightsLabels();
 
     function makeUrls(profile) {
-      const fname = (profile === "balanced") ? "feed.json" : `feed-${profile}.json`;
+      const base = PREVIEW
+        ? (profile === "balanced" ? "feed-preview.json" : `feed-${profile}-preview.json`)
+        : (profile === "balanced" ? "feed.json"        : `feed-${profile}.json`);
       return [
-        `/news/${fname}`,
-        `/api/news?profile=${encodeURIComponent(profile)}`,
-        `https://raw.githubusercontent.com/Nix177/CV/main/public/news/${fname}`
+        `/news/${base}`,
+        `https://raw.githubusercontent.com/Nix177/CV/main/public/news/${base}`
       ];
     }
     async function fetchFirstOk(urls) {
@@ -325,7 +331,6 @@
           `;
         }
       }
-      // note sous le panneau avancé
       pCur.textContent = `P actuel: ${L.policy}${D.policy ? " — " + D.policy : ""}`;
     }
 
@@ -423,6 +428,7 @@
       p.set("t", THRESH);
       p.set("cw", USE_CUSTOM ? "1" : "0");
       p.set("w", currentWeights().join(","));
+      p.set("preview", PREVIEW ? "1" : "0");
       const FILTER = (qInput.value || "").trim();
       if (FILTER) p.set("q", FILTER);
       if (VIEW === "pages") p.set("p", PAGE);
@@ -449,6 +455,7 @@
         ` • profil: ${DATA.profile}` +
         ` • seuil: ${THRESH}` +
         ` • ${weightsLabel()}` +
+        ` • mode: ${PREVIEW ? "preview" : "global"}` +
         (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI indisponible" : "");
 
       grid.innerHTML = "";
@@ -591,6 +598,14 @@
       render();
     });
 
+    // Basculer preview et recharger la bonne source (feed vs feed-preview)
+    previewChk.addEventListener("change", () => {
+      PREVIEW = previewChk.checked;
+      params.set("preview", PREVIEW ? "1" : "0");
+      url.search = params.toString();
+      location.href = url.toString();
+    });
+
     // --------- Trigger workflow from UI ----------
     rebuildBtn.addEventListener("click", async () => {
       try {
@@ -600,13 +615,13 @@
         const weights = currentWeights().join(",");
         const body = {
           use_openai: buildAI.checked,
-          // modèle : par défaut côté API/Workflow (gpt-5). Ajoute un select si tu veux choisir ici.
           profile: profileSel.value,
           score_min: String(THRESH || 65),
           min_publish: "12",
           output_cap: "60",
           max_items: "100",
           custom_weights: weights,
+          publish_target: PREVIEW ? "preview" : "default", // important
           // overrides de la catégorie P
           bucket_policy_label: (pLabelInput.value || "").trim(),
           bucket_policy_desc:  (pDescInput.value  || "").trim(),
