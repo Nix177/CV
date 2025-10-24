@@ -5,15 +5,21 @@ import { SOURCES } from "./sources.mjs";
 import { readFeedMaybe, dedupe } from "./rss-utils.mjs";
 
 // --------- ENV ----------
-const OPENAI_MODEL     = process.env.OPENAI_MODEL || "gpt-4o-mini";
-const SCORE_THRESHOLD  = parseInt(process.env.NEWS_SCORE_MIN   ?? "65", 10);
-const MAX_ITEMS_TOTAL  = parseInt(process.env.NEWS_MAX_ITEMS   ?? "100", 10);
-const MIN_PUBLISH_DEF  = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
-const OUTPUT_CAP_DEF   = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
-const PROFILE_DEFAULT  = (process.env.NEWS_PROFILE || "balanced").toLowerCase();
-const PROFILES_RAW     = (process.env.NEWS_PROFILES || "").trim();
-const PROFILES         = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
+const OPENAI_MODEL       = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const USE_OPENAI         = (process.env.NEWS_USE_OPENAI ?? "true").toLowerCase() === "true";
+const SCORE_THRESHOLD    = parseInt(process.env.NEWS_SCORE_MIN   ?? "65", 10);
+const MAX_ITEMS_TOTAL    = parseInt(process.env.NEWS_MAX_ITEMS   ?? "100", 10);
+const MIN_PUBLISH_DEF    = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
+const OUTPUT_CAP_DEF     = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
+const PROFILE_DEFAULT    = (process.env.NEWS_PROFILE || "balanced").toLowerCase();
+const PROFILES_RAW       = (process.env.NEWS_PROFILES || "").trim();
+const PROFILES           = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
   .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+
+// Nouvel ENV pour pilotage du fichier de sortie
+//  - default  => écrit feed.json (et feed-balanced.json pour le profil balanced)
+//  - preview  => écrit feed-preview.json (ou feed-<profile>-preview.json) sans toucher au flux global
+const PUBLISH_TARGET     = (process.env.NEWS_PUBLISH_TARGET || "default").toLowerCase();
 
 // Option : override des poids (R,P,I,M), ex: "40,25,20,15"
 const CUSTOM_WEIGHTS_RAW = (process.env.NEWS_CUSTOM_WEIGHTS || "").trim();
@@ -149,6 +155,10 @@ function extractJsonArrayFromResponses(resp) {
 }
 
 async function analyzeWithOpenAI(items, W) {
+  // Si pas de clé ou OpenAI désactivé, on force la voie heuristique
+  if (!process.env.OPENAI_API_KEY || !USE_OPENAI) {
+    throw new Error("OPENAI_DISABLED");
+  }
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const inputBlocks = buildBatchedInput(items, W);
 
@@ -273,6 +283,19 @@ async function enrichThumbnails(items, concurrency = 10) {
   items.slice(40).forEach(it => { it.image = favicon(it.url); });
 }
 
+// --------- Output name helper (point 2) ----------
+function outName(profile, target) {
+  if (target === "preview") {
+    return (profile === "balanced")
+      ? "feed-preview.json"
+      : `feed-${profile}-preview.json`;
+  }
+  // default
+  return (profile === "balanced")
+    ? "feed.json"
+    : `feed-${profile}.json`;
+}
+
 // --------- BUILD FOR ONE PROFILE ----------
 async function buildForProfile(profile, gathered) {
   const W = getWeights(profile);
@@ -281,12 +304,14 @@ async function buildForProfile(profile, gathered) {
 
   let analyzed = [];
   let analysisFailed = false;
+  let usedLLM = false;
 
   try {
     const analyses = await analyzeWithOpenAI(gathered, W);
     analyzed = attachAnalyses(gathered, analyses);
+    usedLLM = true;
   } catch (e) {
-    console.error(`[${profile}] OpenAI analysis failed:`, e?.message || e);
+    console.error(`[${profile}] OpenAI analysis failed/disabled:`, e?.message || e);
     analysisFailed = true;
 
     const local = makeHeuristic(W);
@@ -325,8 +350,12 @@ async function buildForProfile(profile, gathered) {
     threshold: SCORE_THRESHOLD,
     totalAnalyzed: analyzed.length,
     totalPublished: selected.length,
+    publishTarget: PUBLISH_TARGET, // NEW: utile côté UI
     debug: {
       analysisFailed,
+      usedLLM,
+      useOpenAIEnv: USE_OPENAI,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       minPublish: MIN_PUBLISH,
       weightsUsed: W,
       labelsUsed: LABELS,
@@ -338,20 +367,21 @@ async function buildForProfile(profile, gathered) {
 
   await fs.mkdir("public/news", { recursive: true });
 
-  if (profile === "balanced") {
-    await fs.writeFile("public/news/feed.json", JSON.stringify(payload, null, 2), "utf8");
+  // Choix du/des fichiers de sortie (point 2)
+  const mainName = outName(profile, PUBLISH_TARGET);
+  await fs.writeFile(`public/news/${mainName}`, JSON.stringify(payload, null, 2), "utf8");
+  console.log(`OK: wrote ${selected.length} items to public/news/${mainName}`);
+
+  // En mode "default" uniquement, on conserve l'alias historique feed-balanced.json pour le profil balanced
+  if (PUBLISH_TARGET === "default" && profile === "balanced") {
     await fs.writeFile("public/news/feed-balanced.json", JSON.stringify(payload, null, 2), "utf8");
-    console.log(`OK: wrote ${selected.length} items to public/news/feed.json (+ feed-balanced.json)`);
-  } else {
-    await fs.writeFile(`public/news/feed-${profile}.json`, JSON.stringify(payload, null, 2), "utf8");
-    console.log(`OK: wrote ${selected.length} items to public/news/feed-${profile}.json`);
+    console.log("Also wrote public/news/feed-balanced.json");
   }
 }
 
 // --------- MAIN ----------
 async function main() {
-  if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY manquant (GitHub Secrets).");
-
+  // Ne jette plus si API key absente : on tombera en heuristique.
   const gathered = await gatherAll();
   console.log(`Gathered ${gathered.length} unique items (max=${MAX_ITEMS_TOTAL}).`);
 
