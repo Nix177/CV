@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Tech News — Éducation numérique & IA</title>
+  <meta name="description" content="Sélection automatique des actualités importantes (éducation numérique, IA, recherches, conférences, politiques, standards)."/>
+
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    :root { --line: var(--border); }
+    main { max-width:1100px; margin: 10px auto 28px; padding: 0 16px; }
+    header.page { max-width:1100px; margin: calc(10px + var(--nt-nav-h,60px)) auto 8px; padding: 0 16px; }
+    .title { margin: 4px 0 4px; }
+    .lead  { margin: 0 0 10px; }
+
+    .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .toolbar .chip { cursor:pointer; }
+    .toolbar .sep { opacity:.4; }
+
+    .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .card { background: var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px; box-shadow: var(--shadow); }
+    .thumb { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:10px; border:1px solid var(--line); background:#0d1b2b; }
+    .meta { color: var(--muted); font-size:.92rem; margin:0; }
+    .r { margin:0; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; }
+    .tag { border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:.85rem }
+
+    .pager { display:flex; gap:8px; align-items:center; justify-content:flex-end; flex-wrap:wrap; margin:12px 0 0; }
+    .pager a, .pager span, .toolbar .chip { padding:6px 10px; border:1px solid var(--line); border-radius:10px; background: var(--surface); color: var(--text); text-decoration:none; }
+    .pager .current { font-weight:700; background: color-mix(in oklab, var(--surface), #fff 6%); }
+    .muted { color: var(--muted); }
+    .reason { font-size:.9rem; color: var(--muted); margin: 0; }
+    .bd { font-variant-numeric: tabular-nums; }
+    .weights { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .weights .row { display:flex; gap:8px; align-items:center; }
+    .weights input[type="range"]{ width:140px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    details.explain { margin-top: 8px; }
+
+    /* Advanced panel */
+    details#adv summary { list-style: none; }
+    details#adv[open] > div { margin-top: 8px; }
+    details#adv input { margin-left: 6px; }
+
+    /* overlay build */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5);
+      display: none; align-items:center; justify-content:center;
+      z-index: 9999;
+    }
+    .dialog {
+      background: var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:18px; width: min(520px, 92vw); color: var(--text); box-shadow: var(--shadow);
+    }
+    .progress { width:100%; height:10px; border:1px solid var(--line); border-radius:999px; overflow:hidden; margin:10px 0 0; background: var(--surface); }
+    .bar { height:100%; width:0%; background: linear-gradient(90deg, #7aa2f7, #a0c2ff); transition: width .5s ease; }
+    .rowb { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <header class="page" aria-label="En-tête page Tech News">
+    <h1 class="title">Tech News</h1>
+    <p class="lead">Actus importantes + <strong>recherche & conférences</strong> (LLM/outils inclus), triées par pertinence/date.</p>
+
+    <div class="toolbar">
+      <button id="refresh" class="btn">Actualiser</button>
+      <label class="chip"><input type="checkbox" id="showMeta"> Métadonnées</label>
+      <span class="sep">|</span>
+
+      <span class="muted">Affichage :</span>
+      <a href="#" data-view="pages" class="chip" id="viewPages">Par pages</a>
+      <a href="#" data-view="days"  class="chip" id="viewDays">Par jours</a>
+
+      <span class="sep">|</span>
+      <label class="select">Page size
+        <select id="pageSize">
+          <option>10</option>
+          <option selected>20</option>
+          <option>30</option>
+          <option>50</option>
+        </select>
+      </label>
+
+      <label>Filtrer
+        <input type="search" id="q" placeholder="titre, source, tag…">
+      </label>
+
+      <span class="sep">|</span>
+      <label>Profil
+        <select id="profile">
+          <option value="balanced">Mix</option>
+          <option value="research">Recherche</option>
+          <option value="policy">Politiques</option>
+        </select>
+      </label>
+
+      <label title="Seuil de score (0 à 100). Les cartes sous ce seuil sont masquées.">
+        Seuil
+        <input type="range" id="th" min="0" max="100" step="5" style="vertical-align:middle">
+        <span id="thVal" class="bd">—</span>
+      </label>
+    </div>
+
+    <details class="explain">
+      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ? (R/P/I/M)</summary>
+      <div class="muted" style="margin-top:6px">
+        <p><strong>Score d’une actu</strong> = somme pondérée de 4 facteurs (<span class="mono">R/P/I/M</span>) :</p>
+        <ul>
+          <li><strong>R — Recherche</strong> : articles/journaux, conférences, CFP, résultats scientifiques.</li>
+          <li><strong>P — Politiques</strong> : lois, régulations, standards, cadres/“frameworks”.</li>
+          <li><strong>I — Institutions</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
+          <li><strong>M — Impact</strong> : impact direct pour la classe/enseignants/universités/EdTech.</li>
+        </ul>
+        <p>Le flux stocke le <em>décompte</em> par facteur (<code>breakdown</code> R/P/I/M). Le profil choisi (Mix/Recherche/Politiques) donne un
+           jeu de poids par défaut. Vous pouvez définir des <strong>poids personnalisés</strong> ci-dessous et même <strong>reconstruire</strong> le flux avec ces poids.</p>
+      </div>
+    </details>
+
+    <div class="weights" id="weightsBar">
+      <label class="chip"><input type="checkbox" id="useCustom"> Poids personnalisés</label>
+      <span id="weightsSum" class="muted">Poids (normés) —</span>
+
+      <div class="row">
+        <span>R</span>
+        <input type="range" id="wR" min="0" max="100" step="5">
+        <span id="wRVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>P</span>
+        <input type="range" id="wP" min="0" max="100" step="5">
+        <span id="wPVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>I</span>
+        <input type="range" id="wI" min="0" max="100" step="5">
+        <span id="wIVal" class="bd">—</span>
+      </div>
+      <div class="row">
+        <span>M</span>
+        <input type="range" id="wM" min="0" max="100" step="5">
+        <span id="wMVal" class="bd">—</span>
+      </div>
+
+      <button id="resetW" class="btn">Réinitialiser poids (profil)</button>
+      <span class="sep">|</span>
+      <label class="chip"><input type="checkbox" id="buildAI" checked> Qualité (OpenAI)</label>
+      <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids</button>
+      <label class="chip"><input type="checkbox" id="preview"> Prévisualiser (n’écrase pas le flux)</label>
+
+      <span class="sep">|</span>
+      <details class="chip" id="adv">
+        <summary>Avancé (renommer P)</summary>
+        <div style="padding:10px; border:1px solid var(--border); border-radius:10px; background:var(--surface);">
+          <label>Libellé P
+            <input id="pLabel" type="text" placeholder="ex: Philosophie" style="min-width:220px">
+          </label>
+          <br>
+          <label>Mots-clés P (séparés par des virgules)
+            <input id="pKeys" type="text" placeholder="ex: philosophy,ethics,epistemology" style="min-width:420px">
+          </label>
+          <br>
+          <label>Description P
+            <input id="pDesc" type="text" placeholder="phrase courte" style="min-width:420px">
+          </label>
+          <p class="muted" id="pCur">P actuel: Politiques — mots-clés par défaut.</p>
+        </div>
+      </details>
+    </div>
+
+    <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
+  </header>
+
+  <main>
+    <div id="pagerTop" class="pager"></div>
+    <div id="grid" class="grid" aria-live="polite"></div>
+    <div id="pagerBottom" class="pager"></div>
+  </main>
+
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Construction du flux">
+    <div class="dialog">
+      <div class="rowb">
+        <strong id="ovlTitle">Construction du flux…</strong>
+        <span id="ovlStatus" class="muted"></span>
+      </div>
+      <div class="progress"><div id="ovlBar" class="bar" style="width:0%"></div></div>
+      <p class="muted" style="margin:8px 0 0;">
+        Cela lance un job GitHub Actions (provision du runner, installation des deps, scraping, analyse).
+      </p>
+    </div>
+  </div>
+
+  <template id="card-tpl">
+    <article class="card">
+      <img class="thumb" alt="">
+      <h3 class="h3 t"></h3>
+      <p class="meta"></p>
+      <p class="r"></p>
+      <p class="tags"></p>
+      <p class="reason"></p>
+    </article>
+  </template>
+
+  <script>
+    const url = new URL(location.href);
+    const params = url.searchParams;
+
+    const grid = document.getElementById("grid");
+    const stamp = document.getElementById("stamp");
+    const refreshBtn = document.getElementById("refresh");
+    const showMeta = document.getElementById("showMeta");
+    const pagerTop = document.getElementById("pagerTop");
+    const pagerBottom = document.getElementById("pagerBottom");
+    const pageSizeSel = document.getElementById("pageSize");
+    const qInput = document.getElementById("q");
+    const viewPagesBtn = document.getElementById("viewPages");
+    const viewDaysBtn  = document.getElementById("viewDays");
+    const profileSel   = document.getElementById("profile");
+    const thSlider     = document.getElementById("th");
+    const thVal        = document.getElementById("thVal");
+
+    const useCustom    = document.getElementById("useCustom");
+    const wR = document.getElementById("wR");
+    const wP = document.getElementById("wP");
+    const wI = document.getElementById("wI");
+    const wM = document.getElementById("wM");
+    const wRVal = document.getElementById("wRVal");
+    const wPVal = document.getElementById("wPVal");
+    const wIVal = document.getElementById("wIVal");
+    const wMVal = document.getElementById("wMVal");
+    const weightsSum = document.getElementById("weightsSum");
+    const resetW = document.getElementById("resetW");
+    const buildAI = document.getElementById("buildAI");
+    const rebuildBtn = document.getElementById("rebuild");
+    const previewChk = document.getElementById("preview");
+
+    // Advanced overrides (bucket P)
+    const pLabelInput = document.getElementById("pLabel");
+    const pKeysInput  = document.getElementById("pKeys");
+    const pDescInput  = document.getElementById("pDesc");
+    const pCur        = document.getElementById("pCur");
+
+    const overlay = document.getElementById("overlay");
+    const ovlBar = document.getElementById("ovlBar");
+    const ovlStatus = document.getElementById("ovlStatus");
+
+    const VIEW = (params.get("view") || "pages");
+    const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
+    let PAGE_SIZE = PAGE_SIZE_DEFAULT;
+    let PAGE = clampInt(params.get("p") || "1", 1, 9999);
+    let DAY_INDEX = clampInt(params.get("d") || "1", 1, 9999);
+    let FILTER = (params.get("q") || "").trim();
+    let PREVIEW = params.get("preview") === "1";
+
+    previewChk.checked = PREVIEW;
+
+    const tz = "Europe/Zurich";
+    const dayFmt = new Intl.DateTimeFormat('sv-SE', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' });
+
+    function clampInt(v, a, b){ v = parseInt(v,10); return isFinite(v) ? Math.max(a, Math.min(b, v)) : a; }
+    function toHttps(u){ if(!u) return u; if(u.startsWith("//")) return "https:"+u; if(u.startsWith("http://")) return "https://"+u.slice(7); return u; }
+
+    const DEFAULT_W = {
+      research: [40,25,20,15],
+      balanced: [35,35,15,15],
+      policy:   [25,40,20,15],
+    };
+
+    const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
+    profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
+    let THRESH = clampInt(params.get("t") || "0", 0, 100);
+
+    const customKey = (p)=> `newsWeights_${p}`;
+    const customFlagKey = (p)=> `newsWeightsEnabled_${p}`;
+    function readCustomRaw(p){
+      const qs = params.get("w");
+      if (qs) return qs.split(",").map(n=>clampInt(n,0,100));
+      const s = localStorage.getItem(customKey(p));
+      return s ? s.split(",").map(n=>clampInt(n,0,100)) : null;
+    }
+    function readCustomEnabled(p){
+      if (params.has("cw")) return params.get("cw")==="1";
+      const v = localStorage.getItem(customFlagKey(p));
+      return v ? v==="1" : false;
+    }
+
+    let DATA = null;
+    let RAW_W = readCustomRaw(profileSel.value) || DEFAULT_W[profileSel.value];
+    let USE_CUSTOM = readCustomEnabled(profileSel.value);
+
+    pageSizeSel.value = String(PAGE_SIZE_DEFAULT);
+    qInput.value = FILTER;
+    (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
+    useCustom.checked = USE_CUSTOM;
+    [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
+    updateWeightsLabels();
+
+    function makeUrls(profile) {
+      const base = PREVIEW
+        ? (profile === "balanced" ? "feed-preview.json" : `feed-${profile}-preview.json`)
+        : (profile === "balanced" ? "feed.json"        : `feed-${profile}.json`);
+      return [
+        `/news/${base}`,
+        `https://raw.githubusercontent.com/Nix177/CV/main/public/news/${base}`
+      ];
+    }
+    async function fetchFirstOk(urls) {
+      for (const u of urls) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (r.ok) return await r.json();
+        } catch {}
+      }
+      throw new Error("Aucune source disponible");
+    }
+
+    function updateLabelsExplain() {
+      const L = DATA?.debug?.labelsUsed || { research:"Recherche", policy:"Politiques", institution:"Institution", impact:"Impact" };
+      const D = DATA?.debug?.descUsed   || {};
+      const explain = document.querySelector("details.explain .muted");
+      if (explain) {
+        const ul = explain.querySelector("ul");
+        if (ul) {
+          ul.innerHTML = `
+            <li><strong>R — ${L.research}</strong> : ${D.research || "articles/journaux, conférences, CFP, résultats scientifiques."}</li>
+            <li><strong>P — ${L.policy}</strong> : ${D.policy   || "lois, régulations, standards, cadres/“frameworks”."}</li>
+            <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."} </li>
+            <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour la classe/enseignants/universités/EdTech."}</li>
+          `;
+        }
+      }
+      pCur.textContent = `P actuel: ${L.policy}${D.policy ? " — " + D.policy : ""}`;
+    }
+
+    async function load() {
+      try {
+        const data = await fetchFirstOk(makeUrls(profileSel.value));
+        DATA = data;
+
+        if (!params.has("t")) {
+          THRESH = clampInt(String(DATA.threshold ?? 65), 0, 100);
+          thSlider.value = String(THRESH); thVal.textContent = THRESH;
+          history.replaceState(null, "", "?"+buildQS());
+        } else {
+          thSlider.value = String(THRESH); thVal.textContent = THRESH;
+        }
+        updateLabelsExplain();
+        render();
+      } catch (e) {
+        grid.innerHTML = "<p class='muted'>Pas encore de données. Réessaie dans une minute.</p>";
+        stamp.textContent = "—";
+      }
+    }
+
+    function defaultsToRaw(profile){ return DEFAULT_W[profile] || DEFAULT_W.balanced; }
+    function normWeights(arr){
+      const s = arr.reduce((a,b)=>a+b,0);
+      if (s <= 0) return [25,25,25,25];
+      const k = 100/s;
+      return arr.map(v => Math.round(v*k));
+    }
+    function currentWeights(){ return USE_CUSTOM ? normWeights(RAW_W) : defaultsToRaw(profileSel.value); }
+    function getDefaultWeights(profile){ return defaultsToRaw(profile); }
+
+    function calcUserScore(item){
+      const bd = item.breakdown || {};
+      const sumBD = (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0);
+      if (sumBD <= 0) return item.score|0;
+
+      const def = getDefaultWeights(DATA?.profile || "balanced"); // [R,P,I,M]
+      const signalR = def[0] ? Math.min(1, (bd.research|0)   / def[0]) : 0;
+      const signalP = def[1] ? Math.min(1, (bd.policy|0)     / def[1]) : 0;
+      const signalI = def[2] ? Math.min(1, (bd.institution|0)/ def[2]) : 0;
+      const signalM = def[3] ? Math.min(1, (bd.impact|0)     / def[3]) : 0;
+
+      const [wR1,wP1,wI1,wM1] = currentWeights();
+      const score = (signalR*wR1) + (signalP*wP1) + (signalI*wI1) + (signalM*wM1);
+      return Math.max(0, Math.min(100, Math.round(score)));
+    }
+
+    function filterItems(items) {
+      const q = (params.get("q") || "").trim().toLowerCase();
+      const th = THRESH;
+      let out = items;
+      if (q) {
+        out = out.filter(it =>
+          (it.title||"").toLowerCase().includes(q) ||
+          (it.source||"").toLowerCase().includes(q) ||
+          (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
+        );
+      }
+      out = out.map(it => ({ ...it, _userScore: calcUserScore(it) }))
+               .filter(it => (it._userScore ?? 0) >= th);
+      return out;
+    }
+
+    function groupByDay(items) {
+      const map = new Map();
+      for (const it of items) {
+        const d = it.published ? new Date(it.published) : null;
+        const key = d ? dayFmt.format(d) : "0000-00-00";
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(it);
+      }
+      for (const arr of map.values()) arr.sort((a,b)=> new Date(b.published||0) - new Date(a.published||0));
+      const days = Array.from(map.keys()).sort((a,b)=> b.localeCompare(a));
+      return { map, days };
+    }
+
+    function pagerLinks(count, current, qs, labelPrev = "◀ Préc.", labelNext = "Suiv. ▶") {
+      const pages = Math.max(1, count);
+      let html = "";
+      const mk = (i, lbl, cls="") => `<a class="${cls}" href="?${qs}&${VIEW==='pages'?'p':'d'}=${i}">${lbl}</a>`;
+      const cur = (i) => `<span class="current">${i}</span>`;
+      if (current > 1) html += mk(current-1, labelPrev);
+      for (let i=1; i<=pages; i++) html += (i===current ? cur(i) : mk(i, i));
+      if (current < pages) html += mk(current+1, labelNext);
+      return html;
+    }
+
+    function buildQS(extra={}) {
+      const p = new URLSearchParams();
+      p.set("view", VIEW);
+      p.set("n", PAGE_SIZE);
+      p.set("profile", profileSel.value);
+      p.set("t", THRESH);
+      p.set("cw", USE_CUSTOM ? "1" : "0");
+      p.set("w", currentWeights().join(","));
+      p.set("preview", PREVIEW ? "1" : "0");
+      const FILTER = (qInput.value || "").trim();
+      if (FILTER) p.set("q", FILTER);
+      if (VIEW === "pages") p.set("p", PAGE);
+      if (VIEW === "days")  p.set("d", DAY_INDEX);
+      for (const [k,v] of Object.entries(extra)) {
+        if (v==null) continue;
+        p.set(k, v);
+      }
+      return p.toString();
+    }
+
+    function weightsLabel(){
+      const [r,p,i,m] = currentWeights();
+      return `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
+    }
+
+    function render() {
+      const itemsAll = filterItems(DATA?.items || []);
+      const total = itemsAll.length;
+
+      stamp.textContent =
+        `Généré le ${new Date(DATA.generatedAt).toLocaleString()}. ` +
+        `${DATA.totalPublished ?? total} sélection(s).` +
+        ` • profil: ${DATA.profile}` +
+        ` • seuil: ${THRESH}` +
+        ` • ${weightsLabel()}` +
+        ` • mode: ${PREVIEW ? "preview" : "global"}` +
+        (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI indisponible" : "");
+
+      grid.innerHTML = "";
+      pagerTop.innerHTML = pagerBottom.innerHTML = "";
+
+      if (VIEW === "pages") {
+        const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        if (PAGE > pages) PAGE = pages;
+        const start = (PAGE-1) * PAGE_SIZE;
+        renderSlice(itemsAll.slice(start, start + PAGE_SIZE));
+        const qs = buildQS({ p: undefined });
+        pagerTop.innerHTML = pagerLinks(pages, PAGE, qs);
+        pagerBottom.innerHTML = pagerTop.innerHTML;
+      } else {
+        const { map, days } = groupByDay(itemsAll);
+        const dPages = Math.max(1, days.length);
+        if (DAY_INDEX > dPages) DAY_INDEX = dPages;
+        const dayKey = days[DAY_INDEX-1];
+        renderSlice(map.get(dayKey) || []);
+        const qs = buildQS({ d: undefined });
+        pagerTop.innerHTML = pagerLinks(dPages, DAY_INDEX, qs, "◀ Jour préc.", "Jour suiv. ▶");
+        pagerBottom.innerHTML = pagerTop.innerHTML;
+      }
+    }
+
+    function renderSlice(slice) {
+      if (!slice.length) {
+        grid.innerHTML = "<p class='muted'>Aucune actualité pour ces critères.</p>";
+        return;
+      }
+      slice.forEach(it => {
+        const tpl = document.getElementById("card-tpl").content.cloneNode(true);
+        const img = tpl.querySelector(".thumb");
+        try {
+          const h = new URL(it.url).hostname;
+          const fallback = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=128`;
+          img.src = toHttps(it.image || fallback);
+        } catch { img.src = toHttps(it.image || ""); }
+        img.alt = it.source ? `Image — ${it.source}` : "Image";
+
+        const a = document.createElement("a");
+        a.href = it.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = it.title;
+        tpl.querySelector(".t").appendChild(a);
+
+        const d = it.published ? new Date(it.published) : null;
+
+        const personal = it._userScore ?? it.score;
+        let meta = `${it.source || "—"}${d ? " • " + d.toLocaleDateString() : ""} • score ${personal}`;
+        if (showMeta.checked && typeof it.score === "number" && it.score !== personal) {
+          meta += ` (feed ${it.score})`;
+        }
+        if (showMeta.checked) {
+          const bd = it.breakdown || {};
+          meta += ` • R/P/I/M: ${(bd.research|0)}/${(bd.policy|0)}/${(bd.institution|0)}/${(bd.impact|0)}`;
+        }
+        tpl.querySelector(".meta").textContent = meta;
+
+        tpl.querySelector(".r").textContent = it.resume_fr || "";
+        tpl.querySelector(".tags").innerHTML = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
+        tpl.querySelector(".reason").textContent = showMeta.checked && it.reason ? it.reason : "";
+        grid.appendChild(tpl);
+      });
+    }
+
+    // --------- UI events ---------
+    refreshBtn.addEventListener("click", load);
+    showMeta.addEventListener("change", render);
+
+    pageSizeSel.addEventListener("change", () => {
+      PAGE_SIZE = clampInt(pageSizeSel.value, 5, 100);
+      params.set("n", String(PAGE_SIZE));
+      if (VIEW === "pages") params.set("p", "1");
+      url.search = params.toString(); location.href = url.toString();
+    });
+
+    qInput.addEventListener("input", () => {
+      const q = qInput.value.trim();
+      if (q) params.set("q", q); else params.delete("q");
+      if (VIEW === "pages") params.set("p", "1"); else params.set("d","1");
+      history.replaceState(null, "", "?"+buildQS());
+      render();
+    });
+
+    function switchView(v) {
+      params.set("view", v);
+      if (v === "pages") { params.set("p","1"); params.set("n", String(PAGE_SIZE)); params.delete("d"); }
+      else { params.set("d","1"); params.delete("p"); }
+      url.search = params.toString(); location.href = url.toString();
+    }
+    document.getElementById("viewPages").addEventListener("click", (e)=>{ e.preventDefault(); switchView("pages"); });
+    document.getElementById("viewDays").addEventListener("click", (e)=>{ e.preventDefault(); switchView("days"); });
+
+    profileSel.addEventListener("change", () => {
+      localStorage.setItem("newsProfile", profileSel.value);
+      if (!USE_CUSTOM) {
+        RAW_W = DEFAULT_W[profileSel.value];
+        [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
+        updateWeightsLabels();
+      }
+      params.set("profile", profileSel.value);
+      params.set("p", "1"); params.set("d", "1");
+      url.search = params.toString(); location.href = url.toString();
+    });
+
+    thSlider.addEventListener("input", () => {
+      THRESH = clampInt(thSlider.value, 0, 100);
+      thVal.textContent = THRESH;
+      params.set("t", String(THRESH));
+      history.replaceState(null, "", "?"+buildQS());
+      render();
+    });
+
+    useCustom.addEventListener("change", () => {
+      USE_CUSTOM = useCustom.checked;
+      localStorage.setItem(customFlagKey(profileSel.value), USE_CUSTOM ? "1" : "0");
+      params.set("cw", USE_CUSTOM ? "1" : "0");
+      history.replaceState(null, "", "?"+buildQS());
+      updateWeightsLabels();
+      render();
+    });
+
+    [wR,wP,wI,wM].forEach((el, idx) => {
+      el.addEventListener("input", () => {
+        RAW_W[idx] = clampInt(el.value, 0, 100);
+        localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
+        params.set("w", currentWeights().join(","));
+        history.replaceState(null, "", "?"+buildQS());
+        updateWeightsLabels();
+        render();
+      });
+    });
+
+    resetW.addEventListener("click", () => {
+      RAW_W = DEFAULT_W[profileSel.value];
+      [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
+      localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
+      params.set("w", currentWeights().join(","));
+      history.replaceState(null, "", "?"+buildQS());
+      updateWeightsLabels();
+      render();
+    });
+
+    // Basculer preview et recharger la bonne source (feed vs feed-preview)
+    previewChk.addEventListener("change", () => {
+      PREVIEW = previewChk.checked;
+      params.set("preview", PREVIEW ? "1" : "0");
+      url.search = params.toString();
+      location.href = url.toString();
+    });
+
+    // --------- Trigger workflow from UI ----------
+    rebuildBtn.addEventListener("click", async () => {
+      try {
+        // show overlay
+        showOverlay("Envoi de la requête…", 10);
+
+        const weights = currentWeights().join(",");
+        const body = {
+          use_openai: buildAI.checked,
+          profile: profileSel.value,
+          score_min: String(THRESH || 65),
+          min_publish: "12",
+          output_cap: "60",
+          max_items: "100",
+          custom_weights: weights,
+          publish_target: PREVIEW ? "preview" : "default", // important
+          // overrides de la catégorie P
+          bucket_policy_label: (pLabelInput.value || "").trim(),
+          bucket_policy_desc:  (pDescInput.value  || "").trim(),
+          bucket_policy_keywords: (pKeysInput.value || "").trim()
+        };
+
+        const r = await fetch("/api/trigger-news", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const j = await r.json();
+        if (!r.ok || !j.ok) throw new Error(j.error || "Échec de la création du run");
+
+        const key = j.run_key;
+        // poll status
+        await pollRun(key);
+
+        // reload feed une fois terminé
+        await load();
+        hideOverlay();
+      } catch (e) {
+        showOverlay("Erreur: " + (e.message || e), 100);
+        setTimeout(hideOverlay, 4000);
+      }
+    });
+
+    function showOverlay(txt, pct){
+      overlay.style.display = "flex";
+      ovlStatus.textContent = txt || "";
+      ovlBar.style.width = (pct||0) + "%";
+    }
+    function hideOverlay(){ overlay.style.display = "none"; }
+
+    async function pollRun(key){
+      let pct = 20;
+      showOverlay("Run créé, en attente du runner…", pct);
+      const start = Date.now();
+
+      while (true) {
+        await new Promise(r => setTimeout(r, 4000));
+
+        const r = await fetch(`/api/check-news?run_key=${encodeURIComponent(key)}`, { cache:"no-store" });
+        const j = await r.json();
+        if (!j.found) {
+          pct = Math.min(50, pct+5);
+          showOverlay("Run en file d'attente…", pct);
+          continue;
+        }
+        if (j.status === "queued") {
+          pct = Math.min(60, pct+5);
+          showOverlay("Queued…", pct);
+          continue;
+        }
+        if (j.status === "in_progress") {
+          // barre progresse lentement pendant l'install & build
+          pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000)); // approx
+          showOverlay("En cours d'exécution…", pct);
+          continue;
+        }
+        if (j.status === "completed") {
+          if (j.conclusion === "success") {
+            showOverlay("Terminé ✔ — actualisation du flux…", 100);
+          } else {
+            throw new Error("Run terminé avec l'état: " + j.conclusion);
+          }
+          break;
+        }
+      }
+    }
+
+    function updateWeightsLabels(){
+      const [r,p,i,m] = currentWeights();
+      weightsSum.textContent = `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
+      wRVal.textContent = r; wPVal.textContent = p; wIVal.textContent = i; wMVal.textContent = m;
+    }
+
+    // ---------- Start ----------
+    load();
+  </script>
+</body>
+</html>
