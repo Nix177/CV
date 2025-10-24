@@ -38,6 +38,10 @@ on:
       run_key:
         description: 'Identifiant client (UI)'
         default: ''
+      publish_target:
+        description: 'default | preview'
+        default: 'default'
+
   schedule:
     - cron: "7 6 * * *"   # tous les jours à 06:07 UTC
 
@@ -101,6 +105,8 @@ jobs:
           NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
           NEWS_USE_OPENAI:   ${{ inputs.use_openai }}
+          NEWS_PUBLISH_TARGET: ${{ inputs.publish_target || 'default' }}
+
         run: |
           set -o pipefail
           mkdir -p logs
