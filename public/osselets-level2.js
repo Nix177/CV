@@ -95,15 +95,13 @@
       b.title = title;
       return b;
     };
-    
-    const up = mk('↑','Rotation X+');
-    const dw = mk('↓','Rotation X-');
-    const lf = mk('←','Rotation Y-');
-    const rg = mk('→','Rotation Y+');
-    const rs = mk('↻','Reset');
-    const zi = mk('+','Zoom +');
-    const zo = mk('−','Zoom −');
-    
+    const up = mk('↑', 'Rotation X+');
+    const dw = mk('↓', 'Rotation X−');
+    const lf = mk('←', 'Rotation Y−');
+    const rg = mk('→', 'Rotation Y+');   // <-- FIX: argument + parenthèse
+    const rs = mk('⟲', 'Recadrer');
+    const zi = mk('+',  'Zoom +');
+    const zo = mk('−',  'Zoom −');
     pad.appendChild(document.createElement('div'));
     pad.appendChild(up);
     pad.appendChild(document.createElement('div'));
