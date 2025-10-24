@@ -26,9 +26,6 @@ on:
       output_cap:
         description: 'Cap d’items dans le feed'
         default: '60'
-      max_items:
-        description: 'Max d’items à analyser'
-        default: '100'
       custom_weights:
         description: 'Poids R,P,I,M (ex: 45,25,15,15)'
         default: ''
@@ -102,18 +99,18 @@ jobs:
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
           NEWS_MIN_PUBLISH: ${{ inputs.min_publish || '12' }}
           NEWS_OUTPUT_CAP:  ${{ inputs.output_cap  || '60' }}
-          NEWS_MAX_ITEMS:   ${{ inputs.max_items   || '100' }}
+          # max_items retiré des inputs => valeur par défaut ici :
+          NEWS_MAX_ITEMS:   ${{ vars.NEWS_MAX_ITEMS || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
           NEWS_USE_OPENAI:   ${{ inputs.use_openai }}
           NEWS_PUBLISH_TARGET: ${{ inputs.publish_target || 'default' }}
-
         run: |
           set -o pipefail
           mkdir -p logs
           echo "== ENV DIAG ==" | tee -a logs/build-news.log
           echo "MODEL=$OPENAI_MODEL" | tee -a logs/build-news.log
           echo "PROFILE=$NEWS_PROFILE SCORE_MIN=$NEWS_SCORE_MIN MIN_PUBLISH=$NEWS_MIN_PUBLISH CAP=$NEWS_OUTPUT_CAP MAX=$NEWS_MAX_ITEMS" | tee -a logs/build-news.log
-          echo "CUSTOM_WEIGHTS=$NEWS_CUSTOM_WEIGHTS USE_OPENAI=$NEWS_USE_OPENAI" | tee -a logs/build-news.log
+          echo "CUSTOM_WEIGHTS=$NEWS_CUSTOM_WEIGHTS USE_OPENAI=$NEWS_USE_OPENAI PUBLISH_TARGET=$NEWS_PUBLISH_TARGET" | tee -a logs/build-news.log
           if [ -z "$OPENAI_API_KEY" ] || [ "$NEWS_USE_OPENAI" != "true" ]; then
             echo "OpenAI disabled for this run" | tee -a logs/build-news.log
             export OPENAI_API_KEY=""
