@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-10-26T06:34:06.165Z",
+  "generatedAt": "2025-10-27T06:40:59.481Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,29 +96,29 @@
   },
   "items": [
     {
-      "title": "The Verification-Value Paradox: A Normative Critique of Gen AI in Legal\n  Practice",
-      "url": "http://arxiv.org/abs/2510.20109v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-23T01:26:37.000Z",
+      "title": "Automated Quality Control for Language Documentation: Detecting\n  Phonotactic Inconsistencies in a Kokborok Wordlist",
+      "url": "http://arxiv.org/abs/2510.21584v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-10-24T15:51:10.000Z",
       "score": 85,
-      "resume_fr": "It is often claimed that machine learning-based generative AI products will drastically streamline and reduce the cost of legal practice. This enthusiasm assumes lawyers can effectively manage AI's risks. Cases in Australia and elsewhere in which lawyers have been reprimanded for submitting inaccurate AI-generated content to courts suggest this paradigm must be revisited. This paper argues that a new paradigm is needed to evaluate AI use in practice, given (a) AI's disconnection from reality and its lack of transparency, and (b) lawyers' paramount duties like honesty, integrity, and not to mis",
+      "resume_fr": "Lexical data collection in language documentation often contains transcription errors and undocumented borrowings that can mislead linguistic analysis. We present unsupervised anomaly detection methods to identify phonotactic inconsistencies in wordlists, applying them to a multilingual dataset of Kokborok varieties with Bangla. Using character-level and syllable-level phonotactic features, our algorithms identify potential transcription errors and borrowings. While precision and recall remain modest due to the subtle nature of these anomalies, syllable-aware features significantly outperform ",
       "tags": [],
       "breakdown": {
         "research": 35,
         "policy": 35,
-        "institution": 0,
-        "impact": 15
+        "institution": 15,
+        "impact": 0
       },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "VAMOS: A Hierarchical Vision-Language-Action Model for\n  Capability-Modulated and Steerable Navigation",
-      "url": "http://arxiv.org/abs/2510.20818v1",
+      "title": "Equivariance by Contrast: Identifiable Equivariant Embeddings from\n  Unlabeled Finite Group Actions",
+      "url": "http://arxiv.org/abs/2510.21706v1",
       "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-23T17:59:45.000Z",
+      "published": "2025-10-24T17:59:46.000Z",
       "score": 70,
-      "resume_fr": "A fundamental challenge in robot navigation lies in learning policies that generalize across diverse environments while conforming to the unique physical constraints and capabilities of a specific embodiment (e.g., quadrupeds can walk up stairs, but rovers cannot). We propose VAMOS, a hierarchical VLA that decouples semantic planning from embodiment grounding: a generalist planner learns from diverse, open-world data, while a specialist affordance model learns the robot's physical constraints and capabilities in safe, low-cost simulation. We enabled this separation by carefully designing an in",
+      "resume_fr": "We propose Equivariance by Contrast (EbC) to learn equivariant embeddings from observation pairs $(\\mathbf{y}, g \\cdot \\mathbf{y})$, where $g$ is drawn from a finite group acting on the data. Our method jointly learns a latent space and a group representation in which group actions correspond to invertible linear maps -- without relying on group-specific inductive biases. We validate our approach on the infinite dSprites dataset with structured transformations defined by the finite group $G:= (R_m \\times \\mathbb{Z}_n \\times \\mathbb{Z}_n)$, combining discrete rotations and periodic translations",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -130,29 +130,12 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "On the Detectability of LLM-Generated Text: What Exactly Is\n  LLM-Generated Text?",
-      "url": "http://arxiv.org/abs/2510.20810v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-23T17:59:06.000Z",
+      "title": "Few-Shot Knowledge Distillation of LLMs With Counterfactual Explanations",
+      "url": "http://arxiv.org/abs/2510.21631v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-10-24T16:36:34.000Z",
       "score": 70,
-      "resume_fr": "With the widespread use of large language models (LLMs), many researchers have turned their attention to detecting text generated by them. However, there is no consistent or precise definition of their target, namely \"LLM-generated text\". Differences in usage scenarios and the diversity of LLMs further increase the difficulty of detection. What is commonly regarded as the detecting target usually represents only a subset of the text that LLMs can potentially produce. Human edits to LLM outputs, together with the subtle influences that LLMs exert on their users, are blurring the line between LL",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Reality Gap in Robotics: Challenges, Solutions, and Best Practices",
-      "url": "http://arxiv.org/abs/2510.20808v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-23T17:58:53.000Z",
-      "score": 70,
-      "resume_fr": "Machine learning has facilitated significant advancements across various robotics domains, including navigation, locomotion, and manipulation. Many such achievements have been driven by the extensive use of simulation as a critical tool for training and testing robotic systems prior to their deployment in real-world environments. However, simulations consist of abstractions and approximations that inevitably introduce discrepancies between simulated and real environments, known as the reality gap. These discrepancies significantly hinder the successful transfer of systems from simulation to th",
+      "resume_fr": "Knowledge distillation is a promising approach to transfer capabilities from complex teacher models to smaller, resource-efficient student models that can be deployed easily, particularly in task-aware scenarios. However, existing methods of task-aware distillation typically require substantial quantities of data which may be unavailable or expensive to obtain in many practical scenarios. In this paper, we address this challenge by introducing a novel strategy called Counterfactual-explanation-infused Distillation CoD for few-shot task-aware knowledge distillation by systematically infusing co",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -179,40 +162,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01136-1/MediaObjects/42256_2025_1136_Fig1_HTML.png"
-    },
-    {
-      "title": "Do it yourself: discerning the effects of self-directed activity on conceptual learning",
-      "url": "https://www.nature.com/articles/s41539-025-00364-9",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2025-09-29T00:00:00.000Z",
-      "score": 70,
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00364-9/MediaObjects/41539_2025_364_Fig1_HTML.png"
-    },
-    {
-      "title": "Re:Member: Emotional Question Generation from Personal Memories",
-      "url": "http://arxiv.org/abs/2510.19030v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-10-21T19:14:15.000Z",
-      "score": 65,
-      "resume_fr": "We present Re:Member, a system that explores how emotionally expressive, memory-grounded interaction can support more engaging second language (L2) learning. By drawing on users' personal videos and generating stylized spoken questions in the target language, Re:Member is designed to encourage affective recall and conversational engagement. The system aligns emotional tone with visual context, using expressive speech styles such as whispers or late-night tones to evoke specific moods. It combines WhisperX-based transcript alignment, 3-frame visual sampling, and Style-BERT-VITS2 for emotional s",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "How to avoid three common pitfalls in EdTech impact evaluations",
@@ -249,20 +198,37 @@
       "image": "https://world-education-blog.org/wp-content/uploads/2025/10/zambia-blog.png"
     },
     {
-      "title": "Video Prediction of Dynamic Physical Simulations With Pixel-Space\n  Spatiotemporal Transformers",
-      "url": "http://arxiv.org/abs/2510.20807v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-23T17:58:45.000Z",
+      "title": "Designing and Evaluating Hint Generation Systems for Science Education",
+      "url": "http://arxiv.org/abs/2510.21087v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-10-24T02:00:16.000Z",
       "score": 50,
-      "resume_fr": "Inspired by the performance and scalability of autoregressive large language models (LLMs), transformer-based models have seen recent success in the visual domain. This study investigates a transformer adaptation for video prediction with a simple end-to-end approach, comparing various spatiotemporal self-attention layouts. Focusing on causal modeling of physical simulations over time; a common shortcoming of existing video-generative approaches, we attempt to isolate spatiotemporal reasoning via physical object tracking metrics and unsupervised training on physical simulation datasets. We int",
+      "resume_fr": "Large language models are influencing the education landscape, with students relying on them in their learning process. Often implemented using general-purpose models, these systems are likely to give away the answers, which could hinder conceptual understanding and critical thinking. We study the role of automatic hint generation as a pedagogical strategy to promote active engagement with the learning content, while guiding learners toward the answers. Focusing on scientific topics at the secondary education level, we explore the potential of large language models to generate chains of hints ",
       "tags": [],
       "breakdown": {
         "research": 35,
         "policy": 0,
-        "institution": 15,
-        "impact": 0
+        "institution": 0,
+        "impact": 15
       },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "NeuroPilot: A Realtime Brain-Computer Interface system to enhance\n  concentration of students in online learning",
+      "url": "http://arxiv.org/abs/2510.20958v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-10-23T19:36:59.000Z",
+      "score": 50,
+      "resume_fr": "Prevalence of online learning poses a vital challenge in real-time monitoring of students' concentration. Traditional methods such as questionnaire assessments require manual interventions and webcam-based monitoring fails to provide accurate insights into learners' mental focus as they are deceived by mere screen fixation without cognitive engagement. Existing BCI-based approaches lack real-time validation and evaluation procedures. To address these limitations, a Brain-Computer Interface (BCI) system is developed using a non-invasive Electroencephalogram (EEG) headband, FocusCalm, to record ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -289,6 +255,40 @@
       "published": "2025-10-23T06:23:35.000Z",
       "score": 50,
       "resume_fr": "This article presents early findings from designing, deploying and evaluating an AI-based educational agent deployed as the primary instructor in a graduate-level Cloud Computing course at IISc. We detail the design of a Large Language Model (LLM)-driven Instructor Agent, and introduce a pedagogical framework that integrates the Instructor Agent into the course workflow for actively interacting with the students for content delivery, supplemented by the human instructor to offer the course structure and undertake question--answer sessions. We also propose an analytical framework that evaluates",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "\"Learning Together\": AI-Mediated Support for Parental Involvement in\n  Everyday Learning",
+      "url": "http://arxiv.org/abs/2510.20123v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-10-23T01:53:18.000Z",
+      "score": 50,
+      "resume_fr": "Family learning takes place in everyday routines where children and caregivers read, practice, and develop new skills together. Although AI is increasingly present in learning environments, most systems remain child-centered and overlook the collaborative, distributed nature of family education. This paper investigates how AI can mediate family collaboration by addressing tensions of coordination, uneven workloads, and parental mediation. From a formative study with families using AI in daily learning, we identified challenges in responsibility sharing and recognition of contributions. Buildin",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Cultural Dimensions of Artificial Intelligence Adoption: Empirical\n  Insights for Wave 1 from a Multinational Longitudinal Pilot Study",
+      "url": "http://arxiv.org/abs/2510.19743v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-10-22T16:31:28.000Z",
+      "score": 50,
+      "resume_fr": "The swift diffusion of artificial intelligence (AI) raises critical questions about how cultural contexts shape adoption patterns and their consequences for human daily life. This study investigates the cultural dimensions of AI adoption and their influence on cognitive strategies across nine national contexts in Europe, Africa, Asia, and South America. Drawing on survey data from a diverse pilot sample (n = 21) and guided by cross-cultural psychology, digital ethics, and sociotechnical systems theory, we examine how demographic variables (age, gender, professional role) and cultural orientati",
       "tags": [],
       "breakdown": {
         "research": 35,
