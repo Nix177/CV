@@ -1,418 +1,438 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>RAG Glassbox + Diff — Server-safe</title>
-<meta name="theme-color" content="#0a1220"/>
-<style>
-  :root{--bg:#0a1220;--card:#0c1628;--text:#eef3f8;--muted:#a9b6c6;--accent:#4dd0e1;--border:#1a3257;--good:#4caf50;--warn:#ffb300;--bad:#ef5350}
-  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,Segoe UI,Roboto,Arial}
-  header{padding:14px 16px;border-bottom:1px solid #132946;background:#0b1426;position:sticky;top:0;z-index:5}
-  h1{margin:0;font-size:18px} main{max-width:1200px;margin:18px auto;padding:0 14px 64px}
-  .tabs{display:flex;gap:8px;margin-top:8px}.tab{padding:8px 12px;border:1px solid #193055;border-radius:8px;color:#cfe9ff;cursor:pointer}
-  .tab.active{background:linear-gradient(180deg,#13253f,#0e1d35);border-color:#25497e}
-  section{display:none}.active{display:block}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0}
-  .row{display:flex;gap:12px;flex-wrap:wrap}.col{flex:1 1 380px;min-width:320px}
-  input,textarea,select{width:100%;background:#0c1a31;color:var(--text);border:1px solid #28466e;border-radius:8px;padding:10px}
-  textarea{min-height:120px} button{background:#17345c;border:1px solid #2b538a;color:#e7f5ff;padding:9px 12px;border-radius:8px;cursor:pointer}
-  button.primary{background:#1b5e8f;border-color:#2c75ad} .pill{display:inline-flex;gap:6px;background:#10223b;border:1px solid #27466f;border-radius:999px;padding:3px 8px;font-size:12px;margin-right:6px}
-  .small{font-size:12px;color:var(--muted)} .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:1100px){.split{grid-template-columns:1fr}}
-  .list{display:grid;gap:8px}.chunk{background:#0b1a32;border:1px solid #24436f;border-radius:10px;padding:10px}
-  pre{background:#0b1a32;border:1px solid #24436f;border-radius:10px;padding:10px;overflow:auto}
-  .bar{height:10px;border-radius:999px;background:#11233e;overflow:hidden;margin-top:4px}.bar>span{display:block;height:100%}
-  .good>span{background:var(--good)} .mid>span{background:var(--warn)} .bad>span{background:var(--bad)}
-  .badge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #2a4f80;background:#0d213d;margin-left:8px}
-  .badge.good{border-color:#2e7d32;color:#b9f6ca}.badge.warn{border-color:#fbc02d;color:#ffecb3}.badge.bad{border-color:#d32f2f;color:#ffcdd2}
-  .timeline{display:grid;gap:6px}.trow{display:grid;grid-template-columns:160px 1fr 110px;gap:10px}
-  .legend{display:flex;gap:8px;align-items:center}.box{width:14px;height:14px;border-radius:3px}.added{background:#1b5e20}.removed{background:#b71c1c}
-  .diff{display:grid;grid-template-columns:1fr 1fr;gap:12px}.diff pre{height:65vh;min-height:420px}
-  mark{background:#2b3f63;outline:2px solid #406299}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-<script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";</script>
-<script src="https://cdn.jsdelivr.net/npm/diff@5/dist/diff.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css">
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Lab — RAG Glassbox & Diff Explorer</title>
+  <meta name="color-scheme" content="dark light">
+  <style>
+    :root{
+      --bg:#0a1220; --card:#0c1628; --muted:#9fb0c9; --text:#eef3f8; --acc:#63e; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
+      --border: #1a2a44;
+    }
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:#9ed0ff}
+    .shell{max-width:1200px;margin:24px auto;padding:0 16px}
+    header h1{margin:0 0 6px}
+    header p{margin:0 0 16px;color:var(--muted)}
+    .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
+    input,select,button,textarea{background:#0f1b30;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+    input::placeholder,textarea::placeholder{color:#7e8aa3}
+    button{cursor:pointer}
+    button.primary{background:linear-gradient(90deg,#6c4bff,#4a74ff);border:none}
+    .tabs{display:flex;gap:8px;margin:4px 0 16px}
+    .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;cursor:pointer;color:var(--muted)}
+    .tab.active{background:#15223a;color:var(--text);border-color:#2b3b61}
+    .panel{display:none}
+    .panel.active{display:block}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:10px 0}
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:1fr 1fr}
+    @media (max-width:1000px){.grid-2{grid-template-columns:1fr}}
+    .split{display:grid;grid-template-columns:1.1fr 1.4fr;gap:12px;min-height:520px}
+    .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
+    .box h4{margin:0 0 8px}
+    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px}
+    .tstep{padding:6px 8px;border-left:3px solid #2b3b61;margin:6px 0;background:#0f1b30;border-radius:8px}
+    .tstep.ok{border-color:var(--ok)} .tstep.warn{border-color:var(--warn)} .tstep.bad{border-color:var(--bad)}
+    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;margin:2px 4px 0 0;background:#13213a;color:#cfe0ff;font-size:12px}
+    .hl{background:rgba(255,230,120,.22);outline:1px dashed rgba(255,230,120,.35)}
+    .score{height:10px;background:#0f1b30;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+    .score > i{display:block;height:100%;background:linear-gradient(90deg,#ff5f6d,#ffc371)}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{padding:4px 8px;border-radius:8px;background:#14203a;border:1px solid var(--border)}
+    .badge.ok{background:#0f2a1a;border-color:#245a3b}
+    .badge.low{background:#2a1c0f;border-color:#5a3d24}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .mono{font-family:ui-monospace,Consolas,monospace}
+    .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
+    .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
+    .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
+  </style>
+
+  <!-- pdf.js (sans SRI pour éviter les erreurs d'intégrité) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <!-- diff-match-patch pour le diff -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
 </head>
 <body>
-<header>
-  <h1>RAG Glassbox + Diff — <span class="small">OpenAI via Vercel server</span></h1>
-  <div class="tabs">
-    <div class="tab active" data-tab="rag">RAG Glassbox</div>
-    <div class="tab" data-tab="diff">Code & Prompt Diff</div>
-    <div class="tab" data-tab="settings">⚙️ Modèles</div>
+  <div class="shell">
+    <header>
+      <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
+      <p>Deux mini-outils pédagogiques, qui utilisent <b>ton endpoint Vercel</b> pour appeler un LLM. Tout est transparent et commenté.</p>
+    </header>
+
+    <!-- Barre de config commune -->
+    <div class="card">
+      <div class="bar">
+        <label>Model
+          <select id="model">
+            <option value="gpt-5">gpt-5 (par défaut via ton API)</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4o">gpt-4o</option>
+          </select>
+        </label>
+        <label class="small">Custom API key (optionnel, test autre compte)
+          <input id="userKey" type="password" placeholder="sk-..." style="min-width:260px">
+        </label>
+        <label class="small">Access code (si protégé)
+          <input id="accessCode" type="password" placeholder="CV_ACCESS_CODE">
+        </label>
+        <span class="small muted">Route API&nbsp;: <code class="mono" id="routeHint"></code></span>
+      </div>
+      <div class="small muted">
+        Explication : par défaut, les appels passent par <b>ton</b> serveur Vercel qui détient la clé OpenAI.  
+        Le champ “Custom API key” permet de tester un autre compte/modèle sans jamais exposer ta clé côté client (elle n’est pas stockée).
+      </div>
+    </div>
+
+    <!-- Onglets -->
+    <div class="tabs">
+      <div class="tab active" data-tab="rag">1) RAG Glassbox — “Explique-moi ta réponse”</div>
+      <div class="tab" data-tab="diff">2) Code & Prompt Diff Explorer</div>
+    </div>
+
+    <!-- Panel RAG -->
+    <section class="panel active" id="panel-rag">
+      <div class="card grid grid-2">
+        <div>
+          <h3>Document & Question</h3>
+          <div class="bar">
+            <input type="file" id="pdfFile" accept="application/pdf">
+            <input id="question" style="flex:1" placeholder="Pose ta question sur le PDF (ex. 'Quels sont les objectifs de la réforme ?')">
+            <button class="primary" id="runRag">Run RAG</button>
+          </div>
+          <details class="card">
+            <summary><b>Comment ça marche ?</b> (explication courte)</summary>
+            <ul>
+              <li><b>Extraction</b> : on convertit le PDF en texte côté navigateur (pdf.js).</li>
+              <li><b>Chunking</b> : le texte est découpé en passages de ~800–1000 caractères, avec recouvrement.</li>
+              <li><b>Ranking (TF-IDF simplifié)</b> : on mesure la proximité question↔passages et on sélectionne les K meilleurs.</li>
+              <li><b>Prompting</b> : on envoie au LLM la question + les passages retenus, en exigeant des <b>citations [n]</b>.</li>
+              <li><b>Glassbox</b> : tu vois les chunks surlignés, les scores, la timeline détaillée, et une jauge de “grounding”.</li>
+            </ul>
+          </details>
+
+          <div class="card">
+            <h4>Timeline détaillée</h4>
+            <div id="timeline" class="timeline"></div>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="box" id="leftPane">
+            <h4>Passages sélectionnés</h4>
+            <div id="passages" class="small"></div>
+            <hr>
+            <h4>Infos</h4>
+            <div id="ragInfo" class="small muted"></div>
+          </div>
+          <div class="box" id="rightPane">
+            <h4>Réponse du modèle</h4>
+            <div id="answer"></div>
+            <div class="badges" id="badges"></div>
+            <div class="footer-note">Les citations [n] renvoient aux passages du panneau gauche.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel Diff -->
+    <section class="panel" id="panel-diff">
+      <div class="card">
+        <h3>Code & Prompt Diff Explorer</h3>
+        <div class="grid grid-2">
+          <div class="box">
+            <h4>Entrée (code ou prompt “avant”)</h4>
+            <textarea id="src" rows="14" placeholder="Colle ici du code ou un prompt…"></textarea>
+            <div class="bar">
+              <input id="goal" style="flex:1" placeholder="Objectif/contraintes (ex. +lisibilité, +sécurité, FR comments)">
+              <button class="primary" id="improve">Improve with AI</button>
+            </div>
+          </div>
+          <div class="box">
+            <h4>Résultat (après)</h4>
+            <textarea id="dst" rows="14" placeholder="Le code/prompt amélioré apparaîtra ici…"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="box">
+            <h4>Diff (side-by-side)</h4>
+            <div id="diff" class="diff small"></div>
+          </div>
+          <div class="box">
+            <h4>Métriques rapides</h4>
+            <div id="metrics" class="small"></div>
+            <hr>
+            <h4>Justification</h4>
+            <div id="why" class="small"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
-</header>
-
-<main>
-  <!-- RAG -->
-  <section id="rag" class="active">
-    <div class="card small">
-      <details><summary>💡 Comment ça marche</summary>
-        <p>1) Tu charges un PDF/TXT. 2) On découpe en “chunks” de N phrases, overlap M. 3) TF-IDF → top-K passages proches de ta question. 4) Réponse locale (extractive) ou via GPT-5 (serveur) en citant [n]. 5) On calcule un score de “grounding”.</p>
-      </details>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <h3>1) Fichiers</h3>
-          <input id="fileInput" type="file" multiple accept=".pdf,.txt,.md"/>
-          <div class="row small" style="margin-top:8px">
-            <label>Chunk size <input id="chunkSize" type="number" value="5" min="2" max="10" style="width:80px"></label>
-            <label>Overlap <input id="chunkOverlap" type="number" value="1" min="0" max="4" style="width:80px"></label>
-            <label>Top K <input id="topK" type="number" value="5" min="1" max="10" style="width:80px"></label>
-          </div>
-        </div>
-        <div class="col">
-          <h3>2) Question</h3>
-          <input id="question" type="text" placeholder="Ex: Quels sont les objectifs prioritaires ?" />
-          <div class="row" style="margin-top:8px">
-            <button id="btnBuild" class="primary">Indexer & Rank</button>
-            <button id="btnAnswer">Réponse (locale)</button>
-            <button id="btnLLM">Réponse via GPT-5 (serveur)</button>
-            <button id="btnLLMCustom">via Custom model</button>
-          </div>
-          <p class="small">Les appels LLM passent par <code>/api/llm/chat</code> côté serveur (clé protégée). “Custom model” change juste le nom du modèle OpenAI.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="split">
-      <div class="card">
-        <h3>Passages top-K</h3>
-        <p class="small">Clique une citation <span class="pill">[n]</span> pour scroller ici.</p>
-        <div id="chunks" class="list"></div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3>Réponse & traçabilité</h3>
-          <div class="small">Tokens (est.), grounding, timeline détaillée</div>
-        </div>
-        <div id="answer" class="card mono" style="white-space:pre-wrap;min-height:96px"></div>
-        <div class="row small">
-          <div class="col">
-            <div id="groundBadge" class="badge warn">Grounding</div>
-            <div class="bar mid"><span id="groundBar" style="width:0%"></span></div>
-            <div id="groundText" class="small" style="margin-top:4px">—</div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:8px">
-          <h4 style="margin:0 0 6px">Timeline</h4>
-          <div id="timeline" class="timeline small"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Diff -->
-  <section id="diff">
-    <div class="card small">
-      <details><summary>💡 Que montre cet outil ?</summary>
-        <p>Colle ton code/prompt à gauche. À droite, version améliorée (heuristique ou GPT-5 serveur). Diff coloré, métriques simples (Halstead approx., lisibilité) et justification. Export Markdown.</p>
-      </details>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <h3>Avant</h3>
-          <textarea id="src" placeholder="// Colle ici"></textarea>
-        </div>
-        <div class="col">
-          <h3>Après</h3>
-          <textarea id="dst" placeholder="// Résultat (ou laisse vide pour LLM)"></textarea>
-        </div>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <button id="btnHeu" class="primary">Améliorer (heuristique)</button>
-        <button id="btnLLM2">Améliorer via GPT-5 (serveur)</button>
-        <button id="btnDiff">Voir diff</button>
-        <button id="btnExplain">Justification (FR)</button>
-        <button id="btnExport">Exporter Markdown</button>
-      </div>
-    </div>
-
-    <div class="split">
-      <div class="card">
-        <h3>Diff</h3>
-        <div class="diff">
-          <pre id="left" class="language-javascript"><code class="language-javascript"></code></pre>
-          <pre id="right" class="language-javascript"><code class="language-javascript"></code></pre>
-        </div>
-        <p class="small">Astuce: change la classe <code>language-*</code> pour un highlight adapté.</p>
-      </div>
-      <div class="card">
-        <h3>Métriques & justification</h3>
-        <div class="row">
-          <div class="col">
-            <div class="pill">Halstead (avant): <b id="hBefore">—</b></div>
-            <div class="pill">Halstead (après): <b id="hAfter">—</b></div>
-            <div id="hWrap" class="bar"><span style="width:0%"></span></div>
-            <div id="hText" class="small" style="margin-top:4px">—</div>
-          </div>
-          <div class="col">
-            <div class="pill">Lisibilité (avant): <b id="rBefore">—</b></div>
-            <div class="pill">Lisibilité (après): <b id="rAfter">—</b></div>
-            <div id="rWrap" class="bar"><span style="width:0%"></span></div>
-            <div id="rText" class="small" style="margin-top:4px">—</div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:10px">
-          <h4 style="margin:0 0 6px">Justification</h4>
-          <div id="explain" class="mono" style="white-space:pre-wrap"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Settings -->
-  <section id="settings">
-    <div class="card">
-      <h3>Modèles</h3>
-      <p class="small">Par défaut: <code>gpt-5</code> (défini côté serveur). Tu peux tester un “Custom model” (ex: <code>gpt-4.1-mini</code>) sans exposer de clé.</p>
-      <div class="row">
-        <div class="col">
-          <label class="small">Default model (affichage seulement)</label>
-          <input id="defModel" type="text" value="gpt-5" disabled />
-        </div>
-        <div class="col">
-          <label class="small">Custom model (optionnel)</label>
-          <input id="cusModel" type="text" placeholder="ex: gpt-4.1-mini"/>
-        </div>
-      </div>
-      <p id="setNote" class="small" style="margin-top:8px;color:#9ad0ff">Les appels vont à <code>/api/llm/chat</code> (clé protégée par Vercel).</p>
-    </div>
-  </section>
-</main>
 
 <script>
-/* Tabs */
+/** ====== CONFIG ====== **/
+const API_ROUTE = '/api/llm/chat'; // ← ta route Vercel (car fichier placé dans api/llm/chat.ts)
+document.getElementById('routeHint').textContent = API_ROUTE;
+
+/** ====== ONGLET UI ====== **/
 document.querySelectorAll('.tab').forEach(t=>{
-  t.onclick=()=>{
+  t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
     t.classList.add('active');
-    document.getElementById(t.dataset.tab).classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
   };
 });
 
-/* Utils */
-const sentences = s=> s.replace(/\n+/g,' ').split(/(?<=[\.\?\!…])\s+/).map(x=>x.trim()).filter(Boolean);
-const tokenize = s=> s.toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean);
-const uniq = arr=>[...new Set(arr)];
-const estimateTokens = s=> Math.max(1, Math.round((s||'').length/4));
-const cosine = (a,b)=>{let dot=0,na=0,nb=0;const keys=new Set([...Object.keys(a),...Object.keys(b)]);for(const k of keys){const va=a[k]||0,vb=b[k]||0;dot+=va*vb;na+=va*va;nb+=vb*vb}return (na&&nb)?dot/Math.sqrt(na*nb):0;};
-const highlight = (text, qwords)=> qwords.length? text.replace(new RegExp(`\\b(${qwords.map(w=>w.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')).join('|')})\\b`,'gi'), m=>`<mark>${m}</mark>`):text;
+/** ====== OUTILS COMMUNS ====== **/
+function logStep(html, cls=''){ 
+  const el = document.createElement('div');
+  el.className = `tstep ${cls}`;
+  el.innerHTML = html;
+  document.getElementById('timeline').appendChild(el);
+  el.scrollIntoView({block:'end',behavior:'smooth'});
+}
+function resetTimeline(){ document.getElementById('timeline').innerHTML=''; }
+function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); } // estimation grossière
+function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
 
-/* Elements */
-const fileInput = document.getElementById('fileInput');
-const chunkSizeEl = document.getElementById('chunkSize');
-const chunkOverlapEl = document.getElementById('chunkOverlap');
-const topKEl = document.getElementById('topK');
-const questionEl = document.getElementById('question');
-const chunksDiv = document.getElementById('chunks');
-const answerEl = document.getElementById('answer');
-const groundBar = document.getElementById('groundBar');
-const groundBadge = document.getElementById('groundBadge');
-const groundText = document.getElementById('groundText');
-const timelineEl = document.getElementById('timeline');
-const cusModelEl = document.getElementById('cusModel');
+async function callLLM(messages, model) {
+  const headers = {'Content-Type':'application/json'};
+  const code = document.getElementById('accessCode').value.trim();
+  if (code) headers['x-access-code'] = code;
+  const userKey = document.getElementById('userKey').value.trim();
+  if (userKey) headers['x-user-api-key'] = userKey;
 
-let DOCS_TEXT=""; let BUILT=null;
-const timeline=[]; const tStart=(name,desc)=>{const t={name,desc,t0:performance.now(),t1:null,extra:null};timeline.push(t);renderTimeline();return t;};
-const tEnd=(t,extra)=>{t.t1=performance.now();t.extra=extra||null;renderTimeline();};
-const renderTimeline=()=> timelineEl.innerHTML = timeline.map(x=>{
-  const dur=(x.t1?x.t1-x.t0:performance.now()-x.t0)/1000;
-  return `<div class="trow"><div><b>• ${x.name}</b></div><div>${x.desc}${x.extra?(' — '+x.extra):''}</div><div style="text-align:right">${dur.toFixed(2)}s</div></div>`;
-}).join('');
+  const res = await fetch(API_ROUTE, {
+    method:'POST',
+    headers,
+    body: JSON.stringify({ provider:'openai', model, messages, temperature:0.2 })
+  });
+  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${await res.text()}`);
+  return res.json(); // suppose {choices:[{message:{content}}]}
+}
 
-/* Load files */
-async function readFileAsText(file){
-  const ext=file.name.toLowerCase().split('.').pop();
-  if(ext==='pdf'){
-    const step=tStart('Lecture PDF',`Fichier: ${file.name}`);
-    const arr=new Uint8Array(await file.arrayBuffer());
-    const pdf=await pdfjsLib.getDocument({data:arr}).promise;
-    let text=""; for(let p=1;p<=pdf.numPages;p++){const p0=performance.now();const page=await pdf.getPage(p);const c=await page.getTextContent();text+=c.items.map(i=>i.str).join(' ')+"\n";step.desc=`Pages extraites: ${p}/${pdf.numPages}`;step.extra=`Dernière: ${((performance.now()-p0)/1000).toFixed(2)}s`;renderTimeline();}
-    tEnd(step,`Pages: ${pdf.numPages}, chars: ${text.length.toLocaleString()}`); return text;
-  } else {
-    const st=tStart('Lecture texte',file.name); const txt=await file.text(); tEnd(st,`Chars: ${txt.length.toLocaleString()}`); return txt;
+/** ====== RAG GLASSBOX ====== **/
+async function pdfToText(file){
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+  logStep(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
+  let text = '';
+  for (let i=1; i<=pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const c = await page.getTextContent();
+    const t = c.items.map(it=>it.str).join(' ');
+    text += '\n' + t;
   }
+  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères`, 'ok');
+  return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
-fileInput.addEventListener('change', async ()=>{
-  timeline.length=0; DOCS_TEXT="";
-  const st=tStart('Chargement', `Fichiers: ${fileInput.files.length}`);
-  for(const f of fileInput.files){ DOCS_TEXT += `\n\n--- FILE: ${f.name} ---\n` + await readFileAsText(f); }
-  tEnd(st,`Total chars: ${DOCS_TEXT.length.toLocaleString()}, ~tokens: ${estimateTokens(DOCS_TEXT)}`);
-});
 
-function buildChunks(text,size=5,overlap=1){
-  const sents=sentences(text); const out=[];
-  for(let i=0;i<sents.length;i+=Math.max(1,(size-overlap))){
-    const ch=sents.slice(i,i+size); if(ch.length) out.push({idx:out.length,text:ch.join(' ')});
+function chunkText(text, opts={win:900, overlap:150}){
+  const clean = text.replace(/\r/g,'');
+  const parts = [];
+  let i = 0;
+  while (i < clean.length){
+    const s = i, e = Math.min(clean.length, i+opts.win);
+    let slice = clean.slice(s, e);
+    // pousser la fin jusqu'au prochain point si possible
+    const extra = clean.slice(e, e+120).match(/^[^.!?]*[.!?]/);
+    if (extra) slice += extra[0];
+    parts.push({id: parts.length+1, start:s, end:s+slice.length, text:slice.trim()});
+    i += (opts.win - opts.overlap);
   }
-  return {chunks:out,sentCount:sents.length};
-}
-function tfidfVectors(chunks, query){
-  const docs=chunks.map(c=>tokenize(c.text)); const df=new Map();
-  docs.forEach(tks=> uniq(tks).forEach(t=>df.set(t,(df.get(t)||0)+1)));
-  const N=docs.length;
-  const vecs=docs.map(tks=>{const tf={}; tks.forEach(t=>tf[t]=(tf[t]||0)+1); const v={}; Object.keys(tf).forEach(t=>{const idf=Math.log((N+1)/((df.get(t)||1)+1))+1; v[t]=tf[t]*idf;}); return v;});
-  const qtk=tokenize(query); const qtf={}; qtk.forEach(t=>qtf[t]=(qtf[t]||0)+1); const qv={}; Object.keys(qtf).forEach(t=>{const idf=Math.log((N+1)/((df.get(t)||1)+1))+1; qv[t]=qtf[t]*idf;});
-  return {vecs:qv?vecs:[], qvec:qv, vocabSize:df.size, N};
-}
-function computeGrounding(answer, topChunks){
-  const A=uniq(tokenize(answer)).filter(w=>w.length>2);
-  const C=uniq(tokenize(topChunks.map(c=>c.text).join(' '))).filter(w=>w.length>2);
-  const overlap=A.filter(w=>C.includes(w)).length;
-  return A.length? overlap/A.length : 0;
-}
-function setGrounding(ratio, txt){
-  const pct=Math.round(ratio*100);
-  groundBar.style.width=pct+"%"; groundText.textContent=`${pct}% de recouvrement (heuristique) — ${txt||''}`;
-  const wrap=groundBar.parentElement; groundBadge.classList.remove('good','warn','bad'); wrap.classList.remove('good','mid','bad');
-  if(ratio>=0.6){wrap.classList.add('good'); groundBadge.classList.add('good'); groundBadge.textContent='Grounded';}
-  else if(ratio>=0.3){wrap.classList.add('mid'); groundBadge.classList.add('warn'); groundBadge.textContent='Medium-Grounding';}
-  else {wrap.classList.add('bad'); groundBadge.classList.add('bad'); groundBadge.textContent='Low-Grounding';}
+  return parts;
 }
 
-/* Build */
-document.getElementById('btnBuild').onclick=()=>{
-  const q=questionEl.value.trim(); if(!DOCS_TEXT) return alert("Charge d'abord des docs."); if(!q) return alert("Entre une question.");
-  const st1=tStart('Chunking',`size=${+chunkSizeEl.value||5}, overlap=${+chunkOverlapEl.value||1}`);
-  const {chunks,sentCount}=buildChunks(DOCS_TEXT, +chunkSizeEl.value||5, +chunkOverlapEl.value||1);
-  tEnd(st1,`Sentences: ${sentCount}, Chunks: ${chunks.length}`);
-  const st2=tStart('TF-IDF & ranking',`TopK=${+topKEl.value||5}`);
-  const {vecs,qvec,vocabSize,N}=tfidfVectors(chunks,q); const scored=chunks.map((c,i)=>({...c,score:cosine(vecs[i],qvec)})).sort((a,b)=>b.score-a.score);
-  const K=Math.min(+topKEl.value||5, scored.length); const qwords=uniq(tokenize(q)).filter(w=>w.length>2);
-  chunksDiv.innerHTML=""; for(let i=0;i<K;i++){const c=scored[i]; const d=document.createElement('div'); d.className='chunk'; d.id=`chunk-${c.idx}`; d.innerHTML=`<h4>#${c.idx} — score <b>${c.score.toFixed(3)}</b> <span class="pill">[${i+1}]</span></h4><div>${highlight(c.text,qwords)}</div>`; chunksDiv.appendChild(d);}
-  tEnd(st2,`Docs:${N}, Vocab:${vocabSize}, Top-K:${scored.slice(0,K).map(x=>x.score.toFixed(3)).join(', ')}`);
-  BUILT={chunks, ranking: scored.slice(0,K)};
-  answerEl.textContent=''; setGrounding(0,'en attente');
-};
-
-/* Réponse locale (extractive) */
-document.getElementById('btnAnswer').onclick=()=>{
-  if(!BUILT) return alert("Fais ‘Indexer & Rank’ d'abord.");
-  const q=questionEl.value.trim(); const qwords=uniq(tokenize(q)).filter(w=>w.length>2);
-  const top=BUILT.ranking; const candidates=[];
-  top.forEach(c=> sentences(c.text).forEach(s=>{const t=tokenize(s); const ov=t.filter(x=>qwords.includes(x)).length; if(ov>0) candidates.push({s,ov,source:c.idx});}));
-  candidates.sort((a,b)=>b.ov-a.ov);
-  const pick=uniq(candidates.map(x=>x.s)).slice(0,6);
-  const text= pick.length? pick.map((s,i)=>`${s} [${i+1}]`).join(' ') : "(Rien de très pertinent trouvé.)";
-  answerEl.textContent=text;
-  const g=computeGrounding(text, top); setGrounding(g,'réponse locale');
-  linkCitations();
-};
-
-/* Réponse LLM (défaut/custom) */
-async function callLLM(model){
-  if(!BUILT) return alert("Fais ‘Indexer & Rank’ d'abord.");
-  const q=questionEl.value.trim();
-  const context=BUILT.ranking.map((c,i)=>`[${i+1}] ${c.text}`).join("\n\n");
-  const system="You are a precise RAG assistant. Use only PASSAGES to answer. If insufficient, say it and explain why. Cite [n].";
-  const st=tStart('LLM',`model=${model}`);
-  const res=await fetch('/api/llm/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system, user:q, context, model, temperature:0.2})});
-  if(!res.ok){ tEnd(st,`HTTP ${res.status}`); return alert('Erreur LLM (voir console).'); }
-  const data=await res.json(); const text=String(data.text||'(no response)');
-  answerEl.textContent=text; const g=computeGrounding(text, BUILT.ranking); setGrounding(g,'réponse LLM');
-  tEnd(st,`~ctx:${estimateTokens(context)}, ~Q:${estimateTokens(q)}, ~A:${estimateTokens(text)}, grounding:${(g*100).toFixed(0)}%`);
-  linkCitations();
+const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
+function tokenize(s){
+  return s
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .split(/\s+/).filter(w=>w && !STOP.has(w));
 }
-document.getElementById('btnLLM').onclick = ()=> callLLM('gpt-5');
-document.getElementById('btnLLMCustom').onclick = ()=> {
-  const m=cusModelEl.value.trim(); if(!m) return alert('Entre un nom de modèle (OpenAI family).'); callLLM(m);
-};
-
-/* Citations cliquables → scroll */
-function linkCitations(){
-  const html=answerEl.innerHTML;
-  answerEl.innerHTML = html.replace(/\[(\d+)\]/g,(m,n)=>`<a class="pill" href="#chunk-${BUILT.ranking[n-1]?.idx||''}">[${n}]</a>`);
+function tfidfRank(query, chunks){
+  const q = tokenize(query);
+  const df = new Map();
+  for (const ch of chunks){
+    const seen = new Set(tokenize(ch.text));
+    for (const t of seen) df.set(t, (df.get(t)||0)+1);
+  }
+  const N = chunks.length;
+  const qset = new Set(q);
+  for (const ch of chunks){
+    const terms = tokenize(ch.text);
+    const tf = new Map();
+    for (const t of terms) tf.set(t, (tf.get(t)||0)+1);
+    let score = 0;
+    for (const t of qset){
+      const idf = Math.log( (N+1) / ((df.get(t)||0)+1) );
+      score += (tf.get(t)||0) * idf;
+    }
+    ch.score = score;
+  }
+  return chunks.sort((a,b)=>b.score-a.score);
 }
 
-/* ===== Diff Explorer ===== */
-const srcEl=document.getElementById('src'), dstEl=document.getElementById('dst');
-const leftCode=document.querySelector('#left code'), rightCode=document.querySelector('#right code');
-const hBefore=document.getElementById('hBefore'), hAfter=document.getElementById('hAfter');
-const hWrap=document.getElementById('hWrap').querySelector('span'), hText=document.getElementById('hText');
-const rBefore=document.getElementById('rBefore'), rAfter=document.getElementById('rAfter');
-const rWrap=document.getElementById('rWrap').querySelector('span'), rText=document.getElementById('rText');
-const explainDiv=document.getElementById('explain');
-
-function halsteadApprox(code){
-  const tokens = (code.match(/[A-Za-z_][A-Za-z0-9_]*|==?=?|!==?|<=?|>=?|[\+\-\*\/%=&\|\^\~\!<>]+|[.,:;?(){}\[\]]/g) || []);
-  const opsSet = new Set(['+','-','*','/','%','=','+=','-=','*=','/=','==','===','!=','!==','<','>','<=','>=','&&','||','!','++','--','=>','.',';',',',':','?','&','|','^','~','<<','>>','>>>','return','if','else','for','while','switch','case','break','continue','try','catch','throw','class','function','def','lambda','import','from','as','with','await','async','yield','new']);
-  const ops=new Set(), ids=new Set(); let N1=0, N2=0;
-  tokens.forEach(t=>{ if(opsSet.has(t)) {ops.add(t); N1++;} else {ids.add(t); N2++;} });
-  const n1=ops.size, n2=ids.size; const N = N1+N2, n=n1+n2;
-  const volume = n>0? N * Math.log2(n) : 0;
-  return Math.round(volume);
-}
-function readabilityApprox(s){ // Flesch-like très grossier
-  const words=(s.match(/\b\w+\b/g)||[]).length;
-  const sentencesCount=(s.match(/[.!?…]+/g)||[]).length||1;
-  const syll = (s.toLowerCase().match(/[aeiouyàâäéèêëîïôöùûü]+/g)||[]).length;
-  const ASL = words/sentencesCount, ASW = syll/words || 0;
-  const score = Math.max(0, Math.min(100, Math.round(206.835 - 1.015*ASL - 84.6*ASW)));
-  return score;
-}
-function updateMetrics(a,b){
-  const hA=halsteadApprox(a), hB=halsteadApprox(b);
-  hBefore.textContent=hA; hAfter.textContent=hB;
-  const hPct = Math.max(0, Math.min(100, Math.round(100*(hA-hB)/Math.max(1,hA))));
-  hWrap.style.width = Math.abs(hPct)+"%"; hWrap.parentElement.className = "bar " + (hPct>20?'good':hPct>0?'mid':'bad');
-  hText.textContent = (hPct>=0? '↓':'↑') + Math.abs(hPct) + '% (plus bas = plus simple)';
-
-  const rA=readabilityApprox(a), rB=readabilityApprox(b);
-  rBefore.textContent=rA; rAfter.textContent=rB;
-  const rGain = Math.max(0, Math.min(100, rB - rA + 50)); // centrer
-  rWrap.style.width = Math.abs(rB-rA)+"%"; rWrap.parentElement.className = "bar " + ((rB>rA)?'good':(rB===rA)?'mid':'bad');
-  rText.textContent = (rB>=rA? '↑ ':'↓ ') + Math.abs(rB-rA) + ' pts lisibilité';
-}
-function renderDiff(a,b){
-  const parts = Diff.diffLines(a,b);
-  leftCode.innerHTML = parts.map(p => p.removed ? `<span class="removed">${Prism.util.encode(p.value)}</span>` : Prism.util.encode(p.value)).join('');
-  rightCode.innerHTML= parts.map(p => p.added   ? `<span class="added">${Prism.util.encode(p.value)}</span>`   : Prism.util.encode(p.value)).join('');
-  Prism.highlightElement(leftCode); Prism.highlightElement(rightCode);
+function renderPassages(list, topk){
+  const root = document.getElementById('passages');
+  root.innerHTML = '';
+  list.slice(0, topk).forEach((ch, idx)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `<div class="pill">#${idx+1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
+      <div class="small">${sanitize(ch.text)}</div>`;
+    root.appendChild(div);
+  });
 }
 
-document.getElementById('btnHeu').onclick=()=>{
-  const a=srcEl.value; if(!a) return alert('Colle un texte/code.');
-  // heuristique simple: trim, enlever doublons d’espaces, nommer fonctions, commentaires
-  let b=a.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n');
-  if(!/\/\//.test(b)) b = '// improved: add comments\n' + b;
-  dstEl.value=b; renderDiff(a,b); updateMetrics(a,b); explainDiv.textContent='Heuristique: simplification espaces, ajout commentaire, normalisation.';
+function groundingScore(answer, passages){
+  const a = new Set(tokenize(answer));
+  const p = new Set(tokenize(passages.map(p=>p.text).join(' ')));
+  let inter = 0;
+  for (const t of a) if (p.has(t)) inter++;
+  const g = a.size ? inter / a.size : 0;
+  return Math.max(0, Math.min(1, g));
+}
+
+document.getElementById('runRag').onclick = async ()=>{
+  try{
+    resetTimeline();
+    const file = document.getElementById('pdfFile').files[0];
+    const q = document.getElementById('question').value.trim();
+    if (!file) { alert('Choisis un PDF'); return; }
+    if (!q) { alert('Écris une question'); return; }
+
+    logStep('🧩 Lecture du PDF & extraction texte…');
+    const text = await pdfToText(file);
+    logStep('🧩 Chunking (fenêtre ~900, overlap 150)…');
+    const chunks = chunkText(text);
+    logStep(`🔍 ${chunks.length} chunks générés.`,'ok');
+
+    logStep('🧮 TF-IDF & ranking…');
+    const ranked = tfidfRank(q, chunks);
+    const top = ranked.slice(0, 6);
+    renderPassages(ranked, 6);
+    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
+
+    const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
+- If the answer is not fully supported, say what is missing and ask for clarification.
+- Cite sources like [1], [2] matching the provided list.`;
+    const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
+
+    const model = document.getElementById('model').value;
+    const inTok = estTokens(sys+user);
+    logStep(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+
+    logStep(`🤖 Appel LLM (${model})…`);
+    const resp = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
+    ], model);
+
+    const content = resp?.choices?.[0]?.message?.content || '(no content)';
+    logStep('✅ Réponse reçue.','ok');
+
+    // afficher answer + badges + info
+    document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+    const g = groundingScore(content, top);
+    const badges = document.getElementById('badges');
+    badges.innerHTML = '';
+    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
+    b1.textContent = g>0.45? 'Grounded' : (g>0.2? 'Partially grounded' : 'Low grounding');
+    badges.appendChild(b1);
+
+    const info = document.getElementById('ragInfo');
+    info.innerHTML = `
+      <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
+      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
+      <div class="muted">Le score mesure le recouvrement lexical (approx.).</div>
+    `;
+
+  }catch(e){
+    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    alert(e.message||e);
+  }
 };
-document.getElementById('btnLLM2').onclick=async()=>{
-  const a=srcEl.value; if(!a) return alert('Colle un texte/code.');
-  const model = (cusModelEl.value.trim() || 'gpt-5');
-  const system = "You are a code/prompt refactoring assistant. Improve clarity, safety and structure. Keep semantics. Output only the improved text.";
-  const res = await fetch('/api/llm/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system, user:a, model, temperature:0.2})});
-  const data = await res.json(); const b=data.text||'';
-  dstEl.value=b; renderDiff(a,b); updateMetrics(a,b); explainDiv.textContent='LLM: refactor + clarté + structure (mêmes intentions).';
+
+/** ====== DIFF EXPLORER ====== **/
+document.getElementById('improve').onclick = async ()=>{
+  try{
+    const src = document.getElementById('src').value;
+    const goal = document.getElementById('goal').value || 'Improve readability, robustness, add brief French comments.';
+    if (!src.trim()){ alert('Colle un code ou prompt à gauche'); return; }
+
+    const model = document.getElementById('model').value;
+    resetTimeline();
+    logStep('🧠 Génération de la version améliorée…');
+
+    const sys = `You improve code or prompts. Return strictly a JSON object with fields:
+- "code": improved code/prompt as string
+- "why": short French explanation of the main changes
+No markdown fences.`;
+    const user = `Objectif: ${goal}
+=== ORIGINAL ===
+${src}`;
+
+    const out = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
+    ], model);
+
+    let payload = out?.choices?.[0]?.message?.content || '';
+    // Tenter de parser JSON même si le modèle a mis des ```json
+    payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
+    let obj;
+    try{ obj = JSON.parse(payload); }
+    catch{ throw new Error('Réponse non-JSON. Ajuste le prompt ou réessaie.'); }
+
+    const dst = obj.code || '';
+    document.getElementById('dst').value = dst;
+    document.getElementById('why').innerHTML = sanitize(obj.why||'');
+
+    // Diff
+    const dmp = new diff_match_patch();
+    const diffs = dmp.diff_main(src, dst);
+    dmp.diff_cleanupSemantic(diffs);
+    const html = diffs.map(([op, text])=>{
+      text = sanitize(text);
+      if (op===1) return `<span class="ins">${text}</span>`;
+      if (op===-1) return `<span class="del">${text}</span>`;
+      return text;
+    }).join('');
+    document.getElementById('diff').innerHTML = html;
+
+    // Metrics
+    const m = metrics(dst);
+    document.getElementById('metrics').innerHTML = `
+      <div>LOC: ${m.loc} · Avg line length: ${m.avg.toFixed(1)}</div>
+      <div>Est. cyclomatic (heuristique): ${m.cyclo}</div>
+      <div>Identifiers: ${m.idents} · Literals: ${m.lits}</div>
+    `;
+    logStep('✅ Amélioration + diff prêts.','ok');
+
+  }catch(e){
+    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    alert(e.message||e);
+  }
 };
-document.getElementById('btnDiff').onclick=()=>{
-  const a=srcEl.value, b=dstEl.value; if(!a||!b) return alert('Remplis avant/après.');
-  renderDiff(a,b); updateMetrics(a,b);
-};
-document.getElementById('btnExplain').onclick=async()=>{
-  const a=srcEl.value, b=dstEl.value; if(!a||!b) return alert('Remplis avant/après.');
-  const system="Explain in French the main improvements between BEFORE and AFTER for a non-technical audience. Bullet points, clear.";
-  const user=`BEFORE:\n${a}\n\nAFTER:\n${b}`;
-  const res=await fetch('/api/llm/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system, user, model:(cusModelEl.value.trim()||'gpt-5'), temperature:0.2})});
-  const data=await res.json(); explainDiv.textContent=data.text||'(no response)';
-};
-document.getElementById('btnExport').onclick=()=>{
-  const a=srcEl.value, b=dstEl.value; const md = `# Diff Report\n\n## Before\n\n\`\`\`\n${a}\n\`\`\`\n\n## After\n\n\`\`\`\n${b}\n\`\`\`\n\n## Notes\n\n${explainDiv.textContent||''}\n`;
-  const blob=new Blob([md],{type:'text/markdown'}); const url=URL.createObjectURL(blob);
-  const ael=document.createElement('a'); ael.href=url; ael.download='diff-report.md'; ael.click(); URL.revokeObjectURL(url);
-};
+
+function metrics(code){
+  const lines = code.split(/\r?\n/);
+  const loc = lines.length;
+  const avg = lines.reduce((a,l)=>a+l.length,0)/Math.max(1,loc);
+  const cyclo = (code.match(/\b(if|for|while|case|catch|&&|\|\|)\b/g)||[]).length + 1;
+  const idents = (code.match(/[A-Za-z_][A-Za-z0-9_]*/g)||[]).length;
+  const lits = (code.match(/(["'`].*?["'`]|[0-9]+(\.[0-9]+)?)/g)||[]).length;
+  return {loc, avg, cyclo, idents, lits};
+}
 </script>
 </body>
 </html>
