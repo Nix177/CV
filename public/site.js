@@ -69,3 +69,18 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   window.UI.guardedDownload();
 });
+
+// --- Vercel Web Analytics + Speed Insights (injecté pour toutes les pages) ---
+(function () {
+  try {
+    var wa = document.createElement("script");
+    wa.defer = true;
+    wa.src = "/_vercel/insights/script.js";
+    document.head.appendChild(wa);
+
+    var si = document.createElement("script");
+    si.defer = true;
+    si.src = "/_vercel/speed-insights/script.js";
+    document.head.appendChild(si);
+  } catch (_) {}
+})();
