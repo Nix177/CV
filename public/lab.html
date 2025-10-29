@@ -51,10 +51,8 @@
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
   </style>
 
-  <!-- pdf.js (sans SRI pour éviter les erreurs d'intégrité) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
-  <!-- diff-match-patch pour le diff -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
 </head>
 <body>
@@ -64,7 +62,6 @@
       <p>Deux mini-outils pédagogiques, qui utilisent <b>ton endpoint Vercel</b> pour appeler un LLM. Tout est transparent et commenté.</p>
     </header>
 
-    <!-- Barre de config commune -->
     <div class="card">
       <div class="bar">
         <label>Model
@@ -85,13 +82,11 @@
       </div>
     </div>
 
-    <!-- Onglets -->
     <div class="tabs">
       <div class="tab active" data-tab="rag">1) RAG Glassbox — “Explique-moi ta réponse”</div>
       <div class="tab" data-tab="diff">2) Code & Prompt Diff Explorer</div>
     </div>
 
-    <!-- Panel RAG -->
     <section class="panel active" id="panel-rag">
       <div class="card grid grid-2">
         <div>
@@ -136,7 +131,6 @@
       </div>
     </section>
 
-    <!-- Panel Diff -->
     <section class="panel" id="panel-diff">
       <div class="card">
         <h3>Code & Prompt Diff Explorer</h3>
@@ -173,11 +167,9 @@
   </div>
 
 <script>
-/** ====== CONFIG ====== **/
 const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
-/** ====== ONGLET UI ====== **/
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -187,7 +179,6 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 
-/** ====== OUTILS COMMUNS ====== **/
 function logStep(html, cls=''){
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
@@ -203,20 +194,19 @@ function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&l
 async function callLLM(messages, model) {
   const headers = {'Content-Type':'application/json'};
   const userKey = document.getElementById('userKey').value.trim();
-  if (userKey) {
-    // 2 possibilités: X-User-Api-Key ou Authorization: Bearer (l’API accepte les deux)
-    headers['X-User-Api-Key'] = userKey;
-  }
+  if (userKey) headers['X-User-Api-Key'] = userKey;
+
   const res = await fetch(API_ROUTE, {
     method:'POST',
     headers,
-    body: JSON.stringify({ model, messages, temperature:0.2 })
+    // ⬇️ NE PLUS ENVOYER temperature (gpt-5 le refuse si ≠ 1)
+    body: JSON.stringify({ model, messages })
   });
   if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${await res.text()}`);
   return res.json();
 }
 
-/** ====== RAG GLASSBOX ====== **/
+/** ===== RAG ===== */
 async function pdfToText(file){
   const buf = await file.arrayBuffer();
   const t0 = performance.now();
@@ -378,7 +368,7 @@ document.getElementById('runRag').onclick = async ()=>{
   }
 };
 
-/** ====== DIFF EXPLORER ====== **/
+/** ===== DIFF ===== */
 document.getElementById('improve').onclick = async ()=>{
   try{
     const src = document.getElementById('src').value;
