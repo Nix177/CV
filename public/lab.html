@@ -77,14 +77,11 @@
         <label class="small">Custom API key (optionnel, test autre compte)
           <input id="userKey" type="password" placeholder="sk-..." style="min-width:260px">
         </label>
-        <label class="small">Access code (si protégé)
-          <input id="accessCode" type="password" placeholder="CV_ACCESS_CODE">
-        </label>
         <span class="small muted">Route API&nbsp;: <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        Par défaut, on passe par <b>ton serveur Vercel</b> qui détient la clé OpenAI.  
-        “Custom API key” permet de tester un autre compte/modèle sans exposer la clé côté client (jamais stockée).
+        Par défaut, on passe par <b>ton serveur Vercel</b> (clé côté serveur).  
+        “Custom API key” permet de tester un autre compte/modèle sans exposer la clé (jamais stockée).
       </div>
     </div>
 
@@ -109,7 +106,7 @@
             <ul>
               <li><b>Extraction</b> : conversion PDF→texte dans ton navigateur (pdf.js).</li>
               <li><b>Chunking</b> : découpes ~800–1000 caractères, avec recouvrement.</li>
-              <li><b>Ranking</b> (TF-IDF simplifié) : sélection des K meilleurs passages.</li>
+              <li><b>Ranking</b> (TF-IDF) : sélection des K meilleurs passages.</li>
               <li><b>Prompt</b> : la question + les passages retenus, avec <b>citations [n]</b> obligatoires.</li>
               <li><b>Glassbox</b> : chunks, scores, timeline détaillée, et jauge de “grounding”.</li>
             </ul>
@@ -177,7 +174,7 @@
 
 <script>
 /** ====== CONFIG ====== **/
-const API_ROUTE = '/api/llm/chat'; // ← ta route Vercel (car fichier placé dans api/llm/chat.ts)
+const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
 /** ====== ONGLET UI ====== **/
@@ -200,26 +197,23 @@ function logStep(html, cls=''){
   tl.scrollTop = tl.scrollHeight;
 }
 function resetTimeline(){ document.getElementById('timeline').innerHTML=''; }
-function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); } // estimation grossière
+function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); }
 function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
 
 async function callLLM(messages, model) {
   const headers = {'Content-Type':'application/json'};
-  const code = document.getElementById('accessCode').value.trim();
-  if (code) {
-    // tu peux aussi passer en Authorization: Bearer
-    headers['X-Access-Code'] = code;
-  }
   const userKey = document.getElementById('userKey').value.trim();
-  if (userKey) headers['X-User-Api-Key'] = userKey;
-
+  if (userKey) {
+    // 2 possibilités: X-User-Api-Key ou Authorization: Bearer (l’API accepte les deux)
+    headers['X-User-Api-Key'] = userKey;
+  }
   const res = await fetch(API_ROUTE, {
     method:'POST',
     headers,
     body: JSON.stringify({ model, messages, temperature:0.2 })
   });
   if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${await res.text()}`);
-  return res.json(); // {choices:[{message:{content}}]}
+  return res.json();
 }
 
 /** ====== RAG GLASSBOX ====== **/
@@ -313,8 +307,10 @@ function groundingScore(answer, passages){
 document.getElementById('runRag').onclick = async ()=>{
   try{
     resetTimeline();
-    const file = (document.getElementById('pdfFile') as HTMLInputElement).files[0];
-    const q = (document.getElementById('question') as HTMLInputElement).value.trim();
+    const fileInput = document.getElementById('pdfFile');
+    const questionInput = document.getElementById('question');
+    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    const q = questionInput ? questionInput.value.trim() : '';
     if (!file) { alert('Choisis un PDF'); return; }
     if (!q) { alert('Écris une question'); return; }
 
@@ -340,7 +336,8 @@ document.getElementById('runRag').onclick = async ()=>{
 - Cite sources like [1], [2] matching the provided list.`;
     const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
 
-    const model = (document.getElementById('model') as HTMLSelectElement).value;
+    const modelSel = document.getElementById('model');
+    const model = modelSel ? modelSel.value : 'gpt-5';
     const inTok = estTokens(sys+user);
     logStep(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
 
@@ -352,7 +349,9 @@ document.getElementById('runRag').onclick = async ()=>{
     ], model);
     const tLLM1 = performance.now();
 
-    const content = resp?.choices?.[0]?.message?.content || '(no content)';
+    const content = resp && resp.choices && resp.choices[0] && resp.choices[0].message
+      ? resp.choices[0].message.content || '(no content)'
+      : '(no content)';
     const outTok = estTokens(content);
     logStep(`✅ Réponse reçue en ${(tLLM1-tLLM0).toFixed(0)} ms (≈${outTok} tokens).`,'ok');
 
@@ -382,11 +381,12 @@ document.getElementById('runRag').onclick = async ()=>{
 /** ====== DIFF EXPLORER ====== **/
 document.getElementById('improve').onclick = async ()=>{
   try{
-    const src = (document.getElementById('src') as HTMLTextAreaElement).value;
-    const goal = (document.getElementById('goal') as HTMLInputElement).value || 'Improve readability, robustness, add brief French comments.';
+    const src = document.getElementById('src').value;
+    const goal = document.getElementById('goal').value || 'Improve readability, robustness, add brief French comments.';
     if (!src.trim()){ alert('Colle un code ou prompt à gauche'); return; }
 
-    const model = (document.getElementById('model') as HTMLSelectElement).value;
+    const modelSel = document.getElementById('model');
+    const model = modelSel ? modelSel.value : 'gpt-5';
     resetTimeline();
     logStep('🧠 Génération de la version améliorée…');
 
@@ -403,23 +403,25 @@ ${src}`;
       {role:'user', content: user}
     ], model);
 
-    let payload = out?.choices?.[0]?.message?.content || '';
+    let payload = out && out.choices && out.choices[0] && out.choices[0].message
+      ? out.choices[0].message.content || ''
+      : '';
     payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
     let obj;
     try{ obj = JSON.parse(payload); }
     catch{ throw new Error('Réponse non-JSON. Ajuste le prompt ou réessaie.'); }
 
     const dst = obj.code || '';
-    (document.getElementById('dst') as HTMLTextAreaElement).value = dst;
+    document.getElementById('dst').value = dst;
     document.getElementById('why').innerHTML = sanitize(obj.why||'');
 
     const dmp = new diff_match_patch();
     const diffs = dmp.diff_main(src, dst);
     dmp.diff_cleanupSemantic(diffs);
-    const html = diffs.map(([op, text])=>{
-      text = sanitize(text);
-      if (op===1) return `<span class="ins">${text}</span>`;
-      if (op===-1) return `<span class="del">${text}</span>`;
+    const html = diffs.map(function(part){
+      var op = part[0], text = sanitize(part[1]);
+      if (op===1) return '<span class="ins">'+text+'</span>';
+      if (op===-1) return '<span class="del">'+text+'</span>';
       return text;
     }).join('');
     document.getElementById('diff').innerHTML = html;
