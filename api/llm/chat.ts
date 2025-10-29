@@ -44,10 +44,10 @@ function setCors(res: VercelResponse, origin: string | '*') {
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers',
-    'Content-Type, X-Access-Code, X-User-Api-Key, Authorization'
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, X-User-Api-Key, Authorization'
   );
-  // Optionnel : évite de re-préflater sans cesse
   res.setHeader('Access-Control-Max-Age', '86400');
 }
 
@@ -69,29 +69,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   setCors(res, origin || '*');
 
-  // -------- Access code (optionnel) --------
-  const required = process.env.CV_ACCESS_CODE;
-  if (required) {
-    const headerCode = (req.headers['x-access-code'] || '').toString().trim();
-    const auth = (req.headers['authorization'] || '').toString().trim();
-    const bearerCode = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';
-    const bodyCode =
-      typeof req.body === 'object' && req.body
-        ? (req.body as any).accessCode?.toString().trim()
-        : '';
-
-    const supplied = headerCode || bearerCode || bodyCode || '';
-    if (supplied !== required) {
-      return res.status(403).json({ error: 'Forbidden (access code missing/wrong)' });
-    }
-  }
-
   if (req.method !== 'POST') return res.status(405).send('POST only');
 
   try {
     const { messages = [], model = 'gpt-5', temperature = 0.2 } = (req.body || {}) as any;
 
-    const userKey = (req.headers['x-user-api-key'] || '').toString().trim();
+    // Clé côté serveur par défaut, ou clé utilisateur pour tester un autre compte
+    const headerUserKey = (req.headers['x-user-api-key'] || '').toString().trim();
+    const auth = (req.headers['authorization'] || '').toString().trim();
+    const bearerUserKey = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';
+    const userKey = headerUserKey || bearerUserKey;
+
     const apiKey = userKey || process.env.OPENAI_API_KEY!;
     if (!apiKey) return res.status(500).json({ error: 'Server misconfigured: OPENAI_API_KEY missing' });
 
@@ -106,7 +94,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const j = await r.json();
     if (!r.ok) {
-      // Fais remonter l’erreur OpenAI si dispo
       const err = (j && j.error && (j.error.message || j.error.type)) || r.statusText;
       throw new Error(err);
     }
