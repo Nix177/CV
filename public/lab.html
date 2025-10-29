@@ -3,435 +3,674 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Lab — Docs & Pitch (client-only, single file)</title>
-  <meta name="color-scheme" content="dark light" />
-
-  <!-- PDF.js — version fixe, SRI retiré -->
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-  <script>
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-    } else {
-      console.warn('PDF.js failed to load; PDFs will be skipped.');
-    }
-  </script>
-
+  <title>RAG Glassbox + Code & Prompt Diff — Lab</title>
+  <meta name="theme-color" content="#0a1220" />
   <style>
     :root{
-      --bg:#0a1220; --card:#0c1628; --text:#eef3f8; --muted:#a8b3c7; --pri:#6ee7ff; --ok:#37d399; --warn:#fbbf24; --err:#f87272; --border:#16233a;
+      --bg:#0a1220; --card:#0c1628; --text:#eef3f8; --muted:#a9b6c6; --accent:#4dd0e1; --accent2:#ffa726;
+      --good:#4caf50; --warn:#ffb300; --bad:#ef5350; --link:#80deea; --chip:#10223b;
+      --ok:#66bb6a; --mid:#fbc02d; --low:#e57373;
     }
-    @media (prefers-color-scheme: light){
-      :root{ --bg:#f7f9fc; --card:#ffffff; --text:#0b1628; --muted:#5b6b83; --border:#e9eef6; }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Arial}
+    header{padding:16px 20px;border-bottom:1px solid #132946;background:#0b1426;position:sticky;top:0;z-index:2}
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .tabs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border:1px solid #193055;border-radius:8px;cursor:pointer;color:var(--muted)}
+    .tab.active{background:linear-gradient(180deg,#13253f,#0e1d35);color:var(--text);border-color:#25497e}
+    main{max-width:1100px;margin:20px auto;padding:0 16px 60px}
+    section{display:none}
+    section.active{display:block}
+    .card{background:var(--card);border:1px solid #163055;border-radius:12px;padding:14px;margin:14px 0}
+    .row{display:flex;gap:14px;flex-wrap:wrap}
+    .col{flex:1 1 360px;min-width:300px}
+    input[type="text"], input[type="number"], textarea, select{
+      width:100%; background:#0c1a31; color:var(--text); border:1px solid #28466e; border-radius:8px; padding:10px; outline:none;
     }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans";}
-    .wrap{max-width:980px;margin:0 auto;padding:24px;}
-    header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
-    h1{font-size:clamp(20px,3vw,28px);margin:0}
-    .muted{color:var(--muted)}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
-    .tab-btn{appearance:none;border:1px solid var(--border);background:transparent;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
-    .tab-btn.active{background:var(--pri);color:#04121b;border-color:transparent}
-    .hidden{display:none}
-
-    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0}
-    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-    .drop{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:.15s}
-    .drop:hover{border-color:var(--pri)}
-    .btn{appearance:none;border:1px solid var(--border);background:transparent;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
-    .btn.primary{background:var(--pri);border-color:transparent;color:#04121b}
-    .btn.small{padding:6px 10px;font-size:13px}
-    input[type="file"]{display:none}
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
-    .file-item{display:flex;flex-direction:column;gap:8px}
-    .meta{font-size:12px;color:var(--muted)}
-    textarea{width:100%;min-height:160px;background:#0000;color:var(--text);border:1px dashed var(--border);border-radius:10px;padding:10px;resize:vertical}
-    .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border);color:var(--muted)}
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
-    .kpi{display:flex;gap:16px;flex-wrap:wrap}
-    .kpi .chip{border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:13px}
-    .footer{color:var(--muted);font-size:12px;margin-top:16px}
-    .right{margin-left:auto}
-    .mono{font-family: ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;}
-
-    /* Pitch & Skills */
-    .cols{display:grid;gap:12px;grid-template-columns:1fr}
-    @media(min-width:920px){ .cols{grid-template-columns:1.2fr .8fr} }
-    .input{display:flex;flex-direction:column;gap:6px}
-    .input label{font-size:13px;color:var(--muted)}
-    .input input,.input textarea{border:1px solid var(--border);background:#0000;color:var(--text);border-radius:10px;padding:10px}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:14px}
-    .bar{height:10px;border-radius:999px;background:linear-gradient(90deg,var(--pri),transparent)}
-    .pill{border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:12px}
-    .card.pitch{border-style:dashed}
+    textarea{min-height:120px}
+    button{
+      background:#17345c; border:1px solid #2b538a; color:#e7f5ff; padding:9px 12px; border-radius:8px; cursor:pointer;
+    }
+    button.primary{background:#1b5e8f;border-color:#2c75ad}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid #27466f;color:#cfe9ff;padding:4px 8px;border-radius:999px;font-size:12px;margin:2px 6px 2px 0}
+    .score{font-weight:600}
+    .bar{height:10px;border-radius:999px;background:#11233e;overflow:hidden}
+    .bar > span{display:block;height:100%}
+    .bar.good > span{background:var(--good)}
+    .bar.mid > span{background:var(--warn)}
+    .bar.bad > span{background:var(--bad)}
+    .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:12px;border:1px solid #2a4f80;background:#0d213d;margin-left:8px}
+    .badge.good{border-color:#2e7d32;color:#b9f6ca}
+    .badge.warn{border-color:#fbc02d;color:#ffecb3}
+    .badge.bad{border-color:#d32f2f;color:#ffcdd2}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .hl{background:#2b3f63;outline:2px solid #406299}
+    .small{font-size:12px;color:var(--muted)}
+    .list{display:grid;gap:10px}
+    .chunk{background:#0b1a32;border:1px solid #24436f;border-radius:10px;padding:10px}
+    .chunk h4{margin:0 0 4px 0;font-size:14px}
+    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .diff{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    pre{background:#0b1a32;border:1px solid #24436f;border-radius:10px;padding:10px;overflow:auto;max-height:360px}
+    .added{background:#12381e}
+    .removed{background:#3a1016}
+    .legend{display:flex;gap:8px;align-items:center}
+    .legend .box{width:14px;height:14px;border-radius:3px}
+    .box.added{background:#1b5e20}
+    .box.removed{background:#b71c1c}
+    a{color:var(--link)}
+    /* Split view */
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:980px){ .split{grid-template-columns:1fr} }
   </style>
+
+  <!-- libs (no integrity on purpose to avoid SRI block) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";</script>
+  <script src="https://cdn.jsdelivr.net/npm/diff@5/dist/diff.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Lab — Docs & Pitch</h1>
-      <div class="muted">Single-file • client-only • zéro backend</div>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="docs">Docs</button>
-        <button class="tab-btn" data-tab="pitch">Pitch & Skills</button>
-      </div>
-    </header>
+  <header>
+    <h1>RAG Glassbox + Code & Prompt Diff — <span class="small">100% client-side</span></h1>
+    <div class="tabs">
+      <div class="tab active" data-tab="rag">RAG Glassbox <span class="badge warn">Explainable</span></div>
+      <div class="tab" data-tab="diff">Code & Prompt Diff Explorer</div>
+    </div>
+  </header>
 
-    <!-- TAB: DOCS -->
-    <section id="tab-docs" class="tab">
+  <main>
+    <!-- RAG -->
+    <section id="rag" class="active">
       <div class="card">
         <div class="row">
-          <label class="drop" for="fileInput" id="dropArea" style="flex:1">
-            <div><strong>Glisse-dépose</strong> ou clique pour importer des <strong>PDF</strong> / <strong>TXT</strong> / <strong>MD</strong></div>
-            <div class="muted">Traitement 100% local dans ton navigateur</div>
-          </label>
-          <input id="fileInput" type="file" accept=".pdf,.txt,.md,.markdown" multiple />
-          <button class="btn" id="clearBtn" title="Effacer la liste">Clear</button>
-        </div>
-        <div class="kpi" id="kpi">
-          <div class="chip">Docs: <span id="kpiDocs">0</span></div>
-          <div class="chip">Mots: <span id="kpiWords">0</span></div>
-          <div class="chip">PDF.js: <span id="kpiPdf" class="mono"></span></div>
-        </div>
-      </div>
-
-      <div id="files" class="grid"></div>
-
-      <div class="card">
-        <div class="row">
-          <div class="muted">Résumé “client-only” (heuristique locale, pas d’API)</div>
-          <button class="btn primary right" id="summAll">Résumer tout</button>
-        </div>
-        <div class="footer">
-          Pour un vrai résumé LLM, branche un backend et remplace <code>summarizeLocally()</code> par un appel serveur. Ici, tout reste local.
-        </div>
-      </div>
-      <div class="footer">Astuce CSP : autorise <code>script-src</code> et <code>worker-src</code> vers <code>cdn.jsdelivr.net</code> si tu as une CSP stricte.</div>
-    </section>
-
-    <!-- TAB: PITCH & SKILLS -->
-    <section id="tab-pitch" class="tab hidden">
-      <div class="card">
-        <div class="row" style="align-items:flex-start">
-          <div>
-            <strong>Pitch & Skills</strong>
-            <div class="muted">Génère une mini-matrice de compétences depuis tes docs + un pitch prêt à copier</div>
+          <div class="col">
+            <h3 style="margin:6px 0 10px">1) Charger des documents</h3>
+            <input id="fileInput" type="file" multiple accept=".pdf,.txt,.md" />
+            <p class="small">Les fichiers restent localement dans le navigateur. Aucune donnée envoyée côté serveur.</p>
+            <div class="flex small">
+              <label>Chunk size (phrases): <input id="chunkSize" type="number" min="2" max="10" value="5" style="width:80px"></label>
+              <label>Overlap: <input id="chunkOverlap" type="number" min="0" max="4" value="1" style="width:80px"></label>
+              <label>Top K: <input id="topK" type="number" min="1" max="10" value="5" style="width:80px"></label>
+            </div>
           </div>
-          <span class="pill right">Docs chargés: <span id="docsCount">0</span></span>
+          <div class="col">
+            <h3 style="margin:6px 0 10px">2) Pose ta question</h3>
+            <input id="question" type="text" placeholder="Ex: Quels sont les objectifs prioritaires évoqués ?" />
+            <div class="flex" style="margin-top:8px">
+              <button class="primary" id="btnBuild">Build index & rank</button>
+              <button id="btnAnswer">Répondre (local extractif)</button>
+            </div>
+            <details style="margin-top:10px">
+              <summary>⚙️ Use LLM (optionnel)</summary>
+              <div class="grid2" style="margin-top:8px">
+                <div>
+                  <label class="small">API Base (ex: https://api.openai.com/v1)</label>
+                  <input id="llmBase" type="text" placeholder="https://api.openai.com/v1">
+                </div>
+                <div>
+                  <label class="small">Model (ex: gpt-4o-mini)</label>
+                  <input id="llmModel" type="text" placeholder="gpt-4o-mini">
+                </div>
+                <div>
+                  <label class="small">API Key</label>
+                  <input id="llmKey" type="text" placeholder="sk-... (attention: exposée côté client)">
+                </div>
+                <div>
+                  <label class="small">&nbsp;</label>
+                  <button id="btnLLM" class="primary">Répondre via LLM</button>
+                </div>
+              </div>
+              <p class="small">⚠️ Démo uniquement : la clé est côté client. Préférer un proxy backend pour un usage réel.</p>
+            </details>
+          </div>
         </div>
       </div>
 
-      <div class="cols">
+      <div class="split">
         <div class="card">
-          <div class="input">
-            <label for="roleInput">Titre de poste ciblé</label>
-            <input id="roleInput" placeholder="Ex: Senior Data Scientist — Industry Solutions" />
-          </div>
-          <div class="input">
-            <label for="skillsInput">Compétences (séparées par des virgules)</label>
-            <input id="skillsInput" value="RAG, RLHF, Evaluation LLM, Prompt Engineering, Data Engineering, MLOps, FastAPI, Next.js, Azure, Teaching, EdTech, UX Research" />
-          </div>
-          <div class="row" style="margin-top:8px">
-            <label class="pill"><input type="checkbox" id="useEvidence" checked /> &nbsp;Inclure des “evidence” depuis les fichiers</label>
-            <button class="btn primary right" id="runSkills">Analyser</button>
-          </div>
+          <h3 style="margin:6px 0 12px">Passages pertinents (top-K)</h3>
+          <div id="chunks" class="list"></div>
         </div>
 
-        <div class="card pitch">
-          <div class="row">
-            <strong>Pitch Preview</strong>
-            <button class="btn small right" id="copyPitch">Copy</button>
+        <div class="card">
+          <div class="flex" style="justify-content:space-between">
+            <h3 style="margin:6px 0">Réponse & Traçabilité</h3>
+            <div class="legend small">
+              <div class="box added"></div> appui
+              <div class="box removed"></div> hors-contexte
+            </div>
           </div>
-          <textarea id="pitchOut" spellcheck="false" placeholder="Ton pitch apparaîtra ici…" style="min-height:220px"></textarea>
-        </div>
-      </div>
+          <div id="answerWrap">
+            <div id="answer" class="mono" style="white-space:pre-wrap;background:#0b1a32;border:1px solid #24436f;border-radius:10px;padding:10px;min-height:88px"></div>
+          </div>
+          <div style="margin-top:10px">
+            <div class="flex">
+              <div>Grounding score</div>
+              <div id="groundBadge" class="badge warn">Low-Grounding</div>
+            </div>
+            <div class="bar mid" style="margin-top:6px"><span id="groundBar" style="width:0%"></span></div>
+            <div class="small" id="groundText" style="margin-top:6px;color:var(--muted)">—</div>
+          </div>
 
-      <div class="card">
-        <div class="row">
-          <strong>Skills Matrix</strong>
-          <button class="btn small right" id="copyCSV">Exporter CSV</button>
-        </div>
-        <div class="muted" style="margin:6px 0">Scores = nombre d’occurrences (approx. mot-clé exact) dans l’ensemble des documents chargés.</div>
-        <div style="overflow:auto">
-          <table id="skillsTable">
-            <thead><tr><th>Skill</th><th>Score</th><th style="width:60%">Intensity</th></tr></thead>
-            <tbody></tbody>
-          </table>
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0 0 6px">Timeline</h4>
+            <div id="timeline" class="small"></div>
+          </div>
         </div>
       </div>
     </section>
-  </div>
 
-  <script>
-    // --- State & helpers ---
-    const el = sel => document.querySelector(sel);
-    const els = sel => Array.from(document.querySelectorAll(sel));
-    const filesEl = el('#files');
-    const kpiDocs = el('#kpiDocs');
-    const kpiWords = el('#kpiWords');
-    const kpiPdf  = el('#kpiPdf');
-    const docsCount = el('#docsCount');
-
-    const state = { docs: [] }; // {name, type, text}
-
-    function fmtNumber(n){ return n?.toLocaleString?.() ?? String(n) }
-    function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
-    const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-    function updateKPIs(){
-      kpiDocs.textContent = state.docs.length;
-      docsCount.textContent = state.docs.length;
-      const words = state.docs.reduce((acc,d) => acc + (d.text?.split(/\s+/g)?.length || 0), 0);
-      kpiWords.textContent = fmtNumber(words);
-      kpiPdf.textContent = window.pdfjsLib ? 'OK' : 'N/A';
-      kpiPdf.className = window.pdfjsLib ? 'ok mono' : 'warn mono';
-    }
-
-    function addDocCard(doc, index){
-      const div = document.createElement('div');
-      div.className = 'card file-item';
-      div.innerHTML = `
-        <div class="row" style="align-items:flex-start">
-          <div>
-            <div><strong>${escapeHtml(doc.name)}</strong></div>
-            <div class="meta">${doc.type} · ${fmtNumber(doc.text.split(/\s+/g).length)} words</div>
-          </div>
-          <span class="tag right">${doc.type.endsWith('pdf')?'PDF':'TEXT'}</span>
-        </div>
-        <textarea spellcheck="false" data-idx="${index}">${escapeHtml(doc.text)}</textarea>
+    <!-- Diff -->
+    <section id="diff">
+      <div class="card">
         <div class="row">
-          <button class="btn small" data-action="copy" data-idx="${index}">Copy</button>
-          <button class="btn small" data-action="summ" data-idx="${index}">Résumé</button>
-          <span class="muted">Local-only</span>
+          <div class="col">
+            <h3 style="margin:6px 0 10px">Code / Prompt (avant)</h3>
+            <textarea id="src" placeholder="// Colle ton code ou prompt ici"></textarea>
+          </div>
+          <div class="col">
+            <h3 style="margin:6px 0 10px">Amélioré (après)</h3>
+            <textarea id="dst" placeholder="// Résultat amélioré (LLM ou heuristique)"></textarea>
+          </div>
         </div>
-      `;
-      filesEl.appendChild(div);
-    }
+        <div class="flex" style="margin-top:8px">
+          <button id="btnHeu" class="primary">Améliorer (heuristique locale)</button>
+          <details>
+            <summary>⚙️ Use LLM (optionnel)</summary>
+            <div class="grid2" style="margin-top:8px">
+              <div>
+                <label class="small">API Base</label><input id="llmBase2" type="text" placeholder="https://api.openai.com/v1">
+              </div>
+              <div>
+                <label class="small">Model</label><input id="llmModel2" type="text" placeholder="gpt-4o-mini">
+              </div>
+              <div>
+                <label class="small">API Key</label><input id="llmKey2" type="text" placeholder="sk-...">
+              </div>
+              <div style="display:flex;align-items:end"><button id="btnLLM2">Améliorer via LLM</button></div>
+            </div>
+          </details>
+          <button id="btnDiff">Voir diff</button>
+          <button id="btnExplain">Justification (FR clair)</button>
+          <button id="btnExport">Exporter en Markdown</button>
+        </div>
+      </div>
 
-    // --- PDF extraction ---
-    async function pdfToText(file){
-      if (!window.pdfjsLib) throw new Error('PDF.js not loaded');
-      const data = new Uint8Array(await file.arrayBuffer());
-      const pdf = await pdfjsLib.getDocument({ data }).promise;
-      let full = '';
-      for (let p=1; p<=pdf.numPages; p++){
-        const page = await pdf.getPage(p);
-        const content = await page.getTextContent();
-        const line = content.items.map(i => i.str).join(' ');
-        full += line + '\n';
-      }
-      return full.trim();
-    }
+      <div class="split">
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Diff side-by-side</h3>
+          <div class="diff">
+            <pre id="left" class="language-javascript"><code class="language-javascript"></code></pre>
+            <pre id="right" class="language-javascript"><code class="language-javascript"></code></pre>
+          </div>
+          <p class="small">Astuce : choisis “language-python” ou “language-javascript” selon le contenu pour un meilleur highlight (ou laisse par défaut).</p>
+        </div>
 
-    async function readAsText(file){
-      if (/\.pdf$/i.test(file.name)){
-        if (!window.pdfjsLib) {
-          console.warn('Skip PDF: PDF.js not available');
-          return { name:file.name, type:file.type||'application/pdf', text:'[PDF non lu: PDF.js indisponible]' };
-        }
-        try{
-          const text = await pdfToText(file);
-          return { name:file.name, type:file.type||'application/pdf', text };
-        }catch(err){
-          console.error('PDF parse error', err);
-          return { name:file.name, type:file.type||'application/pdf', text:`[Erreur lecture PDF] ${err.message||err}` };
-        }
-      } else {
-        const text = await file.text();
-        return { name:file.name, type:file.type||'text/plain', text };
-      }
-    }
+        <div class="card">
+          <h3 style="margin:6px 0 8px">Métriques</h3>
+          <div class="row">
+            <div class="col">
+              <div class="pill">Halstead volume (avant): <span class="score" id="hBefore">—</span></div>
+              <div class="pill">Halstead volume (après): <span class="score" id="hAfter">—</span></div>
+              <div class="bar" id="hBar" style="margin-top:6px"><span style="width:0%"></span></div>
+              <div class="small" id="hText" style="margin-top:6px;color:var(--muted)">—</div>
+            </div>
+            <div class="col">
+              <div class="pill">Lisibilité (avant): <span class="score" id="rBefore">—</span></div>
+              <div class="pill">Lisibilité (après): <span class="score" id="rAfter">—</span></div>
+              <div class="bar" id="rBar" style="margin-top:6px"><span style="width:0%"></span></div>
+              <div class="small" id="rText" style="margin-top:6px;color:var(--muted)">—</div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:10px">
+            <h4 style="margin:0 0 6px">Justification</h4>
+            <div id="explain" class="mono" style="white-space:pre-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    // --- Local résumé heuristic ---
-    function summarizeLocally(text, maxSent=6){
-      const sentences = text
-        .replace(/\s+/g,' ')
-        .split(/(?<=[\.\!\?])\s+(?=[A-ZÀ-Ÿ])/)
-        .filter(s => s.trim().length > 0);
-      if (sentences.length <= maxSent) return text;
-      const freq = Object.create(null);
-      const tokenize = s => s.toLowerCase().match(/[a-zà-ÿ0-9]+/g) || [];
-      for (const s of sentences) for (const t of tokenize(s)) freq[t] = (freq[t]||0)+1;
-      const maxf = Math.max(...Object.values(freq));
-      const scored = sentences.map((s,i) => {
-        const toks = tokenize(s);
-        const tf = toks.reduce((a,t)=>a+(freq[t]/maxf),0);
-        const len = toks.length;
-        const lengthBonus = (len>6 && len<40) ? 0.2 : 0;
-        return { i, s, score: tf/Math.max(1,len) + lengthBonus };
-      });
-      const top = scored.sort((a,b)=>b.score-a.score).slice(0, maxSent).sort((a,b)=>a.i-b.i);
-      return top.map(x=>x.s).join(' ');
-    }
+<script>
+/* ============================
+   Tabs
+============================ */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  };
+});
 
-    // --- Tab switch ---
-    function switchTab(name){
-      els('.tab').forEach(x => x.classList.add('hidden'));
-      el(`#tab-${name}`).classList.remove('hidden');
-      els('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===name));
-    }
-    els('.tab-btn').forEach(b => b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
-
-    // --- Docs tab events ---
-    el('#fileInput').addEventListener('change', async (e) => {
-      await handleFiles(e.target.files);
-      e.target.value = '';
+/* ============================
+   Utils
+============================ */
+const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+const tokenize = (s)=> (s.toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean));
+const sentences = (s)=> s.replace(/\n+/g,' ').split(/(?<=[\.\?\!…])\s+/).map(x=>x.trim()).filter(Boolean);
+const uniq = (arr)=>[...new Set(arr)];
+function cosine(a, b){
+  let dot=0, na=0, nb=0;
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  for(const k of keys){ const va=a[k]||0, vb=b[k]||0; dot+=va*vb; na+=va*va; nb+=vb*vb; }
+  return (na&&nb)? dot/Math.sqrt(na*nb) : 0;
+}
+function tfidfVectors(chunks, query){
+  const docs = chunks.map(c=>tokenize(c.text));
+  const vocab = new Map(), df = new Map();
+  docs.forEach(tokens=>{
+    uniq(tokens).forEach(t=>df.set(t,(df.get(t)||0)+1));
+    tokens.forEach(t=>vocab.set(t,true));
+  });
+  const N = docs.length;
+  const vecs = docs.map(tokens=>{
+    const tf = {}; tokens.forEach(t=>tf[t]=(tf[t]||0)+1);
+    const vec = {};
+    Object.keys(tf).forEach(t=>{
+      const idf = Math.log((N+1)/((df.get(t)||1)+1))+1;
+      vec[t] = tf[t]*idf;
     });
+    return vec;
+  });
+  const qtokens = tokenize(query);
+  const qtf = {}; qtokens.forEach(t=>qtf[t]=(qtf[t]||0)+1);
+  const qvec = {};
+  Object.keys(qtf).forEach(t=>{
+    const idf = Math.log((N+1)/((df.get(t)||1)+1))+1;
+    qvec[t] = qtf[t]*idf;
+  });
+  return {vecs, qvec};
+}
+function highlight(text, qwords){
+  if(!qwords.length) return text;
+  const esc = qwords.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  const re = new RegExp(`\\b(${esc.join('|')})\\b`, 'gi');
+  return text.replace(re, m=>`<mark class="hl">${m}</mark>`);
+}
 
-    const dropArea = el('#dropArea');
-    ;['dragenter','dragover'].forEach(ev => dropArea.addEventListener(ev, e => {
-      e.preventDefault(); e.stopPropagation(); dropArea.style.borderColor = 'var(--pri)';
-    }));
-    ;['dragleave','drop'].forEach(ev => dropArea.addEventListener(ev, e => {
-      e.preventDefault(); e.stopPropagation(); dropArea.style.borderColor = 'var(--border)';
-    }));
-    dropArea.addEventListener('drop', async (e) => {
-      const files = e.dataTransfer?.files;
-      if (files && files.length) await handleFiles(files);
-    });
+/* ============================
+   RAG Glassbox
+============================ */
+const fileInput = document.getElementById('fileInput');
+const chunksDiv = document.getElementById('chunks');
+const questionEl = document.getElementById('question');
+const topKEl = document.getElementById('topK');
+const chunkSizeEl = document.getElementById('chunkSize');
+const chunkOverlapEl = document.getElementById('chunkOverlap');
+const btnBuild = document.getElementById('btnBuild');
+const btnAnswer = document.getElementById('btnAnswer');
+const btnLLM = document.getElementById('btnLLM');
+const answerEl = document.getElementById('answer');
+const timelineEl = document.getElementById('timeline');
+const groundBar = document.getElementById('groundBar');
+const groundBadge = document.getElementById('groundBadge');
+const groundText = document.getElementById('groundText');
 
-    async function handleFiles(fileList){
-      const arr = Array.from(fileList);
-      for (const f of arr){
-        const doc = await readAsText(f);
-        state.docs.push(doc);
-        addDocCard(doc, state.docs.length-1);
-      }
-      updateKPIs();
+let DOCS_TEXT = "";
+let BUILT = null; // {chunks, vecs, qvec, ranking}
+
+async function readFileAsText(file){
+  const ext = file.name.toLowerCase().split('.').pop();
+  if(ext === 'pdf'){
+    const arr = new Uint8Array(await file.arrayBuffer());
+    const pdf = await pdfjsLib.getDocument({data: arr}).promise;
+    let text = "";
+    for(let p=1;p<=pdf.numPages;p++){
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      const pageText = content.items.map(i=>i.str).join(' ');
+      text += pageText + "\n";
     }
+    return text;
+  } else {
+    return await file.text();
+  }
+}
 
-    filesEl.addEventListener('click', async (e) => {
-      const btn = e.target.closest('button[data-action]');
-      if (!btn) return;
-      const idx = Number(btn.dataset.idx);
-      const action = btn.dataset.action;
-      const ta = filesEl.querySelector(`textarea[data-idx="${idx}"]`);
-      if (!ta) return;
+fileInput.addEventListener('change', async ()=>{
+  timelineEl.innerHTML = "📥 Chargement fichiers…";
+  DOCS_TEXT = "";
+  for (const f of fileInput.files){
+    const t = await readFileAsText(f);
+    DOCS_TEXT += `\n\n--- FILE: ${f.name} ---\n` + t;
+  }
+  timelineEl.innerHTML = "✅ Fichiers chargés. Prêts pour chunking.";
+});
 
-      if (action === 'copy'){
-        try{
-          await navigator.clipboard.writeText(ta.value);
-          btn.textContent = 'Copied ✓';
-          setTimeout(()=>btn.textContent='Copy', 900);
-        }catch{
-          alert('Copy failed — droit d’accès au presse-papiers refusé ?');
-        }
+function buildChunks(text, size=5, overlap=1){
+  const sents = sentences(text);
+  const out = [];
+  for(let i=0;i<sents.length;i+=Math.max(1,(size-overlap))){
+    const chunk = sents.slice(i, i+size);
+    if(chunk.length) out.push({idx: out.length, text: chunk.join(' ')});
+  }
+  return out;
+}
+
+btnBuild.onclick = ()=>{
+  const q = questionEl.value.trim();
+  if(!DOCS_TEXT){ alert("Charge d'abord des documents."); return; }
+  if(!q){ alert("Entre une question."); return; }
+
+  timelineEl.innerHTML = "🧩 Chunking…";
+  const size = +chunkSizeEl.value||5, ov = +chunkOverlapEl.value||1;
+  const chunks = buildChunks(DOCS_TEXT, size, ov);
+
+  timelineEl.innerHTML += "<br>🧮 TF-IDF & ranking…";
+  const {vecs, qvec} = tfidfVectors(chunks, q);
+  const scored = chunks.map((c, i)=>({ ...c, score: cosine(vecs[i], qvec) }))
+                       .sort((a,b)=>b.score-a.score);
+
+  const K = Math.min(+topKEl.value||5, scored.length);
+  const qwords = uniq(tokenize(q)).filter(w=>w.length>2);
+
+  chunksDiv.innerHTML = "";
+  for(let i=0;i<K;i++){
+    const c = scored[i];
+    const item = document.createElement('div');
+    item.className = 'chunk';
+    item.innerHTML = `
+      <h4>#${c.idx} — score: <span class="score">${c.score.toFixed(3)}</span></h4>
+      <div class="small" style="margin:4px 0 8px">Citation: <span class="pill">${i+1}</span></div>
+      <div>${highlight(c.text, qwords)}</div>
+    `;
+    chunksDiv.appendChild(item);
+  }
+
+  BUILT = {chunks, vecs, qvec, ranking: scored.slice(0,K)};
+  timelineEl.innerHTML += "<br>✅ Rank prêt.";
+  answerEl.textContent = "";
+  setGrounding(0, "En attente de réponse.");
+};
+
+function localAnswer(){
+  // extractive baseline: pick top sentences that match query terms
+  if(!BUILT){ alert("Clique d'abord ‘Build index & rank’"); return; }
+  const q = questionEl.value.trim();
+  const qwords = uniq(tokenize(q)).filter(w=>w.length>2);
+  const top = BUILT.ranking;
+  const candidates = [];
+  for(const c of top){
+    for(const s of sentences(c.text)){
+      const toks = tokenize(s);
+      const overlap = toks.filter(t=>qwords.includes(t)).length;
+      if(overlap>0){
+        candidates.push({s, overlap, source:c.idx});
       }
-      if (action === 'summ'){
-        ta.value = summarizeLocally(ta.value, 6);
-      }
-    });
-
-    el('#summAll').addEventListener('click', () => {
-      filesEl.querySelectorAll('textarea').forEach(ta => {
-        ta.value = summarizeLocally(ta.value, 6);
-      });
-    });
-
-    el('#clearBtn').addEventListener('click', () => {
-      state.docs = [];
-      filesEl.innerHTML = '';
-      updateKPIs();
-    });
-
-    // --- Pitch & Skills ---
-    function analyzeSkills(skills){
-      const textAll = state.docs.map(d=>d.text?.toLowerCase?.()||'').join('\n');
-      const results = [];
-      let max = 0;
-      for (const raw of skills){
-        const s = raw.trim();
-        if (!s) continue;
-        const re = new RegExp(`\\b${escapeRegExp(s.toLowerCase())}\\b`,'g');
-        const matches = textAll.match(re);
-        const score = matches ? matches.length : 0;
-        max = Math.max(max, score);
-        results.push({ skill:s, score });
-      }
-      return { results, max };
     }
+  }
+  candidates.sort((a,b)=>b.overlap-a.overlap);
+  const pick = uniq(candidates.map(x=>x.s)).slice(0,6);
+  const answer = pick.map((s,i)=>`${s} [${i+1}]`).join(" ");
+  return {text: answer || "(Aucun extrait pertinent trouvé.)", used: candidates.slice(0,6)};
+}
 
-    function renderSkillsTable(results, max){
-      const tbody = el('#skillsTable tbody');
-      tbody.innerHTML = '';
-      const m = Math.max(1, max);
-      for (const r of results){
-        const pct = Math.round((r.score/m)*100);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${escapeHtml(r.skill)}</td>
-          <td>${r.score}</td>
-          <td><div class="bar" style="width:${pct}%;"></div></td>
-        `;
-        tbody.appendChild(tr);
-      }
+function computeGrounding(answer, topChunks){
+  const wordsA = uniq(tokenize(answer)).filter(w=>w.length>2);
+  const wordsC = uniq(tokenize(topChunks.map(c=>c.text).join(' '))).filter(w=>w.length>2);
+  const inBoth = wordsA.filter(w=>wordsC.includes(w)).length;
+  const score = wordsA.length? (inBoth/wordsA.length) : 0;
+  return score; // 0..1
+}
+
+function setGrounding(ratio, txt){
+  const pct = Math.round(ratio*100);
+  groundBar.style.width = pct + "%";
+  groundText.textContent = `${pct}% de recouvrement lexical (heuristique) — ${txt||''}`;
+  groundBar.parentElement.classList.remove('good','mid','bad');
+  groundBadge.classList.remove('good','warn','bad');
+  if (ratio>=0.6){ groundBar.parentElement.classList.add('good'); groundBadge.classList.add('good'); groundBadge.textContent='Grounded'; }
+  else if (ratio>=0.3){ groundBar.parentElement.classList.add('mid'); groundBadge.classList.add('warn'); groundBadge.textContent='Medium-Grounding'; }
+  else { groundBar.parentElement.classList.add('bad'); groundBadge.classList.add('bad'); groundBadge.textContent='Low-Grounding'; }
+}
+
+btnAnswer.onclick = ()=>{
+  if(!BUILT){ alert("Clique d'abord ‘Build index & rank’"); return; }
+  timelineEl.innerHTML += "<br>🧪 Réponse extractive locale…";
+  const {text} = localAnswer();
+  answerEl.textContent = text;
+  const g = computeGrounding(text, BUILT.ranking);
+  setGrounding(g, "réponse locale (extractive)");
+  timelineEl.innerHTML += "<br>✅ Fait.";
+};
+
+btnLLM.onclick = async ()=>{
+  if(!BUILT){ alert("Clique d'abord ‘Build index & rank’"); return; }
+  const base = document.getElementById('llmBase').value.trim();
+  const model = document.getElementById('llmModel').value.trim();
+  const key = document.getElementById('llmKey').value.trim();
+  if(!base || !model || !key){ alert("Renseigne API Base, Model et API Key."); return; }
+  const q = questionEl.value.trim();
+  const ctx = BUILT.ranking.map((c,i)=>`[${i+1}] ${c.text}`).join("\n\n");
+  const prompt = `You are a RAG assistant. Answer the QUESTION strictly grounded in the PASSAGES.
+If you don't find evidence, say you cannot answer.
+Return short paragraphs with [n] citations.
+
+QUESTION:
+${q}
+
+PASSAGES:
+${ctx}
+  `.trim();
+  timelineEl.innerHTML += "<br>🤖 Appel LLM…";
+  try{
+    const res = await fetch(base.replace(/\/$/,'') + "/chat/completions", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization": `Bearer ${key}` },
+      body: JSON.stringify({
+        model, messages:[{role:"user", content: prompt}], temperature: 0.2
+      })
+    });
+    const data = await res.json();
+    const text = data?.choices?.[0]?.message?.content || "(no response)";
+    answerEl.textContent = text;
+    const g = computeGrounding(text, BUILT.ranking);
+    setGrounding(g, "réponse LLM (citée)");
+    timelineEl.innerHTML += "<br>✅ LLM OK.";
+  }catch(e){
+    console.error(e);
+    alert("Erreur LLM (CORS/clé/modèle). Regarde la console.");
+  }
+};
+
+/* ============================
+   Diff Explorer
+============================ */
+const srcEl = document.getElementById('src');
+const dstEl = document.getElementById('dst');
+const leftPre = document.getElementById('left').querySelector('code');
+const rightPre = document.getElementById('right').querySelector('code');
+const btnHeu = document.getElementById('btnHeu');
+const btnLLM2 = document.getElementById('btnLLM2');
+const btnDiff = document.getElementById('btnDiff');
+const btnExplain = document.getElementById('btnExplain');
+const btnExport = document.getElementById('btnExport');
+
+const hBefore = document.getElementById('hBefore');
+const hAfter = document.getElementById('hAfter');
+const hBar = document.getElementById('hBar').querySelector('span');
+const hBarWrap = document.getElementById('hBar');
+const hText = document.getElementById('hText');
+
+const rBefore = document.getElementById('rBefore');
+const rAfter = document.getElementById('rAfter');
+const rBar = document.getElementById('rBar').querySelector('span');
+const rBarWrap = document.getElementById('rBar');
+const rText = document.getElementById('rText');
+const explainDiv = document.getElementById('explain');
+
+function halsteadVolume(code){
+  // super simple heuristic
+  const ops = ['+','-','*','/','%','=','+=','-=','*=','/=','==','===','!=','!==','<','>','<=','>=','&&','||','!','++','--','=>','.',',',':',';','?','&','|','^','~','<<','>>','>>>','new','return','if','else','for','while','switch','case','break','continue','try','catch','throw','class','function','def','lambda','import','from','as','with','await','async','yield'];
+  const tokens = code.match(/[A-Za-z_][A-Za-z0-9_]*|==?=?|!==?|<=?|>=?|[\+\-\*\/%=&\|\^\~\!<>]+|[.,:;?(){}\[\]]/g)||[];
+  let N1=0,N2=0; const opSet=new Set(), idSet=new Set();
+  tokens.forEach(t=>{
+    if(ops.includes(t) || /^(==?=?|!==?|<=?|>=?|[\+\-\*\/%=&\|\^\~\!<>]+|[.,:;?(){}\[\]])$/.test(t)){ N1++; opSet.add(t); }
+    else { N2++; idSet.add(t); }
+  });
+  const n1=opSet.size, n2=idSet.size;
+  const vocab = n1+n2, length = N1+N2;
+  const volume = length * (Math.log2(Math.max(2,vocab)));
+  return {volume, vocab, length, n1,n2,N1,N2};
+}
+function readability(promptText){
+  // approximate: score 0..100 where higher = easier
+  const sents = sentences(promptText);
+  const words = tokenize(promptText);
+  const syll = words.reduce((acc,w)=>acc+Math.max(1,Math.ceil(w.replace(/[^aeiouy]/gi,' ').split(/\s+/).filter(Boolean).length)),0);
+  const ASL = sents.length? words.length/sents.length : words.length;
+  const ASW = words.length? syll/words.length : 1;
+  // Flesch-like (rough)
+  let score = 206.835 - 1.015*ASL - 84.6*ASW;
+  if(!isFinite(score)) score = 0;
+  score = Math.max(0, Math.min(100, score));
+  return {score, ASL, ASW, words:words.length, sents:sents.length};
+}
+function setMetricBars(hVolBefore, hVolAfter, rB, rA){
+  hBefore.textContent = hVolBefore.volume.toFixed(1);
+  hAfter.textContent = hVolAfter.volume.toFixed(1);
+  const delta = hVolBefore.volume - hVolAfter.volume;
+  const norm = Math.max(0, Math.min(100, 50 + (delta/ (hVolBefore.volume+1))*50 ));
+  hBar.style.width = norm + "%";
+  hBarWrap.classList.remove('good','mid','bad');
+  hText.textContent = (delta>0? "↓ Complexité estimée réduite" : delta<0? "↑ Complexité estimée augmentée" : "≈ Inchangé");
+  hBarWrap.classList.add(delta>0?'good':(delta<0?'bad':'mid'));
+
+  rBefore.textContent = rB.score.toFixed(0);
+  rAfter.textContent = rA.score.toFixed(0);
+  const rd = rA.score - rB.score;
+  const rnorm = Math.max(0, Math.min(100, 50 + rd/2 ));
+  rBar.style.width = rnorm + "%";
+  rBarWrap.classList.remove('good','mid','bad');
+  rText.textContent = (rd>0? "↑ Plus lisible" : rd<0? "↓ Moins lisible" : "≈ Lisibilité comparable");
+  rBarWrap.classList.add(rd>0?'good':(rd<0?'bad':'mid'));
+}
+function renderDiff(left, right){
+  const diffs = Diff.diffLines(left, right);
+  // left
+  let lhtml = "";
+  let rhtml = "";
+  diffs.forEach(part=>{
+    const esc = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(part.removed){
+      lhtml += `<span class="removed">${esc(part.value)}</span>`;
+    }else if(part.added){
+      rhtml += `<span class="added">${esc(part.value)}</span>`;
+    }else{
+      lhtml += esc(part.value);
+      rhtml += esc(part.value);
     }
+  });
+  leftPre.innerHTML = lhtml;
+  rightPre.innerHTML = rhtml;
+  Prism.highlightElement(leftPre);
+  Prism.highlightElement(rightPre);
+}
+function heuristicImprove(s){
+  // Code: trim, normalize quotes, dedupe imports, simple reorder imports
+  if(/[{}();]/.test(s) || /import\s+|def\s+|function\s+|class\s+/.test(s)){
+    let out = s.split('\n').map(l=>l.replace(/\s+$/,'')).join('\n');
+    out = out.replace(/"([^"]*)"/g,"'$1'"); // dumb quote normalize
+    const lines = out.split('\n');
+    const imports = lines.filter(l=>/^\s*(import|from)\s+/.test(l));
+    const rest = lines.filter(l=>!imports.includes(l));
+    const uniqImports = [...new Set(imports)].sort((a,b)=>a.localeCompare(b));
+    out = [...uniqImports, '', ...rest].join('\n').replace(/\n{3,}/g,'\n\n');
+    return out;
+  } else {
+    // Prompt: bulletize constraints, add role & success conditions
+    const raw = s.trim();
+    const items = sentences(raw);
+    const constraints = items.filter(x=>/must|do|avoid|ensure|clear|include|step|format|return|in French|en français|JSON|schema/i.test(x));
+    const goal = items.find(x=>/summarize|explain|refactor|improve|analyze|classify|translate|generate/i.test(x)) || items[0] || 'Clarify and improve.';
+    let out = `Role: You are a precise assistant optimizing prompts for clarity and determinism.\nGoal: ${goal}\n\nConstraints:\n`;
+    constraints.forEach(c=> out += `- ${c}\n`);
+    out += `\nOutput:\n- Short, structured result.\n- If code, provide a minimal reproducible snippet.\n- Avoid hallucinations; say "insufficient context" if needed.\n`;
+    return out;
+  }
+}
 
-    function buildPitch(role, results){
-      const top = results
-        .filter(r=>r.score>0)
-        .sort((a,b)=>b.score-a.score)
-        .slice(0,3)
-        .map(r=>r.skill);
+/* actions */
+btnHeu.onclick = ()=>{
+  dstEl.value = heuristicImprove(srcEl.value);
+};
+btnLLM2.onclick = async ()=>{
+  const base = document.getElementById('llmBase2').value.trim();
+  const model = document.getElementById('llmModel2').value.trim();
+  const key = document.getElementById('llmKey2').value.trim();
+  if(!base || !model || !key){ alert("Renseigne API Base, Model et API Key."); return; }
+  const sys = "You improve code or prompts. Return only the improved content, no explanations.";
+  const user = srcEl.value;
+  try{
+    const res = await fetch(base.replace(/\/$/,'') + "/chat/completions", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization": `Bearer ${key}` },
+      body: JSON.stringify({ model, messages:[{role:"system",content:sys},{role:"user",content:user}], temperature:0.2 })
+    });
+    const data = await res.json();
+    dstEl.value = data?.choices?.[0]?.message?.content || "";
+  }catch(e){ console.error(e); alert("Erreur LLM (CORS/clé/modèle)."); }
+};
+btnDiff.onclick = ()=>{
+  renderDiff(srcEl.value, dstEl.value);
+  const hb = halsteadVolume(srcEl.value);
+  const ha = halsteadVolume(dstEl.value);
+  const rb = readability(srcEl.value);
+  const ra = readability(dstEl.value);
+  setMetricBars(hb,ha,rb,ra);
+};
+btnExplain.onclick = ()=>{
+  const diffs = Diff.diffWords(srcEl.value, dstEl.value);
+  const adds = diffs.filter(d=>d.added).map(d=>d.value).join(' ').trim();
+  const dels = diffs.filter(d=>d.removed).map(d=>d.value).join(' ').trim();
+  let exp = "";
+  if (/[{}();]/.test(srcEl.value)) {
+    exp += "• Code: simplification des imports, normalisation des guillemets, suppression des espaces traînants.\n";
+    exp += "• Effet attendu: lisibilité accrue, diff plus stable, bruit réduit dans les PR.\n";
+  } else {
+    exp += "• Prompt: rôle explicite, objectifs clarifiés, contraintes bulletisées, critères de sortie.\n";
+    exp += "• Effet attendu: sorties plus déterministes, meilleure reproductibilité.\n";
+  }
+  exp += `\n+ Ajouts marquants: ${adds.slice(0,300) || "(minimes)"}\n- Suppressions clés: ${dels.slice(0,300) || "(minimes)"}\n`;
+  explainDiv.textContent = exp;
+};
+btnExport.onclick = ()=>{
+  const md =
+`# Diff Report
 
-      const docNames = state.docs.slice(0,3).map(d=>d.name);
-      const bullets = top.length
-        ? top.map(s=>`• ${s}: applied on real artifacts`).join('\n')
-        : '• Rapid prototyping & evaluation\n• Ship-ready code and instrumentation\n• Human-centered & measurable impact';
+## Before
+\`\`\`
+${srcEl.value}
+\`\`\`
 
-      return `${role || 'AI/Data Scientist'} — Impact snapshot
+## After
+\`\`\`
+${dstEl.value}
+\`\`\`
 
-What I deliver
-${typeof bullets === 'string' ? bullets : bullets.join('\n')}
+## Justification
+${(explainDiv.textContent||'')}
 
-Evidence
-${docNames.length ? '• ' + docNames.join('\n• ') : '• (Add documents to auto-populate evidence)'}
+## Metrics
+- Halstead volume (before): ${hBefore.textContent}
+- Halstead volume (after): ${hAfter.textContent}
+- Readability (before): ${rBefore.textContent}
+- Readability (after): ${rAfter.textContent}
 `;
-    }
-
-    el('#runSkills').addEventListener('click', () => {
-      const skills = el('#skillsInput').value.split(',');
-      const { results, max } = analyzeSkills(skills);
-      renderSkillsTable(results, max);
-
-      const role = el('#roleInput').value.trim();
-      const pitch = buildPitch(role, results);
-      el('#pitchOut').value = pitch;
-    });
-
-    el('#copyPitch').addEventListener('click', async () => {
-      try{
-        await navigator.clipboard.writeText(el('#pitchOut').value || '');
-        el('#copyPitch').textContent = 'Copied ✓';
-        setTimeout(()=>el('#copyPitch').textContent='Copy', 900);
-      }catch{ alert('Copy failed'); }
-    });
-
-    el('#copyCSV').addEventListener('click', async () => {
-      const rows = [['Skill','Score']];
-      els('#skillsTable tbody tr').forEach(tr => {
-        const tds = tr.querySelectorAll('td');
-        rows.push([tds[0].textContent.trim(), tds[1].textContent.trim()]);
-      });
-      const csv = rows.map(r => r.map(x => `"${x.replace(/"/g,'""')}"`).join(',')).join('\n');
-      try{
-        await navigator.clipboard.writeText(csv);
-        el('#copyCSV').textContent = 'CSV Copied ✓';
-        setTimeout(()=>el('#copyCSV').textContent='Exporter CSV', 900);
-      }catch{
-        const blob = new Blob([csv], {type:'text/csv'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'skills_matrix.csv';
-        a.click();
-      }
-    });
-
-    // Init
-    updateKPIs();
-    switchTab('docs');
-  </script>
+  const blob = new Blob([md], {type:'text/markdown'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'diff-report.md'; a.click();
+  URL.revokeObjectURL(url);
+};
+</script>
 </body>
 </html>
