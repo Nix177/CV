@@ -14,11 +14,14 @@
     { slug: 'index',     label: { fr: 'Accueil',        en: 'Home',                  de: 'Startseite' } },
     { slug: 'cv',        label: { fr: 'CV',             en: 'CV',                    de: 'Lebenslauf' } },
     { slug: 'portfolio', label: { fr: 'Portfolio',      en: 'Portfolio',             de: 'Portfolio' } },
+
+    // AI-Lab : une seule page (lab.html) pour toutes les langues → fallback universel
+    { slug: 'lab',       label: { fr: 'AI-Lab',         en: 'AI-Lab',                de: 'AI-Lab' } },
+
     { slug: 'passions',  label: { fr: 'Passions',       en: 'Passions',              de: 'Leidenschaften' } },
     { slug: 'chatbot',   label: { fr: 'Chatbot',        en: 'Chatbot',               de: 'Chatbot' } },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
-{ slug: 'tech-news', label: { fr: 'Tech News', en: 'Tech News', de: 'Tech News' } },
-
+    { slug: 'tech-news', label: { fr: 'Tech News',      en: 'Tech News',             de: 'Tech News' } },
   ];
   const KNOWN = new Set(PAGES.map(p => p.slug));
 
@@ -30,14 +33,14 @@
   const path = location.pathname.replace(/\/+/g, '/');
   let lastSeg = path === '/' ? 'index' : path.split('/').filter(Boolean).pop(); // '' -> index
   lastSeg = lastSeg.replace(/\.(html?|php)$/i, ''); // retire extension éventuelle
-  // sépare suffixe -en/-de éventuel
   const mm = lastSeg.match(/^(.+?)(?:-(en|de))?$/i);
   let slug = (mm && mm[1]) ? mm[1].toLowerCase() : 'index';
   if (!KNOWN.has(slug)) slug = 'index';
 
   // --- URLs canoniques pour chaque langue -------------------------------------------
   const urlFor = (s, L) => {
-    // On garde les .html (ton serveur les accepte et/ou réécrit vers /slug)
+    // lab = une seule page (pas de variantes -en/-de pour éviter 404)
+    if (s === 'lab') return '/lab.html';
     if (L === 'fr') return `/${s}.html`;
     if (L === 'en') return `/${s}-en.html`;
     if (L === 'de') return `/${s}-de.html`;
