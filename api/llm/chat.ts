@@ -1,104 +1,444 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
-
-const norm = (s?: string | string[]) =>
-  ((Array.isArray(s) ? s[0] : s) || '').toLowerCase().replace(/\/$/, '');
-
-function getOrigin(req: VercelRequest): string | null {
-  const o = norm(req.headers.origin as any);
-  if (o) return o;
-  const ref = norm(req.headers.referer as any);
-  if (!ref) return null;
-  try { const u = new URL(ref); return `${u.protocol}//${u.host}`; } catch { return null; }
-}
-
-function parseAllowed(): string[] {
-  return (process.env.ALLOWED_ORIGINS || '')
-    .toLowerCase()
-    .split(/[,\s]+/)
-    .map(s => s.replace(/\/$/, ''))
-    .filter(Boolean);
-}
-
-function sameHost(req: VercelRequest): string[] {
-  const host = (req.headers.host || '').toString().toLowerCase();
-  return host ? [`http://${host}`, `https://${host}`] : [];
-}
-
-function matchOrigin(origin: string | null, pattern: string): boolean {
-  if (pattern === '*') return true;
-  if (pattern === 'null') return origin === null;
-  if (!origin) return false;
-  if (pattern.startsWith('*.')) {
-    try {
-      const oh = new URL(origin).host;
-      const suffix = pattern.slice(2);
-      return oh === suffix || oh.endsWith('.' + suffix);
-    } catch { return false; }
-  }
-  return origin === pattern;
-}
-
-function setCors(res: VercelResponse, origin: string | '*') {
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Content-Type, X-User-Api-Key, Authorization'
-  );
-  res.setHeader('Access-Control-Max-Age', '86400');
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const origin = getOrigin(req);
-  const allowList = parseAllowed();
-  const same = sameHost(req);
-  const isAllowed =
-    (origin && (allowList.some(p => matchOrigin(origin, p)) || same.includes(origin))) ||
-    (!origin && allowList.includes('null'));
-
-  if (req.method === 'OPTIONS') {
-    if (isAllowed) { setCors(res, origin || '*'); return res.status(204).end(); }
-    return res.status(403).json({ error: 'Forbidden origin (preflight)', seen: origin, allowed: allowList });
-  }
-
-  if (!isAllowed) {
-    return res.status(403).json({ error: 'Forbidden origin', seen: origin, allowed: allowList });
-  }
-  setCors(res, origin || '*');
-
-  if (req.method !== 'POST') return res.status(405).send('POST only');
-
-  try {
-    const { messages = [], model = 'gpt-5', temperature = 0.2 } = (req.body || {}) as any;
-
-    // Clé côté serveur par défaut, ou clé utilisateur pour tester un autre compte
-    const headerUserKey = (req.headers['x-user-api-key'] || '').toString().trim();
-    const auth = (req.headers['authorization'] || '').toString().trim();
-    const bearerUserKey = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';
-    const userKey = headerUserKey || bearerUserKey;
-
-    const apiKey = userKey || process.env.OPENAI_API_KEY!;
-    if (!apiKey) return res.status(500).json({ error: 'Server misconfigured: OPENAI_API_KEY missing' });
-
-    const r = await fetch(OPENAI_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ model, messages, temperature })
-    });
-
-    const j = await r.json();
-    if (!r.ok) {
-      const err = (j && j.error && (j.error.message || j.error.type)) || r.statusText;
-      throw new Error(err);
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Lab — RAG Glassbox & Diff Explorer</title>
+  <meta name="color-scheme" content="dark light">
+  <style>
+    :root{
+      --bg:#0a1220; --card:#0c1628; --muted:#9fb0c9; --text:#eef3f8; --acc:#63e; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
+      --border:#1a2a44;
     }
-    return res.status(200).json(j);
-  } catch (e: any) {
-    return res.status(500).json({ error: e.message || String(e) });
-  }
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    a{color:#9ed0ff}
+    .shell{max-width:1200px;margin:24px auto;padding:0 16px}
+    header h1{margin:0 0 6px}
+    header p{margin:0 0 16px;color:var(--muted)}
+    .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
+    input,select,button,textarea{background:#0f1b30;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+    input::placeholder,textarea::placeholder{color:#7e8aa3}
+    button{cursor:pointer}
+    button.primary{background:linear-gradient(90deg,#6c4bff,#4a74ff);border:none}
+    .tabs{display:flex;gap:8px;margin:4px 0 16px}
+    .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;cursor:pointer;color:var(--muted)}
+    .tab.active{background:#15223a;color:var(--text);border-color:#2b3b61}
+    .panel{display:none}
+    .panel.active{display:block}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:10px 0}
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:1fr 1fr}
+    @media (max-width:1000px){.grid-2{grid-template-columns:1fr}}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:700px}
+    .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
+    .box h4{margin:0 0 8px}
+    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:320px;overflow:auto}
+    .tstep{padding:6px 8px;border-left:3px solid #2b3b61;margin:6px 0;background:#0f1b30;border-radius:8px}
+    .tstep.ok{border-color:var(--ok)} .tstep.warn{border-color:var(--warn)} .tstep.bad{border-color:var(--bad)}
+    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;margin:2px 4px 0 0;background:#13213a;color:#cfe0ff;font-size:12px}
+    .hl{background:rgba(255,230,120,.22);outline:1px dashed rgba(255,230,120,.35)}
+    .score{height:10px;background:#0f1b30;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+    .score > i{display:block;height:100%;background:linear-gradient(90deg,#ff5f6d,#ffc371)}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{padding:4px 8px;border-radius:8px;background:#14203a;border:1px solid var(--border)}
+    .badge.ok{background:#0f2a1a;border-color:#245a3b}
+    .badge.low{background:#2a1c0f;border-color:#5a3d24}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .mono{font-family:ui-monospace,Consolas,monospace}
+    .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
+    .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
+    .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
+      <p>Deux mini-outils pédagogiques, qui utilisent <b>ton endpoint Vercel</b> pour appeler un LLM. Tout est transparent et commenté.</p>
+    </header>
+
+    <div class="card">
+      <div class="bar">
+        <label>Model
+          <select id="model">
+            <option value="gpt-5">gpt-5 (par défaut via ton API)</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4o">gpt-4o</option>
+          </select>
+        </label>
+        <label class="small">Custom API key (optionnel, test autre compte)
+          <input id="userKey" type="password" placeholder="sk-..." style="min-width:260px">
+        </label>
+        <span class="small muted">Route API&nbsp;: <code class="mono" id="routeHint"></code></span>
+      </div>
+      <div class="small muted">
+        Par défaut, on passe par <b>ton serveur Vercel</b> (clé côté serveur).  
+        “Custom API key” permet de tester un autre compte/modèle sans exposer la clé (jamais stockée).
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="rag">1) RAG Glassbox — “Explique-moi ta réponse”</div>
+      <div class="tab" data-tab="diff">2) Code & Prompt Diff Explorer</div>
+    </div>
+
+    <section class="panel active" id="panel-rag">
+      <div class="card grid grid-2">
+        <div>
+          <h3>Document & Question</h3>
+          <div class="bar">
+            <input type="file" id="pdfFile" accept="application/pdf">
+            <input id="question" style="flex:1" placeholder="Pose ta question sur le PDF (ex. 'Quels sont les objectifs de la réforme ?')">
+            <button class="primary" id="runRag">Run RAG</button>
+          </div>
+          <details class="card">
+            <summary><b>Comment ça marche ?</b> (explication courte)</summary>
+            <ul>
+              <li><b>Extraction</b> : conversion PDF→texte dans ton navigateur (pdf.js).</li>
+              <li><b>Chunking</b> : découpes ~800–1000 caractères, avec recouvrement.</li>
+              <li><b>Ranking</b> (TF-IDF) : sélection des K meilleurs passages.</li>
+              <li><b>Prompt</b> : la question + les passages retenus, avec <b>citations [n]</b> obligatoires.</li>
+              <li><b>Glassbox</b> : chunks, scores, timeline détaillée, et jauge de “grounding”.</li>
+            </ul>
+          </details>
+
+          <div class="card">
+            <h4>Timeline détaillée</h4>
+            <div id="timeline" class="timeline"></div>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="box" id="leftPane">
+            <h4>Passages sélectionnés</h4>
+            <div id="passages" class="small"></div>
+            <hr>
+            <h4>Infos</h4>
+            <div id="ragInfo" class="small muted"></div>
+          </div>
+          <div class="box" id="rightPane">
+            <h4>Réponse du modèle</h4>
+            <div id="answer"></div>
+            <div class="badges" id="badges"></div>
+            <div class="footer-note">Les citations [n] renvoient aux passages du panneau gauche.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-diff">
+      <div class="card">
+        <h3>Code & Prompt Diff Explorer</h3>
+        <div class="grid grid-2">
+          <div class="box">
+            <h4>Entrée (code ou prompt “avant”)</h4>
+            <textarea id="src" rows="14" placeholder="Colle ici du code ou un prompt…"></textarea>
+            <div class="bar">
+              <input id="goal" style="flex:1" placeholder="Objectif/contraintes (ex. +lisibilité, +sécurité, FR comments)">
+              <button class="primary" id="improve">Improve with AI</button>
+            </div>
+          </div>
+          <div class="box">
+            <h4>Résultat (après)</h4>
+            <textarea id="dst" rows="14" placeholder="Le code/prompt amélioré apparaîtra ici…"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="box">
+            <h4>Diff (side-by-side)</h4>
+            <div id="diff" class="diff small"></div>
+          </div>
+          <div class="box">
+            <h4>Métriques rapides</h4>
+            <div id="metrics" class="small"></div>
+            <hr>
+            <h4>Justification</h4>
+            <div id="why" class="small"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+const API_ROUTE = '/api/llm/chat';
+document.getElementById('routeHint').textContent = API_ROUTE;
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  };
+});
+
+function logStep(html, cls=''){
+  const el = document.createElement('div');
+  el.className = `tstep ${cls}`;
+  el.innerHTML = html;
+  const tl = document.getElementById('timeline');
+  tl.appendChild(el);
+  tl.scrollTop = tl.scrollHeight;
 }
+function resetTimeline(){ document.getElementById('timeline').innerHTML=''; }
+function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); }
+function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
+
+async function callLLM(messages, model) {
+  const headers = {'Content-Type':'application/json'};
+  const userKey = document.getElementById('userKey').value.trim();
+  if (userKey) headers['X-User-Api-Key'] = userKey;
+
+  const res = await fetch(API_ROUTE, {
+    method:'POST',
+    headers,
+    // ⬇️ NE PLUS ENVOYER temperature (gpt-5 le refuse si ≠ 1)
+    body: JSON.stringify({ model, messages })
+  });
+  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+/** ===== RAG ===== */
+async function pdfToText(file){
+  const buf = await file.arrayBuffer();
+  const t0 = performance.now();
+  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+  logStep(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
+
+  let text = '';
+  let charCounts = [];
+  for (let i=1; i<=pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const c = await page.getTextContent();
+    const t = c.items.map(it=>it.str).join(' ');
+    charCounts.push(t.length);
+    text += '\n' + t;
+  }
+  const t1 = performance.now();
+  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${(t1 - t0).toFixed(0)} ms (moy/page ~${Math.round(charCounts.reduce((a,b)=>a+b,0)/charCounts.length)} chars)`, 'ok');
+  return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
+}
+
+function chunkText(text, opts={win:900, overlap:150}){
+  const clean = text.replace(/\r/g,'');
+  const parts = [];
+  let i = 0;
+  while (i < clean.length){
+    const s = i, e = Math.min(clean.length, i+opts.win);
+    let slice = clean.slice(s, e);
+    const extra = clean.slice(e, e+120).match(/^[^.!?]*[.!?]/);
+    if (extra) slice += extra[0];
+    parts.push({id: parts.length+1, start:s, end:s+slice.length, text:slice.trim()});
+    i += (opts.win - opts.overlap);
+  }
+  return parts;
+}
+
+const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
+function tokenize(s){
+  return s
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .split(/\s+/).filter(w=>w && !STOP.has(w));
+}
+function tfidfRank(query, chunks){
+  const q = tokenize(query);
+  const df = new Map();
+  for (const ch of chunks){
+    const seen = new Set(tokenize(ch.text));
+    for (const t of seen) df.set(t, (df.get(t)||0)+1);
+  }
+  const N = chunks.length;
+  const qset = new Set(q);
+  for (const ch of chunks){
+    const terms = tokenize(ch.text);
+    const tf = new Map();
+    for (const t of terms) tf.set(t, (tf.get(t)||0)+1);
+    let score = 0;
+    for (const t of qset){
+      const idf = Math.log( (N+1) / ((df.get(t)||0)+1) );
+      score += (tf.get(t)||0) * idf;
+    }
+    ch.score = score;
+  }
+  return chunks.sort((a,b)=>b.score-a.score);
+}
+
+function renderPassages(list, topk){
+  const root = document.getElementById('passages');
+  root.innerHTML = '';
+  list.slice(0, topk).forEach((ch, idx)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `<div class="pill">#${idx+1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
+      <div class="small">${sanitize(ch.text)}</div>`;
+    root.appendChild(div);
+  });
+}
+
+function groundingScore(answer, passages){
+  const a = new Set(tokenize(answer));
+  const p = new Set(tokenize(passages.map(p=>p.text).join(' ')));
+  let inter = 0;
+  for (const t of a) if (p.has(t)) inter++;
+  const g = a.size ? inter / a.size : 0;
+  return Math.max(0, Math.min(1, g));
+}
+
+document.getElementById('runRag').onclick = async ()=>{
+  try{
+    resetTimeline();
+    const fileInput = document.getElementById('pdfFile');
+    const questionInput = document.getElementById('question');
+    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    const q = questionInput ? questionInput.value.trim() : '';
+    if (!file) { alert('Choisis un PDF'); return; }
+    if (!q) { alert('Écris une question'); return; }
+
+    logStep('🧩 Lecture du PDF & extraction texte…');
+    const text = await pdfToText(file);
+
+    logStep('🧩 Chunking (fenêtre ~900, overlap 150)…');
+    const t0 = performance.now();
+    const chunks = chunkText(text);
+    const t1 = performance.now();
+    const avgLen = Math.round(chunks.reduce((a,c)=>a+c.text.length,0)/chunks.length);
+    logStep(`🔍 ${chunks.length} chunks générés (avg ~${avgLen} chars) en ${(t1-t0).toFixed(0)} ms.`,'ok');
+
+    logStep('🧮 TF-IDF & ranking…');
+    const ranked = tfidfRank(q, chunks);
+    const topK = 6;
+    const top = ranked.slice(0, topK);
+    renderPassages(ranked, topK);
+    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
+
+    const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
+- If the answer is not fully supported, say what is missing and ask for clarification.
+- Cite sources like [1], [2] matching the provided list.`;
+    const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
+
+    const modelSel = document.getElementById('model');
+    const model = modelSel ? modelSel.value : 'gpt-5';
+    const inTok = estTokens(sys+user);
+    logStep(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+
+    logStep(`🤖 Appel LLM (${model})…`);
+    const tLLM0 = performance.now();
+    const resp = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
+    ], model);
+    const tLLM1 = performance.now();
+
+    const content = resp && resp.choices && resp.choices[0] && resp.choices[0].message
+      ? resp.choices[0].message.content || '(no content)'
+      : '(no content)';
+    const outTok = estTokens(content);
+    logStep(`✅ Réponse reçue en ${(tLLM1-tLLM0).toFixed(0)} ms (≈${outTok} tokens).`,'ok');
+
+    document.getElementById('answer').innerHTML =
+      `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+
+    const g = groundingScore(content, top);
+    const badges = document.getElementById('badges');
+    badges.innerHTML = '';
+    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
+    b1.textContent = g>0.45? 'Grounded' : (g>0.2? 'Partially grounded' : 'Low grounding');
+    badges.appendChild(b1);
+
+    const info = document.getElementById('ragInfo');
+    info.innerHTML = `
+      <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
+      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
+      <div class="muted">Le score mesure le recouvrement lexical (approx.).</div>
+      <div class="muted">Est. tokens in/out : ${inTok} / ${outTok}.</div>
+    `;
+  }catch(e){
+    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    alert(e.message||e);
+  }
+};
+
+/** ===== DIFF ===== */
+document.getElementById('improve').onclick = async ()=>{
+  try{
+    const src = document.getElementById('src').value;
+    const goal = document.getElementById('goal').value || 'Improve readability, robustness, add brief French comments.';
+    if (!src.trim()){ alert('Colle un code ou prompt à gauche'); return; }
+
+    const modelSel = document.getElementById('model');
+    const model = modelSel ? modelSel.value : 'gpt-5';
+    resetTimeline();
+    logStep('🧠 Génération de la version améliorée…');
+
+    const sys = `You improve code or prompts. Return strictly a JSON object with fields:
+- "code": improved code/prompt as string
+- "why": short French explanation of the main changes
+No markdown fences.`;
+    const user = `Objectif: ${goal}
+=== ORIGINAL ===
+${src}`;
+
+    const out = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
+    ], model);
+
+    let payload = out && out.choices && out.choices[0] && out.choices[0].message
+      ? out.choices[0].message.content || ''
+      : '';
+    payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
+    let obj;
+    try{ obj = JSON.parse(payload); }
+    catch{ throw new Error('Réponse non-JSON. Ajuste le prompt ou réessaie.'); }
+
+    const dst = obj.code || '';
+    document.getElementById('dst').value = dst;
+    document.getElementById('why').innerHTML = sanitize(obj.why||'');
+
+    const dmp = new diff_match_patch();
+    const diffs = dmp.diff_main(src, dst);
+    dmp.diff_cleanupSemantic(diffs);
+    const html = diffs.map(function(part){
+      var op = part[0], text = sanitize(part[1]);
+      if (op===1) return '<span class="ins">'+text+'</span>';
+      if (op===-1) return '<span class="del">'+text+'</span>';
+      return text;
+    }).join('');
+    document.getElementById('diff').innerHTML = html;
+
+    const m = metrics(dst);
+    document.getElementById('metrics').innerHTML = `
+      <div>LOC: ${m.loc} · Avg line length: ${m.avg.toFixed(1)}</div>
+      <div>Est. cyclomatic (heuristique): ${m.cyclo}</div>
+      <div>Identifiers: ${m.idents} · Literals: ${m.lits}</div>
+    `;
+    logStep('✅ Amélioration + diff prêts.','ok');
+
+  }catch(e){
+    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    alert(e.message||e);
+  }
+};
+
+function metrics(code){
+  const lines = code.split(/\r?\n/);
+  const loc = lines.length;
+  const avg = lines.reduce((a,l)=>a+l.length,0)/Math.max(1,loc);
+  const cyclo = (code.match(/\b(if|for|while|case|catch|&&|\|\|)\b/g)||[]).length + 1;
+  const idents = (code.match(/[A-Za-z_][A-Za-z0-9_]*/g)||[]).length;
+  const lits = (code.match(/(["'`].*?["'`]|[0-9]+(\.[0-9]+)?)/g)||[]).length;
+  return {loc, avg, cyclo, idents, lits};
+}
+</script>
+</body>
+</html>
