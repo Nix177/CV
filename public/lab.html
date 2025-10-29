@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Lab — Import PDF/TXT & Mini-Résumé (client-only)</title>
+  <title>Lab — Docs & Pitch (client-only, single file)</title>
   <meta name="color-scheme" content="dark light" />
 
-  <!-- PDF.js — version fixe, SRI retiré, worker aligné sur la même version -->
+  <!-- PDF.js — version fixe, SRI retiré -->
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <script>
     if (window.pdfjsLib) {
@@ -19,17 +19,21 @@
 
   <style>
     :root{
-      --bg:#0a1220; --card:#0c1628; --text:#eef3f8; --muted:#a8b3c7; --pri:#6ee7ff; --ok:#37d399; --warn:#fbbf24; --err:#f87272;
-      --border: #16233a;
+      --bg:#0a1220; --card:#0c1628; --text:#eef3f8; --muted:#a8b3c7; --pri:#6ee7ff; --ok:#37d399; --warn:#fbbf24; --err:#f87272; --border:#16233a;
     }
     @media (prefers-color-scheme: light){
       :root{ --bg:#f7f9fc; --card:#ffffff; --text:#0b1628; --muted:#5b6b83; --border:#e9eef6; }
     }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans";}
     .wrap{max-width:980px;margin:0 auto;padding:24px;}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+    header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
     h1{font-size:clamp(20px,3vw,28px);margin:0}
     .muted{color:var(--muted)}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+    .tab-btn{appearance:none;border:1px solid var(--border);background:transparent;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .tab-btn.active{background:var(--pri);color:#04121b;border-color:transparent}
+    .hidden{display:none}
+
     .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0}
     .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
     .drop{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:.15s}
@@ -42,70 +46,143 @@
     @media(min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
     .file-item{display:flex;flex-direction:column;gap:8px}
     .meta{font-size:12px;color:var(--muted)}
-    textarea{width:100%;min-height:180px;background:#0000;color:var(--text);border:1px dashed var(--border);border-radius:10px;padding:10px;resize:vertical}
+    textarea{width:100%;min-height:160px;background:#0000;color:var(--text);border:1px dashed var(--border);border-radius:10px;padding:10px;resize:vertical}
     .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border);color:var(--muted)}
     .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
     .kpi{display:flex;gap:16px;flex-wrap:wrap}
     .kpi .chip{border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:13px}
     .footer{color:var(--muted);font-size:12px;margin-top:16px}
     .right{margin-left:auto}
-    .mono{font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;}
+    .mono{font-family: ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;}
+
+    /* Pitch & Skills */
+    .cols{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:920px){ .cols{grid-template-columns:1.2fr .8fr} }
+    .input{display:flex;flex-direction:column;gap:6px}
+    .input label{font-size:13px;color:var(--muted)}
+    .input input,.input textarea{border:1px solid var(--border);background:#0000;color:var(--text);border-radius:10px;padding:10px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;font-size:14px}
+    .bar{height:10px;border-radius:999px;background:linear-gradient(90deg,var(--pri),transparent)}
+    .pill{border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:12px}
+    .card.pitch{border-style:dashed}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Lab — PDF/TXT import & résumé (client-only)</h1>
-      <div class="muted">Single-file / zéro backend</div>
+      <h1>Lab — Docs & Pitch</h1>
+      <div class="muted">Single-file • client-only • zéro backend</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="docs">Docs</button>
+        <button class="tab-btn" data-tab="pitch">Pitch & Skills</button>
+      </div>
     </header>
 
-    <div class="card">
-      <div class="row">
-        <label class="drop" for="fileInput" id="dropArea" style="flex:1">
-          <div><strong>Glisse-dépose</strong> ou clique pour importer des <strong>PDF</strong> / <strong>TXT</strong> / <strong>MD</strong></div>
-          <div class="muted">Traitement 100% local dans ton navigateur</div>
-        </label>
-        <input id="fileInput" type="file" accept=".pdf,.txt,.md,.markdown" multiple />
-        <button class="btn" id="clearBtn" title="Effacer la liste">Clear</button>
+    <!-- TAB: DOCS -->
+    <section id="tab-docs" class="tab">
+      <div class="card">
+        <div class="row">
+          <label class="drop" for="fileInput" id="dropArea" style="flex:1">
+            <div><strong>Glisse-dépose</strong> ou clique pour importer des <strong>PDF</strong> / <strong>TXT</strong> / <strong>MD</strong></div>
+            <div class="muted">Traitement 100% local dans ton navigateur</div>
+          </label>
+          <input id="fileInput" type="file" accept=".pdf,.txt,.md,.markdown" multiple />
+          <button class="btn" id="clearBtn" title="Effacer la liste">Clear</button>
+        </div>
+        <div class="kpi" id="kpi">
+          <div class="chip">Docs: <span id="kpiDocs">0</span></div>
+          <div class="chip">Mots: <span id="kpiWords">0</span></div>
+          <div class="chip">PDF.js: <span id="kpiPdf" class="mono"></span></div>
+        </div>
       </div>
-      <div class="kpi" id="kpi">
-        <div class="chip">Docs: <span id="kpiDocs">0</span></div>
-        <div class="chip">Mots: <span id="kpiWords">0</span></div>
-        <div class="chip">PDF.js: <span id="kpiPdf" class="mono"></span></div>
-      </div>
-    </div>
 
-    <div id="files" class="grid"></div>
+      <div id="files" class="grid"></div>
 
-    <div class="card">
-      <div class="row">
-        <div class="muted">Résumé “client-only” (heuristique locale, pas d’API)</div>
-        <button class="btn primary right" id="summAll">Résumer tout</button>
+      <div class="card">
+        <div class="row">
+          <div class="muted">Résumé “client-only” (heuristique locale, pas d’API)</div>
+          <button class="btn primary right" id="summAll">Résumer tout</button>
+        </div>
+        <div class="footer">
+          Pour un vrai résumé LLM, branche un backend et remplace <code>summarizeLocally()</code> par un appel serveur. Ici, tout reste local.
+        </div>
       </div>
-      <div class="footer">
-        Pour un vrai résumé LLM, branche un backend et remplace <code>summarizeLocally()</code> par un appel serveur. Ici, tout reste local.
-      </div>
-    </div>
+      <div class="footer">Astuce CSP : autorise <code>script-src</code> et <code>worker-src</code> vers <code>cdn.jsdelivr.net</code> si tu as une CSP stricte.</div>
+    </section>
 
-    <div class="footer">Astuce CSP : autorise <code>script-src</code> et <code>worker-src</code> vers <code>cdn.jsdelivr.net</code> si tu as une CSP stricte.</div>
+    <!-- TAB: PITCH & SKILLS -->
+    <section id="tab-pitch" class="tab hidden">
+      <div class="card">
+        <div class="row" style="align-items:flex-start">
+          <div>
+            <strong>Pitch & Skills</strong>
+            <div class="muted">Génère une mini-matrice de compétences depuis tes docs + un pitch prêt à copier</div>
+          </div>
+          <span class="pill right">Docs chargés: <span id="docsCount">0</span></span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <div class="input">
+            <label for="roleInput">Titre de poste ciblé</label>
+            <input id="roleInput" placeholder="Ex: Senior Data Scientist — Industry Solutions" />
+          </div>
+          <div class="input">
+            <label for="skillsInput">Compétences (séparées par des virgules)</label>
+            <input id="skillsInput" value="RAG, RLHF, Evaluation LLM, Prompt Engineering, Data Engineering, MLOps, FastAPI, Next.js, Azure, Teaching, EdTech, UX Research" />
+          </div>
+          <div class="row" style="margin-top:8px">
+            <label class="pill"><input type="checkbox" id="useEvidence" checked /> &nbsp;Inclure des “evidence” depuis les fichiers</label>
+            <button class="btn primary right" id="runSkills">Analyser</button>
+          </div>
+        </div>
+
+        <div class="card pitch">
+          <div class="row">
+            <strong>Pitch Preview</strong>
+            <button class="btn small right" id="copyPitch">Copy</button>
+          </div>
+          <textarea id="pitchOut" spellcheck="false" placeholder="Ton pitch apparaîtra ici…" style="min-height:220px"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <strong>Skills Matrix</strong>
+          <button class="btn small right" id="copyCSV">Exporter CSV</button>
+        </div>
+        <div class="muted" style="margin:6px 0">Scores = nombre d’occurrences (approx. mot-clé exact) dans l’ensemble des documents chargés.</div>
+        <div style="overflow:auto">
+          <table id="skillsTable">
+            <thead><tr><th>Skill</th><th>Score</th><th style="width:60%">Intensity</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script>
-    // --- Helpers UI ---
+    // --- State & helpers ---
     const el = sel => document.querySelector(sel);
+    const els = sel => Array.from(document.querySelectorAll(sel));
     const filesEl = el('#files');
     const kpiDocs = el('#kpiDocs');
     const kpiWords = el('#kpiWords');
     const kpiPdf  = el('#kpiPdf');
+    const docsCount = el('#docsCount');
 
-    const state = {
-      docs: [] // {name, type, text}
-    };
+    const state = { docs: [] }; // {name, type, text}
 
-    function fmtNumber(n){ return n.toLocaleString?.() ?? String(n); }
+    function fmtNumber(n){ return n?.toLocaleString?.() ?? String(n) }
+    function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
+    const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     function updateKPIs(){
       kpiDocs.textContent = state.docs.length;
+      docsCount.textContent = state.docs.length;
       const words = state.docs.reduce((acc,d) => acc + (d.text?.split(/\s+/g)?.length || 0), 0);
       kpiWords.textContent = fmtNumber(words);
       kpiPdf.textContent = window.pdfjsLib ? 'OK' : 'N/A';
@@ -127,14 +204,10 @@
         <div class="row">
           <button class="btn small" data-action="copy" data-idx="${index}">Copy</button>
           <button class="btn small" data-action="summ" data-idx="${index}">Résumé</button>
-          <span class="muted">Les traitements restent locaux au navigateur.</span>
+          <span class="muted">Local-only</span>
         </div>
       `;
       filesEl.appendChild(div);
-    }
-
-    function escapeHtml(s){
-      return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     }
 
     // --- PDF extraction ---
@@ -153,7 +226,6 @@
     }
 
     async function readAsText(file){
-      // Fichiers texte simples
       if (/\.pdf$/i.test(file.name)){
         if (!window.pdfjsLib) {
           console.warn('Skip PDF: PDF.js not available');
@@ -172,25 +244,17 @@
       }
     }
 
-    // --- Local “Résumé” (heuristique simple, pas LLM) ---
+    // --- Local résumé heuristic ---
     function summarizeLocally(text, maxSent=6){
-      // 1) découpe naïve en phrases
       const sentences = text
         .replace(/\s+/g,' ')
         .split(/(?<=[\.\!\?])\s+(?=[A-ZÀ-Ÿ])/)
         .filter(s => s.trim().length > 0);
-
-      if (sentences.length <= maxSent) return text; // rien à faire
-
-      // 2) score TF simple sur tokens alpha (sans stopwords pour la démo)
+      if (sentences.length <= maxSent) return text;
       const freq = Object.create(null);
       const tokenize = s => s.toLowerCase().match(/[a-zà-ÿ0-9]+/g) || [];
-      for (const s of sentences){
-        for (const t of tokenize(s)) freq[t] = (freq[t]||0)+1;
-      }
+      for (const s of sentences) for (const t of tokenize(s)) freq[t] = (freq[t]||0)+1;
       const maxf = Math.max(...Object.values(freq));
-
-      // 3) score de phrase = somme des TF normalisés, + bonus pour longueur raisonnable
       const scored = sentences.map((s,i) => {
         const toks = tokenize(s);
         const tf = toks.reduce((a,t)=>a+(freq[t]/maxf),0);
@@ -198,13 +262,19 @@
         const lengthBonus = (len>6 && len<40) ? 0.2 : 0;
         return { i, s, score: tf/Math.max(1,len) + lengthBonus };
       });
-
-      // 4) on prend les top-N et on remet dans l’ordre d’origine
       const top = scored.sort((a,b)=>b.score-a.score).slice(0, maxSent).sort((a,b)=>a.i-b.i);
       return top.map(x=>x.s).join(' ');
     }
 
-    // --- Events ---
+    // --- Tab switch ---
+    function switchTab(name){
+      els('.tab').forEach(x => x.classList.add('hidden'));
+      el(`#tab-${name}`).classList.remove('hidden');
+      els('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===name));
+    }
+    els('.tab-btn').forEach(b => b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
+
+    // --- Docs tab events ---
     el('#fileInput').addEventListener('change', async (e) => {
       await handleFiles(e.target.files);
       e.target.value = '';
@@ -266,8 +336,102 @@
       updateKPIs();
     });
 
-    // Init KPIs
+    // --- Pitch & Skills ---
+    function analyzeSkills(skills){
+      const textAll = state.docs.map(d=>d.text?.toLowerCase?.()||'').join('\n');
+      const results = [];
+      let max = 0;
+      for (const raw of skills){
+        const s = raw.trim();
+        if (!s) continue;
+        const re = new RegExp(`\\b${escapeRegExp(s.toLowerCase())}\\b`,'g');
+        const matches = textAll.match(re);
+        const score = matches ? matches.length : 0;
+        max = Math.max(max, score);
+        results.push({ skill:s, score });
+      }
+      return { results, max };
+    }
+
+    function renderSkillsTable(results, max){
+      const tbody = el('#skillsTable tbody');
+      tbody.innerHTML = '';
+      const m = Math.max(1, max);
+      for (const r of results){
+        const pct = Math.round((r.score/m)*100);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(r.skill)}</td>
+          <td>${r.score}</td>
+          <td><div class="bar" style="width:${pct}%;"></div></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function buildPitch(role, results){
+      const top = results
+        .filter(r=>r.score>0)
+        .sort((a,b)=>b.score-a.score)
+        .slice(0,3)
+        .map(r=>r.skill);
+
+      const docNames = state.docs.slice(0,3).map(d=>d.name);
+      const bullets = top.length
+        ? top.map(s=>`• ${s}: applied on real artifacts`).join('\n')
+        : '• Rapid prototyping & evaluation\n• Ship-ready code and instrumentation\n• Human-centered & measurable impact';
+
+      return `${role || 'AI/Data Scientist'} — Impact snapshot
+
+What I deliver
+${typeof bullets === 'string' ? bullets : bullets.join('\n')}
+
+Evidence
+${docNames.length ? '• ' + docNames.join('\n• ') : '• (Add documents to auto-populate evidence)'}
+`;
+    }
+
+    el('#runSkills').addEventListener('click', () => {
+      const skills = el('#skillsInput').value.split(',');
+      const { results, max } = analyzeSkills(skills);
+      renderSkillsTable(results, max);
+
+      const role = el('#roleInput').value.trim();
+      const pitch = buildPitch(role, results);
+      el('#pitchOut').value = pitch;
+    });
+
+    el('#copyPitch').addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(el('#pitchOut').value || '');
+        el('#copyPitch').textContent = 'Copied ✓';
+        setTimeout(()=>el('#copyPitch').textContent='Copy', 900);
+      }catch{ alert('Copy failed'); }
+    });
+
+    el('#copyCSV').addEventListener('click', async () => {
+      const rows = [['Skill','Score']];
+      els('#skillsTable tbody tr').forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        rows.push([tds[0].textContent.trim(), tds[1].textContent.trim()]);
+      });
+      const csv = rows.map(r => r.map(x => `"${x.replace(/"/g,'""')}"`).join(',')).join('\n');
+      try{
+        await navigator.clipboard.writeText(csv);
+        el('#copyCSV').textContent = 'CSV Copied ✓';
+        setTimeout(()=>el('#copyCSV').textContent='Exporter CSV', 900);
+      }catch{
+        const blob = new Blob([csv], {type:'text/csv'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'skills_matrix.csv';
+        a.click();
+      }
+    });
+
+    // Init
     updateKPIs();
+    switchTab('docs');
   </script>
 </body>
 </html>
