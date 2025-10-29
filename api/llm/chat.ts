@@ -30,7 +30,6 @@ function matchOrigin(origin: string | null, pattern: string): boolean {
   if (pattern === '*') return true;
   if (pattern === 'null') return origin === null;
   if (!origin) return false;
-  // wildcard *.domain.tld
   if (pattern.startsWith('*.')) {
     try {
       const oh = new URL(origin).host;
@@ -44,12 +43,16 @@ function matchOrigin(origin: string | null, pattern: string): boolean {
 function setCors(res: VercelResponse, origin: string | '*') {
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Access-Code, X-User-Api-Key');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers',
+    'Content-Type, X-Access-Code, X-User-Api-Key, Authorization'
+  );
+  // Optionnel : évite de re-préflater sans cesse
+  res.setHeader('Access-Control-Max-Age', '86400');
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const origin = getOrigin(req);                  // ex: https://nicolastuor.ch
+  const origin = getOrigin(req);
   const allowList = parseAllowed();
   const same = sameHost(req);
   const isAllowed =
@@ -66,26 +69,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   setCors(res, origin || '*');
 
-  // Accès optionnel par code
+  // -------- Access code (optionnel) --------
   const required = process.env.CV_ACCESS_CODE;
   if (required) {
-    const got = (req.headers['x-access-code'] || '').toString();
-    if (got !== required) return res.status(403).json({ error: 'Forbidden (access code missing/wrong)' });
+    const headerCode = (req.headers['x-access-code'] || '').toString().trim();
+    const auth = (req.headers['authorization'] || '').toString().trim();
+    const bearerCode = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';
+    const bodyCode =
+      typeof req.body === 'object' && req.body
+        ? (req.body as any).accessCode?.toString().trim()
+        : '';
+
+    const supplied = headerCode || bearerCode || bodyCode || '';
+    if (supplied !== required) {
+      return res.status(403).json({ error: 'Forbidden (access code missing/wrong)' });
+    }
   }
 
   if (req.method !== 'POST') return res.status(405).send('POST only');
 
   try {
-    const { messages = [], model = 'gpt-5', temperature = 0.2 } = req.body || {};
-    const userKey = (req.headers['x-user-api-key'] || '').toString();
+    const { messages = [], model = 'gpt-5', temperature = 0.2 } = (req.body || {}) as any;
+
+    const userKey = (req.headers['x-user-api-key'] || '').toString().trim();
     const apiKey = userKey || process.env.OPENAI_API_KEY!;
+    if (!apiKey) return res.status(500).json({ error: 'Server misconfigured: OPENAI_API_KEY missing' });
+
     const r = await fetch(OPENAI_URL, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ model, messages, temperature })
     });
+
     const j = await r.json();
-    if (!r.ok) throw new Error(j?.error?.message || r.statusText);
+    if (!r.ok) {
+      // Fais remonter l’erreur OpenAI si dispo
+      const err = (j && j.error && (j.error.message || j.error.type)) || r.statusText;
+      throw new Error(err);
+    }
     return res.status(200).json(j);
   } catch (e: any) {
     return res.status(500).json({ error: e.message || String(e) });
