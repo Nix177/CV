@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Lab — RAG Glassbox & Code/Prompt Diff</title>
+  <meta name="description" content="Deux démos: RAG Glassbox (recherche explicable) et Code/Prompt Diff Explorer." />
+  <meta name="theme-color" content="#0a1220" />
+  <style>
+    :root{
+      --bg:#0a1220; --card:#0c1628; --card2:#0f1d34; --ink:#eef3f8; --muted:#a9b4c3;
+      --accent:#68f; --ok:#46d39a; --warn:#f7d774; --err:#ff6b6b; --border:#1c2a44;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial}
+    a{color:var(--accent);text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    h1{font-size:24px;margin:0 0 8px}
+    .sub{color:var(--muted);margin:0 0 16px}
+    .tabs{display:flex;gap:8px;margin:16px 0}
+    .tab{background:var(--card);border:1px solid var(--border);padding:10px 12px;border-radius:8px;cursor:pointer}
+    .tab.active{background:var(--card2);border-color:#29406c}
+    .panels{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .panel{display:none;padding:16px}
+    .panel.active{display:block}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    label.small{color:var(--muted);font-size:12px}
+    input[type="text"],textarea,select{
+      width:100%; background:#0b1a2e; color:var(--ink); border:1px solid var(--border);
+      border-radius:8px; padding:10px 12px; outline:none;
+    }
+    textarea{min-height:100px}
+    .btn{background:#1b3a6b;color:#fff;border:1px solid #2b5296;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .btn.ghost{background:transparent}
+    .hint{color:var(--muted);font-size:12px}
+    .tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 8px;border-radius:999px;background:#13233d;border:1px solid var(--border);color:#cfe}
+    .kpi{display:flex;gap:12px;flex-wrap:wrap}
+    .kpi .chip{background:#0b1a2e;border:1px solid var(--border);padding:6px 10px;border-radius:8px}
+    .scorebar{height:6px;background:#13233d;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+    .scorebar > i{display:block;height:100%;background:linear-gradient(90deg,#59f,#8af)}
+    .chunk{border:1px dashed #27416d;border-radius:8px;padding:10px;margin:8px 0;background:#0b1a2e}
+    .chunk .meta{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 0}
+    .answer{white-space:pre-wrap;background:#0b1a2e;border:1px solid var(--border);border-radius:8px;padding:10px}
+    .divider{height:1px;background:var(--border);margin:12px 0}
+    .badge{font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid var(--border);background:#112036;color:#cde}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .monaco-wrap{height:360px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#0b1a2e}
+    .right{margin-left:auto}
+    .danger{color:var(--err)} .ok{color:var(--ok)} .warn{color:var(--warn)}
+    .footer{color:var(--muted);font-size:12px;margin-top:16px}
+    .pill{display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:#12223b}
+    .upload{border:1px dashed #325080;border-radius:10px;padding:10px;display:flex;justify-content:space-between;gap:8px;background:#0b1a2e}
+    .upload input{display:none}
+  </style>
+
+  <!-- Third-party libs via CDN (no build, no keys) -->
+  <script src="https://unpkg.com/elasticlunr/elasticlunr.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-lx0x5u3f41w2Kdjw5h5mF0yYfY2Puq6j4WZp12I5zhpM10y6GkWkQvF2o0M8zA3a7J9dC8Vn0iS6NTf5Ff8S8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script src="https://cdn.jsdelivr.net/npm/mark.js/dist/mark.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+  <div class="wrap" id="lab-app">
+    <h1>AI Lab</h1>
+    <p class="sub">Deux démos “wow” sans backend ni clés : <strong>RAG Glassbox</strong> (recherche explicable) & <strong>Code/Prompt Diff Explorer</strong>.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="rag">RAG Glassbox</button>
+      <button class="tab" data-tab="diff">Code & Prompt Diff</button>
+    </div>
+
+    <div class="panels">
+      <!-- RAG GLASSBOX -->
+      <section class="panel active" id="panel-rag" aria-labelledby="tab-rag">
+        <div class="grid">
+          <div class="box">
+            <div class="row" style="justify-content:space-between;align-items:center">
+              <div>
+                <strong>Corpus</strong>
+                <div class="hint">Utilise l’échantillon intégré ou dépose un PDF/TXT (extraction locale).</div>
+              </div>
+              <span class="pill" id="docCountPill">0 docs</span>
+            </div>
+            <div class="upload" id="dropArea">
+              <label for="fileInput">Déposer un PDF/TXT ici</label>
+              <input id="fileInput" type="file" accept=".pdf,.txt" multiple/>
+              <button class="btn ghost" id="btnSample">Charger l’échantillon</button>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <input id="q" type="text" placeholder="Rechercher (ex. trust in cognitive tools, extended mind, RAG)"/>
+              <button class="btn" id="btnSearch">Search</button>
+              <button class="btn ghost" id="btnClear">Clear</button>
+              <span class="right badge">Local TF-IDF (elasticlunr)</span>
+            </div>
+            <div class="kpi" id="kpi"></div>
+          </div>
+
+          <div class="box">
+            <strong>Réponse (extractive)</strong>
+            <div class="hint">Résumé naïf par phrases pertinentes (pas de LLM, zéro clé).</div>
+            <div id="answer" class="answer">—</div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:16px">
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <strong>Trace “retriever” (glassbox)</strong>
+            <span class="badge">Top chunks + score</span>
+          </div>
+          <div id="trace"></div>
+        </div>
+
+        <p class="footer">Astuce: remplace le mode TF-IDF par des embeddings plus tard (serveur), l’UI est déjà prête à afficher les scores & chunks.</p>
+      </section>
+
+      <!-- CODE & PROMPT DIFF -->
+      <section class="panel" id="panel-diff" aria-labelledby="tab-diff">
+        <div class="grid">
+          <div class="box">
+            <div class="row" style="justify-content:space-between;align-items:center">
+              <strong>Prompt A/B</strong>
+              <span class="badge">Monaco Diff (plaintext)</span>
+            </div>
+            <div class="row" style="margin:8px 0">
+              <button class="btn ghost" id="loadPromptExample">Charger un exemple</button>
+              <span class="hint">Colle deux versions d’un prompt, compare instantanément.</span>
+            </div>
+            <div class="monaco-wrap" id="promptDiff"></div>
+            <div class="row" style="margin-top:8px">
+              <span class="chip">Estimation tokens: <span id="tokA">0</span> → <span id="tokB">0</span></span>
+              <span class="chip">Delta: <span id="tokDelta">0</span></span>
+              <span class="hint">Heuristique 1 token ≈ 4 caractères (estimation).</span>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="row" style="justify-content:space-between;align-items:center">
+              <strong>Code A/B</strong>
+              <span class="badge">Monaco Diff (langage sélectionnable)</span>
+            </div>
+            <div class="row" style="margin:8px 0">
+              <select id="codeLang">
+                <option value="python">python</option>
+                <option value="javascript">javascript</option>
+                <option value="csharp">csharp</option>
+                <option value="cpp">cpp</option>
+                <option value="json">json</option>
+                <option value="markdown">markdown</option>
+              </select>
+              <button class="btn ghost" id="loadCodeExample">Charger un exemple</button>
+            </div>
+            <div class="monaco-wrap" id="codeDiff"></div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:16px">
+          <strong>Note “wow”</strong>
+          <p class="hint">Tu montres un vrai comparateur A/B utilisable (prompts & code), avec chiffres (tokens estimés). C’est visuel, utile, zéro backend.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    // ------------- Tab logic -------------
+    const tabs = document.querySelectorAll('.tab');
+    const panels = { rag: document.getElementById('panel-rag'), diff: document.getElementById('panel-diff') };
+    tabs.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        tabs.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const key = btn.dataset.tab;
+        Object.values(panels).forEach(p=>p.classList.remove('active'));
+        panels[key].classList.add('active');
+      });
+    });
+
+    // ------------- RAG Glassbox (local TF-IDF) -------------
+    // Minimal sample corpus (2 courts extraits FR/EN)
+    const SAMPLE_DOCS = [
+      {
+        id: 'doc1',
+        title: 'Clarity of Trust in Cognitive Tools (FR)',
+        text: `La “clarté de confiance” envers des outils d’extension cognitive en éducation recouvre
+        la compréhension explicite de ce que l’outil fait, quand l’utiliser, et comment vérifier sa production.
+        Avec les LLM et le RAG, rendre visibles les étapes (retrieval, chunking, scoring) augmente la
+        confiance épistémique et favorise l’autorégulation chez les apprenant·e·s.`
+      },
+      {
+        id: 'doc2',
+        title: 'Extended Mind & Education (EN)',
+        text: `Extended Mind theory suggests cognitive processes can span tools and environments.
+        In classrooms, we should scaffold students to inspect sources, retrieved chunks, and rationales.
+        A glassbox RAG helps debug hallucinations and calibrate trust by exposing retrieval scores and evidence.`
+      }
+    ];
+
+    // State
+    let INDEX = null;
+    let DOCS = []; // {id, title, text, chunks: [{id, text, pos}]}
+    const CHUNK_SIZE = 400; // chars
+    const docCountPill = document.getElementById('docCountPill');
+    const traceEl = document.getElementById('trace');
+    const answerEl = document.getElementById('answer');
+    const kpiEl = document.getElementById('kpi');
+    const qInput = document.getElementById('q');
+
+    function chunkText(text, size=CHUNK_SIZE){
+      const out = [];
+      let pos = 0;
+      while (pos < text.length){
+        const slice = text.slice(pos, pos+size);
+        out.push({ id: `c${pos}`, text: slice, pos });
+        pos += size;
+      }
+      return out;
+    }
+
+    function rebuildIndex(){
+      INDEX = elasticlunr(function () {
+        this.setRef('rid');
+        this.addField('text');
+        this.addField('doc');
+      });
+      DOCS.forEach(d=>{
+        d.chunks.forEach((c,i)=>{
+          INDEX.addDoc({ rid:`${d.id}:${c.id}`, text:c.text, doc:d.title });
+        });
+      });
+      docCountPill.textContent = `${new Set(DOCS.map(d=>d.id)).size} docs`;
+    }
+
+    function addDocs(rawDocs){
+      rawDocs.forEach(d=>{
+        const chunks = chunkText(d.text);
+        DOCS.push({ ...d, chunks });
+      });
+      rebuildIndex();
+    }
+
+    // Extract text from PDF (local)
+    async function pdfToText(file){
+      const array = new Uint8Array(await file.arrayBuffer());
+      const pdf = await pdfjsLib.getDocument({ data: array }).promise;
+      let full = '';
+      for (let p=1; p<=pdf.numPages; p++){
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        full += content.items.map(i => i.str).join(' ') + '\n';
+      }
+      return full;
+    }
+
+    // KPIs
+    function setKPI({tookMs=0, hits=0, avgScore=0}){
+      kpiEl.innerHTML = `
+        <span class="chip">Hits: <strong>${hits}</strong></span>
+        <span class="chip">Avg score: <strong>${avgScore.toFixed(3)}</strong></span>
+        <span class="chip">Latency (local): <strong>${tookMs}ms</strong></span>
+      `;
+    }
+
+    // Simple extractive answer: top sentences by query term match
+    function naiveExtractiveSummary(query, topChunks){
+      const text = topChunks.map(c=>c.text).join(' ');
+      const sentences = text.split(/(?<=[\.\!\?])\s+/);
+      const terms = query.toLowerCase().split(/\W+/).filter(Boolean);
+      const scored = sentences.map(s=>{
+        const t = s.toLowerCase();
+        const score = terms.reduce((acc, w)=>acc + (t.includes(w) ? 1 : 0),0);
+        return { s, score };
+      }).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.s.trim());
+      return scored.length ? scored.join('\n\n') : '—';
+    }
+
+    function highlight(el, needle){
+      const instance = new Mark(el);
+      instance.unmark({ done: ()=>{
+        if(!needle || !needle.trim()) return;
+        instance.mark(needle, { separateWordSearch: true, diacritics: true });
+      }});
+    }
+
+    function renderTrace(query, results){
+      traceEl.innerHTML = '';
+      results.forEach(r=>{
+        const div = document.createElement('div');
+        div.className='chunk';
+        div.innerHTML = `
+          <div class="row" style="justify-content:space-between">
+            <div class="mono">${r.ref}</div>
+            <span class="badge">score ${r.score.toFixed(3)}</span>
+          </div>
+          <div class="scorebar"><i style="width:${Math.min(100, r.score*100)}%"></i></div>
+          <div class="meta">
+            <span class="tag">doc: ${r.doc}</span>
+            <span class="tag">len: ${r.text.length}</span>
+          </div>
+          <div class="chunk-text">${r.text}</div>
+        `;
+        traceEl.appendChild(div);
+        highlight(div.querySelector('.chunk-text'), query);
+      });
+    }
+
+    function search(){
+      const query = qInput.value.trim();
+      if(!query || !INDEX){ answerEl.textContent='—'; traceEl.innerHTML=''; setKPI({}); return; }
+      const t0 = performance.now();
+      const raw = INDEX.search(query, { expand:true, bool:"OR" });
+      // Map to chunk data
+      const results = raw.slice(0,8).map(hit=>{
+        const [docId, chunkId] = hit.ref.split(':');
+        const doc = DOCS.find(d=>d.id===docId);
+        const chunk = doc?.chunks.find(c=>c.id===chunkId);
+        return {
+          ref: hit.ref,
+          doc: doc?.title ?? '—',
+          text: chunk?.text ?? '',
+          score: hit.score
+        };
+      }).filter(x=>x.text);
+      const took = Math.round(performance.now()-t0);
+      const avg = results.length ? results.reduce((a,b)=>a+b.score,0)/results.length : 0;
+      setKPI({tookMs:took, hits:results.length, avgScore:avg});
+      renderTrace(query, results);
+      const summary = naiveExtractiveSummary(query, results);
+      answerEl.textContent = summary;
+      highlight(answerEl, query);
+    }
+
+    // Sample load
+    document.getElementById('btnSample').addEventListener('click', ()=>{
+      DOCS = [];
+      addDocs(SAMPLE_DOCS);
+    });
+
+    document.getElementById('btnSearch').addEventListener('click', search);
+    document.getElementById('btnClear').addEventListener('click', ()=>{
+      qInput.value=''; answerEl.textContent='—'; traceEl.innerHTML=''; setKPI({});
+    });
+    qInput.addEventListener('keydown', e=>{ if(e.key==='Enter') search(); });
+
+    // Drag & drop / file input
+    const fileInput = document.getElementById('fileInput');
+    const dropArea = document.getElementById('dropArea');
+    function handleFiles(files){
+      (async ()=>{
+        const toAdd = [];
+        for(const f of files){
+          try{
+            let text='';
+            if(f.name.toLowerCase().endsWith('.pdf')) text = await pdfToText(f);
+            else text = await f.text();
+            toAdd.push({ id:`u-${crypto.randomUUID()}`, title:f.name, text });
+          }catch(err){ console.error(err); }
+        }
+        if(toAdd.length){ addDocs(toAdd); }
+      })();
+    }
+    dropArea.addEventListener('click', ()=>fileInput.click());
+    fileInput.addEventListener('change', e=>handleFiles(e.target.files));
+    ;['dragenter','dragover'].forEach(ev=>dropArea.addEventListener(ev,e=>{
+      e.preventDefault(); e.stopPropagation(); dropArea.style.background='#0d203a';
+    }));
+    ;['dragleave','drop'].forEach(ev=>dropArea.addEventListener(ev,e=>{
+      e.preventDefault(); e.stopPropagation(); dropArea.style.background='#0b1a2e';
+      if(ev==='drop') handleFiles(e.dataTransfer.files);
+    }));
+
+    // Init with sample
+    addDocs(SAMPLE_DOCS);
+
+    // ------------- Monaco Diff (Prompt & Code) -------------
+    const promptNode = document.getElementById('promptDiff');
+    const codeNode = document.getElementById('codeDiff');
+    const tokAEl = document.getElementById('tokA');
+    const tokBEl = document.getElementById('tokB');
+    const tokDeltaEl = document.getElementById('tokDelta');
+
+    const codeLangSel = document.getElementById('codeLang');
+    let promptDiffEditor, codeDiffEditor;
+    let monacoReady = false;
+
+    function estimateTokens(str){ return Math.ceil((str || '').length / 4); }
+
+    // Monaco loader config
+    window.require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
+    window.require(['vs/editor/editor.main'], function(){
+      monacoReady = true;
+
+      // PROMPT diff
+      promptDiffEditor = monaco.editor.createDiffEditor(promptNode, {
+        theme: 'vs-dark', readOnly: false, renderSideBySide: true, originalEditable: true
+      });
+      const pA = monaco.editor.createModel('You are a helpful tutor.\nExplain “extended mind” in 3 bullets for teachers.', 'plaintext');
+      const pB = monaco.editor.createModel('You are a helpful, critical pedagogy tutor.\nExplain “extended mind” to primary teachers:\n- 3 bullet points\n- 1 short classroom example\n- Avoid jargon', 'plaintext');
+      promptDiffEditor.setModel({ original: pA, modified: pB });
+      const updatePromptKPI = ()=>{
+        tokAEl.textContent = estimateTokens(pA.getValue());
+        tokBEl.textContent = estimateTokens(pB.getValue());
+        tokDeltaEl.textContent = (estimateTokens(pB.getValue()) - estimateTokens(pA.getValue()));
+      };
+      updatePromptKPI();
+      [pA, pB].forEach(m=>m.onDidChangeContent(updatePromptKPI));
+
+      // CODE diff
+      codeDiffEditor = monaco.editor.createDiffEditor(codeNode, {
+        theme: 'vs-dark', renderSideBySide: true, originalEditable: true
+      });
+      const cA = monaco.editor.createModel('def rag_search(q, chunks):\n    return sorted(chunks, key=lambda c: score(q,c))[:5]\n', 'python');
+      const cB = monaco.editor.createModel('def rag_search(q, chunks, k=8):\n    scored = sorted(chunks, key=lambda c: score(q,c), reverse=True)\n    return dedupe(scored)[:k]\n', 'python');
+      codeDiffEditor.setModel({ original: cA, modified: cB });
+
+      // Change language dynamically
+      codeLangSel.addEventListener('change', ()=>{
+        const lang = codeLangSel.value;
+        monaco.editor.setModelLanguage(codeDiffEditor.getModel().original, lang);
+        monaco.editor.setModelLanguage(codeDiffEditor.getModel().modified, lang);
+      });
+
+      // Example loaders
+      document.getElementById('loadPromptExample').addEventListener('click', ()=>{
+        pA.setValue('You are a summarizer. Summarize the article in 5 bullets for busy school leaders.');
+        pB.setValue('You are a critical & concise summarizer.\nSummarize for school leaders:\n- 5 bullets (<=12 words each)\n- 1 risk & 1 opportunity\n- Cite 2 concrete data points');
+      });
+      document.getElementById('loadCodeExample').addEventListener('click', ()=>{
+        const lang = codeLangSel.value;
+        monaco.editor.setModelLanguage(codeDiffEditor.getModel().original, lang);
+        monaco.editor.setModelLanguage(codeDiffEditor.getModel().modified, lang);
+        const examples = {
+          python: [
+            'def cost(tokens, price=3e-6):\n    return tokens*price\n',
+            'def cost(tokens, price_in=3e-6, price_out=6e-6):\n    # in/out token split\n    return int(tokens*0.6)*price_in + int(tokens*0.4)*price_out\n'
+          ],
+          javascript: [
+            'export function chunk(s, n){ return s.match(new RegExp(\'.{1,\'+n+\'}\',\'g\'))||[] }',
+            'export function chunk(s, n){ const out=[]; for(let i=0;i<s.length;i+=n) out.push(s.slice(i,i+n)); return out; }'
+          ],
+          csharp: [
+            'public int Add(int a, int b){ return a+b; }',
+            'public int Add(int a, int b){ checked { return a+b; } }'
+          ],
+          cpp: [
+            'int add(int a,int b){return a+b;}',
+            'int add(int a,int b){return std::plus<int>{}(a,b);}'
+          ],
+          json: [
+            '{ "k": 1 }',
+            '{ "k": 1, "explain": true }'
+          ],
+          markdown: [
+            '# Title\n- point A\n- point B',
+            '# Title\n- point A\n- point B\n> Note: improved clarity'
+          ],
+        };
+        const [oa, ob] = examples[lang] || examples['python'];
+        codeDiffEditor.getModel().original.setValue(oa);
+        codeDiffEditor.getModel().modified.setValue(ob);
+      });
+    });
+
+    // ------------- Accessibility fallback if Monaco blocked by CSP -------------
+    setTimeout(()=>{
+      if(!monacoReady){
+        promptNode.innerHTML = '<div style="padding:12px" class="hint danger">Monaco non chargé (CSP?). Autorise la source CDNJS pour charger l’éditeur de diff.</div>';
+        codeNode.innerHTML = '<div style="padding:12px" class="hint danger">Monaco non chargé (CSP?).</div>';
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
