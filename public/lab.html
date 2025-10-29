@@ -10,9 +10,9 @@
       --bg:#0a1220; --card:#0c1628; --muted:#9fb0c9; --text:#eef3f8; --acc:#63e; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
       --border:#1a2a44;
     }
-    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
     a{color:#9ed0ff}
-    .shell{max-width:1200px;margin:24px auto;padding:0 16px}
+    .shell{max-width:1280px;margin:24px auto;padding:0 16px}
     header h1{margin:0 0 6px}
     header p{margin:0 0 16px;color:var(--muted)}
     .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
@@ -20,7 +20,8 @@
     input::placeholder,textarea::placeholder{color:#7e8aa3}
     button{cursor:pointer}
     button.primary{background:linear-gradient(90deg,#6c4bff,#4a74ff);border:none}
-    .tabs{display:flex;gap:8px;margin:4px 0 16px}
+    button[disabled]{opacity:.6;cursor:not-allowed}
+    .tabs{display:flex;gap:8px;margin:4px 0 16px;flex-wrap:wrap}
     .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;cursor:pointer;color:var(--muted)}
     .tab.active{background:#15223a;color:var(--text);border-color:#2b3b61}
     .panel{display:none}
@@ -28,40 +29,41 @@
     .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:10px 0}
     .grid{display:grid;gap:12px}
     .grid-2{grid-template-columns:1fr 1fr}
-    @media (max-width:1000px){.grid-2{grid-template-columns:1fr}}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:700px}
+    @media (max-width:1100px){.grid-2{grid-template-columns:1fr}}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:560px}
     .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
     .box h4{margin:0 0 8px}
-    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:320px;overflow:auto}
+    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px}
     .tstep{padding:6px 8px;border-left:3px solid #2b3b61;margin:6px 0;background:#0f1b30;border-radius:8px}
     .tstep.ok{border-color:var(--ok)} .tstep.warn{border-color:var(--warn)} .tstep.bad{border-color:var(--bad)}
     .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;margin:2px 4px 0 0;background:#13213a;color:#cfe0ff;font-size:12px}
-    .hl{background:rgba(255,230,120,.22);outline:1px dashed rgba(255,230,120,.35)}
-    .score{height:10px;background:#0f1b30;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-    .score > i{display:block;height:100%;background:linear-gradient(90deg,#ff5f6d,#ffc371)}
-    .badges{display:flex;gap:8px;flex-wrap:wrap}
-    .badge{padding:4px 8px;border-radius:8px;background:#14203a;border:1px solid var(--border)}
-    .badge.ok{background:#0f2a1a;border-color:#245a3b}
-    .badge.low{background:#2a1c0f;border-color:#5a3d24}
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .mono{font-family:ui-monospace,Consolas,monospace}
     .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
-    .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
+    .ins{background:#12371e} .del{background:#3a1520;text-decoration:line-through}
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:1100px){.two-col{grid-template-columns:1fr}}
+    .badge{padding:4px 8px;border-radius:8px;background:#14203a;border:1px solid var(--border);display:inline-block;margin-right:6px}
+    .badge.ok{background:#0f2a1a;border-color:#245a3b}
+    .badge.low{background:#2a1c0f;border-color:#5a3d24}
   </style>
 
+  <!-- pdf.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <!-- diff-match-patch -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
 </head>
 <body>
   <div class="shell">
     <header>
       <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
-      <p>Deux mini-outils pédagogiques, qui utilisent <b>ton endpoint Vercel</b> pour appeler un LLM. Tout est transparent et commenté.</p>
+      <p>Deux mini-outils pédagogiques, qui utilisent <b>ton endpoint Vercel</b> pour appeler un LLM. Tu vois <i>ce qui se passe</i> et pourquoi c’est utile.</p>
     </header>
 
+    <!-- Config -->
     <div class="card">
       <div class="bar">
         <label>Model
@@ -71,39 +73,52 @@
             <option value="gpt-4o">gpt-4o</option>
           </select>
         </label>
-        <label class="small">Custom API key (optionnel, test autre compte)
+        <label class="small">Custom API key (optionnel, tester un autre compte)
           <input id="userKey" type="password" placeholder="sk-..." style="min-width:260px">
         </label>
-        <span class="small muted">Route API&nbsp;: <code class="mono" id="routeHint"></code></span>
+        <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
-      <div class="small muted">
-        Par défaut, on passe par <b>ton serveur Vercel</b> (clé côté serveur).  
-        “Custom API key” permet de tester un autre compte/modèle sans exposer la clé (jamais stockée).
-      </div>
+      <details class="small">
+        <summary><b>À quoi ça sert ?</b></summary>
+        <div class="two-col">
+          <div>
+            <b>1) RAG Glassbox</b> te montre comment une réponse “document-aware” est produite : extraction PDF → découpe (chunks) → ranking des passages → prompt avec citations → réponse.  
+            <br>Tu peux observer : qualité des passages, scores, durée de chaque étape, tokens consommés et “ancrage” de la réponse (grounding).
+          </div>
+          <div>
+            <b>2) Diff Explorer</b> illustre la valeur d’un bon prompt (ou d’un refactor de code).  
+            <br>Tu colles un prompt ou du code ➜ l’IA propose une version améliorée + explication.  
+            <br>Si tu fournis un “Texte de test”, on exécute <i>l’ancien vs le nouveau prompt</i> et on affiche les deux réponses pour comparer.
+          </div>
+        </div>
+      </details>
     </div>
 
+    <!-- Tabs -->
     <div class="tabs">
       <div class="tab active" data-tab="rag">1) RAG Glassbox — “Explique-moi ta réponse”</div>
       <div class="tab" data-tab="diff">2) Code & Prompt Diff Explorer</div>
     </div>
 
+    <!-- RAG -->
     <section class="panel active" id="panel-rag">
       <div class="card grid grid-2">
         <div>
           <h3>Document & Question</h3>
           <div class="bar">
             <input type="file" id="pdfFile" accept="application/pdf">
-            <input id="question" style="flex:1" placeholder="Pose ta question sur le PDF (ex. 'Quels sont les objectifs de la réforme ?')">
+            <input id="question" style="flex:1" placeholder="Pose ta question (ex. « Quels sont les objectifs ? »)">
             <button class="primary" id="runRag">Run RAG</button>
           </div>
-          <details class="card">
-            <summary><b>Comment ça marche ?</b> (explication courte)</summary>
+
+          <details class="card small">
+            <summary><b>Ce que tu vas observer</b></summary>
             <ul>
-              <li><b>Extraction</b> : conversion PDF→texte dans ton navigateur (pdf.js).</li>
-              <li><b>Chunking</b> : découpes ~800–1000 caractères, avec recouvrement.</li>
-              <li><b>Ranking</b> (TF-IDF) : sélection des K meilleurs passages.</li>
-              <li><b>Prompt</b> : la question + les passages retenus, avec <b>citations [n]</b> obligatoires.</li>
-              <li><b>Glassbox</b> : chunks, scores, timeline détaillée, et jauge de “grounding”.</li>
+              <li><b>Extraction</b> : texte tiré du PDF dans ton navigateur (pdf.js).</li>
+              <li><b>Chunking</b> : découpe ~900 caractères avec recouvrement pour garder le contexte.</li>
+              <li><b>Ranking (TF-IDF)</b> : mesure de proximité question↔passages pour choisir les meilleurs.</li>
+              <li><b>Prompting avec sources</b> : on exige des <b>citations [n]</b> vers les passages retenus.</li>
+              <li><b>Observables</b> : #chunks, scores, durées, tokens, et un indicateur d’“ancrage” lexical.</li>
             </ul>
           </details>
 
@@ -124,25 +139,34 @@
           <div class="box" id="rightPane">
             <h4>Réponse du modèle</h4>
             <div id="answer"></div>
-            <div class="badges" id="badges"></div>
+            <div id="badges" style="margin-top:8px"></div>
             <div class="footer-note">Les citations [n] renvoient aux passages du panneau gauche.</div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Diff -->
     <section class="panel" id="panel-diff">
       <div class="card">
         <h3>Code & Prompt Diff Explorer</h3>
+
         <div class="grid grid-2">
           <div class="box">
             <h4>Entrée (code ou prompt “avant”)</h4>
             <textarea id="src" rows="14" placeholder="Colle ici du code ou un prompt…"></textarea>
             <div class="bar">
-              <input id="goal" style="flex:1" placeholder="Objectif/contraintes (ex. +lisibilité, +sécurité, FR comments)">
+              <input id="goal" style="flex:1" placeholder="Objectif (ex. +lisibilité, +sécurité, +FR comments)">
               <button class="primary" id="improve">Improve with AI</button>
             </div>
+            <details class="small">
+              <summary><b>Tester comme “prompt”</b> (facultatif)</summary>
+              <div class="bar">
+                <textarea id="testInput" rows="6" style="width:100%" placeholder="Si tu renseignes ce champ, on traitera le texte de gauche comme un prompt, et on comparera l'output de l'ancien vs le nouveau prompt sur ce ‘Texte de test’."></textarea>
+              </div>
+            </details>
           </div>
+
           <div class="box">
             <h4>Résultat (après)</h4>
             <textarea id="dst" rows="14" placeholder="Le code/prompt amélioré apparaîtra ici…"></textarea>
@@ -162,14 +186,30 @@
             <div id="why" class="small"></div>
           </div>
         </div>
+
+        <div class="card" id="promptRun" style="display:none">
+          <h4>Exécution du prompt : Avant vs Après (sur le “Texte de test”)</h4>
+          <div class="two-col">
+            <div class="box">
+              <h4>Avant</h4>
+              <div id="runBefore" class="small"></div>
+            </div>
+            <div class="box">
+              <h4>Après</h4>
+              <div id="runAfter" class="small"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
 
 <script>
+/** ====== CONFIG ====== **/
 const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
+/** ====== ONGLET UI ====== **/
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -179,51 +219,57 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 
-function logStep(html, cls=''){
+/** ====== OUTILS COMMUNS ====== **/
+function logStep(html, cls=''){ 
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
   el.innerHTML = html;
-  const tl = document.getElementById('timeline');
-  tl.appendChild(el);
-  tl.scrollTop = tl.scrollHeight;
+  document.getElementById('timeline').appendChild(el);
+  el.scrollIntoView({block:'end',behavior:'smooth'});
 }
 function resetTimeline(){ document.getElementById('timeline').innerHTML=''; }
-function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); }
 function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
+function busy(btn, on, labelBusy){
+  if (on){ btn.dataset.prev = btn.textContent; btn.textContent = labelBusy||'Processing…'; btn.disabled = true; }
+  else { btn.textContent = btn.dataset.prev || btn.textContent; btn.disabled = false; }
+}
 
 async function callLLM(messages, model) {
   const headers = {'Content-Type':'application/json'};
   const userKey = document.getElementById('userKey').value.trim();
-  if (userKey) headers['X-User-Api-Key'] = userKey;
+  if (userKey) headers['x-user-api-key'] = userKey;
 
+  const t0 = performance.now();
   const res = await fetch(API_ROUTE, {
     method:'POST',
     headers,
-    // ⬇️ NE PLUS ENVOYER temperature (gpt-5 le refuse si ≠ 1)
     body: JSON.stringify({ model, messages })
   });
-  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${await res.text()}`);
-  return res.json();
+  const txt = await res.text();
+  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${txt}`);
+  const json = JSON.parse(txt);
+  json._client_duration_ms = Math.round(performance.now()-t0);
+  return json;
 }
 
-/** ===== RAG ===== */
+/** ====== RAG GLASSBOX ====== **/
 async function pdfToText(file){
-  const buf = await file.arrayBuffer();
   const t0 = performance.now();
+  const buf = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({data:buf}).promise;
-  logStep(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
+  const loadMs = Math.round(performance.now()-t0);
+  logStep(`📄 PDF chargé — ${pdf.numPages} page(s) (${loadMs} ms)`, 'ok');
 
   let text = '';
-  let charCounts = [];
+  const t1 = performance.now();
   for (let i=1; i<=pdf.numPages; i++){
     const page = await pdf.getPage(i);
     const c = await page.getTextContent();
     const t = c.items.map(it=>it.str).join(' ');
-    charCounts.push(t.length);
     text += '\n' + t;
   }
-  const t1 = performance.now();
-  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${(t1 - t0).toFixed(0)} ms (moy/page ~${Math.round(charCounts.reduce((a,b)=>a+b,0)/charCounts.length)} chars)`, 'ok');
+  const ms = Math.round(performance.now()-t1);
+  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${ms} ms (moy/page ~${Math.round(text.length/pdf.numPages).toLocaleString()} chars)`, 'ok');
   return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
 
@@ -251,6 +297,7 @@ function tokenize(s){
     .split(/\s+/).filter(w=>w && !STOP.has(w));
 }
 function tfidfRank(query, chunks){
+  const t0 = performance.now();
   const q = tokenize(query);
   const df = new Map();
   for (const ch of chunks){
@@ -270,6 +317,8 @@ function tfidfRank(query, chunks){
     }
     ch.score = score;
   }
+  const ms = Math.round(performance.now()-t0);
+  logStep(`🧮 TF-IDF & ranking en ${ms} ms…`);
   return chunks.sort((a,b)=>b.score-a.score);
 }
 
@@ -295,93 +344,91 @@ function groundingScore(answer, passages){
 }
 
 document.getElementById('runRag').onclick = async ()=>{
+  const btn = document.getElementById('runRag');
   try{
     resetTimeline();
-    const fileInput = document.getElementById('pdfFile');
-    const questionInput = document.getElementById('question');
-    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
-    const q = questionInput ? questionInput.value.trim() : '';
+    const file = document.getElementById('pdfFile').files[0];
+    const q = document.getElementById('question').value.trim();
     if (!file) { alert('Choisis un PDF'); return; }
     if (!q) { alert('Écris une question'); return; }
 
+    busy(btn, true, 'Running…');
     logStep('🧩 Lecture du PDF & extraction texte…');
     const text = await pdfToText(file);
 
-    logStep('🧩 Chunking (fenêtre ~900, overlap 150)…');
     const t0 = performance.now();
+    logStep('🧩 Chunking (fenêtre ~900, overlap 150)…');
     const chunks = chunkText(text);
-    const t1 = performance.now();
-    const avgLen = Math.round(chunks.reduce((a,c)=>a+c.text.length,0)/chunks.length);
-    logStep(`🔍 ${chunks.length} chunks générés (avg ~${avgLen} chars) en ${(t1-t0).toFixed(0)} ms.`,'ok');
+    logStep(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/Math.max(1,chunks.length))} chars).`, 'ok');
 
-    logStep('🧮 TF-IDF & ranking…');
     const ranked = tfidfRank(q, chunks);
-    const topK = 6;
-    const top = ranked.slice(0, topK);
-    renderPassages(ranked, topK);
+    const top = ranked.slice(0, 6);
+    renderPassages(ranked, 6);
     const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
+    const chunkMs = Math.round(performance.now()-t0);
 
     const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
 - If the answer is not fully supported, say what is missing and ask for clarification.
 - Cite sources like [1], [2] matching the provided list.`;
     const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
 
-    const modelSel = document.getElementById('model');
-    const model = modelSel ? modelSel.value : 'gpt-5';
-    const inTok = estTokens(sys+user);
-    logStep(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+    const model = (document.getElementById('model')).value;
+    const approxTokens = Math.round((sys.length+user.length)/4);
+    logStep(`📦 Contexte construit (≈${approxTokens} tokens estimés).`, 'ok');
 
     logStep(`🤖 Appel LLM (${model})…`);
-    const tLLM0 = performance.now();
     const resp = await callLLM([
       {role:'system', content: sys},
       {role:'user', content: user}
     ], model);
-    const tLLM1 = performance.now();
 
-    const content = resp && resp.choices && resp.choices[0] && resp.choices[0].message
-      ? resp.choices[0].message.content || '(no content)'
-      : '(no content)';
-    const outTok = estTokens(content);
-    logStep(`✅ Réponse reçue en ${(tLLM1-tLLM0).toFixed(0)} ms (≈${outTok} tokens).`,'ok');
+    const content = resp?.choices?.[0]?.message?.content || '(no content)';
+    const pt = resp?.usage?.prompt_tokens ?? '—';
+    const ct = resp?.usage?.completion_tokens ?? '—';
+    const tot = resp?.usage?.total_tokens ?? '—';
+    const ms = resp?._duration_ms ?? resp?._client_duration_ms ?? 0;
 
-    document.getElementById('answer').innerHTML =
-      `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+    logStep(`✅ Réponse reçue en ${ms} ms (tokens: prompt ${pt}, completion ${ct}, total ${tot}).`,'ok');
 
+    document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
     const g = groundingScore(content, top);
-    const badges = document.getElementById('badges');
-    badges.innerHTML = '';
-    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
+
+    const badges = document.getElementById('badges'); badges.innerHTML='';
+    const b1 = document.createElement('span'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
     b1.textContent = g>0.45? 'Grounded' : (g>0.2? 'Partially grounded' : 'Low grounding');
     badges.appendChild(b1);
 
     const info = document.getElementById('ragInfo');
     info.innerHTML = `
       <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
-      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
-      <div class="muted">Le score mesure le recouvrement lexical (approx.).</div>
-      <div class="muted">Est. tokens in/out : ${inTok} / ${outTok}.</div>
+      <div>Durées : chunking+ranking ≈ ${chunkMs} ms · LLM ≈ ${ms} ms</div>
+      <div>Tokens (si dispo) : prompt ${pt} · completion ${ct} · total ${tot}</div>
+      <div class="muted">Le score “grounding” mesure le recouvrement lexical entre la réponse et les sources (approx.).</div>
     `;
+
   }catch(e){
     logStep('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
+  } finally {
+    busy(btn, false);
   }
 };
 
-/** ===== DIFF ===== */
+/** ====== DIFF EXPLORER ====== **/
 document.getElementById('improve').onclick = async ()=>{
+  const btn = document.getElementById('improve');
   try{
     const src = document.getElementById('src').value;
     const goal = document.getElementById('goal').value || 'Improve readability, robustness, add brief French comments.';
-    if (!src.trim()){ alert('Colle un code ou prompt à gauche'); return; }
+    if (!src.trim()){ alert('Colle un code ou un prompt à gauche'); return; }
 
-    const modelSel = document.getElementById('model');
-    const model = modelSel ? modelSel.value : 'gpt-5';
+    const model = (document.getElementById('model')).value;
     resetTimeline();
+    busy(btn, true, 'Improving…');
     logStep('🧠 Génération de la version améliorée…');
 
-    const sys = `You improve code or prompts. Return strictly a JSON object with fields:
-- "code": improved code/prompt as string
+    const sys = `You improve code OR prompts. Return strictly a JSON object with fields:
+- "code": improved code or prompt as string
 - "why": short French explanation of the main changes
 No markdown fences.`;
     const user = `Objectif: ${goal}
@@ -393,9 +440,7 @@ ${src}`;
       {role:'user', content: user}
     ], model);
 
-    let payload = out && out.choices && out.choices[0] && out.choices[0].message
-      ? out.choices[0].message.content || ''
-      : '';
+    let payload = out?.choices?.[0]?.message?.content || '';
     payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
     let obj;
     try{ obj = JSON.parse(payload); }
@@ -405,39 +450,61 @@ ${src}`;
     document.getElementById('dst').value = dst;
     document.getElementById('why').innerHTML = sanitize(obj.why||'');
 
+    // Diff
     const dmp = new diff_match_patch();
-    const diffs = dmp.diff_main(src, dst);
-    dmp.diff_cleanupSemantic(diffs);
-    const html = diffs.map(function(part){
-      var op = part[0], text = sanitize(part[1]);
-      if (op===1) return '<span class="ins">'+text+'</span>';
-      if (op===-1) return '<span class="del">'+text+'</span>';
+    const diffs = dmp.diff_main(src, dst); dmp.diff_cleanupSemantic(diffs);
+    const html = diffs.map(([op, text])=>{
+      text = sanitize(text);
+      if (op===1) return `<span class="ins">${text}</span>`;
+      if (op===-1) return `<span class="del">${text}</span>`;
       return text;
     }).join('');
     document.getElementById('diff').innerHTML = html;
 
-    const m = metrics(dst);
-    document.getElementById('metrics').innerHTML = `
-      <div>LOC: ${m.loc} · Avg line length: ${m.avg.toFixed(1)}</div>
-      <div>Est. cyclomatic (heuristique): ${m.cyclo}</div>
-      <div>Identifiers: ${m.idents} · Literals: ${m.lits}</div>
-    `;
+    // Metrics
+    document.getElementById('metrics').innerHTML = renderMetrics(dst);
+
     logStep('✅ Amélioration + diff prêts.','ok');
+
+    // Si on a un "Texte de test", traiter comme PROMPT et exécuter AVANT vs APRÈS
+    const testInput = document.getElementById('testInput').value.trim();
+    if (testInput){
+      logStep('🧪 Exécution du prompt AVANT…');
+      const before = await callLLM([{role:'user', content: src + `\n\n=== INPUT ===\n` + testInput}], model);
+      logStep('🧪 Exécution du prompt APRÈS…');
+      const after  = await callLLM([{role:'user', content: dst + `\n\n=== INPUT ===\n` + testInput}], model);
+
+      const bTxt = before?.choices?.[0]?.message?.content || '';
+      const aTxt = after ?.choices?.[0]?.message?.content || '';
+
+      document.getElementById('runBefore').innerHTML = `<div class="small">${sanitize(bTxt)}</div>`;
+      document.getElementById('runAfter').innerHTML  = `<div class="small">${sanitize(aTxt)}</div>`;
+      document.getElementById('promptRun').style.display = 'block';
+      logStep('🏁 Comparaison AVANT vs APRÈS affichée.','ok');
+    } else {
+      document.getElementById('promptRun').style.display = 'none';
+    }
 
   }catch(e){
     logStep('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
+  } finally {
+    busy(btn, false);
   }
 };
 
-function metrics(code){
+function renderMetrics(code){
   const lines = code.split(/\r?\n/);
   const loc = lines.length;
   const avg = lines.reduce((a,l)=>a+l.length,0)/Math.max(1,loc);
   const cyclo = (code.match(/\b(if|for|while|case|catch|&&|\|\|)\b/g)||[]).length + 1;
   const idents = (code.match(/[A-Za-z_][A-Za-z0-9_]*/g)||[]).length;
   const lits = (code.match(/(["'`].*?["'`]|[0-9]+(\.[0-9]+)?)/g)||[]).length;
-  return {loc, avg, cyclo, idents, lits};
+  return `
+    <div>LOC: ${loc} · Longueur moyenne de ligne: ${avg.toFixed(1)}</div>
+    <div>Complexité (heuristique): ${cyclo}</div>
+    <div>Identifiants: ${idents} · Littéraux: ${lits}</div>
+  `;
 }
 </script>
 </body>
