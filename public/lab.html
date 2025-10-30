@@ -72,7 +72,7 @@
       <div class="bar">
         <label>Model
           <select id="model">
-            <option value="gpt-5">gpt-5 (par défaut via ton API)</option>
+            <option value="gpt-5">gpt-5 (par défaut via l’API)</option>
             <option value="gpt-4o-mini">gpt-4o-mini</option>
             <option value="gpt-4o">gpt-4o</option>
           </select>
@@ -83,8 +83,8 @@
         <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).
-        Si vous mettez une clé perso, l’appel est fait avec <b>votre</b> clé (jamais stockée).
+        Par défaut, on passe par <code>/api/llm</code> (une seule fonction Vercel).  
+        Si vous mettez une clé perso, l’appel passe avec <b>votre</b> clé (jamais stockée).
       </div>
       <div class="small" style="margin-top:6px;">
         <div><b>1) RAG Glassbox</b> vous montre comment une réponse basée sur document est produite (extraction → découpe → sélection → réponse justifiée).</div>
@@ -115,7 +115,7 @@
               <li><b>Découpage</b> : le texte est découpé en « morceaux » (chunks).</li>
               <li><b>Classement</b> : on mesure quels morceaux parlent le plus de votre question.</li>
               <li><b>Réponse du modèle</b> : le LLM ne peut s’appuyer que sur ces morceaux → vous voyez lesquels.</li>
-              <li><b>But pédagogique</b> : comprendre que la qualité d’une réponse dépend <u>beaucoup</u> de ce qu’on lui a donné.</li>
+              <li><b>But pédagogique</b> : comprendre la chaîne complète d’un RAG simple.</li>
             </ul>
           </details>
 
@@ -185,7 +185,7 @@
             Avec <code>gpt-5</code> ça peut prendre 20–40 s ×2 → la timeline ci-dessous vous dit où on en est.
           </p>
           <div class="bar">
-            <input id="ctx" style="flex:1" placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur le jeu d’osselets antique »">
+            <input id="ctx" style="flex:1" placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur l’astragale antique »">
             <button class="primary" id="runTest">Lancer le test sur les 2 prompts</button>
           </div>
           <div class="grid grid-2">
@@ -205,19 +205,18 @@
         </div>
 
         <div class="small muted" style="margin-top:10px;">
-          Remarque : cette version appelle un endpoint “chat” → elle produit du texte.
-          Pour générer <b>des images</b>, il faudrait un endpoint dédié images (DALL·E, etc.) côté Vercel.
+          Remarque : cette version appelle <code>/api/llm</code> → texte.  
+          Pour les images : <code>POST /api/llm/image</code> avec <code>{ "prompt": "..." }</code>.
         </div>
       </div>
     </section>
   </div>
 
 <script>
-/** ====== CONFIG ====== **/
-const API_ROUTE = '/api/llm/chat';
+const API_ROUTE = '/api/llm';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
-/** ====== ONGLET UI ====== **/
+// onglets
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -227,32 +226,26 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 
-/** ====== OUTILS COMMUNS ====== **/
 function estTokens(txt){ return Math.max(1, Math.round((txt||'').length/4)); }
 function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
 
-/** appel LLM générique */
-async function callLLM(messages, model, extraHeaders = {}) {
-  const headers = {'Content-Type':'application/json', ...extraHeaders};
+async function callLLM(messages, model) {
+  const headers = { 'Content-Type':'application/json' };
   const userKey = document.getElementById('userKey').value.trim();
   if (userKey) headers['x-user-api-key'] = userKey;
 
-  // ne PAS envoyer temperature quand c'est gpt-5 chez toi
-  const payload = { model, messages };
   const res = await fetch(API_ROUTE, {
     method:'POST',
     headers,
-    body: JSON.stringify(payload)
+    body: JSON.stringify({ model, messages })
   });
   const raw = await res.text();
-  if (!res.ok) {
-    throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
-  }
+  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
   try { return JSON.parse(raw); } catch { return {choices:[{message:{content:raw}}]}; }
 }
 
-/** timeline RAG */
-function logStepRAG(html, cls=''){ 
+// --- timelines
+function logStepRAG(html, cls=''){
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
   el.innerHTML = html;
@@ -262,8 +255,7 @@ function logStepRAG(html, cls=''){
 }
 function resetTimelineRAG(){ document.getElementById('timeline').innerHTML=''; }
 
-/** timeline DIFF */
-function logStepDiff(html, cls=''){ 
+function logStepDiff(html, cls=''){
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
   el.innerHTML = html;
@@ -273,7 +265,7 @@ function logStepDiff(html, cls=''){
 }
 function resetTimelineDiff(){ document.getElementById('timeline-diff').innerHTML=''; }
 
-/** ====== RAG GLASSBOX ====== **/
+// --- RAG
 async function pdfToText(file){
   const start = performance.now();
   const buf = await file.arrayBuffer();
@@ -287,7 +279,7 @@ async function pdfToText(file){
     text += '\n' + t;
   }
   const dur = Math.round(performance.now() - start);
-  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms (moy/page ~${Math.round(text.length/pdf.numPages)} chars)`, 'ok');
+  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms`, 'ok');
   return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
 
@@ -308,8 +300,7 @@ function chunkText(text, opts={win:900, overlap:150}){
 
 const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
 function tokenize(s){
-  return s
-    .toLowerCase()
+  return s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9\s]/g,' ')
     .split(/\s+/).filter(w=>w && !STOP.has(w));
@@ -329,7 +320,7 @@ function tfidfRank(query, chunks){
     for (const t of terms) tf.set(t, (tf.get(t)||0)+1);
     let score = 0;
     for (const t of qset){
-      const idf = Math.log( (N+1) / ((df.get(t)||0)+1) );
+      const idf = Math.log((N+1)/((df.get(t)||0)+1));
       score += (tf.get(t)||0) * idf;
     }
     ch.score = score;
@@ -361,22 +352,22 @@ document.getElementById('runRag').onclick = async ()=>{
     resetTimelineRAG();
     const file = document.getElementById('pdfFile').files[0];
     const q = document.getElementById('question').value.trim();
-    if (!file) { alert('Choisissez un PDF'); return; }
-    if (!q) { alert('Écrivez une question'); return; }
+    if (!file) return alert('Choisissez un PDF');
+    if (!q) return alert('Écrivez une question');
 
     logStepRAG('🧩 Lecture du PDF & extraction texte…');
     const text = await pdfToText(file);
 
     logStepRAG('🧩 Chunking (fenêtre ~900, overlap 150)…');
     const chunks = chunkText(text);
-    logStepRAG(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/chunks.length)} chars) en 0 ms.`,'ok');
+    logStepRAG(`🔍 ${chunks.length} chunks générés.`, 'ok');
 
     logStepRAG('🧮 TF-IDF & ranking…');
     const ranked = tfidfRank(q, chunks);
     const top = ranked.slice(0, 6);
     renderPassages(ranked, 6);
-    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
 
+    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
     const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
 If the answer is not fully supported, explain what is missing and ask for clarification.
 Cite sources like [1], [2].`;
@@ -396,33 +387,34 @@ Cite sources like [1], [2].`;
     const content = resp?.choices?.[0]?.message?.content || '(no content)';
     logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens)`, 'ok');
 
-    document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+    document.getElementById('answer').innerHTML =
+      `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+
     const g = groundingScore(content, top);
     const badges = document.getElementById('badges');
     badges.innerHTML = '';
-    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
-    b1.textContent = g>0.45? 'Bien ancré dans le doc' : (g>0.2? 'Partiellement ancré' : 'Ancrage faible');
+    const b1 = document.createElement('div');
+    b1.className = 'badge ' + (g>0.45 ? 'ok' : (g>0.2 ? '' : 'low'));
+    b1.textContent = g>0.45 ? 'Bien ancré dans le doc' : (g>0.2 ? 'Partiellement ancré' : 'Ancrage faible');
     badges.appendChild(b1);
 
-    const info = document.getElementById('ragInfo');
-    info.innerHTML = `
+    document.getElementById('ragInfo').innerHTML = `
       <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
-      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
-      <div class="muted">Score = recouvrement lexical simple, juste pour illustrer.</div>
+      <div class="score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
+      <div class="muted">Score = recouvrement lexical simple, uniquement pour illustrer.</div>
     `;
-
   }catch(e){
     logStepRAG('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
   }
 };
 
-/** ====== DIFF EXPLORER ====== **/
+// --- DIFF EXPLORER
 document.getElementById('improve').onclick = async ()=>{
   const src = document.getElementById('src').value.trim();
+  if (!src) return alert('Mettez un prompt à gauche.');
   const goal = document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec un exemple, en français.';
   const model = document.getElementById('model').value;
-  if (!src){ alert('Mettez un prompt à gauche.'); return; }
   document.getElementById('improveStatus').textContent = '⏳ Génération du prompt amélioré…';
   try{
     const sys = `You improve user prompts or short pieces of code.
@@ -432,7 +424,6 @@ No markdown fences.`;
     const user = `Objectif: ${goal}
 === PROMPT ORIGINAL ===
 ${src}`;
-
     const out = await callLLM([
       {role:'system', content: sys},
       {role:'user', content: user}
@@ -447,22 +438,19 @@ ${src}`;
     document.getElementById('dst').value = dst;
     document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez lancer le test sur les 2.';
 
-    // Diff texte
     if (window.diff_match_patch) {
       const dmp = new diff_match_patch();
       const diffs = dmp.diff_main(src, dst);
       dmp.diff_cleanupSemantic(diffs);
-      const html = diffs.map(([op, text])=>{
+      document.getElementById('diff').innerHTML = diffs.map(([op, text])=>{
         text = sanitize(text);
         if (op===1) return `<span class="ins">${text}</span>`;
         if (op===-1) return `<span class="del">${text}</span>`;
         return text;
       }).join('');
-      document.getElementById('diff').innerHTML = html;
     } else {
       document.getElementById('diff').innerHTML = '<span class="muted">diff_match_patch non chargé.</span>';
     }
-
   }catch(e){
     document.getElementById('improveStatus').textContent = '⛔ '+(e.message||e);
     alert(e.message||e);
@@ -472,10 +460,10 @@ ${src}`;
 document.getElementById('runTest').onclick = async ()=>{
   const src = document.getElementById('src').value.trim();
   const dst = document.getElementById('dst').value.trim();
-  const model = document.getElementById('model').value;
   const ctx = document.getElementById('ctx').value.trim();
-  if (!src){ alert('Pas de prompt original.'); return; }
-  if (!dst){ alert('Générez d’abord le prompt amélioré.'); return; }
+  const model = document.getElementById('model').value;
+  if (!src) return alert('Pas de prompt original.');
+  if (!dst) return alert('Générez d’abord le prompt amélioré.');
 
   const btn = document.getElementById('runTest');
   btn.disabled = true;
@@ -483,31 +471,24 @@ document.getElementById('runTest').onclick = async ()=>{
   document.getElementById('outOrig').textContent = '';
   document.getElementById('outImproved').textContent = '';
   resetTimelineDiff();
-  logStepDiff('▶️ Lancement du test : 2 appels vont être faits (original + amélioré).');
+  logStepDiff('▶️ 2 appels vont être faits (original + amélioré).');
 
   try{
-    const start = performance.now();
-    logStepDiff('📨 Appel 1/2 avec le prompt original…');
-    const r1 = await callLLM([
-      {role:'user', content: ctx ? (ctx + '\n\n' + src) : src }
-    ], model);
-    const ms1 = Math.round(performance.now() - start);
+    logStepDiff('📨 Appel 1/2 (prompt original)…');
+    const start1 = performance.now();
+    const r1 = await callLLM([{role:'user', content: ctx ? ctx + '\n\n' + src : src}], model);
+    const ms1 = Math.round(performance.now()-start1);
     logStepDiff(`✅ Réponse 1/2 reçue en ${ms1} ms.`, 'ok');
-    const out1 = r1?.choices?.[0]?.message?.content || '(vide)';
-    document.getElementById('outOrig').textContent = out1;
+    document.getElementById('outOrig').textContent = r1?.choices?.[0]?.message?.content || '(vide)';
 
+    logStepDiff('📨 Appel 2/2 (prompt amélioré)…');
     const start2 = performance.now();
-    logStepDiff('📨 Appel 2/2 avec le prompt amélioré…');
-    const r2 = await callLLM([
-      {role:'user', content: ctx ? (ctx + '\n\n' + dst) : dst }
-    ], model);
-    const ms2 = Math.round(performance.now() - start2);
+    const r2 = await callLLM([{role:'user', content: ctx ? ctx + '\n\n' + dst : dst}], model);
+    const ms2 = Math.round(performance.now()-start2);
     logStepDiff(`✅ Réponse 2/2 reçue en ${ms2} ms.`, 'ok');
-    const out2 = r2?.choices?.[0]?.message?.content || '(vide)';
-    document.getElementById('outImproved').textContent = out2;
+    document.getElementById('outImproved').textContent = r2?.choices?.[0]?.message?.content || '(vide)';
 
-    logStepDiff('🎯 Test terminé. Comparez visuellement les 2 sorties.','ok');
-
+    logStepDiff('🎯 Test terminé. Comparez les 2 sorties.','ok');
   }catch(e){
     logStepDiff('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
