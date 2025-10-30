@@ -5,16 +5,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AI Lab — RAG Glassbox & Diff Explorer</title>
   <meta name="color-scheme" content="dark light">
+
+  <!-- même CSS global que le site -->
+  <link rel="stylesheet" href="/style.css">
+
   <style>
     :root{
       --bg:#0a1220; --card:#0c1628; --muted:#9fb0c9; --text:#eef3f8; --acc:#63e; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
       --border: #1a2a44;
     }
-    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
-    a{color:#9ed0ff}
-    .shell{max-width:1200px;margin:24px auto;padding:0 16px}
-    header h1{margin:0 0 6px}
-    header p{margin:0 0 16px;color:var(--muted)}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    /* on laisse nav.js injecter la nav globale – on se met juste en dessous */
+    .shell{
+      max-width:1200px;
+      margin:0 auto;
+      padding:calc(var(--nt-nav-h, 64px) + 20px) 16px 40px;
+    }
+
+    header.page-head h1{margin:0 0 6px}
+    header.page-head p{margin:0 0 16px;color:var(--muted)}
+
     .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
     input,select,button,textarea{background:#0f1b30;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
     input::placeholder,textarea::placeholder{color:#7e8aa3}
@@ -30,6 +45,7 @@
     .grid-2{grid-template-columns:1fr 1fr}
     @media (max-width:1000px){.grid-2{grid-template-columns:1fr}}
     .split{display:grid;grid-template-columns:1.1fr 1.4fr;gap:12px;min-height:520px}
+    @media (max-width:1000px){.split{grid-template-columns:1fr}}
     .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
     .box h4{margin:0 0 8px}
     .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:240px;overflow:auto}
@@ -49,63 +65,40 @@
     .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
     details summary{cursor:pointer}
-    .img-preview{max-width:100%;border-radius:8px;border:1px solid #1f2b45;background:#0f1b30;padding:6px;display:inline-block}
-    /* NEW: préserver l’ASCII multi-lignes */
-    .pre{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
+    .legend{background:#0f1b30;border:1px dashed #213356;border-radius:10px;padding:8px 10px;margin-top:10px}
   </style>
 
-  <!-- pdf.js -->
+  <!-- pdf.js sans SRI -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <!-- diff-match-patch -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
 
-  <!-- diff-match-patch (CDN optionnel) + Fallback -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"
-          onload="window.__dmpReady='cdn'"
-          onerror="window.__dmpReady='err'"></script>
-  <script>
-  (function(){
-    function ensureDMP(){
-      if (window.diff_match_patch) return 'cdn';
-      class SimpleDiff {
-        diff_main(a,b){
-          const A=a.split(/\r?\n/), B=b.split(/\r?\n/);
-          const out=[], m=Math.max(A.length,B.length);
-          for(let i=0;i<m;i++){
-            const la=A[i]??'', lb=B[i]??'';
-            if(la===lb){ out.push([0, la+(i<m-1?'\n':'')]); }
-            else{ if(la) out.push([-1, la+'\n']); if(lb) out.push([1, lb+'\n']); }
-          }
-          return out;
-        }
-        diff_cleanupSemantic(){}
-      }
-      window.diff_match_patch = SimpleDiff;
-      return 'fallback';
-    }
-    document.addEventListener('DOMContentLoaded', ()=>{
-      const src = ensureDMP();
-      window.__dmpReady = true;
-      window.__dmpSource = src;
-    });
-  })();
-  </script>
+  <!-- nav + feedback + site (analytics injecté ici) -->
+  <script defer src="/assets/js/nav.js"></script>
+  <script defer src="/assets/js/feedback.js"></script>
+  <script defer src="/assets/js/site.js"></script>
 </head>
 <body>
+
+  <!-- le header réel sera reconstruit par /assets/js/nav.js, on n’a pas besoin de le dupliquer ici -->
+
   <div class="shell">
-    <header>
+    <header class="page-head">
       <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
       <p>
-        Deux mini-outils pédagogiques, qui utilisent <b>votre</b> endpoint Vercel pour appeler un LLM.
-        Onglet 1 = RAG; Onglet 2 = comparaison de prompts + (option) image.
+        Le premier outil vous montre <b>comment une réponse d’IA s’appuie vraiment sur votre PDF</b>, étape par étape.
+        Le second compare <b>votre texte ou prompt</b> avec une version améliorée par l’IA, et vous laisse tester les deux.
+        C’est pensé pour expliquer à des collègues / apprenants ce qui se passe “sous le capot”.
       </p>
     </header>
 
-    <!-- Config globale -->
+    <!-- Barre de config commune -->
     <div class="card">
       <div class="bar">
-        <label>Model
+        <label>Modèle
           <select id="model">
-            <option value="gpt-5">gpt-5 (par défaut)</option>
+            <option value="gpt-5">gpt-5 (par défaut via votre API)</option>
             <option value="gpt-4o-mini">gpt-4o-mini</option>
             <option value="gpt-4o">gpt-4o</option>
           </select>
@@ -116,22 +109,30 @@
         <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        On appelle <code>/api/llm</code>.  
-        Texte ↔ image est décidé côté client via <code>mode</code>.
+        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).  
+        Si vous saisissez une clé perso, l’appel est fait avec <b>votre</b> clé (jamais stockée).
+      </div>
+      <div class="small" style="margin-top:6px;">
+        <div><b>1) RAG Glassbox</b> = montrer le pipeline “je pose une question sur un PDF → l’IA répond en se basant sur des passages précis”.</div>
+        <div><b>2) Diff Explorer</b> = montrer “ce que change une bonne consigne / un bon prompt” et si ça donne vraiment une meilleure sortie.</div>
       </div>
     </div>
 
     <!-- Onglets -->
     <div class="tabs">
-      <div class="tab active" data-tab="rag">1) RAG Glassbox</div>
+      <div class="tab active" data-tab="rag">1) RAG Glassbox — “Explique-moi ta réponse”</div>
       <div class="tab" data-tab="diff">2) Code & Prompt Diff Explorer</div>
     </div>
 
-    <!-- Panel RAG (inchangé) -->
+    <!-- Panel RAG -->
     <section class="panel active" id="panel-rag">
       <div class="card grid grid-2">
         <div>
           <h3>Document & Question</h3>
+          <p class="small muted">
+            RAG = <b>Retrieval Augmented Generation</b> : avant de faire répondre l’IA, on va d’abord <b>récupérer les bons morceaux du document</b>.
+            Ici, on vous montre ces morceaux.
+          </p>
           <div class="bar">
             <input type="file" id="pdfFile" accept="application/pdf">
             <input id="question" style="flex:1" placeholder="Ex. « Quels sont les objectifs du projet ? »">
@@ -140,14 +141,16 @@
           <details class="card">
             <summary><b>Ce que vous allez voir</b></summary>
             <ul>
-              <li>Lecture PDF côté navigateur</li>
-              <li>Découpage en chunks</li>
-              <li>Classement des chunks par rapport à la question</li>
-              <li>Appel LLM avec ces chunks seulement</li>
+              <li><b>Lecture PDF côté navigateur</b> (rien n’est envoyé au serveur avant l’appel LLM)</li>
+              <li><b>Découpage en chunks</b> (on coupe le PDF en petits blocs exploitables)</li>
+              <li><b>Classement</b> : les blocs les plus proches de votre question passent en premier</li>
+              <li><b>Appel LLM</b> : la réponse est forcée à citer les blocs → vous voyez d’où ça vient</li>
             </ul>
           </details>
+
           <div class="card">
             <h4>Timeline détaillée (RAG)</h4>
+            <p class="small muted">C’est le “film” de ce que fait l’outil : si c’est lent, vous saurez où.</p>
             <div id="timeline" class="timeline"></div>
           </div>
         </div>
@@ -155,16 +158,29 @@
         <div class="split">
           <div class="box" id="leftPane">
             <h4>Passages sélectionnés</h4>
+            <p class="small muted">
+              Ce sont les morceaux du PDF que l’outil juge les plus pertinents pour votre question.
+              Chaque bloc a un <b>score</b> : plus il est haut, plus c’est supposé être utile.
+            </p>
             <div id="passages" class="small"></div>
             <hr>
-            <h4>Infos</h4>
+            <h4>Infos (comment lire)</h4>
             <div id="ragInfo" class="small muted"></div>
+            <div class="legend small">
+              <b>Chunks retenus</b> : liste des blocs envoyés au modèle.<br>
+              <b>Jauge</b> : estimation très simple “est-ce que la réponse réutilise bien le vocabulaire des blocs ?”.<br>
+              <b>Pas scientifique</b> : c’est une aide visuelle pour expliquer le principe d’“ancrage” dans le document.
+            </div>
           </div>
           <div class="box" id="rightPane">
             <h4>Réponse du modèle</h4>
+            <p class="small muted">
+              Le modèle doit répondre <b>uniquement</b> avec les sources envoyées.
+              Les références <b>[1]</b>, <b>[2]</b> renvoient aux passages du panneau gauche.
+            </p>
             <div id="answer"></div>
             <div class="badges" id="badges"></div>
-            <div class="footer-note">Les références [n] renvoient aux passages de gauche.</div>
+            <div class="footer-note">Si la réponse est vague ou sans références, c’est souvent que la question dépasse le PDF.</div>
           </div>
         </div>
       </div>
@@ -173,71 +189,85 @@
     <!-- Panel Diff -->
     <section class="panel" id="panel-diff">
       <div class="card">
-        <h3>Code & Prompt Diff Explorer (avec test réel + image)</h3>
+        <h3>Code & Prompt Diff Explorer (avec test réel)</h3>
+        <p class="small muted">
+          Objectif : montrer que <b>“écrire mieux la demande”</b> peut produire une meilleure sortie.  
+          Étapes : (1) vous collez votre prompt, (2) l’IA le réécrit, (3) on teste les 2 sur le même modèle et on affiche les sorties côte à côte.
+        </p>
 
+        <!-- 1. Entrée -->
         <div class="grid grid-2">
           <div class="box">
-            <h4>1. Prompt / code d’origine</h4>
-            <textarea id="src" rows="6" placeholder="Ex. 'Décris-moi ce tableau en 3 phrases simples.'"></textarea>
-            <div class="small muted">Version la plus simple, pas super guidée.</div>
+            <h4>1. Prompt / texte d’origine</h4>
+            <textarea id="src" rows="6" placeholder="Ex. « Fais un dessin de chien en ASCII »"></textarea>
+            <div class="small muted">
+              Mettez ici la version “comme l’utilisateur l’aurait écrite”.
+            </div>
           </div>
           <div class="box">
-            <h4>2. Objectif</h4>
-            <input id="goal" placeholder="Ex. +détails, +style, exemples, niveau B1, ton pédagogique…">
+            <h4>2. Ce que vous voulez en mieux</h4>
+            <input id="goal" placeholder="Ex. Plus de détails, format structuré, ton pédagogique, exemples…">
             <button class="primary" id="improve">Améliorer avec l’IA</button>
             <div class="small muted" id="improveStatus"></div>
           </div>
         </div>
 
+        <!-- 2. Résultat IA + diff -->
         <div class="grid grid-2" style="margin-top:14px;">
           <div class="box">
-            <h4>Prompt amélioré</h4>
+            <h4>Prompt amélioré (IA)</h4>
             <textarea id="dst" rows="6" placeholder="La version réécrite apparaîtra ici…"></textarea>
+            <p class="small muted">Vous pouvez retoucher cette version avant de la tester.</p>
           </div>
           <div class="box">
-            <h4>Diff texte</h4>
+            <h4>Diff texte (ce qui a changé)</h4>
             <div id="diff" class="diff small"></div>
+            <div class="legend small">
+              <span class="ins">vert = ajouté</span>,
+              <span class="del">rouge barré = enlevé</span>.
+              Ça sert à expliquer “ce que l’IA a rajouté”.
+            </div>
           </div>
         </div>
 
+        <!-- 3. Test réel -->
         <div class="card" style="margin-top:14px;">
           <h4>3. Tester les deux sur le même modèle</h4>
           <p class="small muted">
-            Vous pouvez demander un résultat texte (par défaut) ou cocher “image” pour que <b>les deux</b> appels génèrent des images.
+            On envoie <b>deux requêtes</b> à votre API : l’une avec le prompt original, l’autre avec le prompt amélioré.
+            Avec <code>gpt-5</code> ça peut prendre 20–40 s ×2 → regardez la timeline ci-dessous pour savoir où ça en est.
           </p>
           <div class="bar">
-            <input id="ctx" style="flex:1" placeholder="Contexte (facultatif), ex. 'Sujet : jeux antiques pour des élèves de 8H'">
-            <label class="small"><input type="checkbox" id="genImage"> Générer une image pour les 2 prompts</label>
-            <button class="primary" id="runTest">Lancer le test</button>
+            <input id="ctx" style="flex:1" placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur le jeu d’osselets antique »">
+            <button class="primary" id="runTest">Lancer le test sur les 2 prompts</button>
           </div>
           <div class="grid grid-2">
             <div class="box">
               <h4>Sortie avec prompt original</h4>
-              <!-- NEW: pre pour préserver l’ASCII -->
-              <pre id="outOrig" class="small mono pre"></pre>
-              <div id="outOrigImg"></div>
+              <div id="outOrig" class="small"></div>
             </div>
             <div class="box">
               <h4>Sortie avec prompt amélioré</h4>
-              <!-- NEW: pre pour préserver l’ASCII -->
-              <pre id="outImproved" class="small mono pre"></pre>
-              <div id="outImprovedImg"></div>
+              <div id="outImproved" class="small"></div>
             </div>
           </div>
           <details style="margin-top:10px;">
-            <summary>Timeline (prompts)</summary>
+            <summary>Voir la timeline du test</summary>
             <div id="timeline-diff" class="timeline"></div>
           </details>
+        </div>
+
+        <div class="small muted" style="margin-top:10px;">
+          Remarque : cette version appelle un endpoint texte. Pour produire des images, il faudra un endpoint image séparé.
         </div>
       </div>
     </section>
   </div>
 
 <script>
-const API_ROUTE = '/api/llm';
+const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
-/* onglets */
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -247,56 +277,25 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 
-function sanitize(s){return (s||'').toString().replace(/[<>&]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[m]));}
-function estTokens(txt){return Math.max(1, Math.round((txt||'').length/4));}
+function estTokens(txt){ return Math.max(1, Math.round((txt||'').length/4)); }
+function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
 
-/* appel LLM texte */
-async function callLLMText(messages, model){
-  const headers = {'Content-Type':'application/json'};
+async function callLLM(messages, model, extraHeaders = {}) {
+  const headers = {'Content-Type':'application/json', ...extraHeaders};
   const userKey = document.getElementById('userKey').value.trim();
   if (userKey) headers['x-user-api-key'] = userKey;
-
+  const payload = { model, messages };
   const res = await fetch(API_ROUTE, {
     method:'POST',
     headers,
-    body: JSON.stringify({ model, messages })
+    body: JSON.stringify(payload)
   });
   const raw = await res.text();
-  if (!res.ok) throw new Error(`API → ${res.status}: ${raw}`);
+  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
   try { return JSON.parse(raw); } catch { return {choices:[{message:{content:raw}}]}; }
 }
 
-/* appel image (avec retry + fallback taille) */
-async function callLLMImage(prompt, size='1024x1024'){
-  const headers = {'Content-Type':'application/json'};
-  const userKey = document.getElementById('userKey').value.trim();
-  if (userKey) headers['x-user-api-key'] = userKey;
-
-  async function tryOnce(sz){
-    const res = await fetch(API_ROUTE, {
-      method:'POST',
-      headers,
-      body: JSON.stringify({ mode:'image', prompt, size: sz })
-    });
-    const raw = await res.text();
-    if (!res.ok) throw new Error(`API image → ${res.status}: ${raw}`);
-    return JSON.parse(raw);
-  }
-
-  try {
-    return await tryOnce(size);
-  } catch (e) {
-    // Retry simple si 5xx / upstream error: on tente en 512x512
-    const msg = String(e);
-    if (msg.includes('502') || msg.includes('server_error') || msg.includes('image_upstream_error')) {
-      await new Promise(r=>setTimeout(r, 500));
-      return await tryOnce('512x512');
-    }
-    throw e;
-  }
-}
-
-/* timeline RAG */
+/* TIMELINE RAG */
 function logStepRAG(html, cls=''){
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
@@ -305,135 +304,157 @@ function logStepRAG(html, cls=''){
   root.appendChild(el);
   root.scrollTop = root.scrollHeight;
 }
-function resetTimelineRAG(){document.getElementById('timeline').innerHTML='';}
+function resetTimelineRAG(){ document.getElementById('timeline').innerHTML=''; }
 
-/* RAG (inchangé) */
+/* TIMELINE DIFF */
+function logStepDiff(html, cls=''){
+  const el = document.createElement('div');
+  el.className = `tstep ${cls}`;
+  el.innerHTML = html;
+  const root = document.getElementById('timeline-diff');
+  root.appendChild(el);
+  root.scrollTop = root.scrollHeight;
+}
+function resetTimelineDiff(){ document.getElementById('timeline-diff').innerHTML=''; }
+
+/* ===== RAG ===== */
 async function pdfToText(file){
   const start = performance.now();
   const buf = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({data:buf}).promise;
   logStepRAG(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
-  let text='';
-  for (let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const c=await page.getTextContent();
-    text += '\n' + c.items.map(it=>it.str).join(' ');
+  let text = '';
+  for (let i=1; i<=pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const c = await page.getTextContent();
+    const t = c.items.map(it=>it.str).join(' ');
+    text += '\n' + t;
   }
-  const dur = Math.round(performance.now()-start);
-  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms.`, 'ok');
+  const dur = Math.round(performance.now() - start);
+  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms (moy/page ~${Math.round(text.length/pdf.numPages)} chars)`, 'ok');
   return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
+
 function chunkText(text, opts={win:900, overlap:150}){
   const clean = text.replace(/\r/g,'');
-  const parts=[];
-  let i=0;
-  while(i<clean.length){
-    const s=i, e=Math.min(clean.length, i+opts.win);
-    let slice=clean.slice(s,e);
+  const parts = [];
+  let i = 0;
+  while (i < clean.length){
+    const s = i, e = Math.min(clean.length, i+opts.win);
+    let slice = clean.slice(s, e);
     const extra = clean.slice(e, e+120).match(/^[^.!?]*[.!?]/);
     if (extra) slice += extra[0];
-    parts.push({id:parts.length+1, text:slice.trim()});
+    parts.push({id: parts.length+1, start:s, end:s+slice.length, text:slice.trim()});
     i += (opts.win - opts.overlap);
   }
   return parts;
 }
-const STOP=new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
+
+const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
 function tokenize(s){
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  return s
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9\s]/g,' ')
     .split(/\s+/).filter(w=>w && !STOP.has(w));
 }
 function tfidfRank(query, chunks){
-  const q=tokenize(query);
-  const df=new Map();
+  const q = tokenize(query);
+  const df = new Map();
   for (const ch of chunks){
-    const seen=new Set(tokenize(ch.text));
-    for (const t of seen) df.set(t,(df.get(t)||0)+1);
+    const seen = new Set(tokenize(ch.text));
+    for (const t of seen) df.set(t, (df.get(t)||0)+1);
   }
-  const N=chunks.length;
-  const qset=new Set(q);
+  const N = chunks.length;
+  const qset = new Set(q);
   for (const ch of chunks){
-    const terms=tokenize(ch.text);
-    const tf=new Map();
-    for (const t of terms) tf.set(t,(tf.get(t)||0)+1);
-    let score=0;
+    const terms = tokenize(ch.text);
+    const tf = new Map();
+    for (const t of terms) tf.set(t, (tf.get(t)||0)+1);
+    let score = 0;
     for (const t of qset){
-      const idf=Math.log((N+1)/((df.get(t)||0)+1));
-      score += (tf.get(t)||0)*idf;
+      const idf = Math.log( (N+1) / ((df.get(t)||0)+1) );
+      score += (tf.get(t)||0) * idf;
     }
-    ch.score=score;
+    ch.score = score;
   }
   return chunks.sort((a,b)=>b.score-a.score);
 }
 function renderPassages(list, topk){
-  const root=document.getElementById('passages');
-  root.innerHTML='';
-  list.slice(0,topk).forEach((ch,idx)=>{
-    const div=document.createElement('div');
+  const root = document.getElementById('passages');
+  root.innerHTML = '';
+  list.slice(0, topk).forEach((ch, idx)=>{
+    const div = document.createElement('div');
     div.className='card';
-    div.innerHTML=`<div class="pill">#${idx+1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
-    <div class="small">${sanitize(ch.text)}</div>`;
+    div.innerHTML = `<div class="pill">#${idx+1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
+      <div class="small">${sanitize(ch.text)}</div>`;
     root.appendChild(div);
   });
 }
 function groundingScore(answer, passages){
-  const a=new Set(tokenize(answer));
-  const p=new Set(tokenize(passages.map(p=>p.text).join(' ')));
-  let inter=0; for (const t of a) if (p.has(t)) inter++;
-  const g=a.size? inter/a.size : 0;
-  return Math.max(0,Math.min(1,g));
+  const a = new Set(tokenize(answer));
+  const p = new Set(tokenize(passages.map(p=>p.text).join(' ')));
+  let inter = 0;
+  for (const t of a) if (p.has(t)) inter++;
+  const g = a.size ? inter / a.size : 0;
+  return Math.max(0, Math.min(1, g));
 }
 
-document.getElementById('runRag').onclick = async () => {
+document.getElementById('runRag').onclick = async ()=>{
   try{
     resetTimelineRAG();
-    const file=document.getElementById('pdfFile').files[0];
-    const q=document.getElementById('question').value.trim();
-    if (!file){alert('Choisissez un PDF');return;}
-    if (!q){alert('Écrivez une question');return;}
+    const file = document.getElementById('pdfFile').files[0];
+    const q = document.getElementById('question').value.trim();
+    if (!file) { alert('Choisissez un PDF'); return; }
+    if (!q) { alert('Écrivez une question'); return; }
 
     logStepRAG('🧩 Lecture du PDF & extraction texte…');
-    const text=await pdfToText(file);
-    logStepRAG('🧩 Chunking…');
-    const chunks=chunkText(text);
-    logStepRAG(`🔍 ${chunks.length} chunks générés.`, 'ok');
+    const text = await pdfToText(file);
+
+    logStepRAG('🧩 Chunking (fenêtre ~900, overlap 150)…');
+    const chunks = chunkText(text);
+    logStepRAG(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/chunks.length)} chars).`,'ok');
 
     logStepRAG('🧮 TF-IDF & ranking…');
-    const ranked=tfidfRank(q, chunks);
-    const top=ranked.slice(0,6);
+    const ranked = tfidfRank(q, chunks);
+    const top = ranked.slice(0, 6);
     renderPassages(ranked, 6);
-    const ctx=top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
+    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
 
-    const sys=`You are a careful RAG assistant. Answer ONLY with the SOURCES, citing [1], [2]. If missing info, say it.`;
-    const user=`QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
-    const model=document.getElementById('model').value;
-    logStepRAG(`📦 Contexte construit (≈${estTokens(sys+user)} tokens).`,'ok');
+    const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
+If the answer is not fully supported, explain what is missing and ask for clarification.
+Cite sources like [1], [2].`;
+    const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
 
-    const t0=performance.now();
+    const model = document.getElementById('model').value;
+    const inTok = estTokens(sys+user);
+    logStepRAG(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+
+    const t0 = performance.now();
     logStepRAG(`🤖 Appel LLM (${model})…`);
-    const resp=await callLLMText([
-      {role:'system', content:sys},
-      {role:'user', content:user}
+    const resp = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
     ], model);
-    const ms=Math.round(performance.now()-t0);
-    const content=resp?.choices?.[0]?.message?.content || '(pas de contenu)';
-    logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens).`,'ok');
+    const ms = Math.round(performance.now() - t0);
+    const content = resp?.choices?.[0]?.message?.content || '(no content)';
+    logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens)`, 'ok');
 
-    document.getElementById('answer').innerHTML =
-      `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
-    const g=groundingScore(content, top);
-    const badges=document.getElementById('badges');
-    badges.innerHTML='';
-    const b=document.createElement('div');
-    b.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
-    b.textContent = g>0.45 ? 'Bien ancré' : (g>0.2 ? 'Partiel' : 'Faible');
-    badges.appendChild(b);
+    document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
+    const g = groundingScore(content, top);
+    const badges = document.getElementById('badges');
+    badges.innerHTML = '';
+    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
+    b1.textContent = g>0.45? 'Bien ancré' : (g>0.2? 'Partiellement ancré' : 'Ancrage faible');
+    badges.appendChild(b1);
 
-    const info=document.getElementById('ragInfo');
-    info.innerHTML=`
+    const info = document.getElementById('ragInfo');
+    info.innerHTML = `
       <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
-      <div class="score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
-      <div class="muted">Score = recouvrement lexical simplifié.</div>`;
+      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
+      <div class="muted">Score = recouvrement lexical simplifié, seulement pour montrer le principe.</div>
+    `;
+
   }catch(e){
     logStepRAG('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
@@ -441,141 +462,101 @@ document.getElementById('runRag').onclick = async () => {
 };
 
 /* ===== DIFF ===== */
-function logStepDiff(html, cls=''){
-  const el=document.createElement('div');
-  el.className=`tstep ${cls}`;
-  el.innerHTML=html;
-  const root=document.getElementById('timeline-diff');
-  root.appendChild(el);
-  root.scrollTop=root.scrollHeight;
-}
-function resetTimelineDiff(){document.getElementById('timeline-diff').innerHTML='';}
-
-document.getElementById('improve').onclick = async () => {
-  const src=document.getElementById('src').value.trim();
-  const goal=document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec exemple.';
-  const model=document.getElementById('model').value;
-  if (!src){alert('Mettez un prompt à gauche.');return;}
-  document.getElementById('improveStatus').textContent='⏳ Génération du prompt amélioré…';
+document.getElementById('improve').onclick = async ()=>{
+  const src = document.getElementById('src').value.trim();
+  const goal = document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec un exemple, en français.';
+  const model = document.getElementById('model').value;
+  if (!src){ alert('Mettez un prompt à gauche.'); return; }
+  document.getElementById('improveStatus').textContent = '⏳ Génération du prompt amélioré…';
   try{
-    const sys=`You improve user prompts or short pieces of code.
-Return strictly JSON:
-{ "code": "...improved...", "why": "FR explanation" }`;
-    const user=`Objectif: ${goal}
+    const sys = `You improve user prompts or short pieces of code.
+Return a JSON object with exactly:
+{ "code": "...improved prompt...", "why": "short French explanation" }
+No markdown fences.`;
+    const user = `Objectif: ${goal}
 === PROMPT ORIGINAL ===
 ${src}`;
 
-    const out=await callLLMText([
-      {role:'system', content:sys},
-      {role:'user', content:user}
+    const out = await callLLM([
+      {role:'system', content: sys},
+      {role:'user', content: user}
     ], model);
-
-    let payload=out?.choices?.[0]?.message?.content || '';
+    let payload = out?.choices?.[0]?.message?.content || '';
     payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
     let obj;
-    try{obj=JSON.parse(payload);}catch{throw new Error('Réponse non-JSON');}
+    try{ obj = JSON.parse(payload); }
+    catch{ throw new Error('Réponse non-JSON, réessayez.'); }
 
-    const dst=obj.code || '';
-    document.getElementById('dst').value=dst;
-    document.getElementById('improveStatus').textContent='✅ Prompt amélioré généré. Lancez le test.';
+    const dst = obj.code || '';
+    document.getElementById('dst').value = dst;
+    document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez lancer le test sur les 2.';
 
-    if (window.diff_match_patch){
-      const dmp=new diff_match_patch();
-      const diffs=dmp.diff_main(src, dst);
-      if (typeof dmp.diff_cleanupSemantic === 'function') dmp.diff_cleanupSemantic(diffs);
-      const html=diffs.map(([op,text])=>{
-        text=sanitize(text);
+    if (window.diff_match_patch) {
+      const dmp = new diff_match_patch();
+      const diffs = dmp.diff_main(src, dst);
+      dmp.diff_cleanupSemantic(diffs);
+      const html = diffs.map(([op, text])=>{
+        text = sanitize(text);
         if (op===1) return `<span class="ins">${text}</span>`;
         if (op===-1) return `<span class="del">${text}</span>`;
         return text;
       }).join('');
-      document.getElementById('diff').innerHTML=html;
+      document.getElementById('diff').innerHTML = html;
     } else {
-      document.getElementById('diff').innerHTML='<span class="muted">diff_match_patch non chargé.</span>';
+      document.getElementById('diff').innerHTML = '<span class="muted">diff_match_patch non chargé.</span>';
     }
 
   }catch(e){
-    document.getElementById('improveStatus').textContent='⛔ '+(e.message||e);
+    document.getElementById('improveStatus').textContent = '⛔ '+(e.message||e);
     alert(e.message||e);
   }
 };
 
-document.getElementById('runTest').onclick = async () => {
-  const src=document.getElementById('src').value.trim();
-  const dst=document.getElementById('dst').value.trim();
-  const ctx=document.getElementById('ctx').value.trim();
-  const model=document.getElementById('model').value;
-  const wantImg=document.getElementById('genImage').checked;
-  if (!src){alert('Pas de prompt original.');return;}
-  if (!dst){alert('Générez d’abord le prompt amélioré.');return;}
+document.getElementById('runTest').onclick = async ()=>{
+  const src = document.getElementById('src').value.trim();
+  const dst = document.getElementById('dst').value.trim();
+  const model = document.getElementById('model').value;
+  const ctx = document.getElementById('ctx').value.trim();
+  if (!src){ alert('Pas de prompt original.'); return; }
+  if (!dst){ alert('Générez d’abord le prompt amélioré.'); return; }
 
-  const btn=document.getElementById('runTest');
-  btn.disabled=true;
-  btn.textContent='⏳ Test en cours…';
-  document.getElementById('outOrig').textContent='';
-  document.getElementById('outImproved').textContent='';
-  document.getElementById('outOrigImg').innerHTML='';
-  document.getElementById('outImprovedImg').innerHTML='';
+  const btn = document.getElementById('runTest');
+  btn.disabled = true;
+  btn.textContent = '⏳ Test en cours…';
+  document.getElementById('outOrig').textContent = '';
+  document.getElementById('outImproved').textContent = '';
   resetTimelineDiff();
-  logStepDiff('▶️ Test démarré : 2 appels vont être faits.','ok');
+  logStepDiff('▶️ Lancement du test : 2 appels vont être faits (original + amélioré).');
 
   try{
-    if (!wantImg){
-      // 1) texte avec prompt original
-      logStepDiff('📨 Appel 1/2 (prompt original, texte)…');
-      const r1=await callLLMText([{role:'user', content: ctx ? (ctx+'\n\n'+src) : src}], model);
-      const out1=r1?.choices?.[0]?.message?.content || '(vide)';
-      document.getElementById('outOrig').textContent=out1;
-      logStepDiff('✅ Sortie 1/2 reçue.','ok');
+    const start = performance.now();
+    logStepDiff('📨 Appel 1/2 avec le prompt original…');
+    const r1 = await callLLM([
+      {role:'user', content: ctx ? (ctx + '\n\n' + src) : src }
+    ], model);
+    const ms1 = Math.round(performance.now() - start);
+    logStepDiff(`✅ Réponse 1/2 reçue en ${ms1} ms.`, 'ok');
+    const out1 = r1?.choices?.[0]?.message?.content || '(vide)';
+    document.getElementById('outOrig').textContent = out1;
 
-      // 2) texte avec prompt amélioré
-      logStepDiff('📨 Appel 2/2 (prompt amélioré, texte)…');
-      const r2=await callLLMText([{role:'user', content: ctx ? (ctx+'\n\n'+dst) : dst}], model);
-      const out2=r2?.choices?.[0]?.message?.content || '(vide)';
-      document.getElementById('outImproved').textContent=out2;
-      logStepDiff('✅ Sortie 2/2 reçue.','ok');
-    } else {
-      // 1) image avec prompt original
-      logStepDiff('🖼 Appel 1/2 (prompt original, image)…');
-      const img1=await callLLMImage(ctx ? (ctx+'\n\n'+src) : src);
-      if (img1.image_base64){
-        const im=document.createElement('img');
-        im.src='data:image/png;base64,'+img1.image_base64;
-        im.alt='Image générée (original)';
-        im.className='img-preview';
-        document.getElementById('outOrigImg').appendChild(im);
-        document.getElementById('outOrig').textContent='(image générée ci-dessus)';
-        logStepDiff('✅ Image 1/2 générée.','ok');
-      } else {
-        document.getElementById('outOrig').textContent='(pas d’image retournée)';
-        logStepDiff('⚠️ Pas d’image pour le prompt original.','warn');
-      }
+    const start2 = performance.now();
+    logStepDiff('📨 Appel 2/2 avec le prompt amélioré…');
+    const r2 = await callLLM([
+      {role:'user', content: ctx ? (ctx + '\n\n' + dst) : dst }
+    ], model);
+    const ms2 = Math.round(performance.now() - start2);
+    logStepDiff(`✅ Réponse 2/2 reçue en ${ms2} ms.`, 'ok');
+    const out2 = r2?.choices?.[0]?.message?.content || '(vide)';
+    document.getElementById('outImproved').textContent = out2;
 
-      // 2) image avec prompt amélioré
-      logStepDiff('🖼 Appel 2/2 (prompt amélioré, image)…');
-      const img2=await callLLMImage(ctx ? (ctx+'\n\n'+dst) : dst);
-      if (img2.image_base64){
-        const im2=document.createElement('img');
-        im2.src='data:image/png;base64,'+img2.image_base64;
-        im2.alt='Image générée (amélioré)';
-        im2.className='img-preview';
-        document.getElementById('outImprovedImg').appendChild(im2);
-        document.getElementById('outImproved').textContent='(image générée ci-dessus)';
-        logStepDiff('✅ Image 2/2 générée.','ok');
-      } else {
-        document.getElementById('outImproved').textContent='(pas d’image retournée)';
-        logStepDiff('⚠️ Pas d’image pour le prompt amélioré.','warn');
-      }
-    }
-
-    logStepDiff('🎯 Test terminé. Comparez les sorties.','ok');
+    logStepDiff('🎯 Test terminé. Comparez visuellement les 2 sorties.','ok');
 
   }catch(e){
     logStepDiff('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
   }finally{
-    btn.disabled=false;
-    btn.textContent='Lancer le test';
+    btn.disabled = false;
+    btn.textContent = 'Lancer le test sur les 2 prompts';
   }
 };
 </script>
