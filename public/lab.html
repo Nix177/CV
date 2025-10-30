@@ -20,7 +20,6 @@
     input::placeholder,textarea::placeholder{color:#7e8aa3}
     button{cursor:pointer}
     button.primary{background:linear-gradient(90deg,#6c4bff,#4a74ff);border:none}
-    button[disabled]{opacity:.55;cursor:progress}
     .tabs{display:flex;gap:8px;margin:4px 0 16px}
     .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;cursor:pointer;color:var(--muted)}
     .tab.active{background:#15223a;color:var(--text);border-color:#2b3b61}
@@ -33,11 +32,10 @@
     .split{display:grid;grid-template-columns:1.1fr 1.4fr;gap:12px;min-height:520px}
     .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
     .box h4{margin:0 0 8px}
-    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:260px;overflow:auto}
+    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:240px;overflow:auto}
     .tstep{padding:6px 8px;border-left:3px solid #2b3b61;margin:6px 0;background:#0f1b30;border-radius:8px}
     .tstep.ok{border-color:var(--ok)} .tstep.warn{border-color:var(--warn)} .tstep.bad{border-color:var(--bad)}
     .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;margin:2px 4px 0 0;background:#13213a;color:#cfe0ff;font-size:12px}
-    .hl{background:rgba(255,230,120,.22);outline:1px dashed rgba(255,230,120,.35)}
     .score{height:10px;background:#0f1b30;border:1px solid var(--border);border-radius:999px;overflow:hidden}
     .score > i{display:block;height:100%;background:linear-gradient(90deg,#ff5f6d,#ffc371)}
     .badges{display:flex;gap:8px;flex-wrap:wrap}
@@ -50,29 +48,23 @@
     .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
     .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
-    .two-out{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media (max-width:900px){.two-out{grid-template-columns:1fr}}
+    details summary{cursor:pointer}
   </style>
 
-  <!-- pdf.js (sans SRI) -->
+  <!-- pdf.js sans SRI -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
-  <!-- diff-match-patch (pour quand on veut quand même voir le diff) -->
+  <!-- diff-match-patch -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
 </head>
 <body>
   <div class="shell">
     <header>
       <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
-      <p>Deux mini-outils pédagogiques, qui utilisent <b>votre endpoint Vercel</b> pour appeler un LLM. Tout est transparent et commenté.</p>
-      <div class="small muted">
-        <div>
-          <b>1) RAG Glassbox</b> vous montre, pas à pas, comment l’IA répond à partir de votre PDF : ce qu’elle lit, ce qu’elle garde, ce qu’elle cite, et si la réponse est bien “ancrée”.
-        </div>
-        <div>
-          <b>2) Diff Explorer</b> vous fait comparer une version “avant/après” générée par l’IA, puis exécute les DEUX prompts sur le même modèle pour que vous voyiez la différence réelle dans la sortie.
-        </div>
-      </div>
+      <p>
+        Deux mini-outils pédagogiques, qui utilisent <b>votre</b> endpoint Vercel pour appeler un LLM.
+        Tout est transparent et expliqué.
+      </p>
     </header>
 
     <!-- Barre de config commune -->
@@ -85,16 +77,18 @@
             <option value="gpt-4o">gpt-4o</option>
           </select>
         </label>
-        <label class="small">Custom API key (optionnel)
-          <input id="userKey" type="password" placeholder="sk-..." style="min-width:240px">
+        <label class="small">Clé OpenAI perso (optionnel)
+          <input id="userKey" type="password" placeholder="sk-..." style="min-width:260px">
         </label>
-        <label class="small">Access code (laisser vide si public)
-          <input id="accessCode" type="password" placeholder="CV_ACCESS_CODE">
-        </label>
-        <span class="small muted">Route API&nbsp;: <code class="mono" id="routeHint"></code></span>
+        <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        Par défaut, les appels passent par <b>votre</b> serveur Vercel qui détient la clé OpenAI. “Custom API key” permet de tester un autre compte/modèle sans jamais exposer votre clé côté client (elle n’est pas stockée).
+        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).
+        Si vous mettez une clé perso, l’appel est fait avec <b>votre</b> clé (jamais stockée).
+      </div>
+      <div class="small" style="margin-top:6px;">
+        <div><b>1) RAG Glassbox</b> vous montre comment une réponse basée sur document est produite (extraction → découpe → sélection → réponse justifiée).</div>
+        <div><b>2) Diff Explorer</b> vous montre si un prompt/code réécrit produit vraiment une meilleure sortie sur le même modèle.</div>
       </div>
     </div>
 
@@ -111,22 +105,22 @@
           <h3>Document & Question</h3>
           <div class="bar">
             <input type="file" id="pdfFile" accept="application/pdf">
-            <input id="question" style="flex:1" placeholder="Pose ta question sur le PDF (ex. 'Quels sont les objectifs de la réforme ?')">
+            <input id="question" style="flex:1" placeholder="Ex. « Quels sont les objectifs du projet ? »">
             <button class="primary" id="runRag">Run RAG</button>
           </div>
           <details class="card">
-            <summary><b>Comment ça marche ?</b> (explication courte)</summary>
+            <summary><b>Ce que vous allez voir</b></summary>
             <ul>
-              <li><b>Extraction</b> : on convertit le PDF en texte côté navigateur (pdf.js).</li>
-              <li><b>Chunking</b> : le texte est découpé en passages de ~800–1000 caractères, avec recouvrement.</li>
-              <li><b>Ranking (TF-IDF)</b> : on mesure la proximité question ↔ passages et on sélectionne les K meilleurs.</li>
-              <li><b>Prompting</b> : on envoie au LLM la question + les passages retenus, en exigeant des <b>citations [n]</b>.</li>
-              <li><b>Glassbox</b> : vous voyez les chunks, les scores, la timeline détaillée, et une jauge de “grounding”.</li>
+              <li><b>Lecture</b> : le PDF est lu dans le navigateur.</li>
+              <li><b>Découpage</b> : le texte est découpé en « morceaux » (chunks).</li>
+              <li><b>Classement</b> : on mesure quels morceaux parlent le plus de votre question.</li>
+              <li><b>Réponse du modèle</b> : le LLM ne peut s’appuyer que sur ces morceaux → vous voyez lesquels.</li>
+              <li><b>But pédagogique</b> : comprendre que la qualité d’une réponse dépend <u>beaucoup</u> de ce qu’on lui a donné.</li>
             </ul>
           </details>
 
           <div class="card">
-            <h4>Timeline détaillée</h4>
+            <h4>Timeline détaillée (RAG)</h4>
             <div id="timeline" class="timeline"></div>
           </div>
         </div>
@@ -143,7 +137,7 @@
             <h4>Réponse du modèle</h4>
             <div id="answer"></div>
             <div class="badges" id="badges"></div>
-            <div class="footer-note">Les citations [n] renvoient aux passages du panneau gauche.</div>
+            <div class="footer-note">Les références <b>[1]</b>, <b>[2]</b> renvoient aux passages du panneau gauche.</div>
           </div>
         </div>
       </div>
@@ -152,38 +146,49 @@
     <!-- Panel Diff -->
     <section class="panel" id="panel-diff">
       <div class="card">
-        <h3>Code & Prompt Diff Explorer</h3>
-        <p class="small muted">
-          Étapes : (1) vous collez un prompt ou un petit code → (2) l’IA le réécrit selon votre objectif → (3) vous lancez le <b>même test</b> sur les deux prompts pour voir la différence de sortie.
-        </p>
+        <h3>Code & Prompt Diff Explorer (avec test réel)</h3>
+
+        <!-- 1. Entrée -->
         <div class="grid grid-2">
           <div class="box">
-            <h4>1. Entrée d’origine</h4>
-            <textarea id="src" rows="12" placeholder="Ex. &quot;Fais un dessin de chien en ASCII&quot; ou un petit bout de code JS…"></textarea>
-            <div class="bar">
-              <input id="goal" style="flex:1" placeholder="Objectif (ex. rendre plus robuste / explicite / version prof FR)">
-              <button class="primary" id="improve">Améliorer avec l’IA</button>
+            <h4>1. Votre prompt / code d’origine</h4>
+            <textarea id="src" rows="6" placeholder="Ex. « Fais un dessin de chien en ASCII »"></textarea>
+            <div class="small muted">
+              Mettez ici la version “simple” ou “trop courte”.
             </div>
-            <div class="small muted" id="improveStatus"></div>
           </div>
           <div class="box">
-            <h4>2. Version améliorée (IA)</h4>
-            <textarea id="dst" rows="12" placeholder="Quand vous cliquez sur “Améliorer”, la version IA apparaît ici…"></textarea>
-            <div class="small muted">Vous pouvez encore l’éditer avant de tester.</div>
+            <h4>2. Objectif</h4>
+            <input id="goal" placeholder="Ex. Rendre le prompt plus précis, ajouter le style, demander plusieurs versions…">
+            <button class="primary" id="improve">Améliorer avec l’IA</button>
+            <div class="small muted" id="improveStatus"></div>
           </div>
         </div>
 
-        <div class="card">
+        <!-- 2. Résultat IA + diff -->
+        <div class="grid grid-2" style="margin-top:14px;">
+          <div class="box">
+            <h4>Prompt amélioré (IA)</h4>
+            <textarea id="dst" rows="6" placeholder="La version réécrite apparaîtra ici…"></textarea>
+          </div>
+          <div class="box">
+            <h4>Diff texte (optionnel)</h4>
+            <div id="diff" class="diff small"></div>
+          </div>
+        </div>
+
+        <!-- 3. Test réel -->
+        <div class="card" style="margin-top:14px;">
           <h4>3. Tester les deux sur le même modèle</h4>
           <p class="small muted">
-            Ici on simule un vrai “prompt engineering” : est-ce que le prompt réécrit produit vraiment une meilleure sortie ?  
-            Le test envoie <b>deux requêtes</b> à votre API : l’une avec le prompt original, l’autre avec le prompt amélioré.
+            On envoie <b>deux requêtes</b> à votre API : l’une avec le prompt original, l’autre avec le prompt amélioré.
+            Avec <code>gpt-5</code> ça peut prendre 20–40 s ×2 → la timeline ci-dessous vous dit où on en est.
           </p>
           <div class="bar">
-            <input id="testInput" style="flex:1" placeholder="Contexte / donnée de test (facultatif, ex. 'Le cours porte sur l’astragale…')">
-            <button id="runDual" class="primary">Lancer le test sur les 2 prompts</button>
+            <input id="ctx" style="flex:1" placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur le jeu d’osselets antique »">
+            <button class="primary" id="runTest">Lancer le test sur les 2 prompts</button>
           </div>
-          <div class="two-out">
+          <div class="grid grid-2">
             <div class="box">
               <h4>Sortie avec prompt original</h4>
               <div id="outOrig" class="small"></div>
@@ -193,23 +198,23 @@
               <div id="outImproved" class="small"></div>
             </div>
           </div>
-          <div class="small muted" id="dualMeta"></div>
+          <details style="margin-top:10px;">
+            <summary>Afficher aussi la timeline (prompts)</summary>
+            <div id="timeline-diff" class="timeline"></div>
+          </details>
         </div>
 
-        <details class="card">
-          <summary>Afficher aussi le diff texte (optionnel)</summary>
-          <div class="box">
-            <h4>Diff texte</h4>
-            <div id="diff" class="diff small"></div>
-          </div>
-        </details>
+        <div class="small muted" style="margin-top:10px;">
+          Remarque : cette version appelle un endpoint “chat” → elle produit du texte.
+          Pour générer <b>des images</b>, il faudrait un endpoint dédié images (DALL·E, etc.) côté Vercel.
+        </div>
       </div>
     </section>
   </div>
 
 <script>
 /** ====== CONFIG ====== **/
-const API_ROUTE = '/api/llm/chat'; // ← ton endpoint Vercel
+const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
 /** ====== ONGLET UI ====== **/
@@ -223,43 +228,57 @@ document.querySelectorAll('.tab').forEach(t=>{
 });
 
 /** ====== OUTILS COMMUNS ====== **/
-function logStep(html, cls=''){
-  const el = document.createElement('div');
-  el.className = `tstep ${cls}`;
-  el.innerHTML = html;
-  const tl = document.getElementById('timeline');
-  tl.appendChild(el);
-  tl.scrollTop = tl.scrollHeight;
-}
-function resetTimeline(){ document.getElementById('timeline').innerHTML=''; }
-function estTokens(txt){ return Math.max(1, Math.round(txt.length/4)); }
+function estTokens(txt){ return Math.max(1, Math.round((txt||'').length/4)); }
 function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
 
+/** appel LLM générique */
 async function callLLM(messages, model, extraHeaders = {}) {
   const headers = {'Content-Type':'application/json', ...extraHeaders};
-  const code = document.getElementById('accessCode').value.trim();
-  if (code) headers['x-access-code'] = code;
   const userKey = document.getElementById('userKey').value.trim();
   if (userKey) headers['x-user-api-key'] = userKey;
 
-  const body = { model, messages }; // pas de temperature → ton chat.ts accepte
-  const t0 = performance.now();
-  const res = await fetch(API_ROUTE, { method:'POST', headers, body: JSON.stringify(body) });
-  const t1 = performance.now();
+  // ne PAS envoyer temperature quand c'est gpt-5 chez toi
+  const payload = { model, messages };
+  const res = await fetch(API_ROUTE, {
+    method:'POST',
+    headers,
+    body: JSON.stringify(payload)
+  });
+  const raw = await res.text();
   if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`API ${API_ROUTE} → ${res.status}: ${txt}`);
+    throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
   }
-  const j = await res.json();
-  j._latencyMs = Math.round(t1 - t0);
-  return j;
+  try { return JSON.parse(raw); } catch { return {choices:[{message:{content:raw}}]}; }
 }
+
+/** timeline RAG */
+function logStepRAG(html, cls=''){ 
+  const el = document.createElement('div');
+  el.className = `tstep ${cls}`;
+  el.innerHTML = html;
+  const root = document.getElementById('timeline');
+  root.appendChild(el);
+  root.scrollTop = root.scrollHeight;
+}
+function resetTimelineRAG(){ document.getElementById('timeline').innerHTML=''; }
+
+/** timeline DIFF */
+function logStepDiff(html, cls=''){ 
+  const el = document.createElement('div');
+  el.className = `tstep ${cls}`;
+  el.innerHTML = html;
+  const root = document.getElementById('timeline-diff');
+  root.appendChild(el);
+  root.scrollTop = root.scrollHeight;
+}
+function resetTimelineDiff(){ document.getElementById('timeline-diff').innerHTML=''; }
 
 /** ====== RAG GLASSBOX ====== **/
 async function pdfToText(file){
+  const start = performance.now();
   const buf = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({data:buf}).promise;
-  logStep(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
+  logStepRAG(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
   let text = '';
   for (let i=1; i<=pdf.numPages; i++){
     const page = await pdf.getPage(i);
@@ -267,8 +286,8 @@ async function pdfToText(file){
     const t = c.items.map(it=>it.str).join(' ');
     text += '\n' + t;
   }
-  const perPage = text.length / pdf.numPages;
-  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${Math.round(performance.now())%300} ms (moy/page ~${Math.round(perPage)} chars)`, 'ok');
+  const dur = Math.round(performance.now() - start);
+  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms (moy/page ~${Math.round(text.length/pdf.numPages)} chars)`, 'ok');
   return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
 
@@ -317,7 +336,6 @@ function tfidfRank(query, chunks){
   }
   return chunks.sort((a,b)=>b.score-a.score);
 }
-
 function renderPassages(list, topk){
   const root = document.getElementById('passages');
   root.innerHTML = '';
@@ -329,7 +347,6 @@ function renderPassages(list, topk){
     root.appendChild(div);
   });
 }
-
 function groundingScore(answer, passages){
   const a = new Set(tokenize(answer));
   const p = new Set(tokenize(passages.map(p=>p.text).join(' ')));
@@ -341,103 +358,97 @@ function groundingScore(answer, passages){
 
 document.getElementById('runRag').onclick = async ()=>{
   try{
-    resetTimeline();
+    resetTimelineRAG();
     const file = document.getElementById('pdfFile').files[0];
     const q = document.getElementById('question').value.trim();
     if (!file) { alert('Choisissez un PDF'); return; }
     if (!q) { alert('Écrivez une question'); return; }
 
-    logStep('🧩 Lecture du PDF & extraction texte…');
+    logStepRAG('🧩 Lecture du PDF & extraction texte…');
     const text = await pdfToText(file);
-    logStep('🧩 Chunking (fenêtre ~900, overlap 150)…');
-    const chunks = chunkText(text);
-    logStep(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/chunks.length)} chars) en 0 ms.`, 'ok');
 
-    logStep('🧮 TF-IDF & ranking…');
+    logStepRAG('🧩 Chunking (fenêtre ~900, overlap 150)…');
+    const chunks = chunkText(text);
+    logStepRAG(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/chunks.length)} chars) en 0 ms.`,'ok');
+
+    logStepRAG('🧮 TF-IDF & ranking…');
     const ranked = tfidfRank(q, chunks);
     const top = ranked.slice(0, 6);
     renderPassages(ranked, 6);
     const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
 
     const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
-- If the answer is not fully supported, say what is missing and ask for clarification.
-- Cite sources like [1], [2] matching the provided list.`;
+If the answer is not fully supported, explain what is missing and ask for clarification.
+Cite sources like [1], [2].`;
     const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
 
     const model = document.getElementById('model').value;
     const inTok = estTokens(sys+user);
-    logStep(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+    logStepRAG(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
 
-    logStep(`🤖 Appel LLM (${model})…`);
+    const t0 = performance.now();
+    logStepRAG(`🤖 Appel LLM (${model})…`);
     const resp = await callLLM([
       {role:'system', content: sys},
       {role:'user', content: user}
     ], model);
-
+    const ms = Math.round(performance.now() - t0);
     const content = resp?.choices?.[0]?.message?.content || '(no content)';
-    logStep(`✅ Réponse reçue en ${resp._latencyMs} ms (≈${estTokens(content)} tokens).`,'ok');
+    logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens)`, 'ok');
 
     document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
     const g = groundingScore(content, top);
     const badges = document.getElementById('badges');
     badges.innerHTML = '';
     const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
-    b1.textContent = g>0.45? 'Grounded' : (g>0.2? 'Partially grounded' : 'Low grounding');
+    b1.textContent = g>0.45? 'Bien ancré dans le doc' : (g>0.2? 'Partiellement ancré' : 'Ancrage faible');
     badges.appendChild(b1);
 
     const info = document.getElementById('ragInfo');
     info.innerHTML = `
       <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
       <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
-      <div class="muted">Le score mesure le recouvrement lexical (approx.).</div>
+      <div class="muted">Score = recouvrement lexical simple, juste pour illustrer.</div>
     `;
 
   }catch(e){
-    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    logStepRAG('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
   }
 };
 
-/** ====== DIFF / PROMPT TESTER ====== **/
-const improveBtn = document.getElementById('improve');
-const runDualBtn = document.getElementById('runDual');
-
-improveBtn.onclick = async ()=>{
+/** ====== DIFF EXPLORER ====== **/
+document.getElementById('improve').onclick = async ()=>{
+  const src = document.getElementById('src').value.trim();
+  const goal = document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec un exemple, en français.';
+  const model = document.getElementById('model').value;
+  if (!src){ alert('Mettez un prompt à gauche.'); return; }
+  document.getElementById('improveStatus').textContent = '⏳ Génération du prompt amélioré…';
   try{
-    const src = document.getElementById('src').value;
-    const goal = document.getElementById('goal').value || 'Improve readability, robustness, add brief French comments.';
-    if (!src.trim()){ alert('Collez un prompt ou un code à gauche'); return; }
-
-    resetTimeline();
-    document.getElementById('improveStatus').textContent = '⏳ Génération en cours…';
-    improveBtn.disabled = true;
-
-    const model = document.getElementById('model').value;
-    const sys = `You improve code or prompts. Return strictly a JSON object with fields:
-- "code": improved code/prompt as string
-- "why": short French explanation of the main changes
+    const sys = `You improve user prompts or short pieces of code.
+Return a JSON object with exactly:
+{ "code": "...improved prompt...", "why": "short French explanation" }
 No markdown fences.`;
     const user = `Objectif: ${goal}
-=== ORIGINAL ===
+=== PROMPT ORIGINAL ===
 ${src}`;
 
     const out = await callLLM([
       {role:'system', content: sys},
       {role:'user', content: user}
     ], model);
-
     let payload = out?.choices?.[0]?.message?.content || '';
     payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
     let obj;
     try{ obj = JSON.parse(payload); }
-    catch{ throw new Error('Réponse non-JSON. Ajustez le prompt ou réessayez.'); }
+    catch{ throw new Error('Réponse non-JSON, réessayez.'); }
 
     const dst = obj.code || '';
     document.getElementById('dst').value = dst;
-    document.getElementById('why')?.(obj.why||'');
+    document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez lancer le test sur les 2.';
 
-    // Afficher diff dans la section optionnelle
-    if (typeof diff_match_patch !== 'undefined') {
+    // Diff texte
+    if (window.diff_match_patch) {
       const dmp = new diff_match_patch();
       const diffs = dmp.diff_main(src, dst);
       dmp.diff_cleanupSemantic(diffs);
@@ -448,62 +459,61 @@ ${src}`;
         return text;
       }).join('');
       document.getElementById('diff').innerHTML = html;
+    } else {
+      document.getElementById('diff').innerHTML = '<span class="muted">diff_match_patch non chargé.</span>';
     }
 
-    document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez maintenant lancer le test sur les 2.';
-    logStep('✅ Amélioration générée.','ok');
   }catch(e){
     document.getElementById('improveStatus').textContent = '⛔ '+(e.message||e);
-    logStep('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
-  }finally{
-    improveBtn.disabled = false;
   }
 };
 
-runDualBtn.onclick = async ()=>{
+document.getElementById('runTest').onclick = async ()=>{
+  const src = document.getElementById('src').value.trim();
+  const dst = document.getElementById('dst').value.trim();
+  const model = document.getElementById('model').value;
+  const ctx = document.getElementById('ctx').value.trim();
+  if (!src){ alert('Pas de prompt original.'); return; }
+  if (!dst){ alert('Générez d’abord le prompt amélioré.'); return; }
+
+  const btn = document.getElementById('runTest');
+  btn.disabled = true;
+  btn.textContent = '⏳ Test en cours…';
+  document.getElementById('outOrig').textContent = '';
+  document.getElementById('outImproved').textContent = '';
+  resetTimelineDiff();
+  logStepDiff('▶️ Lancement du test : 2 appels vont être faits (original + amélioré).');
+
   try{
-    const srcPrompt = document.getElementById('src').value.trim();
-    const dstPrompt = document.getElementById('dst').value.trim();
-    const extra = document.getElementById('testInput').value.trim();
-    if (!srcPrompt){ alert('Il faut un prompt original.'); return; }
-    if (!dstPrompt){ alert('Il faut d’abord générer la version améliorée.'); return; }
+    const start = performance.now();
+    logStepDiff('📨 Appel 1/2 avec le prompt original…');
+    const r1 = await callLLM([
+      {role:'user', content: ctx ? (ctx + '\n\n' + src) : src }
+    ], model);
+    const ms1 = Math.round(performance.now() - start);
+    logStepDiff(`✅ Réponse 1/2 reçue en ${ms1} ms.`, 'ok');
+    const out1 = r1?.choices?.[0]?.message?.content || '(vide)';
+    document.getElementById('outOrig').textContent = out1;
 
-    resetTimeline();
-    runDualBtn.disabled = true;
-    logStep('🧪 Test des 2 prompts sur le même modèle…');
+    const start2 = performance.now();
+    logStepDiff('📨 Appel 2/2 avec le prompt amélioré…');
+    const r2 = await callLLM([
+      {role:'user', content: ctx ? (ctx + '\n\n' + dst) : dst }
+    ], model);
+    const ms2 = Math.round(performance.now() - start2);
+    logStepDiff(`✅ Réponse 2/2 reçue en ${ms2} ms.`, 'ok');
+    const out2 = r2?.choices?.[0]?.message?.content || '(vide)';
+    document.getElementById('outImproved').textContent = out2;
 
-    const model = document.getElementById('model').value;
+    logStepDiff('🎯 Test terminé. Comparez visuellement les 2 sorties.','ok');
 
-    // 1. appel avec prompt original
-    logStep('➡️ Prompt original → appel LLM…');
-    const msgOrig = extra
-      ? [{role:'system',content:'You will respond to a test prompt.'},{role:'user',content:srcPrompt+'\n\nContexte:\n'+extra}]
-      : [{role:'user',content:srcPrompt}];
-    const outOrig = await callLLM(msgOrig, model);
-    const txtOrig = outOrig?.choices?.[0]?.message?.content || '(no content)';
-    document.getElementById('outOrig').innerHTML = `<div class="card">${sanitize(txtOrig)}</div>`;
-
-    // 2. appel avec prompt amélioré
-    logStep('➡️ Prompt amélioré → appel LLM…');
-    const msgImp = extra
-      ? [{role:'system',content:'You will respond to a test prompt.'},{role:'user',content:dstPrompt+'\n\nContexte:\n'+extra}]
-      : [{role:'user',content:dstPrompt}];
-    const outImp = await callLLM(msgImp, model);
-    const txtImp = outImp?.choices?.[0]?.message?.content || '(no content)';
-    document.getElementById('outImproved').innerHTML = `<div class="card">${sanitize(txtImp)}</div>`;
-
-    document.getElementById('dualMeta').innerHTML = `
-      <div>Original: ${outOrig._latencyMs} ms · tokens estimés: ${estTokens(txtOrig)}</div>
-      <div>Amélioré: ${outImp._latencyMs} ms · tokens estimés: ${estTokens(txtImp)}</div>
-      <div class="muted">Même modèle: ${sanitize(model)}. Vous pouvez changer le modèle en haut.</div>
-    `;
-    logStep('✅ Test fini. Comparez visuellement les 2 sorties.','ok');
   }catch(e){
-    logStep('⛔ '+sanitize(e.message||e), 'bad');
+    logStepDiff('⛔ '+sanitize(e.message||e), 'bad');
     alert(e.message||e);
   }finally{
-    runDualBtn.disabled = false;
+    btn.disabled = false;
+    btn.textContent = 'Lancer le test sur les 2 prompts';
   }
 };
 </script>
