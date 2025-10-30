@@ -50,13 +50,15 @@
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
     details summary{cursor:pointer}
     .img-preview{max-width:100%;border-radius:8px;border:1px solid #1f2b45;background:#0f1b30;padding:6px;display:inline-block}
+    /* NEW: préserver l’ASCII multi-lignes */
+    .pre{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
   </style>
 
   <!-- pdf.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 
-  <!-- diff-match-patch (CDN optionnel) + Fallback installé automatiquement -->
+  <!-- diff-match-patch (CDN optionnel) + Fallback -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"
           onload="window.__dmpReady='cdn'"
           onerror="window.__dmpReady='err'"></script>
@@ -64,7 +66,6 @@
   (function(){
     function ensureDMP(){
       if (window.diff_match_patch) return 'cdn';
-      // Fallback ultra-simple (ligne par ligne)
       class SimpleDiff {
         diff_main(a,b){
           const A=a.split(/\r?\n/), B=b.split(/\r?\n/);
@@ -72,10 +73,7 @@
           for(let i=0;i<m;i++){
             const la=A[i]??'', lb=B[i]??'';
             if(la===lb){ out.push([0, la+(i<m-1?'\n':'')]); }
-            else{
-              if(la) out.push([-1, la+'\n']);
-              if(lb) out.push([ 1, lb+'\n']);
-            }
+            else{ if(la) out.push([-1, la+'\n']); if(lb) out.push([1, lb+'\n']); }
           }
           return out;
         }
@@ -87,7 +85,7 @@
     document.addEventListener('DOMContentLoaded', ()=>{
       const src = ensureDMP();
       window.__dmpReady = true;
-      window.__dmpSource = src; // 'cdn' ou 'fallback'
+      window.__dmpSource = src;
     });
   })();
   </script>
@@ -205,21 +203,24 @@
         <div class="card" style="margin-top:14px;">
           <h4>3. Tester les deux sur le même modèle</h4>
           <p class="small muted">
-            Vous pouvez demander un résultat texte (par défaut) ou cocher “image” pour que le 2ᵉ appel génère une image.
+            Vous pouvez demander un résultat texte (par défaut) ou cocher “image” pour que <b>les deux</b> appels génèrent des images.
           </p>
           <div class="bar">
             <input id="ctx" style="flex:1" placeholder="Contexte (facultatif), ex. 'Sujet : jeux antiques pour des élèves de 8H'">
-            <label class="small"><input type="checkbox" id="genImage"> Générer une image pour le 2ᵉ prompt</label>
+            <label class="small"><input type="checkbox" id="genImage"> Générer une image pour les 2 prompts</label>
             <button class="primary" id="runTest">Lancer le test</button>
           </div>
           <div class="grid grid-2">
             <div class="box">
               <h4>Sortie avec prompt original</h4>
-              <div id="outOrig" class="small"></div>
+              <!-- NEW: pre pour préserver l’ASCII -->
+              <pre id="outOrig" class="small mono pre"></pre>
+              <div id="outOrigImg"></div>
             </div>
             <div class="box">
               <h4>Sortie avec prompt amélioré</h4>
-              <div id="outImproved" class="small"></div>
+              <!-- NEW: pre pour préserver l’ASCII -->
+              <pre id="outImproved" class="small mono pre"></pre>
               <div id="outImprovedImg"></div>
             </div>
           </div>
@@ -265,20 +266,34 @@ async function callLLMText(messages, model){
   try { return JSON.parse(raw); } catch { return {choices:[{message:{content:raw}}]}; }
 }
 
-/* appel image */
-async function callLLMImage(prompt){
+/* appel image (avec retry + fallback taille) */
+async function callLLMImage(prompt, size='1024x1024'){
   const headers = {'Content-Type':'application/json'};
   const userKey = document.getElementById('userKey').value.trim();
   if (userKey) headers['x-user-api-key'] = userKey;
 
-  const res = await fetch(API_ROUTE, {
-    method:'POST',
-    headers,
-    body: JSON.stringify({ mode:'image', prompt })
-  });
-  const raw = await res.text();
-  if (!res.ok) throw new Error(`API image → ${res.status}: ${raw}`);
-  return JSON.parse(raw);
+  async function tryOnce(sz){
+    const res = await fetch(API_ROUTE, {
+      method:'POST',
+      headers,
+      body: JSON.stringify({ mode:'image', prompt, size: sz })
+    });
+    const raw = await res.text();
+    if (!res.ok) throw new Error(`API image → ${res.status}: ${raw}`);
+    return JSON.parse(raw);
+  }
+
+  try {
+    return await tryOnce(size);
+  } catch (e) {
+    // Retry simple si 5xx / upstream error: on tente en 512x512
+    const msg = String(e);
+    if (msg.includes('502') || msg.includes('server_error') || msg.includes('image_upstream_error')) {
+      await new Promise(r=>setTimeout(r, 500));
+      return await tryOnce('512x512');
+    }
+    throw e;
+  }
 }
 
 /* timeline RAG */
@@ -292,7 +307,7 @@ function logStepRAG(html, cls=''){
 }
 function resetTimelineRAG(){document.getElementById('timeline').innerHTML='';}
 
-/* RAG */
+/* RAG (inchangé) */
 async function pdfToText(file){
   const start = performance.now();
   const buf = await file.arrayBuffer();
@@ -499,39 +514,57 @@ document.getElementById('runTest').onclick = async () => {
   btn.textContent='⏳ Test en cours…';
   document.getElementById('outOrig').textContent='';
   document.getElementById('outImproved').textContent='';
+  document.getElementById('outOrigImg').innerHTML='';
   document.getElementById('outImprovedImg').innerHTML='';
   resetTimelineDiff();
   logStepDiff('▶️ Test démarré : 2 appels vont être faits.','ok');
 
   try{
-    // 1) texte avec prompt original
-    logStepDiff('📨 Appel 1/2 (prompt original, texte)…');
-    const r1=await callLLMText([{role:'user', content: ctx ? (ctx+'\n\n'+src) : src}], model);
-    const out1=r1?.choices?.[0]?.message?.content || '(vide)';
-    document.getElementById('outOrig').textContent=out1;
-    logStepDiff('✅ Sortie 1/2 reçue.','ok');
-
-    // 2) soit texte, soit image
     if (!wantImg){
+      // 1) texte avec prompt original
+      logStepDiff('📨 Appel 1/2 (prompt original, texte)…');
+      const r1=await callLLMText([{role:'user', content: ctx ? (ctx+'\n\n'+src) : src}], model);
+      const out1=r1?.choices?.[0]?.message?.content || '(vide)';
+      document.getElementById('outOrig').textContent=out1;
+      logStepDiff('✅ Sortie 1/2 reçue.','ok');
+
+      // 2) texte avec prompt amélioré
       logStepDiff('📨 Appel 2/2 (prompt amélioré, texte)…');
       const r2=await callLLMText([{role:'user', content: ctx ? (ctx+'\n\n'+dst) : dst}], model);
       const out2=r2?.choices?.[0]?.message?.content || '(vide)';
       document.getElementById('outImproved').textContent=out2;
       logStepDiff('✅ Sortie 2/2 reçue.','ok');
     } else {
+      // 1) image avec prompt original
+      logStepDiff('🖼 Appel 1/2 (prompt original, image)…');
+      const img1=await callLLMImage(ctx ? (ctx+'\n\n'+src) : src);
+      if (img1.image_base64){
+        const im=document.createElement('img');
+        im.src='data:image/png;base64,'+img1.image_base64;
+        im.alt='Image générée (original)';
+        im.className='img-preview';
+        document.getElementById('outOrigImg').appendChild(im);
+        document.getElementById('outOrig').textContent='(image générée ci-dessus)';
+        logStepDiff('✅ Image 1/2 générée.','ok');
+      } else {
+        document.getElementById('outOrig').textContent='(pas d’image retournée)';
+        logStepDiff('⚠️ Pas d’image pour le prompt original.','warn');
+      }
+
+      // 2) image avec prompt amélioré
       logStepDiff('🖼 Appel 2/2 (prompt amélioré, image)…');
-      const imgRes=await callLLMImage(ctx ? (ctx+'\n\n'+dst) : dst);
-      if (imgRes.image_base64){
-        const img=document.createElement('img');
-        img.src='data:image/png;base64,'+imgRes.image_base64;
-        img.alt='Image générée';
-        img.className='img-preview';
-        document.getElementById('outImprovedImg').appendChild(img);
+      const img2=await callLLMImage(ctx ? (ctx+'\n\n'+dst) : dst);
+      if (img2.image_base64){
+        const im2=document.createElement('img');
+        im2.src='data:image/png;base64,'+img2.image_base64;
+        im2.alt='Image générée (amélioré)';
+        im2.className='img-preview';
+        document.getElementById('outImprovedImg').appendChild(im2);
         document.getElementById('outImproved').textContent='(image générée ci-dessus)';
-        logStepDiff('✅ Image générée.','ok');
+        logStepDiff('✅ Image 2/2 générée.','ok');
       } else {
         document.getElementById('outImproved').textContent='(pas d’image retournée)';
-        logStepDiff('⚠️ Pas d’image dans la réponse.','warn');
+        logStepDiff('⚠️ Pas d’image pour le prompt amélioré.','warn');
       }
     }
 
