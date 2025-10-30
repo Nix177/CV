@@ -41,7 +41,8 @@
     .small{font-size:12px}
     .mono{font-family:ui-monospace,Consolas,monospace}
     .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
-    .ins{background:#12371e} .del{background:#3a1520;text-decoration:line-through}
+    .ins{background:#12371e}
+    .del{background:#3a1520;text-decoration:line-through}
     .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media (max-width:1100px){.two-col{grid-template-columns:1fr}}
@@ -53,8 +54,43 @@
   <!-- pdf.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
-  <!-- diff-match-patch -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"></script>
+
+  <!-- diff-match-patch CDN (peut être bloqué) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.min.js"
+          onload="window.__dmpReady=true"
+          onerror="window.__dmpReady=false"></script>
+
+  <!-- Fallback si le CDN est bloqué -->
+  <script>
+    // Si à la fin du chargement on n'a toujours pas window.diff_match_patch,
+    // on installe un tout petit diff de secours.
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!window.diff_match_patch) {
+        // fallback super simple (ligne par ligne)
+        class SimpleDiff {
+          diff_main(a,b){
+            const aLines = a.split(/\r?\n/);
+            const bLines = b.split(/\r?\n/);
+            const diffs = [];
+            const max = Math.max(aLines.length, bLines.length);
+            for (let i=0;i<max;i++){
+              const la = aLines[i] ?? '';
+              const lb = bLines[i] ?? '';
+              if (la === lb) {
+                diffs.push([0, la + (i<max-1?'\n':'')]);
+              } else {
+                if (la) diffs.push([-1, la + '\n']);
+                if (lb) diffs.push([ 1, lb + '\n']);
+              }
+            }
+            return diffs;
+          }
+          diff_cleanupSemantic() {}
+        }
+        window.diff_match_patch = SimpleDiff;
+      }
+    });
+  </script>
 </head>
 <body>
   <div class="shell">
@@ -82,13 +118,10 @@
         <summary><b>À quoi ça sert ?</b></summary>
         <div class="two-col">
           <div>
-            <b>1) RAG Glassbox</b> te montre comment une réponse “document-aware” est produite : extraction PDF → découpe (chunks) → ranking des passages → prompt avec citations → réponse.  
-            <br>Tu peux observer : qualité des passages, scores, durée de chaque étape, tokens consommés et “ancrage” de la réponse (grounding).
+            <b>1) RAG Glassbox</b> te montre comment une réponse “document-aware” est produite : extraction PDF → découpe (chunks) → ranking des passages → prompt avec citations → réponse.
           </div>
           <div>
-            <b>2) Diff Explorer</b> illustre la valeur d’un bon prompt (ou d’un refactor de code).  
-            <br>Tu colles un prompt ou du code ➜ l’IA propose une version améliorée + explication.  
-            <br>Si tu fournis un “Texte de test”, on exécute <i>l’ancien vs le nouveau prompt</i> et on affiche les deux réponses pour comparer.
+            <b>2) Diff Explorer</b> illustre la valeur d’un bon prompt ou d’un refactor : tu vois exactement ce que l’IA change, et tu peux tester l’ancien vs le nouveau sur un même input.
           </div>
         </div>
       </details>
@@ -114,11 +147,11 @@
           <details class="card small">
             <summary><b>Ce que tu vas observer</b></summary>
             <ul>
-              <li><b>Extraction</b> : texte tiré du PDF dans ton navigateur (pdf.js).</li>
-              <li><b>Chunking</b> : découpe ~900 caractères avec recouvrement pour garder le contexte.</li>
-              <li><b>Ranking (TF-IDF)</b> : mesure de proximité question↔passages pour choisir les meilleurs.</li>
-              <li><b>Prompting avec sources</b> : on exige des <b>citations [n]</b> vers les passages retenus.</li>
-              <li><b>Observables</b> : #chunks, scores, durées, tokens, et un indicateur d’“ancrage” lexical.</li>
+              <li><b>Extraction</b> : texte tiré du PDF dans ton navigateur.</li>
+              <li><b>Chunking</b> : découpe ~900 caractères avec recouvrement.</li>
+              <li><b>Ranking (TF-IDF)</b> : on prend les K meilleurs passages.</li>
+              <li><b>Prompting avec sources</b> : on demande des citations [n].</li>
+              <li><b>Observables</b> : #chunks, scores, durées, tokens, degré “d’ancrage”.</li>
             </ul>
           </details>
 
@@ -162,7 +195,7 @@
             <details class="small">
               <summary><b>Tester comme “prompt”</b> (facultatif)</summary>
               <div class="bar">
-                <textarea id="testInput" rows="6" style="width:100%" placeholder="Si tu renseignes ce champ, on traitera le texte de gauche comme un prompt, et on comparera l'output de l'ancien vs le nouveau prompt sur ce ‘Texte de test’."></textarea>
+                <textarea id="testInput" rows="6" style="width:100%" placeholder="Si tu remplis ça, on exécute l'ancien prompt et le nouveau sur ce même input, et on compare."></textarea>
               </div>
             </details>
           </div>
@@ -205,11 +238,9 @@
   </div>
 
 <script>
-/** ====== CONFIG ====== **/
 const API_ROUTE = '/api/llm/chat';
 document.getElementById('routeHint').textContent = API_ROUTE;
 
-/** ====== ONGLET UI ====== **/
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = () => {
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -219,7 +250,6 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 
-/** ====== OUTILS COMMUNS ====== **/
 function logStep(html, cls=''){ 
   const el = document.createElement('div');
   el.className = `tstep ${cls}`;
@@ -252,7 +282,7 @@ async function callLLM(messages, model) {
   return json;
 }
 
-/** ====== RAG GLASSBOX ====== **/
+/* ===== RAG ===== */
 async function pdfToText(file){
   const t0 = performance.now();
   const buf = await file.arrayBuffer();
@@ -269,7 +299,7 @@ async function pdfToText(file){
     text += '\n' + t;
   }
   const ms = Math.round(performance.now()-t1);
-  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${ms} ms (moy/page ~${Math.round(text.length/pdf.numPages).toLocaleString()} chars)`, 'ok');
+  logStep(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${ms} ms`, 'ok');
   return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
 }
 
@@ -414,7 +444,7 @@ document.getElementById('runRag').onclick = async ()=>{
   }
 };
 
-/** ====== DIFF EXPLORER ====== **/
+/* ===== DIFF ===== */
 document.getElementById('improve').onclick = async ()=>{
   const btn = document.getElementById('improve');
   try{
@@ -450,9 +480,11 @@ ${src}`;
     document.getElementById('dst').value = dst;
     document.getElementById('why').innerHTML = sanitize(obj.why||'');
 
-    // Diff
-    const dmp = new diff_match_patch();
-    const diffs = dmp.diff_main(src, dst); dmp.diff_cleanupSemantic(diffs);
+    // Diff (utilise soit la vraie lib, soit le fallback)
+    const DMP = window.diff_match_patch;
+    const dmp = new DMP();
+    const diffs = dmp.diff_main(src, dst);
+    if (dmp.diff_cleanupSemantic) dmp.diff_cleanupSemantic(diffs);
     const html = diffs.map(([op, text])=>{
       text = sanitize(text);
       if (op===1) return `<span class="ins">${text}</span>`;
@@ -466,7 +498,7 @@ ${src}`;
 
     logStep('✅ Amélioration + diff prêts.','ok');
 
-    // Si on a un "Texte de test", traiter comme PROMPT et exécuter AVANT vs APRÈS
+    // test “avant/après” sur un input
     const testInput = document.getElementById('testInput').value.trim();
     if (testInput){
       logStep('🧪 Exécution du prompt AVANT…');
