@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-10-30T06:36:22.218Z",
+  "generatedAt": "2025-10-31T06:36:54.321Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,20 +96,37 @@
   },
   "items": [
     {
-      "title": "TLCD: A Deep Transfer Learning Framework for Cross-Disciplinary\n  Cognitive Diagnosis",
-      "url": "http://arxiv.org/abs/2510.23062v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-27T06:46:23.000Z",
-      "score": 100,
-      "resume_fr": "Driven by the dual principles of smart education and artificial intelligence technology, the online education model has rapidly emerged as an important component of the education industry. Cognitive diagnostic technology can utilize students' learning data and feedback information in educational evaluation to accurately assess their ability level at the knowledge level. However, while massive amounts of information provide abundant data resources, they also bring about complexity in feature extraction and scarcity of disciplinary data. In cross-disciplinary fields, traditional cognitive diagno",
+      "title": "New Thermal Battery Supplies Clean Heat for Oil Extraction",
+      "url": "https://spectrum.ieee.org/thermal-battery-for-industrial-heat",
+      "source": "IEEE Spectrum – AI",
+      "published": "2025-10-30T12:00:03.000Z",
+      "score": 85,
+      "resume_fr": "For the last 12 weeks, California start-up Rondo Energy has been operating what it’s calling the world’s largest thermal battery. Rondo’s system converts cheap renewable electricity into heat that can be discharged on demand into industrial processes. This differs from most next-generation energy storage strategies, which provide electricity to grids in the absence of sun or wind. Instead, Rondo’s system aims to help decarbonize emissions-heavy sectors like steelmaking and cement. The system works like a toaster crossed with a blast furnace. Electricity from solar arrays heat iron wires simila",
       "tags": [],
       "breakdown": {
         "research": 35,
         "policy": 35,
         "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://spectrum.ieee.org/media-library/image.jpg?id=61975653&width=1200&height=600&coordinates=0%2C733%2C0%2C767"
+    },
+    {
+      "title": "Autograder+: A Multi-Faceted AI Framework for Rich Pedagogical Feedback\n  in Programming Education",
+      "url": "http://arxiv.org/abs/2510.26402v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-10-30T11:41:50.000Z",
+      "score": 85,
+      "resume_fr": "The rapid growth of programming education has outpaced traditional assessment tools, leaving faculty with limited means to provide meaningful, scalable feedback. Conventional autograders, while efficient, act as black-box systems that simply return pass/fail results, offering little insight into student thinking or learning needs. Autograder+ is designed to shift autograding from a purely summative process to a formative learning experience. It introduces two key capabilities: automated feedback generation using a fine-tuned Large Language Model, and visualization of student code submissions t",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
         "impact": 15
       },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -181,23 +198,6 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "The Limits of Obliviate: Evaluating Unlearning in LLMs via\n  Stimulus-Knowledge Entanglement-Behavior Framework",
-      "url": "http://arxiv.org/abs/2510.25732v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-10-29T17:37:50.000Z",
-      "score": 70,
-      "resume_fr": "Unlearning in large language models (LLMs) is crucial for managing sensitive data and correcting misinformation, yet evaluating its effectiveness remains an open problem. We investigate whether persuasive prompting can recall factual knowledge from deliberately unlearned LLMs across models ranging from 2.7B to 13B parameters (OPT-2.7B, LLaMA-2-7B, LLaMA-3.1-8B, LLaMA-2-13B). Drawing from ACT-R and Hebbian theory (spreading activation theories), as well as communication principles, we introduce Stimulus-Knowledge Entanglement-Behavior Framework (SKeB), which models information entanglement via ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
       "title": "An interaction-derived graph learning framework for scoring protein–peptide complexes",
       "url": "https://www.nature.com/articles/s42256-025-01136-1",
       "source": "Nature Machine Intelligence",
@@ -213,6 +213,23 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01136-1/MediaObjects/42256_2025_1136_Fig1_HTML.png"
+    },
+    {
+      "title": "Cross-Platform Evaluation of Reasoning Capabilities in Foundation Models",
+      "url": "http://arxiv.org/abs/2510.26732v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-10-30T17:31:03.000Z",
+      "score": 65,
+      "resume_fr": "This paper presents a comprehensive cross-platform evaluation of reasoning capabilities in contemporary foundation models, establishing an infrastructure-agnostic benchmark across three computational paradigms: HPC supercomputing (MareNostrum 5), cloud platforms (Nebius AI Studio), and university clusters (a node with eight H200 GPUs). We evaluate 15 foundation models across 79 problems spanning eight academic domains (Physics, Mathematics, Chemistry, Economics, Biology, Statistics, Calculus, and Optimization) through three experimental phases: (1) Baseline establishment: Six models (Mixtral-8",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Building AI Literacy at Home: How Families Navigate Children's\n  Self-Directed Learning with AI",
@@ -232,12 +249,46 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "How Data Mixing Shapes In-Context Learning: Asymptotic Equivalence for\n  Transformers with MLPs",
-      "url": "http://arxiv.org/abs/2510.25753v1",
+      "title": "How to avoid three common pitfalls in EdTech impact evaluations",
+      "url": "https://world-education-blog.org/2025/10/17/how-to-avoid-three-common-pitfalls-in-edtech-impact-evaluations/",
+      "source": "UNESCO GEM – World Education Blog",
+      "published": "2025-10-17T09:56:32.000Z",
+      "score": 65,
+      "resume_fr": "Professor Natalia I. Kucirkova, Professor of Early Childhood Development at the University of Stavanger, Norway, and The Open University, UK Around the world, major philanthropic agencies are turning to educational technology (EdTech) to improve learning. In the rush to identify tools that can quickly, cost-effectively, and reliably support children’s learning, ‘impact’ has become the central […] The post How to avoid three common pitfalls in EdTech impact evaluations appeared first on World Education Blog.",
+      "tags": [],
+      "breakdown": {
+        "research": 0,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://world-education-blog.org/wp-content/uploads/2025/10/Untitled-Twitter-Post6.png"
+    },
+    {
+      "title": "Launch of the Continental Assessment Framework for Africa – Advancing harmonized learning assessment across the continent",
+      "url": "https://world-education-blog.org/2025/10/08/launch-of-the-continental-assessment-framework-for-africa-advancing-harmonized-learning-assessment-across-the-continent/",
+      "source": "UNESCO GEM – World Education Blog",
+      "published": "2025-10-08T10:25:03.000Z",
+      "score": 65,
+      "resume_fr": "By Adoumtar Noubatour, Coordinator AU-IPED, Sophia Ashipala, AUC-Head of Education Division and Michael M. Chilala, Chief Executive Officer of the Examinations Council of Zambia (ECZ), and Executive Secretary, Association for Educational Assessment in Africa (AEAA) Education remains the cornerstone of Africa’s development and a central driver of the aspirations of Agenda 2063, the Continental Education […] The post Launch of the Continental Assessment Framework for Africa – Advancing harmonized learning assessment across the continent appeared first on World Education Blog.",
+      "tags": [],
+      "breakdown": {
+        "research": 0,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://world-education-blog.org/wp-content/uploads/2025/10/zambia-blog.png"
+    },
+    {
+      "title": "Learning Pseudorandom Numbers with Transformers: Permuted Congruential\n  Generators, Curricula, and Interpretability",
+      "url": "http://arxiv.org/abs/2510.26792v1",
       "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-29T17:51:57.000Z",
+      "published": "2025-10-30T17:59:09.000Z",
       "score": 50,
-      "resume_fr": "Pretrained Transformers demonstrate remarkable in-context learning (ICL) capabilities, enabling them to adapt to new tasks from demonstrations without parameter updates. However, theoretical studies often rely on simplified architectures (e.g., omitting MLPs), data models (e.g., linear regression with isotropic inputs), and single-source training, limiting their relevance to realistic settings. In this work, we study ICL in pretrained Transformers with nonlinear MLP heads on nonlinear tasks drawn from multiple data sources with heterogeneous input, task, and noise distributions. We analyze a m",
+      "resume_fr": "We study the ability of Transformer models to learn sequences generated by Permuted Congruential Generators (PCGs), a widely used family of pseudo-random number generators (PRNGs). PCGs introduce substantial additional difficulty over linear congruential generators (LCGs) by applying a series of bit-wise shifts, XORs, rotations and truncations to the hidden state. We show that Transformers can nevertheless successfully perform in-context prediction on unseen sequences from diverse PCG variants, in tasks that are beyond published classical attacks. In our experiments we scale moduli up to $2^{2",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -246,57 +297,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Meshless solutions of PDE inverse problems on irregular geometries",
-      "url": "http://arxiv.org/abs/2510.25752v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-10-29T17:49:40.000Z",
-      "score": 50,
-      "resume_fr": "Solving inverse and optimization problems over solutions of nonlinear partial differential equations (PDEs) on complex spatial domains is a long-standing challenge. Here we introduce a method that parameterizes the solution using spectral bases on arbitrary spatiotemporal domains, whereby the basis is defined on a hyperrectangle containing the true domain. We find the coefficients of the basis expansion by solving an optimization problem whereby both the equations, the boundary conditions and any optimization targets are enforced by a loss function, building on a key idea from Physics-Informed",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Human Resilience in the AI Era -- What Machines Can't Replace",
-      "url": "http://arxiv.org/abs/2510.25218v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-29T06:48:19.000Z",
-      "score": 50,
-      "resume_fr": "AI is displacing tasks, mediating high-stakes decisions, and flooding communication with synthetic content, unsettling work, identity, and social trust. We argue that the decisive human countermeasure is resilience. We define resilience across three layers: psychological, including emotion regulation, meaning-making, cognitive flexibility; social, including trust, social capital, coordinated response; organizational, including psychological safety, feedback mechanisms, and graceful degradation. We synthesize early evidence that these capacities buffer individual strain, reduce burnout through ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Advancing site-specific disease and pest management in precision\n  agriculture: From reasoning-driven foundation models to adaptive,\n  feedback-based learning",
-      "url": "http://arxiv.org/abs/2510.24650v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-28T17:16:47.000Z",
-      "score": 50,
-      "resume_fr": "Site-specific disease management (SSDM) in crops has advanced rapidly through machine and deep learning (ML and DL) for real-time computer vision. Research evolved from handcrafted feature extraction to large-scale automated feature learning. With foundation models (FMs), crop disease datasets are now processed in fundamentally new ways. Unlike traditional neural networks, FMs integrate visual and textual data, interpret symptoms in text, reason about symptom-management relationships, and support interactive QA for growers and educators. Adaptive and imitation learning in robotics further enab",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
