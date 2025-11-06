@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-05T06:37:12.898Z",
+  "generatedAt": "2025-11-06T06:37:30.392Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,12 +96,12 @@
   },
   "items": [
     {
-      "title": "Interpersonal neural synchronization underlies interactive concept learning in older adults",
-      "url": "https://www.nature.com/articles/s41539-025-00368-5",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2025-10-31T00:00:00.000Z",
+      "title": "A systematic review of relation extraction task since the emergence of\n  Transformers",
+      "url": "http://arxiv.org/abs/2511.03610v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-05T16:28:48.000Z",
       "score": 85,
-      "resume_fr": "",
+      "resume_fr": "This article presents a systematic review of relation extraction (RE) research since the advent of Transformer-based models. Using an automated framework to collect and annotate publications, we analyze 34 surveys, 64 datasets, and 104 models published between 2019 and 2024. The review highlights methodological advances, benchmark resources, and the integration of semantic web technologies. By consolidating results across multiple dimensions, the study identifies current trends, limitations, and open challenges, offering researchers and practitioners a comprehensive reference for understanding",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -110,15 +110,49 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00368-5/MediaObjects/41539_2025_368_Fig1_HTML.png"
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Can LLMs subtract numbers?",
-      "url": "http://arxiv.org/abs/2511.02795v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-04T18:20:17.000Z",
+      "title": "The Adaptivity Barrier in Batched Nonparametric Bandits: Sharp\n  Characterization of the Price of Unknown Margin",
+      "url": "http://arxiv.org/abs/2511.03708v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-05T18:42:47.000Z",
       "score": 70,
-      "resume_fr": "We present a systematic study of subtraction in large language models (LLMs). While prior benchmarks emphasize addition and multiplication, subtraction has received comparatively little attention despite being structurally distinct as a non-commutative operation. We evaluate eight pretrained LLMs spanning four families on addition and subtraction problems. Our experiments reveal that subtraction accuracy lags behind addition by a wide margin. We find that the errors for ($a-b$) are concentrated in cases where ($a<b$). In such cases, LLMs frequently produce the correct magnitude but omit the ne",
+      "resume_fr": "We study batched nonparametric contextual bandits under a margin condition when the margin parameter $\\alpha$ is unknown. To capture the statistical price of this ignorance, we introduce the regret inflation criterion, defined as the ratio between the regret of an adaptive algorithm and that of an oracle knowing $\\alpha$. We show that the optimal regret inflation grows polynomial with the horizon $T$, with exponent precisely given by the value of a convex optimization problem involving the dimension, smoothness, and batch budget. Moreover, the minimizers of this optimization problem directly p",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Behavior-Adaptive Q-Learning: A Unifying Framework for Offline-to-Online\n  RL",
+      "url": "http://arxiv.org/abs/2511.03695v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-05T18:20:23.000Z",
+      "score": 70,
+      "resume_fr": "Offline reinforcement learning (RL) enables training from fixed data without online interaction, but policies learned offline often struggle when deployed in dynamic environments due to distributional shift and unreliable value estimates on unseen state-action pairs. We introduce Behavior-Adaptive Q-Learning (BAQ), a framework designed to enable a smooth and reliable transition from offline to online RL. The key idea is to leverage an implicit behavioral model derived from offline data to provide a behavior-consistency signal during online fine-tuning. BAQ incorporates a dual-objective loss th",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Watermarking Large Language Models in Europe: Interpreting the AI Act in\n  Light of Technology",
+      "url": "http://arxiv.org/abs/2511.03641v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-05T17:00:39.000Z",
+      "score": 70,
+      "resume_fr": "To foster trustworthy Artificial Intelligence (AI) within the European Union, the AI Act requires providers to mark and detect the outputs of their general-purpose models. The Article 50 and Recital 133 call for marking methods that are ''sufficiently reliable, interoperable, effective and robust''. Yet, the rapidly evolving and heterogeneous landscape of watermarks for Large Language Models (LLMs) makes it difficult to determine how these four standards can be translated into concrete and measurable evaluations. Our paper addresses this challenge, anchoring the normativity of European require",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -162,23 +196,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01136-1/MediaObjects/42256_2025_1136_Fig1_HTML.png"
-    },
-    {
-      "title": "Do it yourself: discerning the effects of self-directed activity on conceptual learning",
-      "url": "https://www.nature.com/articles/s41539-025-00364-9",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2025-09-29T00:00:00.000Z",
-      "score": 70,
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00364-9/MediaObjects/41539_2025_364_Fig1_HTML.png"
     },
     {
       "title": "Exploring ChatGPT's Capabilities, Stability, Potential and Risks in\n  Conducting Psychological Counseling through Simulations in School Counseling",
@@ -232,29 +249,12 @@
       "image": "https://world-education-blog.org/wp-content/uploads/2025/10/zambia-blog.png"
     },
     {
-      "title": "In Good GRACEs: Principled Teacher Selection for Knowledge Distillation",
-      "url": "http://arxiv.org/abs/2511.02833v1",
+      "title": "DQN Performance with Epsilon Greedy Policies and Prioritized Experience\n  Replay",
+      "url": "http://arxiv.org/abs/2511.03670v1",
       "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-04T18:58:47.000Z",
+      "published": "2025-11-05T17:36:30.000Z",
       "score": 50,
-      "resume_fr": "Knowledge distillation is an efficient strategy to use data generated by large \"teacher\" language models to train smaller capable \"student\" models, but selecting the optimal teacher for a specific student-task combination requires expensive trial-and-error. We propose a lightweight score called GRACE to quantify how effective a teacher will be for post-training a student model. GRACE measures distributional properties of the student's gradients without access to a verifier, teacher logits, teacher internals, or test data. From an information-theoretic perspective, GRACE connects to leave-one-o",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Oolong: Evaluating Long Context Reasoning and Aggregation Capabilities",
-      "url": "http://arxiv.org/abs/2511.02817v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-04T18:42:12.000Z",
-      "score": 50,
-      "resume_fr": "As model context lengths continue to grow, concerns about whether models effectively use the full context length have persisted. While several carefully designed long-context evaluations have recently been released, these evaluations tend to rely on retrieval from one or more sections of the context, which allows nearly all of the context tokens to be disregarded as noise. This represents only one type of task that might be performed with long context. We introduce Oolong, a benchmark of long-context reasoning tasks that require analyzing individual chunks of text on an atomic level, and then ",
+      "resume_fr": "We present a detailed study of Deep Q-Networks in finite environments, emphasizing the impact of epsilon-greedy exploration schedules and prioritized experience replay. Through systematic experimentation, we evaluate how variations in epsilon decay schedules affect learning efficiency, convergence behavior, and reward optimization. We investigate how prioritized experience replay leads to faster convergence and higher returns and show empirical results comparing uniform, no replay, and prioritized strategies across multiple simulations. Our findings illuminate the trade-offs and interactions b",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -266,12 +266,12 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Does Interpretability of Knowledge Tracing Models Support Teacher\n  Decision Making?",
-      "url": "http://arxiv.org/abs/2511.02718v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-04T16:40:24.000Z",
+      "title": "ChiMDQA: Towards Comprehensive Chinese Document QA with Fine-grained\n  Evaluation",
+      "url": "http://arxiv.org/abs/2511.03656v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-05T17:13:14.000Z",
       "score": 50,
-      "resume_fr": "Knowledge tracing (KT) models are a crucial basis for pedagogical decision-making, namely which task to select next for a learner and when to stop teaching a particular skill. Given the high stakes of pedagogical decisions, KT models are typically required to be interpretable, in the sense that they should implement an explicit model of human learning and provide explicit estimates of learners' abilities. However, to our knowledge, no study to date has investigated whether the interpretability of KT models actually helps human teachers to make teaching decisions. We address this gap. First, we",
+      "resume_fr": "With the rapid advancement of natural language processing (NLP) technologies, the demand for high-quality Chinese document question-answering datasets is steadily growing. To address this issue, we present the Chinese Multi-Document Question Answering Dataset(ChiMDQA), specifically designed for downstream business scenarios across prevalent domains including academic, education, finance, law, medical treatment, and news. ChiMDQA encompasses long-form documents from six distinct fields, consisting of 6,068 rigorously curated, high-quality question-answer (QA) pairs further classified into ten f",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -283,12 +283,12 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "A Multi-Agent Psychological Simulation System for Human Behavior\n  Modeling",
-      "url": "http://arxiv.org/abs/2511.02606v1",
+      "title": "I Prompt, it Generates, we Negotiate. Exploring Text-Image\n  Intertextuality in Human-AI Co-Creation of Visual Narratives with VLMs",
+      "url": "http://arxiv.org/abs/2511.03375v1",
       "source": "arXiv – cs.HC + education",
-      "published": "2025-11-04T14:28:03.000Z",
+      "published": "2025-11-05T11:30:58.000Z",
       "score": 50,
-      "resume_fr": "Training and education in human-centered fields require authentic practice, yet realistic simulations of human behavior have remained limited. We present a multi-agent psychological simulation system that models internal cognitive-affective processes to generate believable human behaviors. In contrast to black-box neural models, this system is grounded in established psychological theories (e.g., self-efficacy, mindset, social constructivism) and explicitly simulates an ``inner parliament'' of agents corresponding to key psychological factors. These agents deliberate and interact to determine ",
+      "resume_fr": "Creating meaningful visual narratives through human-AI collaboration requires understanding how text-image intertextuality emerges when textual intentions meet AI-generated visuals. We conducted a three-phase qualitative study with 15 participants using GPT-4o to investigate how novices navigate sequential visual narratives. Our findings show that users develop strategies to harness AI's semantic surplus by recognizing meaningful visual content beyond literal descriptions, iteratively refining prompts, and constructing narrative significance through complementary text-image relationships. We i",
       "tags": [],
       "breakdown": {
         "research": 35,
