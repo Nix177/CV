@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2025-11-10T06:39:39.357Z",
+  "generatedAt": "2025-11-11T06:38:10.579Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
   "totalAnalyzed": 100,
-  "totalPublished": 12,
+  "totalPublished": 16,
   "publishTarget": "default",
   "debug": {
     "analysisFailed": true,
@@ -96,12 +96,80 @@
   },
   "items": [
     {
-      "title": "AI Literacy for Community Colleges: Instructors' Perspectives on\n  Scenario-Based and Interactive Approaches to Teaching AI",
-      "url": "http://arxiv.org/abs/2511.05363v1",
+      "title": "Understanding Student Interaction with AI-Powered Next-Step Hints:\n  Strategies and Challenges",
+      "url": "http://arxiv.org/abs/2511.06362v1",
       "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-07T15:51:53.000Z",
+      "published": "2025-11-09T12:56:34.000Z",
+      "score": 100,
+      "resume_fr": "Automated feedback generation plays a crucial role in enhancing personalized learning experiences in computer science education. Among different types of feedback, next-step hint feedback is particularly important, as it provides students with actionable steps to progress towards solving programming tasks. This study investigates how students interact with an AI-driven next-step hint system in an in-IDE learning environment. We gathered and analyzed a dataset from 34 students solving Kotlin tasks, containing detailed hint interaction logs. We applied process mining techniques and identified 16",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "LoReTTA: A Low Resource Framework To Poison Continuous Time Dynamic\n  Graphs",
+      "url": "http://arxiv.org/abs/2511.07379v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-10T18:41:02.000Z",
       "score": 85,
-      "resume_fr": "This research category full paper investigates how community college instructors evaluate interactive, no-code AI literacy resources designed for non-STEM learners. As artificial intelligence becomes increasingly integrated into everyday technologies, AI literacy - the ability to evaluate AI systems, communicate with them, and understand their broader impacts - has emerged as a critical skill across disciplines. Yet effective, scalable approaches for teaching these concepts in higher education remain limited, particularly for students outside STEM fields. To address this gap, we developed AI U",
+      "resume_fr": "Temporal Graph Neural Networks (TGNNs) are increasingly used in high-stakes domains, such as financial forecasting, recommendation systems, and fraud detection. However, their susceptibility to poisoning attacks poses a critical security risk. We introduce LoReTTA (Low Resource Two-phase Temporal Attack), a novel adversarial framework on Continuous-Time Dynamic Graphs, which degrades TGNN performance by an average of 29.47% across 4 widely benchmark datasets and 4 State-of-the-Art (SotA) models. LoReTTA operates through a two-stage approach: (1) sparsify the graph by removing high-impact edges",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "MENTOR: A Metacognition-Driven Self-Evolution Framework for Uncovering\n  and Mitigating Implicit Risks in LLMs on Domain Tasks",
+      "url": "http://arxiv.org/abs/2511.07107v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-10T13:51:51.000Z",
+      "score": 85,
+      "resume_fr": "Ensuring the safety and value alignment of large language models (LLMs) is critical for their deployment. Current alignment efforts primarily target explicit risks such as bias, hate speech, and violence. However, they often fail to address deeper, domain-specific implicit risks and lack a flexible, generalizable framework applicable across diverse specialized fields. Hence, we proposed MENTOR: A MEtacognition-driveN self-evoluTion framework for uncOvering and mitigating implicit Risks in LLMs on Domain Tasks. To address the limitations of labor-intensive human evaluation, we introduce a novel",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Pedagogical Reflections on the Holistic Cognitive Development (HCD)\n  Framework and AI-Augmented Learning in Creative Computing",
+      "url": "http://arxiv.org/abs/2511.06779v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-10T07:07:37.000Z",
+      "score": 85,
+      "resume_fr": "This paper presents an expanded account of the Holistic Cognitive Development (HCD) framework for reflective and creative learning in computing education. The HCD framework integrates design thinking, experiential learning, and reflective practice into a unified constructivist pedagogy emphasizing autonomy, ownership, and scaffolding. It is applied across courses in game design (CS3247, CS4350), virtual reality (CS4240), and extended reality systems, where students engage in iterative cycles of thinking, creating, criticizing, and reflecting. The paper also examines how AI-augmented systems su",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AdvisingWise: Supporting Academic Advising in Higher Educations Through\n  a Human-in-the-Loop Multi-Agent Framework",
+      "url": "http://arxiv.org/abs/2511.05706v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-07T20:55:24.000Z",
+      "score": 85,
+      "resume_fr": "Academic advising is critical to student success in higher education, yet high student-to-advisor ratios limit advisors' capacity to provide timely support, particularly during peak periods. Recent advances in Large Language Models (LLMs) present opportunities to enhance the advising process. We present AdvisingWise, a multi-agent system that automates time-consuming tasks, such as information retrieval and response drafting, while preserving human oversight. AdvisingWise leverages authoritative institutional resources and adaptively prompts students about their academic backgrounds to generat",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -130,46 +198,46 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Multi-Agent Collaborative Framework For Math Problem Generation",
-      "url": "http://arxiv.org/abs/2511.03958v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-06T01:24:07.000Z",
+      "title": "Interpersonal neural synchronization underlies interactive concept learning in older adults",
+      "url": "https://www.nature.com/articles/s41539-025-00368-5",
+      "source": "npj Science of Learning (Nature)",
+      "published": "2025-10-31T00:00:00.000Z",
       "score": 85,
-      "resume_fr": "Automatic question generation (AQG) for mathematics education remains an elusive goal for Intelligent Tutoring Systems and educators. While pre-trained transformer-based language models have significantly advanced natural language generation, they often struggle to precisely control problem complexity and cognitive demands. In this paper, we introduce a collaborative multi-agent framework as a novel method of incorporating inference-time computation into AQG. This approach leverages multiple agents that iteratively refine generated question-answer pairs to better balance complexity and cogniti",
+      "resume_fr": "",
       "tags": [],
       "breakdown": {
         "research": 35,
         "policy": 35,
-        "institution": 0,
-        "impact": 15
+        "institution": 15,
+        "impact": 0
       },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00368-5/MediaObjects/41539_2025_368_Fig1_HTML.png"
     },
     {
-      "title": "Extracting Causal Relations in Deep Knowledge Tracing",
-      "url": "http://arxiv.org/abs/2511.03948v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-06T00:52:28.000Z",
-      "score": 85,
-      "resume_fr": "A longstanding goal in computational educational research is to develop explainable knowledge tracing (KT) models. Deep Knowledge Tracing (DKT), which leverages a Recurrent Neural Network (RNN) to predict student knowledge and performance on exercises, has been proposed as a major advancement over traditional KT methods. Several studies suggest that its performance gains stem from its ability to model bidirectional relationships between different knowledge components (KCs) within a course, enabling the inference of a student's understanding of one KC from their performance on others. In this p",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Minority-Aware Satisfaction Estimation in Dialogue Systems via\n  Preference-Adaptive Reinforcement Learning",
-      "url": "http://arxiv.org/abs/2511.05407v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-07T16:34:03.000Z",
+      "title": "StreamDiffusionV2: A Streaming System for Dynamic and Interactive Video\n  Generation",
+      "url": "http://arxiv.org/abs/2511.07399v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-10T18:51:28.000Z",
       "score": 70,
-      "resume_fr": "User satisfaction in dialogue systems is inherently subjective. When the same response strategy is applied across users, minority users may assign different satisfaction ratings than majority users due to variations in individual intents and preferences. However, existing alignment methods typically train one-size-fits-all models that aim for broad consensus, often overlooking minority perspectives and user-specific adaptation. We propose a unified framework that models both individual- and group-level preferences for user satisfaction estimation. First, we introduce Chain-of-Personalized-Reas",
+      "resume_fr": "Generative models are reshaping the live-streaming industry by redefining how content is created, styled, and delivered. Previous image-based streaming diffusion models have powered efficient and creative live streaming products but have hit limits on temporal consistency due to the foundation of image-based designs. Recent advances in video diffusion have markedly improved temporal consistency and sampling efficiency for offline generation. However, offline generation systems primarily optimize throughput by batching large workloads. In contrast, live online streaming operates under strict se",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Surgical Agent Orchestration Platform for Voice-directed Patient Data\n  Interaction",
+      "url": "http://arxiv.org/abs/2511.07392v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-10T18:47:24.000Z",
+      "score": 70,
+      "resume_fr": "In da Vinci robotic surgery, surgeons' hands and eyes are fully engaged in the procedure, making it difficult to access and manipulate multimodal patient data without interruption. We propose a voice-directed Surgical Agent Orchestrator Platform (SAOP) built on a hierarchical multi-agent framework, consisting of an orchestration agent and three task-specific agents driven by Large Language Models (LLMs). These LLM-based agents autonomously plan, refine, validate, and reason to map voice commands into specific tasks such as retrieving clinical information, manipulating CT scans, or navigating 3",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -232,6 +300,40 @@
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01136-1/MediaObjects/42256_2025_1136_Fig1_HTML.png"
     },
     {
+      "title": "Designing Beyond Language: Sociotechnical Barriers in AI Health\n  Technologies for Limited English Proficiency",
+      "url": "http://arxiv.org/abs/2511.07277v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-10T16:23:06.000Z",
+      "score": 65,
+      "resume_fr": "Limited English proficiency (LEP) patients in the U.S. face systemic barriers to healthcare beyond language and interpreter access, encompassing procedural and institutional constraints. AI advances may support communication and care through on-demand translation and visit preparation, but also risk exacerbating existing inequalities. We conducted storyboard-driven interviews with 14 patient navigators to explore how AI could shape care experiences for Spanish-speaking LEP individuals. We identified tensions around linguistic and cultural misunderstandings, privacy concerns, and opportunities ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Imperfect Learner: Incorporating Developmental Trajectories in\n  Memory-based Student Simulation",
+      "url": "http://arxiv.org/abs/2511.05903v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-08T08:05:43.000Z",
+      "score": 65,
+      "resume_fr": "User simulation is important for developing and evaluating human-centered AI, yet current student simulation in educational applications has significant limitations. Existing approaches focus on single learning experiences and do not account for students' gradual knowledge construction and evolving skill sets. Moreover, large language models are optimized to produce direct and accurate responses, making it challenging to represent the incomplete understanding and developmental constraints that characterize real learners. In this paper, we introduce a novel framework for memory-based student si",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "How to avoid three common pitfalls in EdTech impact evaluations",
       "url": "https://world-education-blog.org/2025/10/17/how-to-avoid-three-common-pitfalls-in-edtech-impact-evaluations/",
       "source": "UNESCO GEM – World Education Blog",
@@ -264,40 +366,6 @@
       },
       "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
       "image": "https://world-education-blog.org/wp-content/uploads/2025/10/zambia-blog.png"
-    },
-    {
-      "title": "DGTN: Graph-Enhanced Transformer with Diffusive Attention Gating\n  Mechanism for Enzyme DDG Prediction",
-      "url": "http://arxiv.org/abs/2511.05483v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-07T18:52:17.000Z",
-      "score": 50,
-      "resume_fr": "Predicting the effect of amino acid mutations on enzyme thermodynamic stability (DDG) is fundamental to protein engineering and drug design. While recent deep learning approaches have shown promise, they often process sequence and structure information independently, failing to capture the intricate coupling between local structural geometry and global sequential patterns. We present DGTN (Diffused Graph-Transformer Network), a novel architecture that co-learns graph neural network (GNN) weights for structural priors and transformer attention through a diffusion mechanism. Our key innovation i",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Metamorphic Testing Perspective on Knowledge Distillation for Language\n  Models of Code: Does the Student Deeply Mimic the Teacher?",
-      "url": "http://arxiv.org/abs/2511.05476v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-07T18:38:54.000Z",
-      "score": 50,
-      "resume_fr": "Transformer-based language models of code have achieved state-of-the-art performance across a wide range of software analytics tasks, but their practical deployment remains limited due to high computational costs, slow inference speeds, and significant environmental impact. To address these challenges, recent research has increasingly explored knowledge distillation as a method for compressing a large language model of code (the teacher) into a smaller model (the student) while maintaining performance. However, the degree to which a student model deeply mimics the predictive behavior and inter",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
