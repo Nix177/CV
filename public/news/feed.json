@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-14T06:37:24.957Z",
+  "generatedAt": "2025-11-15T06:34:21.439Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,12 +96,12 @@
   },
   "items": [
     {
-      "title": "A Review of Augmented Reality Apps for an AR-Based STEM Education Framework",
-      "url": "https://arxiv.org/abs/2203.07024v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2022-01-19T08:30:26.000Z",
+      "title": "PustakAI: Curriculum-Aligned and Interactive Textbooks Using Large Language Models",
+      "url": "https://arxiv.org/abs/2511.10002v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-13T06:12:12.000Z",
       "score": 85,
-      "resume_fr": "Within the past two decades, Augmented Reality (AR) applications have received increased attention. Augmented Reality is now widely used in the education sector at level K to 12. AR is expected to be generally adopted in two to three years in higher education and four to five years in K to 12. Applying AR technology in the education sector especially in STEM subjects, can result in having a smart campus. In adopting a SMART Campus strategy, education practitioners must address many intrinsic issues in science, technology, engineering, and mathematics (STEM) research. For example, in physics, t",
+      "resume_fr": "Large Language Models (LLMs) have demonstrated remarkable capabilities in understanding and generating human-like content. This has revolutionized various sectors such as healthcare, software development, and education. In education, LLMs offer potential for personalized and interactive learning experiences, especially in regions with limited teaching resources. However, adapting these models effectively to curriculum-specific content, such as the National Council of Educational Research and Training (NCERT) syllabus in India, presents unique challenges in terms of accuracy, alignment, and ped",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -110,6 +110,74 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "SlideBot: A Multi-Agent Framework for Generating Informative, Reliable, Multi-Modal Presentations",
+      "url": "https://arxiv.org/abs/2511.09804v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-12T23:12:05.000Z",
+      "score": 85,
+      "resume_fr": "Large Language Models (LLMs) have shown immense potential in education, automating tasks like quiz generation and content summarization. However, generating effective presentation slides introduces unique challenges due to the complexity of multimodal content creation and the need for precise, domain-specific information. Existing LLM-based solutions often fail to produce reliable and informative outputs, limiting their educational value. To address these limitations, we introduce SlideBot - a modular, multi-agent slide generation framework that integrates LLMs with retrieval, structured plann",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring The Interaction-Outcome Paradox: Seemingly Richer and More Self-Aware Interactions with LLMs May Not Yet Lead to Better Learning",
+      "url": "https://arxiv.org/abs/2511.09458v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-12T16:18:36.000Z",
+      "score": 85,
+      "resume_fr": "While Large Language Models (LLMs) have transformed the user interface for learning, moving from keyword search to natural language dialogue, their impact on educational outcomes remains unclear. We present a controlled study (N=20) that directly compares the learning interaction and outcomes between LLM and search-based interfaces. We found that although LLMs elicit richer and nuanced interactions from a learner, they do not produce broadly better learning outcomes. In this paper, we explore this the ``Interaction-Outcome Paradox.'' To explain this, we discuss the concept of a cognitive shift",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Interpersonal neural synchronization underlies interactive concept learning in older adults",
+      "url": "https://www.nature.com/articles/s41539-025-00368-5",
+      "source": "npj Science of Learning (Nature)",
+      "published": "2025-10-31T00:00:00.000Z",
+      "score": 85,
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00368-5/MediaObjects/41539_2025_368_Fig1_HTML.png"
+    },
+    {
+      "title": "Black-Box On-Policy Distillation of Large Language Models",
+      "url": "https://arxiv.org/abs/2511.10643v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-13T18:58:37.000Z",
+      "score": 70,
+      "resume_fr": "Black-box distillation creates student large language models (LLMs) by learning from a proprietary teacher model's text outputs alone, without access to its internal logits or parameters. In this work, we introduce Generative Adversarial Distillation (GAD), which enables on-policy and black-box distillation. GAD frames the student LLM as a generator and trains a discriminator to distinguish its responses from the teacher LLM's, creating a minimax game. The discriminator acts as an on-policy reward model that co-evolves with the student, providing stable, adaptive feedback. Experimental results",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -130,74 +198,6 @@
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01137-0/MediaObjects/42256_2025_1137_Fig1_HTML.png"
     },
     {
-      "title": "Language models cannot reliably distinguish belief from knowledge and fact",
-      "url": "https://www.nature.com/articles/s42256-025-01113-8",
-      "source": "Nature Machine Intelligence",
-      "published": "2025-11-03T00:00:00.000Z",
-      "score": 70,
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01113-8/MediaObjects/42256_2025_1113_Fig1_HTML.png"
-    },
-    {
-      "title": "Active learning for data streams: a survey",
-      "url": "https://arxiv.org/abs/2302.08893v4",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2023-02-17T14:24:13.000Z",
-      "score": 70,
-      "resume_fr": "Online active learning is a paradigm in machine learning that aims to select the most informative data points to label from a data stream. The problem of minimizing the cost associated with collecting labeled observations has gained a lot of attention in recent years, particularly in real-world applications where data is only available in an unlabeled form. Annotating each observation can be time-consuming and costly, making it difficult to obtain large amounts of labeled data. To overcome this issue, many active learning strategies have been proposed in the last decades, aiming to select the ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Regularized Attentive Capsule Network for Overlapped Relation Extraction",
-      "url": "https://arxiv.org/abs/2012.10187v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2020-12-18T12:17:08.000Z",
-      "score": 70,
-      "resume_fr": "Distantly supervised relation extraction has been widely applied in knowledge base construction due to its less requirement of human efforts. However, the automatically established training datasets in distant supervision contain low-quality instances with noisy words and overlapped relations, introducing great challenges to the accurate extraction of relations. To address this problem, we propose a novel Regularized Attentive Capsule Network (RA-CapNet) to better identify highly overlapped relations in each informal sentence. To discover multiple relation features in an instance, we embed mul",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "AI & Data Competencies: Scaffolding holistic AI literacy in Higher Education",
-      "url": "https://arxiv.org/abs/2510.24783v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-26T22:56:08.000Z",
-      "score": 65,
-      "resume_fr": "This chapter introduces the AI & Data Acumen Learning Outcomes Framework, a comprehensive tool designed to guide the integration of AI literacy across higher education. Developed through a collaborative process, the framework defines key AI and data-related competencies across four proficiency levels and seven knowledge dimensions. It provides a structured approach for educators to scaffold student learning in AI, balancing technical skills with ethical considerations and sociocultural awareness. The chapter outlines the framework's development process, its structure, and practical strategies ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
       "title": "How to avoid three common pitfalls in EdTech impact evaluations",
       "url": "https://world-education-blog.org/2025/10/17/how-to-avoid-three-common-pitfalls-in-edtech-impact-evaluations/",
       "source": "UNESCO GEM – World Education Blog",
@@ -215,63 +215,46 @@
       "image": "https://world-education-blog.org/wp-content/uploads/2025/10/Untitled-Twitter-Post6.png"
     },
     {
-      "title": "Leveraging AI to Advance Science and Computing Education across Africa: Challenges, Progress and Opportunities",
-      "url": "https://arxiv.org/abs/2402.07397v2",
-      "source": "arXiv – cs.HC + education",
-      "published": "2024-02-12T04:10:09.000Z",
-      "score": 65,
-      "resume_fr": "Across the African continent, students grapple with various educational challenges, including limited access to essential resources such as computers, internet connectivity, reliable electricity, and a shortage of qualified teachers. Despite these challenges, recent advances in AI such as BERT, and GPT-4 have demonstrated their potential for advancing education. Yet, these AI tools tend to be deployed and evaluated predominantly within the context of Western educational settings, with limited attention directed towards the unique needs and challenges faced by students in Africa. In this chapte",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Opportunities for Adaptive Experiments to Enable Continuous Improvement in Computer Science Education",
-      "url": "https://arxiv.org/abs/2310.12324v2",
-      "source": "arXiv – cs.HC + education",
-      "published": "2023-10-18T20:54:59.000Z",
-      "score": 65,
-      "resume_fr": "Randomized A/B comparisons of alternative pedagogical strategies or other course improvements could provide useful empirical evidence for instructor decision-making. However, traditional experiments do not provide a straightforward pathway to rapidly utilize data, increasing the chances that students in an experiment experience the best conditions. Drawing inspiration from the use of machine learning and experimentation in product development at leading technology companies, we explore how adaptive experimentation might aid continuous course improvement. In adaptive experiments, data is analyz",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Higher Ed Strengthens Incident Response With AI and Practice",
-      "url": "https://edtechmagazine.com/higher/media/video/higher-ed-strengthens-incident-response-ai-and-practice",
-      "source": "EdTech Magazine (Higher Ed)",
-      "published": "2025-11-12T22:56:35.000Z",
+      "title": "Querying Labeled Time Series Data with Scenario Programs",
+      "url": "https://arxiv.org/abs/2511.10627v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-13T18:52:27.000Z",
       "score": 50,
-      "resume_fr": "When Jeff Falsetti invoked AI — Allen Iverson, not artificial intelligence (just yet) — he made his point clear: in cybersecurity, practice isn’t optional, it’s preparation. At EDUCAUSE 2025, CDW experts Falsetti and Patrick Sullivan shared insights at a conference session titled, “Defending the Digital Campus: Mastering Incident Response in Higher Education.” Falsetti, a DFIR technical lead consultant, and Sullivan, a senior manager of security sales, joined industry peers to explore new strategies for mastering incident response in higher education through proactive tabletop exercises…",
+      "resume_fr": "Simulation-based testing has become a crucial complement to road testing for ensuring the safety of cyber physical systems (CPS). As a result, significant research efforts have been directed toward identifying failure scenarios within simulation environments. However, a critical question remains. Are the AV failure scenarios discovered in simulation reproducible on actual systems in the real world? The sim-to-real gap caused by differences between simulated and real sensor data means that failure scenarios identified in simulation might either be artifacts of synthetic sensor data or actual is",
       "tags": [],
       "breakdown": {
-        "research": 0,
-        "policy": 35,
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Towards Emotionally Intelligent and Responsible Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2511.10573v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-13T18:09:37.000Z",
+      "score": 50,
+      "resume_fr": "Personalized decision systems in healthcare and behavioral support often rely on static rule-based or engagement-maximizing heuristics that overlook users' emotional context and ethical constraints. Such approaches risk recommending insensitive or unsafe interventions, especially in domains involving serious mental illness, substance use disorders, or depression. To address this limitation, we propose a Responsible Reinforcement Learning (RRL) framework that integrates emotional and contextual understanding with ethical considerations into the sequential decision-making process. RRL formulates",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
         "institution": 0,
         "impact": 15
       },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://edtechmagazine.com/higher/sites/edtechmagazine.com.higher/files/styles/cdw_hero/public/video/Jeff%20Falsetti.jpg?itok=PpP3LbeW"
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "AI in Computational Thinking Education in Higher Education: A Systematic Literature Review",
-      "url": "https://arxiv.org/abs/2510.09677v1",
+      "title": "Bi-Level Contextual Bandits for Individualized Resource Allocation under Delayed Feedback",
+      "url": "https://arxiv.org/abs/2511.10572v1",
       "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-10-08T20:11:46.000Z",
+      "published": "2025-11-13T18:09:08.000Z",
       "score": 50,
-      "resume_fr": "Computational Thinking (CT) is a key skill set for students in higher education to thrive and adapt to an increasingly technology-driven future and workplace. While research on CT education has gained remarkable momentum in K12 over the past decade, it has remained under-explored in higher education, leaving higher education teachers with an insufficient overview, knowledge, and support regarding CT education. The proliferation and adoption of artificial intelligence (AI) by educational institutions have demonstrated promising potential to support instructional activities across many disciplin",
+      "resume_fr": "Equitably allocating limited resources in high-stakes domains-such as education, employment, and healthcare-requires balancing short-term utility with long-term impact, while accounting for delayed outcomes, hidden heterogeneity, and ethical constraints. However, most learning-based allocation frameworks either assume immediate feedback or ignore the complex interplay between individual characteristics and intervention dynamics. We propose a novel bi-level contextual bandit framework for individualized resource allocation under delayed feedback, designed to operate in real-world settings with ",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -283,12 +266,12 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Scoping Review on the Role of Learning Analytics in Assessing and Fostering Creativity in Educational Contexts",
-      "url": "https://learning-analytics.info/index.php/JLA/article/view/8833",
-      "source": "Journal of Learning Analytics (JLA)",
-      "published": "2025-08-29T07:00:00.000Z",
+      "title": "LOCA-R: Near-Perfect Performance on the Chinese Physics Olympiad 2025",
+      "url": "https://arxiv.org/abs/2511.10515v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-13T17:20:46.000Z",
       "score": 50,
-      "resume_fr": "<p>Learning Analytics (LA) is increasingly applied to assess and foster creativity in educational settings. Whereas existing applications have shown promise in STEM contexts, less is known about the diversity of approaches across educational domains. Therefore, we conducted a scoping review that systematically mapped LA applications for creativity in educational contexts. Searches returned 278 articles, with 41 studies meeting eligibility criteria. Analysis revealed five fundamental mechanisms through which LA fosters creativity: process visualization, adaptive feedback, automated pattern reco",
+      "resume_fr": "Olympiad-level physics problem-solving presents a significant challenge for both humans and artificial intelligence (AI), as it requires a sophisticated integration of precise calculation, abstract reasoning, and a fundamental grasp of physical principles. The Chinese Physics Olympiad (CPhO), renowned for its complexity and depth, serves as an ideal and rigorous testbed for these advanced capabilities. In this paper, we introduce LOCA-R (LOgical Chain Augmentation for Reasoning), an improved version of the LOCA framework adapted for complex reasoning, and apply it to the CPhO 2025 theory exami",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -297,7 +280,24 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=learning-analytics.info&sz=128"
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Fixed-Persona SLMs with Modular Memory: Scalable NPC Dialogue on Consumer Hardware",
+      "url": "https://arxiv.org/abs/2511.10277v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-13T13:03:37.000Z",
+      "score": 50,
+      "resume_fr": "Large Language Models (LLMs) have demonstrated remarkable capabilities in generating human-like text, yet their applicability to dialogue systems in computer games remains limited. This limitation arises from their substantial hardware requirements, latency constraints, and the necessity to maintain clearly defined knowledge boundaries within a game setting. In this paper, we propose a modular NPC dialogue system that leverages Small Language Models (SLMs), fine-tuned to encode specific NPC personas and integrated with runtime-swappable memory modules. These memory modules preserve character-s",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
