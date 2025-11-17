@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-16T06:35:17.127Z",
+  "generatedAt": "2025-11-17T06:38:22.698Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,40 +96,6 @@
   },
   "items": [
     {
-      "title": "PustakAI: Curriculum-Aligned and Interactive Textbooks Using Large Language Models",
-      "url": "https://arxiv.org/abs/2511.10002v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-13T06:12:12.000Z",
-      "score": 85,
-      "resume_fr": "Large Language Models (LLMs) have demonstrated remarkable capabilities in understanding and generating human-like content. This has revolutionized various sectors such as healthcare, software development, and education. In education, LLMs offer potential for personalized and interactive learning experiences, especially in regions with limited teaching resources. However, adapting these models effectively to curriculum-specific content, such as the National Council of Educational Research and Training (NCERT) syllabus in India, presents unique challenges in terms of accuracy, alignment, and ped",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "SlideBot: A Multi-Agent Framework for Generating Informative, Reliable, Multi-Modal Presentations",
-      "url": "https://arxiv.org/abs/2511.09804v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-12T23:12:05.000Z",
-      "score": 85,
-      "resume_fr": "Large Language Models (LLMs) have shown immense potential in education, automating tasks like quiz generation and content summarization. However, generating effective presentation slides introduces unique challenges due to the complexity of multimodal content creation and the need for precise, domain-specific information. Existing LLM-based solutions often fail to produce reliable and informative outputs, limiting their educational value. To address these limitations, we introduce SlideBot - a modular, multi-agent slide generation framework that integrates LLMs with retrieval, structured plann",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
       "title": "Exploring The Interaction-Outcome Paradox: Seemingly Richer and More Self-Aware Interactions with LLMs May Not Yet Lead to Better Learning",
       "url": "https://arxiv.org/abs/2511.09458v1",
       "source": "arXiv – cs.HC + education",
@@ -164,12 +130,63 @@
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00368-5/MediaObjects/41539_2025_368_Fig1_HTML.png"
     },
     {
-      "title": "Black-Box On-Policy Distillation of Large Language Models",
-      "url": "https://arxiv.org/abs/2511.10643v1",
+      "title": "DocLens : A Tool-Augmented Multi-Agent Framework for Long Visual Document Understanding",
+      "url": "https://arxiv.org/abs/2511.11552v1",
       "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-13T18:58:37.000Z",
+      "published": "2025-11-14T18:42:18.000Z",
       "score": 70,
-      "resume_fr": "Black-box distillation creates student large language models (LLMs) by learning from a proprietary teacher model's text outputs alone, without access to its internal logits or parameters. In this work, we introduce Generative Adversarial Distillation (GAD), which enables on-policy and black-box distillation. GAD frames the student LLM as a generator and trains a discriminator to distinguish its responses from the teacher LLM's, creating a minimax game. The discriminator acts as an on-policy reward model that co-evolves with the student, providing stable, adaptive feedback. Experimental results",
+      "resume_fr": "Comprehending long visual documents, where information is distributed across extensive pages of text and visual elements, is a critical but challenging task for modern Vision-Language Models (VLMs). Existing approaches falter on a fundamental challenge: evidence localization. They struggle to retrieve relevant pages and overlook fine-grained details within visual elements, leading to limited performance and model hallucination. To address this, we propose DocLens, a tool-augmented multi-agent framework that effectively ``zooms in'' on evidence like a lens. It first navigates from the full docu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Aligning Machiavellian Agents: Behavior Steering via Test-Time Policy Shaping",
+      "url": "https://arxiv.org/abs/2511.11551v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-14T18:42:18.000Z",
+      "score": 70,
+      "resume_fr": "The deployment of decision-making AI agents presents a critical challenge in maintaining alignment with human values or guidelines while operating in complex, dynamic environments. Agents trained solely to achieve their objectives may adopt harmful behavior, exposing a key trade-off between maximizing the reward function and maintaining the alignment. For the pre-trained agents, ensuring alignment is particularly challenging, as retraining can be a costly and slow process. This is further complicated by the diverse and potentially conflicting attributes representing the ethical values for alig",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CVChess: A Deep Learning Framework for Converting Chessboard Images to Forsyth-Edwards Notation",
+      "url": "https://arxiv.org/abs/2511.11522v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-14T17:50:35.000Z",
+      "score": 70,
+      "resume_fr": "Chess has experienced a large increase in viewership since the pandemic, driven largely by the accessibility of online learning platforms. However, no equivalent assistance exists for physical chess games, creating a divide between analog and digital chess experiences. This paper presents CVChess, a deep learning framework for converting chessboard images to Forsyth-Edwards Notation (FEN), which is later input into online chess engines to provide you with the best next move. Our approach employs a convolutional neural network (CNN) with residual layers to perform piece recognition from smartph",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Proactive Hearing Assistants that Isolate Egocentric Conversations",
+      "url": "https://arxiv.org/abs/2511.11473v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-14T16:44:48.000Z",
+      "score": 70,
+      "resume_fr": "We introduce proactive hearing assistants that automatically identify and separate the wearer's conversation partners, without requiring explicit prompts. Our system operates on egocentric binaural audio and uses the wearer's self-speech as an anchor, leveraging turn-taking behavior and dialogue dynamics to infer conversational partners and suppress others. To enable real-time, on-device operation, we propose a dual-model architecture: a lightweight streaming model runs every 12.5 ms for low-latency extraction of the conversation partners, while a slower model runs less frequently to capture l",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -232,12 +249,12 @@
       "image": "https://spectrum.ieee.org/media-library/image.jpg?id=62186165&width=1200&height=600&coordinates=0%2C232%2C0%2C232"
     },
     {
-      "title": "Querying Labeled Time Series Data with Scenario Programs",
-      "url": "https://arxiv.org/abs/2511.10627v1",
+      "title": "Multistability of Self-Attention Dynamics in Transformers",
+      "url": "https://arxiv.org/abs/2511.11553v1",
       "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-13T18:52:27.000Z",
+      "published": "2025-11-14T18:45:22.000Z",
       "score": 50,
-      "resume_fr": "Simulation-based testing has become a crucial complement to road testing for ensuring the safety of cyber physical systems (CPS). As a result, significant research efforts have been directed toward identifying failure scenarios within simulation environments. However, a critical question remains. Are the AV failure scenarios discovered in simulation reproducible on actual systems in the real world? The sim-to-real gap caused by differences between simulated and real sensor data means that failure scenarios identified in simulation might either be artifacts of synthetic sensor data or actual is",
+      "resume_fr": "In machine learning, a self-attention dynamics is a continuous-time multiagent-like model of the attention mechanisms of transformers. In this paper we show that such dynamics is related to a multiagent version of the Oja flow, a dynamical system that computes the principal eigenvector of a matrix corresponding for transformers to the value matrix. We classify the equilibria of the ``single-head'' self-attention system into four classes: consensus, bipartite consensus, clustering and polygonal equilibria. Multiple asymptotically stable equilibria from the first three classes often coexist in t",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -249,46 +266,29 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Towards Emotionally Intelligent and Responsible Reinforcement Learning",
-      "url": "https://arxiv.org/abs/2511.10573v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-13T18:09:37.000Z",
+      "title": "Experience-Guided Adaptation of Inference-Time Reasoning Strategies",
+      "url": "https://arxiv.org/abs/2511.11519v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-14T17:45:28.000Z",
       "score": 50,
-      "resume_fr": "Personalized decision systems in healthcare and behavioral support often rely on static rule-based or engagement-maximizing heuristics that overlook users' emotional context and ethical constraints. Such approaches risk recommending insensitive or unsafe interventions, especially in domains involving serious mental illness, substance use disorders, or depression. To address this limitation, we propose a Responsible Reinforcement Learning (RRL) framework that integrates emotional and contextual understanding with ethical considerations into the sequential decision-making process. RRL formulates",
+      "resume_fr": "Enabling agentic AI systems to adapt their problem-solving approaches based on post-training interactions remains a fundamental challenge. While systems that update and maintain a memory at inference time have been proposed, existing designs only steer the system by modifying textual input to a language model or agent, which means that they cannot change sampling parameters, remove tools, modify system prompts, or switch between agentic and workflow paradigms. On the other hand, systems that adapt more flexibly require offline optimization and remain static once deployed. We present Experience",
       "tags": [],
       "breakdown": {
         "research": 35,
         "policy": 0,
-        "institution": 0,
-        "impact": 15
+        "institution": 15,
+        "impact": 0
       },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "Bi-Level Contextual Bandits for Individualized Resource Allocation under Delayed Feedback",
-      "url": "https://arxiv.org/abs/2511.10572v1",
+      "title": "KGQuest: Template-Driven QA Generation from Knowledge Graphs with LLM-Based Refinement",
+      "url": "https://arxiv.org/abs/2511.11258v1",
       "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-13T18:09:08.000Z",
+      "published": "2025-11-14T12:54:01.000Z",
       "score": 50,
-      "resume_fr": "Equitably allocating limited resources in high-stakes domains-such as education, employment, and healthcare-requires balancing short-term utility with long-term impact, while accounting for delayed outcomes, hidden heterogeneity, and ethical constraints. However, most learning-based allocation frameworks either assume immediate feedback or ignore the complex interplay between individual characteristics and intervention dynamics. We propose a novel bi-level contextual bandit framework for individualized resource allocation under delayed feedback, designed to operate in real-world settings with ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "LOCA-R: Near-Perfect Performance on the Chinese Physics Olympiad 2025",
-      "url": "https://arxiv.org/abs/2511.10515v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-13T17:20:46.000Z",
-      "score": 50,
-      "resume_fr": "Olympiad-level physics problem-solving presents a significant challenge for both humans and artificial intelligence (AI), as it requires a sophisticated integration of precise calculation, abstract reasoning, and a fundamental grasp of physical principles. The Chinese Physics Olympiad (CPhO), renowned for its complexity and depth, serves as an ideal and rigorous testbed for these advanced capabilities. In this paper, we introduce LOCA-R (LOgical Chain Augmentation for Reasoning), an improved version of the LOCA framework adapted for complex reasoning, and apply it to the CPhO 2025 theory exami",
+      "resume_fr": "The generation of questions and answers (QA) from knowledge graphs (KG) plays a crucial role in the development and testing of educational platforms, dissemination tools, and large language models (LLM). However, existing approaches often struggle with scalability, linguistic quality, and factual consistency. This paper presents a scalable and deterministic pipeline for generating natural language QA from KGs, with an additional refinement step using LLMs to further enhance linguistic quality. The approach first clusters KG triplets based on their relations, creating reusable templates through",
       "tags": [],
       "breakdown": {
         "research": 35,
