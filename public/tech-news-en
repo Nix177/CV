@@ -47,7 +47,7 @@
 
     /* overlay build */
     .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.5);
+      position: fixed; inset: 0; background: rgba(0,0,0,5);
       display: none; align-items:center; justify-content:center;
       z-index: 9999;
     }
@@ -105,123 +105,119 @@
     </div>
 
     <details class="explain">
-      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ? (R/P/I/M)</summary>
-      <div class="muted" style="margin-top:6px">
-        <p><strong>Score d’une actu</strong> = somme pondérée de 4 facteurs (<span class="mono">R/P/I/M</span>) :</p>
+      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
+      <p class="muted">
+        Les sources sont d'abord filtrées (éducation numérique, IA, EdTech, politiques/standards). Ensuite, chaque item
+        reçoit un score global (0-100) combinant plusieurs dimensions (recherche, politiques, institutions, impact potentiel
+        pour l'enseignement).
+      </p>
+      <p class="muted bd" id="weightsSum">Poids (normés) R/P/I/M: —</p>
+      <div class="weights">
+        <div class="row">
+          <label>R
+            <input type="range" id="wR" min="0" max="100">
+            <span id="wRVal" class="bd mono">—</span>
+          </label>
+        </div>
+        <div class="row">
+          <label>P
+            <input type="range" id="wP" min="0" max="100">
+            <span id="wPVal" class="bd mono">—</span>
+          </label>
+        </div>
+        <div class="row">
+          <label>I
+            <input type="range" id="wI" min="0" max="100">
+            <span id="wIVal" class="bd mono">—</span>
+          </label>
+        </div>
+        <div class="row">
+          <label>M
+            <input type="range" id="wM" min="0" max="100">
+            <span id="wMVal" class="bd mono">—</span>
+          </label>
+        </div>
+        <label><input type="checkbox" id="useCustom"> Utiliser ces poids personnalisés (profil courant)</label>
+      </div>
+      <div class="muted">
         <ul>
-          <li><strong>R — Recherche</strong> : articles/journaux, conférences, CFP, résultats scientifiques.</li>
+          <li><strong>R — Recherche</strong> : articles, journaux, conférences, appels à communications, résultats scientifiques.</li>
           <li><strong>P — Politiques</strong> : lois, régulations, standards, cadres/“frameworks”.</li>
-          <li><strong>I — Institutions</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
-          <li><strong>M — Impact</strong> : impact direct pour la classe/enseignants/universités/EdTech.</li>
+          <li><strong>I — Institution</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
+          <li><strong>M — Impact</strong> : impact direct pour l’enseignement, les élèves/enseignants, l’EdTech.</li>
         </ul>
-        <p>Le flux stocke le <em>décompte</em> par facteur (<code>breakdown</code> R/P/I/M). Le profil choisi (Mix/Recherche/Politiques) donne un
-           jeu de poids par défaut. Vous pouvez définir des <strong>poids personnalisés</strong> ci-dessous et même <strong>reconstruire</strong> le flux avec ces poids.</p>
       </div>
     </details>
 
-    <div class="weights" id="weightsBar">
-      <label class="chip"><input type="checkbox" id="useCustom"> Poids personnalisés</label>
-      <span id="weightsSum" class="muted">Poids (normés) —</span>
-
-      <div class="row">
-        <span>R</span>
-        <input type="range" id="wR" min="0" max="100" step="5">
-        <span id="wRVal" class="bd">—</span>
-      </div>
-      <div class="row">
-        <span>P</span>
-        <input type="range" id="wP" min="0" max="100" step="5">
-        <span id="wPVal" class="bd">—</span>
-      </div>
-      <div class="row">
-        <span>I</span>
-        <input type="range" id="wI" min="0" max="100" step="5">
-        <span id="wIVal" class="bd">—</span>
-      </div>
-      <div class="row">
-        <span>M</span>
-        <input type="range" id="wM" min="0" max="100" step="5">
-        <span id="wMVal" class="bd">—</span>
-      </div>
-
-      <button id="resetW" class="btn">Réinitialiser poids (profil)</button>
-      <span class="sep">|</span>
-      <label class="chip"><input type="checkbox" id="buildAI" checked> Qualité (OpenAI)</label>
-      <button id="rebuild" class="btn">⚙️ Reconstruire avec ces poids</button>
-      <label class="chip"><input type="checkbox" id="preview"> Prévisualiser (n’écrase pas le flux)</label>
-
-      <span class="sep">|</span>
-      <details class="chip" id="adv">
-        <summary>Avancé (renommer P)</summary>
-        <div style="padding:10px; border:1px solid var(--border); border-radius:10px; background:var(--surface);">
-          <label>Libellé P
-            <input id="pLabel" type="text" placeholder="ex: Philosophie" style="min-width:220px">
-          </label>
-          <br>
-          <label>Mots-clés P (séparés par des virgules)
-            <input id="pKeys" type="text" placeholder="ex: philosophy,ethics,epistemology" style="min-width:420px">
-          </label>
-          <br>
-          <label>Description P
-            <input id="pDesc" type="text" placeholder="phrase courte" style="min-width:420px">
-          </label>
-          <p class="muted" id="pCur">P actuel: Politiques — mots-clés par défaut.</p>
+    <details id="adv">
+      <summary>Options avancées (preview, build GitHub Actions…)</summary>
+      <div>
+        <div class="rowb">
+          <label class="chip"><input type="checkbox" id="previewMode"> Mode preview (ne pas toucher au flux global)</label>
+          <span class="muted">Le mode preview lit/écrit dans un flux séparé (prévisualisation) sans modifier le flux stable.</span>
         </div>
-      </details>
-    </div>
-
-    <p id="stamp" class="muted" style="margin:6px 0 0">—</p>
+        <div class="rowb">
+          <button id="buildBtn" class="btn">Lancer une mise à jour via GitHub Actions</button>
+          <span class="muted">Crée un run GitHub Actions qui rafraîchit les news sur le dépôt (profil + poids + seuil).</span>
+        </div>
+      </div>
+    </details>
   </header>
 
   <main>
-    <div id="pagerTop" class="pager"></div>
-    <div id="grid" class="grid" aria-live="polite"></div>
-    <div id="pagerBottom" class="pager"></div>
+    <p class="muted" id="stamp">Chargement…</p>
+    <div class="grid" id="grid"></div>
+    <div class="pager" id="pagerTop"></div>
+    <div class="pager" id="pagerBottom"></div>
   </main>
-
-  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Construction du flux">
-    <div class="dialog">
-      <div class="rowb">
-        <strong id="ovlTitle">Construction du flux…</strong>
-        <span id="ovlStatus" class="muted"></span>
-      </div>
-      <div class="progress"><div id="ovlBar" class="bar" style="width:0%"></div></div>
-      <p class="muted" style="margin:8px 0 0;">
-        Cela lance un job GitHub Actions (provision du runner, installation des deps, scraping, analyse).
-      </p>
-    </div>
-  </div>
 
   <template id="card-tpl">
     <article class="card">
-      <img class="thumb" alt="">
-      <h3 class="h3 t"></h3>
+      <img class="thumb" alt="Illustration">
       <p class="meta"></p>
+      <h2 class="t"></h2>
       <p class="r"></p>
-      <p class="tags"></p>
+      <div class="tags"></div>
       <p class="reason"></p>
     </article>
   </template>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="dialog">
+      <h2>Mise à jour du flux</h2>
+      <p id="ovlStatus" class="muted">Initialisation…</p>
+      <div class="progress"><div class="bar" id="ovlBar"></div></div>
+      <p class="muted mono" style="margin-top:10px;">Cette opération déclenche un workflow GitHub Actions qui reconstruit le flux Tech News.</p>
+    </div>
+  </div>
 
   <script>
     const url = new URL(location.href);
     const params = url.searchParams;
 
-    const grid = document.getElementById("grid");
+    const PAGE_SIZE_DEFAULT = 20;
+    let PAGE_SIZE = Math.max(5, Math.min(100, parseInt(params.get("n") || PAGE_SIZE_DEFAULT, 10) || PAGE_SIZE_DEFAULT));
+    let VIEW = params.get("view") === "days" ? "days" : "pages";
+    let PAGE = Math.max(1, parseInt(params.get("p") || "1", 10) || 1);
+    let DAY_INDEX = Math.max(1, parseInt(params.get("d") || "1", 10) || 1);
+    const FILTER = (params.get("q") || "").trim();
+    let PREVIEW = params.get("preview") === "1";
+
     const stamp = document.getElementById("stamp");
-    const refreshBtn = document.getElementById("refresh");
-    const showMeta = document.getElementById("showMeta");
+    const grid = document.getElementById("grid");
     const pagerTop = document.getElementById("pagerTop");
     const pagerBottom = document.getElementById("pagerBottom");
+
+    const refreshBtn = document.getElementById("refresh");
+    const showMeta = document.getElementById("showMeta");
     const pageSizeSel = document.getElementById("pageSize");
     const qInput = document.getElementById("q");
-    const viewPagesBtn = document.getElementById("viewPages");
-    const viewDaysBtn  = document.getElementById("viewDays");
-    const profileSel   = document.getElementById("profile");
-    const thSlider     = document.getElementById("th");
-    const thVal        = document.getElementById("thVal");
+    const profileSel = document.getElementById("profile");
 
-    const useCustom    = document.getElementById("useCustom");
+    const viewPagesBtn = document.getElementById("viewPages");
+    const viewDaysBtn = document.getElementById("viewDays");
+
+    const useCustom = document.getElementById("useCustom");
     const wR = document.getElementById("wR");
     const wP = document.getElementById("wP");
     const wI = document.getElementById("wI");
@@ -231,36 +227,16 @@
     const wIVal = document.getElementById("wIVal");
     const wMVal = document.getElementById("wMVal");
     const weightsSum = document.getElementById("weightsSum");
-    const resetW = document.getElementById("resetW");
-    const buildAI = document.getElementById("buildAI");
-    const rebuildBtn = document.getElementById("rebuild");
-    const previewChk = document.getElementById("preview");
 
-    // Advanced overrides (bucket P)
-    const pLabelInput = document.getElementById("pLabel");
-    const pKeysInput  = document.getElementById("pKeys");
-    const pDescInput  = document.getElementById("pDesc");
-    const pCur        = document.getElementById("pCur");
-
+    const previewModeChk = document.getElementById("previewMode");
+    const buildBtn = document.getElementById("buildBtn");
     const overlay = document.getElementById("overlay");
-    const ovlBar = document.getElementById("ovlBar");
     const ovlStatus = document.getElementById("ovlStatus");
+    const ovlBar = document.getElementById("ovlBar");
 
-    const VIEW = (params.get("view") || "pages");
-    const PAGE_SIZE_DEFAULT = clampInt(params.get("n") || "20", 5, 100);
-    let PAGE_SIZE = PAGE_SIZE_DEFAULT;
-    let PAGE = clampInt(params.get("p") || "1", 1, 9999);
-    let DAY_INDEX = clampInt(params.get("d") || "1", 1, 9999);
-    let FILTER = (params.get("q") || "").trim();
-    let PREVIEW = params.get("preview") === "1";
-
-    previewChk.checked = PREVIEW;
-
-    const tz = "Europe/Zurich";
-    const dayFmt = new Intl.DateTimeFormat('sv-SE', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' });
-
-    function clampInt(v, a, b){ v = parseInt(v,10); return isFinite(v) ? Math.max(a, Math.min(b, v)) : a; }
-    function toHttps(u){ if(!u) return u; if(u.startsWith("//")) return "https:"+u; if(u.startsWith("http://")) return "https://"+u.slice(7); return u; }
+    pageSizeSel.value = String(PAGE_SIZE);
+    qInput.value = FILTER;
+    (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
 
     const DEFAULT_W = {
       research: [40,25,20,15],
@@ -297,6 +273,23 @@
     [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
     updateWeightsLabels();
 
+    previewModeChk.checked = PREVIEW;
+
+    function toHttps(u){ if (!u) return ""; if (u.startsWith("//")) return "https:"+u; if (u.startsWith("http://")) return "https://"+u.slice(7); return u; }
+
+    function clampInt(v, min, max){
+      const n = parseInt(v,10);
+      if (isNaN(n)) return min;
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function currentWeights(){
+      if (!USE_CUSTOM) return DEFAULT_W[profileSel.value];
+      const arr = [wR,wP,wI,wM].map(el => clampInt(el.value, 0, 100));
+      const s = arr.reduce((a,b)=>a+b,0) || 1;
+      return arr.map(v => Math.round(v*100/s));
+    }
+
     function makeUrls(profile) {
       const base = PREVIEW
         ? (profile === "balanced" ? "feed-preview.json" : `feed-${profile}-preview.json`)
@@ -326,98 +319,67 @@
           ul.innerHTML = `
             <li><strong>R — ${L.research}</strong> : ${D.research || "articles/journaux, conférences, CFP, résultats scientifiques."}</li>
             <li><strong>P — ${L.policy}</strong> : ${D.policy   || "lois, régulations, standards, cadres/“frameworks”."}</li>
-            <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."} </li>
-            <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour la classe/enseignants/universités/EdTech."}</li>
+            <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."}
+            </li>
+            <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour l’enseignement, les élèves/enseignants, l’EdTech."}</li>
           `;
         }
       }
-      pCur.textContent = `P actuel: ${L.policy}${D.policy ? " — " + D.policy : ""}`;
     }
 
-    async function load() {
-      try {
-        const data = await fetchFirstOk(makeUrls(profileSel.value));
-        DATA = data;
-
-        if (!params.has("t")) {
-          THRESH = clampInt(String(DATA.threshold ?? 65), 0, 100);
-          thSlider.value = String(THRESH); thVal.textContent = THRESH;
-          history.replaceState(null, "", "?"+buildQS());
-        } else {
-          thSlider.value = String(THRESH); thVal.textContent = THRESH;
-        }
-        updateLabelsExplain();
-        render();
-      } catch (e) {
-        grid.innerHTML = "<p class='muted'>Pas encore de données. Réessaie dans une minute.</p>";
-        stamp.textContent = "—";
-      }
-    }
-
-    function defaultsToRaw(profile){ return DEFAULT_W[profile] || DEFAULT_W.balanced; }
-    function normWeights(arr){
-      const s = arr.reduce((a,b)=>a+b,0);
-      if (s <= 0) return [25,25,25,25];
-      const k = 100/s;
-      return arr.map(v => Math.round(v*k));
-    }
-    function currentWeights(){ return USE_CUSTOM ? normWeights(RAW_W) : defaultsToRaw(profileSel.value); }
-    function getDefaultWeights(profile){ return defaultsToRaw(profile); }
-
-    function calcUserScore(item){
-      const bd = item.breakdown || {};
-      const sumBD = (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0);
-      if (sumBD <= 0) return item.score|0;
-
-      const def = getDefaultWeights(DATA?.profile || "balanced"); // [R,P,I,M]
-      const signalR = def[0] ? Math.min(1, (bd.research|0)   / def[0]) : 0;
-      const signalP = def[1] ? Math.min(1, (bd.policy|0)     / def[1]) : 0;
-      const signalI = def[2] ? Math.min(1, (bd.institution|0)/ def[2]) : 0;
-      const signalM = def[3] ? Math.min(1, (bd.impact|0)     / def[3]) : 0;
-
-      const [wR1,wP1,wI1,wM1] = currentWeights();
-      const score = (signalR*wR1) + (signalP*wP1) + (signalI*wI1) + (signalM*wM1);
-      return Math.max(0, Math.min(100, Math.round(score)));
-    }
-
-    function filterItems(items) {
-      const q = (params.get("q") || "").trim().toLowerCase();
-      const th = THRESH;
-      let out = items;
-      if (q) {
-        out = out.filter(it =>
-          (it.title||"").toLowerCase().includes(q) ||
-          (it.source||"").toLowerCase().includes(q) ||
-          (it.tags||[]).some(t => String(t).toLowerCase().includes(q))
-        );
-      }
-      out = out.map(it => ({ ...it, _userScore: calcUserScore(it) }))
-               .filter(it => (it._userScore ?? 0) >= th);
-      return out;
+    function filterItems(items){
+      const q = (qInput.value || "").trim().toLowerCase();
+      if (!q) return items;
+      return items.filter(it => {
+        const hay = [
+          it.title || "",
+          it.source || "",
+          it.resume_fr || "",
+          it.summary_en || "",
+          (it.tags || []).join(" ")
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
     }
 
     function groupByDay(items) {
       const map = new Map();
       for (const it of items) {
         const d = it.published ? new Date(it.published) : null;
-        const key = d ? dayFmt.format(d) : "0000-00-00";
+        const key = d ? d.toISOString().slice(0,10) : "inconnue";
         if (!map.has(key)) map.set(key, []);
         map.get(key).push(it);
       }
-      for (const arr of map.values()) arr.sort((a,b)=> new Date(b.published||0) - new Date(a.published||0));
-      const days = Array.from(map.keys()).sort((a,b)=> b.localeCompare(a));
+      const days = Array.from(map.keys()).sort((a,b) => b.localeCompare(a));
       return { map, days };
     }
 
-    function pagerLinks(count, current, qs, labelPrev = "◀ Préc.", labelNext = "Suiv. ▶") {
-      const pages = Math.max(1, count);
-      let html = "";
-      const mk = (i, lbl, cls="") => `<a class="${cls}" href="?${qs}&${VIEW==='pages'?'p':'d'}=${i}">${lbl}</a>`;
-      const cur = (i) => `<span class="current">${i}</span>`;
-      if (current > 1) html += mk(current-1, labelPrev);
-      for (let i=1; i<=pages; i++) html += (i===current ? cur(i) : mk(i, i));
-      if (current < pages) html += mk(current+1, labelNext);
-      return html;
+    function pagerLinks(totalPages, current, qs, prevLabel="◀ Page préc.", nextLabel="Page suiv. ▶") {
+      const links = [];
+      if (current > 1) {
+        const u = new URL(location.href);
+        const p = new URLSearchParams(qs);
+        p.set("view", VIEW);
+        if (VIEW === "pages") p.set("p", String(current-1));
+        if (VIEW === "days")  p.set("d", String(current-1));
+        u.search = p.toString();
+        links.push(`<a href="${u.toString()}" rel="prev">${prevLabel}</a>`);
+      } else {
+        links.push(`<span class="muted">${prevLabel}</span>`);
+      }
+      links.push(`<span class="current">Page ${current}/${totalPages}</span>`);
+      if (current < totalPages) {
+        const u = new URL(location.href);
+        const p = new URLSearchParams(qs);
+        p.set("view", VIEW);
+        if (VIEW === "pages") p.set("p", String(current+1));
+        if (VIEW === "days")  p.set("d", String(current+1));
+        u.search = p.toString();
+        links.push(`<a href="${u.toString()}" rel="next">${nextLabel}</a>`);
+      } else {
+        links.push(`<span class="muted">${nextLabel}</span>`);
+      }
+      return links.join(" ");
     }
 
     function buildQS(extra={}) {
@@ -513,7 +475,13 @@
         }
         tpl.querySelector(".meta").textContent = meta;
 
-        tpl.querySelector(".r").textContent = it.resume_fr || "";
+        const summaryEn =
+          it.summary_en ||      // résumé anglais
+          it.resume_fr ||       // compat (anciennes versions / heuristique)
+          it.summary_fr ||      // fallback FR si besoin
+          "";
+
+        tpl.querySelector(".r").textContent = summaryEn;
         tpl.querySelector(".tags").innerHTML = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
         tpl.querySelector(".reason").textContent = showMeta.checked && it.reason ? it.reason : "";
         grid.appendChild(tpl);
@@ -531,116 +499,87 @@
       url.search = params.toString(); location.href = url.toString();
     });
 
-    qInput.addEventListener("input", () => {
-      const q = qInput.value.trim();
-      if (q) params.set("q", q); else params.delete("q");
-      if (VIEW === "pages") params.set("p", "1"); else params.set("d","1");
-      history.replaceState(null, "", "?"+buildQS());
-      render();
-    });
-
-    function switchView(v) {
-      params.set("view", v);
-      if (v === "pages") { params.set("p","1"); params.set("n", String(PAGE_SIZE)); params.delete("d"); }
-      else { params.set("d","1"); params.delete("p"); }
+    qInput.addEventListener("change", () => {
+      params.set("q", qInput.value || "");
+      params.set(VIEW === "pages" ? "p" : "d", "1");
       url.search = params.toString(); location.href = url.toString();
-    }
-    document.getElementById("viewPages").addEventListener("click", (e)=>{ e.preventDefault(); switchView("pages"); });
-    document.getElementById("viewDays").addEventListener("click", (e)=>{ e.preventDefault(); switchView("days"); });
+    });
 
     profileSel.addEventListener("change", () => {
-      localStorage.setItem("newsProfile", profileSel.value);
-      if (!USE_CUSTOM) {
-        RAW_W = DEFAULT_W[profileSel.value];
-        [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
-        updateWeightsLabels();
-      }
-      params.set("profile", profileSel.value);
-      params.set("p", "1"); params.set("d", "1");
+      const p = profileSel.value;
+      localStorage.setItem("newsProfile", p);
+      RAW_W = readCustomRaw(p) || DEFAULT_W[p];
+      USE_CUSTOM = readCustomEnabled(p);
+      useCustom.checked = USE_CUSTOM;
+      [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
+      updateWeightsLabels();
+      params.set("profile", p);
+      params.set("p", "1");
       url.search = params.toString(); location.href = url.toString();
     });
 
-    thSlider.addEventListener("input", () => {
-      THRESH = clampInt(thSlider.value, 0, 100);
-      thVal.textContent = THRESH;
-      params.set("t", String(THRESH));
-      history.replaceState(null, "", "?"+buildQS());
-      render();
+    [wR,wP,wI,wM].forEach(el => {
+      el.addEventListener("input", () => {
+        RAW_W = [wR,wP,wI,wM].map(x=>clampInt(x.value,0,100));
+        updateWeightsLabels();
+      });
     });
 
     useCustom.addEventListener("change", () => {
       USE_CUSTOM = useCustom.checked;
-      localStorage.setItem(customFlagKey(profileSel.value), USE_CUSTOM ? "1" : "0");
-      params.set("cw", USE_CUSTOM ? "1" : "0");
-      history.replaceState(null, "", "?"+buildQS());
+      const p = profileSel.value;
+      localStorage.setItem(customKey(p), RAW_W.join(","));
+      localStorage.setItem(customFlagKey(p), USE_CUSTOM ? "1":"0");
       updateWeightsLabels();
       render();
     });
 
-    [wR,wP,wI,wM].forEach((el, idx) => {
-      el.addEventListener("input", () => {
-        RAW_W[idx] = clampInt(el.value, 0, 100);
-        localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
-        params.set("w", currentWeights().join(","));
-        history.replaceState(null, "", "?"+buildQS());
-        updateWeightsLabels();
-        render();
-      });
+    viewPagesBtn.addEventListener("click", e => {
+      e.preventDefault();
+      VIEW = "pages";
+      params.set("view", VIEW);
+      params.set("p", "1");
+      params.delete("d");
+      url.search = params.toString(); location.href = url.toString();
     });
 
-    resetW.addEventListener("click", () => {
-      RAW_W = DEFAULT_W[profileSel.value];
-      [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]));
-      localStorage.setItem(customKey(profileSel.value), RAW_W.join(","));
-      params.set("w", currentWeights().join(","));
-      history.replaceState(null, "", "?"+buildQS());
-      updateWeightsLabels();
-      render();
+    viewDaysBtn.addEventListener("click", e => {
+      e.preventDefault();
+      VIEW = "days";
+      params.set("view", VIEW);
+      params.set("d", "1");
+      params.delete("p");
+      url.search = params.toString(); location.href = url.toString();
     });
 
-    // Basculer preview et recharger la bonne source (feed vs feed-preview)
-    previewChk.addEventListener("change", () => {
-      PREVIEW = previewChk.checked;
+    previewModeChk.addEventListener("change", () => {
+      PREVIEW = previewModeChk.checked;
       params.set("preview", PREVIEW ? "1" : "0");
-      url.search = params.toString();
-      location.href = url.toString();
+      url.search = params.toString(); location.href = url.toString();
     });
 
-    // --------- Trigger workflow from UI ----------
-    rebuildBtn.addEventListener("click", async () => {
+    buildBtn.addEventListener("click", async () => {
       try {
-        // show overlay
-        showOverlay("Envoi de la requête…", 10);
-
-        const weights = currentWeights().join(",");
+        showOverlay("Création du run GitHub Actions…", 10);
+        const [r,p,i,m] = currentWeights();
         const body = {
-          use_openai: buildAI.checked,
           profile: profileSel.value,
-          score_min: String(THRESH || 65),
-          min_publish: "12",
-          output_cap: "60",
-          max_items: "100",
-          custom_weights: weights,
-          publish_target: PREVIEW ? "preview" : "default", // important
-          // overrides de la catégorie P
-          bucket_policy_label: (pLabelInput.value || "").trim(),
-          bucket_policy_desc:  (pDescInput.value  || "").trim(),
-          bucket_policy_keywords: (pKeysInput.value || "").trim()
+          score_min: THRESH,
+          output_cap: PAGE_SIZE,
+          use_openai: true,
+          custom_weights: `${r},${p},${i},${m}`,
+          preview: PREVIEW ? "true" : "false"
         };
-
-        const r = await fetch("/api/trigger-news", {
+        const r2 = await fetch("/api/trigger-news", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body)
         });
-        const j = await r.json();
-        if (!r.ok || !j.ok) throw new Error(j.error || "Échec de la création du run");
+        const j = await r2.json();
+        if (!r2.ok || !j.ok) throw new Error(j.error || "Échec de la création du run");
 
         const key = j.run_key;
-        // poll status
         await pollRun(key);
-
-        // reload feed une fois terminé
         await load();
         hideOverlay();
       } catch (e) {
@@ -677,8 +616,7 @@
           continue;
         }
         if (j.status === "in_progress") {
-          // barre progresse lentement pendant l'install & build
-          pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000)); // approx
+          pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000));
           showOverlay("En cours d'exécution…", pct);
           continue;
         }
@@ -698,6 +636,28 @@
       weightsSum.textContent = `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
       wRVal.textContent = r; wPVal.textContent = p; wIVal.textContent = i; wMVal.textContent = m;
     }
+
+    async function load(){
+      try {
+        const urls = makeUrls(profileSel.value);
+        const data = await fetchFirstOk(urls);
+        DATA = data;
+        THRESH = clampInt(data.threshold ?? THRESH, 0, 100);
+        document.getElementById("th").value = String(THRESH);
+        document.getElementById("thVal").textContent = String(THRESH);
+        updateLabelsExplain();
+        render();
+      } catch (e) {
+        grid.innerHTML = `<p class="muted">Erreur de chargement: ${e.message || e}</p>`;
+        pagerTop.innerHTML = pagerBottom.innerHTML = "";
+      }
+    }
+
+    document.getElementById("th").addEventListener("input", e => {
+      THRESH = clampInt(e.target.value, 0, 100);
+      document.getElementById("thVal").textContent = String(THRESH);
+      render();
+    });
 
     // ---------- Start ----------
     load();
