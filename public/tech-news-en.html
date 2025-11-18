@@ -361,7 +361,8 @@
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="prev">${prevLabel}</a>`);
       } else {
-        links.push(`<span class="muted">${prevLabel}</span>`;
+        // FIX: parenthèse manquante ici
+        links.push(`<span class="muted">${prevLabel}</span>`);
       }
       links.push(`<span class="current">Page ${current}/${totalPages}</span>`);
       if (current < totalPages) {
@@ -373,7 +374,7 @@
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="next">${nextLabel}</a>`);
       } else {
-        links.push(`<span class="muted">${nextLabel}</span>`;
+        links.push(`<span class="muted">${nextLabel}</span>`);
       }
       return links.join(" ");
     }
