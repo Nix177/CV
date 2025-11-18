@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Tech News — Éducation numérique & IA</title>
-  <meta name="description" content="Sélection automatique des actualités importantes (éducation numérique, IA, recherches, conférences, politiques, standards)."/>
+  <title>Tech News — Digital education & AI</title>
+  <meta name="description" content="Automatic selection of important news in digital education & AI (research, conferences, policies, standards)."/>
 
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
@@ -45,9 +45,9 @@
     details#adv[open] > div { margin-top: 8px; }
     details#adv input { margin-left: 6px; }
 
-    /* overlay build */
+    /* overlay build / refresh */
     .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,5);
+      position: fixed; inset: 0; background: rgba(0,0,0,.5);
       display: none; align-items:center; justify-content:center;
       z-index: 9999;
     }
@@ -61,18 +61,18 @@
   </style>
 </head>
 <body>
-  <header class="page" aria-label="En-tête page Tech News">
+  <header class="page" aria-label="Tech News header">
     <h1 class="title">Tech News</h1>
-    <p class="lead">Actus importantes + <strong>recherche & conférences</strong> (LLM/outils inclus), triées par pertinence/date.</p>
+    <p class="lead">Important news + <strong>research & conferences</strong> (LLMs/tools included), sorted by relevance and date.</p>
 
     <div class="toolbar">
-      <button id="refresh" class="btn">Actualiser</button>
-      <label class="chip"><input type="checkbox" id="showMeta"> Métadonnées</label>
+      <button id="refresh" class="btn">Refresh</button>
+      <label class="chip"><input type="checkbox" id="showMeta"> Metadata</label>
       <span class="sep">|</span>
 
-      <span class="muted">Affichage :</span>
-      <a href="#" data-view="pages" class="chip" id="viewPages">Par pages</a>
-      <a href="#" data-view="days"  class="chip" id="viewDays">Par jours</a>
+      <span class="muted">View:</span>
+      <a href="#" data-view="pages" class="chip" id="viewPages">By pages</a>
+      <a href="#" data-view="days"  class="chip" id="viewDays">By days</a>
 
       <span class="sep">|</span>
       <label class="select">Page size
@@ -84,34 +84,33 @@
         </select>
       </label>
 
-      <label>Filtrer
-        <input type="search" id="q" placeholder="titre, source, tag…">
+      <label>Filter
+        <input type="search" id="q" placeholder="title, source, tag…">
       </label>
 
       <span class="sep">|</span>
-      <label>Profil
+      <label>Profile
         <select id="profile">
-          <option value="balanced">Mix</option>
-          <option value="research">Recherche</option>
-          <option value="policy">Politiques</option>
+          <option value="balanced">Mixed</option>
+          <option value="research">Research</option>
+          <option value="policy">Policy</option>
         </select>
       </label>
 
-      <label title="Seuil de score (0 à 100). Les cartes sous ce seuil sont masquées.">
-        Seuil
+      <label title="Score threshold (0 to 100). Cards below this score are hidden.">
+        Threshold
         <input type="range" id="th" min="0" max="100" step="5" style="vertical-align:middle">
         <span id="thVal" class="bd">—</span>
       </label>
     </div>
 
     <details class="explain">
-      <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
+      <summary>How are the <strong>score</strong> and <strong>threshold</strong> computed?</summary>
       <p class="muted">
-        Les sources sont d'abord filtrées (éducation numérique, IA, EdTech, politiques/standards). Ensuite, chaque item
-        reçoit un score global (0-100) combinant plusieurs dimensions (recherche, politiques, institutions, impact potentiel
-        pour l'enseignement).
+        Sources are first filtered (digital education, AI, EdTech, policies/standards). Then each item receives a global
+        score (0–100) combining several dimensions (research, policy, institutions, potential impact for teaching).
       </p>
-      <p class="muted bd" id="weightsSum">Poids (normés) R/P/I/M: —</p>
+      <p class="muted bd" id="weightsSum">Weights (normalized) R/P/I/M: —</p>
       <div class="weights">
         <div class="row">
           <label>R
@@ -137,38 +136,37 @@
             <span id="wMVal" class="bd mono">—</span>
           </label>
         </div>
-        <label><input type="checkbox" id="useCustom"> Utiliser ces poids personnalisés (profil courant)</label>
+        <label><input type="checkbox" id="useCustom"> Use these custom weights (current profile)</label>
       </div>
       <div class="muted">
         <ul>
-          <li><strong>R — Recherche</strong> : articles, journaux, conférences, appels à communications, résultats scientifiques.</li>
-          <li><strong>P — Politiques</strong> : lois, régulations, standards, cadres/“frameworks”.</li>
-          <li><strong>I — Institution</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
-          <li><strong>M — Impact</strong> : impact direct pour l’enseignement, les élèves/enseignants, l’EdTech.</li>
+          <li><strong>R — Research</strong>: articles, journals, conferences, calls for papers, scientific results.</li>
+          <li><strong>P — Policy</strong>: laws, regulations, standards, frameworks.</li>
+          <li><strong>I — Institution</strong>: major agencies & authorities (UNESCO, OECD, CNIL, NCSC, ministries…).</li>
+          <li><strong>M — Impact</strong>: direct impact on teaching, pupils/teachers, EdTech.</li>
         </ul>
       </div>
     </details>
 
     <details id="adv">
-      <summary>Options avancées (preview, build GitHub Actions…)</summary>
+      <summary>Advanced options (preview, GitHub Actions build…)</summary>
       <div>
         <div class="rowb">
-          <label class="chip"><input type="checkbox" id="previewMode"> Mode preview (ne pas toucher au flux global)</label>
-          <span class="muted">Le mode preview lit/écrit dans un flux séparé (prévisualisation) sans modifier le flux stable.</span>
+          <label class="chip"><input type="checkbox" id="previewMode"> Preview mode (do not touch the stable feed)</label>
+          <span class="muted">Preview mode reads/writes from a separate feed (preview) and leaves the stable feed untouched.</span>
         </div>
         <div class="rowb">
-          <button id="buildBtn" class="btn">Lancer une mise à jour via GitHub Actions</button>
-          <span class="muted">Crée un run GitHub Actions qui rafraîchit les news sur le dépôt (profil + poids + seuil).</span>
+          <button id="buildBtn" class="btn">Trigger a GitHub Actions update</button>
+          <span class="muted">Creates a GitHub Actions run that refreshes the news feed (profile + weights + threshold).</span>
         </div>
       </div>
     </details>
   </header>
 
   <main>
-    <p class="muted" id="stamp">Chargement…</p>
+    <p class="muted" id="stamp">Loading…</p>
     <div class="grid" id="grid"></div>
-    <div class="pager" id="pagerTop"></div>
-    <div class="pager" id="pagerBottom"></div>
+    <div class="pager" id="pager"></div>
   </main>
 
   <template id="card-tpl">
@@ -184,10 +182,10 @@
 
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="dialog">
-      <h2>Mise à jour du flux</h2>
-      <p id="ovlStatus" class="muted">Initialisation…</p>
+      <h2>Feed update</h2>
+      <p id="ovlStatus" class="muted">Initialising…</p>
       <div class="progress"><div class="bar" id="ovlBar"></div></div>
-      <p class="muted mono" style="margin-top:10px;">Cette opération déclenche un workflow GitHub Actions qui reconstruit le flux Tech News.</p>
+      <p class="muted mono" style="margin-top:10px;">This operation triggers a GitHub Actions workflow that rebuilds the Tech News feed.</p>
     </div>
   </div>
 
@@ -205,8 +203,7 @@
 
     const stamp = document.getElementById("stamp");
     const grid = document.getElementById("grid");
-    const pagerTop = document.getElementById("pagerTop");
-    const pagerBottom = document.getElementById("pagerBottom");
+    const pager = document.getElementById("pager");
 
     const refreshBtn = document.getElementById("refresh");
     const showMeta = document.getElementById("showMeta");
@@ -306,22 +303,22 @@
           if (r.ok) return await r.json();
         } catch {}
       }
-      throw new Error("Aucune source disponible");
+      throw new Error("No feed source available");
     }
 
     function updateLabelsExplain() {
-      const L = DATA?.debug?.labelsUsed || { research:"Recherche", policy:"Politiques", institution:"Institution", impact:"Impact" };
+      const L = DATA?.debug?.labelsUsed || { research:"Research", policy:"Policy", institution:"Institution", impact:"Impact" };
       const D = DATA?.debug?.descUsed   || {};
       const explain = document.querySelector("details.explain .muted");
       if (explain) {
         const ul = explain.querySelector("ul");
         if (ul) {
           ul.innerHTML = `
-            <li><strong>R — ${L.research}</strong> : ${D.research || "articles/journaux, conférences, CFP, résultats scientifiques."}</li>
-            <li><strong>P — ${L.policy}</strong> : ${D.policy   || "lois, régulations, standards, cadres/“frameworks”."}</li>
-            <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."}
+            <li><strong>R — ${L.research}</strong>: ${D.research || "articles, journals, conferences, CFP, scientific results."}</li>
+            <li><strong>P — ${L.policy}</strong>: ${D.policy   || "laws, regulations, standards, frameworks."}</li>
+            <li><strong>I — ${L.institution}</strong>: ${D.institution || "major agencies & authorities (UNESCO, OECD, CNIL, NCSC, ministries…)."}
             </li>
-            <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour l’enseignement, les élèves/enseignants, l’EdTech."}</li>
+            <li><strong>M — ${L.impact}</strong>: ${D.impact || "direct impact on teaching, pupils/teachers, EdTech."}</li>
           `;
         }
       }
@@ -334,7 +331,6 @@
         const hay = [
           it.title || "",
           it.source || "",
-          it.resume_fr || "",
           it.summary_en || "",
           (it.tags || []).join(" ")
         ].join(" ").toLowerCase();
@@ -346,7 +342,7 @@
       const map = new Map();
       for (const it of items) {
         const d = it.published ? new Date(it.published) : null;
-        const key = d ? d.toISOString().slice(0,10) : "inconnue";
+        const key = d ? d.toISOString().slice(0,10) : "unknown";
         if (!map.has(key)) map.set(key, []);
         map.get(key).push(it);
       }
@@ -354,7 +350,7 @@
       return { map, days };
     }
 
-    function pagerLinks(totalPages, current, qs, prevLabel="◀ Page préc.", nextLabel="Page suiv. ▶") {
+    function pagerLinks(totalPages, current, qs, prevLabel="◀ Prev page", nextLabel="Next page ▶") {
       const links = [];
       if (current > 1) {
         const u = new URL(location.href);
@@ -365,7 +361,7 @@
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="prev">${prevLabel}</a>`);
       } else {
-        links.push(`<span class="muted">${prevLabel}</span>`);
+        links.push(`<span class="muted">${prevLabel}</span>`;
       }
       links.push(`<span class="current">Page ${current}/${totalPages}</span>`);
       if (current < totalPages) {
@@ -377,7 +373,7 @@
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="next">${nextLabel}</a>`);
       } else {
-        links.push(`<span class="muted">${nextLabel}</span>`);
+        links.push(`<span class="muted">${nextLabel}</span>`;
       }
       return links.join(" ");
     }
@@ -404,7 +400,7 @@
 
     function weightsLabel(){
       const [r,p,i,m] = currentWeights();
-      return `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
+      return `Weights (normalized) R/P/I/M: ${r}/${p}/${i}/${m}`;
     }
 
     function render() {
@@ -412,16 +408,16 @@
       const total = itemsAll.length;
 
       stamp.textContent =
-        `Généré le ${new Date(DATA.generatedAt).toLocaleString()}. ` +
-        `${DATA.totalPublished ?? total} sélection(s).` +
-        ` • profil: ${DATA.profile}` +
-        ` • seuil: ${THRESH}` +
+        `Generated on ${new Date(DATA.generatedAt).toLocaleString()}. ` +
+        `${DATA.totalPublished ?? total} item(s).` +
+        ` • profile: ${DATA.profile}` +
+        ` • threshold: ${THRESH}` +
         ` • ${weightsLabel()}` +
         ` • mode: ${PREVIEW ? "preview" : "global"}` +
-        (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI indisponible" : "");
+        (showMeta.checked && DATA.debug?.analysisFailed ? " • OpenAI unavailable" : "");
 
       grid.innerHTML = "";
-      pagerTop.innerHTML = pagerBottom.innerHTML = "";
+      pager.innerHTML = "";
 
       if (VIEW === "pages") {
         const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -429,8 +425,7 @@
         const start = (PAGE-1) * PAGE_SIZE;
         renderSlice(itemsAll.slice(start, start + PAGE_SIZE));
         const qs = buildQS({ p: undefined });
-        pagerTop.innerHTML = pagerLinks(pages, PAGE, qs);
-        pagerBottom.innerHTML = pagerTop.innerHTML;
+        pager.innerHTML = pagerLinks(pages, PAGE, qs);
       } else {
         const { map, days } = groupByDay(itemsAll);
         const dPages = Math.max(1, days.length);
@@ -438,14 +433,13 @@
         const dayKey = days[DAY_INDEX-1];
         renderSlice(map.get(dayKey) || []);
         const qs = buildQS({ d: undefined });
-        pagerTop.innerHTML = pagerLinks(dPages, DAY_INDEX, qs, "◀ Jour préc.", "Jour suiv. ▶");
-        pagerBottom.innerHTML = pagerTop.innerHTML;
+        pager.innerHTML = pagerLinks(dPages, DAY_INDEX, qs, "◀ Prev day", "Next day ▶");
       }
     }
 
     function renderSlice(slice) {
       if (!slice.length) {
-        grid.innerHTML = "<p class='muted'>Aucune actualité pour ces critères.</p>";
+        grid.innerHTML = "<p class='muted'>No news for these filters.</p>";
         return;
       }
       slice.forEach(it => {
@@ -476,9 +470,9 @@
         tpl.querySelector(".meta").textContent = meta;
 
         const summaryEn =
-          it.summary_en ||      // résumé anglais
-          it.resume_fr ||       // compat (anciennes versions / heuristique)
-          it.summary_fr ||      // fallback FR si besoin
+          it.summary_en ||      // English summary
+          it.resume_fr ||       // compat (older feeds / heuristic)
+          it.summary_fr ||      // FR fallback if needed
           "";
 
         tpl.querySelector(".r").textContent = summaryEn;
@@ -489,7 +483,20 @@
     }
 
     // --------- UI events ---------
-    refreshBtn.addEventListener("click", load);
+
+    // Refresh -> overlay + reload
+    refreshBtn.addEventListener("click", async () => {
+      try {
+        showOverlay("Refreshing feed…", 25);
+        await load();
+        showOverlay("Feed refreshed ✔", 100);
+      } catch (e) {
+        showOverlay("Error while refreshing: " + (e.message || e), 100);
+      } finally {
+        setTimeout(hideOverlay, 1200);
+      }
+    });
+
     showMeta.addEventListener("change", render);
 
     pageSizeSel.addEventListener("change", () => {
@@ -560,7 +567,7 @@
 
     buildBtn.addEventListener("click", async () => {
       try {
-        showOverlay("Création du run GitHub Actions…", 10);
+        showOverlay("Creating GitHub Actions run…", 10);
         const [r,p,i,m] = currentWeights();
         const body = {
           profile: profileSel.value,
@@ -576,14 +583,14 @@
           body: JSON.stringify(body)
         });
         const j = await r2.json();
-        if (!r2.ok || !j.ok) throw new Error(j.error || "Échec de la création du run");
+        if (!r2.ok || !j.ok) throw new Error(j.error || "Failed to create run");
 
         const key = j.run_key;
         await pollRun(key);
         await load();
         hideOverlay();
       } catch (e) {
-        showOverlay("Erreur: " + (e.message || e), 100);
+        showOverlay("Error: " + (e.message || e), 100);
         setTimeout(hideOverlay, 4000);
       }
     });
@@ -597,7 +604,7 @@
 
     async function pollRun(key){
       let pct = 20;
-      showOverlay("Run créé, en attente du runner…", pct);
+      showOverlay("Run created, waiting for runner…", pct);
       const start = Date.now();
 
       while (true) {
@@ -607,7 +614,7 @@
         const j = await r.json();
         if (!j.found) {
           pct = Math.min(50, pct+5);
-          showOverlay("Run en file d'attente…", pct);
+          showOverlay("Run in queue…", pct);
           continue;
         }
         if (j.status === "queued") {
@@ -617,14 +624,14 @@
         }
         if (j.status === "in_progress") {
           pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000));
-          showOverlay("En cours d'exécution…", pct);
+          showOverlay("Running…", pct);
           continue;
         }
         if (j.status === "completed") {
           if (j.conclusion === "success") {
-            showOverlay("Terminé ✔ — actualisation du flux…", 100);
+            showOverlay("Done ✔ — refreshing feed…", 100);
           } else {
-            throw new Error("Run terminé avec l'état: " + j.conclusion);
+            throw new Error("Run completed with conclusion: " + j.conclusion);
           }
           break;
         }
@@ -633,7 +640,7 @@
 
     function updateWeightsLabels(){
       const [r,p,i,m] = currentWeights();
-      weightsSum.textContent = `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
+      weightsSum.textContent = `Weights (normalized) R/P/I/M: ${r}/${p}/${i}/${m}`;
       wRVal.textContent = r; wPVal.textContent = p; wIVal.textContent = i; wMVal.textContent = m;
     }
 
@@ -648,8 +655,8 @@
         updateLabelsExplain();
         render();
       } catch (e) {
-        grid.innerHTML = `<p class="muted">Erreur de chargement: ${e.message || e}</p>`;
-        pagerTop.innerHTML = pagerBottom.innerHTML = "";
+        grid.innerHTML = `<p class="muted">Error while loading: ${e.message || e}</p>`;
+        pager.innerHTML = "";
       }
     }
 
