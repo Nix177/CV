@@ -283,7 +283,7 @@ async function enrichThumbnails(items, concurrency = 10) {
   items.slice(40).forEach(it => { it.image = favicon(it.url); });
 }
 
-// --------- Output name helper (point 2) ----------
+// --------- Output name helper ----------
 function outName(profile, target) {
   if (target === "preview") {
     return (profile === "balanced")
@@ -294,6 +294,67 @@ function outName(profile, target) {
   return (profile === "balanced")
     ? "feed.json"
     : `feed-${profile}.json`;
+}
+
+// --------- Lecture + fusion historique ----------
+
+async function readExistingForProfile(profile, target) {
+  const mainName = outName(profile, target);
+  const primaryPath = `public/news/${mainName}`;
+  const fallbackPath =
+    (profile === "balanced" && target === "default")
+      ? "public/news/feed-balanced.json"
+      : null;
+
+  const candidates = [primaryPath, fallbackPath].filter(Boolean);
+  for (const p of candidates) {
+    try {
+      const raw = await fs.readFile(p, "utf8");
+      const json = JSON.parse(raw);
+      if (Array.isArray(json)) return json;
+      if (Array.isArray(json.items)) return json.items;
+    } catch {
+      // ignore & try next
+    }
+  }
+  return [];
+}
+
+function keyForItem(it) {
+  if (!it) return "";
+  const u = (it.url || "").trim().toLowerCase();
+  const t = (it.title || "").trim().toLowerCase();
+  if (!u && !t) return "";
+  return `${u}::${t}`;
+}
+
+function mergeItems(existing, incoming, limit) {
+  const map = new Map();
+
+  for (const it of existing || []) {
+    const k = keyForItem(it);
+    if (!k) continue;
+    map.set(k, it);
+  }
+  for (const it of incoming || []) {
+    const k = keyForItem(it);
+    if (!k) continue;
+    // les nouveaux écrasent les anciens en cas de collision
+    map.set(k, it);
+  }
+
+  const merged = Array.from(map.values());
+  merged.sort((a,b) => {
+    const da = a.published ? new Date(a.published).getTime() : 0;
+    const db = b.published ? new Date(b.published).getTime() : 0;
+    if (db !== da) return db - da;
+    const sa = a.score ?? 0;
+    const sb = b.score ?? 0;
+    return sb - sa;
+  });
+
+  if (!Number.isFinite(limit) || limit <= 0) return merged;
+  return merged.slice(0, limit);
 }
 
 // --------- BUILD FOR ONE PROFILE ----------
@@ -335,13 +396,21 @@ async function buildForProfile(profile, gathered) {
     (b.score - a.score) || ((new Date(b.published||0)) - (new Date(a.published||0)))
   );
 
+  // sélection du batch courant
   let selected = ranked.filter(x => (x.score ?? 0) >= SCORE_THRESHOLD);
   if (selected.length < MIN_PUBLISH) {
-    selected = selected.concat(ranked.filter(x => !selected.includes(x)).slice(0, MIN_PUBLISH - selected.length));
+    selected = selected.concat(
+      ranked.filter(x => !selected.includes(x)).slice(0, MIN_PUBLISH - selected.length)
+    );
   }
   selected = selected.slice(0, OUTPUT_CAP);
 
+  // thumbnails pour les nouveaux éléments seulement
   await enrichThumbnails(selected);
+
+  // chargement de l'historique existant + fusion
+  const existing = await readExistingForProfile(profile, PUBLISH_TARGET);
+  const mergedItems = mergeItems(existing, selected, OUTPUT_CAP);
 
   const payload = {
     generatedAt: new Date().toISOString(),
@@ -349,8 +418,8 @@ async function buildForProfile(profile, gathered) {
     profile,
     threshold: SCORE_THRESHOLD,
     totalAnalyzed: analyzed.length,
-    totalPublished: selected.length,
-    publishTarget: PUBLISH_TARGET, // NEW: utile côté UI
+    totalPublished: mergedItems.length,
+    publishTarget: PUBLISH_TARGET,
     debug: {
       analysisFailed,
       usedLLM,
@@ -362,15 +431,14 @@ async function buildForProfile(profile, gathered) {
       descUsed: DESCS,
       keysUsed: KEYS
     },
-    items: selected
+    items: mergedItems
   };
 
   await fs.mkdir("public/news", { recursive: true });
 
-  // Choix du/des fichiers de sortie (point 2)
   const mainName = outName(profile, PUBLISH_TARGET);
   await fs.writeFile(`public/news/${mainName}`, JSON.stringify(payload, null, 2), "utf8");
-  console.log(`OK: wrote ${selected.length} items to public/news/${mainName}`);
+  console.log(`OK: wrote ${mergedItems.length} items to public/news/${mainName}`);
 
   // En mode "default" uniquement, on conserve l'alias historique feed-balanced.json pour le profil balanced
   if (PUBLISH_TARGET === "default" && profile === "balanced") {
