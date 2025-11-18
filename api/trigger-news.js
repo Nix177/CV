@@ -85,7 +85,7 @@ export default async function handler(req, res) {
       min_publish: String(min_publish),
       output_cap: String(output_cap),
       custom_weights: String(custom_weights || ""),
-      publish_target: PUBLISH_TARGET,          // <== variable maintenant définie
+      publish_target: PUBLISH_TARGET,          // "default" | "preview"
       run_key: key,
       policy_overrides: po || undefined
       // max_items N'EST PAS ENVOYÉ ici pour rester <= 10 inputs
