@@ -116,17 +116,23 @@ function buildBatchedInput(items, W) {
   return items.map(it => ({
     role: "user",
     content: [
-      { type: "text", text:
-        "Tu es un assistant de veille pour l'éducation numérique/IA.\n" +
-        "Retourne STRICTEMENT un JSON par entrée, schéma:\n" +
-        "{score:int[0..100], resume_fr:string(2-3 phrases), tags:string[2..5], " +
-        " breakdown: object<number>, reason:string(1 phrase)}.\n" +
-        "Le champ breakdown DOIT contenir les clés EXACTES: research, policy, institution, impact (entiers 0..100), " +
-        "où les clés correspondent aux catégories décrites ci-dessous.\n" +
-        buildPromptWeights(W) +
-        "\nPriorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
-        "(ii) politiques/régulation/standards/éthique/philosophie si configuré, " +
-        "(iii) communiqués d'institutions de premier plan."
+      {
+        type: "text",
+        text:
+          "Tu es un assistant de veille pour l'éducation numérique/IA.\n" +
+          "Retourne STRICTEMENT un JSON par entrée, schéma:\n" +
+          "{score:int[0..100], " +
+          " summary_en:string(2-3 phrases en anglais), " +
+          " summary_fr:string(2-3 phrases en français adaptées à des enseignant·e·s francophones en Suisse, ton neutre), " +
+          " tags:string[2..5], " +
+          " breakdown: object<number>, " +
+          " reason:string(1 phrase en français expliquant brièvement le score)}.\n" +
+          "Le champ breakdown DOIT contenir les clés EXACTES: research, policy, institution, impact (entiers 0..100), " +
+          "où les clés correspondent aux catégories décrites ci-dessous.\n" +
+          buildPromptWeights(W) +
+          "\nPriorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
+          "(ii) politiques/régulation/standards/éthique/philosophie si configuré, " +
+          "(iii) communiqués d'institutions de premier plan."
       },
       { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
     ]
@@ -178,10 +184,11 @@ async function analyzeWithOpenAI(items, W) {
             items: {
               type: "object",
               additionalProperties: false,
-              required: ["score", "resume_fr", "tags", "breakdown", "reason"],
+              required: ["score", "summary_en", "summary_fr", "tags", "breakdown", "reason"],
               properties: {
                 score: { type: "integer", minimum: 0, maximum: 100 },
-                resume_fr: { type: "string" },
+                summary_en: { type: "string" },
+                summary_fr: { type: "string" },
                 tags: { type: "array", minItems: 2, maxItems: 5, items: { type: "string" } },
                 reason: { type: "string" },
                 breakdown: {
@@ -209,13 +216,20 @@ function attachAnalyses(items, analyses) {
     const bd = a.breakdown || {};
     const score = typeof a.score === "number" ? a.score :
       Math.min(100, (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0));
+
+    const summaryEn = a.summary_en || it.snippet || "";
+    const summaryFr = a.summary_fr || summaryEn;
+
     return {
       title: it.title,
       url: it.url,
       source: it.source,
       published: it.published ? toISO(it.published) : null,
       score,
-      resume_fr: a.resume_fr || it.snippet || "",
+      summary_en: summaryEn,
+      summary_fr: summaryFr,
+      // alias pour compat avec l’UI existante
+      resume_fr: summaryFr,
       tags: Array.isArray(a.tags) && a.tags.length ? a.tags.slice(0,5) : [],
       breakdown: {
         research: bd.research|0,
@@ -378,13 +392,17 @@ async function buildForProfile(profile, gathered) {
     const local = makeHeuristic(W);
     analyzed = gathered.map(it => {
       const s = local(it);
+      const base = it.snippet || "";
       return {
         title: it.title,
         url: it.url,
         source: it.source,
         published: it.published ? toISO(it.published) : null,
         score: s.score,
-        resume_fr: it.snippet || "",
+        summary_en: base,
+        summary_fr: base,
+        // compat
+        resume_fr: base,
         tags: [],
         breakdown: s.breakdown,
         reason: s.reason
