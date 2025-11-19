@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2025-11-18T12:09:40.028Z",
+  "generatedAt": "2025-11-19T06:37:06.303Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
   "totalAnalyzed": 100,
-  "totalPublished": 12,
+  "totalPublished": 19,
   "publishTarget": "default",
   "debug": {
     "analysisFailed": true,
@@ -96,6 +96,139 @@
   },
   "items": [
     {
+      "title": "Beyond Means: A Dynamic Framework for Predicting Customer Satisfaction",
+      "url": "https://arxiv.org/abs/2511.14743v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-18T18:43:29.000Z",
+      "score": 70,
+      "summary_en": "Online ratings influence customer decision-making, yet standard aggregation methods, such as the sample mean, fail to adapt to quality changes over time and ignore review heterogeneity (e.g., review sentiment, a review's helpfulness). To address these challenges, we demonstrate the value of using the Gaussian process (GP) framework for rating aggregation. Specifically, we present a tailored GP model that captures the dynamics of ratings over time while additionally accounting for review heterogeneity. Based on 121,123 ratings from Yelp, we compare the predictive power of different rating aggre",
+      "summary_fr": "Online ratings influence customer decision-making, yet standard aggregation methods, such as the sample mean, fail to adapt to quality changes over time and ignore review heterogeneity (e.g., review sentiment, a review's helpfulness). To address these challenges, we demonstrate the value of using the Gaussian process (GP) framework for rating aggregation. Specifically, we present a tailored GP model that captures the dynamics of ratings over time while additionally accounting for review heterogeneity. Based on 121,123 ratings from Yelp, we compare the predictive power of different rating aggre",
+      "resume_fr": "Online ratings influence customer decision-making, yet standard aggregation methods, such as the sample mean, fail to adapt to quality changes over time and ignore review heterogeneity (e.g., review sentiment, a review's helpfulness). To address these challenges, we demonstrate the value of using the Gaussian process (GP) framework for rating aggregation. Specifically, we present a tailored GP model that captures the dynamics of ratings over time while additionally accounting for review heterogeneity. Based on 121,123 ratings from Yelp, we compare the predictive power of different rating aggre",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Strategic Innovation Management in the Age of Large Language Models Market Intelligence, Adaptive R&D, and Ethical Governance",
+      "url": "https://arxiv.org/abs/2511.14709v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-18T17:50:39.000Z",
+      "score": 70,
+      "summary_en": "This study analyzes the multiple functions of Large Language Models (LLMs) in transforming research and development (R&D) processes. By automating knowledge discovery, boosting hypothesis creation, integrating transdisciplinary insights, and enabling cooperation within innovation ecosystems, LLMs dramatically improve the efficiency and effectiveness of research processes. Through extensive analysis of scientific literature, patent databases, and experimental data, these models enable more flexible and informed R&D workflows, ultimately accelerating innovation cycles and lowering time-to-market",
+      "summary_fr": "This study analyzes the multiple functions of Large Language Models (LLMs) in transforming research and development (R&D) processes. By automating knowledge discovery, boosting hypothesis creation, integrating transdisciplinary insights, and enabling cooperation within innovation ecosystems, LLMs dramatically improve the efficiency and effectiveness of research processes. Through extensive analysis of scientific literature, patent databases, and experimental data, these models enable more flexible and informed R&D workflows, ultimately accelerating innovation cycles and lowering time-to-market",
+      "resume_fr": "This study analyzes the multiple functions of Large Language Models (LLMs) in transforming research and development (R&D) processes. By automating knowledge discovery, boosting hypothesis creation, integrating transdisciplinary insights, and enabling cooperation within innovation ecosystems, LLMs dramatically improve the efficiency and effectiveness of research processes. Through extensive analysis of scientific literature, patent databases, and experimental data, these models enable more flexible and informed R&D workflows, ultimately accelerating innovation cycles and lowering time-to-market",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Subword Tokenization Strategies for Kurdish Word Embeddings",
+      "url": "https://arxiv.org/abs/2511.14696v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-18T17:33:32.000Z",
+      "score": 50,
+      "summary_en": "We investigate tokenization strategies for Kurdish word embeddings by comparing word-level, morpheme-based, and BPE approaches on morphological similarity preservation tasks. We develop a BiLSTM-CRF morphological segmenter using bootstrapped training from minimal manual annotation and evaluate Word2Vec embeddings across comprehensive metrics including similarity preservation, clustering quality, and semantic organization. Our analysis reveals critical evaluation biases in tokenization comparison. While BPE initially appears superior in morphological similarity, it evaluates only 28.6\\% of test",
+      "summary_fr": "We investigate tokenization strategies for Kurdish word embeddings by comparing word-level, morpheme-based, and BPE approaches on morphological similarity preservation tasks. We develop a BiLSTM-CRF morphological segmenter using bootstrapped training from minimal manual annotation and evaluate Word2Vec embeddings across comprehensive metrics including similarity preservation, clustering quality, and semantic organization. Our analysis reveals critical evaluation biases in tokenization comparison. While BPE initially appears superior in morphological similarity, it evaluates only 28.6\\% of test",
+      "resume_fr": "We investigate tokenization strategies for Kurdish word embeddings by comparing word-level, morpheme-based, and BPE approaches on morphological similarity preservation tasks. We develop a BiLSTM-CRF morphological segmenter using bootstrapped training from minimal manual annotation and evaluate Word2Vec embeddings across comprehensive metrics including similarity preservation, clustering quality, and semantic organization. Our analysis reveals critical evaluation biases in tokenization comparison. While BPE initially appears superior in morphological similarity, it evaluates only 28.6\\% of test",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Talk, Snap, Complain: Validation-Aware Multimodal Expert Framework for Fine-Grained Customer Grievances",
+      "url": "https://arxiv.org/abs/2511.14693v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-18T17:29:28.000Z",
+      "score": 70,
+      "summary_en": "Existing approaches to complaint analysis largely rely on unimodal, short-form content such as tweets or product reviews. This work advances the field by leveraging multimodal, multi-turn customer support dialogues, where users often share both textual complaints and visual evidence (e.g., screenshots, product photos) to enable fine-grained classification of complaint aspects and severity. We introduce VALOR, a Validation-Aware Learner with Expert Routing, tailored for this multimodal setting. It employs a multi-expert reasoning setup using large-scale generative models with Chain-of-Thought (",
+      "summary_fr": "Existing approaches to complaint analysis largely rely on unimodal, short-form content such as tweets or product reviews. This work advances the field by leveraging multimodal, multi-turn customer support dialogues, where users often share both textual complaints and visual evidence (e.g., screenshots, product photos) to enable fine-grained classification of complaint aspects and severity. We introduce VALOR, a Validation-Aware Learner with Expert Routing, tailored for this multimodal setting. It employs a multi-expert reasoning setup using large-scale generative models with Chain-of-Thought (",
+      "resume_fr": "Existing approaches to complaint analysis largely rely on unimodal, short-form content such as tweets or product reviews. This work advances the field by leveraging multimodal, multi-turn customer support dialogues, where users often share both textual complaints and visual evidence (e.g., screenshots, product photos) to enable fine-grained classification of complaint aspects and severity. We introduce VALOR, a Validation-Aware Learner with Expert Routing, tailored for this multimodal setting. It employs a multi-expert reasoning setup using large-scale generative models with Chain-of-Thought (",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Quadratic Term Correction on Heaps' Law",
+      "url": "https://arxiv.org/abs/2511.14683v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-11-18T17:22:00.000Z",
+      "score": 70,
+      "summary_en": "Heaps' or Herdan's law characterizes the word-type vs. word-token relation by a power-law function, which is concave in linear-linear scale but a straight line in log-log scale. However, it has been observed that even in log-log scale, the type-token curve is still slightly concave, invalidating the power-law relation. At the next-order approximation, we have shown, by twenty English novels or writings (some are translated from another language to English), that quadratic functions in log-log scale fit the type-token data perfectly. Regression analyses of log(type)-log(token) data with both a ",
+      "summary_fr": "Heaps' or Herdan's law characterizes the word-type vs. word-token relation by a power-law function, which is concave in linear-linear scale but a straight line in log-log scale. However, it has been observed that even in log-log scale, the type-token curve is still slightly concave, invalidating the power-law relation. At the next-order approximation, we have shown, by twenty English novels or writings (some are translated from another language to English), that quadratic functions in log-log scale fit the type-token data perfectly. Regression analyses of log(type)-log(token) data with both a ",
+      "resume_fr": "Heaps' or Herdan's law characterizes the word-type vs. word-token relation by a power-law function, which is concave in linear-linear scale but a straight line in log-log scale. However, it has been observed that even in log-log scale, the type-token curve is still slightly concave, invalidating the power-law relation. At the next-order approximation, we have shown, by twenty English novels or writings (some are translated from another language to English), that quadratic functions in log-log scale fit the type-token data perfectly. Regression analyses of log(type)-log(token) data with both a ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Making Evidence Actionable in Adaptive Learning",
+      "url": "https://arxiv.org/abs/2511.14052v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-18T02:06:08.000Z",
+      "score": 85,
+      "summary_en": "Adaptive learning often diagnoses precisely yet intervenes weakly, yielding help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted micro-interventions. The adaptive learning algorithm contains three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted constraint for time and redundancy, and diversity as protection against overfitting to a single resource. We formalize intervention assignment as a binary integer program with constraints for coverage,",
+      "summary_fr": "Adaptive learning often diagnoses precisely yet intervenes weakly, yielding help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted micro-interventions. The adaptive learning algorithm contains three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted constraint for time and redundancy, and diversity as protection against overfitting to a single resource. We formalize intervention assignment as a binary integer program with constraints for coverage,",
+      "resume_fr": "Adaptive learning often diagnoses precisely yet intervenes weakly, yielding help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted micro-interventions. The adaptive learning algorithm contains three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted constraint for time and redundancy, and diversity as protection against overfitting to a single resource. We formalize intervention assignment as a binary integer program with constraints for coverage,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring the Use of ChatGPT by Computer Science Students in Software Development: Applications, Ethical Considerations, and Insights for Engineering Education",
+      "url": "https://arxiv.org/abs/2511.13996v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-17T23:54:08.000Z",
+      "score": 85,
+      "summary_en": "ChatGPT has been increasingly used in computer science, offering efficient support across software development tasks. While it helps students navigate programming challenges, its use also raises concerns about academic integrity and overreliance. Despite growing interest in this topic, prior research has largely relied on surveys, emphasizing trends over in-depth analysis of students' strategies and ethical awareness. This study complements existing work through a qualitative investigation of how computer science students in one UK institution strategically and ethically engage with ChatGPT in",
+      "summary_fr": "ChatGPT has been increasingly used in computer science, offering efficient support across software development tasks. While it helps students navigate programming challenges, its use also raises concerns about academic integrity and overreliance. Despite growing interest in this topic, prior research has largely relied on surveys, emphasizing trends over in-depth analysis of students' strategies and ethical awareness. This study complements existing work through a qualitative investigation of how computer science students in one UK institution strategically and ethically engage with ChatGPT in",
+      "resume_fr": "ChatGPT has been increasingly used in computer science, offering efficient support across software development tasks. While it helps students navigate programming challenges, its use also raises concerns about academic integrity and overreliance. Despite growing interest in this topic, prior research has largely relied on surveys, emphasizing trends over in-depth analysis of students' strategies and ethical awareness. This study complements existing work through a qualitative investigation of how computer science students in one UK institution strategically and ethically engage with ChatGPT in",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "ST-ProC: A Graph-Prototypical Framework for Robust Semi-Supervised Travel Mode Identification",
       "url": "https://arxiv.org/abs/2511.13702v1",
       "source": "arXiv – cs.LG + learning analytics",
@@ -118,6 +251,8 @@
       "source": "arXiv – cs.AI + education/MOOC",
       "published": "2025-11-17T16:15:50.000Z",
       "score": 85,
+      "summary_en": "Adaptive learning often diagnoses precisely yet intervenes weakly, producing help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted microinterventions. The adaptive learning algorithm includes three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted limit for time and redundancy, and diversity as protection against overfitting to a single resource. We formulate intervention assignment as a binary integer program with constraints for coverage, time",
+      "summary_fr": "Adaptive learning often diagnoses precisely yet intervenes weakly, producing help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted microinterventions. The adaptive learning algorithm includes three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted limit for time and redundancy, and diversity as protection against overfitting to a single resource. We formulate intervention assignment as a binary integer program with constraints for coverage, time",
       "resume_fr": "Adaptive learning often diagnoses precisely yet intervenes weakly, producing help that is mistimed or misaligned. This study presents evidence supporting an instructor-governed feedback loop that converts concept-level assessment evidence into vetted microinterventions. The adaptive learning algorithm includes three safeguards: adequacy as a hard guarantee of gap closure, attention as a budgeted limit for time and redundancy, and diversity as protection against overfitting to a single resource. We formulate intervention assignment as a binary integer program with constraints for coverage, time",
       "tags": [],
       "breakdown": {
@@ -152,6 +287,8 @@
       "source": "arXiv – cs.AI + education/MOOC",
       "published": "2025-11-17T11:42:24.000Z",
       "score": 100,
+      "summary_en": "The rise of Generative AI (GenAI) tools like ChatGPT has created new opportunities and challenges for computing education. Existing research has primarily focused on GenAI's ability to complete educational tasks and its impact on student performance, often overlooking its effects on knowledge gains. In this study, we investigate how GenAI assistance compares to conventional online resources in supporting knowledge gains across different proficiency levels. We conducted a controlled user experiment with 24 undergraduate students of two different levels of programming experience (beginner, inter",
+      "summary_fr": "The rise of Generative AI (GenAI) tools like ChatGPT has created new opportunities and challenges for computing education. Existing research has primarily focused on GenAI's ability to complete educational tasks and its impact on student performance, often overlooking its effects on knowledge gains. In this study, we investigate how GenAI assistance compares to conventional online resources in supporting knowledge gains across different proficiency levels. We conducted a controlled user experiment with 24 undergraduate students of two different levels of programming experience (beginner, inter",
       "resume_fr": "The rise of Generative AI (GenAI) tools like ChatGPT has created new opportunities and challenges for computing education. Existing research has primarily focused on GenAI's ability to complete educational tasks and its impact on student performance, often overlooking its effects on knowledge gains. In this study, we investigate how GenAI assistance compares to conventional online resources in supporting knowledge gains across different proficiency levels. We conducted a controlled user experiment with 24 undergraduate students of two different levels of programming experience (beginner, inter",
       "tags": [],
       "breakdown": {
@@ -254,6 +391,8 @@
       "source": "Nature Machine Intelligence",
       "published": "2025-11-06T00:00:00.000Z",
       "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
       "resume_fr": "",
       "tags": [],
       "breakdown": {
@@ -271,6 +410,8 @@
       "source": "npj Science of Learning (Nature)",
       "published": "2025-10-31T00:00:00.000Z",
       "score": 85,
+      "summary_en": "",
+      "summary_fr": "",
       "resume_fr": "",
       "tags": [],
       "breakdown": {
@@ -288,6 +429,8 @@
       "source": "UNESCO GEM – World Education Blog",
       "published": "2025-10-17T09:56:32.000Z",
       "score": 65,
+      "summary_en": "Professor Natalia I. Kucirkova, Professor of Early Childhood Development at the University of Stavanger, Norway, and The Open University, UK Around the world, major philanthropic agencies are turning to educational technology (EdTech) to improve learning. In the rush to identify tools that can quickly, cost-effectively, and reliably support children’s learning, ‘impact’ has become the central […] The post How to avoid three common pitfalls in EdTech impact evaluations appeared first on World Education Blog.",
+      "summary_fr": "Professor Natalia I. Kucirkova, Professor of Early Childhood Development at the University of Stavanger, Norway, and The Open University, UK Around the world, major philanthropic agencies are turning to educational technology (EdTech) to improve learning. In the rush to identify tools that can quickly, cost-effectively, and reliably support children’s learning, ‘impact’ has become the central […] The post How to avoid three common pitfalls in EdTech impact evaluations appeared first on World Education Blog.",
       "resume_fr": "Professor Natalia I. Kucirkova, Professor of Early Childhood Development at the University of Stavanger, Norway, and The Open University, UK Around the world, major philanthropic agencies are turning to educational technology (EdTech) to improve learning. In the rush to identify tools that can quickly, cost-effectively, and reliably support children’s learning, ‘impact’ has become the central […] The post How to avoid three common pitfalls in EdTech impact evaluations appeared first on World Education Blog.",
       "tags": [],
       "breakdown": {
