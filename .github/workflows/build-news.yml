@@ -93,7 +93,8 @@ jobs:
 
       - name: Build news feed (with log)
         env:
-          OPENAI_API_KEY: ${{ inputs.use_openai == 'true' && secrets.OPENAI_API_KEY || '' }}
+          # 👉 Toujours injecter la clé depuis le secret
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL:   ${{ inputs.model || 'gpt-5' }}
           NEWS_PROFILE:     ${{ inputs.profile     || 'balanced' }}
           NEWS_SCORE_MIN:   ${{ inputs.score_min   || '65' }}
@@ -102,7 +103,8 @@ jobs:
           # max_items retiré des inputs => valeur par défaut ici :
           NEWS_MAX_ITEMS:   ${{ vars.NEWS_MAX_ITEMS || '100' }}
           NEWS_CUSTOM_WEIGHTS: ${{ inputs.custom_weights || '' }}
-          NEWS_USE_OPENAI:   ${{ inputs.use_openai }}
+          # 👉 Pour schedule/push (pas d’inputs), on force "true" par défaut
+          NEWS_USE_OPENAI:   ${{ inputs.use_openai || 'true' }}
           NEWS_PUBLISH_TARGET: ${{ inputs.publish_target || 'default' }}
         run: |
           set -o pipefail
