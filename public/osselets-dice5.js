@@ -1,30 +1,69 @@
 // /public/osselets-dice5.js — 5 osselets 3D (Box Physics)
-// - Version corrigée : Utilise le THREE.js global du portfolio (v0.147.0)
-// - Charge uniquement Cannon (physique) dynamiquement.
+// - CORRECTION : Chargement robuste de Cannon.js (Anti-AdBlock)
+// - Utilise le THREE.js global pour éviter les conflits
+// - Logs détaillés pour le débogage
 
 const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
 (() => {
-  // On charge uniquement le moteur physique (Cannon) car il n'est pas dans le HTML
-  const CANNON_URL= "https://esm.sh/cannon-es@0.20.0";
+  const log = (...a) => console.log("[L3]", ...a);
+  const err = (...a) => console.error("[L3]", ...a);
 
-  async function loadLibs(){
-    // 1. Récupérer Three.js global (déjà chargé par portfolio.html)
+  // --- CHARGEMENT DES LIBRAIRIES (Avec secours) ---
+  async function loadLibs() {
+    log("Chargement des librairies...");
+
+    // 1. Three.js (Doit être déjà là via portfolio.html)
     const T = window.THREE;
-    if (!T) throw new Error("Three.js manquant (global window.THREE requis)");
+    if (!T) throw new Error("Three.js global introuvable. Vérifiez le HTML.");
+    
+    // 2. GLTFLoader
+    const GLTFLoader = T.GLTFLoader || window.GLTFLoader;
+    if (!GLTFLoader) throw new Error("GLTFLoader introuvable.");
 
-    // 2. Récupérer GLTFLoader (attaché à THREE par le script global)
-    const GLTFLoader = T.GLTFLoader; 
-    if (!GLTFLoader) throw new Error("GLTFLoader manquant dans THREE");
+    // 3. Cannon-es (Moteur physique) - Tentative multi-CDN
+    let CANNON = window.CANNON; // Peut-être déjà chargé ?
+    
+    if (!CANNON) {
+        const urls = [
+            "https://esm.sh/cannon-es@0.20.0",                        // Source 1 (ESM)
+            "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm",     // Source 2 (JSDelivr)
+            "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"    // Source 3 (Unpkg UMD - Injection script)
+        ];
 
-    // 3. Charger Cannon (Physique)
-    // On le stocke en global pour éviter de le re-télécharger si on relance le jeu
-    if (!window.__OX_CANNON) {
-       window.__OX_CANNON = await import(CANNON_URL);
+        for (const url of urls) {
+            try {
+                log(`Tentative chargement Cannon via: ${url}`);
+                if (url.endsWith(".js") && !url.includes("+esm")) {
+                    // Injection classique pour UMD
+                    await new Promise((res, rej) => {
+                        const s = document.createElement('script');
+                        s.src = url;
+                        s.onload = res;
+                        s.onerror = rej;
+                        document.head.appendChild(s);
+                    });
+                    // Si UMD, il s'attache à window.CANNON
+                    if (window.CANNON) {
+                        CANNON = window.CANNON;
+                        break;
+                    }
+                } else {
+                    // Import module dynamique
+                    const mod = await import(url);
+                    CANNON = mod;
+                    break;
+                }
+            } catch (e) {
+                console.warn(`[L3] Échec sur ${url}`, e);
+            }
+        }
     }
-    const CANNON = window.__OX_CANNON;
 
+    if (!CANNON) throw new Error("Impossible de charger le moteur physique (Cannon).");
+    
+    log("Librairies chargées OK.");
     return { THREE: T, GLTFLoader, CANNON };
   }
 
@@ -40,7 +79,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
   const RIM_T    = 0.5;
 
   // Physique (Box)
-  const GRAVITY_Y   = -14.0; // Un peu plus lourd pour stabiliser
+  const GRAVITY_Y   = -14.0; 
   const RESTITUTION = 0.40; 
   const FRICTION    = 0.2;  
   const LIN_DAMP    = 0.05; 
@@ -114,8 +153,16 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
   // -------- Moteur de Jeu --------
   async function mount(rootEl){
-    const { THREE, GLTFLoader, CANNON } = await loadLibs();
-    const T = THREE, C = CANNON;
+    log("Mounting...");
+    let lib;
+    try {
+        lib = await loadLibs();
+    } catch (e) {
+        err("Erreur fatale loadLibs:", e);
+        rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b2237;">Erreur chargement moteur physique.<br><small>${e.message}</small></div>`;
+        return;
+    }
+    const { THREE: T, GLTFLoader, CANNON: C } = lib;
 
     // 1. Setup UI & Canvas
     rootEl.innerHTML=""; rootEl.style.position="relative";
@@ -136,8 +183,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     // 2. Three.js Setup
     const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
-    // En 0.147.0 on utilise encore encoding (pas outputColorSpace)
-    renderer.outputEncoding = T.sRGBEncoding; 
+    if (T.sRGBEncoding) renderer.outputEncoding = T.sRGBEncoding; 
 
     const scene=new T.Scene(); scene.background=new T.Color(0xdbeafe);
     
@@ -206,11 +252,16 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     const cfg = await fetchJSON(CFG_PATH) || { values: {ventre:1, bassin:3, membres:4, dos:6} };
     const loader = new GLTFLoader();
     
+    log("Chargement modèle...");
     const gltf = await new Promise((res,rej)=> loader.load(MODEL_PATH, res, null, rej)).catch(e=>{
-        console.error("Err model", e); return null;
+        err("Err model", e); return null;
     });
 
-    if(!gltf) { rootEl.innerHTML="<div style='padding:20px;color:red'>Erreur chargement modèle L3</div>"; return; }
+    if(!gltf) { 
+        rootEl.innerHTML="<div style='padding:20px;color:#ff6b6b'>Erreur chargement modèle 3D (vérifiez console)</div>"; 
+        return; 
+    }
+    log("Modèle chargé.");
 
     const { pivot: meshTemplate, shape: boneShape } = prepareModelAndBox(gltf.scene, T, C);
 
@@ -246,6 +297,8 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
             d.body.angularVelocity.set(0,0,0);
             d.body.sleep();
         });
+        // Force un rendu immédiat
+        loop(now());
     }
     resetPositions(); 
 
@@ -312,16 +365,17 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
             btnThrow.disabled = false;
             showScore();
         }
+        renderer.render(scene, cam);
     }
     requestAnimationFrame(loop);
 
     function showScore(){
         const sum = dices.reduce((a,b)=>a+b.val, 0);
         const details = dices.map(d=>d.val).join(" + ");
-        
-        // Combos simples (ex: Venus = 1,3,4,6)
         const vals = dices.map(d=>d.val).sort().join("");
+        
         let comboText = "";
+        // Combos spécifiques aux astragales
         if(vals.includes("1346")) comboText = "✨ COUP DE VÉNUS !";
         else if(sum === 1) comboText = "🐶 COUP DE CHIEN (Canis)";
         
@@ -334,6 +388,8 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         hud.style.display = 'block';
     }
 
+    log("Jeu L3 initialisé.");
+
     return {
         destroy(){
             try { renderer.dispose(); } catch(e){}
@@ -343,5 +399,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     };
   }
 
+  // API globale
   window.OsseletsDice5 = { mount };
+  log("Module chargé.");
 })();
