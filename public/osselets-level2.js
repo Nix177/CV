@@ -16,7 +16,6 @@
   const WORDS_JS = BASE + "3d/letters.json";
 
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
-  
   const DOT_R = 11;
   const HIT_R = 22;
   const DOT_A = 0.95;
@@ -117,24 +116,21 @@
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
         
-        /* --- GESTION ROBUSTE DU CHARGEMENT (Multi-CDN) --- */
+        /* --- GESTION ROBUSTE DU CHARGEMENT (Multi-CDN - v0.147.0) --- */
         let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
 
         if (!GLTFLoader) {
-          log('GLTFLoader manquant. Tentative de secours...');
+          log('GLTFLoader manquant. Tentative de secours (v0.147.0)...');
           
-          // Liste des URLs de secours à essayer en ordre
+          // Liste des URLs de secours (Version 0.147.0 obligatoire !)
           const BACKUP_URLS = [
-            // 1. jsDelivr (npm mirror)
-            'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js',
-            // 2. Unpkg (souvent bloqué mais standard)
-            'https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js',
-            // 3. Githack (proxy direct GitHub, rarement bloqué)
-            'https://rawcdn.githack.com/mrdoob/three.js/r149/examples/js/loaders/GLTFLoader.js'
+            'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
+            'https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js',
+            'https://rawcdn.githack.com/mrdoob/three.js/r147/examples/js/loaders/GLTFLoader.js'
           ];
 
           for (const url of BACKUP_URLS) {
-            if (THREE.GLTFLoader || window.GLTFLoader) break; // Déjà chargé ?
+            if (THREE.GLTFLoader || window.GLTFLoader) break;
             try {
               log('Essai chargement:', url);
               await new Promise((res, rej) => {
@@ -144,21 +140,18 @@
                 s.onerror = rej;
                 document.head.appendChild(s);
               });
-              // Petite pause pour l'init
               await new Promise(r => setTimeout(r, 50));
             } catch (e) {
               log('Échec sur:', url);
             }
           }
           
-          // Réassignation finale
           GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
         }
 
         if (!GLTFLoader) {
-          // Si vraiment tout échoue, on log juste une erreur mais on ne bloque pas l'UI (écran noir possible)
-          console.error('[L2] Fatal: Impossible de charger GLTFLoader après 3 tentatives.');
-          // On ne retourne pas, on laisse le code crasher proprement plus bas pour voir l'erreur "is not a constructor"
+          console.error('[L2] Fatal: Impossible de charger GLTFLoader.');
+          // On ne plante pas, on laisse une chance au constructeur
         } else {
           log('GLTFLoader actif.');
         }
