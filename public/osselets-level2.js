@@ -3,8 +3,8 @@
  * * - Charge /assets/games/osselets/level2/3d/astragalus.glb
  * - Fallback automatique si GLTFLoader est bloqué (AdBlock)
  * - Collecte 24 ancres "Hole_*" (6 par face)
+ * - HUD 2D avec projection + occlusion réelle
  * - Gameplay : Relier les lettres dans l'ordre pour former le mot cible
- * - Correction éclairage : Moins saturé/blanc
  * ==========================================================================*/
 
 (() => {
@@ -187,7 +187,6 @@
         btnNext.className = 'btn';
         btnNext.textContent = 'Mot suivant';
 
-        // On cache le bouton Edit pour l'instant pour simplifier l'interface joueur
         const btnEdit = document.createElement('button');
         btnEdit.className = 'btn';
         btnEdit.textContent = '✎  Éditer lettres';
@@ -220,9 +219,7 @@
         const cam = new THREE.PerspectiveCamera(45, VIEW.W/VIEW.H, 0.01, 100);
         
         // --- CORRECTION ÉCLAIRAGE : Moins fort pour éviter le "tout blanc" ---
-        // Lumière ambiante douce
         scene.add(new THREE.AmbientLight(0xffffff, 0.45)); 
-        // Lumière directionnelle modérée (soleil)
         const dir = new THREE.DirectionalLight(0xffffff, 0.65);
         dir.position.set(2.4, 3.4, 2.6);
         scene.add(dir);
@@ -251,7 +248,6 @@
           currentTargetWord = w.gr; // ex: "ΕΛΠΙΣ"
           currentTargetHint = w.hint;
 
-          // Construit l'affichage : lettres trouvées + tirets
           let display = "";
           for(let i=0; i<currentTargetWord.length; i++) {
              if(i < currentProgress.length) {
@@ -283,7 +279,7 @@
             if (o.isMesh) {
               if (!o.material || !o.material.isMeshStandardMaterial) {
                 o.material = new THREE.MeshStandardMaterial({
-                  color: 0xebe0d0, // Beige os légèrement foncé (pas blanc pur)
+                  color: 0xebe0d0, // Beige os légèrement foncé
                   roughness: 0.7,
                   metalness: 0.0
                 });
@@ -374,34 +370,31 @@
                 if (k === 0) ctx.moveTo(p.x, p.y);
                 else ctx.lineTo(p.x, p.y);
               }
-              // Si le mot n'est pas fini, on tire un fil vers la souris (optionnel, complexe ici)
               ctx.stroke();
             }
 
-            // 2. Dessiner les points
+            // 2. Dessiner les points ET LES LETTRES
             for (let i = 0; i < anchors.length; i++) {
               const wp = worldPos[i];
               const scr = worldToHud(wp.x, wp.y, wp.z);
               const isHidden = hiddenFlags[i];
               const isSelected = currentPath.includes(i);
               
-              // Si caché, on le dessine très discret, sauf si déjà sélectionné
-              const alpha = isSelected ? 1.0 : (isHidden ? DOT_A_H : DOT_A);
-              
-              ctx.beginPath();
-              if (isSelected) ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`; // Vert validé
-              else ctx.fillStyle = `rgba(14,165,233,${alpha})`; // Bleu par défaut
-              
-              ctx.arc(scr.x, scr.y, DOT_R, 0, Math.PI * 2);
-              ctx.fill();
+              // Afficher si sélectionné OU visible (non caché par l'os)
+              if (isSelected || !isHidden) {
+                // Rond
+                const alpha = isSelected ? 1.0 : (isHidden ? 0.2 : DOT_A);
+                ctx.beginPath();
+                if (isSelected) ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`; // Vert
+                else ctx.fillStyle = `rgba(14,165,233,${alpha})`; // Bleu
+                ctx.arc(scr.x, scr.y, DOT_R, 0, Math.PI * 2);
+                ctx.fill();
 
-              // AFFICHER LA LETTRE : Seulement si le point a été relié
-              if (isSelected) {
+                // Lettre (Correction : on affiche toujours si le point est visible)
                 ctx.fillStyle = '#ffffff';
-                ctx.font = `bold ${Math.round(DOT_R * 1.4)}px ui-sans-serif, system-ui`;
+                ctx.font = `bold ${Math.round(DOT_R * 1.3)}px ui-sans-serif, system-ui`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                // On récupère la lettre associée à ce trou
                 const letter = LETTERS[i % LETTERS.length];
                 ctx.fillText(letter, scr.x, scr.y + 1);
               }
@@ -424,43 +417,32 @@
           }
 
           function onClick(e) {
-            // Si mot fini, on ne fait rien (ou reset auto ?)
             if (currentPath.length >= currentTargetWord.length) return;
 
             const idx = pickNearest(e.clientX, e.clientY);
             if (idx >= 0) {
-              // LOGIQUE DE JEU : Vérifier si c'est la bonne lettre
               const letterClicked = LETTERS[idx % LETTERS.length];
-              const letterExpected = currentTargetWord[currentPath.length]; // La prochaine lettre du mot
+              const letterExpected = currentTargetWord[currentPath.length];
 
               if (letterClicked === letterExpected) {
-                // C'est bon !
                 currentPath.push(idx);
                 refreshTitle(currentPath);
                 
-                // Feedback visuel (optionnel, console pour debug)
-                log('Correct:', letterClicked);
-                
                 if (currentPath.length === currentTargetWord.length) {
-                  // GAGNÉ
                   setTimeout(() => {
                      alert("Bravo ! Mot complet : " + currentTargetWord);
-                     // Passage au mot suivant auto ?
                      wordIdx = (wordIdx + 1) % WORDS.length;
                      reset();
-                  }, 500);
+                  }, 250);
                 }
               } else {
-                // Mauvaise lettre
                 log('Mauvais trou. Attendu:', letterExpected, 'Cliqué:', letterClicked);
-                // Ici on pourrait faire clignoter en rouge, etc.
               }
             }
           }
 
           function onContext(e) {
             e.preventDefault();
-            // Clic droit pour annuler le dernier coup
             if (currentPath.length > 0) {
               currentPath.pop();
               refreshTitle(currentPath);
