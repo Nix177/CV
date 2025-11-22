@@ -1,7 +1,8 @@
 // /public/osselets-dice5.js — 5 osselets 3D (Box Physics)
 // - CORRECTION : Chargement robuste de Cannon.js (Anti-AdBlock)
+// - CORRECTION : Éclairage (ToneMapping + intensité réduite)
+// - CORRECTION : Détection du score par hauteur (plus fiable)
 // - Utilise le THREE.js global pour éviter les conflits
-// - Logs détaillés pour le débogage
 
 const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
@@ -117,15 +118,21 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
   }
 
   function faceUp(anchors, THREE){
-    const up = new THREE.Vector3(0,1,0);
-    const q  = new THREE.Quaternion();
-    let best = { key:null, dot:-2, node:null };
+    // CORRECTION DÉTECTION : On utilise la hauteur (Y) plutôt que la normale.
+    // La face dont le marqueur est le plus haut est celle visible.
+    let best = { key:null, y:-Infinity, node:null };
+    const pos = new THREE.Vector3();
+
     for (const k of ["ventre","bassin","membres","dos"]){
-      const a=anchors[k]; if(!a) continue;
-      a.getWorldQuaternion(q);
-      const ay=new THREE.Vector3(0,1,0).applyQuaternion(q).normalize();
-      const d = ay.dot(up);
-      if (d>best.dot) best = { key:k, dot:d, node:a };
+      const a=anchors[k]; 
+      if(!a) continue;
+      
+      a.getWorldPosition(pos);
+      
+      // On cherche le point le plus haut (Y max)
+      if (pos.y > best.y) {
+          best = { key:k, y:pos.y, node:a };
+      }
     }
     return best;
   }
@@ -183,7 +190,11 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     // 2. Three.js Setup
     const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
-    if (T.sRGBEncoding) renderer.outputEncoding = T.sRGBEncoding; 
+    
+    // CORRECTION ÉCLAIRAGE : ToneMapping pour éviter le sur-clairement
+    renderer.outputEncoding = T.sRGBEncoding; 
+    renderer.toneMapping = T.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
 
     const scene=new T.Scene(); scene.background=new T.Color(0xdbeafe);
     
@@ -204,9 +215,9 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     }
     const ro=new ResizeObserver(resize); ro.observe(rootEl);
     
-    // Lumières
-    scene.add(new T.AmbientLight(0xffffff, 0.6));
-    const spot=new T.SpotLight(0xffffff, 0.8);
+    // Lumières (Intensités réduites)
+    scene.add(new T.AmbientLight(0xffffff, 0.4)); // Réduit de 0.6 à 0.4
+    const spot=new T.SpotLight(0xffffff, 0.5);    // Réduit de 0.8 à 0.5
     spot.position.set(5, 15, 5);
     spot.castShadow=true;
     spot.shadow.mapSize.set(1024,1024);
@@ -231,7 +242,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     world.addBody(floorBody);
 
     const geoBoard = new T.BoxGeometry(ARENA_X*2, 0.5, ARENA_Z*2);
-    const matBoard = new T.MeshStandardMaterial({color:0xf1f5f9});
+    const matBoard = new T.MeshStandardMaterial({color:0xf1f5f9, roughness: 0.5, metalness: 0.1});
     const meshBoard = new T.Mesh(geoBoard, matBoard);
     meshBoard.position.y = -0.25; 
     meshBoard.receiveShadow = true;
@@ -265,6 +276,10 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
     const { pivot: meshTemplate, shape: boneShape } = prepareModelAndBox(gltf.scene, T, C);
 
+    // DEBUG : Vérifier les ancres trouvées
+    const debugAnchors = collectFaceAnchors(meshTemplate);
+    log("Points de détection trouvés dans le modèle :", Object.keys(debugAnchors));
+
     const dices = [];
     for(let i=0; i<COUNT; i++){
         const mesh = meshTemplate.clone();
@@ -286,13 +301,12 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     // 5. Game Logic
     let isThrowing = false;
     let throwTime = 0;
-    let lastT = 0; // DÉPLACÉ ICI pour être accessible par loop
+    let lastT = 0;
 
-    // DÉPLACÉ loop ICI avant resetPositions
     function loop(t){
         requestAnimationFrame(loop);
         
-        if (!t) t = now(); // Sécurité
+        if (!t) t = now();
         const dt = Math.min(0.05, (t - lastT)/1000);
         lastT = t;
 
@@ -337,7 +351,6 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
             d.body.angularVelocity.set(0,0,0);
             d.body.sleep();
         });
-        // Force un rendu immédiat et démarre la boucle si besoin
         loop(now());
     }
 
@@ -369,7 +382,6 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     btnThrow.onclick = throwDice;
     btnReset.onclick = resetPositions;
 
-    // Démarrage
     resetPositions(); 
 
     function showScore(){
@@ -378,7 +390,6 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         const vals = dices.map(d=>d.val).sort().join("");
         
         let comboText = "";
-        // Combos spécifiques aux astragales
         if(vals.includes("1346")) comboText = "✨ COUP DE VÉNUS !";
         else if(sum === 1) comboText = "🐶 COUP DE CHIEN (Canis)";
         
@@ -402,7 +413,6 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     };
   }
 
-  // API globale
   window.OsseletsDice5 = { mount };
   log("Module chargé.");
 })();
