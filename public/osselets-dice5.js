@@ -1,111 +1,122 @@
 // /public/osselets-dice5.js — 5 osselets 3D (Box Physics)
-// - CORRECTION : Chargement robuste de Cannon.js (Anti-AdBlock)
-// - CORRECTION : Éclairage (ToneMapping + intensité réduite)
-// - CORRECTION : Détection du score par hauteur (plus fiable)
-// - Utilise le THREE.js global pour éviter les conflits
+// - CORRECTION : Zoom rapproché
+// - CORRECTION : Murs invisibles plus hauts
+// - CORRECTION : Texture procédurale "Mosaïque Antique" (ou image perso)
+// - CORRECTION : Calcul des points via géométrie (fallback) si les ancres manquent
 
+// --- CONFIGURATION UTILISATEUR ---
 const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
+
+// Mettez ici l'URL de votre image (ex: "/assets/mon-plateau.jpg"). 
+// Si null, une mosaïque procédurale sera générée.
+const BOARD_TEXTURE_URL = null; 
+
+const ZOOM_LEVEL = 6.5;  // Plus petit = Plus près (13 était trop loin)
+const WALL_HEIGHT = 10.0; // Hauteur des murs invisibles
 
 (() => {
   const log = (...a) => console.log("[L3]", ...a);
   const err = (...a) => console.error("[L3]", ...a);
 
-  // --- CHARGEMENT DES LIBRAIRIES (Avec secours) ---
+  // --- CHARGEMENT DES LIBRAIRIES ---
   async function loadLibs() {
     log("Chargement des librairies...");
-
-    // 1. Three.js (Doit être déjà là via portfolio.html)
     const T = window.THREE;
-    if (!T) throw new Error("Three.js global introuvable. Vérifiez le HTML.");
+    if (!T) throw new Error("Three.js global introuvable.");
     
-    // 2. GLTFLoader
     const GLTFLoader = T.GLTFLoader || window.GLTFLoader;
     if (!GLTFLoader) throw new Error("GLTFLoader introuvable.");
 
-    // 3. Cannon-es (Moteur physique) - Tentative multi-CDN
-    let CANNON = window.CANNON; // Peut-être déjà chargé ?
-    
+    let CANNON = window.CANNON;
     if (!CANNON) {
         const urls = [
-            "https://esm.sh/cannon-es@0.20.0",                         // Source 1 (ESM)
-            "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm",      // Source 2 (JSDelivr)
-            "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"    // Source 3 (Unpkg UMD - Injection script)
+            "https://esm.sh/cannon-es@0.20.0",
+            "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
         ];
-
         for (const url of urls) {
             try {
-                log(`Tentative chargement Cannon via: ${url}`);
-                if (url.endsWith(".js") && !url.includes("+esm")) {
-                    // Injection classique pour UMD
+                if (url.endsWith(".js")) {
                     await new Promise((res, rej) => {
-                        const s = document.createElement('script');
-                        s.src = url;
-                        s.onload = res;
-                        s.onerror = rej;
-                        document.head.appendChild(s);
+                        const s = document.createElement('script'); s.src = url; s.onload = res; s.onerror = rej; document.head.appendChild(s);
                     });
-                    // Si UMD, il s'attache à window.CANNON
-                    if (window.CANNON) {
-                        CANNON = window.CANNON;
-                        break;
-                    }
+                    if (window.CANNON) { CANNON = window.CANNON; break; }
                 } else {
-                    // Import module dynamique
-                    const mod = await import(url);
-                    CANNON = mod;
-                    break;
+                    CANNON = await import(url); break;
                 }
-            } catch (e) {
-                console.warn(`[L3] Échec sur ${url}`, e);
-            }
+            } catch (e) {}
         }
     }
-
-    if (!CANNON) throw new Error("Impossible de charger le moteur physique (Cannon).");
-    
-    log("Librairies chargées OK.");
+    if (!CANNON) throw new Error("Impossible de charger Cannon.js");
     return { THREE: T, GLTFLoader, CANNON };
   }
 
-  // -------- Tuning Physique & Jeu --------
-  const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
+  // -------- Tuning Physique --------
   const COUNT = 5;
-
-  // Plateau
   const FLOOR_Y  = 0.0;
   const ARENA_X  = 10.5; 
   const ARENA_Z  = 6.5;  
-  const RIM_H    = 2.0;  
-  const RIM_T    = 0.5;
+  const RIM_T    = 1.0; // Épaisseur murs
 
-  // Physique (Box)
-  const GRAVITY_Y   = -14.0; 
-  const RESTITUTION = 0.40; 
-  const FRICTION    = 0.2;  
-  const LIN_DAMP    = 0.05; 
-  const ANG_DAMP    = 0.05; 
-
+  const GRAVITY_Y   = -18.0; // Gravité un peu plus forte pour qu'ils retombent vite
+  const RESTITUTION = 0.30;  // Moins de rebond
+  const FRICTION    = 0.4;   // Plus de frottement pour qu'ils s'arrêtent
   const TARGET_SIZE = 1.5; 
 
   // Lancer
-  const THROW_POS = { x0:-5.0, z0:-1.5, step: 2.5, y: 4.0 };
-  const IMPULSE_V = { x: 7.5, y: 2.0, z: 3.5 }; 
-  const SPIN_W    = 15.0; 
+  const THROW_POS = { x0:-5.0, z0:-1.5, step: 2.5, y: 5.0 };
+  const IMPULSE_V = { x: 8.0, y: 1.0, z: 3.0 }; 
+  const SPIN_W    = 20.0; 
 
   // Detection
-  const SPEED_EPS     = 0.15;
-  const FORCE_SNAP_MS = 6000;
+  const SPEED_EPS     = 0.1;
+  const FORCE_SNAP_MS = 5000;
 
-  // -------- Utils --------
-  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-  const now   = ()=>performance.now();
+  // -------- Utils & Texture --------
+  const now = ()=>performance.now();
   const randpm= (m)=>(-m + Math.random()*(2*m));
   const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
 
+  // Générateur de texture procédurale "Mosaïque Antique"
+  function createAntiqueTexture() {
+    const cvs = document.createElement('canvas');
+    cvs.width = 512; cvs.height = 512;
+    const ctx = cvs.getContext('2d');
+    
+    // Fond beige/pierre
+    ctx.fillStyle = "#eaddcf";
+    ctx.fillRect(0,0,512,512);
+    
+    // Bruit pour effet pierre
+    for(let i=0; i<5000; i++){
+        ctx.fillStyle = Math.random()>0.5 ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.1)";
+        ctx.fillRect(Math.random()*512, Math.random()*512, 2, 2);
+    }
+
+    // Motif Grec (Meander simple)
+    ctx.strokeStyle = "#8c5e3c";
+    ctx.lineWidth = 8;
+    ctx.strokeRect(20, 20, 472, 472);
+    ctx.strokeRect(40, 40, 432, 432);
+
+    // Cercle central
+    ctx.beginPath();
+    ctx.arc(256, 256, 100, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(140, 94, 60, 0.1)";
+    ctx.fill();
+
+    return cvs.toDataURL();
+  }
+
+  // -------- Logique de Scoring --------
+
   function collectFaceAnchors(root){
     const out={};
+    // On dump toute la structure pour le debug
+    const allNames = [];
     root.traverse(n=>{
+      if(n.name) allNames.push(n.name);
       const s=(n.name||"").toLowerCase();
       const flat=s.replace(/[_\s-]+/g,"");
       const hit = (k)=>s.includes(k) || flat.includes(k);
@@ -114,27 +125,50 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
       else if (hit("membres")) out.membres = n;
       else if (hit("dos"))     out.dos     = n;
     });
+    if(allNames.length > 0 && Object.keys(out).length === 0) {
+        console.warn("[L3] Structure du modèle (Anchors non trouvés):", allNames);
+    }
     return out;
   }
 
-  function faceUp(anchors, THREE){
-    // CORRECTION DÉTECTION : On utilise la hauteur (Y) plutôt que la normale.
-    // La face dont le marqueur est le plus haut est celle visible.
-    let best = { key:null, y:-Infinity, node:null };
+  // Méthode 1 : Par hauteur de marker (si anchors existent)
+  function getScoreFromAnchors(anchors, THREE){
+    let best = { key:null, y:-Infinity };
     const pos = new THREE.Vector3();
-
-    for (const k of ["ventre","bassin","membres","dos"]){
-      const a=anchors[k]; 
-      if(!a) continue;
-      
+    for (const k in anchors){
+      const a=anchors[k];
       a.getWorldPosition(pos);
-      
-      // On cherche le point le plus haut (Y max)
-      if (pos.y > best.y) {
-          best = { key:k, y:pos.y, node:a };
-      }
+      if (pos.y > best.y) best = { key:k, y:pos.y };
     }
-    return best;
+    return best.key;
+  }
+
+  // Méthode 2 : Par orientation géométrique (Fallback)
+  // Suppose que le modèle est exporté avec Y=Haut (Dos), Z=Devant, X=Côté
+  function getScoreFromGeometry(mesh, THREE) {
+    const up = new THREE.Vector3(0, 1, 0);
+    
+    // vecteurs locaux représentant les faces
+    const localDirs = {
+        dos:     new THREE.Vector3(0, 1, 0),  // Y+
+        ventre:  new THREE.Vector3(0, -1, 0), // Y-
+        membres: new THREE.Vector3(1, 0, 0),  // X+ (ou Z, à tester selon modèle)
+        bassin:  new THREE.Vector3(-1, 0, 0)  // X-
+    };
+
+    let bestKey = "dos";
+    let maxDot = -1.0;
+
+    for (const [key, localDir] of Object.entries(localDirs)) {
+        // On transforme la direction locale en direction monde
+        const worldDir = localDir.clone().applyQuaternion(mesh.quaternion).normalize();
+        const dot = worldDir.dot(up); // Plus c'est proche de 1, plus ça pointe vers le haut
+        if (dot > maxDot) {
+            maxDot = dot;
+            bestKey = key;
+        }
+    }
+    return bestKey;
   }
 
   function prepareModelAndBox(baseRoot, THREE, CANNON){
@@ -151,27 +185,19 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     root.scale.setScalar(scale);
     pivot.add(root);
 
-    const physSize = size.clone().multiplyScalar(scale * 0.5);
-    physSize.multiplyScalar(0.9); 
-
+    const physSize = size.clone().multiplyScalar(scale * 0.5 * 0.9);
     const shape = new CANNON.Box(new CANNON.Vec3(physSize.x, physSize.y, physSize.z));
     return { pivot, shape };
   }
 
   // -------- Moteur de Jeu --------
   async function mount(rootEl){
-    log("Mounting...");
     let lib;
-    try {
-        lib = await loadLibs();
-    } catch (e) {
-        err("Erreur fatale loadLibs:", e);
-        rootEl.innerHTML = `<div style="padding:20px;color:#ff6b6b;background:#0b2237;">Erreur chargement moteur physique.<br><small>${e.message}</small></div>`;
-        return;
-    }
+    try { lib = await loadLibs(); } 
+    catch (e) { rootEl.innerHTML = `Error: ${e.message}`; return; }
     const { THREE: T, GLTFLoader, CANNON: C } = lib;
 
-    // 1. Setup UI & Canvas
+    // 1. UI & Canvas
     rootEl.innerHTML=""; rootEl.style.position="relative";
     const canvas=document.createElement("canvas");
     canvas.style.cssText="display:block;border-radius:12px;width:100%;height:100%;";
@@ -184,30 +210,34 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     ctrl.append(btnThrow,btnReset); rootEl.appendChild(ctrl);
 
     const hud=document.createElement("div");
-    hud.style.cssText="position:absolute;left:16px;bottom:16px;background:#0b2237ee;color:#e2e8f0;border:1px solid #ffffff22;border-radius:12px;padding:12px 16px;font-size:15px;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:none;";
+    hud.style.cssText="position:absolute;left:16px;bottom:16px;background:#0b2237ee;color:#e2e8f0;border:1px solid #ffffff22;border-radius:12px;padding:12px 16px;font-size:15px;display:none;pointer-events:none;";
     rootEl.appendChild(hud);
 
-    // 2. Three.js Setup
-    const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
-    renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
-    
-    // CORRECTION ÉCLAIRAGE : ToneMapping pour éviter le sur-clairement
-    renderer.outputEncoding = T.sRGBEncoding; 
+    // 2. Scene & Light
+    const renderer=new T.WebGLRenderer({canvas, antialias:true});
+    renderer.shadowMap.enabled=true; 
+    renderer.shadowMap.type=T.PCFSoftShadowMap;
+    renderer.outputEncoding = T.sRGBEncoding;
     renderer.toneMapping = T.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
 
-    const scene=new T.Scene(); scene.background=new T.Color(0xdbeafe);
+    const scene=new T.Scene(); 
+    scene.background=new T.Color(0xdbeafe);
     
     const cam=new T.OrthographicCamera(-1,1,1,-1,0.1,100);
+    // Position caméra ajustée
     cam.position.set(0, 20, 15); 
     cam.lookAt(0, 0, 0);
+
+    const textureLoader = new T.TextureLoader();
+    const texUrl = BOARD_TEXTURE_URL || createAntiqueTexture();
+    const boardMap = textureLoader.load(texUrl);
+    boardMap.wrapS = boardMap.wrapT = T.RepeatWrapping;
+    if(!BOARD_TEXTURE_URL) boardMap.repeat.set(2, 2); // Répéter si texture générée
 
     function resize(){
       const w=rootEl.clientWidth, h=rootEl.clientHeight || (w*0.5625);
       renderer.setSize(w,h,false);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      
-      const zoom = 13; 
+      const zoom = ZOOM_LEVEL; // Utilisation de la constante zoom
       const asp = w/h;
       cam.left = -zoom * asp; cam.right = zoom * asp;
       cam.top = zoom; cam.bottom = -zoom;
@@ -215,102 +245,94 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     }
     const ro=new ResizeObserver(resize); ro.observe(rootEl);
     
-    // Lumières (Intensités réduites)
-    scene.add(new T.AmbientLight(0xffffff, 0.4)); // Réduit de 0.6 à 0.4
-    const spot=new T.SpotLight(0xffffff, 0.5);    // Réduit de 0.8 à 0.5
+    scene.add(new T.AmbientLight(0xffffff, 0.5));
+    const spot=new T.SpotLight(0xffffff, 0.6);
     spot.position.set(5, 15, 5);
     spot.castShadow=true;
-    spot.shadow.mapSize.set(1024,1024);
+    spot.shadow.mapSize.set(2048,2048); // Ombres plus nettes
     scene.add(spot);
 
-    // 3. Cannon Physics Setup
+    // 3. Physics
     const world=new C.World();
     world.gravity.set(0, GRAVITY_Y, 0);
     world.broadphase = new C.SAPBroadphase(world);
     
     const matFloor = new C.Material();
     const matBone  = new C.Material();
-    const contactMat = new C.ContactMaterial(matFloor, matBone, {
-      friction: FRICTION,
-      restitution: RESTITUTION
-    });
-    world.addContactMaterial(contactMat);
+    world.addContactMaterial(new C.ContactMaterial(matFloor, matBone, { friction: FRICTION, restitution: RESTITUTION }));
 
     const floorBody = new C.Body({ mass: 0, material: matFloor });
     floorBody.addShape(new C.Plane());
     floorBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
     world.addBody(floorBody);
 
+    // Plateau visuel
     const geoBoard = new T.BoxGeometry(ARENA_X*2, 0.5, ARENA_Z*2);
-    const matBoard = new T.MeshStandardMaterial({color:0xf1f5f9, roughness: 0.5, metalness: 0.1});
+    const matBoard = new T.MeshStandardMaterial({ map: boardMap, roughness:0.8 });
     const meshBoard = new T.Mesh(geoBoard, matBoard);
     meshBoard.position.y = -0.25; 
     meshBoard.receiveShadow = true;
     scene.add(meshBoard);
 
+    // Murs Invisibles (Physique uniquement)
     function addWall(x, z, w, d){
       const b = new C.Body({mass:0, material: matFloor});
-      b.addShape(new C.Box(new C.Vec3(w/2, RIM_H/2, d/2)));
-      b.position.set(x, RIM_H/2, z);
+      b.addShape(new C.Box(new C.Vec3(w/2, WALL_HEIGHT/2, d/2)));
+      b.position.set(x, WALL_HEIGHT/2, z);
       world.addBody(b);
     }
-    addWall(0, -ARENA_Z - RIM_T/2, ARENA_X*2, RIM_T); 
-    addWall(0,  ARENA_Z + RIM_T/2, ARENA_X*2, RIM_T); 
-    addWall(-ARENA_X - RIM_T/2, 0, RIM_T, ARENA_Z*2); 
-    addWall( ARENA_X + RIM_T/2, 0, RIM_T, ARENA_Z*2); 
+    addWall(0, -ARENA_Z - RIM_T/2, ARENA_X*2 + 2, RIM_T); 
+    addWall(0,  ARENA_Z + RIM_T/2, ARENA_X*2 + 2, RIM_T); 
+    addWall(-ARENA_X - RIM_T/2, 0, RIM_T, ARENA_Z*2 + 2); 
+    addWall( ARENA_X + RIM_T/2, 0, RIM_T, ARENA_Z*2 + 2); 
 
-    // 4. Chargement Assets
-    const cfg = await fetchJSON(CFG_PATH) || { values: {ventre:1, bassin:3, membres:4, dos:6} };
+    // 4. Chargement Osselets
+    // Valeurs par défaut si detection géométrique (Standard osselet)
+    const defaultValues = { dos:6, ventre:1, membres:4, bassin:3 };
+    const userCfg = await fetchJSON(CFG_PATH);
+    const valMap = (userCfg && userCfg.values) ? userCfg.values : defaultValues;
+
     const loader = new GLTFLoader();
-    
-    log("Chargement modèle...");
-    const gltf = await new Promise((res,rej)=> loader.load(MODEL_PATH, res, null, rej)).catch(e=>{
-        err("Err model", e); return null;
-    });
-
-    if(!gltf) { 
-        rootEl.innerHTML="<div style='padding:20px;color:#ff6b6b'>Erreur chargement modèle 3D (vérifiez console)</div>"; 
-        return; 
-    }
-    log("Modèle chargé.");
+    let gltf;
+    try { gltf = await new Promise((res,rej)=> loader.load(MODEL_PATH, res, null, rej)); }
+    catch(e){ err("Model err",e); return; }
 
     const { pivot: meshTemplate, shape: boneShape } = prepareModelAndBox(gltf.scene, T, C);
-
-    // DEBUG : Vérifier les ancres trouvées
+    
+    // Analyse des ancres pour debug
     const debugAnchors = collectFaceAnchors(meshTemplate);
-    log("Points de détection trouvés dans le modèle :", Object.keys(debugAnchors));
+    const hasAnchors = Object.keys(debugAnchors).length > 0;
+    log("Mode détection:", hasAnchors ? "ANCHORS (Précis)" : "GEOMETRY (Fallback)");
 
     const dices = [];
     for(let i=0; i<COUNT; i++){
         const mesh = meshTemplate.clone();
         scene.add(mesh);
-        const anchors = collectFaceAnchors(mesh);
+        const anchors = collectFaceAnchors(mesh); // Chaque clone a ses ancres
 
         const body = new C.Body({
             mass: 1,
             material: matBone,
-            linearDamping: LIN_DAMP,
-            angularDamping: ANG_DAMP,
+            linearDamping: 0.05,
+            angularDamping: 0.05,
             shape: boneShape
         });
         world.addBody(body);
-
         dices.push({ mesh, body, anchors, settled: false, val: 0 });
     }
 
-    // 5. Game Logic
+    // 5. Game Loop
     let isThrowing = false;
     let throwTime = 0;
     let lastT = 0;
 
     function loop(t){
         requestAnimationFrame(loop);
-        
         if (!t) t = now();
         const dt = Math.min(0.05, (t - lastT)/1000);
         lastT = t;
 
-        world.step(1/60, dt, 3);
+        world.step(1/60, dt, 5);
 
         let allSettled = true;
         let totalSpeed = 0;
@@ -325,8 +347,17 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
             if(isThrowing && !d.settled){
                 if(speed < SPEED_EPS || (now() - throwTime > FORCE_SNAP_MS)){
                     d.settled = true;
-                    const res = faceUp(d.anchors, T);
-                    d.val = (cfg.values && cfg.values[res.key]) || 0;
+                    
+                    // --- DÉTECTION SCORE ---
+                    let key;
+                    if (hasAnchors) {
+                        key = getScoreFromAnchors(d.anchors, T);
+                    } else {
+                        key = getScoreFromGeometry(d.mesh, T);
+                    }
+                    
+                    d.val = valMap[key] || 0;
+                    // log(`Dice settled. Key: ${key}, Val: ${d.val}`);
                 } else {
                     allSettled = false;
                 }
@@ -345,8 +376,8 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         hud.style.display = 'none';
         dices.forEach((d, i) => {
             d.settled = false;
-            d.body.position.set(-6 + i * 3, 1.5, 0);
-            d.body.quaternion.setFromEuler(0, Math.random()*6, 0);
+            d.body.position.set(-4 + i * 2, 1.0, 0); // Alignés proprement
+            d.body.quaternion.set(0,0,0,1);
             d.body.velocity.set(0,0,0);
             d.body.angularVelocity.set(0,0,0);
             d.body.sleep();
@@ -364,16 +395,19 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         dices.forEach((d, i) => {
             d.settled = false;
             d.body.wakeUp();
+            // Position de départ aléatoire groupée
             d.body.position.set(
-                THROW_POS.x0 + (Math.random()-0.5)*2, 
+                THROW_POS.x0 + randpm(1), 
                 THROW_POS.y + Math.random(), 
-                THROW_POS.z0 + (i - 2)*1.0 
+                THROW_POS.z0 + randpm(1) 
             );
             d.body.quaternion.setFromEuler(Math.random()*6, Math.random()*6, Math.random()*6);
+            
+            // Impulsion forte vers le centre
             d.body.velocity.set(
-                IMPULSE_V.x + randpm(1), 
-                IMPULSE_V.y + randpm(1), 
-                randpm(IMPULSE_V.z)
+                IMPULSE_V.x + randpm(2), 
+                IMPULSE_V.y + randpm(2), 
+                randpm(2)
             );
             d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
         });
@@ -381,28 +415,24 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
     btnThrow.onclick = throwDice;
     btnReset.onclick = resetPositions;
-
     resetPositions(); 
 
     function showScore(){
         const sum = dices.reduce((a,b)=>a+b.val, 0);
-        const details = dices.map(d=>d.val).join(" + ");
         const vals = dices.map(d=>d.val).sort().join("");
         
-        let comboText = "";
-        if(vals.includes("1346")) comboText = "✨ COUP DE VÉNUS !";
-        else if(sum === 1) comboText = "🐶 COUP DE CHIEN (Canis)";
-        
+        let combo = "";
+        if(vals.includes("1346")) combo = "✨ COUP DE VÉNUS !";
+        else if(sum === 1) combo = "🐶 CHIEN (Canis)";
+
         hud.innerHTML = `
-            <div style="text-transform:uppercase;font-size:12px;opacity:0.7">Résultat</div>
-            <div style="font-size:24px;font-weight:bold;color:#4ade80">${sum}</div>
-            <div style="margin-top:4px;font-size:13px;opacity:0.8">${details}</div>
-            ${comboText ? `<div style="margin-top:6px;color:#fcd34d;font-weight:bold">${comboText}</div>` : ""}
+            <div style="text-transform:uppercase;font-size:12px;opacity:0.7">Total</div>
+            <div style="font-size:28px;font-weight:bold;color:#4ade80">${sum}</div>
+            <div style="font-size:14px;margin-top:4px;letter-spacing:2px">${vals.split('').join(' ')}</div>
+            ${combo ? `<div style="margin-top:8px;color:#fbbf24;font-weight:bold">${combo}</div>` : ""}
         `;
         hud.style.display = 'block';
     }
-
-    log("Jeu L3 initialisé.");
 
     return {
         destroy(){
@@ -414,5 +444,5 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
   }
 
   window.OsseletsDice5 = { mount };
-  log("Module chargé.");
+  log("Module chargé (v2 corrigée).");
 })();
