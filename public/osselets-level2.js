@@ -123,12 +123,21 @@
       waitForGlobal('THREE', async (THREE) => {
         // GLTFLoader est exposé via THREE.GLTFLoader avec unpkg
        // GLTFLoader est exposé via THREE.GLTFLoader avec unpkg
-        const GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+        // --- CORRECTION : Attente active du Loader ---
+        let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+        let tries = 40; // On attend jusqu'à 4 secondes
+        while (!GLTFLoader && tries > 0) {
+          await new Promise(r => setTimeout(r, 100));
+          GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+          tries--;
+        }
+
         if (!GLTFLoader) {
-          console.error('[L2] THREE.GLTFLoader introuvable');
-          rootEl.innerHTML = '<div style="color:#ff6b6b;padding:20px;text-align:center;">GLTFLoader non chargé</div>';
+          console.error('[L2] THREE.GLTFLoader introuvable (timeout)');
+          rootEl.innerHTML = '<div style="color:#ff6b6b;padding:20px;text-align:center;">Erreur: GLTFLoader bloqué ou trop lent.</div>';
           return;
         }
+        // --- FIN CORRECTION ---
           
           // DOM setup
           rootEl.innerHTML = '';
