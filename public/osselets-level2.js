@@ -121,118 +121,35 @@
 
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
-      // --- VERSION SIMPLIFIÉE (Sans message d'erreur) ---
+      // --- DÉBUT REMPLACEMENT : Chargement de secours automatique ---
         let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
 
-        // Petite attente silencieuse (2 secondes max)
-        let tries = 20; 
-        while (!GLTFLoader && tries > 0) {
-          await new Promise(r => setTimeout(r, 100));
-          GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
-          tries--;
-        }
-        
-        // On continue coûte que coûte
-        if (!GLTFLoader) console.warn('[L2] Warning: GLTFLoader introuvable, tentative de suite...');
-          
-          // DOM setup
-          rootEl.innerHTML = '';
-          rootEl.style.position = 'relative';
-          rootEl.style.minHeight = '54vh';
-
-          const gl = document.createElement('canvas');
-          gl.width = VIEW.W;
-          gl.height = VIEW.H;
-          gl.style.cssText = 'display:block;border-radius:12px;background:transparent;width:100%;height:auto;';
-          rootEl.appendChild(gl);
-
-          const hud = document.createElement('canvas');
-          hud.width = VIEW.W;
-          hud.height = VIEW.H;
-          hud.style.cssText = 'position:absolute;inset:0;pointer-events:auto;';
-          rootEl.appendChild(hud);
-
-          const uiBar = document.createElement('div');
-          uiBar.style.cssText = 'position:absolute;left:18px;bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:10;';
-          rootEl.appendChild(uiBar);
-
-          const btnReset = document.createElement('button');
-          btnReset.className = 'btn';
-          btnReset.textContent = 'Réinitialiser';
-
-          const btnNext = document.createElement('button');
-          btnNext.className = 'btn';
-          btnNext.textContent = 'Mot suivant';
-
-          const btnEdit = document.createElement('button');
-          btnEdit.className = 'btn';
-          btnEdit.textContent = '✎  Éditer lettres';
-
-          const labelBox = document.createElement('div');
-          labelBox.style.cssText = 'color:#9bb2d4;font-size:14px;margin-right:6px;';
-          labelBox.textContent = 'Mot : —';
-
-          uiBar.append(labelBox, btnReset, btnNext, btnEdit);
-
-          const panel = document.createElement('div');
-          panel.style.cssText = 'position:absolute;right:18px;top:18px;width:260px;max-height:min(70vh,600px);overflow:auto;background:#0b2237;border:1px solid #ffffff22;border-radius:12px;padding:12px;display:none;z-index:10;';
-          panel.innerHTML = '<div style="font-weight:700;margin-bottom:8px">Lettres par trou</div>';
-          rootEl.appendChild(panel);
-
-          const { pad, up, dw, lf, rg, rs, zi, zo } = makeNudgePad();
-          rootEl.appendChild(pad);
-
-          // Renderer
-          const renderer = new THREE.WebGLRenderer({canvas: gl, antialias: true, alpha: true});
-          renderer.outputColorSpace = THREE.SRGBColorSpace || THREE.sRGBEncoding;
-          renderer.setPixelRatio(clamp(devicePixelRatio || 1, 1, VIEW.DPR_MAX));
-          renderer.setSize(VIEW.W, VIEW.H, false);
-
-          // Scene/Camera
-          const scene = new THREE.Scene();
-          scene.background = null;
-          
-          const cam = new THREE.PerspectiveCamera(45, VIEW.W/VIEW.H, 0.01, 100);
-          scene.add(new THREE.AmbientLight(0xffffff, 0.78));
-          
-          const dir = new THREE.DirectionalLight(0xffffff, 0.95);
-          dir.position.set(2.4, 3.4, 2.6);
-          scene.add(dir);
-
-          const pivot = new THREE.Group();
-          scene.add(pivot);
-
-          // Load words/letters config
-          const cfg = await fetchJSON(WORDS_JS);
-          const WORDS = (cfg && Array.isArray(cfg.words) && cfg.words.length) ? cfg.words : [
-            { gr:"ΕΛΠΙΣ", en:"ELPIS", hint:"Espoir — bon présage." },
-            { gr:"ΝΙΚΗ", en:"NIKĒ", hint:"Victoire — élan de réussite." },
-            { gr:"ΜΑΤΙ", en:"MATI", hint:"« Mauvais œil » — apotropaïon." }
-          ];
-          
-          const LETTERS = (cfg && Array.isArray(cfg.letters) && cfg.letters.length === 24) 
-            ? cfg.letters 
-            : GREEK.slice();
-          
-          let wordIdx = 0;
-
-          function refreshTitle() {
-            const w = WORDS[wordIdx % WORDS.length];
-            labelBox.textContent = `Mot : ${w.gr} (${w.en})`;
-            labelBox.setAttribute('title', `Indice : ${w.hint || ''}`);
+        // Si le Loader est absent (bloqué), on le télécharge nous-mêmes depuis une autre source
+        if (!GLTFLoader) {
+          log('[L2] GLTFLoader manquant. Tentative de chargement via secours...');
+          try {
+            await new Promise((resolve, reject) => {
+              const s = document.createElement('script');
+              // On utilise jsDelivr qui passe souvent mieux que unpkg
+              s.src = 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js';
+              s.onload = resolve;
+              s.onerror = reject;
+              document.head.appendChild(s);
+            });
+            // Petite pause pour laisser le temps à THREE de l'intégrer
+            await new Promise(r => setTimeout(r, 100));
+            GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+          } catch (e) {
+            console.warn('[L2] Échec du chargement de secours.');
           }
-          refreshTitle();
+        }
 
-          // Load model
-          const loader = new GLTFLoader();
-          
-          loader.load(MODEL, (gltf) => {
-            const root = gltf.scene || (gltf.scenes && gltf.scenes[0]);
-            if (!root) {
-              console.error('[L2] Modèle vide');
-              return;
-            }
-
+        // Si malgré tout ça ne marche pas, on arrête proprement sans planter la console
+        if (!GLTFLoader) {
+           console.error('[L2] Impossible de lancer le jeu : GLTFLoader introuvable.');
+           return; 
+        }
+        // --- FIN REMPLACEMENT ---
             root.traverse(o => {
               if (o.isMesh) {
                 if (!o.material || !o.material.isMeshStandardMaterial) {
