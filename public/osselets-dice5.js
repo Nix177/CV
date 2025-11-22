@@ -1,5 +1,5 @@
 // /public/osselets-dice5.js
-// --- MODIFICATION : AJOUT UI RÈGLES & EXPLICATIONS ---
+// --- MODIFICATION : CSS RESPONSIVE POUR LA MODALE RÈGLES ---
 
 const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
@@ -110,20 +110,42 @@ const WALL_HEIGHT = 10.0;
     rootEl.innerHTML=""; rootEl.style.position="relative";
     
     // Injection styles CSS pour modales et boutons
+    // MODIF : Ajout de max-height et overflow-y pour la modale
     const styleCSS = `
         .game-btn { background: #0b2237; color: #fbbf24; border: 1px solid #fbbf24; padding: 8px 16px; font-family: 'Cinzel', serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; transition: all 0.2s; }
         .game-btn:hover { background: #fbbf24; color: #0b2237; }
         .game-btn:disabled { opacity: 0.5; cursor: default; }
         
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 50; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #0f172a; border: 2px solid #fbbf24; color: #e2e8f0; padding: 24px; max-width: 400px; text-align: center; border-radius: 8px; font-family: 'Cinzel', serif; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
-        .modal-title { color: #fbbf24; font-size: 22px; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        
+        .modal-content { 
+            background: #0f172a; 
+            border: 2px solid #fbbf24; 
+            color: #e2e8f0; 
+            padding: 24px; 
+            max-width: 400px;
+            width: 90%;
+            max-height: 85vh; /* Empêche de dépasser la hauteur */
+            overflow-y: auto; /* Scroll si trop long */
+            text-align: center; 
+            border-radius: 8px; 
+            font-family: 'Cinzel', serif; 
+            position: relative; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8); 
+        }
+        
+        .modal-title { color: #fbbf24; font-size: 22px; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 8px; position: sticky; top: 0; background: #0f172a; z-index: 1; }
         .modal-text { font-family: sans-serif; font-size: 14px; line-height: 1.6; text-align: left; color: #94a3b8; margin-bottom: 20px; }
-        .modal-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #64748b; font-size: 20px; cursor: pointer; }
+        .modal-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #64748b; font-size: 20px; cursor: pointer; z-index: 2; }
         .modal-close:hover { color: #fff; }
         
         .rule-row { display: flex; justify-content: space-between; border-bottom: 1px solid #1e293b; padding: 4px 0; }
         .rule-val { color: #fbbf24; font-weight: bold; }
+        
+        /* Scrollbar custom */
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: #1e293b; }
+        .modal-content::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
     `;
     const styleEl = document.createElement('style');
     styleEl.textContent = styleCSS;
@@ -342,5 +364,5 @@ const WALL_HEIGHT = 10.0;
   }
 
   window.OsseletsDice5 = { mount };
-  log("Jeu Romain (avec UI Règles) chargé.");
+  log("Jeu Romain (avec UI Règles FIX) chargé.");
 })();
