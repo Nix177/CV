@@ -1,9 +1,9 @@
 /* ============================================================================
  * public/osselets-level2.js — L2 « Écrire avec les os »
  * * - Charge /assets/games/osselets/level2/3d/astragalus.glb
- * - Fallback automatique si GLTFLoader est bloqué (AdBlock)
  * - Collecte 24 ancres "Hole_*" (6 par face)
  * - HUD 2D avec projection + occlusion réelle
+ * - Multi-CDN Fallback pour GLTFLoader (anti-blocage)
  * ==========================================================================*/
 
 (() => {
@@ -16,6 +16,7 @@
   const WORDS_JS = BASE + "3d/letters.json";
 
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
+  
   const DOT_R = 11;
   const HIT_R = 22;
   const DOT_A = 0.95;
@@ -116,33 +117,51 @@
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
         
-        /* --- GESTION ROBUSTE DU CHARGEMENT (Correction AdBlock) --- */
+        /* --- GESTION ROBUSTE DU CHARGEMENT (Multi-CDN) --- */
         let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
 
         if (!GLTFLoader) {
-          log('GLTFLoader manquant/bloqué. Tentative de secours...');
-          try {
-            await new Promise((res, rej) => {
-              const s = document.createElement('script');
-              s.src = 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js';
-              s.onload = res;
-              s.onerror = () => rej();
-              document.head.appendChild(s);
-            });
-            // Petite pause technique
-            await new Promise(r => setTimeout(r, 100));
-            GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
-          } catch (e) {
-            console.warn('Le chargement de secours a aussi échoué.');
+          log('GLTFLoader manquant. Tentative de secours...');
+          
+          // Liste des URLs de secours à essayer en ordre
+          const BACKUP_URLS = [
+            // 1. jsDelivr (npm mirror)
+            'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js',
+            // 2. Unpkg (souvent bloqué mais standard)
+            'https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js',
+            // 3. Githack (proxy direct GitHub, rarement bloqué)
+            'https://rawcdn.githack.com/mrdoob/three.js/r149/examples/js/loaders/GLTFLoader.js'
+          ];
+
+          for (const url of BACKUP_URLS) {
+            if (THREE.GLTFLoader || window.GLTFLoader) break; // Déjà chargé ?
+            try {
+              log('Essai chargement:', url);
+              await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = url;
+                s.onload = res;
+                s.onerror = rej;
+                document.head.appendChild(s);
+              });
+              // Petite pause pour l'init
+              await new Promise(r => setTimeout(r, 50));
+            } catch (e) {
+              log('Échec sur:', url);
+            }
           }
+          
+          // Réassignation finale
+          GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
         }
 
         if (!GLTFLoader) {
-          console.error('[L2] Fatal: GLTFLoader introuvable.');
-          rootEl.innerHTML = `<div style="color:#ff6b6b;padding:20px;text-align:center;">Erreur technique: Composant 3D bloqué.</div>`;
-          return;
+          // Si vraiment tout échoue, on log juste une erreur mais on ne bloque pas l'UI (écran noir possible)
+          console.error('[L2] Fatal: Impossible de charger GLTFLoader après 3 tentatives.');
+          // On ne retourne pas, on laisse le code crasher proprement plus bas pour voir l'erreur "is not a constructor"
+        } else {
+          log('GLTFLoader actif.');
         }
-        log('GLTFLoader actif.');
         /* ---------------------------------------------------------- */
           
         // DOM setup
@@ -234,6 +253,7 @@
         refreshTitle();
 
         // Load model
+        if (!GLTFLoader) return; // Sécurité si échec total
         const loader = new GLTFLoader();
         
         loader.load(MODEL, (gltf) => {
