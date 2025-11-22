@@ -121,22 +121,41 @@
 
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
-        // GLTFLoader est exposé via THREE.GLTFLoader avec unpkg
-       // GLTFLoader est exposé via THREE.GLTFLoader avec unpkg
-        // --- CORRECTION : Attente active du Loader ---
+       // --- DÉBUT REMPLACEMENT (Correction AdBlock) ---
         let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
-        let tries = 40; // On attend jusqu'à 4 secondes
-        while (!GLTFLoader && tries > 0) {
-          await new Promise(r => setTimeout(r, 100));
-          GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
-          tries--;
+
+        // Si le loader est manquant (bloqué), on tente de le charger via un autre CDN (jsDelivr)
+        if (!GLTFLoader) {
+          log('GLTFLoader manquant/bloqué. Tentative de chargement de secours...');
+          try {
+            await new Promise((res, rej) => {
+              const s = document.createElement('script');
+              // On utilise jsDelivr qui est souvent moins bloqué que unpkg
+              s.src = 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/loaders/GLTFLoader.js';
+              s.onload = res;
+              s.onerror = () => rej();
+              document.head.appendChild(s);
+            });
+            // On revérifie après chargement manuel
+            GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
+          } catch (e) {
+            console.warn('Le chargement de secours a aussi échoué.');
+          }
         }
 
+        // Vérification finale
         if (!GLTFLoader) {
-          console.error('[L2] THREE.GLTFLoader introuvable (timeout)');
-          rootEl.innerHTML = '<div style="color:#ff6b6b;padding:20px;text-align:center;">Erreur: GLTFLoader bloqué ou trop lent.</div>';
+          console.error('[L2] Fatal: GLTFLoader définitivement introuvable.');
+          rootEl.innerHTML = `
+            <div style="color:#ff8888;background:#220000;padding:16px;border-radius:8px;text-align:center;border:1px solid red;">
+              <strong>Erreur technique</strong><br>
+              Le fichier 3D Loader est bloqué par votre navigateur.<br>
+              <small>Essayez de désactiver votre bloqueur de publicité (AdBlock/uBlock) pour ce site.</small>
+            </div>`;
           return;
         }
+        log('GLTFLoader actif.');
+        // --- FIN REMPLACEMENT ---
         // --- FIN CORRECTION ---
           
           // DOM setup
