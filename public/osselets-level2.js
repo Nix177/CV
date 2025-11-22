@@ -2,9 +2,7 @@
  * public/osselets-level2.js — L2 « Écrire avec les os »
  * * - Charge /assets/games/osselets/level2/3d/astragalus.glb
  * - Fallback automatique si GLTFLoader est bloqué (AdBlock)
- * - Collecte 24 ancres "Hole_*" (6 par face)
- * - HUD 2D avec projection + occlusion réelle
- * - Gameplay : Relier les lettres dans l'ordre pour former le mot cible
+ * - Gameplay : Relier les lettres + Rotation intuitive (Trackball/Drag)
  * ==========================================================================*/
 
 (() => {
@@ -25,7 +23,7 @@
   const DOT_A_H = 0.15;   // Transparence si caché derrière l'os
   
   // Contrôles
-  const ROT_STEP = 0.08;
+  const ROT_SPEED = 0.006; // Vitesse de rotation à la souris
   const ZOOM_MIN = 0.9, ZOOM_MAX = 1.8;
 
   const GREEK = ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"];
@@ -83,8 +81,9 @@
   }
 
   function makeNudgePad() {
+    // On garde les boutons pour l'accessibilité, mais on peut les réduire ou les cacher si le drag suffit
     const pad = document.createElement('div');
-    pad.style.cssText = 'position:absolute;right:18px;bottom:18px;display:grid;grid-template-columns:repeat(3,44px);grid-auto-rows:44px;gap:10px;background:#0b2237;border:1px solid #ffffff22;border-radius:12px;padding:14px;';
+    pad.style.cssText = 'position:absolute;right:18px;bottom:18px;display:grid;grid-template-columns:repeat(3,44px);grid-auto-rows:44px;gap:10px;background:#0b2237;border:1px solid #ffffff22;border-radius:12px;padding:14px;opacity:0.8;transform:scale(0.8);transform-origin:bottom right;';
     
     const mk = (txt, title = '') => {
       const b = document.createElement('button');
@@ -94,24 +93,16 @@
       b.title = title;
       return b;
     };
-    const up = mk('↑', 'Rotation X+');
-    const dw = mk('↓', 'Rotation X−');
-    const lf = mk('←', 'Rotation Y−');
-    const rg = mk('→', 'Rotation Y+'); 
     const rs = mk('⟲', 'Recadrer');
     const zi = mk('+',  'Zoom +');
     const zo = mk('−',  'Zoom −');
-    pad.appendChild(document.createElement('div'));
-    pad.appendChild(up);
-    pad.appendChild(document.createElement('div'));
-    pad.appendChild(lf);
-    pad.appendChild(rs);
-    pad.appendChild(rg);
+    
+    // Layout simplifié (juste Zoom et Reset, puisque le drag gère la rotation)
     pad.appendChild(zo);
-    pad.appendChild(dw);
+    pad.appendChild(rs);
     pad.appendChild(zi);
     
-    return { pad, up, dw, lf, rg, rs, zi, zo };
+    return { pad, rs, zi, zo };
   }
 
   /* ----------------------- Main Mount ----------------------- */
@@ -135,7 +126,6 @@
           for (const url of BACKUP_URLS) {
             if (THREE.GLTFLoader || window.GLTFLoader) break;
             try {
-              log('Essai chargement:', url);
               await new Promise((res, rej) => {
                 const s = document.createElement('script');
                 s.src = url;
@@ -144,15 +134,13 @@
                 document.head.appendChild(s);
               });
               await new Promise(r => setTimeout(r, 50));
-            } catch (e) {
-              log('Échec sur:', url);
-            }
+            } catch (e) {}
           }
           GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
         }
 
         if (!GLTFLoader) {
-          console.error('[L2] Fatal: Impossible de charger GLTFLoader après 3 tentatives.');
+          console.error('[L2] Fatal: Impossible de charger GLTFLoader.');
         } else {
           log('GLTFLoader actif.');
         }
@@ -172,38 +160,34 @@
         const hud = document.createElement('canvas');
         hud.width = VIEW.W;
         hud.height = VIEW.H;
-        hud.style.cssText = 'position:absolute;inset:0;pointer-events:auto;';
+        // IMPORTANT : touch-action: none pour que le drag ne scrolle pas la page sur mobile
+        hud.style.cssText = 'position:absolute;inset:0;pointer-events:auto;touch-action:none;cursor:grab;';
         rootEl.appendChild(hud);
 
         const uiBar = document.createElement('div');
-        uiBar.style.cssText = 'position:absolute;left:18px;bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:10;';
-        rootEl.appendChild(uiBar);
+        uiBar.style.cssText = 'position:absolute;left:18px;bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:10;pointer-events:none;'; // pointer-events:none pour laisser passer le drag si on clique à côté
+        
+        // Wrapper pour que les boutons reçoivent quand même les clics
+        const btnWrap = (btn) => { btn.style.pointerEvents = 'auto'; return btn; };
 
         const btnReset = document.createElement('button');
         btnReset.className = 'btn';
         btnReset.textContent = 'Réinitialiser';
+        btnWrap(btnReset);
 
         const btnNext = document.createElement('button');
         btnNext.className = 'btn';
         btnNext.textContent = 'Mot suivant';
-
-        const btnEdit = document.createElement('button');
-        btnEdit.className = 'btn';
-        btnEdit.textContent = '✎  Éditer lettres';
-        btnEdit.style.display = 'none'; 
+        btnWrap(btnNext);
 
         const labelBox = document.createElement('div');
-        labelBox.style.cssText = 'color:#e6f1ff;font-size:15px;background:#0b2237cc;padding:8px 14px;border-radius:8px;border:1px solid #ffffff22;margin-right:6px;';
+        labelBox.style.cssText = 'color:#e6f1ff;font-size:15px;background:#0b2237cc;padding:8px 14px;border-radius:8px;border:1px solid #ffffff22;margin-right:6px;pointer-events:auto;';
         labelBox.innerHTML = 'Chargement...';
 
-        uiBar.append(labelBox, btnReset, btnNext, btnEdit);
+        uiBar.append(labelBox, btnReset, btnNext);
+        rootEl.appendChild(uiBar);
 
-        const panel = document.createElement('div');
-        panel.style.cssText = 'position:absolute;right:18px;top:18px;width:260px;max-height:min(70vh,600px);overflow:auto;background:#0b2237;border:1px solid #ffffff22;border-radius:12px;padding:12px;display:none;z-index:10;';
-        panel.innerHTML = '<div style="font-weight:700;margin-bottom:8px">Lettres par trou</div>';
-        rootEl.appendChild(panel);
-
-        const { pad, up, dw, lf, rg, rs, zi, zo } = makeNudgePad();
+        const { pad, rs, zi, zo } = makeNudgePad();
         rootEl.appendChild(pad);
 
         // Renderer
@@ -218,7 +202,7 @@
         
         const cam = new THREE.PerspectiveCamera(45, VIEW.W/VIEW.H, 0.01, 100);
         
-        // --- CORRECTION ÉCLAIRAGE : Moins fort pour éviter le "tout blanc" ---
+        // Eclairage doux
         scene.add(new THREE.AmbientLight(0xffffff, 0.45)); 
         const dir = new THREE.DirectionalLight(0xffffff, 0.65);
         dir.position.set(2.4, 3.4, 2.6);
@@ -279,7 +263,7 @@
             if (o.isMesh) {
               if (!o.material || !o.material.isMeshStandardMaterial) {
                 o.material = new THREE.MeshStandardMaterial({
-                  color: 0xebe0d0, // Beige os légèrement foncé
+                  color: 0xebe0d0,
                   roughness: 0.7,
                   metalness: 0.0
                 });
@@ -359,10 +343,10 @@
           function drawHUD() {
             ctx.clearRect(0, 0, hud.width, hud.height);
 
-            // 1. Dessiner le fil (path)
+            // 1. Dessiner le fil
             if (currentPath.length > 0) {
               ctx.lineWidth = 4;
-              ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)'; // Vert clair
+              ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)';
               ctx.beginPath();
               for (let k = 0; k < currentPath.length; k++) {
                 const idx = currentPath[k];
@@ -373,24 +357,25 @@
               ctx.stroke();
             }
 
-            // 2. Dessiner les points ET LES LETTRES
+            // 2. Dessiner les points & lettres
             for (let i = 0; i < anchors.length; i++) {
               const wp = worldPos[i];
               const scr = worldToHud(wp.x, wp.y, wp.z);
               const isHidden = hiddenFlags[i];
               const isSelected = currentPath.includes(i);
               
-              // Afficher si sélectionné OU visible (non caché par l'os)
+              // On affiche TOUJOURS la lettre si elle n'est pas cachée, 
+              // ou si elle est déjà sélectionnée (pour voir le fil).
               if (isSelected || !isHidden) {
-                // Rond
-                const alpha = isSelected ? 1.0 : (isHidden ? 0.2 : DOT_A);
+                const alpha = isSelected ? 1.0 : DOT_A;
                 ctx.beginPath();
-                if (isSelected) ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`; // Vert
-                else ctx.fillStyle = `rgba(14,165,233,${alpha})`; // Bleu
+                if (isSelected) ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
+                else ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+                
                 ctx.arc(scr.x, scr.y, DOT_R, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Lettre (Correction : on affiche toujours si le point est visible)
+                // Lettre
                 ctx.fillStyle = '#ffffff';
                 ctx.font = `bold ${Math.round(DOT_R * 1.3)}px ui-sans-serif, system-ui`;
                 ctx.textAlign = 'center';
@@ -401,33 +386,78 @@
             }
           }
 
-          function pickNearest(clientX, clientY) {
+          // --- GESTION DU DRAG (Rotation) & CLICK ---
+          let isDragging = false;
+          let startX = 0, startY = 0;
+          let lastX = 0, lastY = 0;
+
+          function onPointerDown(e) {
+            isDragging = true;
+            hud.setPointerCapture(e.pointerId);
+            startX = e.clientX;
+            startY = e.clientY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            hud.style.cursor = 'grabbing';
+          }
+
+          function onPointerMove(e) {
+            if (!isDragging) return;
+            e.preventDefault(); // Empêche le scroll sur mobile
+            
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            // Rotation "Trackball" (autour des axes du monde = plus intuitif)
+            // Axe X souris -> Rotation autour de l'axe Y du monde (vertical)
+            // Axe Y souris -> Rotation autour de l'axe X du monde (horizontal)
+            pivot.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), dx * ROT_SPEED);
+            pivot.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), dy * ROT_SPEED);
+          }
+
+          function onPointerUp(e) {
+            isDragging = false;
+            hud.releasePointerCapture(e.pointerId);
+            hud.style.cursor = 'grab';
+
+            // Si on a très peu bougé (< 5px), on considère que c'est un CLIC
+            const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+            if (dist < 6) {
+              handleHoleClick(e.clientX, e.clientY);
+            }
+          }
+
+          hud.addEventListener('pointerdown', onPointerDown);
+          hud.addEventListener('pointermove', onPointerMove);
+          hud.addEventListener('pointerup', onPointerUp);
+
+          // Logique de sélection de trou
+          function handleHoleClick(cx, cy) {
+            if (currentPath.length >= currentTargetWord.length) return;
+
             const rect = hud.getBoundingClientRect();
-            const px = (clientX - rect.left) * (hud.width / rect.width);
-            const py = (clientY - rect.top) * (hud.height / rect.height);
+            const px = (cx - rect.left) * (hud.width / rect.width);
+            const py = (cy - rect.top) * (hud.height / rect.height);
+            
             let best = -1, bd = Infinity;
             for (let i = 0; i < anchors.length; i++) {
-              if (hiddenFlags[i]) continue; // On ne peut pas cliquer à travers l'os
+              if (hiddenFlags[i]) continue; // On ne clique pas à travers l'os
               const wp = worldPos[i];
               const p = worldToHud(wp.x, wp.y, wp.z);
               const d = Math.hypot(p.x - px, p.y - py);
               if (d < bd) { bd = d; best = i; }
             }
-            return (bd <= HIT_R) ? best : -1;
-          }
 
-          function onClick(e) {
-            if (currentPath.length >= currentTargetWord.length) return;
-
-            const idx = pickNearest(e.clientX, e.clientY);
-            if (idx >= 0) {
+            if (best >= 0 && bd <= HIT_R) {
+              const idx = best;
               const letterClicked = LETTERS[idx % LETTERS.length];
               const letterExpected = currentTargetWord[currentPath.length];
 
               if (letterClicked === letterExpected) {
                 currentPath.push(idx);
                 refreshTitle(currentPath);
-                
                 if (currentPath.length === currentTargetWord.length) {
                   setTimeout(() => {
                      alert("Bravo ! Mot complet : " + currentTargetWord);
@@ -437,20 +467,19 @@
                 }
               } else {
                 log('Mauvais trou. Attendu:', letterExpected, 'Cliqué:', letterClicked);
+                // Petit shake visuel du label si possible, ou juste log pour l'instant
               }
             }
           }
 
-          function onContext(e) {
+          // Clic droit pour annuler
+          hud.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             if (currentPath.length > 0) {
               currentPath.pop();
               refreshTitle(currentPath);
             }
-          }
-
-          hud.addEventListener('click', onClick);
-          hud.addEventListener('contextmenu', onContext);
+          });
 
           function reset() {
             currentPath.length = 0;
@@ -467,11 +496,7 @@
             reset();
           });
 
-          // Contrôles Pad
-          up.addEventListener('click', () => { pivot.rotation.x += ROT_STEP; });
-          dw.addEventListener('click', () => { pivot.rotation.x -= ROT_STEP; });
-          lf.addEventListener('click', () => { pivot.rotation.y -= ROT_STEP; });
-          rg.addEventListener('click', () => { pivot.rotation.y += ROT_STEP; });
+          // Contrôles boutons (Zoom/Reset uniquement)
           rs.addEventListener('click', reset);
           zi.addEventListener('click', () => { cam.zoom = clamp(cam.zoom * 1.12, ZOOM_MIN, ZOOM_MAX); cam.updateProjectionMatrix(); });
           zo.addEventListener('click', () => { cam.zoom = clamp(cam.zoom / 1.12, ZOOM_MIN, ZOOM_MAX); cam.updateProjectionMatrix(); });
@@ -497,8 +522,9 @@
               ro?.disconnect();
               window.removeEventListener('resize', syncSizes);
               try {
-                hud.removeEventListener('click', onClick);
-                hud.removeEventListener('contextmenu', onContext);
+                hud.removeEventListener('pointerdown', onPointerDown);
+                hud.removeEventListener('pointermove', onPointerMove);
+                hud.removeEventListener('pointerup', onPointerUp);
               } catch {}
               try { renderer.dispose(); } catch {}
               rootEl.innerHTML = '';
@@ -506,11 +532,7 @@
             }
           });
         }, 
-        (progress) => {
-          if (progress && progress.total) {
-            // log('chargement:', Math.round((progress.loaded / progress.total) * 100) + '%');
-          }
-        },
+        (progress) => {},
         (err) => {
           console.error('[L2] Erreur de chargement:', err);
           rootEl.innerHTML = '<div style="color:#ff6b6b;padding:20px;text-align:center;">Erreur de chargement du modèle 3D</div>';
