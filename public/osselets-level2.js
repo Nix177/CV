@@ -1,9 +1,10 @@
 /* ============================================================================
  * public/osselets-level2.js — L2 « Écrire avec les os »
  * * - Charge /assets/games/osselets/level2/3d/astragalus.glb
+ * - Fallback automatique si GLTFLoader est bloqué (AdBlock)
  * - Collecte 24 ancres "Hole_*" (6 par face)
- * - HUD 2D avec projection + occlusion réelle
- * - Multi-CDN Fallback pour GLTFLoader (anti-blocage)
+ * - Gameplay : Relier les lettres dans l'ordre pour former le mot cible
+ * - Correction éclairage : Moins saturé/blanc
  * ==========================================================================*/
 
 (() => {
@@ -16,10 +17,14 @@
   const WORDS_JS = BASE + "3d/letters.json";
 
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
+  
+  // Visuels HUD
   const DOT_R = 11;
   const HIT_R = 22;
-  const DOT_A = 0.95;
-  const DOT_A_H = 0.40;
+  const DOT_A = 0.8;      // Transparence des points non validés
+  const DOT_A_H = 0.15;   // Transparence si caché derrière l'os
+  
+  // Contrôles
   const ROT_STEP = 0.08;
   const ZOOM_MIN = 0.9, ZOOM_MAX = 1.8;
 
@@ -116,13 +121,11 @@
     return new Promise((resolve) => {
       waitForGlobal('THREE', async (THREE) => {
         
-        /* --- GESTION ROBUSTE DU CHARGEMENT (Multi-CDN - v0.147.0) --- */
+        /* --- GESTION ROBUSTE DU CHARGEMENT (Multi-CDN) --- */
         let GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
 
         if (!GLTFLoader) {
           log('GLTFLoader manquant. Tentative de secours (v0.147.0)...');
-          
-          // Liste des URLs de secours (Version 0.147.0 obligatoire !)
           const BACKUP_URLS = [
             'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
             'https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js',
@@ -145,13 +148,11 @@
               log('Échec sur:', url);
             }
           }
-          
           GLTFLoader = THREE.GLTFLoader || window.GLTFLoader;
         }
 
         if (!GLTFLoader) {
-          console.error('[L2] Fatal: Impossible de charger GLTFLoader.');
-          // On ne plante pas, on laisse une chance au constructeur
+          console.error('[L2] Fatal: Impossible de charger GLTFLoader après 3 tentatives.');
         } else {
           log('GLTFLoader actif.');
         }
@@ -186,13 +187,15 @@
         btnNext.className = 'btn';
         btnNext.textContent = 'Mot suivant';
 
+        // On cache le bouton Edit pour l'instant pour simplifier l'interface joueur
         const btnEdit = document.createElement('button');
         btnEdit.className = 'btn';
         btnEdit.textContent = '✎  Éditer lettres';
+        btnEdit.style.display = 'none'; 
 
         const labelBox = document.createElement('div');
-        labelBox.style.cssText = 'color:#9bb2d4;font-size:14px;margin-right:6px;';
-        labelBox.textContent = 'Mot : —';
+        labelBox.style.cssText = 'color:#e6f1ff;font-size:15px;background:#0b2237cc;padding:8px 14px;border-radius:8px;border:1px solid #ffffff22;margin-right:6px;';
+        labelBox.innerHTML = 'Chargement...';
 
         uiBar.append(labelBox, btnReset, btnNext, btnEdit);
 
@@ -215,9 +218,12 @@
         scene.background = null;
         
         const cam = new THREE.PerspectiveCamera(45, VIEW.W/VIEW.H, 0.01, 100);
-        scene.add(new THREE.AmbientLight(0xffffff, 0.78));
         
-        const dir = new THREE.DirectionalLight(0xffffff, 0.95);
+        // --- CORRECTION ÉCLAIRAGE : Moins fort pour éviter le "tout blanc" ---
+        // Lumière ambiante douce
+        scene.add(new THREE.AmbientLight(0xffffff, 0.45)); 
+        // Lumière directionnelle modérée (soleil)
+        const dir = new THREE.DirectionalLight(0xffffff, 0.65);
         dir.position.set(2.4, 3.4, 2.6);
         scene.add(dir);
 
@@ -237,16 +243,33 @@
           : GREEK.slice();
         
         let wordIdx = 0;
+        let currentTargetWord = "";
+        let currentTargetHint = "";
 
-        function refreshTitle() {
+        function refreshTitle(currentProgress = []) {
           const w = WORDS[wordIdx % WORDS.length];
-          labelBox.textContent = `Mot : ${w.gr} (${w.en})`;
-          labelBox.setAttribute('title', `Indice : ${w.hint || ''}`);
+          currentTargetWord = w.gr; // ex: "ΕΛΠΙΣ"
+          currentTargetHint = w.hint;
+
+          // Construit l'affichage : lettres trouvées + tirets
+          let display = "";
+          for(let i=0; i<currentTargetWord.length; i++) {
+             if(i < currentProgress.length) {
+               display += `<span style="color:#4ade80;font-weight:bold">${currentTargetWord[i]}</span> `;
+             } else {
+               display += "_ ";
+             }
+          }
+
+          labelBox.innerHTML = `
+            <div style="font-size:12px;opacity:.7;margin-bottom:2px">Objectif : ${w.en}</div>
+            <div style="font-size:18px;letter-spacing:2px;">${display}</div>
+            <div style="font-size:11px;opacity:.6;margin-top:4px">${w.hint}</div>
+          `;
         }
-        refreshTitle();
 
         // Load model
-        if (!GLTFLoader) return; // Sécurité si échec total
+        if (!GLTFLoader) return; 
         const loader = new GLTFLoader();
         
         loader.load(MODEL, (gltf) => {
@@ -260,9 +283,9 @@
             if (o.isMesh) {
               if (!o.material || !o.material.isMeshStandardMaterial) {
                 o.material = new THREE.MeshStandardMaterial({
-                  color: 0xf7efe7,
-                  roughness: 0.62,
-                  metalness: 0.05
+                  color: 0xebe0d0, // Beige os légèrement foncé (pas blanc pur)
+                  roughness: 0.7,
+                  metalness: 0.0
                 });
               }
               o.castShadow = false;
@@ -278,53 +301,40 @@
           frameToObject(THREE, cam, modelWrap, 1.35);
 
           const anchors = collectHoles(modelWrap);
-          log('anchors trouvés:', anchors.length, anchors.map(a => a.name));
-
-          if (anchors.length !== 24) {
-            console.warn('[L2] Attendu 24 ancres, trouvé:', anchors.length);
-          }
+          log('anchors trouvés:', anchors.length);
 
           // HUD state
           const ctx = hud.getContext('2d');
-          const current = [];
+          const currentPath = []; // indices des trous validés
           const hiddenFlags = new Array(anchors.length).fill(false);
           const worldPos = anchors.map(() => new THREE.Vector3());
           const ray = new THREE.Raycaster(undefined, undefined, 0.01, 100);
 
-          // Sizing
+          refreshTitle(currentPath);
+
           function syncSizes() {
             const w = Math.max(320, rootEl.clientWidth | 0);
             const h = Math.round(w * (VIEW.H / VIEW.W));
             const dpr = clamp(devicePixelRatio || 1, 1, VIEW.DPR_MAX);
-
             renderer.setPixelRatio(dpr);
             renderer.setSize(w, h, false);
-
             const db = new THREE.Vector2();
             renderer.getDrawingBufferSize(db);
-            
             hud.width = db.x | 0;
             hud.height = db.y | 0;
             hud.style.width = w + 'px';
             hud.style.height = h + 'px';
-
             cam.aspect = w / h;
             cam.updateProjectionMatrix();
           }
-          
           syncSizes();
-          const ro = (typeof ResizeObserver !== 'undefined') 
-            ? new ResizeObserver(syncSizes) 
-            : null;
-          
+          const ro = (typeof ResizeObserver !== 'undefined') ? new ResizeObserver(syncSizes) : null;
           if (ro) ro.observe(rootEl);
           window.addEventListener('resize', syncSizes);
 
-          // Projection + occlusion
           function projectHolesAndOcclusion() {
             pivot.updateMatrixWorld(true);
             cam.updateMatrixWorld(true);
-
             const camPos = new THREE.Vector3();
             cam.getWorldPosition(camPos);
             const dir = new THREE.Vector3();
@@ -332,17 +342,13 @@
             for (let i = 0; i < anchors.length; i++) {
               const n = anchors[i];
               n.getWorldPosition(worldPos[i]);
-
               hiddenFlags[i] = false;
               dir.copy(worldPos[i]).sub(camPos).normalize();
               ray.set(camPos, dir);
-              
               const hits = ray.intersectObject(modelWrap, true);
               if (hits && hits.length) {
                 const dHole = camPos.distanceTo(worldPos[i]);
-                if (hits[0].distance < dHole - 1e-3) {
-                  hiddenFlags[i] = true;
-                }
+                if (hits[0].distance < dHole - 1e-3) hiddenFlags[i] = true;
               }
             }
           }
@@ -357,77 +363,116 @@
           function drawHUD() {
             ctx.clearRect(0, 0, hud.width, hud.height);
 
-            // Fil
-            if (current.length > 0) {
+            // 1. Dessiner le fil (path)
+            if (currentPath.length > 0) {
               ctx.lineWidth = 4;
-              ctx.strokeStyle = 'rgba(96,165,250,0.92)';
+              ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)'; // Vert clair
               ctx.beginPath();
-              
-              for (let k = 0; k < current.length; k++) {
-                const idx = current[k];
+              for (let k = 0; k < currentPath.length; k++) {
+                const idx = currentPath[k];
                 const p = worldToHud(worldPos[idx].x, worldPos[idx].y, worldPos[idx].z);
                 if (k === 0) ctx.moveTo(p.x, p.y);
                 else ctx.lineTo(p.x, p.y);
               }
+              // Si le mot n'est pas fini, on tire un fil vers la souris (optionnel, complexe ici)
               ctx.stroke();
             }
 
-            // Pastilles + lettres
+            // 2. Dessiner les points
             for (let i = 0; i < anchors.length; i++) {
               const wp = worldPos[i];
               const scr = worldToHud(wp.x, wp.y, wp.z);
-              const alpha = hiddenFlags[i] ? DOT_A_H : DOT_A;
-
+              const isHidden = hiddenFlags[i];
+              const isSelected = currentPath.includes(i);
+              
+              // Si caché, on le dessine très discret, sauf si déjà sélectionné
+              const alpha = isSelected ? 1.0 : (isHidden ? DOT_A_H : DOT_A);
+              
               ctx.beginPath();
-              ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+              if (isSelected) ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`; // Vert validé
+              else ctx.fillStyle = `rgba(14,165,233,${alpha})`; // Bleu par défaut
+              
               ctx.arc(scr.x, scr.y, DOT_R, 0, Math.PI * 2);
               ctx.fill();
 
-              ctx.fillStyle = 'rgba(230,241,255,1)';
-              ctx.font = `${Math.round(DOT_R * 1.2)}px ui-sans-serif, system-ui`;
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              const letter = LETTERS[i % LETTERS.length];
-              ctx.fillText(letter, scr.x, scr.y + 0.5);
+              // AFFICHER LA LETTRE : Seulement si le point a été relié
+              if (isSelected) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `bold ${Math.round(DOT_R * 1.4)}px ui-sans-serif, system-ui`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                // On récupère la lettre associée à ce trou
+                const letter = LETTERS[i % LETTERS.length];
+                ctx.fillText(letter, scr.x, scr.y + 1);
+              }
             }
           }
 
-          // Interactions
           function pickNearest(clientX, clientY) {
             const rect = hud.getBoundingClientRect();
             const px = (clientX - rect.left) * (hud.width / rect.width);
             const py = (clientY - rect.top) * (hud.height / rect.height);
-            
             let best = -1, bd = Infinity;
             for (let i = 0; i < anchors.length; i++) {
-              if (hiddenFlags[i]) continue;
+              if (hiddenFlags[i]) continue; // On ne peut pas cliquer à travers l'os
               const wp = worldPos[i];
               const p = worldToHud(wp.x, wp.y, wp.z);
               const d = Math.hypot(p.x - px, p.y - py);
-              if (d < bd) {
-                bd = d;
-                best = i;
-              }
+              if (d < bd) { bd = d; best = i; }
             }
             return (bd <= HIT_R) ? best : -1;
           }
 
           function onClick(e) {
+            // Si mot fini, on ne fait rien (ou reset auto ?)
+            if (currentPath.length >= currentTargetWord.length) return;
+
             const idx = pickNearest(e.clientX, e.clientY);
-            if (idx >= 0) current.push(idx);
+            if (idx >= 0) {
+              // LOGIQUE DE JEU : Vérifier si c'est la bonne lettre
+              const letterClicked = LETTERS[idx % LETTERS.length];
+              const letterExpected = currentTargetWord[currentPath.length]; // La prochaine lettre du mot
+
+              if (letterClicked === letterExpected) {
+                // C'est bon !
+                currentPath.push(idx);
+                refreshTitle(currentPath);
+                
+                // Feedback visuel (optionnel, console pour debug)
+                log('Correct:', letterClicked);
+                
+                if (currentPath.length === currentTargetWord.length) {
+                  // GAGNÉ
+                  setTimeout(() => {
+                     alert("Bravo ! Mot complet : " + currentTargetWord);
+                     // Passage au mot suivant auto ?
+                     wordIdx = (wordIdx + 1) % WORDS.length;
+                     reset();
+                  }, 500);
+                }
+              } else {
+                // Mauvaise lettre
+                log('Mauvais trou. Attendu:', letterExpected, 'Cliqué:', letterClicked);
+                // Ici on pourrait faire clignoter en rouge, etc.
+              }
+            }
           }
 
           function onContext(e) {
             e.preventDefault();
-            current.pop();
+            // Clic droit pour annuler le dernier coup
+            if (currentPath.length > 0) {
+              currentPath.pop();
+              refreshTitle(currentPath);
+            }
           }
 
           hud.addEventListener('click', onClick);
           hud.addEventListener('contextmenu', onContext);
 
-          // Buttons
           function reset() {
-            current.length = 0;
+            currentPath.length = 0;
+            refreshTitle(currentPath);
             pivot.rotation.set(0, 0, 0);
             frameToObject(THREE, cam, modelWrap, 1.35);
             cam.zoom = clamp(cam.zoom, ZOOM_MIN, ZOOM_MAX);
@@ -435,61 +480,20 @@
           }
 
           btnReset.addEventListener('click', reset);
-
           btnNext.addEventListener('click', () => {
             wordIdx = (wordIdx + 1) % WORDS.length;
-            refreshTitle();
             reset();
           });
 
-          function rebuildPanel() {
-            panel.innerHTML = '<div style="font-weight:700;margin-bottom:8px">Lettres par trou</div>';
-            const list = document.createElement('div');
-            list.style.cssText = 'display:grid;grid-template-columns:1fr 70px;gap:6px;';
-            
-            for (let i = 0; i < anchors.length; i++) {
-              const lab = document.createElement('div');
-              lab.style.cssText = 'opacity:.8;font-size:12px;';
-              lab.textContent = anchors[i].name || `Hole_${i + 1}`;
-              
-              const inp = document.createElement('input');
-              inp.value = LETTERS[i] || '';
-              inp.maxLength = 2;
-              inp.style.cssText = 'width:70px;background:#001225;color:#e6f1ff;border:1px solid #ffffff25;border-radius:8px;padding:6px 8px;';
-              inp.addEventListener('input', () => {
-                LETTERS[i] = inp.value.toUpperCase().slice(0, 2);
-              });
-              
-              list.append(lab, inp);
-            }
-            panel.appendChild(list);
-          }
-
-          btnEdit.addEventListener('click', () => {
-            const show = panel.style.display === 'none';
-            if (show) rebuildPanel();
-            panel.style.display = show ? 'block' : 'none';
-          });
-
-          // Nudge controls
+          // Contrôles Pad
           up.addEventListener('click', () => { pivot.rotation.x += ROT_STEP; });
           dw.addEventListener('click', () => { pivot.rotation.x -= ROT_STEP; });
           lf.addEventListener('click', () => { pivot.rotation.y -= ROT_STEP; });
           rg.addEventListener('click', () => { pivot.rotation.y += ROT_STEP; });
-          rs.addEventListener('click', () => {
-            pivot.rotation.set(0, 0, 0);
-            frameToObject(THREE, cam, modelWrap, 1.35);
-          });
-          zi.addEventListener('click', () => {
-            cam.zoom = clamp(cam.zoom * 1.12, ZOOM_MIN, ZOOM_MAX);
-            cam.updateProjectionMatrix();
-          });
-          zo.addEventListener('click', () => {
-            cam.zoom = clamp(cam.zoom / 1.12, ZOOM_MIN, ZOOM_MAX);
-            cam.updateProjectionMatrix();
-          });
+          rs.addEventListener('click', reset);
+          zi.addEventListener('click', () => { cam.zoom = clamp(cam.zoom * 1.12, ZOOM_MIN, ZOOM_MAX); cam.updateProjectionMatrix(); });
+          zo.addEventListener('click', () => { cam.zoom = clamp(cam.zoom / 1.12, ZOOM_MIN, ZOOM_MAX); cam.updateProjectionMatrix(); });
 
-          // Animation loop
           let raf = 0;
           (function loop() {
             projectHolesAndOcclusion();
@@ -500,8 +504,7 @@
 
           // Info footer
           const foot = document.createElement('div');
-          foot.style.cssText = 'position:absolute;left:18px;top:18px;color:#9bb2d4;font-size:12px;opacity:.8;';
-          foot.innerHTML = `Modèle : <code>astragalus.glb</code> — ${anchors.length} trous détectés`;
+          foot.style.cssText = 'position:absolute;left:18px;top:18px;color:#9bb2d4;font-size:12px;opacity:.8;display:none';
           rootEl.appendChild(foot);
 
           log('Jeu initialisé avec succès');
@@ -523,7 +526,7 @@
         }, 
         (progress) => {
           if (progress && progress.total) {
-            log('chargement:', Math.round((progress.loaded / progress.total) * 100) + '%');
+            // log('chargement:', Math.round((progress.loaded / progress.total) * 100) + '%');
           }
         },
         (err) => {
@@ -535,7 +538,6 @@
     });
   }
 
-  // API globale
   window.OsseletsLevel2 = { mount };
   log('script chargé, timestamp:', Date.now());
 })();
