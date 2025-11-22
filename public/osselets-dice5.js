@@ -1,70 +1,60 @@
-// /public/osselets-dice5.js — 5 osselets 3D (Three.js + cannon-es) plateau rigide + score
-// - Plateau "board" avec rebords visuels et murs physiques (Box) ultra stables.
-// - Reset total avant chaque lancer, impulsion linéaire + spin.
-// - Pivot du modèle recentré + scale auto pour matcher la sphère physique (RADIUS).
-// - Détection de la face vers le haut via ancres (ventre/dos/bassin/membres).
-// - Snap à l'arrêt (ou snap forcé à 3 s) → calcul des valeurs + combos (JSON).
-//
-// API globale: window.OsseletsDice5.mount(rootEl)
+// /public/osselets-dice5.js — 5 osselets 3D (Box Physics)
+// - Remplacement de la physique Sphère -> Box pour des atterrissages réels sur les faces.
+// - Gravité et damping ajustés pour un lancer plus naturel (moins "lourd").
+// - Dimensions physiques calculées dynamiquement selon la BBox du modèle.
 
 const MODEL_PATH = "/assets/games/osselets/level3/3d/astragalus_faces.glb";
 const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
 
 (() => {
-  // -------- Imports ESM (cachés globalement) --------
-  const THREE_VER = "0.158.0";
-  const THREE_URL = `https://esm.sh/three@${THREE_VER}`;
-  const GLTF_URL  = `https://esm.sh/three@${THREE_VER}/examples/jsm/loaders/GLTFLoader.js`;
-  const CANNON_URL= `https://esm.sh/cannon-es@0.20.0`;
+  // -------- Imports ESM --------
+  // On utilise la version 0.147.0 pour être cohérent avec le reste du site (HTML)
+  // Mais pour Cannon (physique), on garde la version moderne esm
+  const THREE_URL = "https://unpkg.com/three@0.147.0/build/three.module.js";
+  const GLTF_URL  = "https://unpkg.com/three@0.147.0/examples/jsm/loaders/GLTFLoader.js";
+  const CANNON_URL= "https://esm.sh/cannon-es@0.20.0";
 
   async function loadLibs(){
-    if (window.__OX_PHYS_V2) return window.__OX_PHYS_V2;
+    if (window.__OX_PHYS_V3) return window.__OX_PHYS_V3;
     const THREE = await import(THREE_URL);
     const { GLTFLoader } = await import(GLTF_URL);
     const CANNON = await import(CANNON_URL);
-    window.__OX_PHYS_V2 = { THREE, GLTFLoader, CANNON };
-    return window.__OX_PHYS_V2;
+    window.__OX_PHYS_V3 = { THREE, GLTFLoader, CANNON };
+    return window.__OX_PHYS_V3;
   }
 
-  // -------- Constantes / tuning --------
+  // -------- Tuning Physique & Jeu --------
   const VIEW = { W: 960, H: 540, DPR_MAX: 2.5 };
   const COUNT = 5;
 
-  // Plateau & physique
+  // Plateau
   const FLOOR_Y  = 0.0;
-  const ARENA_X  = 10.5;   // demi-largeur plateau
-  const ARENA_Z  = 6.5;    // demi-profondeur plateau
-  const RIM_H    = 1.2;    // hauteur rebord visuel/physique
-  const RIM_T    = 0.6;    // épaisseur rebord
+  const ARENA_X  = 10.5; 
+  const ARENA_Z  = 6.5;  
+  const RIM_H    = 2.0;  // Rebords un peu plus hauts pour éviter les sorties
+  const RIM_T    = 0.5;
 
-  // Le modèle est ramené à ce rayon sphérique physique
-  const RADIUS   = 0.75;   // rayon de collision (sphère Cannon)
+  // Physique
+  // Gravité plus douce pour laisser le temps de voir le mouvement
+  const GRAVITY_Y   = -12.0; 
+  const RESTITUTION = 0.45; // Rebond
+  const FRICTION    = 0.2;  // Glisse un peu
+  // Damping très faible pour laisser tourner en l'air
+  const LIN_DAMP    = 0.05; 
+  const ANG_DAMP    = 0.05; 
 
-  // Physique stricte
-  const GRAVITY_Y   = -18.0;
-  const RESTITUTION = 0.42;
-  const FRICTION    = 0.35;
-  const LIN_DAMP    = 0.28;
-  const ANG_DAMP    = 0.30;
-  const SOLVER_ITER = 20;
-  const SOLVER_TOL  = 1e-3;
-
-  // Anti-tunneling / stabilisation
-  const FIXED_DT    = 1/90;    // pas de base
-  const MAX_SUB     = 10;      // sous-pas max
-  const MAX_VEL     = 18.0;    // clamps
-  const MAX_ANG     = 18.0;
-
-  // Détection d'arrêt + snap
-  const SPEED_EPS     = 0.33;
-  const SLEEP_TIME    = 0.75;  // s
-  const DOT_LOCK      = 0.985;
-  const FORCE_SNAP_MS = 3000;
+  // Taille cible de l'os (diagonale approx)
+  const TARGET_SIZE = 1.5; 
 
   // Lancer
-  const THROW_POS = { x0:-4.8, z0:-1.3, step: 2.25, y: 2.7 };
-  const IMPULSE_V = { x: 5.9, y: 4.0, z: 2.4 };
-  const SPIN_W    = 7.2;
+  const THROW_POS = { x0:-5.0, z0:-1.5, step: 2.5, y: 4.0 };
+  const IMPULSE_V = { x: 7.5, y: 2.0, z: 3.5 }; // Poussée vers le centre
+  const SPIN_W    = 15.0; // Beaucoup de rotation initiale
+
+  // Detection
+  const SPEED_EPS     = 0.15;
+  const DOT_LOCK      = 0.80; // Tolérance d'angle (0.8 = assez large, car la boîte atterrit déjà à plat)
+  const FORCE_SNAP_MS = 6000; // Temps max avant arrêt forcé
 
   // -------- Utils --------
   const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
@@ -72,6 +62,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
   const randpm= (m)=>(-m + Math.random()*(2*m));
   const fetchJSON = (u)=>fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
 
+  // Récupère les ancres (objets vides dans le GLB nommés "ventre", "dos"...)
   function collectFaceAnchors(root){
     const out={};
     root.traverse(n=>{
@@ -86,6 +77,7 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     return out;
   }
 
+  // Quelle face regarde vers le haut ? (Dot product avec Y+)
   function faceUp(anchors, THREE){
     const up = new THREE.Vector3(0,1,0);
     const q  = new THREE.Quaternion();
@@ -100,372 +92,294 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     return best;
   }
 
-  function makeSnapQuaternion(mesh, anchorNode, THREE){
-    const qAnchorW = new THREE.Quaternion(); anchorNode.getWorldQuaternion(qAnchorW);
-    const anchorUpW= new THREE.Vector3(0,1,0).applyQuaternion(qAnchorW).normalize();
-    const qDelta   = new THREE.Quaternion().setFromUnitVectors(anchorUpW, new THREE.Vector3(0,1,0));
-    return mesh.quaternion.clone().premultiply(qDelta);
-  }
-
-  function detectCombos(values, combos){
-    if (!combos) return [];
-    const res=[];
-    const count = arr => arr.reduce((m,v)=>(m[v]=(m[v]||0)+1, m), {});
-    const V=count(values);
-    for (const [name, want] of Object.entries(combos)){
-      const arr = Array.isArray(want) ? want : [want];
-      const W=count(arr);
-      let ok=true; for (const k in W){ if ((V[k]||0) < W[k]) { ok=false; break; } }
-      if (ok) res.push(name);
-    }
-    return res;
-  }
-
-  // Recentre + met à l’échelle un clone du modèle pour que le pivot = centre et taille ≈ RADIUS
-  function buildCenteredTemplate(baseRoot, THREE){
+  // Prépare le modèle : Centre le pivot et calcule la taille pour la boite physique
+  function prepareModelAndBox(baseRoot, THREE, CANNON){
     const root = baseRoot.clone(true);
-    // calc BBox
     const box = new THREE.Box3().setFromObject(root);
-    const size= new THREE.Vector3(); box.getSize(size);
+    const size = new THREE.Vector3(); box.getSize(size);
     const center = new THREE.Vector3(); box.getCenter(center);
-    // scale pour matcher le rayon physique
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const targetDiameter = 2*RADIUS;
-    const scale = (maxDim > 1e-6) ? targetDiameter/maxDim : 1.0;
 
-    // pivot à l'origine, root recentré & mis à l’échelle
+    // Facteur d'échelle pour que l'objet ait une taille standard
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = (maxDim > 1e-6) ? TARGET_SIZE/maxDim : 1.0;
+
+    // On applique l'échelle et le recentrage
     const pivot = new THREE.Group();
-    root.position.sub(center);
+    root.position.sub(center); // Centre géométrique en (0,0,0)
     root.scale.setScalar(scale);
     pivot.add(root);
 
-    return { pivot, inner: root };
+    // Dimensions finales pour la physique (Box Shape)
+    // On divise par 2 car Cannon utilise les "halfExtents"
+    const physSize = size.clone().multiplyScalar(scale * 0.5);
+    // Petit ajustement : on réduit légèrement la boite physique (90%) pour que les bords visuels touchent avant
+    physSize.multiplyScalar(0.9); 
+
+    const shape = new CANNON.Box(new CANNON.Vec3(physSize.x, physSize.y, physSize.z));
+
+    return { pivot, shape };
   }
 
-  // -------- Game --------
+  // -------- Moteur de Jeu --------
   async function mount(rootEl){
     const { THREE, GLTFLoader, CANNON } = await loadLibs();
     const T = THREE, C = CANNON;
 
-    // UI
+    // 1. Setup UI & Canvas
     rootEl.innerHTML=""; rootEl.style.position="relative";
     const canvas=document.createElement("canvas");
-    canvas.width=VIEW.W; canvas.height=VIEW.H;
-    canvas.style.cssText="display:block;border-radius:12px;";
+    canvas.style.cssText="display:block;border-radius:12px;width:100%;height:100%;";
     rootEl.appendChild(canvas);
 
+    // Overlay UI
     const ctrl=document.createElement("div");
-    ctrl.style.cssText="position:absolute;left:12px;top:12px;display:flex;gap:8px;z-index:10";
+    ctrl.style.cssText="position:absolute;left:16px;top:16px;display:flex;gap:10px;z-index:10";
     const btnThrow=document.createElement("button"); btnThrow.className="btn"; btnThrow.textContent="Lancer";
     const btnReset=document.createElement("button"); btnReset.className="btn"; btnReset.textContent="Réinitialiser";
     ctrl.append(btnThrow,btnReset); rootEl.appendChild(ctrl);
 
     const hud=document.createElement("div");
-    hud.style.cssText="position:absolute;left:12px;bottom:12px;background:#0b2237cc;border:1px solid #ffffff22;border-radius:12px;padding:10px 12px;font-size:14px;display:none;max-width:min(96%,680px)";
+    hud.style.cssText="position:absolute;left:16px;bottom:16px;background:#0b2237ee;color:#e2e8f0;border:1px solid #ffffff22;border-radius:12px;padding:12px 16px;font-size:15px;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:none;";
     rootEl.appendChild(hud);
 
-    // Renderer / Scene / Camera
+    // 2. Three.js Setup
     const renderer=new T.WebGLRenderer({canvas, antialias:true, alpha:false});
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+    renderer.outputEncoding = T.sRGBEncoding;
 
-    const scene=new T.Scene(); scene.background=new T.Color(0xeef2f8);
-    const cam=new T.OrthographicCamera(-10,10,10,-10,0.1,100); cam.position.set(0,16,12); cam.lookAt(0,0.7,0);
+    const scene=new T.Scene(); scene.background=new T.Color(0xdbeafe); // Bleu ciel très clair
+    // Caméra Ortho pour un look "Tabletop" propre
+    const cam=new T.OrthographicCamera(-1,1,1,-1,0.1,100);
+    cam.position.set(0, 20, 15); 
+    cam.lookAt(0, 0, 0);
 
-    function frame(){
-      const w=Math.max(320, rootEl.clientWidth|0);
-      const h=Math.round(w*(VIEW.H/VIEW.W));
-      const d=clamp(window.devicePixelRatio||1,1,VIEW.DPR_MAX);
-      renderer.setPixelRatio(d); renderer.setSize(w,h,false);
-      canvas.style.width=w+"px"; canvas.style.height=h+"px";
-      const aspect=w/h;
-      cam.left=-ARENA_X*aspect; cam.right=ARENA_X*aspect;
-      cam.top=ARENA_Z; cam.bottom=-ARENA_Z; cam.updateProjectionMatrix();
+    function resize(){
+      const w=rootEl.clientWidth, h=rootEl.clientHeight || (w*0.5625);
+      renderer.setSize(w,h,false);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      
+      // Zoom caméra adaptatif
+      const zoom = 13; 
+      const asp = w/h;
+      cam.left = -zoom * asp; cam.right = zoom * asp;
+      cam.top = zoom; cam.bottom = -zoom;
+      cam.updateProjectionMatrix();
     }
-    const ro = typeof ResizeObserver!=="undefined" ? new ResizeObserver(frame) : null;
-    if (ro) ro.observe(rootEl); window.addEventListener("resize", frame);
-    frame();
-
+    const ro=new ResizeObserver(resize); ro.observe(rootEl);
+    
     // Lumières
-    scene.add(new T.HemisphereLight(0xffffff,0x334466,.9));
-    const dir=new T.DirectionalLight(0xffffff,1.05); dir.position.set(4,8,6); dir.castShadow=true;
-    dir.shadow.mapSize?.set?.(1024,1024); scene.add(dir);
+    scene.add(new T.AmbientLight(0xffffff, 0.6));
+    const spot=new T.SpotLight(0xffffff, 0.8);
+    spot.position.set(5, 15, 5);
+    spot.castShadow=true;
+    spot.shadow.mapSize.set(1024,1024);
+    scene.add(spot);
 
-    // ---- Plateau visuel solide (board + rebords) ----
-    const boardMat = new T.MeshStandardMaterial({ color:0xeae7ff, roughness:.95, metalness:0 });
-    const board = new T.Mesh(new T.BoxGeometry(ARENA_X*2, 0.4, ARENA_Z*2), boardMat);
-    board.position.y = FLOOR_Y - 0.2; board.receiveShadow = true; scene.add(board);
-
-    const rimMat = new T.MeshStandardMaterial({ color:0xced7f2, roughness:.7, metalness:0 });
-    function mkRim(x, z, w, h, d){
-      const m=new T.Mesh(new T.BoxGeometry(w,h,d), rimMat);
-      m.castShadow=true; m.receiveShadow=true; m.position.set(x, FLOOR_Y + h/2, z);
-      scene.add(m); return m;
-    }
-    // 4 rebords (un peu épais pour la robustesse)
-    mkRim( 0,  ARENA_Z+RIM_T/2, ARENA_X*2+RIM_T*2, RIM_H, RIM_T); // haut
-    mkRim( 0, -ARENA_Z-RIM_T/2, ARENA_X*2+RIM_T*2, RIM_H, RIM_T); // bas
-    mkRim( ARENA_X+RIM_T/2, 0,  RIM_T, RIM_H, ARENA_Z*2+RIM_T*2); // droite
-    mkRim(-ARENA_X-RIM_T/2, 0,  RIM_T, RIM_H, ARENA_Z*2+RIM_T*2); // gauche
-
-    // ---- Monde physique très rigide ----
-    const world=new C.World({ gravity: new C.Vec3(0, GRAVITY_Y, 0) });
-    world.solver.iterations = SOLVER_ITER;
-    world.solver.tolerance  = SOLVER_TOL;
+    // 3. Cannon Physics Setup
+    const world=new C.World();
+    world.gravity.set(0, GRAVITY_Y, 0);
     world.broadphase = new C.SAPBroadphase(world);
-
-    const matGround=new C.Material("ground");
-    const matDice  =new C.Material("dice");
-    world.addContactMaterial(new C.ContactMaterial(matGround, matDice, {
+    // Matériaux
+    const matFloor = new C.Material();
+    const matBone  = new C.Material();
+    const contactMat = new C.ContactMaterial(matFloor, matBone, {
       friction: FRICTION,
-      restitution: RESTITUTION,
-      contactEquationStiffness: 1e7,
-      contactEquationRelaxation: 3
-    }));
-
-    // Board physique (Box)
-    const boardBody = new C.Body({
-      mass:0, material:matGround,
-      shape: new C.Box(new C.Vec3(ARENA_X, 0.2, ARENA_Z)),
-      position: new C.Vec3(0, FLOOR_Y - 0.2, 0)
+      restitution: RESTITUTION
     });
-    world.addBody(boardBody);
+    world.addContactMaterial(contactMat);
 
-    // Rebords physiques (4 Box)
-    function addWallBox(x, y, z, hx, hy, hz){
-      const b=new C.Body({ mass:0, material:matGround });
-      b.addShape(new C.Box(new C.Vec3(hx,hy,hz)));
-      b.position.set(x,y,z);
+    // Sol (Plane)
+    const floorBody = new C.Body({ mass: 0, material: matFloor });
+    floorBody.addShape(new C.Plane());
+    floorBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+    world.addBody(floorBody);
+
+    // Sol visuel (Board)
+    const geoBoard = new T.BoxGeometry(ARENA_X*2, 0.5, ARENA_Z*2);
+    const matBoard = new T.MeshStandardMaterial({color:0xf1f5f9});
+    const meshBoard = new T.Mesh(geoBoard, matBoard);
+    meshBoard.position.y = -0.25; 
+    meshBoard.receiveShadow = true;
+    scene.add(meshBoard);
+
+    // Murs invisibles (Physique uniquement) pour garder les dés sur le plateau
+    function addWall(x, z, w, d){
+      const b = new C.Body({mass:0, material: matFloor});
+      b.addShape(new C.Box(new C.Vec3(w/2, RIM_H/2, d/2)));
+      b.position.set(x, RIM_H/2, z);
       world.addBody(b);
-      return b;
     }
-    addWallBox( 0, FLOOR_Y + RIM_H/2,  ARENA_Z+RIM_T/2,  ARENA_X+RIM_T, RIM_H/2, RIM_T/2);
-    addWallBox( 0, FLOOR_Y + RIM_H/2, -ARENA_Z-RIM_T/2,  ARENA_X+RIM_T, RIM_H/2, RIM_T/2);
-    addWallBox( ARENA_X+RIM_T/2, FLOOR_Y + RIM_H/2, 0,  RIM_T/2, RIM_H/2, ARENA_Z+RIM_T);
-    addWallBox(-ARENA_X-RIM_T/2, FLOOR_Y + RIM_H/2, 0,  RIM_T/2, RIM_H/2, ARENA_Z+RIM_T);
+    addWall(0, -ARENA_Z - RIM_T/2, ARENA_X*2, RIM_T); // Bas
+    addWall(0,  ARENA_Z + RIM_T/2, ARENA_X*2, RIM_T); // Haut
+    addWall(-ARENA_X - RIM_T/2, 0, RIM_T, ARENA_Z*2); // Gauche
+    addWall( ARENA_X + RIM_T/2, 0, RIM_T, ARENA_Z*2); // Droite
 
-    // ---- Config valeurs/combos ----
-    const cfg = await fetchJSON(CFG_PATH) || {
-      values: { ventre:1, bassin:3, membres:4, dos:6 },
-      combos: null,
-      ui: { hint: "" }
-    };
-
-    // ---- Modèle ----
-    const loader=new GLTFLoader();
-    const rawRoot = await new Promise((res,rej)=>{
-      loader.load(MODEL_PATH, (gltf)=>{
-        const root=gltf.scene || (gltf.scenes && gltf.scenes[0]);
-        if (!root) return rej(new Error("Modèle vide"));
-        root.traverse(o=>{
-          if (o.isMesh){
-            if (!o.material || !o.material.isMeshStandardMaterial)
-              o.material=new T.MeshStandardMaterial({color:0xf7efe7,roughness:.6,metalness:.05});
-            o.castShadow=true; o.receiveShadow=false;
-          }
-        });
-        res(root);
-      }, undefined, err=>rej(err));
+    // 4. Chargement Assets
+    const cfg = await fetchJSON(CFG_PATH) || { values: {ventre:1, bassin:3, membres:4, dos:6} };
+    const loader = new GLTFLoader();
+    
+    // Charge le GLB
+    const gltf = await new Promise((res,rej)=> loader.load(MODEL_PATH, res, null, rej)).catch(e=>{
+        console.error("Err model", e); return null;
     });
 
-    // Template recentré/échellonné (pour spin sur soi-même + cohérence rayon physique)
-    const template = buildCenteredTemplate(rawRoot, T);
+    if(!gltf) { rootEl.innerHTML="Erreur chargement modèle"; return; }
 
-    // ---- Dés (mesh pivoté + body sphère) ----
-    const dice=[]; // { pivot, inner, anchors, body, snapped, value, snapTime }
-    for (let i=0;i<COUNT;i++){
-      const pivot = template.pivot.clone(true);
-      scene.add(pivot);
-      const anchors = collectFaceAnchors(pivot); // ancres sous le pivot
+    // Prépare le template (Mesh + Shape Physique Box)
+    const { pivot: meshTemplate, shape: boneShape } = prepareModelAndBox(gltf.scene, T, C);
 
-      const body=new C.Body({
-        mass: 1,
-        shape: new C.Sphere(RADIUS),
-        material: matDice,
-        position: new C.Vec3(THROW_POS.x0 + i*THROW_POS.step, THROW_POS.y, THROW_POS.z0),
-        angularDamping: ANG_DAMP,
-        linearDamping:  LIN_DAMP,
-        allowSleep: true,
-        sleepSpeedLimit: SPEED_EPS,
-        sleepTimeLimit: SLEEP_TIME
-      });
-      world.addBody(body);
+    // Instanciation des 5 osselets
+    const dices = [];
+    for(let i=0; i<COUNT; i++){
+        const mesh = meshTemplate.clone();
+        scene.add(mesh);
+        
+        // Récupération des ancres pour ce mesh spécifique
+        // (Attention: clone() ne clone pas toujours proprement les noms profonds, on re-traverse)
+        const anchors = collectFaceAnchors(mesh);
 
-      dice.push({
-        pivot, inner: pivot.children[0],
-        anchors, body,
-        snapped:false, value:0, snapTime:0
-      });
+        const body = new C.Body({
+            mass: 1,
+            material: matBone,
+            linearDamping: LIN_DAMP,
+            angularDamping: ANG_DAMP,
+            shape: boneShape
+        });
+        world.addBody(body);
+
+        dices.push({ mesh, body, anchors, settled: false, val: 0 });
     }
 
-    function syncMeshFromBody(d){
-      const b=d.body, m=d.pivot;
-      m.position.set(b.position.x, b.position.y, b.position.z);
-      m.quaternion.set(b.quaternion.x, b.quaternion.y, b.quaternion.z, b.quaternion.w);
+    // 5. Game Logic
+    let isThrowing = false;
+    let throwTime = 0;
+
+    function resetPositions(){
+        hud.style.display = 'none';
+        dices.forEach((d, i) => {
+            d.settled = false;
+            // Position alignée propre
+            d.body.position.set(
+                -6 + i * 3, 
+                1.5, 
+                0
+            );
+            d.body.quaternion.setFromEuler(0, Math.random()*6, 0); // Rotation Y aléatoire mais plat
+            d.body.velocity.set(0,0,0);
+            d.body.angularVelocity.set(0,0,0);
+            d.body.sleep(); // On les endort pour qu'ils ne bougent pas
+        });
+    }
+    resetPositions(); // Init
+
+    function throwDice(){
+        if(isThrowing) return;
+        isThrowing = true;
+        throwTime = now();
+        hud.style.display = 'none';
+        btnThrow.disabled = true;
+
+        dices.forEach((d, i) => {
+            d.settled = false;
+            d.body.wakeUp();
+            
+            // Position de départ (en l'air, un peu en retrait)
+            d.body.position.set(
+                THROW_POS.x0 + (Math.random()-0.5)*2, 
+                THROW_POS.y + Math.random(), 
+                THROW_POS.z0 + (i - 2)*1.0 // Étale un peu en Z
+            );
+
+            // Rotation aléatoire initiale complète
+            d.body.quaternion.setFromEuler(Math.random()*6, Math.random()*6, Math.random()*6);
+
+            // Force de lancer (Vers le centre + un peu de chaos)
+            d.body.velocity.set(
+                IMPULSE_V.x + randpm(1), 
+                IMPULSE_V.y + randpm(1), 
+                randpm(IMPULSE_V.z) // Z aléatoire pour étaler
+            );
+
+            // Spin violent
+            d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
+        });
     }
 
-    function hardResetBody(b, x, y, z){
-      b.velocity.set(0,0,0);
-      b.angularVelocity.set(0,0,0);
-      b.force.set(0,0,0);
-      b.torque.set(0,0,0);
-      b.position.set(x, y, z);
-      b.quaternion.setFromEuler(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-      b.linearDamping = LIN_DAMP;
-      b.angularDamping= ANG_DAMP;
-      b.wakeUp();
-    }
+    btnThrow.onclick = throwDice;
+    btnReset.onclick = resetPositions;
 
-    function placeRowRandom(){
-      dice.forEach((d,i)=>{
-        hardResetBody(
-          d.body,
-          THROW_POS.x0 + i*THROW_POS.step,
-          1.2 + (i%2)*.18,
-          THROW_POS.z0 + (i%3)*.55
-        );
-        syncMeshFromBody(d);
-        d.snapped=false; d.value=0; d.snapTime=0;
-      });
-      hud.style.display="none";
-    }
-    placeRowRandom();
+    // Loop
+    let lastT = 0;
+    function loop(t){
+        requestAnimationFrame(loop);
+        const dt = Math.min(0.05, (t - lastT)/1000);
+        lastT = t;
 
-    // ---- Boucle physique/rendu ultra stable ----
-    let req=0, acc=0, last=now(), throwing=false, finished=false, tThrow=0;
+        world.step(1/60, dt, 3);
 
-    function clampBody(b){
-      const v=b.velocity, w=b.angularVelocity;
-      const lv=Math.hypot(v.x,v.y,v.z);
-      if (lv>MAX_VEL){
-        const k=MAX_VEL/lv; v.scale(k,v);
-      }
-      const la=Math.hypot(w.x,w.y,w.z);
-      if (la>MAX_ANG){
-        const k=MAX_ANG/la; w.scale(k,w);
-      }
-    }
+        // Sync Mesh -> Body
+        let allSettled = true;
+        let totalSpeed = 0;
 
-    function physicsUpdate(dt){
-      // sous-pas fixes
-      acc += dt;
-      let steps=0;
-      while (acc >= FIXED_DT && steps < MAX_SUB){
-        for (const d of dice) clampBody(d.body);
-        world.step(FIXED_DT);
-        acc -= FIXED_DT; steps++;
-      }
+        dices.forEach(d => {
+            d.mesh.position.copy(d.body.position);
+            d.mesh.quaternion.copy(d.body.quaternion);
 
-      // sync, snap, score
-      let allSnapped=true;
-      for (const d of dice){
-        syncMeshFromBody(d);
-        if (d.snapped) continue;
+            const speed = d.body.velocity.length() + d.body.angularVelocity.length();
+            totalSpeed += speed;
 
-        const isSlow = d.body.velocity.length() + d.body.angularVelocity.length() < SPEED_EPS*1.1;
-        const info = faceUp(d.anchors, T);
+            if(isThrowing && !d.settled){
+                // Est-ce qu'il est arrêté ?
+                if(speed < SPEED_EPS || (now() - throwTime > FORCE_SNAP_MS)){
+                    d.settled = true;
+                    // Calcul du résultat
+                    const res = faceUp(d.anchors, T);
+                    d.val = (cfg.values && cfg.values[res.key]) || 0;
+                    
+                    // Petit effet visuel de "Snap" pour aligner parfaitement la face (optionnel mais propre)
+                    // On ne le fait que si on est vraiment proche, sinon ça fait un saut bizarre
+                    if(res.dot > 0.7) {
+                       // Ici on pourrait forcer la rotation finale, 
+                       // mais avec la Box Physics, il est DEJA sur une face.
+                       // Donc on laisse la physique faire, c'est plus naturel.
+                    }
+                } else {
+                    allSettled = false;
+                }
+            }
+        });
 
-        if (isSlow && info.dot >= DOT_LOCK){
-          // Snap immédiat
-          const qTarget = makeSnapQuaternion(d.pivot, info.node, T);
-          d.body.velocity.set(0,0,0);
-          d.body.angularVelocity.set(0,0,0);
-          d.body.quaternion.set(qTarget.x, qTarget.y, qTarget.z, qTarget.w);
-          d.pivot.quaternion.copy(qTarget);
-          d.snapped=true;
-          d.value = (cfg.values && cfg.values[info.key]) ?? 0;
-          d.snapTime = now();
-        } else {
-          allSnapped=false;
+        // Fin du tour
+        if(isThrowing && allSettled && totalSpeed < 0.1){
+            isThrowing = false;
+            btnThrow.disabled = false;
+            showScore();
         }
-      }
+    }
+    requestAnimationFrame(loop);
 
-      if (throwing && !finished && (now()-tThrow) > FORCE_SNAP_MS){
-        // Snap forcé
-        for (const d of dice){
-          if (d.snapped) continue;
-          const info = faceUp(d.anchors, T);
-          const qTarget = info.node ? makeSnapQuaternion(d.pivot, info.node, T) : d.pivot.quaternion;
-          d.body.velocity.set(0,0,0);
-          d.body.angularVelocity.set(0,0,0);
-          d.body.quaternion.set(qTarget.x, qTarget.y, qTarget.z, qTarget.w);
-          d.pivot.quaternion.copy(qTarget);
-          d.snapped=true;
-          d.value = (cfg.values && cfg.values[info.key]) ?? 0;
-          d.snapTime = now();
-        }
-        allSnapped=true;
-      }
-
-      if (throwing && allSnapped && !finished){
-        finished=true; throwing=false;
-        const vals=dice.map(d=>d.value||0);
-        const total=vals.reduce((a,b)=>a+b,0);
-        const combosTxt = detectCombos(vals, cfg.combos).join(", ");
-        hud.style.display="block";
+    function showScore(){
+        const sum = dices.reduce((a,b)=>a+b.val, 0);
+        const details = dices.map(d=>d.val).join(" + ");
+        
+        // Logique simple de combo (exemple: 5 identiques = coup de vénus ?)
+        // Vous pouvez enrichir ça avec `cfg.combos`
+        
         hud.innerHTML = `
-          <div style="font-weight:700;margin-bottom:4px">Tirage : ${vals.join("  ")}</div>
-          <div>Somme : <b>${total}</b>${combosTxt ? ` — Combo : <i>${combosTxt}</i>` : ""}</div>
-          ${cfg.ui && cfg.ui.hint ? `<div style="margin-top:6px;color:#9bb2d4;font-size:12px">${cfg.ui.hint}</div>` : ""}`;
-        btnThrow.disabled=false; btnReset.disabled=false;
-      }
+            <div style="text-transform:uppercase;font-size:12px;opacity:0.7">Résultat</div>
+            <div style="font-size:24px;font-weight:bold;color:#4ade80">${sum}</div>
+            <div style="margin-top:4px;font-size:13px;opacity:0.8">${details}</div>
+        `;
+        hud.style.display = 'block';
     }
-
-    function loop(){
-      const t=now();
-      const dt=Math.min(0.08, Math.max(0,(t-last)/1000)); last=t;
-      physicsUpdate(dt);
-      renderer.render(scene,cam);
-      req=requestAnimationFrame(loop);
-    }
-    loop();
-
-    // ---- Contrôles ----
-    function doThrow(){
-      // reset total AVANT chaque lancer
-      dice.forEach((d,i)=>{
-        hardResetBody(
-          d.body,
-          THROW_POS.x0 + i*THROW_POS.step,
-          THROW_POS.y + Math.random()*0.7,
-          THROW_POS.z0 + (i%3)*.65
-        );
-        syncMeshFromBody(d);
-        d.snapped=false; d.value=0; d.snapTime=0;
-      });
-
-      btnThrow.disabled=true; btnReset.disabled=true; hud.style.display="none";
-      finished=false; throwing=true; tThrow=now();
-
-      // impulsion & spin (autour de leur propre centre)
-      dice.forEach((d)=>{
-        d.body.velocity.set(
-          IMPULSE_V.x + Math.random()*1.8,
-          IMPULSE_V.y + Math.random()*1.2,
-          (Math.random()<.5?-1:1)*(IMPULSE_V.z + Math.random()*1.2)
-        );
-        d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
-        d.body.wakeUp();
-      });
-    }
-
-    function doReset(){
-      finished=false; throwing=false;
-      placeRowRandom();
-    }
-
-    btnThrow.addEventListener("click", doThrow);
-    btnReset.addEventListener("click", doReset);
 
     return {
-      destroy(){
-        try{ cancelAnimationFrame(req); }catch{}
-        ro?.disconnect(); window.removeEventListener("resize", frame);
-        try{ renderer.dispose(); }catch{}
-        rootEl.innerHTML="";
-      }
+        destroy(){
+            // Cleanup sommaire
+            rootEl.innerHTML = "";
+        }
     };
   }
 
-  // API globale
   window.OsseletsDice5 = { mount };
 })();
