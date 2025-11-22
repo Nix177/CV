@@ -27,8 +27,8 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     
     if (!CANNON) {
         const urls = [
-            "https://esm.sh/cannon-es@0.20.0",                        // Source 1 (ESM)
-            "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm",     // Source 2 (JSDelivr)
+            "https://esm.sh/cannon-es@0.20.0",                         // Source 1 (ESM)
+            "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm",      // Source 2 (JSDelivr)
             "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"    // Source 3 (Unpkg UMD - Injection script)
         ];
 
@@ -286,54 +286,13 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
     // 5. Game Logic
     let isThrowing = false;
     let throwTime = 0;
+    let lastT = 0; // DÉPLACÉ ICI pour être accessible par loop
 
-    function resetPositions(){
-        hud.style.display = 'none';
-        dices.forEach((d, i) => {
-            d.settled = false;
-            d.body.position.set(-6 + i * 3, 1.5, 0);
-            d.body.quaternion.setFromEuler(0, Math.random()*6, 0);
-            d.body.velocity.set(0,0,0);
-            d.body.angularVelocity.set(0,0,0);
-            d.body.sleep();
-        });
-        // Force un rendu immédiat
-        loop(now());
-    }
-    resetPositions(); 
-
-    function throwDice(){
-        if(isThrowing) return;
-        isThrowing = true;
-        throwTime = now();
-        hud.style.display = 'none';
-        btnThrow.disabled = true;
-
-        dices.forEach((d, i) => {
-            d.settled = false;
-            d.body.wakeUp();
-            d.body.position.set(
-                THROW_POS.x0 + (Math.random()-0.5)*2, 
-                THROW_POS.y + Math.random(), 
-                THROW_POS.z0 + (i - 2)*1.0 
-            );
-            d.body.quaternion.setFromEuler(Math.random()*6, Math.random()*6, Math.random()*6);
-            d.body.velocity.set(
-                IMPULSE_V.x + randpm(1), 
-                IMPULSE_V.y + randpm(1), 
-                randpm(IMPULSE_V.z)
-            );
-            d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
-        });
-    }
-
-    btnThrow.onclick = throwDice;
-    btnReset.onclick = resetPositions;
-
-    // Loop
-    let lastT = 0;
+    // DÉPLACÉ loop ICI avant resetPositions
     function loop(t){
         requestAnimationFrame(loop);
+        
+        if (!t) t = now(); // Sécurité
         const dt = Math.min(0.05, (t - lastT)/1000);
         lastT = t;
 
@@ -367,7 +326,51 @@ const CFG_PATH   = "/assets/games/osselets/level3/3d/values.json";
         }
         renderer.render(scene, cam);
     }
-    requestAnimationFrame(loop);
+
+    function resetPositions(){
+        hud.style.display = 'none';
+        dices.forEach((d, i) => {
+            d.settled = false;
+            d.body.position.set(-6 + i * 3, 1.5, 0);
+            d.body.quaternion.setFromEuler(0, Math.random()*6, 0);
+            d.body.velocity.set(0,0,0);
+            d.body.angularVelocity.set(0,0,0);
+            d.body.sleep();
+        });
+        // Force un rendu immédiat et démarre la boucle si besoin
+        loop(now());
+    }
+
+    function throwDice(){
+        if(isThrowing) return;
+        isThrowing = true;
+        throwTime = now();
+        hud.style.display = 'none';
+        btnThrow.disabled = true;
+
+        dices.forEach((d, i) => {
+            d.settled = false;
+            d.body.wakeUp();
+            d.body.position.set(
+                THROW_POS.x0 + (Math.random()-0.5)*2, 
+                THROW_POS.y + Math.random(), 
+                THROW_POS.z0 + (i - 2)*1.0 
+            );
+            d.body.quaternion.setFromEuler(Math.random()*6, Math.random()*6, Math.random()*6);
+            d.body.velocity.set(
+                IMPULSE_V.x + randpm(1), 
+                IMPULSE_V.y + randpm(1), 
+                randpm(IMPULSE_V.z)
+            );
+            d.body.angularVelocity.set(randpm(SPIN_W), randpm(SPIN_W), randpm(SPIN_W));
+        });
+    }
+
+    btnThrow.onclick = throwDice;
+    btnReset.onclick = resetPositions;
+
+    // Démarrage
+    resetPositions(); 
 
     function showScore(){
         const sum = dices.reduce((a,b)=>a+b.val, 0);
