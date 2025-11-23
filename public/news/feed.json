@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2025-11-22T06:34:08.659Z",
+  "generatedAt": "2025-11-23T06:35:35.025Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
   "totalAnalyzed": 100,
-  "totalPublished": 36,
+  "totalPublished": 38,
   "publishTarget": "default",
   "debug": {
     "analysisFailed": true,
@@ -150,7 +150,7 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "Stabilizing Policy Gradient Methods via Reward Profiling",
@@ -169,7 +169,7 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "TimeViper: A Hybrid Mamba-Transformer Vision-Language Model for Efficient Long Video Understanding",
@@ -188,7 +188,7 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "D-GARA: A Dynamic Benchmarking Framework for GUI Agent Robustness in Real-World Anomalies",
@@ -207,7 +207,26 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
+    },
+    {
+      "title": "FlipVQA-Miner: Cross-Page Visual Question-Answer Mining from Textbooks",
+      "url": "https://arxiv.org/abs/2511.16216v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-20T10:38:00.000Z",
+      "score": 50,
+      "summary_en": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
+      "summary_fr": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
+      "resume_fr": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "Artificial Intelligence and Accounting Research: A Framework and Agenda",
@@ -226,7 +245,7 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "Timing of reward cues alters the interaction between reward and interest on memory over time",
@@ -359,7 +378,26 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
+    },
+    {
+      "title": "HISE-KT: Synergizing Heterogeneous Information Networks and LLMs for Explainable Knowledge Tracing with Meta-Path Optimization",
+      "url": "https://arxiv.org/abs/2511.15191v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-19T07:24:10.000Z",
+      "score": 50,
+      "summary_en": "Knowledge Tracing (KT) aims to mine students' evolving knowledge states and predict their future question-answering performance. Existing methods based on heterogeneous information networks (HINs) are prone to introducing noises due to manual or random selection of meta-paths and lack necessary quality assessment of meta-path instances. Conversely, recent large language models (LLMs)-based methods ignore the rich information across students, and both paradigms struggle to deliver consistently accurate and evidence-based explanations. To address these issues, we propose an innovative framework,",
+      "summary_fr": "Knowledge Tracing (KT) aims to mine students' evolving knowledge states and predict their future question-answering performance. Existing methods based on heterogeneous information networks (HINs) are prone to introducing noises due to manual or random selection of meta-paths and lack necessary quality assessment of meta-path instances. Conversely, recent large language models (LLMs)-based methods ignore the rich information across students, and both paradigms struggle to deliver consistently accurate and evidence-based explanations. To address these issues, we propose an innovative framework,",
+      "resume_fr": "Knowledge Tracing (KT) aims to mine students' evolving knowledge states and predict their future question-answering performance. Existing methods based on heterogeneous information networks (HINs) are prone to introducing noises due to manual or random selection of meta-paths and lack necessary quality assessment of meta-path instances. Conversely, recent large language models (LLMs)-based methods ignore the rich information across students, and both paradigms struggle to deliver consistently accurate and evidence-based explanations. To address these issues, we propose an innovative framework,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "Simulated Human Learning in a Dynamic, Partially-Observed, Time-Series Environment",
@@ -378,7 +416,7 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "International perspectives on gaps and solutions for integrating research evidence into classroom practices",
@@ -549,7 +587,7 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
     },
     {
       "title": "ST-ProC: A Graph-Prototypical Framework for Robust Semi-Supervised Travel Mode Identification",
