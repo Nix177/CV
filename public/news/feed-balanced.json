@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-30T06:37:35.306Z",
+  "generatedAt": "2025-12-01T06:41:43.967Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -115,6 +115,44 @@
       "image": "https://spectrum.ieee.org/media-library/muet-epics-team-and-volunteers-visited-the-project-community-partner-at-ida-rieu-school-for-the-blind-and-deaf.jpg?id=62236973&width=1200&height=600&coordinates=0%2C312%2C0%2C313"
     },
     {
+      "title": "Provable Benefits of Sinusoidal Activation for Modular Addition",
+      "url": "https://arxiv.org/abs/2511.23443v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-11-28T18:37:03.000Z",
+      "score": 70,
+      "summary_en": "This paper studies the role of activation functions in learning modular addition with two-layer neural networks. We first establish a sharp expressivity gap: sine MLPs admit width-$2$ exact realizations for any fixed length $m$ and, with bias, width-$2$ exact realizations uniformly over all lengths. In contrast, the width of ReLU networks must scale linearly with $m$ to interpolate, and they cannot simultaneously fit two lengths with different residues modulo $p$. We then provide a novel Natarajan-dimension generalization bound for sine networks, yielding nearly optimal sample complexity $\\wid",
+      "summary_fr": "This paper studies the role of activation functions in learning modular addition with two-layer neural networks. We first establish a sharp expressivity gap: sine MLPs admit width-$2$ exact realizations for any fixed length $m$ and, with bias, width-$2$ exact realizations uniformly over all lengths. In contrast, the width of ReLU networks must scale linearly with $m$ to interpolate, and they cannot simultaneously fit two lengths with different residues modulo $p$. We then provide a novel Natarajan-dimension generalization bound for sine networks, yielding nearly optimal sample complexity $\\wid",
+      "resume_fr": "This paper studies the role of activation functions in learning modular addition with two-layer neural networks. We first establish a sharp expressivity gap: sine MLPs admit width-$2$ exact realizations for any fixed length $m$ and, with bias, width-$2$ exact realizations uniformly over all lengths. In contrast, the width of ReLU networks must scale linearly with $m$ to interpolate, and they cannot simultaneously fit two lengths with different residues modulo $p$. We then provide a novel Natarajan-dimension generalization bound for sine networks, yielding nearly optimal sample complexity $\\wid",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Amplifiers or Equalizers? A Longitudinal Study of LLM Evolution in Software Engineering Project-Based Learning",
+      "url": "https://arxiv.org/abs/2511.23157v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-11-28T13:05:23.000Z",
+      "score": 50,
+      "summary_en": "As LLMs reshape software development, integrating LLM-augmented practices into SE education has become imperative. While existing studies explore LLMs' educational use in introductory programming or isolated SE tasks, their impact in more open-ended Project-Based Learning (PBL) remains unexplored. This paper introduces a two-year longitudinal study comparing a 2024 (using early free LLMs, $n$=48) and 2025 (using the latest paid LLMs, $n$=46) cohort. Our findings suggest the latest powerful LLMs' dual role: they act as \"equalizers,\" boosting average performance even for programming-weak student",
+      "summary_fr": "As LLMs reshape software development, integrating LLM-augmented practices into SE education has become imperative. While existing studies explore LLMs' educational use in introductory programming or isolated SE tasks, their impact in more open-ended Project-Based Learning (PBL) remains unexplored. This paper introduces a two-year longitudinal study comparing a 2024 (using early free LLMs, $n$=48) and 2025 (using the latest paid LLMs, $n$=46) cohort. Our findings suggest the latest powerful LLMs' dual role: they act as \"equalizers,\" boosting average performance even for programming-weak student",
+      "resume_fr": "As LLMs reshape software development, integrating LLM-augmented practices into SE education has become imperative. While existing studies explore LLMs' educational use in introductory programming or isolated SE tasks, their impact in more open-ended Project-Based Learning (PBL) remains unexplored. This paper introduces a two-year longitudinal study comparing a 2024 (using early free LLMs, $n$=48) and 2025 (using the latest paid LLMs, $n$=46) cohort. Our findings suggest the latest powerful LLMs' dual role: they act as \"equalizers,\" boosting average performance even for programming-weak student",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Citizens of Smart Cities Need a Way to Opt Out",
       "url": "https://spectrum.ieee.org/smart-city-personal-data-collection",
       "source": "IEEE Spectrum – AI",
@@ -132,6 +170,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
       "image": "https://spectrum.ieee.org/media-library/image.png?id=62219013&width=1200&height=600&coordinates=0%2C168%2C0%2C168"
+    },
+    {
+      "title": "A Theoretically Grounded Hybrid Ensemble for Reliable Detection of LLM-Generated Text",
+      "url": "https://arxiv.org/abs/2511.22153v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-27T06:42:56.000Z",
+      "score": 50,
+      "summary_en": "The rapid proliferation of Large Language Models (LLMs) has blurred the line between human and machine authorship, creating practical risks for academic integrity and information reliability. Existing text detectors typically rely on a single methodological paradigm and suffer from poor generalization and high false positive rates (FPR), especially on high-stakes academic text. We propose a theoretically grounded hybrid ensemble that systematically fuses three complementary detection paradigms: (i) a RoBERTa-based transformer classifier for deep semantic feature extraction, (ii) a GPT-2-based ",
+      "summary_fr": "The rapid proliferation of Large Language Models (LLMs) has blurred the line between human and machine authorship, creating practical risks for academic integrity and information reliability. Existing text detectors typically rely on a single methodological paradigm and suffer from poor generalization and high false positive rates (FPR), especially on high-stakes academic text. We propose a theoretically grounded hybrid ensemble that systematically fuses three complementary detection paradigms: (i) a RoBERTa-based transformer classifier for deep semantic feature extraction, (ii) a GPT-2-based ",
+      "resume_fr": "The rapid proliferation of Large Language Models (LLMs) has blurred the line between human and machine authorship, creating practical risks for academic integrity and information reliability. Existing text detectors typically rely on a single methodological paradigm and suffer from poor generalization and high false positive rates (FPR), especially on high-stakes academic text. We propose a theoretically grounded hybrid ensemble that systematically fuses three complementary detection paradigms: (i) a RoBERTa-based transformer classifier for deep semantic feature extraction, (ii) a GPT-2-based ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Revisiting Generalization Across Difficulty Levels: It's Not So Easy",
@@ -169,6 +226,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reducing research bureaucracy in UK higher education: Can generative AI assist with the internal evaluation of quality?",
+      "url": "https://arxiv.org/abs/2511.21790v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-11-26T15:48:04.000Z",
+      "score": 50,
+      "summary_en": "This paper examines the potential for generative artificial intelligence (GenAI) to assist with internal review processes for research quality evaluations in UK higher education and particularly in preparation for the Research Excellence Framework (REF). Using the lens of function substitution in the Viable Systems Model, we present an experimental methodology using ChatGPT to score and rank business and management papers from REF 2021 submissions, \"reverse engineering\" the assessment by comparing AI-generated scores with known institutional results. Through rigourous testing of 822 papers acr",
+      "summary_fr": "This paper examines the potential for generative artificial intelligence (GenAI) to assist with internal review processes for research quality evaluations in UK higher education and particularly in preparation for the Research Excellence Framework (REF). Using the lens of function substitution in the Viable Systems Model, we present an experimental methodology using ChatGPT to score and rank business and management papers from REF 2021 submissions, \"reverse engineering\" the assessment by comparing AI-generated scores with known institutional results. Through rigourous testing of 822 papers acr",
+      "resume_fr": "This paper examines the potential for generative artificial intelligence (GenAI) to assist with internal review processes for research quality evaluations in UK higher education and particularly in preparation for the Research Excellence Framework (REF). Using the lens of function substitution in the Viable Systems Model, we present an experimental methodology using ChatGPT to score and rank business and management papers from REF 2021 submissions, \"reverse engineering\" the assessment by comparing AI-generated scores with known institutional results. Through rigourous testing of 822 papers acr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -1148,78 +1224,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Differences in the Moral Foundations of Large Language Models",
-      "url": "https://arxiv.org/abs/2511.11790v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-14T18:21:22.000Z",
-      "score": 50,
-      "resume_fr": "Large language models are increasingly being used in critical domains of politics, business, and education, but the nature of their normative ethical judgment remains opaque. Alignment research has, to date, not sufficiently utilized perspectives and insights from the field of moral psychology to inform training and evaluation of frontier models. I perform a synthetic experiment on a wide range of models from most major model providers using Jonathan Haidt's influential moral foundations theory (MFT) to elicit diverse value judgments from LLMs. Using multiple descriptive statistical approaches",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Higher Ed Strengthens Incident Response With AI and Practice",
-      "url": "https://edtechmagazine.com/higher/media/video/higher-ed-strengthens-incident-response-ai-and-practice",
-      "source": "EdTech Magazine (Higher Ed)",
-      "published": "2025-11-12T22:56:35.000Z",
-      "score": 50,
-      "summary_en": "When Jeff Falsetti invoked AI — Allen Iverson, not artificial intelligence (just yet) — he made his point clear: in cybersecurity, practice isn’t optional, it’s preparation. At EDUCAUSE 2025, CDW experts Falsetti and Patrick Sullivan shared insights at a conference session titled, “Defending the Digital Campus: Mastering Incident Response in Higher Education.” Falsetti, a DFIR technical lead consultant, and Sullivan, a senior manager of security sales, joined industry peers to explore new strategies for mastering incident response in higher education through proactive tabletop exercises…",
-      "summary_fr": "When Jeff Falsetti invoked AI — Allen Iverson, not artificial intelligence (just yet) — he made his point clear: in cybersecurity, practice isn’t optional, it’s preparation. At EDUCAUSE 2025, CDW experts Falsetti and Patrick Sullivan shared insights at a conference session titled, “Defending the Digital Campus: Mastering Incident Response in Higher Education.” Falsetti, a DFIR technical lead consultant, and Sullivan, a senior manager of security sales, joined industry peers to explore new strategies for mastering incident response in higher education through proactive tabletop exercises…",
-      "resume_fr": "When Jeff Falsetti invoked AI — Allen Iverson, not artificial intelligence (just yet) — he made his point clear: in cybersecurity, practice isn’t optional, it’s preparation. At EDUCAUSE 2025, CDW experts Falsetti and Patrick Sullivan shared insights at a conference session titled, “Defending the Digital Campus: Mastering Incident Response in Higher Education.” Falsetti, a DFIR technical lead consultant, and Sullivan, a senior manager of security sales, joined industry peers to explore new strategies for mastering incident response in higher education through proactive tabletop exercises…",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://edtechmagazine.com/higher/sites/edtechmagazine.com.higher/files/styles/cdw_hero/public/video/Jeff%20Falsetti.jpg?itok=PpP3LbeW"
-    },
-    {
-      "title": "Exploring The Interaction-Outcome Paradox: Seemingly Richer and More Self-Aware Interactions with LLMs May Not Yet Lead to Better Learning",
-      "url": "https://arxiv.org/abs/2511.09458v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-12T16:18:36.000Z",
-      "score": 85,
-      "resume_fr": "While Large Language Models (LLMs) have transformed the user interface for learning, moving from keyword search to natural language dialogue, their impact on educational outcomes remains unclear. We present a controlled study (N=20) that directly compares the learning interaction and outcomes between LLM and search-based interfaces. We found that although LLMs elicit richer and nuanced interactions from a learner, they do not produce broadly better learning outcomes. In this paper, we explore this the ``Interaction-Outcome Paradox.'' To explain this, we discuss the concept of a cognitive shift",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Densing law of LLMs",
-      "url": "https://www.nature.com/articles/s42256-025-01137-0",
-      "source": "Nature Machine Intelligence",
-      "published": "2025-11-06T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01137-0/MediaObjects/42256_2025_1137_Fig1_HTML.png"
     }
   ]
 }
