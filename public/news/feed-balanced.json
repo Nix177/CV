@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-12-03T06:39:51.657Z",
+  "generatedAt": "2025-12-04T06:39:47.551Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,82 @@
   },
   "items": [
     {
+      "title": "SkillFactory: Self-Distillation For Learning Cognitive Behaviors",
+      "url": "https://arxiv.org/abs/2512.04072v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-12-03T18:54:53.000Z",
+      "score": 70,
+      "summary_en": "Reasoning models leveraging long chains of thought employ various cognitive skills, such as verification of their answers, backtracking, retrying by an alternate method, and more. Previous work has shown that when a base language model exhibits these skills, training that model further with reinforcement learning (RL) can learn to leverage them. How can we get models to leverage skills that aren't exhibited by base models? Our work, SkillFactory, is a method for fine-tuning models to roughly learn these skills during a supervised fine-tuning (SFT) stage prior to RL. Our approach does not rely ",
+      "summary_fr": "Reasoning models leveraging long chains of thought employ various cognitive skills, such as verification of their answers, backtracking, retrying by an alternate method, and more. Previous work has shown that when a base language model exhibits these skills, training that model further with reinforcement learning (RL) can learn to leverage them. How can we get models to leverage skills that aren't exhibited by base models? Our work, SkillFactory, is a method for fine-tuning models to roughly learn these skills during a supervised fine-tuning (SFT) stage prior to RL. Our approach does not rely ",
+      "resume_fr": "Reasoning models leveraging long chains of thought employ various cognitive skills, such as verification of their answers, backtracking, retrying by an alternate method, and more. Previous work has shown that when a base language model exhibits these skills, training that model further with reinforcement learning (RL) can learn to leverage them. How can we get models to leverage skills that aren't exhibited by base models? Our work, SkillFactory, is a method for fine-tuning models to roughly learn these skills during a supervised fine-tuning (SFT) stage prior to RL. Our approach does not rely ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning Steerable Clarification Policies with Collaborative Self-play",
+      "url": "https://arxiv.org/abs/2512.04068v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-12-03T18:49:54.000Z",
+      "score": 50,
+      "summary_en": "To handle underspecified or ambiguous queries, AI assistants need a policy for managing their uncertainty to determine (a) when to guess the user intent and answer directly, (b) when to enumerate and answer multiple possible intents, and (c) when to ask a clarifying question. However, such policies are contextually dependent on factors such as user preferences or modality. For example, enumerating multiple possible user intentions is cumbersome on small screens or in a voice setting. In this work, we propose to train steerable policies for managing this uncertainty using self-play. Given two a",
+      "summary_fr": "To handle underspecified or ambiguous queries, AI assistants need a policy for managing their uncertainty to determine (a) when to guess the user intent and answer directly, (b) when to enumerate and answer multiple possible intents, and (c) when to ask a clarifying question. However, such policies are contextually dependent on factors such as user preferences or modality. For example, enumerating multiple possible user intentions is cumbersome on small screens or in a voice setting. In this work, we propose to train steerable policies for managing this uncertainty using self-play. Given two a",
+      "resume_fr": "To handle underspecified or ambiguous queries, AI assistants need a policy for managing their uncertainty to determine (a) when to guess the user intent and answer directly, (b) when to enumerate and answer multiple possible intents, and (c) when to ask a clarifying question. However, such policies are contextually dependent on factors such as user preferences or modality. For example, enumerating multiple possible user intentions is cumbersome on small screens or in a voice setting. In this work, we propose to train steerable policies for managing this uncertainty using self-play. Given two a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Eval Factsheets: A Structured Framework for Documenting AI Evaluations",
+      "url": "https://arxiv.org/abs/2512.04062v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-12-03T18:46:50.000Z",
+      "score": 70,
+      "summary_en": "The rapid proliferation of benchmarks has created significant challenges in reproducibility, transparency, and informed decision-making. However, unlike datasets and models -- which benefit from structured documentation frameworks like Datasheets and Model Cards -- evaluation methodologies lack systematic documentation standards. We introduce Eval Factsheets, a structured, descriptive framework for documenting AI system evaluations through a comprehensive taxonomy and questionnaire-based approach. Our framework organizes evaluation characteristics across five fundamental dimensions: Context (W",
+      "summary_fr": "The rapid proliferation of benchmarks has created significant challenges in reproducibility, transparency, and informed decision-making. However, unlike datasets and models -- which benefit from structured documentation frameworks like Datasheets and Model Cards -- evaluation methodologies lack systematic documentation standards. We introduce Eval Factsheets, a structured, descriptive framework for documenting AI system evaluations through a comprehensive taxonomy and questionnaire-based approach. Our framework organizes evaluation characteristics across five fundamental dimensions: Context (W",
+      "resume_fr": "The rapid proliferation of benchmarks has created significant challenges in reproducibility, transparency, and informed decision-making. However, unlike datasets and models -- which benefit from structured documentation frameworks like Datasheets and Model Cards -- evaluation methodologies lack systematic documentation standards. We introduce Eval Factsheets, a structured, descriptive framework for documenting AI system evaluations through a comprehensive taxonomy and questionnaire-based approach. Our framework organizes evaluation characteristics across five fundamental dimensions: Context (W",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Teacher, But Also Student: Challenges and Tech Needs of Adult Braille Learners with Sight",
+      "url": "https://arxiv.org/abs/2512.03398v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-12-03T03:09:42.000Z",
+      "score": 50,
+      "summary_en": "Braille literacy is critical for blind individuals' independence and quality of life, yet literacy rates continue to decline. Though braille instructors in integrated K-12 classrooms play a central role in literacy development in blind youth, prior research on braille learning almost exclusively focuses on blind adolescent students. As a result, we still know little about how sighted adult teachers learn braille. To address this, we interviewed 14 educators, including 13 certificated Teachers of Students with Visual Impairments (TVIs) and 1 paraeducator, who learned braille as adults. We found",
+      "summary_fr": "Braille literacy is critical for blind individuals' independence and quality of life, yet literacy rates continue to decline. Though braille instructors in integrated K-12 classrooms play a central role in literacy development in blind youth, prior research on braille learning almost exclusively focuses on blind adolescent students. As a result, we still know little about how sighted adult teachers learn braille. To address this, we interviewed 14 educators, including 13 certificated Teachers of Students with Visual Impairments (TVIs) and 1 paraeducator, who learned braille as adults. We found",
+      "resume_fr": "Braille literacy is critical for blind individuals' independence and quality of life, yet literacy rates continue to decline. Though braille instructors in integrated K-12 classrooms play a central role in literacy development in blind youth, prior research on braille learning almost exclusively focuses on blind adolescent students. As a result, we still know little about how sighted adult teachers learn braille. To address this, we interviewed 14 educators, including 13 certificated Teachers of Students with Visual Impairments (TVIs) and 1 paraeducator, who learned braille as adults. We found",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "The Moral Consistency Pipeline: Continuous Ethical Evaluation for Large Language Models",
       "url": "https://arxiv.org/abs/2512.03026v1",
       "source": "arXiv – cs.CL (NLP/LLM)",
@@ -150,6 +226,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AI-Driven Document Redaction in UK Public Authorities: Implementation Gaps, Regulatory Challenges, and the Human Oversight Imperative",
+      "url": "https://arxiv.org/abs/2512.02774v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-02T13:52:10.000Z",
+      "score": 100,
+      "summary_en": "Document redaction in public authorities faces critical challenges as traditional manual approaches struggle to balance growing transparency demands with increasingly stringent data protection requirements. This study investigates the implementation of AI-driven document redaction within UK public authorities through Freedom of Information (FOI) requests. While AI technologies offer potential solutions to redaction challenges, their actual implementation within public sector organizations remains underexplored. Based on responses from 44 public authorities across healthcare, government, and hi",
+      "summary_fr": "Document redaction in public authorities faces critical challenges as traditional manual approaches struggle to balance growing transparency demands with increasingly stringent data protection requirements. This study investigates the implementation of AI-driven document redaction within UK public authorities through Freedom of Information (FOI) requests. While AI technologies offer potential solutions to redaction challenges, their actual implementation within public sector organizations remains underexplored. Based on responses from 44 public authorities across healthcare, government, and hi",
+      "resume_fr": "Document redaction in public authorities faces critical challenges as traditional manual approaches struggle to balance growing transparency demands with increasingly stringent data protection requirements. This study investigates the implementation of AI-driven document redaction within UK public authorities through Freedom of Information (FOI) requests. While AI technologies offer potential solutions to redaction challenges, their actual implementation within public sector organizations remains underexplored. Based on responses from 44 public authorities across healthcare, government, and hi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -302,7 +397,7 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00375-6/MediaObjects/41539_2025_375_Fig1_HTML.png"
+      "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
     },
     {
       "title": "Ethically-Aware Participatory Design of a Productivity Social Robot for College Students",
@@ -1138,101 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Impact of Quantization on Large Reasoning Model Reinforcement Learning",
-      "url": "https://arxiv.org/abs/2511.15694v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-19T18:50:58.000Z",
-      "score": 70,
-      "summary_en": "Strong reasoning capabilities can now be achieved by large-scale reinforcement learning (RL) without any supervised fine-tuning. Although post-training quantization (PTQ) and quantization-aware training (QAT) are well studied in the context of fine-tuning, how quantization impacts RL in large reasoning models (LRMs) remains an open question. To answer this question, we conducted systematic experiments and discovered a significant gap in reasoning performance on mathematical benchmarks between post-RL quantized models and their quantization-aware RL optimized counterparts. Our findings suggest ",
-      "summary_fr": "Strong reasoning capabilities can now be achieved by large-scale reinforcement learning (RL) without any supervised fine-tuning. Although post-training quantization (PTQ) and quantization-aware training (QAT) are well studied in the context of fine-tuning, how quantization impacts RL in large reasoning models (LRMs) remains an open question. To answer this question, we conducted systematic experiments and discovered a significant gap in reasoning performance on mathematical benchmarks between post-RL quantized models and their quantization-aware RL optimized counterparts. Our findings suggest ",
-      "resume_fr": "Strong reasoning capabilities can now be achieved by large-scale reinforcement learning (RL) without any supervised fine-tuning. Although post-training quantization (PTQ) and quantization-aware training (QAT) are well studied in the context of fine-tuning, how quantization impacts RL in large reasoning models (LRMs) remains an open question. To answer this question, we conducted systematic experiments and discovered a significant gap in reasoning performance on mathematical benchmarks between post-RL quantized models and their quantization-aware RL optimized counterparts. Our findings suggest ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Front-door Reducibility: Reducing ADMGs to the Standard Front-door Setting via a Graphical Criterion",
-      "url": "https://arxiv.org/abs/2511.15679v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-19T18:26:55.000Z",
-      "score": 70,
-      "summary_en": "Front-door adjustment provides a simple closed-form identification formula under the classical front-door criterion, but its applicability is often viewed as narrow and strict. Although ID algorithm is very useful and is proved effective for causal relation identification in general causal graphs (if it is identifiable), performing ID algorithm does not guarantee to obtain a practical, easy-to-estimate interventional distribution expression. We argue that the applicability of the front-door criterion is not as limited as it seems: many more complicated causal graphs can be reduced to the front",
-      "summary_fr": "Front-door adjustment provides a simple closed-form identification formula under the classical front-door criterion, but its applicability is often viewed as narrow and strict. Although ID algorithm is very useful and is proved effective for causal relation identification in general causal graphs (if it is identifiable), performing ID algorithm does not guarantee to obtain a practical, easy-to-estimate interventional distribution expression. We argue that the applicability of the front-door criterion is not as limited as it seems: many more complicated causal graphs can be reduced to the front",
-      "resume_fr": "Front-door adjustment provides a simple closed-form identification formula under the classical front-door criterion, but its applicability is often viewed as narrow and strict. Although ID algorithm is very useful and is proved effective for causal relation identification in general causal graphs (if it is identifiable), performing ID algorithm does not guarantee to obtain a practical, easy-to-estimate interventional distribution expression. We argue that the applicability of the front-door criterion is not as limited as it seems: many more complicated causal graphs can be reduced to the front",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "SRPO: Self-Referential Policy Optimization for Vision-Language-Action Models",
-      "url": "https://arxiv.org/abs/2511.15605v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-19T16:52:23.000Z",
-      "score": 70,
-      "summary_en": "Vision-Language-Action (VLA) models excel in robotic manipulation but are constrained by their heavy reliance on expert demonstrations, leading to demonstration bias and limiting performance. Reinforcement learning (RL) is a vital post-training strategy to overcome these limits, yet current VLA-RL methods, including group-based optimization approaches, are crippled by severe reward sparsity. Relying on binary success indicators wastes valuable information in failed trajectories, resulting in low training efficiency. To solve this, we propose Self-Referential Policy Optimization (SRPO), a novel",
-      "summary_fr": "Vision-Language-Action (VLA) models excel in robotic manipulation but are constrained by their heavy reliance on expert demonstrations, leading to demonstration bias and limiting performance. Reinforcement learning (RL) is a vital post-training strategy to overcome these limits, yet current VLA-RL methods, including group-based optimization approaches, are crippled by severe reward sparsity. Relying on binary success indicators wastes valuable information in failed trajectories, resulting in low training efficiency. To solve this, we propose Self-Referential Policy Optimization (SRPO), a novel",
-      "resume_fr": "Vision-Language-Action (VLA) models excel in robotic manipulation but are constrained by their heavy reliance on expert demonstrations, leading to demonstration bias and limiting performance. Reinforcement learning (RL) is a vital post-training strategy to overcome these limits, yet current VLA-RL methods, including group-based optimization approaches, are crippled by severe reward sparsity. Relying on binary success indicators wastes valuable information in failed trajectories, resulting in low training efficiency. To solve this, we propose Self-Referential Policy Optimization (SRPO), a novel",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Keys to Building an AI University: A Framework from NVIDIA",
-      "url": "https://content.knowledgehub.wiley.com/the-roadmap-to-becoming-an-ai-university-industry-brief/",
-      "source": "IEEE Spectrum – AI",
-      "published": "2025-11-19T16:00:16.000Z",
-      "score": 85,
-      "summary_en": "As artificial intelligence reshapes every industry, universities face a critical choice: lead the transformation or risk falling behind. The institutions that integrate AI across disciplines, invest in computing infrastructure, and conduct groundbreaking research will become destinations for top students, faculty, and research funding. This industry brief provides a practical roadmap for building a comprehensive AI strategy that drives enrollment, attracts research dollars, and delivers career-ready graduates. Download this free whitepaper now!",
-      "summary_fr": "As artificial intelligence reshapes every industry, universities face a critical choice: lead the transformation or risk falling behind. The institutions that integrate AI across disciplines, invest in computing infrastructure, and conduct groundbreaking research will become destinations for top students, faculty, and research funding. This industry brief provides a practical roadmap for building a comprehensive AI strategy that drives enrollment, attracts research dollars, and delivers career-ready graduates. Download this free whitepaper now!",
-      "resume_fr": "As artificial intelligence reshapes every industry, universities face a critical choice: lead the transformation or risk falling behind. The institutions that integrate AI across disciplines, invest in computing infrastructure, and conduct groundbreaking research will become destinations for top students, faculty, and research funding. This industry brief provides a practical roadmap for building a comprehensive AI strategy that drives enrollment, attracts research dollars, and delivers career-ready graduates. Download this free whitepaper now!",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://content.knowledgehub.wiley.com/wp-content/uploads/2025/11/The-Roadmap-to-Becoming-an-AI-University-1500x400-1-500x133.jpg"
-    },
-    {
-      "title": "PresentCoach: Dual-Agent Presentation Coaching through Exemplars and Interactive Feedback",
-      "url": "https://arxiv.org/abs/2511.15253v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-19T09:15:21.000Z",
-      "score": 85,
-      "summary_en": "Effective presentation skills are essential in education, professional communication, and public speaking, yet learners often lack access to high-quality exemplars or personalized coaching. Existing AI tools typically provide isolated functionalities such as speech scoring or script generation without integrating reference modeling and interactive feedback into a cohesive learning experience. We introduce a dual-agent system that supports presentation practice through two complementary roles: the Ideal Presentation Agent and the Coach Agent. The Ideal Presentation Agent converts user-provided ",
-      "summary_fr": "Effective presentation skills are essential in education, professional communication, and public speaking, yet learners often lack access to high-quality exemplars or personalized coaching. Existing AI tools typically provide isolated functionalities such as speech scoring or script generation without integrating reference modeling and interactive feedback into a cohesive learning experience. We introduce a dual-agent system that supports presentation practice through two complementary roles: the Ideal Presentation Agent and the Coach Agent. The Ideal Presentation Agent converts user-provided ",
-      "resume_fr": "Effective presentation skills are essential in education, professional communication, and public speaking, yet learners often lack access to high-quality exemplars or personalized coaching. Existing AI tools typically provide isolated functionalities such as speech scoring or script generation without integrating reference modeling and interactive feedback into a cohesive learning experience. We introduce a dual-agent system that supports presentation practice through two complementary roles: the Ideal Presentation Agent and the Coach Agent. The Ideal Presentation Agent converts user-provided ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
