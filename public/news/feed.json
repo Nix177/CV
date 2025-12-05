@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-12-04T06:39:47.551Z",
+  "generatedAt": "2025-12-05T06:39:55.457Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,196 @@
   },
   "items": [
     {
+      "title": "Value Gradient Guidance for Flow Matching Alignment",
+      "url": "https://arxiv.org/abs/2512.05116v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-12-04T18:59:57.000Z",
+      "score": 70,
+      "summary_en": "While methods exist for aligning flow matching models--a popular and effective class of generative models--with human preferences, existing approaches fail to achieve both adaptation efficiency and probabilistically sound prior preservation. In this work, we leverage the theory of optimal control and propose VGG-Flow, a gradient-matching-based method for finetuning pretrained flow matching models. The key idea behind this algorithm is that the optimal difference between the finetuned velocity field and the pretrained one should be matched with the gradient field of a value function. This metho",
+      "summary_fr": "While methods exist for aligning flow matching models--a popular and effective class of generative models--with human preferences, existing approaches fail to achieve both adaptation efficiency and probabilistically sound prior preservation. In this work, we leverage the theory of optimal control and propose VGG-Flow, a gradient-matching-based method for finetuning pretrained flow matching models. The key idea behind this algorithm is that the optimal difference between the finetuned velocity field and the pretrained one should be matched with the gradient field of a value function. This metho",
+      "resume_fr": "While methods exist for aligning flow matching models--a popular and effective class of generative models--with human preferences, existing approaches fail to achieve both adaptation efficiency and probabilistically sound prior preservation. In this work, we leverage the theory of optimal control and propose VGG-Flow, a gradient-matching-based method for finetuning pretrained flow matching models. The key idea behind this algorithm is that the optimal difference between the finetuned velocity field and the pretrained one should be matched with the gradient field of a value function. This metho",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "TV2TV: A Unified Framework for Interleaved Language and Video Generation",
+      "url": "https://arxiv.org/abs/2512.05103v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-12-04T18:59:09.000Z",
+      "score": 70,
+      "summary_en": "Video generation models are rapidly advancing, but can still struggle with complex video outputs that require significant semantic branching or repeated high-level reasoning about what should happen next. In this paper, we introduce a new class of omni video-text models that integrate ideas from recent LM reasoning advances to address this challenge. More specifically, we present TV2TV, a unified generative modeling framework which decomposes video generation into an interleaved text and video generation process. TV2TV jointly learns language modeling (next-token prediction) and video flow mat",
+      "summary_fr": "Video generation models are rapidly advancing, but can still struggle with complex video outputs that require significant semantic branching or repeated high-level reasoning about what should happen next. In this paper, we introduce a new class of omni video-text models that integrate ideas from recent LM reasoning advances to address this challenge. More specifically, we present TV2TV, a unified generative modeling framework which decomposes video generation into an interleaved text and video generation process. TV2TV jointly learns language modeling (next-token prediction) and video flow mat",
+      "resume_fr": "Video generation models are rapidly advancing, but can still struggle with complex video outputs that require significant semantic branching or repeated high-level reasoning about what should happen next. In this paper, we introduce a new class of omni video-text models that integrate ideas from recent LM reasoning advances to address this challenge. More specifically, we present TV2TV, a unified generative modeling framework which decomposes video generation into an interleaved text and video generation process. TV2TV jointly learns language modeling (next-token prediction) and video flow mat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Model-Free Assessment of Simulator Fidelity via Quantile Curves",
+      "url": "https://arxiv.org/abs/2512.05024v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T17:39:51.000Z",
+      "score": 50,
+      "summary_en": "Simulation of complex systems originated in manufacturing and queuing applications. It is now widely used for large-scale, ML-based systems in research, education, and consumer surveys. However, characterizing the discrepancy between simulators and ground truth remains challenging for increasingly complex, machine-learning-based systems. We propose a computationally tractable method to estimate the quantile function of the discrepancy between the simulated and ground-truth outcome distributions. Our approach focuses on output uncertainty and treats the simulator as a black box, imposing no mod",
+      "summary_fr": "Simulation of complex systems originated in manufacturing and queuing applications. It is now widely used for large-scale, ML-based systems in research, education, and consumer surveys. However, characterizing the discrepancy between simulators and ground truth remains challenging for increasingly complex, machine-learning-based systems. We propose a computationally tractable method to estimate the quantile function of the discrepancy between the simulated and ground-truth outcome distributions. Our approach focuses on output uncertainty and treats the simulator as a black box, imposing no mod",
+      "resume_fr": "Simulation of complex systems originated in manufacturing and queuing applications. It is now widely used for large-scale, ML-based systems in research, education, and consumer surveys. However, characterizing the discrepancy between simulators and ground truth remains challenging for increasingly complex, machine-learning-based systems. We propose a computationally tractable method to estimate the quantile function of the discrepancy between the simulated and ground-truth outcome distributions. Our approach focuses on output uncertainty and treats the simulator as a black box, imposing no mod",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Factuality and Transparency Are All RAG Needs! Self-Explaining Contrastive Evidence Re-ranking",
+      "url": "https://arxiv.org/abs/2512.05012v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-12-04T17:24:35.000Z",
+      "score": 70,
+      "summary_en": "This extended abstract introduces Self-Explaining Contrastive Evidence Re-Ranking (CER), a novel method that restructures retrieval around factual evidence by fine-tuning embeddings with contrastive learning and generating token-level attribution rationales for each retrieved passage. Hard negatives are automatically selected using a subjectivity-based criterion, forcing the model to pull factual rationales closer while pushing subjective or misleading explanations apart. As a result, the method creates an embedding space explicitly aligned with evidential reasoning. We evaluated our method on",
+      "summary_fr": "This extended abstract introduces Self-Explaining Contrastive Evidence Re-Ranking (CER), a novel method that restructures retrieval around factual evidence by fine-tuning embeddings with contrastive learning and generating token-level attribution rationales for each retrieved passage. Hard negatives are automatically selected using a subjectivity-based criterion, forcing the model to pull factual rationales closer while pushing subjective or misleading explanations apart. As a result, the method creates an embedding space explicitly aligned with evidential reasoning. We evaluated our method on",
+      "resume_fr": "This extended abstract introduces Self-Explaining Contrastive Evidence Re-Ranking (CER), a novel method that restructures retrieval around factual evidence by fine-tuning embeddings with contrastive learning and generating token-level attribution rationales for each retrieved passage. Hard negatives are automatically selected using a subjectivity-based criterion, forcing the model to pull factual rationales closer while pushing subjective or misleading explanations apart. As a result, the method creates an embedding space explicitly aligned with evidential reasoning. We evaluated our method on",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Declarative Synthesis and Multi-Objective Optimization of Stripboard Circuit Layouts Using Answer Set Programming",
+      "url": "https://arxiv.org/abs/2512.04910v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T15:37:59.000Z",
+      "score": 50,
+      "summary_en": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
+      "summary_fr": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
+      "resume_fr": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Developing a General Personal Tutor for Education",
+      "url": "https://arxiv.org/abs/2512.04869v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T14:55:48.000Z",
+      "score": 50,
+      "summary_en": "The vision of a universal AI tutor has remained elusive, despite decades of effort. Could LLMs be the game-changer? We overview novel issues arising from developing a nationwide AI tutor. We highlight the practical questions that point to specific gaps in our scientific understanding of the learning process.",
+      "summary_fr": "The vision of a universal AI tutor has remained elusive, despite decades of effort. Could LLMs be the game-changer? We overview novel issues arising from developing a nationwide AI tutor. We highlight the practical questions that point to specific gaps in our scientific understanding of the learning process.",
+      "resume_fr": "The vision of a universal AI tutor has remained elusive, despite decades of effort. Could LLMs be the game-changer? We overview novel issues arising from developing a nationwide AI tutor. We highlight the practical questions that point to specific gaps in our scientific understanding of the learning process.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Are LLMs Truly Multilingual? Exploring Zero-Shot Multilingual Capability of LLMs for Information Retrieval: An Italian Healthcare Use Case",
+      "url": "https://arxiv.org/abs/2512.04834v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T14:17:46.000Z",
+      "score": 50,
+      "summary_en": "Large Language Models (LLMs) have become a key topic in AI and NLP, transforming sectors like healthcare, finance, education, and marketing by improving customer service, automating tasks, providing insights, improving diagnostics, and personalizing learning experiences. Information extraction from clinical records is a crucial task in digital healthcare. Although traditional NLP techniques have been used for this in the past, they often fall short due to the complexity, variability of clinical language, and high inner semantics in the free clinical text. Recently, Large Language Models (LLMs)",
+      "summary_fr": "Large Language Models (LLMs) have become a key topic in AI and NLP, transforming sectors like healthcare, finance, education, and marketing by improving customer service, automating tasks, providing insights, improving diagnostics, and personalizing learning experiences. Information extraction from clinical records is a crucial task in digital healthcare. Although traditional NLP techniques have been used for this in the past, they often fall short due to the complexity, variability of clinical language, and high inner semantics in the free clinical text. Recently, Large Language Models (LLMs)",
+      "resume_fr": "Large Language Models (LLMs) have become a key topic in AI and NLP, transforming sectors like healthcare, finance, education, and marketing by improving customer service, automating tasks, providing insights, improving diagnostics, and personalizing learning experiences. Information extraction from clinical records is a crucial task in digital healthcare. Although traditional NLP techniques have been used for this in the past, they often fall short due to the complexity, variability of clinical language, and high inner semantics in the free clinical text. Recently, Large Language Models (LLMs)",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "SmartAlert: Implementing Machine Learning-Driven Clinical Decision Support for Inpatient Lab Utilization Reduction",
+      "url": "https://arxiv.org/abs/2512.04354v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-12-04T00:59:41.000Z",
+      "score": 50,
+      "summary_en": "Repetitive laboratory testing unlikely to yield clinically useful information is a common practice that burdens patients and increases healthcare costs. Education and feedback interventions have limited success, while general test ordering restrictions and electronic alerts impede appropriate clinical care. We introduce and evaluate SmartAlert, a machine learning (ML)-driven clinical decision support (CDS) system integrated into the electronic health record that predicts stable laboratory results to reduce unnecessary repeat testing. This case study describes the implementation process, challe",
+      "summary_fr": "Repetitive laboratory testing unlikely to yield clinically useful information is a common practice that burdens patients and increases healthcare costs. Education and feedback interventions have limited success, while general test ordering restrictions and electronic alerts impede appropriate clinical care. We introduce and evaluate SmartAlert, a machine learning (ML)-driven clinical decision support (CDS) system integrated into the electronic health record that predicts stable laboratory results to reduce unnecessary repeat testing. This case study describes the implementation process, challe",
+      "resume_fr": "Repetitive laboratory testing unlikely to yield clinically useful information is a common practice that burdens patients and increases healthcare costs. Education and feedback interventions have limited success, while general test ordering restrictions and electronic alerts impede appropriate clinical care. We introduce and evaluate SmartAlert, a machine learning (ML)-driven clinical decision support (CDS) system integrated into the electronic health record that predicts stable laboratory results to reduce unnecessary repeat testing. This case study describes the implementation process, challe",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "On the Role and Impact of GenAI Tools in Software Engineering Education",
+      "url": "https://arxiv.org/abs/2512.04256v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-12-03T20:51:16.000Z",
+      "score": 85,
+      "summary_en": "Context. The rise of generative AI (GenAI) tools like ChatGPT and GitHub Copilot has transformed how software is learned and written. In software engineering (SE) education, these tools offer new opportunities for support, but also raise concerns about over-reliance, ethical use, and impacts on learning. Objective. This study investigates how undergraduate SE students use GenAI tools, focusing on the benefits, challenges, ethical concerns, and instructional expectations that shape their experiences. Method. We conducted a survey with 130 undergraduate students from two universities. The survey",
+      "summary_fr": "Context. The rise of generative AI (GenAI) tools like ChatGPT and GitHub Copilot has transformed how software is learned and written. In software engineering (SE) education, these tools offer new opportunities for support, but also raise concerns about over-reliance, ethical use, and impacts on learning. Objective. This study investigates how undergraduate SE students use GenAI tools, focusing on the benefits, challenges, ethical concerns, and instructional expectations that shape their experiences. Method. We conducted a survey with 130 undergraduate students from two universities. The survey",
+      "resume_fr": "Context. The rise of generative AI (GenAI) tools like ChatGPT and GitHub Copilot has transformed how software is learned and written. In software engineering (SE) education, these tools offer new opportunities for support, but also raise concerns about over-reliance, ethical use, and impacts on learning. Objective. This study investigates how undergraduate SE students use GenAI tools, focusing on the benefits, challenges, ethical concerns, and instructional expectations that shape their experiences. Method. We conducted a survey with 130 undergraduate students from two universities. The survey",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Educational Cone Model in Embedding Vector Spaces",
+      "url": "https://arxiv.org/abs/2512.04227v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-03T19:47:08.000Z",
+      "score": 50,
+      "summary_en": "Human-annotated datasets with explicit difficulty ratings are essential in intelligent educational systems. Although embedding vector spaces are widely used to represent semantic closeness and are promising for analyzing text difficulty, the abundance of embedding methods creates a challenge in selecting the most suitable method. This study proposes the Educational Cone Model, which is a geometric framework based on the assumption that easier texts are less diverse (focusing on fundamental concepts), whereas harder texts are more diverse. This assumption leads to a cone-shaped distribution in ",
+      "summary_fr": "Human-annotated datasets with explicit difficulty ratings are essential in intelligent educational systems. Although embedding vector spaces are widely used to represent semantic closeness and are promising for analyzing text difficulty, the abundance of embedding methods creates a challenge in selecting the most suitable method. This study proposes the Educational Cone Model, which is a geometric framework based on the assumption that easier texts are less diverse (focusing on fundamental concepts), whereas harder texts are more diverse. This assumption leads to a cone-shaped distribution in ",
+      "resume_fr": "Human-annotated datasets with explicit difficulty ratings are essential in intelligent educational systems. Although embedding vector spaces are widely used to represent semantic closeness and are promising for analyzing text difficulty, the abundance of embedding methods creates a challenge in selecting the most suitable method. This study proposes the Educational Cone Model, which is a geometric framework based on the assumption that easier texts are less diverse (focusing on fundamental concepts), whereas harder texts are more diverse. This assumption leads to a cone-shaped distribution in ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "SkillFactory: Self-Distillation For Learning Cognitive Behaviors",
       "url": "https://arxiv.org/abs/2512.04072v1",
       "source": "arXiv – cs.CL (NLP/LLM)",
@@ -150,6 +340,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Artificial Intelligence / Human Intelligence: Who Controls Whom?",
+      "url": "https://arxiv.org/abs/2512.04131v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-03T10:21:13.000Z",
+      "score": 50,
+      "summary_en": "Using the example of the film 2001: A Space Odyssey, this chapter illustrates the challenges posed by an AI capable of making decisions that go against human interests. But are human decisions always rational and ethical? In reality, the cognitive decision-making process is influenced by cognitive biases that affect our behavior and choices. AI not only reproduces these biases, but can also exploit them, with the potential to shape our decisions and judgments. Behind IA algorithms, there are sometimes individuals who show little concern for fundamental rights and impose their own rules. To add",
+      "summary_fr": "Using the example of the film 2001: A Space Odyssey, this chapter illustrates the challenges posed by an AI capable of making decisions that go against human interests. But are human decisions always rational and ethical? In reality, the cognitive decision-making process is influenced by cognitive biases that affect our behavior and choices. AI not only reproduces these biases, but can also exploit them, with the potential to shape our decisions and judgments. Behind IA algorithms, there are sometimes individuals who show little concern for fundamental rights and impose their own rules. To add",
+      "resume_fr": "Using the example of the film 2001: A Space Odyssey, this chapter illustrates the challenges posed by an AI capable of making decisions that go against human interests. But are human decisions always rational and ethical? In reality, the cognitive decision-making process is influenced by cognitive biases that affect our behavior and choices. AI not only reproduces these biases, but can also exploit them, with the potential to shape our decisions and judgments. Behind IA algorithms, there are sometimes individuals who show little concern for fundamental rights and impose their own rules. To add",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -1016,215 +1225,6 @@
       "summary_en": "Multiple-choice question answering (MCQA) has been a popular format for evaluating and reinforcement fine-tuning (RFT) of modern multimodal language models. Its constrained output format allows for simplified, deterministic automatic verification. However, we find that the options may leak exploitable signals, which makes the accuracy metrics unreliable for indicating real capabilities and encourages explicit or implicit answer guessing behaviors during RFT. We propose ReVeL (Rewrite and Verify by LLM), a framework that rewrites multiple-choice questions into open-form questions while keeping ",
       "summary_fr": "Multiple-choice question answering (MCQA) has been a popular format for evaluating and reinforcement fine-tuning (RFT) of modern multimodal language models. Its constrained output format allows for simplified, deterministic automatic verification. However, we find that the options may leak exploitable signals, which makes the accuracy metrics unreliable for indicating real capabilities and encourages explicit or implicit answer guessing behaviors during RFT. We propose ReVeL (Rewrite and Verify by LLM), a framework that rewrites multiple-choice questions into open-form questions while keeping ",
       "resume_fr": "Multiple-choice question answering (MCQA) has been a popular format for evaluating and reinforcement fine-tuning (RFT) of modern multimodal language models. Its constrained output format allows for simplified, deterministic automatic verification. However, we find that the options may leak exploitable signals, which makes the accuracy metrics unreliable for indicating real capabilities and encourages explicit or implicit answer guessing behaviors during RFT. We propose ReVeL (Rewrite and Verify by LLM), a framework that rewrites multiple-choice questions into open-form questions while keeping ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "MusicAIR: A Multimodal AI Music Generation Framework Powered by an Algorithm-Driven Core",
-      "url": "https://arxiv.org/abs/2511.17323v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-21T15:43:27.000Z",
-      "score": 85,
-      "summary_en": "Recent advances in generative AI have made music generation a prominent research focus. However, many neural-based models rely on large datasets, raising concerns about copyright infringement and high-performance costs. In contrast, we propose MusicAIR, an innovative multimodal AI music generation framework powered by a novel algorithm-driven symbolic music core, effectively mitigating copyright infringement risks. The music core algorithms connect critical lyrical and rhythmic information to automatically derive musical features, creating a complete, coherent melodic score solely from the lyr",
-      "summary_fr": "Recent advances in generative AI have made music generation a prominent research focus. However, many neural-based models rely on large datasets, raising concerns about copyright infringement and high-performance costs. In contrast, we propose MusicAIR, an innovative multimodal AI music generation framework powered by a novel algorithm-driven symbolic music core, effectively mitigating copyright infringement risks. The music core algorithms connect critical lyrical and rhythmic information to automatically derive musical features, creating a complete, coherent melodic score solely from the lyr",
-      "resume_fr": "Recent advances in generative AI have made music generation a prominent research focus. However, many neural-based models rely on large datasets, raising concerns about copyright infringement and high-performance costs. In contrast, we propose MusicAIR, an innovative multimodal AI music generation framework powered by a novel algorithm-driven symbolic music core, effectively mitigating copyright infringement risks. The music core algorithms connect critical lyrical and rhythmic information to automatically derive musical features, creating a complete, coherent melodic score solely from the lyr",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Balancing Physical Security and Privacy in Higher Education: A Practical Guide",
-      "url": "https://edtechmagazine.com/higher/article/2025/11/balancing-physical-security-and-privacy-higher-education-practical-guide",
-      "source": "EdTech Magazine (Higher Ed)",
-      "published": "2025-11-20T21:56:06.000Z",
-      "score": 50,
-      "summary_en": "Video surveillance, face recognition and artificial intelligence have become common in physical security. For colleges and universities, that raises some serious questions about privacy. Benefits to the safety and well-being of students range from being able to more quickly identify an on-campus intruder to improving access control for staff and faculty. But the potential risks include new administrative burdens, spiraling costs and running afoul of local privacy laws. The key to using cutting-edge physical security technology responsibly is striking a balance among protecting people,…",
-      "summary_fr": "Video surveillance, face recognition and artificial intelligence have become common in physical security. For colleges and universities, that raises some serious questions about privacy. Benefits to the safety and well-being of students range from being able to more quickly identify an on-campus intruder to improving access control for staff and faculty. But the potential risks include new administrative burdens, spiraling costs and running afoul of local privacy laws. The key to using cutting-edge physical security technology responsibly is striking a balance among protecting people,…",
-      "resume_fr": "Video surveillance, face recognition and artificial intelligence have become common in physical security. For colleges and universities, that raises some serious questions about privacy. Benefits to the safety and well-being of students range from being able to more quickly identify an on-campus intruder to improving access control for staff and faculty. But the potential risks include new administrative burdens, spiraling costs and running afoul of local privacy laws. The key to using cutting-edge physical security technology responsibly is striking a balance among protecting people,…",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://edtechmagazine.com/higher/sites/edtechmagazine.com.higher/files/styles/cdw_hero/public/articles/%5Bcdw_tech_site%3Afield_site_shortname%5D/202511/GettyImages-2198968310.jpg?itok=KJV60sbW"
-    },
-    {
-      "title": "Develop a deeper understanding with interactive images in Gemini.",
-      "url": "https://blog.google/outreach-initiatives/education/gemini-interactive-images/",
-      "source": "Google for Education – Blog",
-      "published": "2025-11-20T20:30:00.000Z",
-      "score": 50,
-      "summary_en": "Learning science consistently shows us that true learning requires active engagement. This is fundamental to how Gemini helps you learn. Going beyond simple text and sta…",
-      "summary_fr": "Learning science consistently shows us that true learning requires active engagement. This is fundamental to how Gemini helps you learn. Going beyond simple text and sta…",
-      "resume_fr": "Learning science consistently shows us that true learning requires active engagement. This is fundamental to how Gemini helps you learn. Going beyond simple text and sta…",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/original_videos/wagtailvideo-e6k80n42_thumb.jpg"
-    },
-    {
-      "title": "Evolution Strategies at the Hyperscale",
-      "url": "https://arxiv.org/abs/2511.16652v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-20T18:56:05.000Z",
-      "score": 50,
-      "summary_en": "We introduce Evolution Guided General Optimization via Low-rank Learning (EGGROLL), an evolution strategies (ES) algorithm designed to scale backprop-free optimization to large population sizes for modern large neural network architectures with billions of parameters. ES is a set of powerful blackbox optimisation methods that can handle non-differentiable or noisy objectives with excellent scaling potential through parallelisation. Na{ï}ve ES becomes prohibitively expensive at scale due to the computational and memory costs associated with generating matrix perturbations $E\\in\\mathbb{R}^{m\\tim",
-      "summary_fr": "We introduce Evolution Guided General Optimization via Low-rank Learning (EGGROLL), an evolution strategies (ES) algorithm designed to scale backprop-free optimization to large population sizes for modern large neural network architectures with billions of parameters. ES is a set of powerful blackbox optimisation methods that can handle non-differentiable or noisy objectives with excellent scaling potential through parallelisation. Na{ï}ve ES becomes prohibitively expensive at scale due to the computational and memory costs associated with generating matrix perturbations $E\\in\\mathbb{R}^{m\\tim",
-      "resume_fr": "We introduce Evolution Guided General Optimization via Low-rank Learning (EGGROLL), an evolution strategies (ES) algorithm designed to scale backprop-free optimization to large population sizes for modern large neural network architectures with billions of parameters. ES is a set of powerful blackbox optimisation methods that can handle non-differentiable or noisy objectives with excellent scaling potential through parallelisation. Na{ï}ve ES becomes prohibitively expensive at scale due to the computational and memory costs associated with generating matrix perturbations $E\\in\\mathbb{R}^{m\\tim",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "Stabilizing Policy Gradient Methods via Reward Profiling",
-      "url": "https://arxiv.org/abs/2511.16629v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-20T18:35:51.000Z",
-      "score": 70,
-      "summary_en": "Policy gradient methods, which have been extensively studied in the last decade, offer an effective and efficient framework for reinforcement learning problems. However, their performances can often be unsatisfactory, suffering from unreliable reward improvements and slow convergence, due to high variance in gradient estimations. In this paper, we propose a universal reward profiling framework that can be seamlessly integrated with any policy gradient algorithm, where we selectively update the policy based on high-confidence performance estimations. We theoretically justify that our technique ",
-      "summary_fr": "Policy gradient methods, which have been extensively studied in the last decade, offer an effective and efficient framework for reinforcement learning problems. However, their performances can often be unsatisfactory, suffering from unreliable reward improvements and slow convergence, due to high variance in gradient estimations. In this paper, we propose a universal reward profiling framework that can be seamlessly integrated with any policy gradient algorithm, where we selectively update the policy based on high-confidence performance estimations. We theoretically justify that our technique ",
-      "resume_fr": "Policy gradient methods, which have been extensively studied in the last decade, offer an effective and efficient framework for reinforcement learning problems. However, their performances can often be unsatisfactory, suffering from unreliable reward improvements and slow convergence, due to high variance in gradient estimations. In this paper, we propose a universal reward profiling framework that can be seamlessly integrated with any policy gradient algorithm, where we selectively update the policy based on high-confidence performance estimations. We theoretically justify that our technique ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "TimeViper: A Hybrid Mamba-Transformer Vision-Language Model for Efficient Long Video Understanding",
-      "url": "https://arxiv.org/abs/2511.16595v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-20T17:48:21.000Z",
-      "score": 50,
-      "summary_en": "We introduce TimeViper, a hybrid vision-language model designed to tackle challenges of long video understanding. Processing long videos demands both an efficient model architecture and an effective mechanism for handling extended temporal contexts. To this end, TimeViper adopts a hybrid Mamba-Transformer backbone that combines the efficiency of state-space models with the expressivity of attention mechanisms. Through this hybrid design, we reveal the vision-to-text information aggregation phenomenon, where information progressively flows from vision tokens to text tokens across increasing LLM",
-      "summary_fr": "We introduce TimeViper, a hybrid vision-language model designed to tackle challenges of long video understanding. Processing long videos demands both an efficient model architecture and an effective mechanism for handling extended temporal contexts. To this end, TimeViper adopts a hybrid Mamba-Transformer backbone that combines the efficiency of state-space models with the expressivity of attention mechanisms. Through this hybrid design, we reveal the vision-to-text information aggregation phenomenon, where information progressively flows from vision tokens to text tokens across increasing LLM",
-      "resume_fr": "We introduce TimeViper, a hybrid vision-language model designed to tackle challenges of long video understanding. Processing long videos demands both an efficient model architecture and an effective mechanism for handling extended temporal contexts. To this end, TimeViper adopts a hybrid Mamba-Transformer backbone that combines the efficiency of state-space models with the expressivity of attention mechanisms. Through this hybrid design, we reveal the vision-to-text information aggregation phenomenon, where information progressively flows from vision tokens to text tokens across increasing LLM",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "D-GARA: A Dynamic Benchmarking Framework for GUI Agent Robustness in Real-World Anomalies",
-      "url": "https://arxiv.org/abs/2511.16590v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-11-20T17:43:46.000Z",
-      "score": 85,
-      "summary_en": "Developing intelligent agents capable of operating a wide range of Graphical User Interfaces (GUIs) with human-level proficiency is a key milestone on the path toward Artificial General Intelligence. While most existing datasets and benchmarks for training and evaluating GUI agents are static and idealized, failing to reflect the complexity and unpredictability of real-world environments, particularly the presence of anomalies. To bridge this research gap, we propose D-GARA, a dynamic benchmarking framework, to evaluate Android GUI agent robustness in real-world anomalies. D-GARA introduces a ",
-      "summary_fr": "Developing intelligent agents capable of operating a wide range of Graphical User Interfaces (GUIs) with human-level proficiency is a key milestone on the path toward Artificial General Intelligence. While most existing datasets and benchmarks for training and evaluating GUI agents are static and idealized, failing to reflect the complexity and unpredictability of real-world environments, particularly the presence of anomalies. To bridge this research gap, we propose D-GARA, a dynamic benchmarking framework, to evaluate Android GUI agent robustness in real-world anomalies. D-GARA introduces a ",
-      "resume_fr": "Developing intelligent agents capable of operating a wide range of Graphical User Interfaces (GUIs) with human-level proficiency is a key milestone on the path toward Artificial General Intelligence. While most existing datasets and benchmarks for training and evaluating GUI agents are static and idealized, failing to reflect the complexity and unpredictability of real-world environments, particularly the presence of anomalies. To bridge this research gap, we propose D-GARA, a dynamic benchmarking framework, to evaluate Android GUI agent robustness in real-world anomalies. D-GARA introduces a ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "FlipVQA-Miner: Cross-Page Visual Question-Answer Mining from Textbooks",
-      "url": "https://arxiv.org/abs/2511.16216v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-20T10:38:00.000Z",
-      "score": 50,
-      "summary_en": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
-      "summary_fr": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
-      "resume_fr": "The development of Large Language Models (LLMs) increasingly depends on high-quality supervised data, yet existing instruction-tuning and RL datasets remain costly to curate and often rely on synthetic samples that introduce hallucination and limited diversity. At the same time, textbooks and exercise materials contain abundant, high-quality human-authored Question-Answer(QA) content that remains underexploited due to the difficulty of transforming raw PDFs into AI-ready supervision. Although modern OCR and vision-language models can accurately parse document structure, their outputs lack the ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "Artificial Intelligence and Accounting Research: A Framework and Agenda",
-      "url": "https://arxiv.org/abs/2511.16055v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-20T05:18:39.000Z",
-      "score": 85,
-      "summary_en": "Recent advances in artificial intelligence, particularly generative AI (GenAI) and large language models (LLMs), are fundamentally transforming accounting research, creating both opportunities and competitive threats for scholars. This paper proposes a framework that classifies AI-accounting research along two dimensions: research focus (accounting-centric versus AI-centric) and methodological approach (AI-based versus traditional methods). We apply this framework to papers from the IJAIS special issue and recent AI-accounting research published in leading accounting journals to map existing s",
-      "summary_fr": "Recent advances in artificial intelligence, particularly generative AI (GenAI) and large language models (LLMs), are fundamentally transforming accounting research, creating both opportunities and competitive threats for scholars. This paper proposes a framework that classifies AI-accounting research along two dimensions: research focus (accounting-centric versus AI-centric) and methodological approach (AI-based versus traditional methods). We apply this framework to papers from the IJAIS special issue and recent AI-accounting research published in leading accounting journals to map existing s",
-      "resume_fr": "Recent advances in artificial intelligence, particularly generative AI (GenAI) and large language models (LLMs), are fundamentally transforming accounting research, creating both opportunities and competitive threats for scholars. This paper proposes a framework that classifies AI-accounting research along two dimensions: research focus (accounting-centric versus AI-centric) and methodological approach (AI-based versus traditional methods). We apply this framework to papers from the IJAIS special issue and recent AI-accounting research published in leading accounting journals to map existing s",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Timing of reward cues alters the interaction between reward and interest on memory over time",
-      "url": "https://www.nature.com/articles/s41539-025-00374-7",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2025-11-20T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41539-025-00374-7/MediaObjects/41539_2025_374_Fig1_HTML.png"
-    },
-    {
-      "title": "RescueLens: LLM-Powered Triage and Action on Volunteer Feedback for Food Rescue",
-      "url": "https://arxiv.org/abs/2511.15698v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-19T18:55:16.000Z",
-      "score": 70,
-      "summary_en": "Food rescue organizations simultaneously tackle food insecurity and waste by working with volunteers to redistribute food from donors who have excess to recipients who need it. Volunteer feedback allows food rescue organizations to identify issues early and ensure volunteer satisfaction. However, food rescue organizations monitor feedback manually, which can be cumbersome and labor-intensive, making it difficult to prioritize which issues are most important. In this work, we investigate how large language models (LLMs) assist food rescue organizers in understanding and taking action based on v",
-      "summary_fr": "Food rescue organizations simultaneously tackle food insecurity and waste by working with volunteers to redistribute food from donors who have excess to recipients who need it. Volunteer feedback allows food rescue organizations to identify issues early and ensure volunteer satisfaction. However, food rescue organizations monitor feedback manually, which can be cumbersome and labor-intensive, making it difficult to prioritize which issues are most important. In this work, we investigate how large language models (LLMs) assist food rescue organizers in understanding and taking action based on v",
-      "resume_fr": "Food rescue organizations simultaneously tackle food insecurity and waste by working with volunteers to redistribute food from donors who have excess to recipients who need it. Volunteer feedback allows food rescue organizations to identify issues early and ensure volunteer satisfaction. However, food rescue organizations monitor feedback manually, which can be cumbersome and labor-intensive, making it difficult to prioritize which issues are most important. In this work, we investigate how large language models (LLMs) assist food rescue organizers in understanding and taking action based on v",
       "tags": [],
       "breakdown": {
         "research": 35,
