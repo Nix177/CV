@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-12-07T06:35:20.466Z",
+  "generatedAt": "2025-12-08T06:42:45.866Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -115,6 +115,120 @@
       "image": "https://spectrum.ieee.org/media-library/susan-lau-natasha-main-ryan-ramkhelawan-and-julia-proto-posing-in-front-of-several-international-flags.jpg?id=62282024&width=1200&height=600&coordinates=0%2C250%2C0%2C250"
     },
     {
+      "title": "Enhancing Retrieval-Augmented Generation with Entity Linking for Educational Platforms",
+      "url": "https://arxiv.org/abs/2512.05967v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2025-12-05T18:59:18.000Z",
+      "score": 50,
+      "summary_en": "In the era of Large Language Models (LLMs), Retrieval-Augmented Generation (RAG) architectures are gaining significant attention for their ability to ground language generation in reliable knowledge sources. Despite their impressive effectiveness in many areas, RAG systems based solely on semantic similarity often fail to ensure factual accuracy in specialized domains, where terminological ambiguity can affect retrieval relevance. This study proposes an enhanced RAG architecture that integrates a factual signal derived from Entity Linking to improve the accuracy of educational question-answeri",
+      "summary_fr": "In the era of Large Language Models (LLMs), Retrieval-Augmented Generation (RAG) architectures are gaining significant attention for their ability to ground language generation in reliable knowledge sources. Despite their impressive effectiveness in many areas, RAG systems based solely on semantic similarity often fail to ensure factual accuracy in specialized domains, where terminological ambiguity can affect retrieval relevance. This study proposes an enhanced RAG architecture that integrates a factual signal derived from Entity Linking to improve the accuracy of educational question-answeri",
+      "resume_fr": "In the era of Large Language Models (LLMs), Retrieval-Augmented Generation (RAG) architectures are gaining significant attention for their ability to ground language generation in reliable knowledge sources. Despite their impressive effectiveness in many areas, RAG systems based solely on semantic similarity often fail to ensure factual accuracy in specialized domains, where terminological ambiguity can affect retrieval relevance. This study proposes an enhanced RAG architecture that integrates a factual signal derived from Entity Linking to improve the accuracy of educational question-answeri",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Optimizing Medical Question-Answering Systems: A Comparative Study of Fine-Tuned and Zero-Shot Large Language Models with RAG Framework",
+      "url": "https://arxiv.org/abs/2512.05863v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-12-05T16:38:47.000Z",
+      "score": 70,
+      "summary_en": "Medical question-answering (QA) systems can benefit from advances in large language models (LLMs), but directly applying LLMs to the clinical domain poses challenges such as maintaining factual accuracy and avoiding hallucinations. In this paper, we present a retrieval-augmented generation (RAG) based medical QA system that combines domain-specific knowledge retrieval with open-source LLMs to answer medical questions. We fine-tune two state-of-the-art open LLMs (LLaMA~2 and Falcon) using Low-Rank Adaptation (LoRA) for efficient domain specialization. The system retrieves relevant medical liter",
+      "summary_fr": "Medical question-answering (QA) systems can benefit from advances in large language models (LLMs), but directly applying LLMs to the clinical domain poses challenges such as maintaining factual accuracy and avoiding hallucinations. In this paper, we present a retrieval-augmented generation (RAG) based medical QA system that combines domain-specific knowledge retrieval with open-source LLMs to answer medical questions. We fine-tune two state-of-the-art open LLMs (LLaMA~2 and Falcon) using Low-Rank Adaptation (LoRA) for efficient domain specialization. The system retrieves relevant medical liter",
+      "resume_fr": "Medical question-answering (QA) systems can benefit from advances in large language models (LLMs), but directly applying LLMs to the clinical domain poses challenges such as maintaining factual accuracy and avoiding hallucinations. In this paper, we present a retrieval-augmented generation (RAG) based medical QA system that combines domain-specific knowledge retrieval with open-source LLMs to answer medical questions. We fine-tune two state-of-the-art open LLMs (LLaMA~2 and Falcon) using Low-Rank Adaptation (LoRA) for efficient domain specialization. The system retrieves relevant medical liter",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Prompting Science Report 4: Playing Pretend: Expert Personas Don't Improve Factual Accuracy",
+      "url": "https://arxiv.org/abs/2512.05858v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2025-12-05T16:35:18.000Z",
+      "score": 70,
+      "summary_en": "This is the fourth in a series of short reports that help business, education, and policy leaders understand the technical details of working with AI through rigorous testing. Here, we ask whether assigning personas to models improves performance on difficult objective multiple-choice questions. We study both domain-specific expert personas and low-knowledge personas, evaluating six models on GPQA Diamond (Rein et al. 2024) and MMLU-Pro (Wang et al. 2024), graduate-level questions spanning science, engineering, and law. We tested three approaches: -In-Domain Experts: Assigning the model an exp",
+      "summary_fr": "This is the fourth in a series of short reports that help business, education, and policy leaders understand the technical details of working with AI through rigorous testing. Here, we ask whether assigning personas to models improves performance on difficult objective multiple-choice questions. We study both domain-specific expert personas and low-knowledge personas, evaluating six models on GPQA Diamond (Rein et al. 2024) and MMLU-Pro (Wang et al. 2024), graduate-level questions spanning science, engineering, and law. We tested three approaches: -In-Domain Experts: Assigning the model an exp",
+      "resume_fr": "This is the fourth in a series of short reports that help business, education, and policy leaders understand the technical details of working with AI through rigorous testing. Here, we ask whether assigning personas to models improves performance on difficult objective multiple-choice questions. We study both domain-specific expert personas and low-knowledge personas, evaluating six models on GPQA Diamond (Rein et al. 2024) and MMLU-Pro (Wang et al. 2024), graduate-level questions spanning science, engineering, and law. We tested three approaches: -In-Domain Experts: Assigning the model an exp",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Scaffolding Breaks: Investigating Student Interaction with LLM-Based Writing Support in Real-Time K-12 EFL Classrooms",
+      "url": "https://arxiv.org/abs/2512.05506v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2025-12-05T08:09:05.000Z",
+      "score": 85,
+      "summary_en": "Large language models (LLMs) are promising tools for scaffolding students' English writing skills, but their effectiveness in real-time K-12 classrooms remains underexplored. Addressing this gap, our study examines the benefits and limitations of using LLMs as real-time learning support, considering how classroom constraints, such as diverse proficiency levels and limited time, affect their effectiveness. We conducted a deployment study with 157 eighth-grade students in a South Korean middle school English class over six weeks. Our findings reveal that while scaffolding improved students' abil",
+      "summary_fr": "Large language models (LLMs) are promising tools for scaffolding students' English writing skills, but their effectiveness in real-time K-12 classrooms remains underexplored. Addressing this gap, our study examines the benefits and limitations of using LLMs as real-time learning support, considering how classroom constraints, such as diverse proficiency levels and limited time, affect their effectiveness. We conducted a deployment study with 157 eighth-grade students in a South Korean middle school English class over six weeks. Our findings reveal that while scaffolding improved students' abil",
+      "resume_fr": "Large language models (LLMs) are promising tools for scaffolding students' English writing skills, but their effectiveness in real-time K-12 classrooms remains underexplored. Addressing this gap, our study examines the benefits and limitations of using LLMs as real-time learning support, considering how classroom constraints, such as diverse proficiency levels and limited time, affect their effectiveness. We conducted a deployment study with 157 eighth-grade students in a South Korean middle school English class over six weeks. Our findings reveal that while scaffolding improved students' abil",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Building Capacity for Artificial Intelligence in Africa: A Cross-Country Survey of Challenges and Governance Pathways",
+      "url": "https://arxiv.org/abs/2512.05432v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-05T05:14:23.000Z",
+      "score": 50,
+      "summary_en": "Artificial intelligence (AI) is transforming education and the workforce, but access to AI learning opportunities in Africa remains uneven. With rapid demographic shifts and growing labour market pressures, AI has become a strategic development priority, making the demand for relevant skills more urgent. This study investigates how universities and industries engage in shaping AI education and workforce preparation, drawing on survey responses from five African countries (Ghana, Namibia, Rwanda, Kenya and Zambia). The findings show broad recognition of AI importance but limited evidence of con",
+      "summary_fr": "Artificial intelligence (AI) is transforming education and the workforce, but access to AI learning opportunities in Africa remains uneven. With rapid demographic shifts and growing labour market pressures, AI has become a strategic development priority, making the demand for relevant skills more urgent. This study investigates how universities and industries engage in shaping AI education and workforce preparation, drawing on survey responses from five African countries (Ghana, Namibia, Rwanda, Kenya and Zambia). The findings show broad recognition of AI importance but limited evidence of con",
+      "resume_fr": "Artificial intelligence (AI) is transforming education and the workforce, but access to AI learning opportunities in Africa remains uneven. With rapid demographic shifts and growing labour market pressures, AI has become a strategic development priority, making the demand for relevant skills more urgent. This study investigates how universities and industries engage in shaping AI education and workforce preparation, drawing on survey responses from five African countries (Ghana, Namibia, Rwanda, Kenya and Zambia). The findings show broad recognition of AI importance but limited evidence of con",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning to Code with Context: A Study-Based Approach",
+      "url": "https://arxiv.org/abs/2512.05242v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T20:40:36.000Z",
+      "score": 50,
+      "summary_en": "The rapid emergence of generative AI tools is transforming the way software is developed. Consequently, software engineering education must adapt to ensure that students not only learn traditional development methods but also understand how to meaningfully and responsibly use these new technologies. In particular, project-based courses offer an effective environment to explore and evaluate the integration of AI assistance into real-world development practices. This paper presents our approach and a user study conducted within a university programming project in which students collaboratively d",
+      "summary_fr": "The rapid emergence of generative AI tools is transforming the way software is developed. Consequently, software engineering education must adapt to ensure that students not only learn traditional development methods but also understand how to meaningfully and responsibly use these new technologies. In particular, project-based courses offer an effective environment to explore and evaluate the integration of AI assistance into real-world development practices. This paper presents our approach and a user study conducted within a university programming project in which students collaboratively d",
+      "resume_fr": "The rapid emergence of generative AI tools is transforming the way software is developed. Consequently, software engineering education must adapt to ensure that students not only learn traditional development methods but also understand how to meaningfully and responsibly use these new technologies. In particular, project-based courses offer an effective environment to explore and evaluate the integration of AI assistance into real-world development practices. This paper presents our approach and a user study conducted within a university programming project in which students collaboratively d",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Value Gradient Guidance for Flow Matching Alignment",
       "url": "https://arxiv.org/abs/2512.05116v1",
       "source": "arXiv – cs.LG + learning analytics",
@@ -150,6 +264,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Fine-Tuning BERT for Domain-Specific Question Answering: Toward Educational NLP Resources at University Scale",
+      "url": "https://arxiv.org/abs/2512.05179v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T18:27:46.000Z",
+      "score": 50,
+      "summary_en": "Prior work on scientific question answering has largely emphasized chatbot-style systems, with limited exploration of fine-tuning foundation models for domain-specific reasoning. In this study, we developed a chatbot for the University of Limerick's Department of Electronic and Computer Engineering to provide course information to students. A custom dataset of 1,203 question-answer pairs in SQuAD format was constructed using the university book of modules, supplemented with manually and synthetically generated entries. We fine-tuned BERT (Devlin et al., 2019) using PyTorch and evaluated perfor",
+      "summary_fr": "Prior work on scientific question answering has largely emphasized chatbot-style systems, with limited exploration of fine-tuning foundation models for domain-specific reasoning. In this study, we developed a chatbot for the University of Limerick's Department of Electronic and Computer Engineering to provide course information to students. A custom dataset of 1,203 question-answer pairs in SQuAD format was constructed using the university book of modules, supplemented with manually and synthetically generated entries. We fine-tuned BERT (Devlin et al., 2019) using PyTorch and evaluated perfor",
+      "resume_fr": "Prior work on scientific question answering has largely emphasized chatbot-style systems, with limited exploration of fine-tuning foundation models for domain-specific reasoning. In this study, we developed a chatbot for the University of Limerick's Department of Electronic and Computer Engineering to provide course information to students. A custom dataset of 1,203 question-answer pairs in SQuAD format was constructed using the university book of modules, supplemented with manually and synthetically generated entries. We fine-tuned BERT (Devlin et al., 2019) using PyTorch and evaluated perfor",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -199,6 +332,25 @@
       "summary_en": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
       "summary_fr": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
       "resume_fr": "This paper presents a novel approach to automated stripboard circuit layout design using Answer Set Programming (ASP). The work formulates the layout problem as both a synthesis and multi-objective optimization task that simultaneously generates viable layouts while minimizing board area and component strip crossing. By leveraging ASP's declarative nature, this work expresses complex geometric and electrical constraints in a natural and concise manner. The two-phase solving methodology first ensures feasibility before optimizing layout quality. Experimental results demonstrate that this approa",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Bridging Traditional Machine Learning and Large Language Models: A Two-Part Course Design for Modern AI Education",
+      "url": "https://arxiv.org/abs/2512.05167v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2025-12-04T15:10:37.000Z",
+      "score": 50,
+      "summary_en": "This paper presents an innovative pedagogical approach for teaching artificial intelligence and data science that systematically bridges traditional machine learning techniques with modern Large Language Models (LLMs). We describe a course structured in two sequential and complementary parts: foundational machine learning concepts and contemporary LLM applications. This design enables students to develop a comprehensive understanding of AI evolution while building practical skills with both established and cutting-edge technologies. We detail the course architecture, implementation strategies,",
+      "summary_fr": "This paper presents an innovative pedagogical approach for teaching artificial intelligence and data science that systematically bridges traditional machine learning techniques with modern Large Language Models (LLMs). We describe a course structured in two sequential and complementary parts: foundational machine learning concepts and contemporary LLM applications. This design enables students to develop a comprehensive understanding of AI evolution while building practical skills with both established and cutting-edge technologies. We detail the course architecture, implementation strategies,",
+      "resume_fr": "This paper presents an innovative pedagogical approach for teaching artificial intelligence and data science that systematically bridges traditional machine learning techniques with modern Large Language Models (LLMs). We describe a course structured in two sequential and complementary parts: foundational machine learning concepts and contemporary LLM applications. This design enables students to develop a comprehensive understanding of AI evolution while building practical skills with both established and cutting-edge technologies. We detail the course architecture, implementation strategies,",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -1081,158 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Scaling Item-to-Standard Alignment with Large Language Models: Accuracy, Limits, and Solutions",
-      "url": "https://arxiv.org/abs/2511.19749v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-24T22:12:23.000Z",
-      "score": 85,
-      "summary_en": "As educational systems evolve, ensuring that assessment items remain aligned with content standards is essential for maintaining fairness and instructional relevance. Traditional human alignment reviews are accurate but slow and labor-intensive, especially across large item banks. This study examines whether Large Language Models (LLMs) can accelerate this process without sacrificing accuracy. Using over 12,000 item-skill pairs in grades K-5, we tested three LLMs (GPT-3.5 Turbo, GPT-4o-mini, and GPT-4o) across three tasks that mirror real-world challenges: identifying misaligned items, selecti",
-      "summary_fr": "As educational systems evolve, ensuring that assessment items remain aligned with content standards is essential for maintaining fairness and instructional relevance. Traditional human alignment reviews are accurate but slow and labor-intensive, especially across large item banks. This study examines whether Large Language Models (LLMs) can accelerate this process without sacrificing accuracy. Using over 12,000 item-skill pairs in grades K-5, we tested three LLMs (GPT-3.5 Turbo, GPT-4o-mini, and GPT-4o) across three tasks that mirror real-world challenges: identifying misaligned items, selecti",
-      "resume_fr": "As educational systems evolve, ensuring that assessment items remain aligned with content standards is essential for maintaining fairness and instructional relevance. Traditional human alignment reviews are accurate but slow and labor-intensive, especially across large item banks. This study examines whether Large Language Models (LLMs) can accelerate this process without sacrificing accuracy. Using over 12,000 item-skill pairs in grades K-5, we tested three LLMs (GPT-3.5 Turbo, GPT-4o-mini, and GPT-4o) across three tasks that mirror real-world challenges: identifying misaligned items, selecti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Towards Synergistic Teacher-AI Interactions with Generative Artificial Intelligence",
-      "url": "https://arxiv.org/abs/2511.19580v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-24T18:29:29.000Z",
-      "score": 85,
-      "summary_en": "Generative artificial intelligence (GenAI) is increasingly used in education, posing significant challenges for teachers adapting to these changes. GenAI offers unprecedented opportunities for accessibility, scalability and productivity in educational tasks. However, the automation of teaching tasks through GenAI raises concerns about reduced teacher agency, potential cognitive atrophy, and the broader deprofessionalisation of teaching. Drawing findings from prior literature on AI in Education, and refining through a recent systematic literature review, this chapter presents a conceptualisatio",
-      "summary_fr": "Generative artificial intelligence (GenAI) is increasingly used in education, posing significant challenges for teachers adapting to these changes. GenAI offers unprecedented opportunities for accessibility, scalability and productivity in educational tasks. However, the automation of teaching tasks through GenAI raises concerns about reduced teacher agency, potential cognitive atrophy, and the broader deprofessionalisation of teaching. Drawing findings from prior literature on AI in Education, and refining through a recent systematic literature review, this chapter presents a conceptualisatio",
-      "resume_fr": "Generative artificial intelligence (GenAI) is increasingly used in education, posing significant challenges for teachers adapting to these changes. GenAI offers unprecedented opportunities for accessibility, scalability and productivity in educational tasks. However, the automation of teaching tasks through GenAI raises concerns about reduced teacher agency, potential cognitive atrophy, and the broader deprofessionalisation of teaching. Drawing findings from prior literature on AI in Education, and refining through a recent systematic literature review, this chapter presents a conceptualisatio",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Tu crois que c'est vrai ? Diversite des regimes d'enonciation face aux fake news et mecanismes d'autoregulation conversationnelle",
-      "url": "https://arxiv.org/abs/2511.18369v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-11-23T09:28:16.000Z",
-      "score": 85,
-      "summary_en": "This thesis addresses two paradoxes: (1) why empirical studies find that fake news represent only a small share of the information consulted and shared on social media despite the absence of editorial control or journalistic norms, and (2) how political polarization has intensified even though users do not appear especially receptive to fake news. To investigate these issues, two complementary studies were carried out on Twitter and Facebook, combining quantitative analyses of digital traces with online observation and interviews. This mixed-methods design avoids reducing users to single react",
-      "summary_fr": "This thesis addresses two paradoxes: (1) why empirical studies find that fake news represent only a small share of the information consulted and shared on social media despite the absence of editorial control or journalistic norms, and (2) how political polarization has intensified even though users do not appear especially receptive to fake news. To investigate these issues, two complementary studies were carried out on Twitter and Facebook, combining quantitative analyses of digital traces with online observation and interviews. This mixed-methods design avoids reducing users to single react",
-      "resume_fr": "This thesis addresses two paradoxes: (1) why empirical studies find that fake news represent only a small share of the information consulted and shared on social media despite the absence of editorial control or journalistic norms, and (2) how political polarization has intensified even though users do not appear especially receptive to fake news. To investigate these issues, two complementary studies were carried out on Twitter and Facebook, combining quantitative analyses of digital traces with online observation and interviews. This mixed-methods design avoids reducing users to single react",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Harnessing Data from Clustered LQR Systems: Personalized and Collaborative Policy Optimization",
-      "url": "https://arxiv.org/abs/2511.17489v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-21T18:45:53.000Z",
-      "score": 70,
-      "summary_en": "It is known that reinforcement learning (RL) is data-hungry. To improve sample-efficiency of RL, it has been proposed that the learning algorithm utilize data from 'approximately similar' processes. However, since the process models are unknown, identifying which other processes are similar poses a challenge. In this work, we study this problem in the context of the benchmark Linear Quadratic Regulator (LQR) setting. Specifically, we consider a setting with multiple agents, each corresponding to a copy of a linear process to be controlled. The agents' local processes can be partitioned into cl",
-      "summary_fr": "It is known that reinforcement learning (RL) is data-hungry. To improve sample-efficiency of RL, it has been proposed that the learning algorithm utilize data from 'approximately similar' processes. However, since the process models are unknown, identifying which other processes are similar poses a challenge. In this work, we study this problem in the context of the benchmark Linear Quadratic Regulator (LQR) setting. Specifically, we consider a setting with multiple agents, each corresponding to a copy of a linear process to be controlled. The agents' local processes can be partitioned into cl",
-      "resume_fr": "It is known that reinforcement learning (RL) is data-hungry. To improve sample-efficiency of RL, it has been proposed that the learning algorithm utilize data from 'approximately similar' processes. However, since the process models are unknown, identifying which other processes are similar poses a challenge. In this work, we study this problem in the context of the benchmark Linear Quadratic Regulator (LQR) setting. Specifically, we consider a setting with multiple agents, each corresponding to a copy of a linear process to be controlled. The agents' local processes can be partitioned into cl",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Enhancing Quranic Learning: A Multimodal Deep Learning Approach for Arabic Phoneme Recognition",
-      "url": "https://arxiv.org/abs/2511.17477v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-11-21T18:25:46.000Z",
-      "score": 50,
-      "summary_en": "Recent advances in multimodal deep learning have greatly enhanced the capability of systems for speech analysis and pronunciation assessment. Accurate pronunciation detection remains a key challenge in Arabic, particularly in the context of Quranic recitation, where subtle phonetic differences can alter meaning. Addressing this challenge, the present study proposes a transformer-based multimodal framework for Arabic phoneme mispronunciation detection that combines acoustic and textual representations to achieve higher precision and robustness. The framework integrates UniSpeech-derived acousti",
-      "summary_fr": "Recent advances in multimodal deep learning have greatly enhanced the capability of systems for speech analysis and pronunciation assessment. Accurate pronunciation detection remains a key challenge in Arabic, particularly in the context of Quranic recitation, where subtle phonetic differences can alter meaning. Addressing this challenge, the present study proposes a transformer-based multimodal framework for Arabic phoneme mispronunciation detection that combines acoustic and textual representations to achieve higher precision and robustness. The framework integrates UniSpeech-derived acousti",
-      "resume_fr": "Recent advances in multimodal deep learning have greatly enhanced the capability of systems for speech analysis and pronunciation assessment. Accurate pronunciation detection remains a key challenge in Arabic, particularly in the context of Quranic recitation, where subtle phonetic differences can alter meaning. Addressing this challenge, the present study proposes a transformer-based multimodal framework for Arabic phoneme mispronunciation detection that combines acoustic and textual representations to achieve higher precision and robustness. The framework integrates UniSpeech-derived acousti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Unmasking Airborne Threats: Guided-Transformers for Portable Aerosol Mass Spectrometry",
-      "url": "https://arxiv.org/abs/2511.17446v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-21T17:45:00.000Z",
-      "score": 50,
-      "summary_en": "Matrix Assisted Laser Desorption/Ionization Mass Spectrometry (MALDI-MS) is a cornerstone in biomolecular analysis, offering precise identification of pathogens through unique mass spectral signatures. Yet, its reliance on labor-intensive sample preparation and multi-shot spectral averaging restricts its use to laboratory settings, rendering it impractical for real-time environmental monitoring. These limitations are especially pronounced in emerging aerosol MALDI-MS systems, where autonomous sampling generates noisy spectra for unknown aerosol analytes, requiring single-shot detection for eff",
-      "summary_fr": "Matrix Assisted Laser Desorption/Ionization Mass Spectrometry (MALDI-MS) is a cornerstone in biomolecular analysis, offering precise identification of pathogens through unique mass spectral signatures. Yet, its reliance on labor-intensive sample preparation and multi-shot spectral averaging restricts its use to laboratory settings, rendering it impractical for real-time environmental monitoring. These limitations are especially pronounced in emerging aerosol MALDI-MS systems, where autonomous sampling generates noisy spectra for unknown aerosol analytes, requiring single-shot detection for eff",
-      "resume_fr": "Matrix Assisted Laser Desorption/Ionization Mass Spectrometry (MALDI-MS) is a cornerstone in biomolecular analysis, offering precise identification of pathogens through unique mass spectral signatures. Yet, its reliance on labor-intensive sample preparation and multi-shot spectral averaging restricts its use to laboratory settings, rendering it impractical for real-time environmental monitoring. These limitations are especially pronounced in emerging aerosol MALDI-MS systems, where autonomous sampling generates noisy spectra for unknown aerosol analytes, requiring single-shot detection for eff",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "InTAct: Interval-based Task Activation Consolidation for Continual Learning",
-      "url": "https://arxiv.org/abs/2511.17439v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-21T17:36:12.000Z",
-      "score": 70,
-      "summary_en": "Continual learning aims to enable neural networks to acquire new knowledge without forgetting previously learned information. While recent prompt-based methods perform strongly in class-incremental settings, they remain vulnerable under domain shifts, where the input distribution changes but the label space remains fixed. This exposes a persistent problem known as representation drift. Shared representations evolve in ways that overwrite previously useful features and cause forgetting even when prompts isolate task-specific parameters. To address this issue, we introduce InTAct, a method that ",
-      "summary_fr": "Continual learning aims to enable neural networks to acquire new knowledge without forgetting previously learned information. While recent prompt-based methods perform strongly in class-incremental settings, they remain vulnerable under domain shifts, where the input distribution changes but the label space remains fixed. This exposes a persistent problem known as representation drift. Shared representations evolve in ways that overwrite previously useful features and cause forgetting even when prompts isolate task-specific parameters. To address this issue, we introduce InTAct, a method that ",
-      "resume_fr": "Continual learning aims to enable neural networks to acquire new knowledge without forgetting previously learned information. While recent prompt-based methods perform strongly in class-incremental settings, they remain vulnerable under domain shifts, where the input distribution changes but the label space remains fixed. This exposes a persistent problem known as representation drift. Shared representations evolve in ways that overwrite previously useful features and cause forgetting even when prompts isolate task-specific parameters. To address this issue, we introduce InTAct, a method that ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Framework for Adaptive Stabilisation of Nonlinear Stochastic Systems",
-      "url": "https://arxiv.org/abs/2511.17436v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-11-21T17:33:00.000Z",
-      "score": 70,
-      "summary_en": "We consider the adaptive control problem for discrete-time, nonlinear stochastic systems with linearly parameterised uncertainty. Assuming access to a parameterised family of controllers that can stabilise the system in a bounded set within an informative region of the state space when the parameter is well-chosen, we propose a certainty equivalence learning-based adaptive control strategy, and subsequently derive stability bounds on the closed-loop system that hold for some probabilities. We then show that if the entire state space is informative, and the family of controllers is globally sta",
-      "summary_fr": "We consider the adaptive control problem for discrete-time, nonlinear stochastic systems with linearly parameterised uncertainty. Assuming access to a parameterised family of controllers that can stabilise the system in a bounded set within an informative region of the state space when the parameter is well-chosen, we propose a certainty equivalence learning-based adaptive control strategy, and subsequently derive stability bounds on the closed-loop system that hold for some probabilities. We then show that if the entire state space is informative, and the family of controllers is globally sta",
-      "resume_fr": "We consider the adaptive control problem for discrete-time, nonlinear stochastic systems with linearly parameterised uncertainty. Assuming access to a parameterised family of controllers that can stabilise the system in a bounded set within an informative region of the state space when the parameter is well-chosen, we propose a certainty equivalence learning-based adaptive control strategy, and subsequently derive stability bounds on the closed-loop system that hold for some probabilities. We then show that if the entire state space is informative, and the family of controllers is globally sta",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
