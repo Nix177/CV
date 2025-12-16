@@ -6,13 +6,11 @@
   <title>Portfolio — Nicolas Tuor</title>
   <meta name="description" content="Projekte und Demos (Bildung, KI, Lernspiele)."/>
   <link rel="icon" href="/favicon.ico"/>
-  <!-- hreflang -->
   <link rel="alternate" hreflang="fr" href="/portfolio.html">
   <link rel="alternate" hreflang="en" href="/portfolio-en.html">
   <link rel="alternate" hreflang="de" href="/portfolio-de.html">
   <link rel="alternate" hreflang="x-default" href="/portfolio.html">
 
-  <!-- Basis-Styles (Fallback, falls /style.css nicht geladen wird) -->
   <style>
     body { margin:0 }
     main.wrap { max-width: 1100px; padding: 16px; margin: 0 auto; }
@@ -53,15 +51,12 @@
 
   <link rel="preload" href="/style.css" as="style"/>
   <link rel="stylesheet" href="/style.css"/>
-  <!-- Globaler Header wird per JS injiziert (gleiche Buttons/Effekte wie Index/Passions) -->
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 
 <body>
-  <!-- Die globale Navigation (Menü + Sprachen) wird von /assets/js/nav.js eingefügt -->
-  <!-- Lokaler Fallback nur ohne JavaScript sichtbar -->
   <noscript>
     <header class="site-header">
       <nav class="site-nav" aria-label="Hauptnavigation">
@@ -87,12 +82,10 @@
   </header>
 
   <main class="wrap">
-    <!-- ===================== PROJEKTE (Karten/Overlays) ===================== -->
     <section id="sites">
       <div id="portfolioGrid" class="p-grid"></div>
     </section>
 
-    <!-- OVERLAY VORSCHAU (einzeln, mit JS/CSS abgestimmt) -->
     <div id="pfOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
       <div class="pf-panel">
         <header class="pf-head">
@@ -108,9 +101,6 @@
       </div>
     </div>
 
-    <!-- ===================== ASTRAGALUS-SPIELE ===================== -->
-
-    <!-- Spiel 1: Runner 2D -->
     <section class="game-card" id="osselets-runner-card">
       <h2>🎮 Runner 2D – Astragalus-Amulette: diese drei Spiele sind noch frühe Prototypen</h2>
       <p class="muted">Anatomie (Talus) und Amulettgebrauch (Reinigung, apotropäisch) beim Laufen entdecken.</p>
@@ -125,7 +115,6 @@
       </div>
     </section>
 
-    <!-- Spiel 2: Mit den Knochen schreiben -->
     <section class="game-card" id="osselets-l2-card">
       <h2>✍️ Mit den Knochen schreiben — Faden & Alphabet</h2>
       <p class="muted">24 Löcher (6 pro Seite) den 24 griechischen Buchstaben zugeordnet. Folge dem Faden, um ein Wort zu buchstabieren.</p>
@@ -140,7 +129,6 @@
       </div>
     </section>
 
-    <!-- Spiel 3: Die Knochen werfen -->
     <section class="game-card" id="osselets-l3-card">
       <h2>🎲 Die Knochen werfen — Venus, Canis, Senio…</h2>
       <p class="muted">Wirf 4 Astragali (Seiten {1,3,4,6}). Spielmodus (Punkte) oder Orakel (symbolische Deutung).</p>
@@ -161,63 +149,136 @@
     © Nicolas Tuor — Portfolio
   </footer>
 
-  <!-- Daten -->
   <script src="/portfolio-data.js"></script>
   <script src="/portfolio.js" defer></script>
 
-  <!-- Lab -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel (UMD) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Three.js + Beispiele (GLTFLoader, OrbitControls) -->
   <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://unpkg.com/three@0.149.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  <!-- Astragalus-Spiele -->
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level2.tsx"></script>
+
+  <script>window.__L2_DEBUG = true; console.info("[HTML] __L2_DEBUG=on");</script>
+  <script src="/osselets-level2.js?v=debug-v3" defer></script>
+
   <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
 
-  <!-- Mount / Navigation (ein Container pro Spiel) -->
   <script type="text/babel">
   (function () {
+    const reactRoots   = new Map();   // id -> ReactRoot
+    const externalApps = new Map();   // id -> { destroy() }
+
     function stopAllAudio() {
       document.querySelectorAll('audio').forEach(a => { try { a.pause(); a.currentTime = 0; } catch {} });
     }
-    function whenReady(name, cb, tries = 40) {
-      const Comp = window && window[name];
-      if (Comp) return cb(Comp);
-      if (tries <= 0) { console.warn("[osselets] Komponente nicht gefunden:", name); return; }
-      setTimeout(() => whenReady(name, cb, tries - 1), 125);
-    }
-    function mount(root, cover, CompName, btn) {
-      if (!root) return;
-      if (btn) { btn.disabled = true; btn.textContent = "Lädt…"; }
+
+    function unmountAllExcept(keepId) {
+      for (const [id, r] of reactRoots.entries()) {
+        if (id === keepId) continue;
+        try { r.unmount?.(); } catch {}
+        reactRoots.delete(id);
+      }
+      for (const [id, api] of externalApps.entries()) {
+        if (id === keepId) continue;
+        try { api.destroy?.(); } catch {}
+        externalApps.delete(id);
+      }
       stopAllAudio();
-      whenReady(CompName, (Comp) => {
+    }
+
+    function waitForGlobal(name, cb, tries = 60) { // ~7.5s
+      const g = window && window[name];
+      if (g) return cb(g);
+      if (tries <= 0) { console.error("[HTML] Global nicht gefunden:", name); return; }
+      setTimeout(() => waitForGlobal(name, cb, tries - 1), 125);
+    }
+
+    function mountReact(root, cover, CompName, btn) {
+      if (!root) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Laden..."; }
+      console.group("[HTML] mountReact", CompName, "→", root.id);
+      unmountAllExcept(root.id);
+      waitForGlobal(CompName, (Comp) => {
         try {
           if (cover) { cover.style.display = 'none'; cover.remove(); }
+          const prev = reactRoots.get(root.id);
+          if (prev) { try { prev.unmount?.(); } catch {} }
           const r = ReactDOM.createRoot(root);
+          reactRoots.set(root.id, r);
           r.render(React.createElement(Comp));
+          console.info("[HTML] React gerendert:", CompName);
           setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } catch (e) {
+          console.error("[HTML] mountReact error", e);
         } finally {
           if (btn) { btn.disabled = false; btn.textContent = "Starten"; }
+          console.groupEnd();
         }
       });
     }
-    document.getElementById('btn-start-runner')?.addEventListener('click', () =>
-      mount(document.getElementById('root-runner'), document.getElementById('cover-runner'), 'AstragalusRunner', document.getElementById('btn-start-runner'))
+
+    function mountExternal(root, cover, GlobalApiName, btn) {
+      if (!root) return;
+      if (btn) { btn.disabled = true; btn.textContent = "Laden..."; }
+      console.group("[HTML] mountExternal", GlobalApiName, "→", root.id);
+      unmountAllExcept(root.id);
+      waitForGlobal(GlobalApiName, async (API) => {
+        try {
+          if (cover) { cover.style.display = 'none'; cover.remove(); }
+          const prev = externalApps.get(root.id);
+          if (prev) { try { prev.destroy?.(); } catch {} }
+          console.info("[HTML] Aufruf", GlobalApiName + ".mount(root)");
+          const handle = await API.mount(root);
+          externalApps.set(root.id, handle || {});
+          console.info("[HTML] mountExternal OK:", !!handle);
+          setTimeout(() => { try { root.focus({preventScroll:true}); } catch(e){ root.focus(); } }, 50);
+        } catch (e) {
+          console.error("[HTML] mountExternal error", e);
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = "Starten"; }
+          console.groupEnd();
+        }
+      });
+    }
+
+    // Buttons
+    const btnRun = document.getElementById('btn-start-runner');
+    const btnL2  = document.getElementById('btn-start-l2');
+    const btnL3  = document.getElementById('btn-start-l3');
+
+    btnRun?.addEventListener('click', () =>
+      mountReact(
+        document.getElementById('root-runner'),
+        document.getElementById('cover-runner'),
+        'AstragalusRunner',
+        btnRun
+      )
     );
-    document.getElementById('btn-start-l2')?.addEventListener('click', () =>
-      mount(document.getElementById('root-l2'), document.getElementById('cover-l2'), 'AstragalusLevel2', document.getElementById('btn-start-l2'))
+
+    // L2 = externes Spiel (jetzt reines JS)
+    btnL2?.addEventListener('click', () =>
+      mountExternal(
+        document.getElementById('root-l2'),
+        document.getElementById('cover-l2'),
+        'OsseletsLevel2',
+        btnL2
+      )
     );
-    document.getElementById('btn-start-l3')?.addEventListener('click', () =>
-      mount(document.getElementById('root-l3'), document.getElementById('cover-l3'), 'AstragalusLevel3', document.getElementById('btn-start-l3'))
+
+    // L3 = React/TSX
+    btnL3?.addEventListener('click', () =>
+      mountReact(
+        document.getElementById('root-l3'),
+        document.getElementById('cover-l3'),
+        'AstragalusLevel3',
+        btnL3
+      )
     );
   })();
   </script>
