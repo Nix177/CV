@@ -7,7 +7,6 @@
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <!-- UPDATE: hreflang -->
   <link rel="alternate" hreflang="fr" href="/index.html">
   <link rel="alternate" hreflang="en" href="/index-en.html">
   <link rel="alternate" hreflang="de" href="/index-de.html">
@@ -41,21 +40,18 @@
     }
 
     /* ===== Header : brand | boutons ===== */
-    /* // UPDATE: décale le titre sous la nav globale */
-    :root { --navH: 56px; }                /* hauteur approx. de la nav en desktop */
-    @media (max-width: 820px){ :root { --navH: 72px; } }  /* nav peut passer à 2 lignes */
+    :root { --navH: 56px; }
+    @media (max-width: 820px){ :root { --navH: 72px; } }
 
-    /* // UPDATE: brand sous la nav globale, sans impacter #nt-global-nav */
     header:not(#nt-global-nav){
       position: fixed;
       left: 18px;
       right: 18px;
       top: calc(18px + var(--nt-nav-h, 64px));
-      z-index: 5; /* sous la nav globale (qui est z-index:100 dans style.css) */
+      z-index: 5;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
     }
 
-    /* // UPDATE: masque l'ancien nav local sans toucher la nav globale */
     header:not(#nt-global-nav) > nav.site-nav { display: none !important; }
     .brand{
       display:flex; align-items:center; gap:.75rem;
@@ -110,18 +106,12 @@
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
     .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations (sans scale) ===== */
+    /* ===== Stations ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
     .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
     .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
     .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
     .hit-rect{ fill:transparent; pointer-events:all; }
-
-    /* ===== Train ===== */
-    .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
-    .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
-    .train-nose{ fill:#d0dcef }
-    .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
 
     /* ===== Carte centrée sobre ===== */
     .spotlight{
@@ -191,7 +181,6 @@
 </head>
 <body class="panel-collapsed">
   <header aria-label="En-tête">
-    <!-- UPDATE: NAV LAYOUT ONLY -->
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
         <li><a href="/index.html" aria-current="page">Accueil</a></li>
@@ -217,23 +206,27 @@
   <main>
     <section class="scene" aria-label="Ligne principale — stations de convictions">
       <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="headlight-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#14b8a6; stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#14b8a6; stop-opacity:0" />
+          </linearGradient>
+        </defs>
+
         <path id="track" class="track" d="" />
         <g id="sleepers" class="sleepers"></g>
         <g id="stations"></g>
-        <g id="train" class="train">
-          <g transform="translate(-22,-12)">
-            <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
-            <rect class="train-nose" x="30" y="2" rx="5" ry="5" width="12" height="20"/>
-            <circle class="headlight" cx="40" cy="12" r="3"/>
-            <rect x="5"  y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="16" y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="5"  y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-            <rect x="16" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-          </g>
+        
+        <g id="train">
+          <path d="M 5,0 L 60,-15 L 60,15 Z" fill="url(#headlight-grad)" style="mix-blend-mode: screen;" />
+          <rect x="-10" y="-4" width="16" height="8" rx="2" fill="#eef3f8" stroke="#14b8a6" stroke-width="1" />
         </g>
       </svg>
 
-      <!-- Carte centrée (sobre) -->
       <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Idée sélectionnée">
         <h4 id="spotTitle"></h4>
         <p id="spotText"></p>
@@ -364,7 +357,6 @@
         g.setAttribute('data-idx', i);
         g.setAttribute('transform', `translate(${p.x},${p.y})`);
 
-        /* zone de hit large qui couvre le label (hover stable) */
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
         hitRect.setAttribute('x', -100);
@@ -470,35 +462,84 @@
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
     /* ===== Animation du train + auto spotlight ===== */
-    let pos = 0, speed = 50, lastT = performance.now();
+    // Configuration du mouvement
+    let speed = 1.5;          // Vitesse de croisière
+    let currentSpeed = 1.5;   // Vitesse actuelle (pour accélération/freinage)
+    let pos = 0;
+    let lastT = performance.now(); // Correction: init avec perf.now
+    
+    // Gestion des arrêts
+    let stationWait = 0;      // Temps d'attente restant (ms)
+    const STOP_DURATION = 800; // Durée d'arrêt à une station (ms)
+    let lastStationIdx = -1;  // Pour ne pas s'arrêter 2 fois à la même
+    
     const showRadius = 32;
     let lastShownIdx = -1;
     let cooldownUntil = 0;
 
-    function tick(now){
-      const dt = Math.min(40, now - lastT) / 1000; lastT = now;
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const effectiveSpeed = mq.matches ? 0 : speed;
-      pos = (pos + effectiveSpeed * dt) % totalLen;
+    function tick(t) {
+      const dt = Math.min(40, t - lastT); // dt en ms
+      lastT = t;
+      const now = performance.now();
 
+      // Si on est à l'arrêt
+      if (stationWait > 0) {
+        stationWait -= dt;
+        // On force la vitesse à 0 pour l'effet visuel si besoin
+        currentSpeed = 0;
+        // On continue d'appeler tick pour reprendre plus tard
+        requestAnimationFrame(tick);
+        return;
+      }
+
+      // Reprise de vitesse (accélération douce)
+      if (currentSpeed < speed) currentSpeed += 0.05;
+
+      // Avancer
+      pos += currentSpeed;
+      if (pos > totalLen) {
+        pos -= totalLen;
+        lastStationIdx = -1; // Reset tour
+      }
+
+      // Calcul position & rotation
       const p = track.getPointAtLength(pos);
-      const p2 = track.getPointAtLength((pos + 1) % totalLen);
-      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
+      // On prend un point un peu plus loin pour calculer l'angle (tangente)
+      const p2 = track.getPointAtLength((pos + 2) % totalLen); 
+      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180 / Math.PI;
+
+      // Appliquer au groupe train
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
 
-      // auto spotlight quand le train passe sur une station
-      if(now >= cooldownUntil){
-        for(const s of stationPositions){
-          const delta = Math.abs(((pos - s.len + totalLen) % totalLen));
-          const near = Math.min(delta, totalLen - delta);
-          if(near < showRadius && s.idx !== lastShownIdx && hoverLockIdx===null){
-            lastShownIdx = s.idx;
-            showSpotlight(s.idx,'auto');
-            cooldownUntil = now + 900;
-            break;
+      // --- LOGIQUE DES STATIONS ---
+      // On cherche si on est proche d'une station pour s'arrêter
+      
+      for(const s of stationPositions){
+        // Distance simple sur la ligne
+        const dist = Math.abs(pos - s.len);
+        
+        // Zone de détection (ex: 5 pixels avant/après)
+        if(dist < 5 && s.idx !== lastStationIdx){
+          // ARRÊT !
+          stationWait = STOP_DURATION;
+          lastStationIdx = s.idx;
+          currentSpeed = 0; // Stop net
+          
+          // Effet Spotlight (déjà existant dans ton code)
+          if(hoverLockIdx === null){
+             lastShownIdx = s.idx;
+             showSpotlight(s.idx, 'auto');
           }
+          break; 
+        }
+        
+        // Zone de freinage (ex: 50 pixels avant)
+        if (s.len > pos && (s.len - pos) < 50 && s.idx !== lastStationIdx) {
+           // On ralentit progressivement
+           currentSpeed = Math.max(0.5, currentSpeed * 0.95);
         }
       }
+
       requestAnimationFrame(tick);
     }
 
