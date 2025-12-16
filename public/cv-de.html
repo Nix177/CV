@@ -1,10 +1,10 @@
+<!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lebenslauf — Nicolas Tuor</title>
 
-  <!-- UPDATE: hreflang -->
   <link rel="alternate" hreflang="fr" href="/cv.html">
   <link rel="alternate" hreflang="en" href="/cv-en.html">
   <link rel="alternate" hreflang="de" href="/cv-de.html">
@@ -24,199 +24,204 @@
     html,body{height:100%}
     body{
       margin:0; color:var(--text);
-      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      background: radial-gradient(1200px 720px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      font: 16px/1.6 system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 50% -20%, #132f4c 0%, var(--bg) 60%) fixed;
     }
-
-    /* Header */
-    header{
-      position:sticky; top:0; z-index:10;
-      background:rgba(10,18,32,.75); backdrop-filter:blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .head{max-width:var(--max); margin:0 auto; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .brand{display:flex; align-items:center; gap:.65rem; font-weight:800; letter-spacing:.2px}
-    .logo{width:30px; height:30px; border-radius:8px; display:grid; place-items:center;
-          background:linear-gradient(135deg,#0a1220,#00060d); color:#fff; border:1px solid rgba(255,255,255,.1)}
-    nav.top{display:flex; gap:.5rem; flex-wrap:wrap}
-    .btn{
-      appearance:none; border:1px solid rgba(255,255,255,.08); background:#0c1728; color:var(--text);
-      text-decoration:none; padding:.42rem .65rem; border-radius:10px; font-weight:600; font-size:14px;
-    }
-    .btn:hover{background:#0e1b2f}
-
-    main{max-width:var(--max); margin:18px auto 80px; padding:0 16px}
-    h1{font-size:30px; margin:8px 0 14px 0}
-    .lede{color:var(--muted); margin:0 0 18px 0}
-
+    a{color:inherit; text-decoration:none; transition:color .2s}
+    a:hover{color:var(--accent)}
+    
     /* Layout */
-    .grid{
-      display:grid; grid-template-columns: 320px 1fr; gap:16px;
+    .app { display:grid; grid-template-columns: 280px 1fr; gap:24px; max-width:var(--max); margin:0 auto; padding:24px; }
+    
+    /* Sidebar */
+    .side { background:var(--panel); border:1px solid var(--border); border-radius:var(--br); padding:24px; position:sticky; top:24px; height:fit-content; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:24px; }
+    .me { text-align:center; }
+    .me h1 { margin:12px 0 4px; font-size:24px; color:#fff; }
+    .me p { margin:0; color:var(--accent); font-weight:500; }
+    .avatar-ph { width:120px; height:120px; margin:0 auto; border-radius:50%; background:linear-gradient(45deg, #1e293b, #334155); display:flex; align-items:center; justify-content:center; font-size:40px; }
+    
+    .info-list { list-style:none; padding:0; margin:0; font-size:14px; display:flex; flex-direction:column; gap:12px; }
+    .info-list li { display:flex; flex-direction:column; gap:2px; }
+    .info-list strong { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+    
+    .skills-tags { display:flex; flex-wrap:wrap; gap:8px; }
+    .tag { background:#1e293b; color:#cbd5e1; padding:4px 10px; border-radius:6px; font-size:13px; border:1px solid #334155; }
+
+    /* Main Content */
+    .main { display:flex; flex-direction:column; gap:24px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:var(--br); padding:28px; box-shadow:var(--shadow); }
+    .card:hover { border-color:#263549; }
+    
+    .h2 { font-size:20px; font-weight:600; color:#fff; margin-bottom:20px; display:flex; align-items:center; gap:10px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+    .h2::before { content:''; width:4px; height:20px; background:var(--accent); border-radius:2px; }
+
+    /* Timeline */
+    .timeline { display:flex; flex-direction:column; gap:24px; }
+    .item { display:grid; grid-template-columns: 70px 1fr; gap:16px; }
+    .year { font-weight:700; color:var(--muted); font-feature-settings:"tnum"; text-align:right; padding-top:2px; }
+    .details h3 { margin:0 0 4px; font-size:17px; color:#fff; }
+    .details .role { color:var(--accent); font-size:14px; font-weight:500; margin-bottom:6px; display:block; }
+    .details p { margin:0; font-size:15px; color:#cbd5e1; }
+    .details ul { margin:8px 0 0 18px; padding:0; color:#94a3b8; font-size:14px; }
+
+    /* Nav */
+    .nav-bar { grid-column:1/-1; display:flex; gap:12px; margin-bottom:8px; justify-content:space-between; align-items:center; }
+    .nav-links { display:flex; gap:12px; }
+    .nav-btn { background:var(--panel); border:1px solid var(--border); padding:8px 16px; border-radius:8px; font-size:14px; font-weight:500; color:var(--muted); }
+    .nav-btn:hover, .nav-btn.active { background:var(--accent); color:#000; border-color:var(--accent); }
+    
+    .dl a { display:inline-flex; align-items:center; gap:8px; color:var(--accent); font-weight:500; }
+
+    @media(max-width:800px){
+      .app { grid-template-columns:1fr; padding:16px; gap:16px; }
+      .side { position:static; }
+      .item { grid-template-columns:1fr; gap:4px; }
+      .year { text-align:left; font-size:13px; color:var(--accent); margin-bottom:2px; }
     }
-    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
-
-    .card{
-      background:var(--card); border:1px solid var(--border); border-radius:var(--br);
-      box-shadow:var(--shadow); padding:14px;
-    }
-    .section{display:grid; gap:12px}
-    .h2{font-size:18px; font-weight:800; margin:0 0 6px 0}
-    .h3{font-size:16px; font-weight:800; margin:0}
-    .muted{color:var(--muted)}
-    ul{margin:6px 0 0 0; padding-left:18px}
-    li{margin:4px 0}
-    .tag{display:inline-block; background:#0c1728; border:1px solid rgba(255,255,255,.08); color:var(--text);
-         padding:.22rem .5rem; border-radius:999px; font-size:12px; font-weight:700; margin:2px 4px 0 0}
-
-    .dl{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-    .link{color:var(--text); text-decoration:none; background:#0c1728; border:1px solid rgba(255,255,255,.08);
-          padding:.38rem .6rem; border-radius:10px; font-weight:600; font-size:14px}
-    .link:hover{background:#0e1b2f}
-
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .pill{background:#0f1c31; border:1px solid #163052; padding:.28rem .55rem; border-radius:999px; font-size:13px}
-    address{font-style:normal}
-    hr{height:1px; border:0; background:rgba(255,255,255,.08); margin:10px 0}
   </style>
-  <link rel="stylesheet" href="/style.css">
-  <script defer src="/assets/js/nav.js"></script>
-  <script defer src="/assets/js/feedback.js"></script>
-  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-<header>
-  <div class="head">
-    <div class="brand">
-      <div class="logo">N·T</div>
-      <div>CV — Nicolas Tuor</div>
-    </div>
-    <!-- UPDATE: NAV LAYOUT ONLY -->
-    <nav class="site-nav" aria-label="Navigation">
-      <ul class="menu">
-        <li><a class="btn" href="/index-de.html">Startseite</a></li>
-        <li><a class="btn" href="/cv-de.html" aria-current="page" style="border-color:#1e3a5f;background:#10223a">Lebenslauf</a></li>
-        <li><a class="btn" href="/portfolio-de.html">Portfolio</a></li>
-        <li><a class="btn" href="/passions-de.html">Leidenschaften</a></li>
-        <li><a class="btn" href="/ai-lab-de.html">KI-Lab</a></li>
-        <li><a class="btn" href="/fun-facts-de.html">Irrtümer</a></li>
-      </ul>
-      <ul class="lang">
-        <li><a class="btn" href="/cv.html">FR</a></li>
-        <li><a class="btn" href="/cv-en.html">EN</a></li>
-        <li><a class="btn" href="/cv-de.html" aria-current="page" style="border-color:#1e3a5f;background:#10223a">DE</a></li>
-      </ul>
+
+  <div class="app">
+    <nav class="nav-bar">
+      <div class="nav-links">
+        <a href="/index-de.html" class="nav-btn">Startseite</a>
+        <a href="/portfolio-de.html" class="nav-btn">Portfolio</a>
+        <a href="/passions-de.html" class="nav-btn">Leidenschaften</a>
+      </div>
+      <div class="nav-links">
+        <a href="/cv.html" class="nav-btn">FR</a>
+        <a href="/cv-en.html" class="nav-btn">EN</a>
+        <a href="/cv-de.html" class="nav-btn active">DE</a>
+      </div>
     </nav>
-  </div>
-</header>
 
-<main>
-  <h1>Lebenslauf — Nicolas Tuor</h1>
-  <p class="lede">Direkt angezeigte deutsche Fassung (Übersetzung aus dem Französischen). Sachlich, kompakt, gut lesbar.</p>
+    <aside class="side">
+      <div class="me">
+        <div class="avatar-ph">NT</div>
+        <h1>Nicolas Tuor</h1>
+        <p>Master in Fachdidaktik Informatik</p>
+      </div>
 
-  <div class="grid">
-    <!-- Sidebar -->
-    <aside class="section">
+      <ul class="info-list">
+        <li><strong>Standort</strong> 1700 Freiburg, CH</li>
+        <li><strong>Kontakt</strong> <a href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a></li>
+        <li><strong>Sprachen</strong>
+          <span>Französisch (Muttersprache)</span>
+          <span>Englisch (C2)</span>
+          <span>Deutsch (B2/C1)</span>
+        </li>
+      </ul>
+
+      <div class="sep"></div>
+
+      <div class="h2" style="font-size:16px; border:none; margin-bottom:10px">Digitale Tools</div>
+      <div class="skills-tags">
+        <span class="tag">Generative KI</span>
+        <span class="tag">Python</span>
+        <span class="tag">C# / Unity</span>
+        <span class="tag">Web (JS/HTML/CSS)</span>
+        <span class="tag">APIs / n8n</span>
+        <span class="tag">M365 / SharePoint</span>
+        <span class="tag">ComfyUI</span>
+        <span class="tag">Blender</span>
+      </div>
+
+      <div class="h2" style="font-size:16px; border:none; margin-bottom:10px; margin-top:10px">Interessen</div>
+      <div class="skills-tags">
+        <span class="tag">Wissenschaftskommunikation</span>
+        <span class="tag">Kritisches Denken</span>
+        <span class="tag">Astronomie & Astrofotografie</span>
+        <span class="tag">Rudern (Wettkampf 2005-2011)</span>
+        <span class="tag">Impro-Theater</span>
+        <span class="tag">Kampfsport</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      
       <section class="card">
-        <div class="h2">Kontakt</div>
-        <address>
-          <div class="row"><span class="pill">Telefon</span> <span>+41 79 762 26 67</span></div>
-          <div class="row"><span class="pill">E-Mail</span> <span><a class="link" href="mailto:nicolas.tuor@bluewin.ch">nicolas.tuor@bluewin.ch</a></span></div>
-          <div class="row"><span class="pill">Adresse</span>
-            <span>Rue de la Grand-Fontaine 6, 1700 Fribourg, Schweiz</span>
+        <div class="h2">Berufserfahrung</div>
+        <div class="timeline">
+          
+          <div class="item">
+            <div class="year">2024</div>
+            <div class="details">
+              <h3>Master-Praktikum (Forschung/Ausbildung)</h3>
+              <span class="role">HEP Fribourg (CRE/ATE, Dir. Lionel Alvarez)</span>
+              <p>6-monatiges Praktikum im Bereich Bildungsforschung und -technologie.</p>
+            </div>
           </div>
-        </address>
-      </section>
 
-      <section class="card">
-        <div class="h2">Kompetenzen</div>
-        <ul>
-          <li>Forschungsmethodik &amp; Datenanalyse</li>
-          <li>Pädagogik, Fachdidaktik &amp; Weiterbildung</li>
-          <li>Sicherer Umgang mit digitalen Werkzeugen</li>
-          <li>Wissenschaftskommunikation &amp; Popularisierung</li>
-          <li>Teamarbeit &amp; interdisziplinäre Zusammenarbeit</li>
-          <li>Anpassungsfähigkeit &amp; Eigeninitiative</li>
-          <li>Problemlösungskompetenz</li>
-        </ul>
-      </section>
+          <div class="item">
+            <div class="year">2022–2023</div>
+            <div class="details">
+              <h3>Zivildienst-Einsätze</h3>
+              <span class="role">Verschiedene Institutionen</span>
+              <ul>
+                <li><strong>Betreuung von Asylsuchenden</strong> (1 Monat, 2023), Bundesasylzentrum Guglera. Begleitung und Unterstützung von Flüchtlingen.</li>
+                <li><strong>Archivhilfe</strong> (2 Monate, 2022-2023), Staatskanzlei des Kantons Freiburg.</li>
+              </ul>
+            </div>
+          </div>
 
-      <section class="card">
-        <div class="h2">Sprachen</div>
-        <div class="row">
-          <span class="tag">Französisch (Muttersprache)</span>
-          <span class="tag">Englisch (C2)</span>
-          <span class="tag">Deutsch (B2/C1)</span>
+          <div class="item">
+            <div class="year">2020–2021</div>
+            <div class="details">
+              <h3>Primarlehrer</h3>
+              <span class="role">Schule Corminboeuf</span>
+              <p>Klassenlehrer einer 5H-Klasse (3. Klasse).</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="year">2019–2020</div>
+            <div class="details">
+              <h3>Lern-, Admin- & Techniksupport</h3>
+              <span class="role">Gymnasium Jean-Piaget, Neuchâtel</span>
+              <p>Zivildienst (langer Einsatz): Schulische Unterstützung, Verwaltungsaufgaben und technischer Support.</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="year">2012–2019</div>
+            <div class="details">
+              <h3>Diverse Erfahrungen</h3>
+              <ul>
+                <li>Mitglied ETUCOM (Studierendenkomitee PH FR) <span class="muted">• 2017–2019</span></li>
+                <li>Archivhilfe, Kantonsspital Freiburg (1 Monat) <span class="muted">• 2017</span></li>
+                <li>Rezeptionist, Hotel Elite Freiburg <span class="muted">• 2016–2017</span></li>
+                <li>Sicherheitsagent, Phoenix Security <span class="muted">• 2012–2017</span></li>
+              </ul>
+            </div>
+          </div>
+
         </div>
       </section>
 
       <section class="card">
-        <div class="h2">Interessen</div>
-        <ul>
-          <li>Wissenschaftsvermittlung, kritisches Denken</li>
-          <li>Astronomie &amp; Astrofotografie</li>
-          <li>Rudern (Wettkampf 2005–2011)</li>
-          <li>Improvisationstheater</li>
-          <li>Begeisterung für vielfältiges Lernen</li>
-          <li>Technologien &amp; KI-Werkzeuge (Bild/Video-Erstellung, Recherche, Spieleentwicklung mit GitHub Copilot &amp; Unity; Aufbau/Automatisierung von KI-Teams mit n8n)</li>
-          <li>Kampfkünste</li>
-        </ul>
-      </section>
-    </aside>
+        <div class="h2">Ausbildung</div>
+        <div class="timeline">
+          
+          <div class="item">
+            <div class="year">2020–2024</div>
+            <div class="details">
+              <h3>Master in Fachdidaktik Informatik</h3>
+              <span class="role">HEP Vaud / UNIL / EPFL</span>
+              <p>Spezialisierung auf Informatikunterricht. Masterarbeit unter der Leitung von Engin Bumbacher.</p>
+            </div>
+          </div>
 
-    <!-- Main column -->
-    <div class="section">
-      <section class="card">
-        <div class="h2">Bildung</div>
+          <div class="item">
+            <div class="year">2015–2019</div>
+            <div class="details">
+              <h3>Bachelor in Unterricht (Vorschule & Primarstufe)</h3>
+              <span class="role">HEP Fribourg</span>
+              <p>Bachelorarbeit unter der Leitung von Samuel Heinzen.</p>
+            </div>
+          </div>
 
-        <p class="h3">HEP Lausanne — Master in fachdidaktischer Ausbildung (Informatik) <span class="muted">• 2020–2024</span></p>
-        <ul>
-          <li>Schwerpunkt: Python, HTML/CSS, C++</li>
-          <li>Masterarbeit: <em>Explizites Unterrichten systematischen Debuggings und Kompetenztransfer</em> (Betreuung: Engin Bumbacher)</li>
-        </ul>
-        <hr>
-
-        <p class="h3">HEP Freiburg — Bachelor Vorschul- &amp; Primarstufe <span class="muted">• 2015–2019</span></p>
-        <ul>
-          <li>Bachelorarbeit: <em>Erhebung zur Kinderphilosophie an Freiburger Primarschulen</em> (Betreuung: Samuel Heinzen)</li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <div class="h2">Berufserfahrung</div>
-
-        <p class="h3">Stellvertretungen Primarstufe <span class="muted">• 2019–heute</span></p>
-        <p class="muted">Lehrperson auf verschiedenen Stufen.</p>
-        <hr>
-
-        <p class="h3">CAS «Éducation numérique» — Fortbildungstag, PH Freiburg <span class="muted">• 2024</span></p>
-        <p class="muted">Schwerpunkt Informatik &amp; Gesellschaft (Lehrtätigkeit).</p>
-        <hr>
-
-        <p class="h3">Zivildienst</p>
-        <ul>
-          <li>Einsätze in Masonnens, Villa-Thérèse, Praroman, Echarlens, Chénens, Vuisternens-devant-Romont</li>
-          <li>Begleitung von Geflüchteten, 1 Monat im Bundesasylzentrum Guglera <span class="muted">(2023)</span></li>
-        </ul>
-        <hr>
-
-        <p class="h3">Festanstellung Primarstufe, Schule Corminboeuf <span class="muted">• 2020–2021</span></p>
-        <p class="muted">Unterricht in 5H.</p>
-        <hr>
-
-        <p class="h3">Masterpraktikum, PH Freiburg — CRE/ATE <span class="muted">• 2022–2023</span></p>
-        <p class="muted">6-monatiges Forschungs-/Ausbildungspraktikum (Leitung: Lionel Alvarez).</p>
-        <hr>
-
-        <p class="h3">Weitere Tätigkeiten</p>
-        <ul>
-          <li>Rezeptionist, Hôtel Elite, Freiburg <span class="muted">• 2016–2017</span></li>
-          <li>Praktikum, Foyer Saint-Étienne <span class="muted">• 2013</span></li>
-          <li>Sicherheitsmitarbeiter, Phoenix Security <span class="muted">• 2012–2017</span></li>
-          <li>Archivhilfe, Staatskanzlei Kanton Freiburg (2 Monate) <span class="muted">• 2022–2023</span></li>
-          <li>Lern-/Admin-/Techniksupport, Gymnasium Jean-Piaget, Neuchâtel (Langzeitdienst) <span class="muted">• 09.09.2019–03.07.2020</span></li>
-          <li>Archivhilfe, Kantonsspital Freiburg (1 Monat) <span class="muted">• 2017</span></li>
-          <li>Mitglied ETUCOM (Studierendenkomitee PH FR) <span class="muted">• 2017–2019</span></li>
-        </ul>
+        </div>
       </section>
 
       <section class="card">
@@ -230,19 +235,16 @@
       </section>
 
      <section class="card">
-  <div class="h2">Downloads</div>
-  <div class="dl">
-    <a class="link" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener" download="Nicolas_Tuor_CV_FR.pdf">
-      PDF (FR) öffnen / herunterladen
-    </a>
-    <a class="link" href="/assets/cv/cv-en.pdf" target="_blank" rel="noopener" download="Nicolas_Tuor_CV_EN.pdf">
-      PDF (EN) öffnen / herunterladen
-    </a>
-  </div>
-</section>
+      <div class="h2">Downloads</div>
+      <div class="dl">
+        <a class="link" href="/assets/cv/cv-fr.pdf" target="_blank" rel="noopener" download="Nicolas_Tuor_CV_2025.pdf">
+          📄 CV als PDF herunterladen (Französisch)
+        </a>
+      </div>
+    </section>
 
-    </div>
+    </main>
   </div>
-</main>
+
 </body>
 </html>
