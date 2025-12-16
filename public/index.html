@@ -209,7 +209,7 @@
 
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
-      <div>Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies - créé en collaboration avec ChatGpt; work in progress</span></div>
+      <div>Nicolas Tuor — <span style="color:var(--muted)">éducation, sciences & technologies - créé en collaboration avec ChatGpt et Gemini; work in progress</span></div>
     </div>
   </header>
 
@@ -482,14 +482,14 @@
 
     /* ===== Animation du train + auto spotlight ===== */
     // Configuration du mouvement
-    let speed = 1.5;          // Vitesse de croisière
-    let currentSpeed = 1.5;   // Vitesse actuelle (pour accélération/freinage)
+    let speed = 0.8;          // Vitesse de croisière
+    let currentSpeed = 0.8;   // Vitesse actuelle (pour accélération/freinage)
     let pos = 0;
     let lastT = performance.now();
     
     // Gestion des arrêts
     let stationWait = 0;      // Temps d'attente restant (ms)
-    const STOP_DURATION = 800; // Durée d'arrêt à une station (ms)
+    const STOP_DURATION = 1000; // Durée d'arrêt à une station (ms)
     let lastStationIdx = -1;  // Pour ne pas s'arrêter 2 fois à la même
     
     const showRadius = 32;
