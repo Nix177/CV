@@ -303,9 +303,29 @@
     const sleeperStep = 46;
 
     function buildZigZagPath(preserve=true){
-      const {width:W, height:H} = svg.viewBox.baseVal;
+      // --- PARTIE RESPONSIVE ---
+      // 1. On garde une hauteur fixe (900) pour la cohérence, 
+      // mais on calcule la largeur virtuelle (W) selon le ratio de l'écran.
+      const H = 900; 
+      const aspect = window.innerWidth / window.innerHeight;
+      const W = H * aspect;
+      
+      // On met à jour la "caméra" du SVG pour qu'elle cadre exactement la fenêtre
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+      // 2. Configuration adaptative du tracé
       const topY = H*0.28, botY = H*0.72;
-      const left = 80, right = W-80, segs = 8;
+      
+      // Marges dynamiques : plus petites sur mobile pour gagner de la place
+      const margin = Math.max(40, Math.min(80, W * 0.05));
+      const left = margin, right = W - margin;
+      
+      // 3. Condenser les rails : moins de zig-zags sur les petits écrans
+      // < 600px (Mobile) -> 4 segments
+      // < 1200px (Tablette) -> 6 segments
+      // > 1200px (Desktop) -> 8 segments (comme avant)
+      const segs = W < 600 ? 4 : (W < 1200 ? 6 : 8);
+      // --- FIN RESPONSIVE ---
 
       const dx = (right-left)/segs;
       let d = `M ${left},${topY}`;
