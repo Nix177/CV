@@ -387,10 +387,10 @@
         // --- STATION IMAGE ---
         const icon = document.createElementNS('http://www.w3.org/2000/svg','image');
         icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets/station.png');
-        icon.setAttribute('width', 48);
-        icon.setAttribute('height', 48);
-        icon.setAttribute('x', -24);
-        icon.setAttribute('y', -24);
+        icon.setAttribute('width', 60);
+        icon.setAttribute('height', 60);
+        icon.setAttribute('x', -30);
+        icon.setAttribute('y', -30);
         icon.setAttribute('class', 'dot'); 
 
         const label = document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -495,7 +495,7 @@
     let lastT = performance.now();
     
     let stationWait = 0;
-    const STOP_DURATION = 800;
+    const STOP_DURATION = 1000;
     let lastStationIdx = -1;
     
     const showRadius = 32;
