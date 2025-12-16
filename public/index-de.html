@@ -7,23 +7,24 @@
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <!-- UPDATE: hreflang -->
   <link rel="alternate" hreflang="fr" href="/index.html">
   <link rel="alternate" hreflang="en" href="/index-en.html">
   <link rel="alternate" hreflang="de" href="/index-de.html">
   <link rel="alternate" hreflang="x-default" href="/index.html">
-  <meta name="theme-color" content="#0a1220" />
+  <meta name="theme-color" content="#1a120b" />
 
   <style>
     :root{
-      --bg:#0a1220;
-      --track:#23334a;
-      --station:#14b8a6;
-      --card-bg:#0d1524;
-      --card-border:#1a2d49;
-      --text:#eef3f8;
-      --muted:#9fb2c8;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      /* Palette Steampunk / Rétro */
+      --bg: #1a120b;           /* Marron très sombre */
+      --track: #5a3a2a;        /* Bronze oxydé */
+      --station: #ffb703;      /* Or/Laiton brillant */
+      --card-bg: #261a15;      /* Fond sombre chaud */
+      --card-border: #8c5e35;  /* Bordure cuivre */
+      --text: #e6dac3;         /* Couleur papier ancien */
+      --muted: #a3927d;        /* Beige grisé */
+      --shadow: 0 10px 30px rgba(0,0,0,.65);
+      
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
@@ -34,44 +35,61 @@
     html,body{ height:100% }
     body{
       margin:0;
-      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      /* Dégradé chaleureux type "lampe à huile" */
+      background: radial-gradient(circle at 50% 30%, #3e2723 0%, #0d0805 70%) fixed;
       color:var(--text);
-      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      /* Police avec empattements pour le côté rétro */
+      font-family: 'Georgia', 'Times New Roman', serif; 
       overflow:hidden;
     }
 
+    /* ===== Header : brand | boutons ===== */
     :root { --navH: 56px; }
     @media (max-width: 820px){ :root { --navH: 72px; } }
 
-    /* // UPDATE: Brand unter der globalen Nav, ohne #nt-global-nav zu beeinflussen */
     header:not(#nt-global-nav){
       position: fixed;
       left: 18px;
       right: 18px;
       top: calc(18px + var(--nt-nav-h, 64px));
-      z-index: 5; /* unter der globalen Nav (z-index:100 in style.css) */
+      z-index: 5;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
     }
 
-    /* // UPDATE: nur das alte lokale Nav ausblenden */
     header:not(#nt-global-nav) > nav.site-nav { display: none !important; }
-
+    
     .brand{
       display:flex; align-items:center; gap:.75rem;
       padding:.6rem .8rem; border-radius:14px;
-      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.08);
+      /* Fond translucide teinté sépia */
+      background:rgba(38, 26, 21, 0.85); backdrop-filter: blur(6px);
+      border:1px solid #8c5e35;
       box-shadow: var(--shadow);
       font-weight:800; letter-spacing:.5px;
     }
     .logo{
       width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#0a1220,#00060d);
-      border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      background:linear-gradient(135deg, #8c5e35, #3e2723);
+      border:1px solid #ffb703; color: #ffecb3; font-weight:800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
       flex:0 0 32px;
     }
+    
+    /* Boutons style Steampunk */
+    .btn, .panel-toggle-btn {
+        background: linear-gradient(180deg, #5d4037, #3e2723) !important;
+        border: 1px solid #8d6e63 !important;
+        color: #ffecb3 !important;
+        padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+        display:inline-flex; align-items:center; gap:.4rem;
+        cursor:pointer; text-decoration:none; appearance:none;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.4);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    .btn:hover, .panel-toggle-btn:hover { filter: brightness(1.1); }
+    .btn:active { transform: translateY(1px); }
 
+    /* ===== Layout ===== */
     main{
       height:100%;
       display:grid;
@@ -81,32 +99,40 @@
       transition: grid-template-columns .25s ease;
     }
 
+    /* ===== Scène rail ===== */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid #5a3a2a;
       box-shadow: var(--shadow);
       min-height: 480px;
     }
     svg{ width:100%; height:100%; display:block }
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
-    .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
+    .sleepers{ stroke: #3e2723; stroke-width:4; stroke-linecap:round; }
 
+    /* ===== Stations (Images) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
-    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
-    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
-    .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
+    /* L'image de la station */
+    .station .dot { 
+        filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.4)); 
+        transition: transform .2s ease, filter .2s ease;
+    }
+    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; font-family: sans-serif; text-shadow: 0 2px 4px black; }
+    .station:hover .dot{ 
+        filter: drop-shadow(0 0 10px rgba(255, 183, 3, 0.8)); 
+        transform: scale(1.2);
+    }
     .hit-rect{ fill:transparent; pointer-events:all; }
 
-    .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
-    .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
-    .train-nose{ fill:#d0dcef }
-    .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
+    /* ===== Train ===== */
+    .train{ filter: drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
 
+    /* ===== Carte centrée sobre ===== */
     .spotlight{
       position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.96);
       width:min(620px, 76vw); max-width:620px;
-      background: rgba(13,21,36,.96);
+      background: rgba(26, 18, 11, 0.96);
       border:1px solid var(--card-border);
       border-radius:16px; padding:16px 18px;
       box-shadow: var(--shadow);
@@ -115,9 +141,10 @@
       z-index:6;
     }
     .spotlight.visible{ opacity:1; transform: translate(-50%,-50%) scale(1); pointer-events:auto; }
-    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:20px }
-    .spotlight p{ margin:0; color:var(--muted) }
+    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:22px; color: #ffb703; }
+    .spotlight p{ margin:0; color:var(--text); font-size:17px; line-height: 1.5; }
 
+    /* ===== Panneau détails ===== */
     aside{
       position:relative;
       border-left:1px solid rgba(255,255,255,.07);
@@ -129,29 +156,26 @@
     .panel{
       position:sticky; top:90px; max-height: calc(100vh - 120px);
       display:flex; flex-direction:column; gap:10px; overflow:auto;
-      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent;
+      scrollbar-width: thin; scrollbar-color: #8c5e35 transparent;
       opacity:1; transition: opacity .2s ease;
     }
     body.panel-collapsed .panel{ pointer-events:none; opacity:0; }
 
-    .panel .card{ background:#0b1323; border:1px solid #152238; border-radius:14px; padding:12px; box-shadow: var(--shadow); }
-    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:15px }
-    .panel .card p{ margin:0; color:var(--muted); font-size:14px }
+    .panel .card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px; box-shadow: var(--shadow); }
+    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:16px; color:#ffb703; }
+    .panel .card p{ margin:0; color:var(--muted); font-size:14px; font-family: sans-serif; }
     .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
     .panel-toggle-btn{
       position:absolute; inset:auto auto 18px -12px;
-      display:flex; align-items:center; gap:.5rem;
-      padding:.5rem .7rem .5rem 1.1rem;
+      z-index:6; user-select:none;
       border-radius:12px 0 0 12px;
-      background:linear-gradient(135deg, rgba(20,184,166,.96), rgba(15,130,120,.96));
-      color:#052023; font-weight:800; letter-spacing:.3px;
-      border:1px solid rgba(255,255,255,.25); border-right:none;
-      box-shadow: var(--shadow);
-      cursor:pointer; z-index:6; user-select:none;
+      padding-left: 1.1rem;
     }
     .panel-toggle-btn .chev{ font-size:18px; line-height:1; }
-    /* // UPDATE: DE strings */
+    .panel-toggle-btn .txt{ font-size:13px; }
+    
+    /* DEUTSCHE ÜBERSETZUNG FÜR UI */
     body.panel-collapsed .panel-toggle-btn .txt::after{ content:" Alles anzeigen"; }
     body:not(.panel-collapsed) .panel-toggle-btn .txt::after{ content:" Einklappen"; }
 
@@ -168,15 +192,14 @@
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body class="panel-collapsed">
-  <header aria-label="Kopfbereich">
-    <!-- UPDATE: NAV LAYOUT ONLY -->
+  <header aria-label="Header">
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
         <li><a href="/index-de.html" aria-current="page">Startseite</a></li>
         <li><a href="/cv-de.html">Lebenslauf</a></li>
         <li><a href="/portfolio-de.html">Portfolio</a></li>
         <li><a href="/passions-de.html">Leidenschaften</a></li>
-        <li><a href="/ai-lab-de.html">KI-Lab</a></li>
+        <li><a href="/ai-lab.html">KI-Labor</a></li>
         <li><a href="/fun-facts-de.html">Irrtümer</a></li>
       </ul>
       <ul class="lang">
@@ -188,31 +211,35 @@
 
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
-      <div>Nicolas Tuor — <span style="color:var(--muted)">Bildung, Wissenschaft & Technik</span></div>
+      <div>Nicolas Tuor — <span style="color:var(--muted)">Bildung, Wissenschaft & Technologie - erstellt in Zusammenarbeit mit ChatGPT; work in progress</span></div>
     </div>
   </header>
 
   <main>
-    <section class="scene" aria-label="Hauptlinie — Stationen der Überzeugungen">
+    <section class="scene" aria-label="Main line — convictions stations">
       <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img">
-        <path id="track" class="track" d="" />
-        <g id="sleepers" class="sleepers"></g>
+        <defs>
+          <filter id="steam-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="headlight-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#ffb703; stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#ffb703; stop-opacity:0" />
+          </linearGradient>
+        </defs>
+
+        <path id="track" class="track" d="" style="stroke: var(--track); stroke-width: 6;" />
+        <g id="sleepers" class="sleepers" style="stroke: #3e2723;"></g>
         <g id="stations"></g>
-        <g id="train" class="train">
-          <g transform="translate(-22,-12)">
-            <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
-            <rect class="train-nose" x="30" y="2" rx="5" ry="5" width="12" height="20"/>
-            <circle class="headlight" cx="40" cy="12" r="3"/>
-            <rect x="5"  y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="16" y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="5"  y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-            <rect x="16" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-          </g>
+        
+        <g id="train">
+          <path d="M 10,0 L 180,-30 L 180,30 Z" fill="url(#headlight-grad)" style="mix-blend-mode: screen; filter: url(#steam-glow);" />
+          <image href="/assets/train.png" x="-30" y="-15" width="60" height="30" /> 
         </g>
       </svg>
 
-      <!-- Zentrale Karte -->
-      <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Ausgewählte Idee">
+      <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Selected idea">
         <h4 id="spotTitle"></h4>
         <p id="spotText"></p>
       </div>
@@ -226,7 +253,7 @@
         <div class="card">
           <h3>Überzeugungen & Leitlinien</h3>
           <div class="meta" style="color:var(--muted);font-size:12px">
-            Mit dem türkisen Button öffnen/schließen. Station anklicken für Details.
+            Nutzen Sie den Button zum Öffnen/Schließen. Klicken Sie auf eine Station für Details.
           </div>
         </div>
         <div class="list" id="detail-list"></div>
@@ -235,29 +262,29 @@
   </main>
 
   <script>
-    /* ===== Stationen (DE) ===== */
+    /* ===== Station Data (DE) ===== */
     const STATIONS = [
-    { title:"Kritisches Denken", short:"Analysieren, methodisch zweifeln.", detail:"Testbare Fragen formulieren, Quellen abgleichen, mit Belegen und klaren Kriterien argumentieren." },
-    { title:"Lebenslanges Lernen", short:"Selbstgesteuertes Lernen mit Werkzeugen.", detail:"Routinen, Ressourcen, Werkzeuge und Techniken, um schneller, besser und nachhaltig zu lernen." },
-    { title:"Freude am Lernen", short:"Neugier und Leidenschaft.", detail:"Ich begeistere mich für jede Art des Lernens und bin überzeugt, dass man alles interessant machen kann." },
-    { title:"Projektbasierte Didaktik", short:"Reale Probleme, greifbare Ergebnisse.", detail:"Vom Bedarf bis zur Ergebnispräsentation: fundierte, kollaborative Projekte mit Sinn." },
-    { title:"Staunen", short:"Die Welt verstehen, um sie zu schätzen.", detail:"Je besser wir Funktionsweise und Existenz der Dinge begreifen, desto magischer wirkt die Welt." },
-    { title:"Vermittlung & Popularisierung", short:"Wissenschaft & Kultur vermitteln.", detail:"Lernen hat für mich nur Sinn, wenn ich es teilen kann – siehe Lernleidenschaft und Staunen." },
-    { title:"Communities of Practice", short:"Lernen unter Peers.", detail:"Gemeinsame Räume und gesunde soziale Netzwerke, um gemeinsam zu lernen und Lernen zu unterstützen." },
-    { title:"Lernen durch Fehler", short:"Versuch → Feedback → Verbesserung.", detail:"Fehler = Informationssignal; ohne Irrtümer kein Fortschritt. Bewertungssysteme sind verbesserbar (z. B. Portfolios)." },
-    { title:"Open Science / Open Education", short:"Offenheit, soziokonstruktivistisch.", detail:"Wiederverwendbarkeit (Lizenzen, Repos, Vorlagen) für faire Verbreitung und Ausstattung." },
-    { title:"Ermöglichungsräume", short:"Handlungsfähigkeit ermöglichen.", detail:"Werkzeuge, Rahmen und Unterstützung so justieren, dass Fähigkeiten und Initiative wachsen – statt zu verordnen." },
-    { title:"Technologieunterricht", short:"Bauen, programmieren, dokumentieren, analysieren.", detail:"Technologien breit und nachhaltig lernen. Werkzeuge und ihre Funktionsweise besser verstehen." },
-    { title:"Wissenschaftliche Methodik", short:"Hypothesen, Protokolle, Messungen.", detail:"Lesen, Recherche und Schreiben nach wissenschaftlichen Standards." },
-    { title:"Popularisierung für alle", short:"Nützliche Weiterbildungen für Erwachsene.", detail:"Modulare, einsatzbereite Angebote ohne unnötigen Jargon. Wissens- und Forschungssilos aufbrechen." },
-    { title:"Extended Mind", short:"Werkzeuge für die Kognition.", detail:"Artefakte bewerten und integrieren, die Gedächtnis, Aufmerksamkeit und Urteilsvermögen erweitern." },
-    { title:"Bewertung neu denken", short:"Bewerten, um zu lernen.", detail:"Authentische Nachweise, klare Kriterien, umsetzbares Feedback – ohne Lernende zu entmutigen." },
-    { title:"YouTube & nützliche Ressourcen", short:"Hochwertige populäre Formate.", detail:"Auswahl und Aufbereitung für Lehrkräfte – weniger Rauschen, mehr Nutzen." },
-    { title:"Niemand ist überall Experte", short:"Expertisen verbinden.", detail:"Brücken schlagen und das Wesentliche nach Gebrauchswert kuratieren." },
-    { title:"Wissenschaftsberatung", short:"Forschung und Entscheidungen verbinden.", detail:"Methodisches Lesen, Evidenzkriterien, umsetzbare Empfehlungen – ohne Eigennutz." }
-  ];
+      { title:"Kritisches Denken", short:"Analysieren, methodisch zweifeln.", detail:"Testbare Fragen formulieren, Quellen abgleichen, mit Beweisen und Kriterien argumentieren." },
+      { title:"Lebenslanges Lernen", short:"Werkzeuggestütztes Autodidaktentum.", detail:"Routinen, Ressourcen, Werkzeuge und Techniken, um schnell, besser und nachhaltig zu lernen." },
+      { title:"Lust am Lernen", short:"Neugier und Leidenschaft.", detail:"Ich begeistere mich für alle Arten des Lernens und bin überzeugt, dass man alles interessant gestalten kann." },
+      { title:"Projektbasierte Pädagogik", short:"Reale Probleme, konkrete Ergebnisse.", detail:"Von der Bedarfsanalyse bis zur Übergabe, verankerte und kollaborative Projekte, die Sinn ergeben." },
+      { title:"Staunen", short:"Die Welt besser verstehen, um sie zu schätzen.", detail:"Je mehr man über die Funktionsweise und Existenz der Dinge weiß, desto magischer wird die Welt." },
+      { title:"Vermittlung & Popularisierung", short:"Wissenschaft & Kultur weitergeben.", detail:"Etwas zu lernen macht für mich nur Sinn, wenn ich es teilen kann (siehe Leidenschaft für Lernen und Staunen)." },
+      { title:"Praxisgemeinschaften", short:"Lernen unter Gleichgesinnten.", detail:"Räume für Austausch, wirklich soziale, gesunde Netzwerke zum gemeinsamen Lernen und zur Unterstützung." },
+      { title:"Lernen durch Fehler", short:"Versuch→Feedback→Verbesserung.", detail:"Fehler = Informationssignal; wenn wir uns nie irren, verbessern wir uns nicht. Bewertungssysteme sind verbesserungswürdig." },
+      { title:"Open Science / Open Education", short:"Öffnen, Soziokonstruktivismus.", detail:"Wiederverwendbarkeit (Lizenzen, Repositorien, Vorlagen), um gerecht zu verbreiten und auszurüsten." },
+      { title:"Befähigende Umgebungen", short:"Handlungsfähig machen.", detail:"Werkzeuge, Rahmenbedingungen und Unterstützung anpassen, um Fähigkeiten und Initiative zu entwickeln, statt aufzuzwingen." },
+      { title:"Technologieunterricht", short:"Bauen, coden, dokumentieren, analysieren.", detail:"Technologie im weiten und nachhaltigen Sinne lernen. Die Werkzeuge um uns herum und ihre Funktionsweise besser verstehen." },
+      { title:"Wissenschaftliche Methodik", short:"Hypothesen, Protokolle, Messungen.", detail:"Lesen, Überwachen und Schreiben nach wissenschaftlichen Standards." },
+      { title:"Popularisierung für alle", short:"Nützliche Bildung für Erwachsene aller Hintergründe.", detail:"Modulare Pfade, schlüsselfertig, ohne nutzlosen Jargon. Wissen und Forschung entgrenzen." },
+      { title:"Extended Mind", short:"Kognition mit Werkzeugen erweitern.", detail:"Artefakte bewerten und integrieren, die Gedächtnis, Aufmerksamkeit und Urteilsvermögen erweitern." },
+      { title:"Bewertung: Paradigmenwechsel", short:"Bewerten um zu lernen.", detail:"Authentische Beweise, explizite Kriterien, nutzbares Feedback, nicht vom Lernen abschrecken." },
+      { title:"YouTube & nützliche Ressourcen", short:"Hochwertige Laienformate.", detail:"Auswahl und Skripting für Lehrer — weniger Lärm, mehr Wert." },
+      { title:"Man kann nicht in allem Experte sein", short:"Expertisen verbinden.", detail:"Brücken bauen und das Wesentliche nach Gebrauchswert kuratieren." },
+      { title:"Wissenschaftliche Beratung", short:"Forschung und Entscheidung verbinden.", detail:"Methodisches Lesen, Beweiskriterien, operative Empfehlungen ohne Gier." }
+    ];
 
-    /* ===== DOM-Referenzen ===== */
+    /* ===== DOM Refs ===== */
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
@@ -271,15 +298,23 @@
     const spotTitle = document.getElementById('spotTitle');
     const spotText  = document.getElementById('spotText');
 
-    /* ===== Geometrie & Linie ===== */
+    /* ===== Geometry & Track ===== */
     let totalLen = 0;
     let stationPositions = [];
     const sleeperStep = 46;
 
     function buildZigZagPath(preserve=true){
-      const {width:W, height:H} = svg.viewBox.baseVal;
+      const H = 900; 
+      const aspect = window.innerWidth / window.innerHeight;
+      const W = H * aspect;
+      
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
       const topY = H*0.28, botY = H*0.72;
-      const left = 80, right = W-80, segs = 8;
+      const margin = Math.max(40, Math.min(80, W * 0.05));
+      const left = margin, right = W - margin;
+      
+      const segs = W < 600 ? 4 : (W < 1200 ? 6 : 8);
 
       const dx = (right-left)/segs;
       let d = `M ${left},${topY}`;
@@ -299,7 +334,7 @@
       d += ` L ${left},${topY}`;
 
       let ratio = 0;
-      if(totalLen>0) ratio = pos / totalLen;
+      if(preserve && totalLen>0) ratio = pos / totalLen;
 
       track.setAttribute('d', d);
       renderSleepers();
@@ -344,20 +379,28 @@
 
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
-        hitRect.setAttribute('x', -100);
-        hitRect.setAttribute('y', -50);
-        hitRect.setAttribute('width', 200);
-        hitRect.setAttribute('height', 80);
-        hitRect.setAttribute('rx', 14);
+        hitRect.setAttribute('x', -30);
+        hitRect.setAttribute('y', -30);
+        hitRect.setAttribute('width', 60);
+        hitRect.setAttribute('height', 60);
 
-        const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
+        // --- STATION IMAGE ---
+        const icon = document.createElementNS('http://www.w3.org/2000/svg','image');
+        icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets/station.png');
+        icon.setAttribute('width', 48);
+        icon.setAttribute('height', 48);
+        icon.setAttribute('x', -24);
+        icon.setAttribute('y', -24);
+        icon.setAttribute('class', 'dot'); 
 
         const label = document.createElementNS('http://www.w3.org/2000/svg','text');
-        label.setAttribute('y', -16);
+        label.setAttribute('y', -24);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); 
+        g.appendChild(icon); 
+        g.appendChild(label);
+        
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -402,6 +445,7 @@
       setTimeout(()=>{ if(hoverLockIdx===null) hideSpotlight(); }, lingerHover);
     }
 
+    /* ===== Panel ===== */
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -435,7 +479,7 @@
       dot.animate(
         [
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
-          { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
+          { filter:'drop-shadow(0 0 15px rgba(255,183,3,0.9))' },
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }
         ],
         { duration:500, easing:'ease-out' }
@@ -444,37 +488,68 @@
 
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-    let pos = 0, speed = 50, lastT = performance.now();
+    /* ===== Train Animation & Physics ===== */
+    let speed = 0.5;
+    let currentSpeed = 0.5;
+    let pos = 0;
+    let lastT = performance.now();
+    
+    let stationWait = 0;
+    const STOP_DURATION = 800;
+    let lastStationIdx = -1;
+    
     const showRadius = 32;
     let lastShownIdx = -1;
     let cooldownUntil = 0;
 
-    function tick(now){
-      const dt = Math.min(40, now - lastT) / 1000; lastT = now;
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const effectiveSpeed = mq.matches ? 0 : speed;
-      pos = (pos + effectiveSpeed * dt) % totalLen;
+    function tick(t) {
+      const dt = Math.min(40, t - lastT);
+      lastT = t;
+      const now = performance.now();
+
+      if (stationWait > 0) {
+        stationWait -= dt;
+        currentSpeed = 0;
+        requestAnimationFrame(tick);
+        return;
+      }
+
+      if (currentSpeed < speed) currentSpeed += 0.05;
+
+      pos += currentSpeed;
+      if (pos > totalLen) {
+        pos -= totalLen;
+        lastStationIdx = -1;
+      }
 
       const p = track.getPointAtLength(pos);
-      const p2 = track.getPointAtLength((pos + 1) % totalLen);
-      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
+      const p2 = track.getPointAtLength((pos + 2) % totalLen); 
+      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180 / Math.PI;
+
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
 
-      if(now >= cooldownUntil){
-        for(const s of stationPositions){
-          const delta = Math.abs(((pos - s.len + totalLen) % totalLen));
-          const near = Math.min(delta, totalLen - delta);
-          if(near < showRadius && s.idx !== lastShownIdx && hoverLockIdx===null){
-            lastShownIdx = s.idx;
-            showSpotlight(s.idx,'auto');
-            cooldownUntil = now + 900;
-            break;
+      for(const s of stationPositions){
+        const dist = Math.abs(pos - s.len);
+        if(dist < 5 && s.idx !== lastStationIdx){
+          stationWait = STOP_DURATION;
+          lastStationIdx = s.idx;
+          currentSpeed = 0; 
+          
+          if(hoverLockIdx === null){
+             lastShownIdx = s.idx;
+             showSpotlight(s.idx, 'auto');
           }
+          break; 
+        }
+        if (s.len > pos && (s.len - pos) < 50 && s.idx !== lastStationIdx) {
+           currentSpeed = Math.max(0.5, currentSpeed * 0.95);
         }
       }
+
       requestAnimationFrame(tick);
     }
 
+    /* ===== Init ===== */
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
@@ -498,5 +573,6 @@
     }
     init();
   </script>
+  <script src="/assets/js/site.js" defer></script>
 </body>
 </html>
