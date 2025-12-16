@@ -7,23 +7,24 @@
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <!-- UPDATE: hreflang -->
   <link rel="alternate" hreflang="fr" href="/index.html">
   <link rel="alternate" hreflang="en" href="/index-en.html">
   <link rel="alternate" hreflang="de" href="/index-de.html">
   <link rel="alternate" hreflang="x-default" href="/index.html">
-  <meta name="theme-color" content="#0a1220" />
+  <meta name="theme-color" content="#1a120b" />
 
   <style>
     :root{
-      --bg:#0a1220;
-      --track:#23334a;
-      --station:#14b8a6;
-      --card-bg:#0d1524;
-      --card-border:#1a2d49;
-      --text:#eef3f8;
-      --muted:#9fb2c8;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      /* Palette Steampunk / Rétro */
+      --bg: #1a120b;           /* Marron très sombre */
+      --track: #5a3a2a;        /* Bronze oxydé */
+      --station: #ffb703;      /* Or/Laiton brillant */
+      --card-bg: #261a15;      /* Fond sombre chaud */
+      --card-border: #8c5e35;  /* Bordure cuivre */
+      --text: #e6dac3;         /* Couleur papier ancien */
+      --muted: #a3927d;        /* Beige grisé */
+      --shadow: 0 10px 30px rgba(0,0,0,.65);
+      
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
@@ -34,44 +35,59 @@
     html,body{ height:100% }
     body{
       margin:0;
-      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      /* Dégradé chaleureux type "lampe à huile" */
+      background: radial-gradient(circle at 50% 30%, #3e2723 0%, #0d0805 70%) fixed;
       color:var(--text);
-      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      /* Police avec empattements pour le côté rétro */
+      font-family: 'Georgia', 'Times New Roman', serif; 
       overflow:hidden;
     }
 
-    /* ===== Header : brand | buttons ===== */
+    /* ===== Header : brand | boutons ===== */
     :root { --navH: 56px; }
     @media (max-width: 820px){ :root { --navH: 72px; } }
 
-    /* // UPDATE: brand below the global nav, without impacting #nt-global-nav */
     header:not(#nt-global-nav){
       position: fixed;
       left: 18px;
       right: 18px;
       top: calc(18px + var(--nt-nav-h, 64px));
-      z-index: 5; /* under the global nav (z-index:100 in style.css) */
+      z-index: 5;
       display:flex; align-items:center; justify-content:space-between; gap:1rem;
     }
 
-    /* // UPDATE: hide legacy local nav only (do not touch global nav) */
     header:not(#nt-global-nav) > nav.site-nav { display: none !important; }
-
+    
     .brand{
       display:flex; align-items:center; gap:.75rem;
       padding:.6rem .8rem; border-radius:14px;
-      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.08);
+      /* Fond translucide teinté sépia */
+      background:rgba(38, 26, 21, 0.85); backdrop-filter: blur(6px);
+      border:1px solid #8c5e35;
       box-shadow: var(--shadow);
       font-weight:800; letter-spacing:.5px;
     }
     .logo{
       width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#0a1220,#00060d);
-      border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      background:linear-gradient(135deg, #8c5e35, #3e2723);
+      border:1px solid #ffb703; color: #ffecb3; font-weight:800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
       flex:0 0 32px;
     }
+    
+    /* Boutons style Steampunk */
+    .btn, .panel-toggle-btn {
+        background: linear-gradient(180deg, #5d4037, #3e2723) !important;
+        border: 1px solid #8d6e63 !important;
+        color: #ffecb3 !important;
+        padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+        display:inline-flex; align-items:center; gap:.4rem;
+        cursor:pointer; text-decoration:none; appearance:none;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.4);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    .btn:hover, .panel-toggle-btn:hover { filter: brightness(1.1); }
+    .btn:active { transform: translateY(1px); }
 
     /* ===== Layout ===== */
     main{
@@ -83,36 +99,40 @@
       transition: grid-template-columns .25s ease;
     }
 
-    /* ===== Rail scene ===== */
+    /* ===== Scène rail ===== */
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid #5a3a2a;
       box-shadow: var(--shadow);
       min-height: 480px;
     }
     svg{ width:100%; height:100%; display:block }
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
-    .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
+    .sleepers{ stroke: #3e2723; stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations ===== */
+    /* ===== Stations (Images) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
-    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
-    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
-    .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
+    /* L'image de la station */
+    .station .dot { 
+        filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.4)); 
+        transition: transform .2s ease, filter .2s ease;
+    }
+    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; font-family: sans-serif; text-shadow: 0 2px 4px black; }
+    .station:hover .dot{ 
+        filter: drop-shadow(0 0 10px rgba(255, 183, 3, 0.8)); 
+        transform: scale(1.2);
+    }
     .hit-rect{ fill:transparent; pointer-events:all; }
 
     /* ===== Train ===== */
-    .train{ filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
-    .train-body{ fill:#e8eef6; stroke:#c9d5e6; stroke-width:2; }
-    .train-nose{ fill:#d0dcef }
-    .headlight{ fill:#ffd66b; opacity:.92; filter: drop-shadow(0 0 12px rgba(255,214,107,.8)) }
+    .train{ filter: drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
 
-    /* ===== Centered card ===== */
+    /* ===== Carte centrée sobre ===== */
     .spotlight{
       position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.96);
       width:min(620px, 76vw); max-width:620px;
-      background: rgba(13,21,36,.96);
+      background: rgba(26, 18, 11, 0.96);
       border:1px solid var(--card-border);
       border-radius:16px; padding:16px 18px;
       box-shadow: var(--shadow);
@@ -121,10 +141,10 @@
       z-index:6;
     }
     .spotlight.visible{ opacity:1; transform: translate(-50%,-50%) scale(1); pointer-events:auto; }
-    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:20px }
-    .spotlight p{ margin:0; color:var(--muted) }
+    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:22px; color: #ffb703; }
+    .spotlight p{ margin:0; color:var(--text); font-size:17px; line-height: 1.5; }
 
-    /* ===== Details panel ===== */
+    /* ===== Panneau détails ===== */
     aside{
       position:relative;
       border-left:1px solid rgba(255,255,255,.07);
@@ -136,29 +156,26 @@
     .panel{
       position:sticky; top:90px; max-height: calc(100vh - 120px);
       display:flex; flex-direction:column; gap:10px; overflow:auto;
-      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent;
+      scrollbar-width: thin; scrollbar-color: #8c5e35 transparent;
       opacity:1; transition: opacity .2s ease;
     }
     body.panel-collapsed .panel{ pointer-events:none; opacity:0; }
 
-    .panel .card{ background:#0b1323; border:1px solid #152238; border-radius:14px; padding:12px; box-shadow: var(--shadow); }
-    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:15px }
-    .panel .card p{ margin:0; color:var(--muted); font-size:14px }
+    .panel .card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px; box-shadow: var(--shadow); }
+    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:16px; color:#ffb703; }
+    .panel .card p{ margin:0; color:var(--muted); font-size:14px; font-family: sans-serif; }
     .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
     .panel-toggle-btn{
       position:absolute; inset:auto auto 18px -12px;
-      display:flex; align-items:center; gap:.5rem;
-      padding:.5rem .7rem .5rem 1.1rem;
+      z-index:6; user-select:none;
       border-radius:12px 0 0 12px;
-      background:linear-gradient(135deg, rgba(20,184,166,.96), rgba(15,130,120,.96));
-      color:#052023; font-weight:800; letter-spacing:.3px;
-      border:1px solid rgba(255,255,255,.25); border-right:none;
-      box-shadow: var(--shadow);
-      cursor:pointer; z-index:6; user-select:none;
+      padding-left: 1.1rem;
     }
     .panel-toggle-btn .chev{ font-size:18px; line-height:1; }
-    /* // UPDATE: EN strings */
+    .panel-toggle-btn .txt{ font-size:13px; }
+    
+    /* ENGLISH TRANSLATION FOR UI */
     body.panel-collapsed .panel-toggle-btn .txt::after{ content:" Show all"; }
     body:not(.panel-collapsed) .panel-toggle-btn .txt::after{ content:" Collapse"; }
 
@@ -176,15 +193,14 @@
 </head>
 <body class="panel-collapsed">
   <header aria-label="Header">
-    <!-- UPDATE: NAV LAYOUT ONLY (labels handled by nav.js as well) -->
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
         <li><a href="/index-en.html" aria-current="page">Home</a></li>
         <li><a href="/cv-en.html">CV</a></li>
         <li><a href="/portfolio-en.html">Portfolio</a></li>
         <li><a href="/passions-en.html">Passions</a></li>
-        <li><a href="/ai-lab-en.html">AI Lab</a></li>
-        <li><a href="/fun-facts-en.html">Common Misconceptions</a></li>
+        <li><a href="/ai-lab.html">AI Lab</a></li>
+        <li><a href="/fun-facts-en.html">Misconceptions</a></li>
       </ul>
       <ul class="lang">
         <li><a href="/index.html">FR</a></li>
@@ -195,30 +211,34 @@
 
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
-      <div>Nicolas Tuor — <span style="color:var(--muted)">education, science & technology</span></div>
+      <div>Nicolas Tuor — <span style="color:var(--muted)">education, science & technology - created in collaboration with ChatGPT; work in progress</span></div>
     </div>
   </header>
 
   <main>
-    <section class="scene" aria-label="Main line — guiding stations">
+    <section class="scene" aria-label="Main line — convictions stations">
       <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img">
-        <path id="track" class="track" d="" />
-        <g id="sleepers" class="sleepers"></g>
+        <defs>
+          <filter id="steam-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="headlight-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#ffb703; stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#ffb703; stop-opacity:0" />
+          </linearGradient>
+        </defs>
+
+        <path id="track" class="track" d="" style="stroke: var(--track); stroke-width: 6;" />
+        <g id="sleepers" class="sleepers" style="stroke: #3e2723;"></g>
         <g id="stations"></g>
-        <g id="train" class="train">
-          <g transform="translate(-22,-12)">
-            <rect class="train-body" x="0" y="0" rx="6" ry="6" width="44" height="24"/>
-            <rect class="train-nose" x="30" y="2" rx="5" ry="5" width="12" height="20"/>
-            <circle class="headlight" cx="40" cy="12" r="3"/>
-            <rect x="5"  y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="16" y="4"  width="8" height="8" fill="#6f87a9" rx="1"/>
-            <rect x="5"  y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-            <rect x="16" y="14" width="8" height="6" fill="#a7b8cf" rx="1"/>
-          </g>
+        
+        <g id="train">
+          <path d="M 10,0 L 180,-30 L 180,30 Z" fill="url(#headlight-grad)" style="mix-blend-mode: screen; filter: url(#steam-glow);" />
+          <image href="/assets/train.png" x="-30" y="-15" width="60" height="30" /> 
         </g>
       </svg>
 
-      <!-- Centered card -->
       <div id="spotlight" class="spotlight" role="dialog" aria-live="polite" aria-label="Selected idea">
         <h4 id="spotTitle"></h4>
         <p id="spotText"></p>
@@ -231,9 +251,9 @@
       </div>
       <div class="panel" id="panel">
         <div class="card">
-          <h3>Principles & guidelines</h3>
+          <h3>Convictions & Guidelines</h3>
           <div class="meta" style="color:var(--muted);font-size:12px">
-            Use the teal button to open/close. Click a station for details.
+            Use the button to open/close. Click a station for details.
           </div>
         </div>
         <div class="list" id="detail-list"></div>
@@ -242,29 +262,29 @@
   </main>
 
   <script>
-    /* ===== Station data (EN) ===== */
+    /* ===== Station Data (EN) ===== */
     const STATIONS = [
-    { title:"Critical thinking", short:"Analyze, doubt methodically.", detail:"Formulate testable questions, cross-check sources, argue with evidence and explicit criteria." },
-    { title:"Lifelong learning", short:"Self-directed learning with tools.", detail:"Routines, resources, tools and techniques to learn faster, better and sustainably." },
-    { title:"Love of learning", short:"Curiosity and passion.", detail:"I’m passionate about every kind of learning and convinced anything can be made interesting." },
-    { title:"Project-based pedagogy", short:"Real problems, concrete deliverables.", detail:"From needs analysis to delivery: anchored, collaborative projects that make sense." },
-    { title:"Wonder", short:"Understand the world to appreciate it.", detail:"The more we grasp how things work and exist, the more magical the world becomes." },
-    { title:"Mediation & outreach", short:"Share science and culture.", detail:"Learning matters to me only if I can share it—see passion for learning and wonder." },
-    { title:"Communities of practice", short:"Learning with peers.", detail:"Shared spaces and healthy social networks to learn together and support learning." },
-    { title:"Learning through error", short:"Try → feedback → improvement.", detail:"Error = information signal; no mistakes, no growth. Assessment systems can improve (e.g., portfolios)." },
-    { title:"Open science / open education", short:"Openness, socio-constructivism.", detail:"Reusability (licenses, repos, templates) to disseminate fairly and equip everyone." },
-    { title:"Enabling environments", short:"Enable people to act.", detail:"Tune tools, constraints and supports to build capabilities and initiative rather than impose." },
-    { title:"Technology classes", short:"Build, code, document, analyze.", detail:"Learn technology broadly and for the long term. Better understand everyday tools and how they work." },
-    { title:"Scientific method", short:"Hypotheses, protocols, measurements.", detail:"Reading, monitoring and writing to scientific standards." },
-    { title:"Popularization for all", short:"Useful training for adults from all walks.", detail:"Modular, turnkey paths without needless jargon. Break down silos between knowledge and research." },
-    { title:"Extended mind", short:"Tool the mind.", detail:"Assess and integrate artifacts that extend memory, attention and judgment." },
-    { title:"Assessment: a paradigm shift", short:"Assess to learn.", detail:"Authentic evidence, explicit criteria, actionable feedback—without discouraging learning." },
-    { title:"YouTube & useful resources", short:"Quality popular formats.", detail:"Selection and scripting for teachers—less noise, more value." },
-    { title:"We can’t be experts in everything", short:"Connect expertise.", detail:"Build bridges and curate the essentials by use-value." },
-    { title:"Scientific consulting", short:"Connect research and decision-making.", detail:"Methodical reading, evidence criteria, actionable recommendations without greed." }
-  ];
+      { title:"Critical Thinking", short:"Analyze, doubt methodically.", detail:"Formulate testable questions, cross-reference sources, argue with evidence and criteria." },
+      { title:"Lifelong Learning", short:"Tooled autodidacticism.", detail:"Routines, resources, tools, and techniques to learn fast and better, sustainably." },
+      { title:"Love of Learning", short:"Curiosity and passion.", detail:"I am passionate about all types of learning and convinced that everything can be made interesting." },
+      { title:"Project-Based Learning", short:"Real problems, concrete deliverables.", detail:"From needs definition to delivery, anchored and collaborative projects that make sense." },
+      { title:"Wonder", short:"Understanding the world better to appreciate it.", detail:"The more we know about how things work and exist, the more magical the world becomes." },
+      { title:"Mediation & Outreach", short:"Transmitting science & culture.", detail:"Learning something only makes sense to me if I can share it (see passion for learning and wonder)." },
+      { title:"Communities of Practice", short:"Learning among peers.", detail:"Spaces for sharing, truly social healthy networks to learn together and support learning." },
+      { title:"Learning by Error", short:"Trial→feedback→improvement.", detail:"Error = information signal; if we never make mistakes, we don't improve. Evaluation systems are perfectible." },
+      { title:"Open Science / Open Education", short:"Open up, socio-constructivism.", detail:"Reusability (licenses, repositories, templates) to disseminate and equip equitably." },
+      { title:"Enabling Environments", short:"Empowering to act.", detail:"Adjusting tools, constraints, and supports to develop capabilities and initiative instead of imposing." },
+      { title:"Technology Class", short:"Build, code, document, analyze.", detail:"Learning technology in a broad and sustainable sense. Better understanding the tools around us and how they work." },
+      { title:"Scientific Methodology", short:"Hypotheses, protocols, measurements.", detail:"Reading, monitoring, and writing to scientific standards." },
+      { title:"Popularize for All", short:"Useful training for adults of all backgrounds.", detail:"Modular paths, ready-to-use, without useless jargon. Breaking down silos of knowledge and research." },
+      { title:"Extended Mind", short:"Tooling cognition.", detail:"Evaluating and integrating artifacts that augment memory, attention, judgment." },
+      { title:"Assessment: Changing Paradigms", short:"Assess to learn.", detail:"Authentic evidence, explicit criteria, actionable feedback, not discouraging learning." },
+      { title:"YouTube & Useful Resources", short:"Quality profane formats.", detail:"Selection and scripting for teachers — less noise, more value." },
+      { title:"Cannot be Expert in Everything", short:"Connecting expertise.", detail:"Building bridges and curating the essential according to usage value." },
+      { title:"Scientific Consulting", short:"Connecting research and decision.", detail:"Methodical reading, criteria of proof, operative recommendations without greed." }
+    ];
 
-    /* ===== DOM refs ===== */
+    /* ===== DOM Refs ===== */
     const svg = document.getElementById('metro');
     const track = document.getElementById('track');
     const sleepers = document.getElementById('sleepers');
@@ -278,15 +298,23 @@
     const spotTitle = document.getElementById('spotTitle');
     const spotText  = document.getElementById('spotText');
 
-    /* ===== Geometry & line ===== */
+    /* ===== Geometry & Track ===== */
     let totalLen = 0;
     let stationPositions = [];
     const sleeperStep = 46;
 
     function buildZigZagPath(preserve=true){
-      const {width:W, height:H} = svg.viewBox.baseVal;
+      const H = 900; 
+      const aspect = window.innerWidth / window.innerHeight;
+      const W = H * aspect;
+      
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
       const topY = H*0.28, botY = H*0.72;
-      const left = 80, right = W-80, segs = 8;
+      const margin = Math.max(40, Math.min(80, W * 0.05));
+      const left = margin, right = W - margin;
+      
+      const segs = W < 600 ? 4 : (W < 1200 ? 6 : 8);
 
       const dx = (right-left)/segs;
       let d = `M ${left},${topY}`;
@@ -306,7 +334,7 @@
       d += ` L ${left},${topY}`;
 
       let ratio = 0;
-      if(totalLen>0) ratio = pos / totalLen;
+      if(preserve && totalLen>0) ratio = pos / totalLen;
 
       track.setAttribute('d', d);
       renderSleepers();
@@ -351,20 +379,28 @@
 
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
-        hitRect.setAttribute('x', -100);
-        hitRect.setAttribute('y', -50);
-        hitRect.setAttribute('width', 200);
-        hitRect.setAttribute('height', 80);
-        hitRect.setAttribute('rx', 14);
+        hitRect.setAttribute('x', -30);
+        hitRect.setAttribute('y', -30);
+        hitRect.setAttribute('width', 60);
+        hitRect.setAttribute('height', 60);
 
-        const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
+        // --- STATION IMAGE ---
+        const icon = document.createElementNS('http://www.w3.org/2000/svg','image');
+        icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets/station.png');
+        icon.setAttribute('width', 60);
+        icon.setAttribute('height', 60);
+        icon.setAttribute('x', -30);
+        icon.setAttribute('y', -30);
+        icon.setAttribute('class', 'dot'); 
 
         const label = document.createElementNS('http://www.w3.org/2000/svg','text');
-        label.setAttribute('y', -16);
+        label.setAttribute('y', -24);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); 
+        g.appendChild(icon); 
+        g.appendChild(label);
+        
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -409,7 +445,7 @@
       setTimeout(()=>{ if(hoverLockIdx===null) hideSpotlight(); }, lingerHover);
     }
 
-    /* ===== Detail panel ===== */
+    /* ===== Panel ===== */
     function renderDetailList(){
       detailList.innerHTML = '';
       STATIONS.forEach((st, i) => {
@@ -443,7 +479,7 @@
       dot.animate(
         [
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
-          { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
+          { filter:'drop-shadow(0 0 15px rgba(255,183,3,0.9))' },
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }
         ],
         { duration:500, easing:'ease-out' }
@@ -452,38 +488,68 @@
 
     function esc(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-    /* ===== Train animation ===== */
-    let pos = 0, speed = 50, lastT = performance.now();
+    /* ===== Train Animation & Physics ===== */
+    let speed = 0.5;
+    let currentSpeed = 0.5;
+    let pos = 0;
+    let lastT = performance.now();
+    
+    let stationWait = 0;
+    const STOP_DURATION = 1000;
+    let lastStationIdx = -1;
+    
     const showRadius = 32;
     let lastShownIdx = -1;
     let cooldownUntil = 0;
 
-    function tick(now){
-      const dt = Math.min(40, now - lastT) / 1000; lastT = now;
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const effectiveSpeed = mq.matches ? 0 : speed;
-      pos = (pos + effectiveSpeed * dt) % totalLen;
+    function tick(t) {
+      const dt = Math.min(40, t - lastT);
+      lastT = t;
+      const now = performance.now();
+
+      if (stationWait > 0) {
+        stationWait -= dt;
+        currentSpeed = 0;
+        requestAnimationFrame(tick);
+        return;
+      }
+
+      if (currentSpeed < speed) currentSpeed += 0.05;
+
+      pos += currentSpeed;
+      if (pos > totalLen) {
+        pos -= totalLen;
+        lastStationIdx = -1;
+      }
 
       const p = track.getPointAtLength(pos);
-      const p2 = track.getPointAtLength((pos + 1) % totalLen);
-      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180/Math.PI;
+      const p2 = track.getPointAtLength((pos + 2) % totalLen); 
+      const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180 / Math.PI;
+
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
 
-      if(now >= cooldownUntil){
-        for(const s of stationPositions){
-          const delta = Math.abs(((pos - s.len + totalLen) % totalLen));
-          const near = Math.min(delta, totalLen - delta);
-          if(near < showRadius && s.idx !== lastShownIdx && hoverLockIdx===null){
-            lastShownIdx = s.idx;
-            showSpotlight(s.idx,'auto');
-            cooldownUntil = now + 900;
-            break;
+      for(const s of stationPositions){
+        const dist = Math.abs(pos - s.len);
+        if(dist < 5 && s.idx !== lastStationIdx){
+          stationWait = STOP_DURATION;
+          lastStationIdx = s.idx;
+          currentSpeed = 0; 
+          
+          if(hoverLockIdx === null){
+             lastShownIdx = s.idx;
+             showSpotlight(s.idx, 'auto');
           }
+          break; 
+        }
+        if (s.len > pos && (s.len - pos) < 50 && s.idx !== lastStationIdx) {
+           currentSpeed = Math.max(0.5, currentSpeed * 0.95);
         }
       }
+
       requestAnimationFrame(tick);
     }
 
+    /* ===== Init ===== */
     function init(){
       buildZigZagPath(false);
       totalLen = track.getTotalLength();
@@ -507,5 +573,6 @@
     }
     init();
   </script>
+  <script src="/assets/js/site.js" defer></script>
 </body>
 </html>
