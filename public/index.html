@@ -11,18 +11,20 @@
   <link rel="alternate" hreflang="en" href="/index-en.html">
   <link rel="alternate" hreflang="de" href="/index-de.html">
   <link rel="alternate" hreflang="x-default" href="/index.html">
-  <meta name="theme-color" content="#0a1220" />
+  <meta name="theme-color" content="#1a120b" />
 
   <style>
     :root{
-      --bg:#0a1220;
-      --track:#23334a;
-      --station:#14b8a6;
-      --card-bg:#0d1524;
-      --card-border:#1a2d49;
-      --text:#eef3f8;
-      --muted:#9fb2c8;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      /* Palette Steampunk / Rétro */
+      --bg: #1a120b;           /* Marron très sombre */
+      --track: #5a3a2a;        /* Bronze oxydé */
+      --station: #ffb703;      /* Or/Laiton brillant */
+      --card-bg: #261a15;      /* Fond sombre chaud */
+      --card-border: #8c5e35;  /* Bordure cuivre */
+      --text: #e6dac3;         /* Couleur papier ancien */
+      --muted: #a3927d;        /* Beige grisé */
+      --shadow: 0 10px 30px rgba(0,0,0,.65);
+      
       --asideW: clamp(300px, 28vw, 420px);
       --asideCollapsed: 64px;
       --asideCurrent: var(--asideW);
@@ -33,9 +35,11 @@
     html,body{ height:100% }
     body{
       margin:0;
-      background: radial-gradient(1200px 700px at 20% 0%, #0b1930 0%, var(--bg) 55%) fixed;
+      /* Dégradé chaleureux type "lampe à huile" */
+      background: radial-gradient(circle at 50% 30%, #3e2723 0%, #0d0805 70%) fixed;
       color:var(--text);
-      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      /* Police avec empattements pour le côté rétro */
+      font-family: 'Georgia', 'Times New Roman', serif; 
       overflow:hidden;
     }
 
@@ -53,36 +57,37 @@
     }
 
     header:not(#nt-global-nav) > nav.site-nav { display: none !important; }
+    
     .brand{
       display:flex; align-items:center; gap:.75rem;
       padding:.6rem .8rem; border-radius:14px;
-      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.08);
+      /* Fond translucide teinté sépia */
+      background:rgba(38, 26, 21, 0.85); backdrop-filter: blur(6px);
+      border:1px solid #8c5e35;
       box-shadow: var(--shadow);
       font-weight:800; letter-spacing:.5px;
     }
     .logo{
       width:32px; height:32px; border-radius:9px; display:grid; place-items:center;
-      background:linear-gradient(135deg,#0a1220,#00060d);
-      border:1px solid rgba(255,255,255,.08); color:#fff; font-weight:800;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      background:linear-gradient(135deg, #8c5e35, #3e2723);
+      border:1px solid #ffb703; color: #ffecb3; font-weight:800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
       flex:0 0 32px;
     }
-    nav.top-actions{
-      display:flex; gap:.5rem; flex-wrap:wrap;
-      background:rgba(10,18,32,.75); backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px; padding:.45rem;
-      box-shadow: var(--shadow);
+    
+    /* Boutons style Steampunk */
+    .btn, .panel-toggle-btn {
+        background: linear-gradient(180deg, #5d4037, #3e2723) !important;
+        border: 1px solid #8d6e63 !important;
+        color: #ffecb3 !important;
+        padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
+        display:inline-flex; align-items:center; gap:.4rem;
+        cursor:pointer; text-decoration:none; appearance:none;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.4);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
-    .btn{
-      appearance:none; border:1px solid rgba(255,255,255,.08);
-      background:#0c1728; color:var(--text); text-decoration:none;
-      padding:.45rem .7rem; border-radius:10px; font-weight:600; font-size:14px;
-      display:inline-flex; align-items:center; gap:.4rem;
-    }
-    .btn:hover{ background:#0e1b2f }
-    .btn:active{ transform: translateY(1px) }
+    .btn:hover, .panel-toggle-btn:hover { filter: brightness(1.1); }
+    .btn:active { transform: translateY(1px); }
 
     /* ===== Layout ===== */
     main{
@@ -98,26 +103,36 @@
     .scene{
       position:relative; border-radius:18px; overflow:hidden;
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid #5a3a2a;
       box-shadow: var(--shadow);
       min-height: 480px;
     }
     svg{ width:100%; height:100%; display:block }
     .track{ stroke:var(--track); stroke-width:8; fill:none; }
-    .sleepers{ stroke:rgba(255,255,255,.05); stroke-width:4; stroke-linecap:round; }
+    .sleepers{ stroke: #3e2723; stroke-width:4; stroke-linecap:round; }
 
-    /* ===== Stations ===== */
+    /* ===== Stations (Images) ===== */
     .station{ cursor:pointer; transform-box: fill-box; transform-origin:center; }
-    .station .dot{ fill:var(--station); filter: drop-shadow(0 0 8px rgba(20,184,166,.45)); transition: filter .12s ease; }
-    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; }
-    .station:hover .dot{ filter: drop-shadow(0 0 12px rgba(20,184,166,.75)) brightness(1.1); }
+    /* L'image de la station */
+    .station .dot { 
+        filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.4)); 
+        transition: transform .2s ease, filter .2s ease;
+    }
+    .station text{ fill:var(--muted); font-size:12px; text-anchor:middle; pointer-events:none; font-family: sans-serif; text-shadow: 0 2px 4px black; }
+    .station:hover .dot{ 
+        filter: drop-shadow(0 0 10px rgba(255, 183, 3, 0.8)); 
+        transform: scale(1.2);
+    }
     .hit-rect{ fill:transparent; pointer-events:all; }
+
+    /* ===== Train ===== */
+    .train{ filter: drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
 
     /* ===== Carte centrée sobre ===== */
     .spotlight{
       position:absolute; left:50%; top:50%; transform: translate(-50%,-50%) scale(.96);
       width:min(620px, 76vw); max-width:620px;
-      background: rgba(13,21,36,.96);
+      background: rgba(26, 18, 11, 0.96);
       border:1px solid var(--card-border);
       border-radius:16px; padding:16px 18px;
       box-shadow: var(--shadow);
@@ -126,8 +141,8 @@
       z-index:6;
     }
     .spotlight.visible{ opacity:1; transform: translate(-50%,-50%) scale(1); pointer-events:auto; }
-    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:20px }
-    .spotlight p{ margin:0; color:var(--muted) }
+    .spotlight h4{ margin:.1rem 0 .2rem 0; font-size:22px; color: #ffb703; }
+    .spotlight p{ margin:0; color:var(--text); font-size:17px; line-height: 1.5; }
 
     /* ===== Panneau détails ===== */
     aside{
@@ -141,26 +156,21 @@
     .panel{
       position:sticky; top:90px; max-height: calc(100vh - 120px);
       display:flex; flex-direction:column; gap:10px; overflow:auto;
-      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent;
+      scrollbar-width: thin; scrollbar-color: #8c5e35 transparent;
       opacity:1; transition: opacity .2s ease;
     }
     body.panel-collapsed .panel{ pointer-events:none; opacity:0; }
 
-    .panel .card{ background:#0b1323; border:1px solid #152238; border-radius:14px; padding:12px; box-shadow: var(--shadow); }
-    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:15px }
-    .panel .card p{ margin:0; color:var(--muted); font-size:14px }
+    .panel .card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px; box-shadow: var(--shadow); }
+    .panel .card h4{ margin:.1rem 0 .35rem 0; font-size:16px; color:#ffb703; }
+    .panel .card p{ margin:0; color:var(--muted); font-size:14px; font-family: sans-serif; }
     .panel .list{ display:grid; grid-template-columns: 1fr; gap:10px; }
 
     .panel-toggle-btn{
       position:absolute; inset:auto auto 18px -12px;
-      display:flex; align-items:center; gap:.5rem;
-      padding:.5rem .7rem .5rem 1.1rem;
+      z-index:6; user-select:none;
       border-radius:12px 0 0 12px;
-      background:linear-gradient(135deg, rgba(20,184,166,.96), rgba(15,130,120,.96));
-      color:#052023; font-weight:800; letter-spacing:.3px;
-      border:1px solid rgba(255,255,255,.25); border-right:none;
-      box-shadow: var(--shadow);
-      cursor:pointer; z-index:6; user-select:none;
+      padding-left: 1.1rem;
     }
     .panel-toggle-btn .chev{ font-size:18px; line-height:1; }
     .panel-toggle-btn .txt{ font-size:13px; }
@@ -207,23 +217,24 @@
     <section class="scene" aria-label="Ligne principale — stations de convictions">
       <svg id="metro" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img">
         <defs>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <filter id="steam-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
             <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
           <linearGradient id="headlight-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#14b8a6; stop-opacity:0.8" />
-            <stop offset="100%" style="stop-color:#14b8a6; stop-opacity:0" />
+            <stop offset="0%" style="stop-color:#ffb703; stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#ffb703; stop-opacity:0" />
           </linearGradient>
         </defs>
 
-        <path id="track" class="track" d="" />
-        <g id="sleepers" class="sleepers"></g>
+        <path id="track" class="track" d="" style="stroke: var(--track); stroke-width: 6;" />
+        <g id="sleepers" class="sleepers" style="stroke: #3e2723;"></g>
         <g id="stations"></g>
         
         <g id="train">
-          <path d="M 5,0 L 60,-15 L 60,15 Z" fill="url(#headlight-grad)" style="mix-blend-mode: screen;" />
-          <rect x="-10" y="-4" width="16" height="8" rx="2" fill="#eef3f8" stroke="#14b8a6" stroke-width="1" />
+          <path d="M 10,0 L 180,-30 L 180,30 Z" fill="url(#headlight-grad)" style="mix-blend-mode: screen; filter: url(#steam-glow);" />
+          
+          <image href="/assets/train.png" x="-30" y="-15" width="60" height="30" transform="rotate(90)" /> 
         </g>
       </svg>
 
@@ -241,7 +252,7 @@
         <div class="card">
           <h3>Convictions & lignes directrices</h3>
           <div class="meta" style="color:var(--muted);font-size:12px">
-            Utilise le bouton teal pour ouvrir/fermer. Clique une station pour les détails.
+            Utilise le bouton pour ouvrir/fermer. Clique une station pour les détails.
           </div>
         </div>
         <div class="list" id="detail-list"></div>
@@ -359,20 +370,28 @@
 
         const hitRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
         hitRect.setAttribute('class','hit-rect');
-        hitRect.setAttribute('x', -100);
-        hitRect.setAttribute('y', -50);
-        hitRect.setAttribute('width', 200);
-        hitRect.setAttribute('height', 80);
-        hitRect.setAttribute('rx', 14);
+        hitRect.setAttribute('x', -30);
+        hitRect.setAttribute('y', -30);
+        hitRect.setAttribute('width', 60);
+        hitRect.setAttribute('height', 60);
 
-        const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        dot.setAttribute('class','dot'); dot.setAttribute('r', 6);
+        // --- IMAGE STATION ---
+        const icon = document.createElementNS('http://www.w3.org/2000/svg','image');
+        icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets/station.png');
+        icon.setAttribute('width', 32);
+        icon.setAttribute('height', 32);
+        icon.setAttribute('x', -16);
+        icon.setAttribute('y', -16);
+        icon.setAttribute('class', 'dot'); // Garder la classe pour les effets CSS
 
         const label = document.createElementNS('http://www.w3.org/2000/svg','text');
-        label.setAttribute('y', -16);
+        label.setAttribute('y', -24);
         label.textContent = STATIONS[i].title;
 
-        g.appendChild(hitRect); g.appendChild(dot); g.appendChild(label);
+        g.appendChild(hitRect); 
+        g.appendChild(icon); 
+        g.appendChild(label);
+        
         g.addEventListener('mouseenter', () => onHoverStation(i));
         g.addEventListener('mouseleave', () => onLeaveStation(i));
         g.addEventListener('click', () => openDetail(i));
@@ -447,12 +466,12 @@
     function focusStation(i){
       const node = stationLayer.querySelector(`.station[data-idx="${i}"]`);
       if(!node) return;
-      const dot = node.querySelector('.dot');
+      const dot = node.querySelector('.dot'); // cible l'image
       if(!dot) return;
       dot.animate(
         [
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' },
-          { filter:'drop-shadow(0 0 12px rgba(20,184,166,.9))' },
+          { filter:'drop-shadow(0 0 15px rgba(255,183,3,0.9))' }, // Lueur or
           { filter:'drop-shadow(0 0 0 rgba(0,0,0,0))' }
         ],
         { duration:500, easing:'ease-out' }
@@ -466,7 +485,7 @@
     let speed = 1.5;          // Vitesse de croisière
     let currentSpeed = 1.5;   // Vitesse actuelle (pour accélération/freinage)
     let pos = 0;
-    let lastT = performance.now(); // Correction: init avec perf.now
+    let lastT = performance.now();
     
     // Gestion des arrêts
     let stationWait = 0;      // Temps d'attente restant (ms)
@@ -508,12 +527,11 @@
       const p2 = track.getPointAtLength((pos + 2) % totalLen); 
       const angle = Math.atan2(p2.y - p.y, p2.x - p.x) * 180 / Math.PI;
 
-      // Appliquer au groupe train
+      // Appliquer au groupe train (position + rotation)
       train.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${angle})`);
 
       // --- LOGIQUE DES STATIONS ---
       // On cherche si on est proche d'une station pour s'arrêter
-      
       for(const s of stationPositions){
         // Distance simple sur la ligne
         const dist = Math.abs(pos - s.len);
