@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-08T06:43:07.750Z",
+  "generatedAt": "2026-01-09T06:42:50.068Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,158 @@
   },
   "items": [
     {
+      "title": "GDPO: Group reward-Decoupled Normalization Policy Optimization for Multi-reward RL Optimization",
+      "url": "https://arxiv.org/abs/2601.05242v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-08T18:59:24.000Z",
+      "score": 70,
+      "summary_en": "As language models become increasingly capable, users expect them to provide not only accurate responses but also behaviors aligned with diverse human preferences across a variety of scenarios. To achieve this, Reinforcement learning (RL) pipelines have begun incorporating multiple rewards, each capturing a distinct preference, to guide models toward these desired behaviors. However, recent work has defaulted to apply Group Relative Policy Optimization (GRPO) under multi-reward setting without examining its suitability. In this paper, we demonstrate that directly applying GRPO to normalize dis",
+      "summary_fr": "As language models become increasingly capable, users expect them to provide not only accurate responses but also behaviors aligned with diverse human preferences across a variety of scenarios. To achieve this, Reinforcement learning (RL) pipelines have begun incorporating multiple rewards, each capturing a distinct preference, to guide models toward these desired behaviors. However, recent work has defaulted to apply Group Relative Policy Optimization (GRPO) under multi-reward setting without examining its suitability. In this paper, we demonstrate that directly applying GRPO to normalize dis",
+      "resume_fr": "As language models become increasingly capable, users expect them to provide not only accurate responses but also behaviors aligned with diverse human preferences across a variety of scenarios. To achieve this, Reinforcement learning (RL) pipelines have begun incorporating multiple rewards, each capturing a distinct preference, to guide models toward these desired behaviors. However, recent work has defaulted to apply Group Relative Policy Optimization (GRPO) under multi-reward setting without examining its suitability. In this paper, we demonstrate that directly applying GRPO to normalize dis",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Stochastic Deep Learning: A Probabilistic Framework for Modeling Uncertainty in Structured Temporal Data",
+      "url": "https://arxiv.org/abs/2601.05227v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-08T18:53:59.000Z",
+      "score": 70,
+      "summary_en": "I propose a novel framework that integrates stochastic differential equations (SDEs) with deep generative models to improve uncertainty quantification in machine learning applications involving structured and temporal data. This approach, termed Stochastic Latent Differential Inference (SLDI), embeds an Itô SDE in the latent space of a variational autoencoder, allowing for flexible, continuous-time modeling of uncertainty while preserving a principled mathematical foundation. The drift and diffusion terms of the SDE are parameterized by neural networks, enabling data-driven inference and gener",
+      "summary_fr": "I propose a novel framework that integrates stochastic differential equations (SDEs) with deep generative models to improve uncertainty quantification in machine learning applications involving structured and temporal data. This approach, termed Stochastic Latent Differential Inference (SLDI), embeds an Itô SDE in the latent space of a variational autoencoder, allowing for flexible, continuous-time modeling of uncertainty while preserving a principled mathematical foundation. The drift and diffusion terms of the SDE are parameterized by neural networks, enabling data-driven inference and gener",
+      "resume_fr": "I propose a novel framework that integrates stochastic differential equations (SDEs) with deep generative models to improve uncertainty quantification in machine learning applications involving structured and temporal data. This approach, termed Stochastic Latent Differential Inference (SLDI), embeds an Itô SDE in the latent space of a variational autoencoder, allowing for flexible, continuous-time modeling of uncertainty while preserving a principled mathematical foundation. The drift and diffusion terms of the SDE are parameterized by neural networks, enabling data-driven inference and gener",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Observations and Remedies for Large Language Model Bias in Self-Consuming Performative Loop",
+      "url": "https://arxiv.org/abs/2601.05184v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-08T18:08:15.000Z",
+      "score": 50,
+      "summary_en": "The rapid advancement of large language models (LLMs) has led to growing interest in using synthetic data to train future models. However, this creates a self-consuming retraining loop, where models are trained on their own outputs and may cause performance drops and induce emerging biases. In real-world applications, previously deployed LLMs may influence the data they generate, leading to a dynamic system driven by user feedback. For example, if a model continues to underserve users from a group, less query data will be collected from this particular demographic of users. In this study, we i",
+      "summary_fr": "The rapid advancement of large language models (LLMs) has led to growing interest in using synthetic data to train future models. However, this creates a self-consuming retraining loop, where models are trained on their own outputs and may cause performance drops and induce emerging biases. In real-world applications, previously deployed LLMs may influence the data they generate, leading to a dynamic system driven by user feedback. For example, if a model continues to underserve users from a group, less query data will be collected from this particular demographic of users. In this study, we i",
+      "resume_fr": "The rapid advancement of large language models (LLMs) has led to growing interest in using synthetic data to train future models. However, this creates a self-consuming retraining loop, where models are trained on their own outputs and may cause performance drops and induce emerging biases. In real-world applications, previously deployed LLMs may influence the data they generate, leading to a dynamic system driven by user feedback. For example, if a model continues to underserve users from a group, less query data will be collected from this particular demographic of users. In this study, we i",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reverse-engineering NLI: A study of the meta-inferential properties of Natural Language Inference",
+      "url": "https://arxiv.org/abs/2601.05170v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-08T17:58:52.000Z",
+      "score": 50,
+      "summary_en": "Natural Language Inference (NLI) has been an important task for evaluating language models for Natural Language Understanding, but the logical properties of the task are poorly understood and often mischaracterized. Understanding the notion of inference captured by NLI is key to interpreting model performance on the task. In this paper we formulate three possible readings of the NLI label set and perform a comprehensive analysis of the meta-inferential properties they entail. Focusing on the SNLI dataset, we exploit (1) NLI items with shared premises and (2) items generated by LLMs to evaluate",
+      "summary_fr": "Natural Language Inference (NLI) has been an important task for evaluating language models for Natural Language Understanding, but the logical properties of the task are poorly understood and often mischaracterized. Understanding the notion of inference captured by NLI is key to interpreting model performance on the task. In this paper we formulate three possible readings of the NLI label set and perform a comprehensive analysis of the meta-inferential properties they entail. Focusing on the SNLI dataset, we exploit (1) NLI items with shared premises and (2) items generated by LLMs to evaluate",
+      "resume_fr": "Natural Language Inference (NLI) has been an important task for evaluating language models for Natural Language Understanding, but the logical properties of the task are poorly understood and often mischaracterized. Understanding the notion of inference captured by NLI is key to interpreting model performance on the task. In this paper we formulate three possible readings of the NLI label set and perform a comprehensive analysis of the meta-inferential properties they entail. Focusing on the SNLI dataset, we exploit (1) NLI items with shared premises and (2) items generated by LLMs to evaluate",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring Student Expectations and Confidence in Learning Analytics",
+      "url": "https://arxiv.org/abs/2601.05082v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-08T16:27:09.000Z",
+      "score": 50,
+      "summary_en": "Learning Analytics (LA) is nowadays ubiquitous in many educational systems, providing the ability to collect and analyze student data in order to understand and optimize learning and the environments in which it occurs. On the other hand, the collection of data requires to comply with the growing demand regarding privacy legislation. In this paper, we use the Student Expectation of Learning Analytics Questionnaire (SELAQ) to analyze the expectations and confidence of students from different faculties regarding the processing of their data for Learning Analytics purposes. This allows us to iden",
+      "summary_fr": "Learning Analytics (LA) is nowadays ubiquitous in many educational systems, providing the ability to collect and analyze student data in order to understand and optimize learning and the environments in which it occurs. On the other hand, the collection of data requires to comply with the growing demand regarding privacy legislation. In this paper, we use the Student Expectation of Learning Analytics Questionnaire (SELAQ) to analyze the expectations and confidence of students from different faculties regarding the processing of their data for Learning Analytics purposes. This allows us to iden",
+      "resume_fr": "Learning Analytics (LA) is nowadays ubiquitous in many educational systems, providing the ability to collect and analyze student data in order to understand and optimize learning and the environments in which it occurs. On the other hand, the collection of data requires to comply with the growing demand regarding privacy legislation. In this paper, we use the Student Expectation of Learning Analytics Questionnaire (SELAQ) to analyze the expectations and confidence of students from different faculties regarding the processing of their data for Learning Analytics purposes. This allows us to iden",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CurricuLLM: Designing Personalized and Workforce-Aligned Cybersecurity Curricula Using Fine-Tuned LLMs",
+      "url": "https://arxiv.org/abs/2601.04940v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-08T13:43:15.000Z",
+      "score": 50,
+      "summary_en": "The cybersecurity landscape is constantly evolving, driven by increased digitalization and new cybersecurity threats. Cybersecurity programs often fail to equip graduates with skills demanded by the workforce, particularly concerning recent developments in cybersecurity, as curriculum design is costly and labor-intensive. To address this misalignment, we present a novel Large Language Model (LLM)-based framework for automated design and analysis of cybersecurity curricula, called CurricuLLM. Our approach provides three key contributions: (1) automation of personalized curriculum design, (2) a ",
+      "summary_fr": "The cybersecurity landscape is constantly evolving, driven by increased digitalization and new cybersecurity threats. Cybersecurity programs often fail to equip graduates with skills demanded by the workforce, particularly concerning recent developments in cybersecurity, as curriculum design is costly and labor-intensive. To address this misalignment, we present a novel Large Language Model (LLM)-based framework for automated design and analysis of cybersecurity curricula, called CurricuLLM. Our approach provides three key contributions: (1) automation of personalized curriculum design, (2) a ",
+      "resume_fr": "The cybersecurity landscape is constantly evolving, driven by increased digitalization and new cybersecurity threats. Cybersecurity programs often fail to equip graduates with skills demanded by the workforce, particularly concerning recent developments in cybersecurity, as curriculum design is costly and labor-intensive. To address this misalignment, we present a novel Large Language Model (LLM)-based framework for automated design and analysis of cybersecurity curricula, called CurricuLLM. Our approach provides three key contributions: (1) automation of personalized curriculum design, (2) a ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "What Students Ask, How a Generative AI Assistant Responds: Exploring Higher Education Students' Dialogues on Learning Analytics Feedback",
+      "url": "https://arxiv.org/abs/2601.04919v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-08T13:17:44.000Z",
+      "score": 50,
+      "summary_en": "Learning analytics dashboards (LADs) aim to support students' regulation of learning by translating complex data into feedback. Yet students, especially those with lower self-regulated learning (SRL) competence, often struggle to engage with and interpret analytics feedback. Conversational generative artificial intelligence (GenAI) assistants have shown potential to scaffold this process through real-time, personalised, dialogue-based support. Further advancing this potential, we explored authentic dialogues between students and GenAI assistant integrated into LAD during a 10-week semester. Th",
+      "summary_fr": "Learning analytics dashboards (LADs) aim to support students' regulation of learning by translating complex data into feedback. Yet students, especially those with lower self-regulated learning (SRL) competence, often struggle to engage with and interpret analytics feedback. Conversational generative artificial intelligence (GenAI) assistants have shown potential to scaffold this process through real-time, personalised, dialogue-based support. Further advancing this potential, we explored authentic dialogues between students and GenAI assistant integrated into LAD during a 10-week semester. Th",
+      "resume_fr": "Learning analytics dashboards (LADs) aim to support students' regulation of learning by translating complex data into feedback. Yet students, especially those with lower self-regulated learning (SRL) competence, often struggle to engage with and interpret analytics feedback. Conversational generative artificial intelligence (GenAI) assistants have shown potential to scaffold this process through real-time, personalised, dialogue-based support. Further advancing this potential, we explored authentic dialogues between students and GenAI assistant integrated into LAD during a 10-week semester. Th",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Breaking Robustness Barriers in Cognitive Diagnosis: A One-Shot Neural Architecture Search Perspective",
+      "url": "https://arxiv.org/abs/2601.04918v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-08T13:17:40.000Z",
+      "score": 50,
+      "summary_en": "With the advancement of network technologies, intelligent tutoring systems (ITS) have emerged to deliver increasingly precise and tailored personalized learning services. Cognitive diagnosis (CD) has emerged as a core research task in ITS, aiming to infer learners' mastery of specific knowledge concepts by modeling the mapping between learning behavior data and knowledge states. However, existing research prioritizes model performance enhancement while neglecting the pervasive noise contamination in observed response data, significantly hindering practical deployment. Furthermore, current cogn",
+      "summary_fr": "With the advancement of network technologies, intelligent tutoring systems (ITS) have emerged to deliver increasingly precise and tailored personalized learning services. Cognitive diagnosis (CD) has emerged as a core research task in ITS, aiming to infer learners' mastery of specific knowledge concepts by modeling the mapping between learning behavior data and knowledge states. However, existing research prioritizes model performance enhancement while neglecting the pervasive noise contamination in observed response data, significantly hindering practical deployment. Furthermore, current cogn",
+      "resume_fr": "With the advancement of network technologies, intelligent tutoring systems (ITS) have emerged to deliver increasingly precise and tailored personalized learning services. Cognitive diagnosis (CD) has emerged as a core research task in ITS, aiming to infer learners' mastery of specific knowledge concepts by modeling the mapping between learning behavior data and knowledge states. However, existing research prioritizes model performance enhancement while neglecting the pervasive noise contamination in observed response data, significantly hindering practical deployment. Furthermore, current cogn",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Double training promotes retinotopic transfer of category learning",
       "url": "https://www.nature.com/articles/s41539-025-00396-1",
       "source": "npj Science of Learning (Nature)",
@@ -113,6 +265,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
       "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
+    },
+    {
+      "title": "Pilot Study on Student Public Opinion Regarding GAI",
+      "url": "https://arxiv.org/abs/2601.04336v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-07T19:16:50.000Z",
+      "score": 50,
+      "summary_en": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
+      "summary_fr": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
+      "resume_fr": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Robust Physics Discovery from Highly Corrupted Data: A PINN Framework Applied to the Nonlinear Schrödinger Equation",
@@ -1062,177 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Performative Policy Gradient: Optimality in Performative Reinforcement Learning",
-      "url": "https://arxiv.org/abs/2512.20576v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-12-23T18:20:06.000Z",
-      "score": 70,
-      "summary_en": "Post-deployment machine learning algorithms often influence the environments they act in, and thus shift the underlying dynamics that the standard reinforcement learning (RL) methods ignore. While designing optimal algorithms in this performative setting has recently been studied in supervised learning, the RL counterpart remains under-explored. In this paper, we prove the performative counterparts of the performance difference lemma and the policy gradient theorem in RL, and further introduce the Performative Policy Gradient algorithm (PePG). PePG is the first policy gradient algorithm design",
-      "summary_fr": "Post-deployment machine learning algorithms often influence the environments they act in, and thus shift the underlying dynamics that the standard reinforcement learning (RL) methods ignore. While designing optimal algorithms in this performative setting has recently been studied in supervised learning, the RL counterpart remains under-explored. In this paper, we prove the performative counterparts of the performance difference lemma and the policy gradient theorem in RL, and further introduce the Performative Policy Gradient algorithm (PePG). PePG is the first policy gradient algorithm design",
-      "resume_fr": "Post-deployment machine learning algorithms often influence the environments they act in, and thus shift the underlying dynamics that the standard reinforcement learning (RL) methods ignore. While designing optimal algorithms in this performative setting has recently been studied in supervised learning, the RL counterpart remains under-explored. In this paper, we prove the performative counterparts of the performance difference lemma and the policy gradient theorem in RL, and further introduce the Performative Policy Gradient algorithm (PePG). PePG is the first policy gradient algorithm design",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Stories That Teach: Eastern Wisdom for Human-AI Creative Partnerships",
-      "url": "https://arxiv.org/abs/2512.19999v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-12-23T02:47:02.000Z",
-      "score": 65,
-      "summary_en": "This workshop explores innovative human-AI collaboration methodologies in HCI visual storytelling education through our established \"gap-and-fill\" approach. Drawing on Eastern aesthetic philosophies of intentional emptiness, including Chinese negative-space traditions, Japanese \"ma\" concepts, and contemporary design minimalism, we demonstrate how educators can teach students to maintain creative agency while strategically leveraging AI assistance. During this workshop, participants will experience a structured three-phase methodology: creating a human-led narrative foundation, identifying stra",
-      "summary_fr": "This workshop explores innovative human-AI collaboration methodologies in HCI visual storytelling education through our established \"gap-and-fill\" approach. Drawing on Eastern aesthetic philosophies of intentional emptiness, including Chinese negative-space traditions, Japanese \"ma\" concepts, and contemporary design minimalism, we demonstrate how educators can teach students to maintain creative agency while strategically leveraging AI assistance. During this workshop, participants will experience a structured three-phase methodology: creating a human-led narrative foundation, identifying stra",
-      "resume_fr": "This workshop explores innovative human-AI collaboration methodologies in HCI visual storytelling education through our established \"gap-and-fill\" approach. Drawing on Eastern aesthetic philosophies of intentional emptiness, including Chinese negative-space traditions, Japanese \"ma\" concepts, and contemporary design minimalism, we demonstrate how educators can teach students to maintain creative agency while strategically leveraging AI assistance. During this workshop, participants will experience a structured three-phase methodology: creating a human-led narrative foundation, identifying stra",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Bottom-up Policy Optimization: Your Language Model Policy Secretly Contains Internal Policies",
-      "url": "https://arxiv.org/abs/2512.19673v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2025-12-22T18:51:48.000Z",
-      "score": 85,
-      "summary_en": "Existing reinforcement learning (RL) approaches treat large language models (LLMs) as a single unified policy, overlooking their internal mechanisms. Understanding how policy evolves across layers and modules is therefore crucial for enabling more targeted optimization and raveling out complex reasoning mechanisms. In this paper, we decompose the language model policy by leveraging the intrinsic split of the Transformer residual stream and the equivalence between the composition of hidden states with the unembedding matrix and the resulting samplable policy. This decomposition reveals Internal",
-      "summary_fr": "Existing reinforcement learning (RL) approaches treat large language models (LLMs) as a single unified policy, overlooking their internal mechanisms. Understanding how policy evolves across layers and modules is therefore crucial for enabling more targeted optimization and raveling out complex reasoning mechanisms. In this paper, we decompose the language model policy by leveraging the intrinsic split of the Transformer residual stream and the equivalence between the composition of hidden states with the unembedding matrix and the resulting samplable policy. This decomposition reveals Internal",
-      "resume_fr": "Existing reinforcement learning (RL) approaches treat large language models (LLMs) as a single unified policy, overlooking their internal mechanisms. Understanding how policy evolves across layers and modules is therefore crucial for enabling more targeted optimization and raveling out complex reasoning mechanisms. In this paper, we decompose the language model policy by leveraging the intrinsic split of the Transformer residual stream and the equivalence between the composition of hidden states with the unembedding matrix and the resulting samplable policy. This decomposition reveals Internal",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "An Agentic AI Framework for Training General Practitioner Student Skills",
-      "url": "https://arxiv.org/abs/2512.18440v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-20T17:26:39.000Z",
-      "score": 85,
-      "summary_en": "Advancements in large language models offer strong potential for enhancing virtual simulated patients (VSPs) in medical education by providing scalable alternatives to resource-intensive traditional methods. However, current VSPs often struggle with medical accuracy, consistent roleplaying, scenario generation for VSP use, and educationally structured feedback. We introduce an agentic framework for training general practitioner student skills that unifies (i) configurable, evidence-based vignette generation, (ii) controlled persona-driven patient dialogue with optional retrieval grounding, and",
-      "summary_fr": "Advancements in large language models offer strong potential for enhancing virtual simulated patients (VSPs) in medical education by providing scalable alternatives to resource-intensive traditional methods. However, current VSPs often struggle with medical accuracy, consistent roleplaying, scenario generation for VSP use, and educationally structured feedback. We introduce an agentic framework for training general practitioner student skills that unifies (i) configurable, evidence-based vignette generation, (ii) controlled persona-driven patient dialogue with optional retrieval grounding, and",
-      "resume_fr": "Advancements in large language models offer strong potential for enhancing virtual simulated patients (VSPs) in medical education by providing scalable alternatives to resource-intensive traditional methods. However, current VSPs often struggle with medical accuracy, consistent roleplaying, scenario generation for VSP use, and educationally structured feedback. We introduce an agentic framework for training general practitioner student skills that unifies (i) configurable, evidence-based vignette generation, (ii) controlled persona-driven patient dialogue with optional retrieval grounding, and",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When Reasoning Meets Its Laws",
-      "url": "https://arxiv.org/abs/2512.17901v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-12-19T18:59:11.000Z",
-      "score": 70,
-      "summary_en": "Despite the superior performance of Large Reasoning Models (LRMs), their reasoning behaviors are often counterintuitive, leading to suboptimal reasoning capabilities. To theoretically formalize the desired reasoning behaviors, this paper presents the Laws of Reasoning (LoRe), a unified framework that characterizes intrinsic reasoning patterns in LRMs. We first propose compute law with the hypothesis that the reasoning compute should scale linearly with question complexity. Beyond compute, we extend LoRe with a supplementary accuracy law. Since the question complexity is difficult to quantify i",
-      "summary_fr": "Despite the superior performance of Large Reasoning Models (LRMs), their reasoning behaviors are often counterintuitive, leading to suboptimal reasoning capabilities. To theoretically formalize the desired reasoning behaviors, this paper presents the Laws of Reasoning (LoRe), a unified framework that characterizes intrinsic reasoning patterns in LRMs. We first propose compute law with the hypothesis that the reasoning compute should scale linearly with question complexity. Beyond compute, we extend LoRe with a supplementary accuracy law. Since the question complexity is difficult to quantify i",
-      "resume_fr": "Despite the superior performance of Large Reasoning Models (LRMs), their reasoning behaviors are often counterintuitive, leading to suboptimal reasoning capabilities. To theoretically formalize the desired reasoning behaviors, this paper presents the Laws of Reasoning (LoRe), a unified framework that characterizes intrinsic reasoning patterns in LRMs. We first propose compute law with the hypothesis that the reasoning compute should scale linearly with question complexity. Beyond compute, we extend LoRe with a supplementary accuracy law. Since the question complexity is difficult to quantify i",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When the Gold Standard isn't Necessarily Standard: Challenges of Evaluating the Translation of User-Generated Content",
-      "url": "https://arxiv.org/abs/2512.17738v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2025-12-19T16:17:23.000Z",
-      "score": 70,
-      "summary_en": "User-generated content (UGC) is characterised by frequent use of non-standard language, from spelling errors to expressive choices such as slang, character repetitions, and emojis. This makes evaluating UGC translation particularly challenging: what counts as a \"good\" translation depends on the level of standardness desired in the output. To explore this, we examine the human translation guidelines of four UGC datasets, and derive a taxonomy of twelve non-standard phenomena and five translation actions (NORMALISE, COPY, TRANSFER, OMIT, CENSOR). Our analysis reveals notable differences in how U",
-      "summary_fr": "User-generated content (UGC) is characterised by frequent use of non-standard language, from spelling errors to expressive choices such as slang, character repetitions, and emojis. This makes evaluating UGC translation particularly challenging: what counts as a \"good\" translation depends on the level of standardness desired in the output. To explore this, we examine the human translation guidelines of four UGC datasets, and derive a taxonomy of twelve non-standard phenomena and five translation actions (NORMALISE, COPY, TRANSFER, OMIT, CENSOR). Our analysis reveals notable differences in how U",
-      "resume_fr": "User-generated content (UGC) is characterised by frequent use of non-standard language, from spelling errors to expressive choices such as slang, character repetitions, and emojis. This makes evaluating UGC translation particularly challenging: what counts as a \"good\" translation depends on the level of standardness desired in the output. To explore this, we examine the human translation guidelines of four UGC datasets, and derive a taxonomy of twelve non-standard phenomena and five translation actions (NORMALISE, COPY, TRANSFER, OMIT, CENSOR). Our analysis reveals notable differences in how U",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Fair Voting Methods as a Catalyst for Democratic Resilience: A Trilogy on Legitimacy, Impact and AI Safeguarding",
-      "url": "https://arxiv.org/abs/2512.17461v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-19T11:24:26.000Z",
-      "score": 85,
-      "summary_en": "This article shows how fair voting methods can be a catalyst for change in the way we make collective decisions, and how such change can promote long-awaited upgrades of democracy. Based on real-world evidence from democratic innovations in participatory budgeting, in Switzerland and beyond, I highlight a trilogy of key research results: Fair voting methods achieve to be (i) legitimacy incubator, (ii) novel impact accelerator and (iii) safeguard for risks of artificial intelligence (AI). Compared to majoritarian voting methods, combining expressive ballot formats (e.g. cumulative voting) with ",
-      "summary_fr": "This article shows how fair voting methods can be a catalyst for change in the way we make collective decisions, and how such change can promote long-awaited upgrades of democracy. Based on real-world evidence from democratic innovations in participatory budgeting, in Switzerland and beyond, I highlight a trilogy of key research results: Fair voting methods achieve to be (i) legitimacy incubator, (ii) novel impact accelerator and (iii) safeguard for risks of artificial intelligence (AI). Compared to majoritarian voting methods, combining expressive ballot formats (e.g. cumulative voting) with ",
-      "resume_fr": "This article shows how fair voting methods can be a catalyst for change in the way we make collective decisions, and how such change can promote long-awaited upgrades of democracy. Based on real-world evidence from democratic innovations in participatory budgeting, in Switzerland and beyond, I highlight a trilogy of key research results: Fair voting methods achieve to be (i) legitimacy incubator, (ii) novel impact accelerator and (iii) safeguard for risks of artificial intelligence (AI). Compared to majoritarian voting methods, combining expressive ballot formats (e.g. cumulative voting) with ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Psychological Factors Influencing University Students Trust in AI-Based Learning Assistants",
-      "url": "https://arxiv.org/abs/2512.17390v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-12-19T09:44:43.000Z",
-      "score": 85,
-      "summary_en": "Artificial intelligence (AI) based learning assistants and chatbots are increasingly integrated into higher education. While these tools are often evaluated in terms of technical performance, their successful and ethical use also depends on psychological factors such as trust, perceived risk, technology anxiety, and students general attitudes toward AI. This paper adopts a psychology oriented perspective to examine how university students form trust in AI based learning assistants. Drawing on recent literature in mental health, human AI interaction, and trust in automation, we propose a concep",
-      "summary_fr": "Artificial intelligence (AI) based learning assistants and chatbots are increasingly integrated into higher education. While these tools are often evaluated in terms of technical performance, their successful and ethical use also depends on psychological factors such as trust, perceived risk, technology anxiety, and students general attitudes toward AI. This paper adopts a psychology oriented perspective to examine how university students form trust in AI based learning assistants. Drawing on recent literature in mental health, human AI interaction, and trust in automation, we propose a concep",
-      "resume_fr": "Artificial intelligence (AI) based learning assistants and chatbots are increasingly integrated into higher education. While these tools are often evaluated in terms of technical performance, their successful and ethical use also depends on psychological factors such as trust, perceived risk, technology anxiety, and students general attitudes toward AI. This paper adopts a psychology oriented perspective to examine how university students form trust in AI based learning assistants. Drawing on recent literature in mental health, human AI interaction, and trust in automation, we propose a concep",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Implementation of Augmented Reality as an Educational Tool for Practice in Early Childhood",
-      "url": "https://arxiv.org/abs/2512.17354v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2025-12-19T08:51:41.000Z",
-      "score": 85,
-      "summary_en": "Learning Wudhu for young children requires engaging and interactive media to foster a deep understanding of the worship procedures. This study aims to develop a Wudhu learning application based on Augmented Reality (AR) as an interactive and fun educational medium. The development method used includes the stages of needs analysis, system design, implementation, and testing using Black Box Testing. The system utilizes marker-based tracking to display 3D animations of Wudhu movements in real-time when the camera detects a marker on the printed media. The test results indicate that all main funct",
-      "summary_fr": "Learning Wudhu for young children requires engaging and interactive media to foster a deep understanding of the worship procedures. This study aims to develop a Wudhu learning application based on Augmented Reality (AR) as an interactive and fun educational medium. The development method used includes the stages of needs analysis, system design, implementation, and testing using Black Box Testing. The system utilizes marker-based tracking to display 3D animations of Wudhu movements in real-time when the camera detects a marker on the printed media. The test results indicate that all main funct",
-      "resume_fr": "Learning Wudhu for young children requires engaging and interactive media to foster a deep understanding of the worship procedures. This study aims to develop a Wudhu learning application based on Augmented Reality (AR) as an interactive and fun educational medium. The development method used includes the stages of needs analysis, system design, implementation, and testing using Black Box Testing. The system utilizes marker-based tracking to display 3D animations of Wudhu movements in real-time when the camera detects a marker on the printed media. The test results indicate that all main funct",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
