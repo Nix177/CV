@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-14T06:42:39.202Z",
+  "generatedAt": "2026-01-15T06:42:18.922Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,139 @@
     }
   },
   "items": [
+    {
+      "title": "Fast-ThinkAct: Efficient Vision-Language-Action Reasoning via Verbalizable Latent Planning",
+      "url": "https://arxiv.org/abs/2601.09708v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-14T18:59:59.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) tasks require reasoning over complex visual scenes and executing adaptive actions in dynamic environments. While recent studies on reasoning VLAs show that explicit chain-of-thought (CoT) can improve generalization, they suffer from high inference latency due to lengthy reasoning traces. We propose Fast-ThinkAct, an efficient reasoning framework that achieves compact yet performant planning through verbalizable latent reasoning. Fast-ThinkAct learns to reason efficiently with latent CoTs by distilling from a teacher, driven by a preference-guided objective to align",
+      "summary_fr": "Vision-Language-Action (VLA) tasks require reasoning over complex visual scenes and executing adaptive actions in dynamic environments. While recent studies on reasoning VLAs show that explicit chain-of-thought (CoT) can improve generalization, they suffer from high inference latency due to lengthy reasoning traces. We propose Fast-ThinkAct, an efficient reasoning framework that achieves compact yet performant planning through verbalizable latent reasoning. Fast-ThinkAct learns to reason efficiently with latent CoTs by distilling from a teacher, driven by a preference-guided objective to align",
+      "resume_fr": "Vision-Language-Action (VLA) tasks require reasoning over complex visual scenes and executing adaptive actions in dynamic environments. While recent studies on reasoning VLAs show that explicit chain-of-thought (CoT) can improve generalization, they suffer from high inference latency due to lengthy reasoning traces. We propose Fast-ThinkAct, an efficient reasoning framework that achieves compact yet performant planning through verbalizable latent reasoning. Fast-ThinkAct learns to reason efficiently with latent CoTs by distilling from a teacher, driven by a preference-guided objective to align",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Value-Aware Numerical Representations for Transformer Language Models",
+      "url": "https://arxiv.org/abs/2601.09706v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-14T18:59:14.000Z",
+      "score": 50,
+      "summary_en": "Transformer-based language models often achieve strong results on mathematical reasoning benchmarks while remaining fragile on basic numerical understanding and arithmetic operations. A central limitation is that numbers are processed as symbolic tokens whose embeddings do not explicitly encode numerical value, leading to systematic errors. We introduce a value-aware numerical representation that augments standard tokenized inputs with a dedicated prefix token whose embedding is explicitly conditioned on the underlying numerical value. This mechanism injects magnitude information directly into",
+      "summary_fr": "Transformer-based language models often achieve strong results on mathematical reasoning benchmarks while remaining fragile on basic numerical understanding and arithmetic operations. A central limitation is that numbers are processed as symbolic tokens whose embeddings do not explicitly encode numerical value, leading to systematic errors. We introduce a value-aware numerical representation that augments standard tokenized inputs with a dedicated prefix token whose embedding is explicitly conditioned on the underlying numerical value. This mechanism injects magnitude information directly into",
+      "resume_fr": "Transformer-based language models often achieve strong results on mathematical reasoning benchmarks while remaining fragile on basic numerical understanding and arithmetic operations. A central limitation is that numbers are processed as symbolic tokens whose embeddings do not explicitly encode numerical value, leading to systematic errors. We introduce a value-aware numerical representation that augments standard tokenized inputs with a dedicated prefix token whose embedding is explicitly conditioned on the underlying numerical value. This mechanism injects magnitude information directly into",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Empathy Applicability Modeling for General Health Queries",
+      "url": "https://arxiv.org/abs/2601.09696v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-14T18:47:02.000Z",
+      "score": 50,
+      "summary_en": "LLMs are increasingly being integrated into clinical workflows, yet they often lack clinical empathy, an essential aspect of effective doctor-patient communication. Existing NLP frameworks focus on reactively labeling empathy in doctors' responses but offer limited support for anticipatory modeling of empathy needs, especially in general health queries. We introduce the Empathy Applicability Framework (EAF), a theory-driven approach that classifies patient queries in terms of the applicability of emotional reactions and interpretations, based on clinical, contextual, and linguistic cues. We re",
+      "summary_fr": "LLMs are increasingly being integrated into clinical workflows, yet they often lack clinical empathy, an essential aspect of effective doctor-patient communication. Existing NLP frameworks focus on reactively labeling empathy in doctors' responses but offer limited support for anticipatory modeling of empathy needs, especially in general health queries. We introduce the Empathy Applicability Framework (EAF), a theory-driven approach that classifies patient queries in terms of the applicability of emotional reactions and interpretations, based on clinical, contextual, and linguistic cues. We re",
+      "resume_fr": "LLMs are increasingly being integrated into clinical workflows, yet they often lack clinical empathy, an essential aspect of effective doctor-patient communication. Existing NLP frameworks focus on reactively labeling empathy in doctors' responses but offer limited support for anticipatory modeling of empathy needs, especially in general health queries. We introduce the Empathy Applicability Framework (EAF), a theory-driven approach that classifies patient queries in terms of the applicability of emotional reactions and interpretations, based on clinical, contextual, and linguistic cues. We re",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DeepResearchEval: An Automated Framework for Deep Research Task Construction and Agentic Evaluation",
+      "url": "https://arxiv.org/abs/2601.09688v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-14T18:38:31.000Z",
+      "score": 70,
+      "summary_en": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
+      "summary_fr": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
+      "resume_fr": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Collaborative Multi-Agent Test-Time Reinforcement Learning for Reasoning",
+      "url": "https://arxiv.org/abs/2601.09667v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-14T17:57:43.000Z",
+      "score": 50,
+      "summary_en": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
+      "summary_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
+      "resume_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "KTCF: Actionable Recourse in Knowledge Tracing via Counterfactual Explanations for Education",
+      "url": "https://arxiv.org/abs/2601.09156v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-14T04:51:54.000Z",
+      "score": 85,
+      "summary_en": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
+      "summary_fr": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
+      "resume_fr": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Leveraging learning analytics to enhance immersive teacher simulations: Challenges and opportunities",
+      "url": "https://arxiv.org/abs/2601.08954v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-13T19:44:04.000Z",
+      "score": 65,
+      "summary_en": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
+      "summary_fr": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
+      "resume_fr": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Asymptotic Universal Alignment: A New Alignment Framework via Test-Time Scaling",
       "url": "https://arxiv.org/abs/2601.08777v1",
@@ -1101,139 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
       "image": "https://spectrum.ieee.org/media-library/image.jpg?id=62611995&width=1200&height=600&coordinates=0%2C259%2C0%2C241"
-    },
-    {
-      "title": "Practising responsibility: Ethics in NLP as a hands-on course",
-      "url": "https://arxiv.org/abs/2512.24825v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-31T12:26:20.000Z",
-      "score": 85,
-      "summary_en": "As Natural Language Processing (NLP) systems become more pervasive, integrating ethical considerations into NLP education has become essential. However, this presents inherent challenges in curriculum development: the field's rapid evolution from both academia and industry, and the need to foster critical thinking beyond traditional technical training. We introduce our course on Ethical Aspects in NLP and our pedagogical approach, grounded in active learning through interactive sessions, hands-on activities, and \"learning by teaching\" methods. Over four years, the course has been refined and a",
-      "summary_fr": "As Natural Language Processing (NLP) systems become more pervasive, integrating ethical considerations into NLP education has become essential. However, this presents inherent challenges in curriculum development: the field's rapid evolution from both academia and industry, and the need to foster critical thinking beyond traditional technical training. We introduce our course on Ethical Aspects in NLP and our pedagogical approach, grounded in active learning through interactive sessions, hands-on activities, and \"learning by teaching\" methods. Over four years, the course has been refined and a",
-      "resume_fr": "As Natural Language Processing (NLP) systems become more pervasive, integrating ethical considerations into NLP education has become essential. However, this presents inherent challenges in curriculum development: the field's rapid evolution from both academia and industry, and the need to foster critical thinking beyond traditional technical training. We introduce our course on Ethical Aspects in NLP and our pedagogical approach, grounded in active learning through interactive sessions, hands-on activities, and \"learning by teaching\" methods. Over four years, the course has been refined and a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Inferring spatial single-cell-level interactions through interpreting cell state and niche correlations learned by self-supervised graph transformer",
-      "url": "https://www.nature.com/articles/s42256-025-01161-0",
-      "source": "Nature Machine Intelligence",
-      "published": "2025-12-31T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01161-0/MediaObjects/42256_2025_1161_Fig1_HTML.png"
-    },
-    {
-      "title": "Current-diffusion model for metasurface structure discoveries with spatial-frequency dynamics",
-      "url": "https://www.nature.com/articles/s42256-025-01162-z",
-      "source": "Nature Machine Intelligence",
-      "published": "2025-12-31T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01162-z/MediaObjects/42256_2025_1162_Fig1_HTML.png"
-    },
-    {
-      "title": "One-shot synthesis of rare gastrointestinal lesions improves diagnostic accuracy and clinical training",
-      "url": "https://arxiv.org/abs/2512.24278v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-30T15:07:09.000Z",
-      "score": 50,
-      "summary_en": "Rare gastrointestinal lesions are infrequently encountered in routine endoscopy, restricting the data available for developing reliable artificial intelligence (AI) models and training novice clinicians. Here we present EndoRare, a one-shot, retraining-free generative framework that synthesizes diverse, high-fidelity lesion exemplars from a single reference image. By leveraging language-guided concept disentanglement, EndoRare separates pathognomonic lesion features from non-diagnostic attributes, encoding the former into a learnable prototype embedding while varying the latter to ensure diver",
-      "summary_fr": "Rare gastrointestinal lesions are infrequently encountered in routine endoscopy, restricting the data available for developing reliable artificial intelligence (AI) models and training novice clinicians. Here we present EndoRare, a one-shot, retraining-free generative framework that synthesizes diverse, high-fidelity lesion exemplars from a single reference image. By leveraging language-guided concept disentanglement, EndoRare separates pathognomonic lesion features from non-diagnostic attributes, encoding the former into a learnable prototype embedding while varying the latter to ensure diver",
-      "resume_fr": "Rare gastrointestinal lesions are infrequently encountered in routine endoscopy, restricting the data available for developing reliable artificial intelligence (AI) models and training novice clinicians. Here we present EndoRare, a one-shot, retraining-free generative framework that synthesizes diverse, high-fidelity lesion exemplars from a single reference image. By leveraging language-guided concept disentanglement, EndoRare separates pathognomonic lesion features from non-diagnostic attributes, encoding the former into a learnable prototype embedding while varying the latter to ensure diver",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Top 8 Semiconductor Stories of 2025",
-      "url": "https://spectrum.ieee.org/top-semiconductor-stories-2025",
-      "source": "IEEE Spectrum – AI",
-      "published": "2025-12-30T14:00:02.000Z",
-      "score": 50,
-      "summary_en": "This year’s top semiconductor stories were mostly about the long and twisting trips a technology takes from idea (or even raw material) to commercial deployment. I’ve been at IEEE Spectrum long enough to have seen some of the early days of things that became commercial only this year. In chip-making that includes the production of the next evolution of transistor design—nanosheet transistors—and the arrival of nanoimprint lithography. In optoelectronics, it was the commercialization of optical fiber links that go directly into the processor package. Of course there were also great new technolo",
-      "summary_fr": "This year’s top semiconductor stories were mostly about the long and twisting trips a technology takes from idea (or even raw material) to commercial deployment. I’ve been at IEEE Spectrum long enough to have seen some of the early days of things that became commercial only this year. In chip-making that includes the production of the next evolution of transistor design—nanosheet transistors—and the arrival of nanoimprint lithography. In optoelectronics, it was the commercialization of optical fiber links that go directly into the processor package. Of course there were also great new technolo",
-      "resume_fr": "This year’s top semiconductor stories were mostly about the long and twisting trips a technology takes from idea (or even raw material) to commercial deployment. I’ve been at IEEE Spectrum long enough to have seen some of the early days of things that became commercial only this year. In chip-making that includes the production of the next evolution of transistor design—nanosheet transistors—and the arrival of nanoimprint lithography. In optoelectronics, it was the commercialization of optical fiber links that go directly into the processor package. Of course there were also great new technolo",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/image.jpg?id=62611979&width=1200&height=600&coordinates=0%2C287%2C0%2C213"
-    },
-    {
-      "title": "Coding With AI: From a Reflection on Industrial Practices to Future Computer Science and Software Engineering Education",
-      "url": "https://arxiv.org/abs/2512.23982v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-30T04:39:59.000Z",
-      "score": 85,
-      "summary_en": "Recent advances in large language models (LLMs) have introduced new paradigms in software development, including vibe coding, AI-assisted coding, and agentic coding, fundamentally reshaping how software is designed, implemented, and maintained. Prior research has primarily examined AI-based coding at the individual level or in educational settings, leaving industrial practitioners' perspectives underexplored. This paper addresses this gap by investigating how LLM coding tools are used in professional practice, the associated concerns and risks, and the resulting transformations in development ",
-      "summary_fr": "Recent advances in large language models (LLMs) have introduced new paradigms in software development, including vibe coding, AI-assisted coding, and agentic coding, fundamentally reshaping how software is designed, implemented, and maintained. Prior research has primarily examined AI-based coding at the individual level or in educational settings, leaving industrial practitioners' perspectives underexplored. This paper addresses this gap by investigating how LLM coding tools are used in professional practice, the associated concerns and risks, and the resulting transformations in development ",
-      "resume_fr": "Recent advances in large language models (LLMs) have introduced new paradigms in software development, including vibe coding, AI-assisted coding, and agentic coding, fundamentally reshaping how software is designed, implemented, and maintained. Prior research has primarily examined AI-based coding at the individual level or in educational settings, leaving industrial practitioners' perspectives underexplored. This paper addresses this gap by investigating how LLM coding tools are used in professional practice, the associated concerns and risks, and the resulting transformations in development ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Artificial Intelligence for All? Brazilian Teachers on Ethics, Equity, and the Everyday Challenges of AI in Education",
-      "url": "https://arxiv.org/abs/2512.23834v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2025-12-29T19:58:09.000Z",
-      "score": 85,
-      "summary_en": "This study examines the perceptions of Brazilian K-12 education teachers regarding the use of AI in education, specifically General Purpose AI. This investigation employs a quantitative analysis approach, extracting information from a questionnaire completed by 346 educators from various regions of Brazil regarding their AI literacy and use. Educators vary in their educational level, years of experience, and type of educational institution. The analysis of the questionnaires shows that although most educators had only basic or limited knowledge of AI (80.3\\%), they showed a strong interest in ",
-      "summary_fr": "This study examines the perceptions of Brazilian K-12 education teachers regarding the use of AI in education, specifically General Purpose AI. This investigation employs a quantitative analysis approach, extracting information from a questionnaire completed by 346 educators from various regions of Brazil regarding their AI literacy and use. Educators vary in their educational level, years of experience, and type of educational institution. The analysis of the questionnaires shows that although most educators had only basic or limited knowledge of AI (80.3\\%), they showed a strong interest in ",
-      "resume_fr": "This study examines the perceptions of Brazilian K-12 education teachers regarding the use of AI in education, specifically General Purpose AI. This investigation employs a quantitative analysis approach, extracting information from a questionnaire completed by 346 educators from various regions of Brazil regarding their AI literacy and use. Educators vary in their educational level, years of experience, and type of educational institution. The analysis of the questionnaires shows that although most educators had only basic or limited knowledge of AI (80.3\\%), they showed a strong interest in ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
