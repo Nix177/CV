@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-20T06:46:59.265Z",
+  "generatedAt": "2026-01-21T06:47:09.065Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,158 @@
     }
   },
   "items": [
+    {
+      "title": "Which Reasoning Trajectories Teach Students to Reason Better? A Simple Metric of Informative Alignment",
+      "url": "https://arxiv.org/abs/2601.14249v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-20T18:58:10.000Z",
+      "score": 65,
+      "summary_en": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
+      "summary_fr": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
+      "resume_fr": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Jet-RL: Enabling On-Policy FP8 Reinforcement Learning with Unified Training and Rollout Precision Flow",
+      "url": "https://arxiv.org/abs/2601.14243v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-20T18:54:31.000Z",
+      "score": 70,
+      "summary_en": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
+      "summary_fr": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
+      "resume_fr": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Opportunities in AI/ML for the Rubin LSST Dark Energy Science Collaboration",
+      "url": "https://arxiv.org/abs/2601.14235v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-20T18:46:42.000Z",
+      "score": 50,
+      "summary_en": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
+      "summary_fr": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
+      "resume_fr": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring Learners' Expectations and Engagement When Collaborating with Constructively Controversial Peer Agents",
+      "url": "https://arxiv.org/abs/2601.13479v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-20T00:25:33.000Z",
+      "score": 50,
+      "summary_en": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
+      "summary_fr": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
+      "resume_fr": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PhysicsSolutionAgent: Towards Multimodal Explanations for Numerical Physics Problem Solving",
+      "url": "https://arxiv.org/abs/2601.13453v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-19T23:11:02.000Z",
+      "score": 50,
+      "summary_en": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
+      "summary_fr": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
+      "resume_fr": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Explicit Cognitive Allocation: A Principle for Governed and Auditable Inference in Large Language Models",
+      "url": "https://arxiv.org/abs/2601.13443v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-19T23:00:14.000Z",
+      "score": 50,
+      "summary_en": "The rapid adoption of large language models (LLMs) has enabled new forms of AI-assisted reasoning across scientific, technical, and organizational domains. However, prevailing modes of LLM use remain cognitively unstructured: problem framing, knowledge exploration, retrieval, methodological awareness, and explanation are typically collapsed into a single generative process. This cognitive collapse limits traceability, weakens epistemic control, and undermines reproducibility, particularly in high-responsibility settings. We introduce Explicit Cognitive Allocation, a general principle for struc",
+      "summary_fr": "The rapid adoption of large language models (LLMs) has enabled new forms of AI-assisted reasoning across scientific, technical, and organizational domains. However, prevailing modes of LLM use remain cognitively unstructured: problem framing, knowledge exploration, retrieval, methodological awareness, and explanation are typically collapsed into a single generative process. This cognitive collapse limits traceability, weakens epistemic control, and undermines reproducibility, particularly in high-responsibility settings. We introduce Explicit Cognitive Allocation, a general principle for struc",
+      "resume_fr": "The rapid adoption of large language models (LLMs) has enabled new forms of AI-assisted reasoning across scientific, technical, and organizational domains. However, prevailing modes of LLM use remain cognitively unstructured: problem framing, knowledge exploration, retrieval, methodological awareness, and explanation are typically collapsed into a single generative process. This cognitive collapse limits traceability, weakens epistemic control, and undermines reproducibility, particularly in high-responsibility settings. We introduce Explicit Cognitive Allocation, a general principle for struc",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ICo3D: An Interactive Conversational 3D Virtual Human",
+      "url": "https://arxiv.org/abs/2601.13148v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-19T15:30:08.000Z",
+      "score": 85,
+      "summary_en": "This work presents Interactive Conversational 3D Virtual Human (ICo3D), a method for generating an interactive, conversational, and photorealistic 3D human avatar. Based on multi-view captures of a subject, we create an animatable 3D face model and a dynamic 3D body model, both rendered by splatting Gaussian primitives. Once merged together, they represent a lifelike virtual human avatar suitable for real-time user interactions. We equip our avatar with an LLM for conversational ability. During conversation, the audio speech of the avatar is used as a driving signal to animate the face model, ",
+      "summary_fr": "This work presents Interactive Conversational 3D Virtual Human (ICo3D), a method for generating an interactive, conversational, and photorealistic 3D human avatar. Based on multi-view captures of a subject, we create an animatable 3D face model and a dynamic 3D body model, both rendered by splatting Gaussian primitives. Once merged together, they represent a lifelike virtual human avatar suitable for real-time user interactions. We equip our avatar with an LLM for conversational ability. During conversation, the audio speech of the avatar is used as a driving signal to animate the face model, ",
+      "resume_fr": "This work presents Interactive Conversational 3D Virtual Human (ICo3D), a method for generating an interactive, conversational, and photorealistic 3D human avatar. Based on multi-view captures of a subject, we create an animatable 3D face model and a dynamic 3D body model, both rendered by splatting Gaussian primitives. Once merged together, they represent a lifelike virtual human avatar suitable for real-time user interactions. We equip our avatar with an LLM for conversational ability. During conversation, the audio speech of the avatar is used as a driving signal to animate the face model, ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A self-evolving multi-role collaborative framework with fine-grained difficulty guidance for innovative mathematical problem generation",
+      "url": "https://arxiv.org/abs/2601.11792v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-01-16T21:36:04.000Z",
+      "score": 85,
+      "summary_en": "Mathematical problem generation (MPG) is a significant research direction in the field of intelligent education. In recent years, the rapid development of large language models (LLMs) has enabled new technological approaches to problem-generation tasks. Although existing LLMs can achieve high correctness rates, they generally lack innovation and exhibit poor discrimination. In this paper, we propose the task of innovative math problem generation (IMPG). To solve the IMPG task, this paper proposes a self-evolving, multi-role collaborative framework with fine-grained difficulty guidance. First, ",
+      "summary_fr": "Mathematical problem generation (MPG) is a significant research direction in the field of intelligent education. In recent years, the rapid development of large language models (LLMs) has enabled new technological approaches to problem-generation tasks. Although existing LLMs can achieve high correctness rates, they generally lack innovation and exhibit poor discrimination. In this paper, we propose the task of innovative math problem generation (IMPG). To solve the IMPG task, this paper proposes a self-evolving, multi-role collaborative framework with fine-grained difficulty guidance. First, ",
+      "resume_fr": "Mathematical problem generation (MPG) is a significant research direction in the field of intelligent education. In recent years, the rapid development of large language models (LLMs) has enabled new technological approaches to problem-generation tasks. Although existing LLMs can achieve high correctness rates, they generally lack innovation and exhibit poor discrimination. In this paper, we propose the task of innovative math problem generation (IMPG). To solve the IMPG task, this paper proposes a self-evolving, multi-role collaborative framework with fine-grained difficulty guidance. First, ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "On the Probability of First Success in Differential Evolution: Hazard Identities and Tail Bounds",
       "url": "https://arxiv.org/abs/2601.11499v1",
@@ -1073,158 +1225,6 @@
       "summary_en": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
       "summary_fr": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
       "resume_fr": "The emergence of generative AI (GAI) has sparked diverse opinions regarding its appropriate use across various domains, including education. This pilot study investigates university students' perceptions of GAI in higher education classrooms, aiming to lay the groundwork for understanding these attitudes. With a participation rate of approximately 4.4%, the study highlights the challenges of engaging students in GAI-related research and underscores the need for larger sample sizes in future studies. By gaining insights into student perspectives, instructors can better prepare to integrate disc",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Robust Physics Discovery from Highly Corrupted Data: A PINN Framework Applied to the Nonlinear Schrödinger Equation",
-      "url": "https://arxiv.org/abs/2601.04176v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-07T18:43:11.000Z",
-      "score": 70,
-      "summary_en": "We demonstrate a deep learning framework capable of recovering physical parameters from the Nonlinear Schrodinger Equation (NLSE) under severe noise conditions. By integrating Physics-Informed Neural Networks (PINNs) with automatic differentiation, we achieve reconstruction of the nonlinear coefficient beta with less than 0.2 percent relative error using only 500 sparse, randomly sampled data points corrupted by 20 percent additive Gaussian noise, a regime where traditional finite difference methods typically fail due to noise amplification in numerical derivatives. We validate the method's ge",
-      "summary_fr": "We demonstrate a deep learning framework capable of recovering physical parameters from the Nonlinear Schrodinger Equation (NLSE) under severe noise conditions. By integrating Physics-Informed Neural Networks (PINNs) with automatic differentiation, we achieve reconstruction of the nonlinear coefficient beta with less than 0.2 percent relative error using only 500 sparse, randomly sampled data points corrupted by 20 percent additive Gaussian noise, a regime where traditional finite difference methods typically fail due to noise amplification in numerical derivatives. We validate the method's ge",
-      "resume_fr": "We demonstrate a deep learning framework capable of recovering physical parameters from the Nonlinear Schrodinger Equation (NLSE) under severe noise conditions. By integrating Physics-Informed Neural Networks (PINNs) with automatic differentiation, we achieve reconstruction of the nonlinear coefficient beta with less than 0.2 percent relative error using only 500 sparse, randomly sampled data points corrupted by 20 percent additive Gaussian noise, a regime where traditional finite difference methods typically fail due to noise amplification in numerical derivatives. We validate the method's ge",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Women Worry, Men Adopt: How Gendered Perceptions Shape the Use of Generative AI",
-      "url": "https://arxiv.org/abs/2601.03880v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-07T12:47:39.000Z",
-      "score": 50,
-      "summary_en": "Generative artificial intelligence (GenAI) is diffusing rapidly, yet its adoption is strikingly unequal. Using nationally representative UK survey data from 2023 to 2024, we show that women adopt GenAI substantially less often than men because they perceive its societal risks differently. We construct a composite index capturing concerns about mental health, privacy, climate impact, and labor market disruption. This index explains between 9 and 18 percent of the variation in GenAI adoption and ranks among the strongest predictors for women across all age groups, surpassing digital literacy and",
-      "summary_fr": "Generative artificial intelligence (GenAI) is diffusing rapidly, yet its adoption is strikingly unequal. Using nationally representative UK survey data from 2023 to 2024, we show that women adopt GenAI substantially less often than men because they perceive its societal risks differently. We construct a composite index capturing concerns about mental health, privacy, climate impact, and labor market disruption. This index explains between 9 and 18 percent of the variation in GenAI adoption and ranks among the strongest predictors for women across all age groups, surpassing digital literacy and",
-      "resume_fr": "Generative artificial intelligence (GenAI) is diffusing rapidly, yet its adoption is strikingly unequal. Using nationally representative UK survey data from 2023 to 2024, we show that women adopt GenAI substantially less often than men because they perceive its societal risks differently. We construct a composite index capturing concerns about mental health, privacy, climate impact, and labor market disruption. This index explains between 9 and 18 percent of the variation in GenAI adoption and ranks among the strongest predictors for women across all age groups, surpassing digital literacy and",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Can AI Chatbots Provide Coaching in Engineering? Beyond Information Processing Toward Mastery",
-      "url": "https://arxiv.org/abs/2601.03693v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-07T08:28:47.000Z",
-      "score": 50,
-      "summary_en": "Engineering education faces a double disruption: traditional apprenticeship models that cultivated judgment and tacit skill are eroding, just as generative AI emerges as an informal coaching partner. This convergence rekindles long-standing questions in the philosophy of AI and cognition about the limits of computation, the nature of embodied rationality, and the distinction between information processing and wisdom. Building on this rich intellectual tradition, this paper examines whether AI chatbots can provide coaching that fosters mastery rather than merely delivering information. We synth",
-      "summary_fr": "Engineering education faces a double disruption: traditional apprenticeship models that cultivated judgment and tacit skill are eroding, just as generative AI emerges as an informal coaching partner. This convergence rekindles long-standing questions in the philosophy of AI and cognition about the limits of computation, the nature of embodied rationality, and the distinction between information processing and wisdom. Building on this rich intellectual tradition, this paper examines whether AI chatbots can provide coaching that fosters mastery rather than merely delivering information. We synth",
-      "resume_fr": "Engineering education faces a double disruption: traditional apprenticeship models that cultivated judgment and tacit skill are eroding, just as generative AI emerges as an informal coaching partner. This convergence rekindles long-standing questions in the philosophy of AI and cognition about the limits of computation, the nature of embodied rationality, and the distinction between information processing and wisdom. Building on this rich intellectual tradition, this paper examines whether AI chatbots can provide coaching that fosters mastery rather than merely delivering information. We synth",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Content vs. Form: What Drives the Writing Score Gap Across Socioeconomic Backgrounds? A Generated Panel Approach",
-      "url": "https://arxiv.org/abs/2601.03469v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-06T23:45:18.000Z",
-      "score": 50,
-      "summary_en": "Students from different socioeconomic backgrounds exhibit persistent gaps in test scores, gaps that can translate into unequal educational and labor-market outcomes later in life. In many assessments, performance reflects not only what students know, but also how effectively they can communicate that knowledge. This distinction is especially salient in writing assessments, where scores jointly reward the substance of students' ideas and the way those ideas are expressed. As a result, observed score gaps may conflate differences in underlying content with differences in expressive skill. A cent",
-      "summary_fr": "Students from different socioeconomic backgrounds exhibit persistent gaps in test scores, gaps that can translate into unequal educational and labor-market outcomes later in life. In many assessments, performance reflects not only what students know, but also how effectively they can communicate that knowledge. This distinction is especially salient in writing assessments, where scores jointly reward the substance of students' ideas and the way those ideas are expressed. As a result, observed score gaps may conflate differences in underlying content with differences in expressive skill. A cent",
-      "resume_fr": "Students from different socioeconomic backgrounds exhibit persistent gaps in test scores, gaps that can translate into unequal educational and labor-market outcomes later in life. In many assessments, performance reflects not only what students know, but also how effectively they can communicate that knowledge. This distinction is especially salient in writing assessments, where scores jointly reward the substance of students' ideas and the way those ideas are expressed. As a result, observed score gaps may conflate differences in underlying content with differences in expressive skill. A cent",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "STReasoner: Empowering LLMs for Spatio-Temporal Reasoning in Time Series via Spatial-Aware Reinforcement Learning",
-      "url": "https://arxiv.org/abs/2601.03248v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-06T18:46:12.000Z",
-      "score": 50,
-      "summary_en": "Spatio-temporal reasoning in time series involves the explicit synthesis of temporal dynamics, spatial dependencies, and textual context. This capability is vital for high-stakes decision-making in systems such as traffic networks, power grids, and disease propagation. However, the field remains underdeveloped because most existing works prioritize predictive accuracy over reasoning. To address the gap, we introduce ST-Bench, a benchmark consisting of four core tasks, including etiological reasoning, entity identification, correlation reasoning, and in-context forecasting, developed via a netw",
-      "summary_fr": "Spatio-temporal reasoning in time series involves the explicit synthesis of temporal dynamics, spatial dependencies, and textual context. This capability is vital for high-stakes decision-making in systems such as traffic networks, power grids, and disease propagation. However, the field remains underdeveloped because most existing works prioritize predictive accuracy over reasoning. To address the gap, we introduce ST-Bench, a benchmark consisting of four core tasks, including etiological reasoning, entity identification, correlation reasoning, and in-context forecasting, developed via a netw",
-      "resume_fr": "Spatio-temporal reasoning in time series involves the explicit synthesis of temporal dynamics, spatial dependencies, and textual context. This capability is vital for high-stakes decision-making in systems such as traffic networks, power grids, and disease propagation. However, the field remains underdeveloped because most existing works prioritize predictive accuracy over reasoning. To address the gap, we introduce ST-Bench, a benchmark consisting of four core tasks, including etiological reasoning, entity identification, correlation reasoning, and in-context forecasting, developed via a netw",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "MalruleLib: Large-Scale Executable Misconception Reasoning with Step Traces for Modeling Student Thinking in Mathematics",
-      "url": "https://arxiv.org/abs/2601.03217v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-06T17:59:37.000Z",
-      "score": 50,
-      "summary_en": "Student mistakes in mathematics are often systematic: a learner applies a coherent but wrong procedure and repeats it across contexts. We introduce MalruleLib, a learning-science-grounded framework that translates documented misconceptions into executable procedures, drawing on 67 learning-science and mathematics education sources, and generates step-by-step traces of malrule-consistent student work. We formalize a core student-modeling problem as Malrule Reasoning Accuracy (MRA): infer a misconception from one worked mistake and predict the student's next answer under cross-template rephrasin",
-      "summary_fr": "Student mistakes in mathematics are often systematic: a learner applies a coherent but wrong procedure and repeats it across contexts. We introduce MalruleLib, a learning-science-grounded framework that translates documented misconceptions into executable procedures, drawing on 67 learning-science and mathematics education sources, and generates step-by-step traces of malrule-consistent student work. We formalize a core student-modeling problem as Malrule Reasoning Accuracy (MRA): infer a misconception from one worked mistake and predict the student's next answer under cross-template rephrasin",
-      "resume_fr": "Student mistakes in mathematics are often systematic: a learner applies a coherent but wrong procedure and repeats it across contexts. We introduce MalruleLib, a learning-science-grounded framework that translates documented misconceptions into executable procedures, drawing on 67 learning-science and mathematics education sources, and generates step-by-step traces of malrule-consistent student work. We formalize a core student-modeling problem as Malrule Reasoning Accuracy (MRA): infer a misconception from one worked mistake and predict the student's next answer under cross-template rephrasin",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Counterfactual Fairness with Graph Uncertainty",
-      "url": "https://arxiv.org/abs/2601.03203v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-06T17:33:26.000Z",
-      "score": 70,
-      "summary_en": "Evaluating machine learning (ML) model bias is key to building trustworthy and robust ML systems. Counterfactual Fairness (CF) audits allow the measurement of bias of ML models with a causal framework, yet their conclusions rely on a single causal graph that is rarely known with certainty in real-world scenarios. We propose CF with Graph Uncertainty (CF-GU), a bias evaluation procedure that incorporates the uncertainty of specifying a causal graph into CF. CF-GU (i) bootstraps a Causal Discovery algorithm under domain knowledge constraints to produce a bag of plausible Directed Acyclic Graphs ",
-      "summary_fr": "Evaluating machine learning (ML) model bias is key to building trustworthy and robust ML systems. Counterfactual Fairness (CF) audits allow the measurement of bias of ML models with a causal framework, yet their conclusions rely on a single causal graph that is rarely known with certainty in real-world scenarios. We propose CF with Graph Uncertainty (CF-GU), a bias evaluation procedure that incorporates the uncertainty of specifying a causal graph into CF. CF-GU (i) bootstraps a Causal Discovery algorithm under domain knowledge constraints to produce a bag of plausible Directed Acyclic Graphs ",
-      "resume_fr": "Evaluating machine learning (ML) model bias is key to building trustworthy and robust ML systems. Counterfactual Fairness (CF) audits allow the measurement of bias of ML models with a causal framework, yet their conclusions rely on a single causal graph that is rarely known with certainty in real-world scenarios. We propose CF with Graph Uncertainty (CF-GU), a bias evaluation procedure that incorporates the uncertainty of specifying a causal graph into CF. CF-GU (i) bootstraps a Causal Discovery algorithm under domain knowledge constraints to produce a bag of plausible Directed Acyclic Graphs ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Privacy-Preserving AI-Enabled Decentralized Learning and Employment Records System",
-      "url": "https://arxiv.org/abs/2601.02720v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-06T05:18:03.000Z",
-      "score": 50,
-      "summary_en": "Learning and Employment Record (LER) systems are emerging as critical infrastructure for securely compiling and sharing educational and work achievements. Existing blockchain-based platforms leverage verifiable credentials but typically lack automated skill-credential generation and the ability to incorporate unstructured evidence of learning. In this paper,a privacy-preserving, AI-enabled decentralized LER system is proposed to address these gaps. Digitally signed transcripts from educational institutions are accepted, and verifiable self-issued skill credentials are derived inside a trusted ",
-      "summary_fr": "Learning and Employment Record (LER) systems are emerging as critical infrastructure for securely compiling and sharing educational and work achievements. Existing blockchain-based platforms leverage verifiable credentials but typically lack automated skill-credential generation and the ability to incorporate unstructured evidence of learning. In this paper,a privacy-preserving, AI-enabled decentralized LER system is proposed to address these gaps. Digitally signed transcripts from educational institutions are accepted, and verifiable self-issued skill credentials are derived inside a trusted ",
-      "resume_fr": "Learning and Employment Record (LER) systems are emerging as critical infrastructure for securely compiling and sharing educational and work achievements. Existing blockchain-based platforms leverage verifiable credentials but typically lack automated skill-credential generation and the ability to incorporate unstructured evidence of learning. In this paper,a privacy-preserving, AI-enabled decentralized LER system is proposed to address these gaps. Digitally signed transcripts from educational institutions are accepted, and verifiable self-issued skill credentials are derived inside a trusted ",
       "tags": [],
       "breakdown": {
         "research": 35,
