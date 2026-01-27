@@ -376,10 +376,10 @@ a:focus-visible {
   backface-visibility: hidden !important;
   padding: 16px;
   border-radius: 16px;
-  background: var(--card);
+  background: #1a2635;
   border: 1px solid var(--border);
   color: var(--text);
-  box-shadow: 0 6px 20px rgba(0,0,0,.28);
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
   /* pour éviter tout “collapse” */
   min-height: 200px;
 }

@@ -5,38 +5,38 @@ import { SOURCES } from "./sources.mjs";
 import { readFeedMaybe, dedupe } from "./rss-utils.mjs";
 
 // --------- ENV ----------
-const OPENAI_MODEL       = process.env.OPENAI_MODEL || "gpt-4o-mini";
-const USE_OPENAI         = (process.env.NEWS_USE_OPENAI ?? "true").toLowerCase() === "true";
-const SCORE_THRESHOLD    = parseInt(process.env.NEWS_SCORE_MIN   ?? "65", 10);
-const MAX_ITEMS_TOTAL    = parseInt(process.env.NEWS_MAX_ITEMS   ?? "100", 10);
-const MIN_PUBLISH_DEF    = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
-const OUTPUT_CAP_DEF     = parseInt(process.env.NEWS_OUTPUT_CAP  ?? "60", 10);
-const PROFILE_DEFAULT    = (process.env.NEWS_PROFILE || "balanced").toLowerCase();
-const PROFILES_RAW       = (process.env.NEWS_PROFILES || "").trim();
-const PROFILES           = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const USE_OPENAI = (process.env.NEWS_USE_OPENAI ?? "true").toLowerCase() === "true";
+const SCORE_THRESHOLD = parseInt(process.env.NEWS_SCORE_MIN ?? "65", 10);
+const MAX_ITEMS_TOTAL = parseInt(process.env.NEWS_MAX_ITEMS ?? "100", 10);
+const MIN_PUBLISH_DEF = parseInt(process.env.NEWS_MIN_PUBLISH ?? "12", 10);
+const OUTPUT_CAP_DEF = parseInt(process.env.NEWS_OUTPUT_CAP ?? "60", 10);
+const PROFILE_DEFAULT = (process.env.NEWS_PROFILE || "balanced").toLowerCase();
+const PROFILES_RAW = (process.env.NEWS_PROFILES || "").trim();
+const PROFILES = (PROFILES_RAW ? PROFILES_RAW : PROFILE_DEFAULT)
   .split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
 
 // Nouvel ENV pour pilotage du fichier de sortie
 //  - default  => écrit feed.json (et feed-balanced.json pour le profil balanced)
 //  - preview  => écrit feed-preview.json (ou feed-<profile>-preview.json) sans toucher au flux global
-const PUBLISH_TARGET     = (process.env.NEWS_PUBLISH_TARGET || "default").toLowerCase();
+const PUBLISH_TARGET = (process.env.NEWS_PUBLISH_TARGET || "default").toLowerCase();
 
 // Option : override des poids (R,P,I,M), ex: "40,25,20,15"
 const CUSTOM_WEIGHTS_RAW = (process.env.NEWS_CUSTOM_WEIGHTS || "").trim();
 
 // --------- Labels/Descriptions/Keywords ----------
 const LABELS = {
-  research:     process.env.NEWS_LABEL_RESEARCH     || "Recherche",
-  policy:       process.env.NEWS_LABEL_POLICY       || "Politiques",
-  institution:  process.env.NEWS_LABEL_INSTITUTION  || "Institution",
-  impact:       process.env.NEWS_LABEL_IMPACT       || "Impact",
+  research: process.env.NEWS_LABEL_RESEARCH || "Recherche",
+  policy: process.env.NEWS_LABEL_POLICY || "Politiques",
+  institution: process.env.NEWS_LABEL_INSTITUTION || "Institution",
+  impact: process.env.NEWS_LABEL_IMPACT || "Impact",
 };
 
 const DESCS = {
-  research:     process.env.NEWS_DESC_RESEARCH     || "articles/journaux, conférences, CFP, résultats scientifiques",
-  policy:       process.env.NEWS_DESC_POLICY       || "lois, régulations, standards, cadres, gouvernance",
-  institution:  process.env.NEWS_DESC_INSTITUTION  || "communiqués des grandes agences et autorités (UNESCO, OCDE, CNIL, ministères…)",
-  impact:       process.env.NEWS_DESC_IMPACT       || "impact direct pour la classe/enseignants/universités/EdTech",
+  research: process.env.NEWS_DESC_RESEARCH || "articles/journaux, conférences, CFP, résultats scientifiques",
+  policy: process.env.NEWS_DESC_POLICY || "lois, régulations, standards, cadres, gouvernance",
+  institution: process.env.NEWS_DESC_INSTITUTION || "communiqués des grandes agences et autorités (UNESCO, OCDE, CNIL, ministères…)",
+  impact: process.env.NEWS_DESC_IMPACT || "impact direct pour la classe/enseignants/universités/EdTech",
 };
 
 function splitKeys(s, fallback) {
@@ -55,43 +55,43 @@ const KEYS = {
     "school,education,teacher,enseignant,k-12,universit,student,pupil,mooc,classroom,edtech"),
 };
 
-function mkRegex(keys){
+function mkRegex(keys) {
   const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   return new RegExp("(" + escaped.join("|") + ")", "i");
 }
 const RX = {
   research: mkRegex(KEYS.research),
-  policy:   mkRegex(KEYS.policy),
+  policy: mkRegex(KEYS.policy),
   institution: mkRegex(KEYS.institution),
-  impact:   mkRegex(KEYS.impact),
+  impact: mkRegex(KEYS.impact),
 };
 
 // --------- HELPERS ----------
 function toISO(d) { try { return new Date(d).toISOString(); } catch { return null; } }
-function toHttps(u) { if (!u) return u; if (u.startsWith("//")) return "https:"+u; if (u.startsWith("http://")) return "https://"+u.slice(7); return u; }
+function toHttps(u) { if (!u) return u; if (u.startsWith("//")) return "https:" + u; if (u.startsWith("http://")) return "https://" + u.slice(7); return u; }
 function host(u) { try { return new URL(u).hostname; } catch { return ""; } }
-function favicon(u, size=128) { const h=host(u); return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : ""; }
-function absUrl(pageUrl, src){ try{ return new URL(src, pageUrl).toString(); }catch{ return null; } }
-const clamp = (x,a,b)=> Math.max(a, Math.min(b, x|0));
+function favicon(u, size = 128) { const h = host(u); return h ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=${size}` : ""; }
+function absUrl(pageUrl, src) { try { return new URL(src, pageUrl).toString(); } catch { return null; } }
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x | 0));
 
 const DEFAULT_W = {
   research: { research: 40, policy: 25, institution: 20, impact: 15 },
   balanced: { research: 35, policy: 35, institution: 15, impact: 15 },
-  policy:   { research: 25, policy: 40, institution: 20, impact: 15 },
+  policy: { research: 25, policy: 40, institution: 20, impact: 15 },
 };
 
-function parseCustomWeights(raw){
+function parseCustomWeights(raw) {
   if (!raw) return null;
-  const parts = raw.split(",").map(x => clamp(parseInt(x,10), 0, 100));
+  const parts = raw.split(",").map(x => clamp(parseInt(x, 10), 0, 100));
   if (parts.length !== 4) return null;
-  const s = parts.reduce((a,b)=>a+b,0);
+  const s = parts.reduce((a, b) => a + b, 0);
   if (s <= 0) return null;
-  const k = 100/s;
-  const [r,p,i,m] = parts.map(v => Math.round(v*k));
-  return { research:r, policy:p, institution:i, impact:m };
+  const k = 100 / s;
+  const [r, p, i, m] = parts.map(v => Math.round(v * k));
+  return { research: r, policy: p, institution: i, impact: m };
 }
 
-function getWeights(profile){
+function getWeights(profile) {
   const override = parseCustomWeights(CUSTOM_WEIGHTS_RAW);
   if (override) return override;
   return DEFAULT_W[profile] || DEFAULT_W.balanced;
@@ -102,14 +102,14 @@ async function gatherAll() {
   const results = await Promise.all(SOURCES.map(readFeedMaybe));
   const all = results.flatMap(r => r.items);
   const unique = dedupe(all);
-  unique.sort((a,b) => (new Date(b.published || 0)) - (new Date(a.published || 0)));
+  unique.sort((a, b) => (new Date(b.published || 0)) - (new Date(a.published || 0)));
   return unique.slice(0, MAX_ITEMS_TOTAL);
 }
 
 // --- LLM prompt helpers ---
 function buildPromptWeights(W) {
   return `Pondérations (total 100) — ${LABELS.research}: ${W.research}, ${LABELS.policy}: ${W.policy}, ${LABELS.institution}: ${W.institution}, ${LABELS.impact}: ${W.impact}.` +
-  `\nDéfinitions: ${LABELS.research} = ${DESCS.research}; ${LABELS.policy} = ${DESCS.policy}; ${LABELS.institution} = ${DESCS.institution}; ${LABELS.impact} = ${DESCS.impact}.`;
+    `\nDéfinitions: ${LABELS.research} = ${DESCS.research}; ${LABELS.policy} = ${DESCS.policy}; ${LABELS.institution} = ${DESCS.institution}; ${LABELS.impact} = ${DESCS.impact}.`;
 }
 
 function buildBatchedInput(items, W) {
@@ -124,22 +124,22 @@ function buildBatchedInput(items, W) {
           "{score:int[0..100], " +
           " summary_en:string(2-3 phrases en anglais), " +
           " summary_fr:string(2-3 phrases en français adaptées à des enseignant·e·s francophones en Suisse, ton neutre), " +
-          " tags:string[2..5], " +
+          " tags:string[2..5] (inclure au moins un parmi: 'scientific', 'news', 'event', 'tech_update'), " +
           " breakdown: object<number>, " +
           " reason:string(1 phrase en français expliquant brièvement le score)}.\n" +
           "Le champ breakdown DOIT contenir les clés EXACTES: research, policy, institution, impact (entiers 0..100), " +
           "où les clés correspondent aux catégories décrites ci-dessous.\n" +
           buildPromptWeights(W) +
-          "\nPriorise: (i) articles/journaux/conférences (résultats, CFP, proceedings), " +
-          "(ii) politiques/régulation/standards/éthique/philosophie si configuré, " +
-          "(iii) communiqués d'institutions de premier plan."
+          "\nPriorise: (i) articles/journaux/conférences (Scientific), " +
+          "(ii) politiques/régulation/standards/éthique (News/Policy), " +
+          "(iii) communiqués d'institutions (Institution), (iv) updates de modèles/outils (Tech Update), (v) événements futurs (Event)."
       },
       { type: "input_text", text: `${it.title}\n${it.url}\n${it.snippet || ""}` }
     ]
   }));
 }
 
-function safeParseArray(txt){ try{ const v=JSON.parse(txt); return Array.isArray(v) ? v : null; }catch{ return null; } }
+function safeParseArray(txt) { try { const v = JSON.parse(txt); return Array.isArray(v) ? v : null; } catch { return null; } }
 
 function extractJsonArrayFromResponses(resp) {
   if (resp?.output_text) {
@@ -156,7 +156,7 @@ function extractJsonArrayFromResponses(resp) {
     const joined = texts.join("\n");
     const arr = safeParseArray(joined);
     if (arr) return arr;
-  } catch {}
+  } catch { }
   throw new Error("Impossible d'extraire le JSON structuré de la réponse OpenAI.");
 }
 
@@ -198,7 +198,7 @@ async function analyzeWithOpenAI(items, W) {
                     minimum: 0,
                     maximum: 100
                   },
-                  required: ["research","policy","institution","impact"]
+                  required: ["research", "policy", "institution", "impact"]
                 }
               }
             }
@@ -215,7 +215,7 @@ function attachAnalyses(items, analyses) {
     const a = analyses?.[i] || {};
     const bd = a.breakdown || {};
     const score = typeof a.score === "number" ? a.score :
-      Math.min(100, (bd.research|0)+(bd.policy|0)+(bd.institution|0)+(bd.impact|0));
+      Math.min(100, (bd.research | 0) + (bd.policy | 0) + (bd.institution | 0) + (bd.impact | 0));
 
     const summaryEn = a.summary_en || it.snippet || "";
     const summaryFr = a.summary_fr || summaryEn;
@@ -230,26 +230,26 @@ function attachAnalyses(items, analyses) {
       summary_fr: summaryFr,
       // alias pour compat avec l’UI existante
       resume_fr: summaryFr,
-      tags: Array.isArray(a.tags) && a.tags.length ? a.tags.slice(0,5) : [],
+      tags: Array.isArray(a.tags) && a.tags.length ? a.tags.slice(0, 5) : [],
       breakdown: {
-        research: bd.research|0,
-        policy: bd.policy|0,
-        institution: bd.institution|0,
-        impact: bd.impact|0
+        research: bd.research | 0,
+        policy: bd.policy | 0,
+        institution: bd.institution | 0,
+        impact: bd.impact | 0
       },
       reason: a.reason || ""
     };
   });
 }
 
-function makeHeuristic(W){
+function makeHeuristic(W) {
   return function scoreWithBreakdown(x) {
     const t = `${x.title} ${x.source}`.toLowerCase();
-    const bd = { research:0, policy:0, institution:0, impact:0 };
-    if (RX.research.test(t))    bd.research    += W.research;
-    if (RX.policy.test(t))      bd.policy      += W.policy;
+    const bd = { research: 0, policy: 0, institution: 0, impact: 0 };
+    if (RX.research.test(t)) bd.research += W.research;
+    if (RX.policy.test(t)) bd.policy += W.policy;
     if (RX.institution.test(t)) bd.institution += W.institution;
-    if (RX.impact.test(t))      bd.impact      += W.impact;
+    if (RX.impact.test(t)) bd.impact += W.impact;
     const score = Math.min(100, bd.research + bd.policy + bd.institution + bd.impact);
     const reason = `Heuristique: ${LABELS.research}=${bd.research}, ${LABELS.policy}=${bd.policy}, ${LABELS.institution}=${bd.institution}, ${LABELS.impact}=${bd.impact}.`;
     return { score, breakdown: bd, reason };
@@ -358,7 +358,7 @@ function mergeItems(existing, incoming, limit) {
   }
 
   const merged = Array.from(map.values());
-  merged.sort((a,b) => {
+  merged.sort((a, b) => {
     const da = a.published ? new Date(a.published).getTime() : 0;
     const db = b.published ? new Date(b.published).getTime() : 0;
     if (db !== da) return db - da;
@@ -375,7 +375,7 @@ function mergeItems(existing, incoming, limit) {
 async function buildForProfile(profile, gathered) {
   const W = getWeights(profile);
   const MIN_PUBLISH = MIN_PUBLISH_DEF;
-  const OUTPUT_CAP  = OUTPUT_CAP_DEF;
+  const OUTPUT_CAP = OUTPUT_CAP_DEF;
 
   let analyzed = [];
   let analysisFailed = false;
@@ -410,8 +410,8 @@ async function buildForProfile(profile, gathered) {
     });
   }
 
-  const ranked = [...analyzed].sort((a,b) =>
-    (b.score - a.score) || ((new Date(b.published||0)) - (new Date(a.published||0)))
+  const ranked = [...analyzed].sort((a, b) =>
+    (b.score - a.score) || ((new Date(b.published || 0)) - (new Date(a.published || 0)))
   );
 
   // sélection du batch courant
@@ -471,7 +471,7 @@ async function main() {
   const gathered = await gatherAll();
   console.log(`Gathered ${gathered.length} unique items (max=${MAX_ITEMS_TOTAL}).`);
 
-  const wanted = Array.from(new Set(PROFILES)).filter(p => ["balanced","research","policy"].includes(p));
+  const wanted = Array.from(new Set(PROFILES)).filter(p => ["balanced", "research", "policy"].includes(p));
   if (!wanted.length) wanted.push(PROFILE_DEFAULT);
 
   for (const p of wanted) {

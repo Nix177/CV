@@ -1,70 +1,235 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Tech News — Éducation numérique & IA</title>
-  <meta name="description" content="Sélection automatique des actualités importantes (éducation numérique, IA, recherches, conférences, politiques, standards)."/>
+  <meta name="description"
+    content="Sélection automatique des actualités importantes (éducation numérique, IA, recherches, conférences, politiques, standards)." />
 
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
 
   <style>
-    :root { --line: var(--border); }
-    main { max-width:1100px; margin: 10px auto 28px; padding: 0 16px; }
-    header.page { max-width:1100px; margin: calc(10px + var(--nt-nav-h,60px)) auto 8px; padding: 0 16px; }
-    .title { margin: 4px 0 4px; }
-    .lead  { margin: 0 0 10px; }
+    :root {
+      --line: var(--border);
+    }
 
-    .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .toolbar .chip { cursor:pointer; }
-    .toolbar .sep { opacity:.4; }
+    main {
+      max-width: 1100px;
+      margin: 10px auto 28px;
+      padding: 0 16px;
+    }
 
-    .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-    .card { background: var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px; box-shadow: var(--shadow); }
-    .thumb { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:10px; border:1px solid var(--line); background:#0d1b2b; }
-    .meta { color: var(--muted); font-size:.92rem; margin:0; }
-    .r { margin:0; }
-    .tags { display:flex; flex-wrap:wrap; gap:6px; }
-    .tag { border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:.85rem }
+    header.page {
+      max-width: 1100px;
+      margin: calc(10px + var(--nt-nav-h, 60px)) auto 8px;
+      padding: 0 16px;
+    }
 
-    .pager { display:flex; gap:8px; align-items:center; justify-content:flex-end; flex-wrap:wrap; margin:12px 0 0; }
-    .pager a, .pager span, .toolbar .chip { padding:6px 10px; border:1px solid var(--line); border-radius:10px; background: var(--surface); color: var(--text); text-decoration:none; }
-    .pager .current { font-weight:700; background: color-mix(in oklab, var(--surface), #fff 6%); }
-    .muted { color: var(--muted); }
-    .reason { font-size:.9rem; color: var(--muted); margin: 0; }
-    .bd { font-variant-numeric: tabular-nums; }
-    .weights { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-    .weights .row { display:flex; gap:8px; align-items:center; }
-    .weights input[type="range"]{ width:140px; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    details.explain { margin-top: 8px; }
+    .title {
+      margin: 4px 0 4px;
+    }
+
+    .lead {
+      margin: 0 0 10px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar .chip {
+      cursor: pointer;
+    }
+
+    .toolbar .sep {
+      opacity: .4;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #0d1b2b;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 0;
+    }
+
+    .r {
+      margin: 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: .85rem
+    }
+
+    .pager {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin: 12px 0 0;
+    }
+
+    .pager a,
+    .pager span,
+    .toolbar .chip {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .pager .current {
+      font-weight: 700;
+      background: color-mix(in oklab, var(--surface), #fff 6%);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .reason {
+      font-size: .9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .bd {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .weights {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .weights .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .weights input[type="range"] {
+      width: 140px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    details.explain {
+      margin-top: 8px;
+    }
 
     /* Advanced panel */
-    details#adv summary { list-style: none; }
-    details#adv[open] > div { margin-top: 8px; }
-    details#adv input { margin-left: 6px; }
+    details#adv summary {
+      list-style: none;
+    }
+
+    details#adv[open]>div {
+      margin-top: 8px;
+    }
+
+    details#adv input {
+      margin-left: 6px;
+    }
 
     /* overlay build / refresh */
     .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.5);
-      display: none; align-items:center; justify-content:center;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      align-items: center;
+      justify-content: center;
       z-index: 9999;
     }
+
     .dialog {
-      background: var(--card); border:1px solid var(--border); border-radius:14px;
-      padding:18px; width: min(520px, 92vw); color: var(--text); box-shadow: var(--shadow);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      width: min(520px, 92vw);
+      color: var(--text);
+      box-shadow: var(--shadow);
     }
-    .progress { width:100%; height:10px; border:1px solid var(--line); border-radius:999px; overflow:hidden; margin:10px 0 0; background: var(--surface); }
-    .bar { height:100%; width:0%; background: linear-gradient(90deg, #7aa2f7, #a0c2ff); transition: width .5s ease; }
-    .rowb { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 0;
+      background: var(--surface);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7aa2f7, #a0c2ff);
+      transition: width .5s ease;
+    }
+
+    .rowb {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
+
 <body>
   <header class="page" aria-label="En-tête page Tech News">
     <h1 class="title">Tech News</h1>
-    <p class="lead">Actus importantes + <strong>recherche & conférences</strong> (LLM/outils inclus), triées par pertinence/date.</p>
+    <p class="lead">Actus importantes + <strong>recherche & conférences</strong> (LLM/outils inclus), triées par
+      pertinence/date.</p>
 
     <div class="toolbar">
       <button id="refresh" class="btn">Actualiser</button>
@@ -73,7 +238,18 @@
 
       <span class="muted">Affichage :</span>
       <a href="#" data-view="pages" class="chip" id="viewPages">Par pages</a>
-      <a href="#" data-view="days"  class="chip" id="viewDays">Par jours</a>
+      <a href="#" data-view="days" class="chip" id="viewDays">Par jours</a>
+
+      <span class="sep">|</span>
+      <!-- Filtres Catégories -->
+      <span class="muted">Catégorie :</span>
+      <select id="catFilter">
+        <option value="">Tout</option>
+        <option value="scientific">Scientifique</option>
+        <option value="news">News</option>
+        <option value="event">Événement</option>
+        <option value="tech_update">Tech Update</option>
+      </select>
 
       <span class="sep">|</span>
       <label class="select">Page size
@@ -109,7 +285,8 @@
       <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
       <p class="muted">
         Les sources sont d'abord filtrées (éducation numérique, IA, EdTech, politiques/standards). Ensuite, chaque item
-        reçoit un score global (0-100) combinant plusieurs dimensions (recherche, politiques, institutions, impact potentiel
+        reçoit un score global (0-100) combinant plusieurs dimensions (recherche, politiques, institutions, impact
+        potentiel
         pour l'enseignement).
       </p>
       <p class="muted bd" id="weightsSum">Poids (normés) R/P/I/M: —</p>
@@ -142,9 +319,11 @@
       </div>
       <div class="muted">
         <ul>
-          <li><strong>R — Recherche</strong> : articles, journaux, conférences, appels à communications, résultats scientifiques.</li>
+          <li><strong>R — Recherche</strong> : articles, journaux, conférences, appels à communications, résultats
+            scientifiques.</li>
           <li><strong>P — Politiques</strong> : lois, régulations, standards, cadres/“frameworks”.</li>
-          <li><strong>I — Institution</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).</li>
+          <li><strong>I — Institution</strong> : grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…).
+          </li>
           <li><strong>M — Impact</strong> : impact direct pour l’enseignement, les élèves/enseignants, l’EdTech.</li>
         </ul>
       </div>
@@ -154,12 +333,15 @@
       <summary>Options avancées (preview, build GitHub Actions…)</summary>
       <div>
         <div class="rowb">
-          <label class="chip"><input type="checkbox" id="previewMode"> Mode preview (ne pas toucher au flux global)</label>
-          <span class="muted">Le mode preview lit/écrit dans un flux séparé (prévisualisation) sans modifier le flux stable.</span>
+          <label class="chip"><input type="checkbox" id="previewMode"> Mode preview (ne pas toucher au flux
+            global)</label>
+          <span class="muted">Le mode preview lit/écrit dans un flux séparé (prévisualisation) sans modifier le flux
+            stable.</span>
         </div>
         <div class="rowb">
           <button id="buildBtn" class="btn">Lancer une mise à jour via GitHub Actions</button>
-          <span class="muted">Crée un run GitHub Actions qui rafraîchit les news sur le dépôt (profil + poids + seuil).</span>
+          <span class="muted">Crée un run GitHub Actions qui rafraîchit les news sur le dépôt (profil + poids +
+            seuil).</span>
         </div>
       </div>
     </details>
@@ -186,8 +368,11 @@
     <div class="dialog">
       <h2>Mise à jour du flux</h2>
       <p id="ovlStatus" class="muted">Initialisation…</p>
-      <div class="progress"><div class="bar" id="ovlBar"></div></div>
-      <p class="muted mono" style="margin-top:10px;">Cette opération déclenche un workflow GitHub Actions qui reconstruit le flux Tech News.</p>
+      <div class="progress">
+        <div class="bar" id="ovlBar"></div>
+      </div>
+      <p class="muted mono" style="margin-top:10px;">Cette opération déclenche un workflow GitHub Actions qui
+        reconstruit le flux Tech News.</p>
     </div>
   </div>
 
@@ -211,6 +396,7 @@
     const showMeta = document.getElementById("showMeta");
     const pageSizeSel = document.getElementById("pageSize");
     const qInput = document.getElementById("q");
+    const catFilter = document.getElementById("catFilter");
     const profileSel = document.getElementById("profile");
 
     const viewPagesBtn = document.getElementById("viewPages");
@@ -238,27 +424,27 @@
     (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
 
     const DEFAULT_W = {
-      research: [40,25,20,15],
-      balanced: [35,35,15,15],
-      policy:   [25,40,20,15],
+      research: [40, 25, 20, 15],
+      balanced: [35, 35, 15, 15],
+      policy: [25, 40, 20, 15],
     };
 
     const profileURL = (params.get("profile") || localStorage.getItem("newsProfile") || "balanced").toLowerCase();
-    profileSel.value = ["balanced","research","policy"].includes(profileURL) ? profileURL : "balanced";
+    profileSel.value = ["balanced", "research", "policy"].includes(profileURL) ? profileURL : "balanced";
     let THRESH = clampInt(params.get("t") || "0", 0, 100);
 
-    const customKey = (p)=> `newsWeights_${p}`;
-    const customFlagKey = (p)=> `newsWeightsEnabled_${p}`;
-    function readCustomRaw(p){
+    const customKey = (p) => `newsWeights_${p}`;
+    const customFlagKey = (p) => `newsWeightsEnabled_${p}`;
+    function readCustomRaw(p) {
       const qs = params.get("w");
-      if (qs) return qs.split(",").map(n=>clampInt(n,0,100));
+      if (qs) return qs.split(",").map(n => clampInt(n, 0, 100));
       const s = localStorage.getItem(customKey(p));
-      return s ? s.split(",").map(n=>clampInt(n,0,100)) : null;
+      return s ? s.split(",").map(n => clampInt(n, 0, 100)) : null;
     }
-    function readCustomEnabled(p){
-      if (params.has("cw")) return params.get("cw")==="1";
+    function readCustomEnabled(p) {
+      if (params.has("cw")) return params.get("cw") === "1";
       const v = localStorage.getItem(customFlagKey(p));
-      return v ? v==="1" : false;
+      return v ? v === "1" : false;
     }
 
     let DATA = null;
@@ -269,30 +455,30 @@
     qInput.value = FILTER;
     (VIEW === "days" ? viewDaysBtn : viewPagesBtn).setAttribute("aria-current", "page");
     useCustom.checked = USE_CUSTOM;
-    [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
+    [wR, wP, wI, wM].forEach((el, i) => el.value = String(RAW_W[i] || 0));
     updateWeightsLabels();
 
     previewModeChk.checked = PREVIEW;
 
-    function toHttps(u){ if (!u) return ""; if (u.startsWith("//")) return "https:"+u; if (u.startsWith("http://")) return "https://"+u.slice(7); return u; }
+    function toHttps(u) { if (!u) return ""; if (u.startsWith("//")) return "https:" + u; if (u.startsWith("http://")) return "https://" + u.slice(7); return u; }
 
-    function clampInt(v, min, max){
-      const n = parseInt(v,10);
+    function clampInt(v, min, max) {
+      const n = parseInt(v, 10);
       if (isNaN(n)) return min;
       return Math.max(min, Math.min(max, n));
     }
 
-    function currentWeights(){
+    function currentWeights() {
       if (!USE_CUSTOM) return DEFAULT_W[profileSel.value];
-      const arr = [wR,wP,wI,wM].map(el => clampInt(el.value, 0, 100));
-      const s = arr.reduce((a,b)=>a+b,0) || 1;
-      return arr.map(v => Math.round(v*100/s));
+      const arr = [wR, wP, wI, wM].map(el => clampInt(el.value, 0, 100));
+      const s = arr.reduce((a, b) => a + b, 0) || 1;
+      return arr.map(v => Math.round(v * 100 / s));
     }
 
     function makeUrls(profile) {
       const base = PREVIEW
         ? (profile === "balanced" ? "feed-preview.json" : `feed-${profile}-preview.json`)
-        : (profile === "balanced" ? "feed.json"        : `feed-${profile}.json`);
+        : (profile === "balanced" ? "feed.json" : `feed-${profile}.json`);
       return [
         `/news/${base}`,
         `https://raw.githubusercontent.com/Nix177/CV/main/public/news/${base}`
@@ -303,21 +489,21 @@
         try {
           const r = await fetch(u, { cache: "no-store" });
           if (r.ok) return await r.json();
-        } catch {}
+        } catch { }
       }
       throw new Error("Aucune source disponible");
     }
 
     function updateLabelsExplain() {
-      const L = DATA?.debug?.labelsUsed || { research:"Recherche", policy:"Politiques", institution:"Institution", impact:"Impact" };
-      const D = DATA?.debug?.descUsed   || {};
+      const L = DATA?.debug?.labelsUsed || { research: "Recherche", policy: "Politiques", institution: "Institution", impact: "Impact" };
+      const D = DATA?.debug?.descUsed || {};
       const explain = document.querySelector("details.explain .muted");
       if (explain) {
         const ul = explain.querySelector("ul");
         if (ul) {
           ul.innerHTML = `
             <li><strong>R — ${L.research}</strong> : ${D.research || "articles/journaux, conférences, CFP, résultats scientifiques."}</li>
-            <li><strong>P — ${L.policy}</strong> : ${D.policy   || "lois, régulations, standards, cadres/“frameworks”."}</li>
+            <li><strong>P — ${L.policy}</strong> : ${D.policy || "lois, régulations, standards, cadres/“frameworks”."}</li>
             <li><strong>I — ${L.institution}</strong> : ${D.institution || "grandes agences & autorités (UNESCO, OCDE, CNIL, NCSC, ministères…)."}
             </li>
             <li><strong>M — ${L.impact}</strong> : ${D.impact || "impact direct pour l’enseignement, les élèves/enseignants, l’EdTech."}</li>
@@ -326,10 +512,27 @@
       }
     }
 
-    function filterItems(items){
+    function filterItems(items) {
       const q = (qInput.value || "").trim().toLowerCase();
-      if (!q) return items;
+      const cat = catFilter ? catFilter.value : "";
+
       return items.filter(it => {
+        // 1. Category Filter
+        if (cat) {
+          const tTags = (it.tags || []).map(t => t.toLowerCase());
+          const hasTag = tTags.includes(cat);
+
+          let matchesHeuristic = false;
+          if (!hasTag) {
+            const bd = it.breakdown || {};
+            if (cat === "scientific" && bd.research >= 60) matchesHeuristic = true;
+            if (cat === "news" && (bd.policy >= 50 || bd.impact >= 50)) matchesHeuristic = true;
+          }
+          if (!hasTag && !matchesHeuristic) return false;
+        }
+
+        // 2. Text Filter
+        if (!q) return true;
         const hay = [
           it.title || "",
           it.source || "",
@@ -345,22 +548,22 @@
       const map = new Map();
       for (const it of items) {
         const d = it.published ? new Date(it.published) : null;
-        const key = d ? d.toISOString().slice(0,10) : "inconnue";
+        const key = d ? d.toISOString().slice(0, 10) : "inconnue";
         if (!map.has(key)) map.set(key, []);
         map.get(key).push(it);
       }
-      const days = Array.from(map.keys()).sort((a,b) => b.localeCompare(a));
+      const days = Array.from(map.keys()).sort((a, b) => b.localeCompare(a));
       return { map, days };
     }
 
-    function pagerLinks(totalPages, current, qs, prevLabel="◀ Page préc.", nextLabel="Page suiv. ▶") {
+    function pagerLinks(totalPages, current, qs, prevLabel = "◀ Page préc.", nextLabel = "Page suiv. ▶") {
       const links = [];
       if (current > 1) {
         const u = new URL(location.href);
         const p = new URLSearchParams(qs);
         p.set("view", VIEW);
-        if (VIEW === "pages") p.set("p", String(current-1));
-        if (VIEW === "days")  p.set("d", String(current-1));
+        if (VIEW === "pages") p.set("p", String(current - 1));
+        if (VIEW === "days") p.set("d", String(current - 1));
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="prev">${prevLabel}</a>`);
       } else {
@@ -371,8 +574,8 @@
         const u = new URL(location.href);
         const p = new URLSearchParams(qs);
         p.set("view", VIEW);
-        if (VIEW === "pages") p.set("p", String(current+1));
-        if (VIEW === "days")  p.set("d", String(current+1));
+        if (VIEW === "pages") p.set("p", String(current + 1));
+        if (VIEW === "days") p.set("d", String(current + 1));
         u.search = p.toString();
         links.push(`<a href="${u.toString()}" rel="next">${nextLabel}</a>`);
       } else {
@@ -381,7 +584,7 @@
       return links.join(" ");
     }
 
-    function buildQS(extra={}) {
+    function buildQS(extra = {}) {
       const p = new URLSearchParams();
       p.set("view", VIEW);
       p.set("n", PAGE_SIZE);
@@ -393,16 +596,16 @@
       const FILTER = (qInput.value || "").trim();
       if (FILTER) p.set("q", FILTER);
       if (VIEW === "pages") p.set("p", PAGE);
-      if (VIEW === "days")  p.set("d", DAY_INDEX);
-      for (const [k,v] of Object.entries(extra)) {
-        if (v==null) continue;
+      if (VIEW === "days") p.set("d", DAY_INDEX);
+      for (const [k, v] of Object.entries(extra)) {
+        if (v == null) continue;
         p.set(k, v);
       }
       return p.toString();
     }
 
-    function weightsLabel(){
-      const [r,p,i,m] = currentWeights();
+    function weightsLabel() {
+      const [r, p, i, m] = currentWeights();
       return `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
     }
 
@@ -425,7 +628,7 @@
       if (VIEW === "pages") {
         const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
         if (PAGE > pages) PAGE = pages;
-        const start = (PAGE-1) * PAGE_SIZE;
+        const start = (PAGE - 1) * PAGE_SIZE;
         renderSlice(itemsAll.slice(start, start + PAGE_SIZE));
         const qs = buildQS({ p: undefined });
         pager.innerHTML = pagerLinks(pages, PAGE, qs);
@@ -433,7 +636,7 @@
         const { map, days } = groupByDay(itemsAll);
         const dPages = Math.max(1, days.length);
         if (DAY_INDEX > dPages) DAY_INDEX = dPages;
-        const dayKey = days[DAY_INDEX-1];
+        const dayKey = days[DAY_INDEX - 1];
         renderSlice(map.get(dayKey) || []);
         const qs = buildQS({ d: undefined });
         pager.innerHTML = pagerLinks(dPages, DAY_INDEX, qs, "◀ Jour préc.", "Jour suiv. ▶");
@@ -468,7 +671,7 @@
         }
         if (showMeta.checked) {
           const bd = it.breakdown || {};
-          meta += ` • R/P/I/M: ${(bd.research|0)}/${(bd.policy|0)}/${(bd.institution|0)}/${(bd.impact|0)}`;
+          meta += ` • R/P/I/M: ${(bd.research | 0)}/${(bd.policy | 0)}/${(bd.institution | 0)}/${(bd.impact | 0)}`;
         }
         tpl.querySelector(".meta").textContent = meta;
 
@@ -515,22 +718,24 @@
       url.search = params.toString(); location.href = url.toString();
     });
 
+    catFilter.addEventListener("change", render);
+
     profileSel.addEventListener("change", () => {
       const p = profileSel.value;
       localStorage.setItem("newsProfile", p);
       RAW_W = readCustomRaw(p) || DEFAULT_W[p];
       USE_CUSTOM = readCustomEnabled(p);
       useCustom.checked = USE_CUSTOM;
-      [wR,wP,wI,wM].forEach((el,i)=> el.value = String(RAW_W[i]||0));
+      [wR, wP, wI, wM].forEach((el, i) => el.value = String(RAW_W[i] || 0));
       updateWeightsLabels();
       params.set("profile", p);
       params.set("p", "1");
       url.search = params.toString(); location.href = url.toString();
     });
 
-    [wR,wP,wI,wM].forEach(el => {
+    [wR, wP, wI, wM].forEach(el => {
       el.addEventListener("input", () => {
-        RAW_W = [wR,wP,wI,wM].map(x=>clampInt(x.value,0,100));
+        RAW_W = [wR, wP, wI, wM].map(x => clampInt(x.value, 0, 100));
         updateWeightsLabels();
       });
     });
@@ -539,7 +744,7 @@
       USE_CUSTOM = useCustom.checked;
       const p = profileSel.value;
       localStorage.setItem(customKey(p), RAW_W.join(","));
-      localStorage.setItem(customFlagKey(p), USE_CUSTOM ? "1":"0");
+      localStorage.setItem(customFlagKey(p), USE_CUSTOM ? "1" : "0");
       updateWeightsLabels();
       render();
     });
@@ -571,7 +776,7 @@
     buildBtn.addEventListener("click", async () => {
       try {
         showOverlay("Création du run GitHub Actions…", 10);
-        const [r,p,i,m] = currentWeights();
+        const [r, p, i, m] = currentWeights();
         const body = {
           profile: profileSel.value,
           score_min: THRESH,
@@ -598,14 +803,14 @@
       }
     });
 
-    function showOverlay(txt, pct){
+    function showOverlay(txt, pct) {
       overlay.style.display = "flex";
       ovlStatus.textContent = txt || "";
-      ovlBar.style.width = (pct||0) + "%";
+      ovlBar.style.width = (pct || 0) + "%";
     }
-    function hideOverlay(){ overlay.style.display = "none"; }
+    function hideOverlay() { overlay.style.display = "none"; }
 
-    async function pollRun(key){
+    async function pollRun(key) {
       let pct = 20;
       showOverlay("Run créé, en attente du runner…", pct);
       const start = Date.now();
@@ -613,20 +818,20 @@
       while (true) {
         await new Promise(r => setTimeout(r, 4000));
 
-        const r = await fetch(`/api/check-news?run_key=${encodeURIComponent(key)}`, { cache:"no-store" });
+        const r = await fetch(`/api/check-news?run_key=${encodeURIComponent(key)}`, { cache: "no-store" });
         const j = await r.json();
         if (!j.found) {
-          pct = Math.min(50, pct+5);
+          pct = Math.min(50, pct + 5);
           showOverlay("Run en file d'attente…", pct);
           continue;
         }
         if (j.status === "queued") {
-          pct = Math.min(60, pct+5);
+          pct = Math.min(60, pct + 5);
           showOverlay("Queued…", pct);
           continue;
         }
         if (j.status === "in_progress") {
-          pct = Math.min(90, 60 + Math.floor((Date.now()-start)/15000));
+          pct = Math.min(90, 60 + Math.floor((Date.now() - start) / 15000));
           showOverlay("En cours d'exécution…", pct);
           continue;
         }
@@ -641,13 +846,13 @@
       }
     }
 
-    function updateWeightsLabels(){
-      const [r,p,i,m] = currentWeights();
+    function updateWeightsLabels() {
+      const [r, p, i, m] = currentWeights();
       weightsSum.textContent = `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
       wRVal.textContent = r; wPVal.textContent = p; wIVal.textContent = i; wMVal.textContent = m;
     }
 
-    async function load(){
+    async function load() {
       try {
         const urls = makeUrls(profileSel.value);
         const data = await fetchFirstOk(urls);
@@ -673,4 +878,5 @@
     load();
   </script>
 </body>
+
 </html>

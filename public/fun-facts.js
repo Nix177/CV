@@ -7,7 +7,7 @@
 
   // ---------- Langue ----------
   const getLang = () => {
-    const h = (document.documentElement.getAttribute('lang') || '').slice(0,2).toLowerCase();
+    const h = (document.documentElement.getAttribute('lang') || '').slice(0, 2).toLowerCase();
     if (h) return h;
     const path = (location.pathname.split('/').pop() || '').toLowerCase();
     const m = path.match(/-(en|de)\.html?$/);
@@ -17,9 +17,9 @@
 
   // ---------- Root / états ----------
   const ROOT = document.getElementById('ff_root');
-  const setReady   = () => { if (ROOT){ ROOT.classList.remove('ff-pending'); ROOT.classList.add('ff-ready'); } };
+  const setReady = () => { if (ROOT) { ROOT.classList.remove('ff-pending'); ROOT.classList.add('ff-ready'); } };
   const setPending = (msg) => {
-    if (ROOT){ ROOT.classList.remove('ff-ready'); ROOT.classList.add('ff-pending'); }
+    if (ROOT) { ROOT.classList.remove('ff-ready'); ROOT.classList.add('ff-pending'); }
     const st = document.getElementById('ff_status'); if (st) st.textContent = msg || '';
   };
 
@@ -28,12 +28,18 @@
 
   // ---------- i18n ----------
   const LMAP = {
-    fr: { myth:'Idée reçue', fact:'Réponse', source:'Source', newBatch:'🎲 Nouveau lot aléatoire', noData:'Aucune donnée disponible pour le moment.', cards:'cartes',
-          ask:'Questions sur ces idées reçues ?', placeholder:'Pose ta question…', send:'Envoyer', thinking:'Je réfléchis…' },
-    en: { myth:'Myth',       fact:'Answer',  source:'Source', newBatch:'🎲 New random batch',      noData:'No data available for now.',           cards:'cards',
-          ask:'Questions about these myths?', placeholder:'Ask a question…', send:'Send', thinking:'Thinking…' },
-    de: { myth:'Irrtum',     fact:'Antwort', source:'Quelle', newBatch:'🎲 Neuer zufälliger Satz',  noData:'Zurzeit keine Daten verfügbar.',       cards:'Karten',
-          ask:'Fragen zu diesen Irrtümern?', placeholder:'Stelle eine Frage…', send:'Senden', thinking:'Ich überlege…' },
+    fr: {
+      myth: 'Idée reçue', fact: 'Réponse', source: 'Source', newBatch: '🎲 Nouveau lot aléatoire', noData: 'Aucune donnée disponible pour le moment.', cards: 'cartes',
+      ask: 'Questions sur ces idées reçues ?', placeholder: 'Pose ta question…', send: 'Envoyer', thinking: 'Je réfléchis…'
+    },
+    en: {
+      myth: 'Myth', fact: 'Answer', source: 'Source', newBatch: '🎲 New random batch', noData: 'No data available for now.', cards: 'cards',
+      ask: 'Questions about these myths?', placeholder: 'Ask a question…', send: 'Send', thinking: 'Thinking…'
+    },
+    de: {
+      myth: 'Irrtum', fact: 'Antwort', source: 'Quelle', newBatch: '🎲 Neuer zufälliger Satz', noData: 'Zurzeit keine Daten verfügbar.', cards: 'Karten',
+      ask: 'Fragen zu diesen Irrtümern?', placeholder: 'Stelle eine Frage…', send: 'Senden', thinking: 'Ich überlege…'
+    },
   };
   const L = LMAP[LANG] || LMAP.fr;
 
@@ -52,8 +58,8 @@
       .ff-card.is-flipped .ff-inner{transform:rotateY(180deg);}
 
       .ff-face{display:block !important;position:absolute !important;inset:0 !important;overflow:auto;
-               backface-visibility:hidden !important;padding:16px;border-radius:16px;background:rgba(255,255,255,.06);
-               border:1px solid rgba(255,255,255,.10);color:#e8efff;box-shadow:0 6px 20px rgba(0,0,0,.28)}
+               backface-visibility:hidden !important;padding:16px;border-radius:16px;background:#1a2635;
+               border:1px solid rgba(255,255,255,.12);color:#e8efff;box-shadow:0 6px 20px rgba(0,0,0,.4)}
       .ff-face.ff-back{transform:rotateY(180deg);}
       .ff-head{font-weight:700;opacity:.92;margin-bottom:8px}
       .badge{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.18);font-size:.85rem}
@@ -96,8 +102,8 @@
   }
 
   // ---------- DOM helpers ----------
-  const $  = (s, el=document) => el.querySelector(s);
-  const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const ensureGrid = () => {
     let grid = $('#facts-grid');
     if (!grid) {
@@ -116,23 +122,23 @@
   const COUNT = $('#ff_count');
 
   // ---------- Squelettes ----------
-  const showSkeleton = (n=9) => { GRID.classList.add('ff-loading'); GRID.setAttribute('aria-busy','true'); GRID.innerHTML=''; for(let i=0;i<n;i++){ const d=document.createElement('div'); d.className='ff-skel'; GRID.appendChild(d); } };
-  const clearSkeleton = () => { GRID.classList.remove('ff-loading'); GRID.removeAttribute('aria-busy'); GRID.innerHTML=''; };
+  const showSkeleton = (n = 9) => { GRID.classList.add('ff-loading'); GRID.setAttribute('aria-busy', 'true'); GRID.innerHTML = ''; for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'ff-skel'; GRID.appendChild(d); } };
+  const clearSkeleton = () => { GRID.classList.remove('ff-loading'); GRID.removeAttribute('aria-busy'); GRID.innerHTML = ''; };
 
   // ---------- Texte ----------
-  const clampWords = (txt, max=30) => { if (!txt) return ''; const w = txt.trim().split(/\s+/); return (w.length<=max)?txt.trim():(w.slice(0,max).join(' ')+'…'); };
-  const sentence = s => { if (!s) return ''; const t=s.trim().replace(/\s+/g,' '); return t ? t[0].toUpperCase()+t.slice(1) : ''; };
-  const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s+'.' : s);
-  const domain = u => { try { return new URL(u).hostname.replace(/^www\./,''); } catch { return ''; } };
+  const clampWords = (txt, max = 30) => { if (!txt) return ''; const w = txt.trim().split(/\s+/); return (w.length <= max) ? txt.trim() : (w.slice(0, max).join(' ') + '…'); };
+  const sentence = s => { if (!s) return ''; const t = s.trim().replace(/\s+/g, ' '); return t ? t[0].toUpperCase() + t.slice(1) : ''; };
+  const ensureDot = s => /[.!?…]$/.test(s) ? s : (s ? s + '.' : s);
+  const domain = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
 
   // ---------- Keys / normalisation ----------
-  const shortHash = (str) => { let h=2166136261>>>0; const s=String(str||''); for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=(h+(h<<1)+(h<<4)+(h<<7)+(h<<8)+(h<<24))>>>0; } return h.toString(36); };
+  const shortHash = (str) => { let h = 2166136261 >>> 0; const s = String(str || ''); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)) >>> 0; } return h.toString(36); };
   const keyOf = (it) => it?.id ? String(it.id) : shortHash((it?.claim || it?.title || '') + '|' + (it?.source || it?.url || ''));
   const normalize = (it) => {
     const type = (it.type || 'myth').toLowerCase();
     const claimRaw = it.claim || it.title || it.q || '';
     let explainRaw = it.explainShort || it.explanation || it.explain || it.truth || it.answer || '';
-    const claim   = ensureDot(sentence(claimRaw));
+    const claim = ensureDot(sentence(claimRaw));
     const explain = ensureDot(sentence(clampWords(explainRaw, 30)));
     const url = it.source || it.url || (Array.isArray(it.sources) && it.sources[0] && (it.sources[0].url || it.sources[0])) || '';
     return { type, claim, explain, url, _k: keyOf(it) };
@@ -144,20 +150,20 @@
     const inner = document.createElement('div'); inner.className = 'ff-inner';
     const front = document.createElement('div'); front.className = 'ff-face ff-front';
     front.innerHTML = `<div class="ff-head"><span class="badge">${L.myth}</span></div><p class="ff-text ff-claim">${n.claim || ''}</p><div class="ff-actions"></div>`;
-    const back = document.createElement('div');  back.className = 'ff-face ff-back';
+    const back = document.createElement('div'); back.className = 'ff-face ff-back';
     const link = n.url ? `<a class="ff-link" href="${n.url}" target="_blank" rel="noopener">${L.source} · ${domain(n.url)}</a>` : '';
     back.innerHTML = `<p class="ff-text ff-explain">${n.explain || ''}</p><div class="ff-actions">${link}</div>`;
     inner.append(front, back); wrap.appendChild(inner);
     const flip = () => wrap.classList.toggle('is-flipped');
     wrap.addEventListener('click', e => { if (!e.target.closest('a')) flip(); });
-    wrap.addEventListener('keydown', e => { if (e.key===' '||e.key==='Enter'){ e.preventDefault(); flip(); }});
+    wrap.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); } });
     return wrap;
   };
 
   // ---------- Anti-répétitions (scopé par langue) ----------
   const LS_SEEN = `ff_seen_ids_v2_${LANG}`;
   const loadSeen = () => { try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) || '[]')); } catch { return new Set(); } };
-  const saveSeen = (set) => { const arr=[...set]; localStorage.setItem(LS_SEEN, JSON.stringify(arr.slice(-600))); };
+  const saveSeen = (set) => { const arr = [...set]; localStorage.setItem(LS_SEEN, JSON.stringify(arr.slice(-600))); };
   let seenIDs = loadSeen();
   let lastKeys = new Set();
 
@@ -186,46 +192,46 @@
   // ---------- Fallback fetch ----------
   const fetchJSON = async (url) => {
     log('fetch:', url);
-    const res = await fetch(url, { headers:{'Accept':'application/json'} });
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
     const ct = res.headers.get('content-type') || '';
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    if (!/json/i.test(ct)){ const txt = await res.text(); throw new Error(`Réponse non-JSON (${ct}): ${txt.slice(0,120)}…`); }
+    if (!/json/i.test(ct)) { const txt = await res.text(); throw new Error(`Réponse non-JSON (${ct}): ${txt.slice(0, 120)}…`); }
     return res.json();
   };
 
   // ---------- Batch ----------
-  function sampleExcluding(arr, want, excluded) { const out=[]; for(const it of arr){ const k=keyOf(it); if(!excluded.has(k)){ out.push(it); if(out.length>=want) break; } } return out; }
-  function shuffleInPlace(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function sampleExcluding(arr, want, excluded) { const out = []; for (const it of arr) { const k = keyOf(it); if (!excluded.has(k)) { out.push(it); if (out.length >= want) break; } } return out; }
+  function shuffleInPlace(a) { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0;[a[i], a[j]] = [a[j], a[i]]; } return a; }
 
   const fetchBatch = async (n) => {
     // 1) dataset local
     const ds = await fetchDataset(LANG);
-    if (Array.isArray(ds) && ds.length){
-      const pool=shuffleInPlace(ds.slice());
-      const pick=sampleExcluding(pool, n*3, new Set([...seenIDs, ...lastKeys]));
-      if (pick.length) return { arr: pick, meta: { source:'dataset' } };
+    if (Array.isArray(ds) && ds.length) {
+      const pool = shuffleInPlace(ds.slice());
+      const pick = sampleExcluding(pool, n * 3, new Set([...seenIDs, ...lastKeys]));
+      if (pick.length) return { arr: pick, meta: { source: 'dataset' } };
     }
     // 2) API ff-batch (avec seen hashé)
     try {
       const seenQs = buildSeenParam(new Set([...seenIDs, ...lastKeys]));
-      const url1 = `/api/ff-batch?lang=${encodeURIComponent(LANG)}&count=${n*3}${seenQs}`;
+      const url1 = `/api/ff-batch?lang=${encodeURIComponent(LANG)}&count=${n * 3}${seenQs}`;
       const data1 = await fetchJSON(url1);
-      if (Array.isArray(data1) && data1.length) return { arr: data1, meta:{source:'ff-batch'} };
-    } catch(e){ log('ff-batch failed → fallback /api/facts', e); }
+      if (Array.isArray(data1) && data1.length) return { arr: data1, meta: { source: 'ff-batch' } };
+    } catch (e) { log('ff-batch failed → fallback /api/facts', e); }
     // 3) API facts (dernier filet)
     const url2 = `/api/facts?lang=${encodeURIComponent(LANG)}&n=${n}&t=${Date.now()}`;
     const data2 = await fetchJSON(url2);
     const arr = Array.isArray(data2) ? data2
-            : Array.isArray(data2?.items) ? data2.items
-            : Array.isArray(data2?.facts) ? data2.facts : [];
-    return { arr, meta:{source:'facts'} };
+      : Array.isArray(data2?.items) ? data2.items
+        : Array.isArray(data2?.facts) ? data2.facts : [];
+    return { arr, meta: { source: 'facts' } };
   };
 
   // ---------- getFacts (avec wrap-around quand tout est vu) ----------
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   async function getFacts(n = 9, maxTries = 3) {
     const picked = [];
-    const avoid  = new Set([...lastKeys]);                 // ne pas répéter le lot précédent
+    const avoid = new Set([...lastKeys]);                 // ne pas répéter le lot précédent
     const seenNow = new Set([...avoid, ...seenIDs]);       // historique + lot précédent
 
     // 1) Tentatives normales en respectant l'historique
@@ -276,7 +282,7 @@
       card.classList.add('ff-measure');
       card.style.height = ''; // reset
       const front = card.querySelector('.ff-front');
-      const back  = card.querySelector('.ff-back');
+      const back = card.querySelector('.ff-back');
       const h = Math.max(front?.scrollHeight || 0, back?.scrollHeight || 0, 200);
       card.classList.remove('ff-measure');
       card.style.height = h + 'px';
@@ -284,8 +290,8 @@
       if (inner) inner.style.height = '100%';
     });
   }
-  let resizeTO=null;
-  window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO=setTimeout(measureAndFixHeights, 120); });
+  let resizeTO = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO = setTimeout(measureAndFixHeights, 120); });
 
   // ---------- Mini-chat dynamique ----------
   function mountChat(currentCards) {
@@ -317,7 +323,7 @@
     const input = document.getElementById('ff-qa-input');
     const btn = document.getElementById('ff-qa-btn');
 
-    const push = (txt, me=false) => {
+    const push = (txt, me = false) => {
       const p = document.createElement('div');
       p.className = 'ff-qa-msg' + (me ? ' me' : '');
       p.textContent = txt;
@@ -331,7 +337,7 @@
       if (!q) return;
       push(q, true);
       input.value = '';
-      btn.setAttribute('aria-busy','true'); btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true'); btn.disabled = true;
 
       try {
         const payload = {
@@ -346,7 +352,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        const j = await r.json().catch(()=>({answer:'(API indisponible)'}));
+        const j = await r.json().catch(() => ({ answer: '(API indisponible)' }));
         push(j.answer || '(API indisponible)');
       } catch {
         push('(API indisponible)');
@@ -417,7 +423,7 @@
     }
     btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      btn.classList.add('is-busy'); btn.setAttribute('aria-busy','true');
+      btn.classList.add('is-busy'); btn.setAttribute('aria-busy', 'true');
       try { await load(); } finally { btn.classList.remove('is-busy'); btn.removeAttribute('aria-busy'); }
     });
   };
