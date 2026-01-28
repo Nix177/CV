@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-27T14:49:49.635Z",
+  "generatedAt": "2026-01-28T06:46:28.298Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,101 @@
     }
   },
   "items": [
+    {
+      "title": "Identifying and Transferring Reasoning-Critical Neurons: Improving LLM Inference Reliability via Activation Steering",
+      "url": "https://arxiv.org/abs/2601.19847v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-27T17:53:01.000Z",
+      "score": 85,
+      "summary_en": "Despite the strong reasoning capabilities of recent large language models (LLMs), achieving reliable performance on challenging tasks often requires post-training or computationally expensive sampling strategies, limiting their practical efficiency. In this work, we first show that a small subset of neurons in LLMs exhibits strong predictive correlations with reasoning correctness. Based on this observation, we propose AdaRAS (Adaptive Reasoning Activation Steering), a lightweight test-time framework that improves reasoning reliability by selectively intervening on neuron activations. AdaRAS i",
+      "summary_fr": "Despite the strong reasoning capabilities of recent large language models (LLMs), achieving reliable performance on challenging tasks often requires post-training or computationally expensive sampling strategies, limiting their practical efficiency. In this work, we first show that a small subset of neurons in LLMs exhibits strong predictive correlations with reasoning correctness. Based on this observation, we propose AdaRAS (Adaptive Reasoning Activation Steering), a lightweight test-time framework that improves reasoning reliability by selectively intervening on neuron activations. AdaRAS i",
+      "resume_fr": "Despite the strong reasoning capabilities of recent large language models (LLMs), achieving reliable performance on challenging tasks often requires post-training or computationally expensive sampling strategies, limiting their practical efficiency. In this work, we first show that a small subset of neurons in LLMs exhibits strong predictive correlations with reasoning correctness. Based on this observation, we propose AdaRAS (Adaptive Reasoning Activation Steering), a lightweight test-time framework that improves reasoning reliability by selectively intervening on neuron activations. AdaRAS i",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Neural Neural Scaling Laws",
+      "url": "https://arxiv.org/abs/2601.19831v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-27T17:38:11.000Z",
+      "score": 70,
+      "summary_en": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
+      "summary_fr": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
+      "resume_fr": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CaseMaster: Designing and Evaluating a Probe for Oral Case Presentation Training with LLM Assistance",
+      "url": "https://arxiv.org/abs/2601.19332v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-27T08:17:11.000Z",
+      "score": 50,
+      "summary_en": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
+      "summary_fr": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
+      "resume_fr": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Voice-Based Chatbots for English Speaking Practice in Multilingual Low-Resource Indian Schools: A Multi-Stakeholder Study",
+      "url": "https://arxiv.org/abs/2601.19304v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-27T07:44:52.000Z",
+      "score": 85,
+      "summary_en": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
+      "summary_fr": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
+      "resume_fr": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "XR Design Framework for Early Childhood Education",
+      "url": "https://arxiv.org/abs/2601.18979v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-26T21:32:35.000Z",
+      "score": 85,
+      "summary_en": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
+      "summary_fr": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
+      "resume_fr": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "IEEE Brings Hands-On STEM Activities to India’s Rural Areas",
       "url": "https://spectrum.ieee.org/ieee-stem-activities-rural-india",
@@ -1138,101 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The importance of intentional child development practices in early childhood education and care settings",
-      "url": "https://oecdedutoday.com/the-importance-of-intentional-child-development-practices-in-early-childhood-education-and-care-settings/",
-      "source": "OECD Education & Skills Today",
-      "published": "2026-01-13T17:06:25.000Z",
-      "score": 65,
-      "summary_en": "By Andreas Schleicher, OECD Director for Education and Skills Despite efforts to strengthen education systems, each year many young adults … More",
-      "summary_fr": "By Andreas Schleicher, OECD Director for Education and Skills Despite efforts to strengthen education systems, each year many young adults … More",
-      "resume_fr": "By Andreas Schleicher, OECD Director for Education and Skills Despite efforts to strengthen education systems, each year many young adults … More",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://oecdedutoday.com/wp-content/uploads/2025/11/TALIS-Starting-Strong-cover.jpg"
-    },
-    {
-      "title": "Auditing Student-AI Collaboration: A Case Study of Online Graduate CS Students",
-      "url": "https://arxiv.org/abs/2601.08697v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-13T16:21:54.000Z",
-      "score": 50,
-      "summary_en": "As generative AI becomes embedded in higher education, it increasingly shapes how students complete academic tasks. While these systems offer efficiency and support, concerns persist regarding over-automation, diminished student agency, and the potential for unreliable or hallucinated outputs. This study conducts a mixed-methods audit of student-AI collaboration preferences by examining the alignment between current AI capabilities and students' desired levels of automation in academic work. Using two sequential and complementary surveys, we capture students' perceived benefits, risks, and pre",
-      "summary_fr": "As generative AI becomes embedded in higher education, it increasingly shapes how students complete academic tasks. While these systems offer efficiency and support, concerns persist regarding over-automation, diminished student agency, and the potential for unreliable or hallucinated outputs. This study conducts a mixed-methods audit of student-AI collaboration preferences by examining the alignment between current AI capabilities and students' desired levels of automation in academic work. Using two sequential and complementary surveys, we capture students' perceived benefits, risks, and pre",
-      "resume_fr": "As generative AI becomes embedded in higher education, it increasingly shapes how students complete academic tasks. While these systems offer efficiency and support, concerns persist regarding over-automation, diminished student agency, and the potential for unreliable or hallucinated outputs. This study conducts a mixed-methods audit of student-AI collaboration preferences by examining the alignment between current AI capabilities and students' desired levels of automation in academic work. Using two sequential and complementary surveys, we capture students' perceived benefits, risks, and pre",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PATS: Personality-Aware Teaching Strategies with Large Language Model Tutors",
-      "url": "https://arxiv.org/abs/2601.08402v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-13T10:17:26.000Z",
-      "score": 65,
-      "summary_en": "Recent advances in large language models (LLMs) demonstrate their potential as educational tutors. However, different tutoring strategies benefit different student personalities, and mismatches can be counterproductive to student outcomes. Despite this, current LLM tutoring systems do not take into account student personality traits. To address this problem, we first construct a taxonomy that links pedagogical methods to personality profiles, based on pedagogical literature. We simulate student-teacher conversations and use our framework to let the LLM tutor adjust its strategy to the simulate",
-      "summary_fr": "Recent advances in large language models (LLMs) demonstrate their potential as educational tutors. However, different tutoring strategies benefit different student personalities, and mismatches can be counterproductive to student outcomes. Despite this, current LLM tutoring systems do not take into account student personality traits. To address this problem, we first construct a taxonomy that links pedagogical methods to personality profiles, based on pedagogical literature. We simulate student-teacher conversations and use our framework to let the LLM tutor adjust its strategy to the simulate",
-      "resume_fr": "Recent advances in large language models (LLMs) demonstrate their potential as educational tutors. However, different tutoring strategies benefit different student personalities, and mismatches can be counterproductive to student outcomes. Despite this, current LLM tutoring systems do not take into account student personality traits. To address this problem, we first construct a taxonomy that links pedagogical methods to personality profiles, based on pedagogical literature. We simulate student-teacher conversations and use our framework to let the LLM tutor adjust its strategy to the simulate",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Thematic Working Group 5 -- Artificial Intelligence (AI) literacy for teaching and learning: design and implementation",
-      "url": "https://arxiv.org/abs/2601.08380v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-13T09:43:00.000Z",
-      "score": 50,
-      "summary_en": "TWG 5 focused on developing and implementing effective strategies for enhancing AI literacy and agency of teachers, equipping them with the knowledge and skills necessary to integrate AI into their teaching practices. Explorations covered curriculum design, professional development programs, practical classroom applications, and policy guidelines aiming to empower educators to confidently utilize AI tools and foster a deeper understanding of AI concepts among students.",
-      "summary_fr": "TWG 5 focused on developing and implementing effective strategies for enhancing AI literacy and agency of teachers, equipping them with the knowledge and skills necessary to integrate AI into their teaching practices. Explorations covered curriculum design, professional development programs, practical classroom applications, and policy guidelines aiming to empower educators to confidently utilize AI tools and foster a deeper understanding of AI concepts among students.",
-      "resume_fr": "TWG 5 focused on developing and implementing effective strategies for enhancing AI literacy and agency of teachers, equipping them with the knowledge and skills necessary to integrate AI into their teaching practices. Explorations covered curriculum design, professional development programs, practical classroom applications, and policy guidelines aiming to empower educators to confidently utilize AI tools and foster a deeper understanding of AI concepts among students.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Integrating Attendance Tracking and Emotion Detection for Enhanced Student Engagement in Smart Classrooms",
-      "url": "https://arxiv.org/abs/2601.08049v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-12T22:38:25.000Z",
-      "score": 50,
-      "summary_en": "The increasing adoption of smart classroom technologies in higher education has mainly focused on automating attendance, with limited attention given to students' emotional and cognitive engagement during lectures. This limits instructors' ability to identify disengagement and adapt teaching strategies in real time. This paper presents SCASED (Smart Classroom Attendance System with Emotion Detection), an IoT-based system that integrates automated attendance tracking with facial emotion recognition to support classroom engagement monitoring. The system uses a Raspberry Pi camera and OpenCV for ",
-      "summary_fr": "The increasing adoption of smart classroom technologies in higher education has mainly focused on automating attendance, with limited attention given to students' emotional and cognitive engagement during lectures. This limits instructors' ability to identify disengagement and adapt teaching strategies in real time. This paper presents SCASED (Smart Classroom Attendance System with Emotion Detection), an IoT-based system that integrates automated attendance tracking with facial emotion recognition to support classroom engagement monitoring. The system uses a Raspberry Pi camera and OpenCV for ",
-      "resume_fr": "The increasing adoption of smart classroom technologies in higher education has mainly focused on automating attendance, with limited attention given to students' emotional and cognitive engagement during lectures. This limits instructors' ability to identify disengagement and adapt teaching strategies in real time. This paper presents SCASED (Smart Classroom Attendance System with Emotion Detection), an IoT-based system that integrates automated attendance tracking with facial emotion recognition to support classroom engagement monitoring. The system uses a Raspberry Pi camera and OpenCV for ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
