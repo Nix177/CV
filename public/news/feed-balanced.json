@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-28T06:46:28.298Z",
+  "generatedAt": "2026-01-29T06:57:18.421Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,120 @@
     }
   },
   "items": [
+    {
+      "title": "Evolutionary Strategies lead to Catastrophic Forgetting in LLMs",
+      "url": "https://arxiv.org/abs/2601.20861v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-28T18:59:34.000Z",
+      "score": 50,
+      "summary_en": "One of the biggest missing capabilities in current AI systems is the ability to learn continuously after deployment. Implementing such continually learning systems have several challenges, one of which is the large memory requirement of gradient-based algorithms that are used to train state-of-the-art LLMs. Evolutionary Strategies (ES) have recently re-emerged as a gradient-free alternative to traditional learning algorithms and have shown encouraging performance on specific tasks in LLMs. In this paper, we perform a comprehensive analysis of ES and specifically evaluate its forgetting curves ",
+      "summary_fr": "One of the biggest missing capabilities in current AI systems is the ability to learn continuously after deployment. Implementing such continually learning systems have several challenges, one of which is the large memory requirement of gradient-based algorithms that are used to train state-of-the-art LLMs. Evolutionary Strategies (ES) have recently re-emerged as a gradient-free alternative to traditional learning algorithms and have shown encouraging performance on specific tasks in LLMs. In this paper, we perform a comprehensive analysis of ES and specifically evaluate its forgetting curves ",
+      "resume_fr": "One of the biggest missing capabilities in current AI systems is the ability to learn continuously after deployment. Implementing such continually learning systems have several challenges, one of which is the large memory requirement of gradient-based algorithms that are used to train state-of-the-art LLMs. Evolutionary Strategies (ES) have recently re-emerged as a gradient-free alternative to traditional learning algorithms and have shown encouraging performance on specific tasks in LLMs. In this paper, we perform a comprehensive analysis of ES and specifically evaluate its forgetting curves ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring Transformer Placement in Variational Autoencoders for Tabular Data Generation",
+      "url": "https://arxiv.org/abs/2601.20854v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-28T18:54:27.000Z",
+      "score": 50,
+      "summary_en": "Tabular data remains a challenging domain for generative models. In particular, the standard Variational Autoencoder (VAE) architecture, typically composed of multilayer perceptrons, struggles to model relationships between features, especially when handling mixed data types. In contrast, Transformers, through their attention mechanism, are better suited for capturing complex feature interactions. In this paper, we empirically investigate the impact of integrating Transformers into different components of a VAE. We conduct experiments on 57 datasets from the OpenML CC18 suite and draw two main",
+      "summary_fr": "Tabular data remains a challenging domain for generative models. In particular, the standard Variational Autoencoder (VAE) architecture, typically composed of multilayer perceptrons, struggles to model relationships between features, especially when handling mixed data types. In contrast, Transformers, through their attention mechanism, are better suited for capturing complex feature interactions. In this paper, we empirically investigate the impact of integrating Transformers into different components of a VAE. We conduct experiments on 57 datasets from the OpenML CC18 suite and draw two main",
+      "resume_fr": "Tabular data remains a challenging domain for generative models. In particular, the standard Variational Autoencoder (VAE) architecture, typically composed of multilayer perceptrons, struggles to model relationships between features, especially when handling mixed data types. In contrast, Transformers, through their attention mechanism, are better suited for capturing complex feature interactions. In this paper, we empirically investigate the impact of integrating Transformers into different components of a VAE. We conduct experiments on 57 datasets from the OpenML CC18 suite and draw two main",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Post-Training Fairness Control: A Single-Train Framework for Dynamic Fairness in Recommendation",
+      "url": "https://arxiv.org/abs/2601.20848v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-01-28T18:48:43.000Z",
+      "score": 70,
+      "summary_en": "Despite growing efforts to mitigate unfairness in recommender systems, existing fairness-aware methods typically fix the fairness requirement at training time and provide limited post-training flexibility. However, in real-world scenarios, diverse stakeholders may demand differing fairness requirements over time, so retraining for different fairness requirements becomes prohibitive. To address this limitation, we propose Cofair, a single-train framework that enables post-training fairness control in recommendation. Specifically, Cofair introduces a shared representation layer with fairness-con",
+      "summary_fr": "Despite growing efforts to mitigate unfairness in recommender systems, existing fairness-aware methods typically fix the fairness requirement at training time and provide limited post-training flexibility. However, in real-world scenarios, diverse stakeholders may demand differing fairness requirements over time, so retraining for different fairness requirements becomes prohibitive. To address this limitation, we propose Cofair, a single-train framework that enables post-training fairness control in recommendation. Specifically, Cofair introduces a shared representation layer with fairness-con",
+      "resume_fr": "Despite growing efforts to mitigate unfairness in recommender systems, existing fairness-aware methods typically fix the fairness requirement at training time and provide limited post-training flexibility. However, in real-world scenarios, diverse stakeholders may demand differing fairness requirements over time, so retraining for different fairness requirements becomes prohibitive. To address this limitation, we propose Cofair, a single-train framework that enables post-training fairness control in recommendation. Specifically, Cofair introduces a shared representation layer with fairness-con",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Structured Semantic Information Helps Retrieve Better Examples for In-Context Learning in Few-Shot Relation Extraction",
+      "url": "https://arxiv.org/abs/2601.20803v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-01-28T17:48:58.000Z",
+      "score": 70,
+      "summary_en": "This paper presents several strategies to automatically obtain additional examples for in-context learning of one-shot relation extraction. Specifically, we introduce a novel strategy for example selection, in which new examples are selected based on the similarity of their underlying syntactic-semantic structure to the provided one-shot example. We show that this method results in complementary word choices and sentence structures when compared to LLM-generated examples. When these strategies are combined, the resulting hybrid system achieves a more holistic picture of the relations of intere",
+      "summary_fr": "This paper presents several strategies to automatically obtain additional examples for in-context learning of one-shot relation extraction. Specifically, we introduce a novel strategy for example selection, in which new examples are selected based on the similarity of their underlying syntactic-semantic structure to the provided one-shot example. We show that this method results in complementary word choices and sentence structures when compared to LLM-generated examples. When these strategies are combined, the resulting hybrid system achieves a more holistic picture of the relations of intere",
+      "resume_fr": "This paper presents several strategies to automatically obtain additional examples for in-context learning of one-shot relation extraction. Specifically, we introduce a novel strategy for example selection, in which new examples are selected based on the similarity of their underlying syntactic-semantic structure to the provided one-shot example. We show that this method results in complementary word choices and sentence structures when compared to LLM-generated examples. When these strategies are combined, the resulting hybrid system achieves a more holistic picture of the relations of intere",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning to Live with AI: How Students Develop AI Literacy Through Naturalistic ChatGPT Interaction",
+      "url": "https://arxiv.org/abs/2601.20749v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-28T16:29:52.000Z",
+      "score": 85,
+      "summary_en": "How do students develop AI literacy through everyday practice rather than formal instruction? While normative AI literacy frameworks proliferate, empirical understanding of how students actually learn to work with generative AI remains limited. This study analyzes 10,536 ChatGPT messages from 36 undergraduates over one academic year, revealing five use genres -- academic workhorse, emotional companion, metacognitive partner, repair and negotiation, and trust calibration -- that constitute distinct configurations of student-AI learning. Drawing on domestication theory and emerging frameworks fo",
+      "summary_fr": "How do students develop AI literacy through everyday practice rather than formal instruction? While normative AI literacy frameworks proliferate, empirical understanding of how students actually learn to work with generative AI remains limited. This study analyzes 10,536 ChatGPT messages from 36 undergraduates over one academic year, revealing five use genres -- academic workhorse, emotional companion, metacognitive partner, repair and negotiation, and trust calibration -- that constitute distinct configurations of student-AI learning. Drawing on domestication theory and emerging frameworks fo",
+      "resume_fr": "How do students develop AI literacy through everyday practice rather than formal instruction? While normative AI literacy frameworks proliferate, empirical understanding of how students actually learn to work with generative AI remains limited. This study analyzes 10,536 ChatGPT messages from 36 undergraduates over one academic year, revealing five use genres -- academic workhorse, emotional companion, metacognitive partner, repair and negotiation, and trust calibration -- that constitute distinct configurations of student-AI learning. Drawing on domestication theory and emerging frameworks fo",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Evaluating Actionability in Explainable AI",
+      "url": "https://arxiv.org/abs/2601.20086v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-27T22:10:07.000Z",
+      "score": 85,
+      "summary_en": "A core assumption of Explainable AI (XAI) is that explanations are useful to users -- that is, users will do something with the explanations. Prior work, however, does not clearly connect the information provided in explanations to user actions to evaluate effectiveness. In this paper, we articulate this connection. We conducted a formative study through 14 interviews with end users in education and medicine. We contribute a catalog of information and associated actions. Our catalog maps 12 categories of information that participants described relying on to take 60 different actions. We show h",
+      "summary_fr": "A core assumption of Explainable AI (XAI) is that explanations are useful to users -- that is, users will do something with the explanations. Prior work, however, does not clearly connect the information provided in explanations to user actions to evaluate effectiveness. In this paper, we articulate this connection. We conducted a formative study through 14 interviews with end users in education and medicine. We contribute a catalog of information and associated actions. Our catalog maps 12 categories of information that participants described relying on to take 60 different actions. We show h",
+      "resume_fr": "A core assumption of Explainable AI (XAI) is that explanations are useful to users -- that is, users will do something with the explanations. Prior work, however, does not clearly connect the information provided in explanations to user actions to evaluate effectiveness. In this paper, we articulate this connection. We conducted a formative study through 14 interviews with end users in education and medicine. We contribute a catalog of information and associated actions. Our catalog maps 12 categories of information that participants described relying on to take 60 different actions. We show h",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Identifying and Transferring Reasoning-Critical Neurons: Improving LLM Inference Reliability via Activation Steering",
       "url": "https://arxiv.org/abs/2601.19847v1",
@@ -307,7 +421,7 @@
     {
       "title": "\"Crash Test Dummies\" for AI-Enabled Clinical Assessment: Validating Virtual Patient Scenarios with Virtual Learners",
       "url": "https://arxiv.org/abs/2601.18085v1",
-      "source": "arXiv – cs.HC + education",
+      "source": "arXiv – cs.AI + education/MOOC",
       "published": "2026-01-26T02:47:28.000Z",
       "score": 65,
       "summary_en": "Background: In medical and health professions education (HPE), AI is increasingly used to assess clinical competencies, including via virtual standardized patients. However, most evaluations rely on AI-human interrater reliability and lack a measurement framework for how cases, learners, and raters jointly shape scores. This leaves robustness uncertain and can expose learners to misguidance from unvalidated systems. We address this by using AI \"simulated learners\" to stress-test and psychometrically characterize assessment pipelines before human use. Objective: Develop an open-source AI virtua",
@@ -1111,120 +1225,6 @@
       "summary_en": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
       "summary_fr": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
       "resume_fr": "Deep research systems are widely used for multi-step web research, analysis, and cross-source synthesis, yet their evaluation remains challenging. Existing benchmarks often require annotation-intensive task construction, rely on static evaluation dimensions, or fail to reliably verify facts when citations are missing. To bridge these gaps, we introduce DeepResearchEval, an automated framework for deep research task construction and agentic evaluation. For task construction, we propose a persona-driven pipeline generating realistic, complex research tasks anchored in diverse user profiles, appl",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Collaborative Multi-Agent Test-Time Reinforcement Learning for Reasoning",
-      "url": "https://arxiv.org/abs/2601.09667v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-14T17:57:43.000Z",
-      "score": 50,
-      "summary_en": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "summary_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "resume_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Collaborative Multi-Agent Test-Time Reinforcement Learning for Reasoning",
-      "url": "https://arxiv.org/abs/2601.09667v2",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-14T17:57:43.000Z",
-      "score": 50,
-      "summary_en": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "summary_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "resume_fr": "Multi-agent systems have evolved into practical LLM-driven collaborators for many applications, gaining robustness from diversity and cross-checking. However, multi-agent RL (MARL) training is resource-intensive and unstable: co-adapting teammates induce non-stationarity, and rewards are often sparse and high-variance. Therefore, we introduce \\textbf{Multi-Agent Test-Time Reinforcement Learning (MATTRL)}, a framework that injects structured textual experience into multi-agent deliberation at inference time. MATTRL forms a multi-expert team of specialists for multi-turn discussions, retrieves a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Personalized Multimodal Feedback Using Multiple External Representations: Strategy Profiles and Learning in High School Physics",
-      "url": "https://arxiv.org/abs/2601.09470v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-14T13:25:44.000Z",
-      "score": 50,
-      "summary_en": "Multiple external representations (MERs) and personalized feedback support physics learning, yet evidence on how personalized feedback can effectively integrate MERs remains limited. This question is particularly timely given the emergence of multimodal large language models. We conducted a 16-24 week observational study in high school physics (N=661) using a computer-based platform that provided verification and optional elaborated feedback in verbal, graphical and mathematical forms. Linear mixed-effects models and strategy-cluster analyses (ANCOVA-adjusted comparisons) tested associations b",
-      "summary_fr": "Multiple external representations (MERs) and personalized feedback support physics learning, yet evidence on how personalized feedback can effectively integrate MERs remains limited. This question is particularly timely given the emergence of multimodal large language models. We conducted a 16-24 week observational study in high school physics (N=661) using a computer-based platform that provided verification and optional elaborated feedback in verbal, graphical and mathematical forms. Linear mixed-effects models and strategy-cluster analyses (ANCOVA-adjusted comparisons) tested associations b",
-      "resume_fr": "Multiple external representations (MERs) and personalized feedback support physics learning, yet evidence on how personalized feedback can effectively integrate MERs remains limited. This question is particularly timely given the emergence of multimodal large language models. We conducted a 16-24 week observational study in high school physics (N=661) using a computer-based platform that provided verification and optional elaborated feedback in verbal, graphical and mathematical forms. Linear mixed-effects models and strategy-cluster analyses (ANCOVA-adjusted comparisons) tested associations b",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "KTCF: Actionable Recourse in Knowledge Tracing via Counterfactual Explanations for Education",
-      "url": "https://arxiv.org/abs/2601.09156v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-14T04:51:54.000Z",
-      "score": 85,
-      "summary_en": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
-      "summary_fr": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
-      "resume_fr": "Using Artificial Intelligence to improve teaching and learning benefits greater adaptivity and scalability in education. Knowledge Tracing (KT) is recognized for student modeling task due to its superior performance and application potential in education. To this end, we conceptualize and investigate counterfactual explanation as the connection from XAI for KT to education. Counterfactual explanations offer actionable recourse, are inherently causal and local, and easy for educational stakeholders to understand who are often non-experts. We propose KTCF, a counterfactual explanation generation",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Leveraging learning analytics to enhance immersive teacher simulations: Challenges and opportunities",
-      "url": "https://arxiv.org/abs/2601.08954v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-13T19:44:04.000Z",
-      "score": 65,
-      "summary_en": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
-      "summary_fr": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
-      "resume_fr": "This chapter examines how data analytics can be leveraged to enhance immersive teacher simulations, situating this inquiry within the broader learning sciences discourse on embodied cognition, data-informed feedback, and teacher professional learning. It explores both conceptual foundations and empirical cases to illustrate how analytics serve as mediational tools that connect immersive experiences with reflective teaching practice. The chapter unfolds in multiple sections: (1) The Innovation Journey: An Overview of Immersive Teacher Simulations outlines the evolution from traditional simulati",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Asymptotic Universal Alignment: A New Alignment Framework via Test-Time Scaling",
-      "url": "https://arxiv.org/abs/2601.08777v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-13T18:08:06.000Z",
-      "score": 70,
-      "summary_en": "Aligning large language models (LLMs) to serve users with heterogeneous and potentially conflicting preferences is a central challenge for personalized and trustworthy AI. We formalize an ideal notion of universal alignment through test-time scaling: for each prompt, the model produces $k\\ge 1$ candidate responses and a user selects their preferred one. We introduce $(k,f(k))$-robust alignment, which requires the $k$-output model to have win rate $f(k)$ against any other single-output model, and asymptotic universal alignment (U-alignment), which requires $f(k)\\to 1$ as $k\\to\\infty$. Our main ",
-      "summary_fr": "Aligning large language models (LLMs) to serve users with heterogeneous and potentially conflicting preferences is a central challenge for personalized and trustworthy AI. We formalize an ideal notion of universal alignment through test-time scaling: for each prompt, the model produces $k\\ge 1$ candidate responses and a user selects their preferred one. We introduce $(k,f(k))$-robust alignment, which requires the $k$-output model to have win rate $f(k)$ against any other single-output model, and asymptotic universal alignment (U-alignment), which requires $f(k)\\to 1$ as $k\\to\\infty$. Our main ",
-      "resume_fr": "Aligning large language models (LLMs) to serve users with heterogeneous and potentially conflicting preferences is a central challenge for personalized and trustworthy AI. We formalize an ideal notion of universal alignment through test-time scaling: for each prompt, the model produces $k\\ge 1$ candidate responses and a user selects their preferred one. We introduce $(k,f(k))$-robust alignment, which requires the $k$-output model to have win rate $f(k)$ against any other single-output model, and asymptotic universal alignment (U-alignment), which requires $f(k)\\to 1$ as $k\\to\\infty$. Our main ",
       "tags": [],
       "breakdown": {
         "research": 35,
