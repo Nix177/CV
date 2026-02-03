@@ -73,6 +73,66 @@ window.portfolioData = [
         url: "https://petnamegenerator.github.io/petname/?lang=de"
       }
     }
+  },
+  {
+    id: "telescope",
+    image: "/assets/portfolio/thumbs/telescope-onstep.png",
+    tags: ["Hardware", "Astronomie", "DIY"],
+    url: "#",
+    i18n: {
+      fr: {
+        title: "Télescope OnStep (WIP)",
+        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Impression 3D, électronique et calibration."
+      },
+      en: {
+        title: "OnStep Telescope (WIP)",
+        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). 3D printing, electronics, and calibration."
+      },
+      de: {
+        title: "OnStep Teleskop (WIP)",
+        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). 3D-Druck, Elektronik und Kalibrierung."
+      }
+    }
+  },
+  {
+    id: "robotarm",
+    image: "/assets/portfolio/thumbs/robot-arm.png",
+    tags: ["Robotics", "3D Print", "ROS"],
+    url: "#",
+    i18n: {
+      fr: {
+        title: "Robot & Bras Robotisé (WIP)",
+        description: "Bras 6 axes et rover mobile imprimés en 3D. Expérimentations avec ROS, cinématique inverse et vision."
+      },
+      en: {
+        title: "Robot & Robotic Arm (WIP)",
+        description: "3D printed 6-axis arm and mobile rover. Experiments with ROS, inverse kinematics, and computer vision."
+      },
+      de: {
+        title: "Roboter & Roboterarm (WIP)",
+        description: "3D-gedruckter 6-Achsen-Arm und mobiler Rover. Experimente mit ROS, inverser Kinematik und Vision."
+      }
+    }
+  },
+  {
+    id: "bm800",
+    image: "/assets/portfolio/thumbs/bm800-mod.png",
+    tags: ["Audio", "Electronics", "PCB"],
+    url: "#",
+    i18n: {
+      fr: {
+        title: "BM-800 Mod (WIP)",
+        description: "Upgrade complet d'un micro bon marché : circuit Schoeps/Alice, capsule RK-47 pour une qualité studio."
+      },
+      en: {
+        title: "BM-800 Mod (WIP)",
+        description: "Complete upgrade of a cheap mic: Schoeps/Alice circuit, RK-47 capsule for studio quality."
+      },
+      de: {
+        title: "BM-800 Mod (WIP)",
+        description: "Komplettes Upgrade eines billigen Mikrofons: Schoeps/Alice-Schaltung, RK-47-Kapsel für Studioqualität."
+      }
+    }
   }
 ];
 

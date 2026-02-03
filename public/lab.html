@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -10,62 +11,326 @@
   <link rel="stylesheet" href="/style.css">
 
   <style>
-    :root{
-      --bg:#0a1220; --card:#0c1628; --muted:#9fb0c9; --text:#eef3f8; --acc:#63e; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c;
+    :root {
+      --bg: #0a1220;
+      --card: #0c1628;
+      --muted: #9fb0c9;
+      --text: #eef3f8;
+      --acc: #63e;
+      --ok: #2ecc71;
+      --warn: #f39c12;
+      --bad: #e74c3c;
       --border: #1a2a44;
     }
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font:15px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial;
     }
+
     /* on laisse nav.js injecter la nav globale – on se met juste en dessous */
-    .shell{
-      max-width:1200px;
-      margin:0 auto;
-      padding:calc(var(--nt-nav-h, 64px) + 20px) 16px 40px;
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: calc(var(--nt-nav-h, 64px) + 20px) 16px 40px;
     }
 
-    header.page-head h1{margin:0 0 6px}
-    header.page-head p{margin:0 0 16px;color:var(--muted)}
+    header.page-head h1 {
+      margin: 0 0 6px
+    }
 
-    .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 20px}
-    input,select,button,textarea{background:#0f1b30;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
-    input::placeholder,textarea::placeholder{color:#7e8aa3}
-    button{cursor:pointer}
-    button.primary{background:linear-gradient(90deg,#6c4bff,#4a74ff);border:none}
-    .tabs{display:flex;gap:8px;margin:4px 0 16px}
-    .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;cursor:pointer;color:var(--muted)}
-    .tab.active{background:#15223a;color:var(--text);border-color:#2b3b61}
-    .panel{display:none}
-    .panel.active{display:block}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:10px 0}
-    .grid{display:grid;gap:12px}
-    .grid-2{grid-template-columns:1fr 1fr}
-    @media (max-width:1000px){.grid-2{grid-template-columns:1fr}}
-    .split{display:grid;grid-template-columns:1.1fr 1.4fr;gap:12px;min-height:520px}
-    @media (max-width:1000px){.split{grid-template-columns:1fr}}
-    .box{background:#0f1b30;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto}
-    .box h4{margin:0 0 8px}
-    .timeline{font-family:ui-monospace,Consolas,monospace;font-size:13px;max-height:240px;overflow:auto}
-    .tstep{padding:6px 8px;border-left:3px solid #2b3b61;margin:6px 0;background:#0f1b30;border-radius:8px}
-    .tstep.ok{border-color:var(--ok)} .tstep.warn{border-color:var(--warn)} .tstep.bad{border-color:var(--bad)}
-    .pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 8px;margin:2px 4px 0 0;background:#13213a;color:#cfe0ff;font-size:12px}
-    .score{height:10px;background:#0f1b30;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-    .score > i{display:block;height:100%;background:linear-gradient(90deg,#ff5f6d,#ffc371)}
-    .badges{display:flex;gap:8px;flex-wrap:wrap}
-    .badge{padding:4px 8px;border-radius:8px;background:#14203a;border:1px solid var(--border)}
-    .badge.ok{background:#0f2a1a;border-color:#245a3b}
-    .badge.low{background:#2a1c0f;border-color:#5a3d24}
-    .muted{color:var(--muted)}
-    .small{font-size:12px}
-    .mono{font-family:ui-monospace,Consolas,monospace}
-    .diff{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace}
-    .ins{background:#12371e} .del{background:#3a1520; text-decoration: line-through}
-    .footer-note{color:#94a6c7;font-size:12px;margin-top:10px}
-    details summary{cursor:pointer}
-    .legend{background:#0f1b30;border:1px dashed #213356;border-radius:10px;padding:8px 10px;margin-top:10px}
+    header.page-head p {
+      margin: 0 0 16px;
+      color: var(--muted)
+    }
+
+    .bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 12px 0 20px
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      background: #0f1b30;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #7e8aa3
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    button.primary {
+      background: linear-gradient(90deg, #6c4bff, #4a74ff);
+      border: none
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 4px 0 16px
+    }
+
+    .tab {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--muted)
+    }
+
+    .tab.active {
+      background: #15223a;
+      color: var(--text);
+      border-color: #2b3b61
+    }
+
+    .panel {
+      display: none
+    }
+
+    .panel.active {
+      display: block
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 10px 0
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    @media (max-width:1000px) {
+      .grid-2 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 12px;
+      min-height: 520px
+    }
+
+    @media (max-width:1000px) {
+      .split {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .box {
+      background: #0f1b30;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      overflow: auto
+    }
+
+    .box h4 {
+      margin: 0 0 8px
+    }
+
+    .timeline {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 13px;
+      max-height: 240px;
+      overflow: auto
+    }
+
+    .tstep {
+      padding: 6px 8px;
+      border-left: 3px solid #2b3b61;
+      margin: 6px 0;
+      background: #0f1b30;
+      border-radius: 8px
+    }
+
+    .tstep.ok {
+      border-color: var(--ok)
+    }
+
+    .tstep.warn {
+      border-color: var(--warn)
+    }
+
+    .tstep.bad {
+      border-color: var(--bad)
+    }
+
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin: 2px 4px 0 0;
+      background: #13213a;
+      color: #cfe0ff;
+      font-size: 12px
+    }
+
+    .score {
+      height: 10px;
+      background: #0f1b30;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .score>i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #ff5f6d, #ffc371)
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: #14203a;
+      border: 1px solid var(--border)
+    }
+
+    .badge.ok {
+      background: #0f2a1a;
+      border-color: #245a3b
+    }
+
+    .badge.low {
+      background: #2a1c0f;
+      border-color: #5a3d24
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .small {
+      font-size: 12px
+    }
+
+    .mono {
+      font-family: ui-monospace, Consolas, monospace
+    }
+
+    .diff {
+      white-space: pre-wrap;
+      font-family: ui-monospace, Consolas, monospace
+    }
+
+    .ins {
+      background: #12371e
+    }
+
+    .del {
+      background: #3a1520;
+      text-decoration: line-through
+    }
+
+    .footer-note {
+      color: #94a6c7;
+      font-size: 12px;
+      margin-top: 10px
+    }
+
+    details summary {
+      cursor: pointer
+    }
+
+    .legend {
+      background: #0f1b30;
+      border: 1px dashed #213356;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-top: 10px
+    }
+
+    /* Pipeline Viz */
+    .pipeline-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .pipeline-container .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.4;
+      transition: all 0.3s;
+    }
+
+    .pipeline-container .step.active {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .pipeline-container .icon {
+      font-size: 24px;
+      background: #15223a;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .pipeline-container .step.active .icon {
+      background: var(--acc);
+      border-color: #8b6eff;
+      box-shadow: 0 0 15px rgba(100, 60, 255, 0.4);
+    }
+
+    .pipeline-container .label {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .pipeline-container .connector {
+      color: var(--border);
+      font-size: 20px;
+      font-weight: bold;
+      opacity: 0.4;
+    }
+
+    .pipeline-container .step.active~.connector {
+      opacity: 1;
+      color: var(--acc);
+    }
   </style>
 
   <!-- pdf.js sans SRI -->
@@ -80,6 +345,7 @@
   <script defer src="/assets/js/site.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
+
 <body>
 
   <!-- le header réel sera reconstruit par /assets/js/nav.js, on n’a pas besoin de le dupliquer ici -->
@@ -89,7 +355,8 @@
       <h1>AI Lab — RAG Glassbox & Diff Explorer</h1>
       <p>
         Le premier outil vous montre <b>comment une réponse d’IA s’appuie vraiment sur votre PDF</b>, étape par étape.
-        Le second compare <b>votre texte ou prompt</b> avec une version améliorée par l’IA, et vous laisse tester les deux.
+        Le second compare <b>votre texte ou prompt</b> avec une version améliorée par l’IA, et vous laisse tester les
+        deux.
         C’est pensé pour expliquer à des collègues / apprenants ce qui se passe “sous le capot”.
       </p>
     </header>
@@ -110,12 +377,14 @@
         <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).  
+        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).
         Si vous saisissez une clé perso, l’appel est fait avec <b>votre</b> clé (jamais stockée).
       </div>
       <div class="small" style="margin-top:6px;">
-        <div><b>1) RAG Glassbox</b> = montrer le pipeline “je pose une question sur un PDF → l’IA répond en se basant sur des passages précis”.</div>
-        <div><b>2) Diff Explorer</b> = montrer “ce que change une bonne consigne / un bon prompt” et si ça donne vraiment une meilleure sortie.</div>
+        <div><b>1) RAG Glassbox</b> = montrer le pipeline “je pose une question sur un PDF → l’IA répond en se basant
+          sur des passages précis”.</div>
+        <div><b>2) Diff Explorer</b> = montrer “ce que change une bonne consigne / un bon prompt” et si ça donne
+          vraiment une meilleure sortie.</div>
       </div>
     </div>
 
@@ -131,7 +400,8 @@
         <div>
           <h3>Document & Question</h3>
           <p class="small muted">
-            RAG = <b>Retrieval Augmented Generation</b> : avant de faire répondre l’IA, on va d’abord <b>récupérer les bons morceaux du document</b>.
+            RAG = <b>Retrieval Augmented Generation</b> : avant de faire répondre l’IA, on va d’abord <b>récupérer les
+              bons morceaux du document</b>.
             Ici, on vous montre ces morceaux.
           </p>
           <div class="bar">
@@ -139,15 +409,31 @@
             <input id="question" style="flex:1" placeholder="Ex. « Quels sont les objectifs du projet ? »">
             <button class="primary" id="runRag">Run RAG</button>
           </div>
-          <details class="card">
-            <summary><b>Ce que vous allez voir</b></summary>
-            <ul>
-              <li><b>Lecture PDF côté navigateur</b> (rien n’est envoyé au serveur avant l’appel LLM)</li>
-              <li><b>Découpage en chunks</b> (on coupe le PDF en petits blocs exploitables)</li>
-              <li><b>Classement</b> : les blocs les plus proches de votre question passent en premier</li>
-              <li><b>Appel LLM</b> : la réponse est forcée à citer les blocs → vous voyez d’où ça vient</li>
-            </ul>
-          </details>
+          <!-- Visual Pipeline -->
+          <div class="pipeline-container">
+            <div class="step" id="step-pdf">
+              <div class="icon">📄</div>
+              <div class="label">PDF</div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step" id="step-chunk">
+              <div class="icon">✂️</div>
+              <div class="label">Découpage</div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step" id="step-search">
+              <div class="icon">🔍</div>
+              <div class="label">Recherche</div>
+            </div>
+            <div class="connector">→</div>
+            <div class="step" id="step-llm">
+              <div class="icon">🤖</div>
+              <div class="label">Réponse</div>
+            </div>
+          </div>
+          <div class="small muted" style="margin-bottom:16px; text-align:center;">
+            Le système lit le PDF, le découpe, trouve les passages pertinents, et les envoie à l'IA.
+          </div>
 
           <div class="card">
             <h4>Timeline détaillée (RAG)</h4>
@@ -169,7 +455,8 @@
             <div id="ragInfo" class="small muted"></div>
             <div class="legend small">
               <b>Chunks retenus</b> : liste des blocs envoyés au modèle.<br>
-              <b>Jauge</b> : estimation très simple “est-ce que la réponse réutilise bien le vocabulaire des blocs ?”.<br>
+              <b>Jauge</b> : estimation très simple “est-ce que la réponse réutilise bien le vocabulaire des blocs
+              ?”.<br>
               <b>Pas scientifique</b> : c’est une aide visuelle pour expliquer le principe d’“ancrage” dans le document.
             </div>
           </div>
@@ -181,7 +468,8 @@
             </p>
             <div id="answer"></div>
             <div class="badges" id="badges"></div>
-            <div class="footer-note">Si la réponse est vague ou sans références, c’est souvent que la question dépasse le PDF.</div>
+            <div class="footer-note">Si la réponse est vague ou sans références, c’est souvent que la question dépasse
+              le PDF.</div>
           </div>
         </div>
       </div>
@@ -192,8 +480,9 @@
       <div class="card">
         <h3>Code & Prompt Diff Explorer (avec test réel)</h3>
         <p class="small muted">
-          Objectif : montrer que <b>“écrire mieux la demande”</b> peut produire une meilleure sortie.  
-          Étapes : (1) vous collez votre prompt, (2) l’IA le réécrit, (3) on teste les 2 sur le même modèle et on affiche les sorties côte à côte.
+          Objectif : montrer que <b>“écrire mieux la demande”</b> peut produire une meilleure sortie.
+          Étapes : (1) vous collez votre prompt, (2) l’IA le réécrit, (3) on teste les 2 sur le même modèle et on
+          affiche les sorties côte à côte.
         </p>
 
         <!-- 1. Entrée -->
@@ -236,10 +525,12 @@
           <h4>3. Tester les deux sur le même modèle</h4>
           <p class="small muted">
             On envoie <b>deux requêtes</b> à votre API : l’une avec le prompt original, l’autre avec le prompt amélioré.
-            Avec <code>gpt-5</code> ça peut prendre 20–40 s ×2 → regardez la timeline ci-dessous pour savoir où ça en est.
+            Avec <code>gpt-5</code> ça peut prendre 20–40 s ×2 → regardez la timeline ci-dessous pour savoir où ça en
+            est.
           </p>
           <div class="bar">
-            <input id="ctx" style="flex:1" placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur le jeu d’osselets antique »">
+            <input id="ctx" style="flex:1"
+              placeholder="Contexte de test (facultatif), ex. « Le sujet porte sur le jeu d’osselets antique »">
             <button class="primary" id="runTest">Lancer le test sur les 2 prompts</button>
           </div>
           <div class="grid grid-2">
@@ -259,307 +550,322 @@
         </div>
 
         <div class="small muted" style="margin-top:10px;">
-          Remarque : cette version appelle un endpoint texte. Pour produire des images, il faudra un endpoint image séparé.
+          Remarque : cette version appelle un endpoint texte. Pour produire des images, il faudra un endpoint image
+          séparé.
         </div>
       </div>
     </section>
   </div>
 
-<script>
-const API_ROUTE = '/api/llm/chat';
-document.getElementById('routeHint').textContent = API_ROUTE;
+  <script>
+    const API_ROUTE = '/api/llm/chat';
+    document.getElementById('routeHint').textContent = API_ROUTE;
 
-document.querySelectorAll('.tab').forEach(t=>{
-  t.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  };
-});
+    document.querySelectorAll('.tab').forEach(t => {
+      t.onclick = () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+      };
+    });
 
-function estTokens(txt){ return Math.max(1, Math.round((txt||'').length/4)); }
-function sanitize(s){ return (s||'').toString().replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
+    function estTokens(txt) { return Math.max(1, Math.round((txt || '').length / 4)); }
+    function sanitize(s) { return (s || '').toString().replace(/[<>&]/g, m => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[m])); }
 
-async function callLLM(messages, model, extraHeaders = {}) {
-  const headers = {'Content-Type':'application/json', ...extraHeaders};
-  const userKey = document.getElementById('userKey').value.trim();
-  if (userKey) headers['x-user-api-key'] = userKey;
-  const payload = { model, messages };
-  const res = await fetch(API_ROUTE, {
-    method:'POST',
-    headers,
-    body: JSON.stringify(payload)
-  });
-  const raw = await res.text();
-  if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
-  try { return JSON.parse(raw); } catch { return {choices:[{message:{content:raw}}]}; }
-}
-
-/* TIMELINE RAG */
-function logStepRAG(html, cls=''){
-  const el = document.createElement('div');
-  el.className = `tstep ${cls}`;
-  el.innerHTML = html;
-  const root = document.getElementById('timeline');
-  root.appendChild(el);
-  root.scrollTop = root.scrollHeight;
-}
-function resetTimelineRAG(){ document.getElementById('timeline').innerHTML=''; }
-
-/* TIMELINE DIFF */
-function logStepDiff(html, cls=''){
-  const el = document.createElement('div');
-  el.className = `tstep ${cls}`;
-  el.innerHTML = html;
-  const root = document.getElementById('timeline-diff');
-  root.appendChild(el);
-  root.scrollTop = root.scrollHeight;
-}
-function resetTimelineDiff(){ document.getElementById('timeline-diff').innerHTML=''; }
-
-/* ===== RAG ===== */
-async function pdfToText(file){
-  const start = performance.now();
-  const buf = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
-  logStepRAG(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
-  let text = '';
-  for (let i=1; i<=pdf.numPages; i++){
-    const page = await pdf.getPage(i);
-    const c = await page.getTextContent();
-    const t = c.items.map(it=>it.str).join(' ');
-    text += '\n' + t;
-  }
-  const dur = Math.round(performance.now() - start);
-  logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms (moy/page ~${Math.round(text.length/pdf.numPages)} chars)`, 'ok');
-  return text.replace(/\s+\n/g,'\n').replace(/\n{2,}/g,'\n\n');
-}
-
-function chunkText(text, opts={win:900, overlap:150}){
-  const clean = text.replace(/\r/g,'');
-  const parts = [];
-  let i = 0;
-  while (i < clean.length){
-    const s = i, e = Math.min(clean.length, i+opts.win);
-    let slice = clean.slice(s, e);
-    const extra = clean.slice(e, e+120).match(/^[^.!?]*[.!?]/);
-    if (extra) slice += extra[0];
-    parts.push({id: parts.length+1, start:s, end:s+slice.length, text:slice.trim()});
-    i += (opts.win - opts.overlap);
-  }
-  return parts;
-}
-
-const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
-function tokenize(s){
-  return s
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9\s]/g,' ')
-    .split(/\s+/).filter(w=>w && !STOP.has(w));
-}
-function tfidfRank(query, chunks){
-  const q = tokenize(query);
-  const df = new Map();
-  for (const ch of chunks){
-    const seen = new Set(tokenize(ch.text));
-    for (const t of seen) df.set(t, (df.get(t)||0)+1);
-  }
-  const N = chunks.length;
-  const qset = new Set(q);
-  for (const ch of chunks){
-    const terms = tokenize(ch.text);
-    const tf = new Map();
-    for (const t of terms) tf.set(t, (tf.get(t)||0)+1);
-    let score = 0;
-    for (const t of qset){
-      const idf = Math.log( (N+1) / ((df.get(t)||0)+1) );
-      score += (tf.get(t)||0) * idf;
+    async function callLLM(messages, model, extraHeaders = {}) {
+      const headers = { 'Content-Type': 'application/json', ...extraHeaders };
+      const userKey = document.getElementById('userKey').value.trim();
+      if (userKey) headers['x-user-api-key'] = userKey;
+      const payload = { model, messages };
+      const res = await fetch(API_ROUTE, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      const raw = await res.text();
+      if (!res.ok) throw new Error(`API ${API_ROUTE} → ${res.status}: ${raw}`);
+      try { return JSON.parse(raw); } catch { return { choices: [{ message: { content: raw } }] }; }
     }
-    ch.score = score;
-  }
-  return chunks.sort((a,b)=>b.score-a.score);
-}
-function renderPassages(list, topk){
-  const root = document.getElementById('passages');
-  root.innerHTML = '';
-  list.slice(0, topk).forEach((ch, idx)=>{
-    const div = document.createElement('div');
-    div.className='card';
-    div.innerHTML = `<div class="pill">#${idx+1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
+
+    /* TIMELINE RAG */
+    function logStepRAG(html, cls = '') {
+      const el = document.createElement('div');
+      el.className = `tstep ${cls}`;
+      el.innerHTML = html;
+      const root = document.getElementById('timeline');
+      root.appendChild(el);
+      root.scrollTop = root.scrollHeight;
+    }
+    function resetTimelineRAG() { document.getElementById('timeline').innerHTML = ''; }
+
+    /* TIMELINE DIFF */
+    function logStepDiff(html, cls = '') {
+      const el = document.createElement('div');
+      el.className = `tstep ${cls}`;
+      el.innerHTML = html;
+      const root = document.getElementById('timeline-diff');
+      root.appendChild(el);
+      root.scrollTop = root.scrollHeight;
+    }
+    function resetTimelineDiff() { document.getElementById('timeline-diff').innerHTML = ''; }
+
+    /* ===== RAG ===== */
+    async function pdfToText(file) {
+      const start = performance.now();
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      logStepRAG(`📄 PDF chargé — ${pdf.numPages} page(s)`, 'ok');
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const c = await page.getTextContent();
+        const t = c.items.map(it => it.str).join(' ');
+        text += '\n' + t;
+      }
+      const dur = Math.round(performance.now() - start);
+      logStepRAG(`✂️ Extraction texte ~${text.length.toLocaleString()} caractères en ${dur} ms (moy/page ~${Math.round(text.length / pdf.numPages)} chars)`, 'ok');
+      return text.replace(/\s+\n/g, '\n').replace(/\n{2,}/g, '\n\n');
+    }
+
+    function chunkText(text, opts = { win: 900, overlap: 150 }) {
+      const clean = text.replace(/\r/g, '');
+      const parts = [];
+      let i = 0;
+      while (i < clean.length) {
+        const s = i, e = Math.min(clean.length, i + opts.win);
+        let slice = clean.slice(s, e);
+        const extra = clean.slice(e, e + 120).match(/^[^.!?]*[.!?]/);
+        if (extra) slice += extra[0];
+        parts.push({ id: parts.length + 1, start: s, end: s + slice.length, text: slice.trim() });
+        i += (opts.win - opts.overlap);
+      }
+      return parts;
+    }
+
+    const STOP = new Set('a,à,au,aux,le,la,les,un,une,des,de,du,d,et,ou,mais,que,qui,quoi,pour,par,avec,sans,sur,sous,ces,ce,cette,son,sa,ses,leurs,leur,est,sont,été,être,ainsi,plus,moins,très,trop,ne,pas,ni,comme,car,donc,si,lors,afin,chez,entre,vers,contre,selon,chez,quand,ou,où'.split(','));
+    function tokenize(s) {
+      return s
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/).filter(w => w && !STOP.has(w));
+    }
+    function tfidfRank(query, chunks) {
+      const q = tokenize(query);
+      const df = new Map();
+      for (const ch of chunks) {
+        const seen = new Set(tokenize(ch.text));
+        for (const t of seen) df.set(t, (df.get(t) || 0) + 1);
+      }
+      const N = chunks.length;
+      const qset = new Set(q);
+      for (const ch of chunks) {
+        const terms = tokenize(ch.text);
+        const tf = new Map();
+        for (const t of terms) tf.set(t, (tf.get(t) || 0) + 1);
+        let score = 0;
+        for (const t of qset) {
+          const idf = Math.log((N + 1) / ((df.get(t) || 0) + 1));
+          score += (tf.get(t) || 0) * idf;
+        }
+        ch.score = score;
+      }
+      return chunks.sort((a, b) => b.score - a.score);
+    }
+    function renderPassages(list, topk) {
+      const root = document.getElementById('passages');
+      root.innerHTML = '';
+      list.slice(0, topk).forEach((ch, idx) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `<div class="pill">#${idx + 1} (chunk ${ch.id}) — score ${ch.score.toFixed(2)}</div>
       <div class="small">${sanitize(ch.text)}</div>`;
-    root.appendChild(div);
-  });
-}
-function groundingScore(answer, passages){
-  const a = new Set(tokenize(answer));
-  const p = new Set(tokenize(passages.map(p=>p.text).join(' ')));
-  let inter = 0;
-  for (const t of a) if (p.has(t)) inter++;
-  const g = a.size ? inter / a.size : 0;
-  return Math.max(0, Math.min(1, g));
-}
+        root.appendChild(div);
+      });
+    }
+    function groundingScore(answer, passages) {
+      const a = new Set(tokenize(answer));
+      const p = new Set(tokenize(passages.map(p => p.text).join(' ')));
+      let inter = 0;
+      for (const t of a) if (p.has(t)) inter++;
+      const g = a.size ? inter / a.size : 0;
+      return Math.max(0, Math.min(1, g));
+    }
 
-document.getElementById('runRag').onclick = async ()=>{
-  try{
-    resetTimelineRAG();
-    const file = document.getElementById('pdfFile').files[0];
-    const q = document.getElementById('question').value.trim();
-    if (!file) { alert('Choisissez un PDF'); return; }
-    if (!q) { alert('Écrivez une question'); return; }
+    // Visual Pipeline Helper
+    function highlightStep(id) {
+      document.querySelectorAll('.pipeline-container .step').forEach(s => s.classList.remove('active'));
+      if (id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('active');
+      }
+    }
 
-    logStepRAG('🧩 Lecture du PDF & extraction texte…');
-    const text = await pdfToText(file);
+    document.getElementById('runRag').onclick = async () => {
+      try {
+        resetTimelineRAG();
+        const file = document.getElementById('pdfFile').files[0];
+        const q = document.getElementById('question').value.trim();
+        if (!file) { alert('Choisissez un PDF'); return; }
+        if (!q) { alert('Écrivez une question'); return; }
 
-    logStepRAG('🧩 Chunking (fenêtre ~900, overlap 150)…');
-    const chunks = chunkText(text);
-    logStepRAG(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length/chunks.length)} chars).`,'ok');
+        logStepRAG('🧩 Lecture du PDF & extraction texte…');
+        highlightStep('step-pdf');
+        const text = await pdfToText(file);
 
-    logStepRAG('🧮 TF-IDF & ranking…');
-    const ranked = tfidfRank(q, chunks);
-    const top = ranked.slice(0, 6);
-    renderPassages(ranked, 6);
-    const ctx = top.map((c,i)=>`[${i+1}] ${c.text}`).join('\n\n');
+        logStepRAG('🧩 Chunking (fenêtre ~900, overlap 150)…');
+        highlightStep('step-chunk');
+        const chunks = chunkText(text);
+        logStepRAG(`🔍 ${chunks.length} chunks générés (avg ~${Math.round(text.length / chunks.length)} chars).`, 'ok');
 
-    const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
+        logStepRAG('🧮 TF-IDF & ranking…');
+        highlightStep('step-search');
+        const ranked = tfidfRank(q, chunks);
+        const top = ranked.slice(0, 6);
+        renderPassages(ranked, 6);
+        const ctx = top.map((c, i) => `[${i + 1}] ${c.text}`).join('\n\n');
+
+        const sys = `You are a careful RAG assistant. Answer ONLY using the provided SOURCES.
 If the answer is not fully supported, explain what is missing and ask for clarification.
 Cite sources like [1], [2].`;
-    const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
+        const user = `QUESTION:\n${q}\n\nSOURCES:\n${ctx}`;
 
-    const model = document.getElementById('model').value;
-    const inTok = estTokens(sys+user);
-    logStepRAG(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
+        const model = document.getElementById('model').value;
+        const inTok = estTokens(sys + user);
+        logStepRAG(`📦 Contexte construit (≈${inTok} tokens estimés).`, 'ok');
 
-    const t0 = performance.now();
-    logStepRAG(`🤖 Appel LLM (${model})…`);
-    const resp = await callLLM([
-      {role:'system', content: sys},
-      {role:'user', content: user}
-    ], model);
-    const ms = Math.round(performance.now() - t0);
-    const content = resp?.choices?.[0]?.message?.content || '(no content)';
-    logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens)`, 'ok');
+        const t0 = performance.now();
+        logStepRAG(`🤖 Appel LLM (${model})…`);
+        highlightStep('step-llm');
+        const resp = await callLLM([
+          { role: 'system', content: sys },
+          { role: 'user', content: user }
+        ], model);
+        const ms = Math.round(performance.now() - t0);
+        const content = resp?.choices?.[0]?.message?.content || '(no content)';
+        logStepRAG(`✅ Réponse reçue en ${ms} ms (≈${estTokens(content)} tokens)`, 'ok');
 
-    document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g,'<b>[$1]</b>')}</div>`;
-    const g = groundingScore(content, top);
-    const badges = document.getElementById('badges');
-    badges.innerHTML = '';
-    const b1 = document.createElement('div'); b1.className='badge '+(g>0.45?'ok':(g>0.2?'':'low'));
-    b1.textContent = g>0.45? 'Bien ancré' : (g>0.2? 'Partiellement ancré' : 'Ancrage faible');
-    badges.appendChild(b1);
+        document.getElementById('answer').innerHTML = `<div class="card small">${sanitize(content).replace(/\[(\d+)\]/g, '<b>[$1]</b>')}</div>`;
+        const g = groundingScore(content, top);
+        const badges = document.getElementById('badges');
+        badges.innerHTML = '';
+        const b1 = document.createElement('div'); b1.className = 'badge ' + (g > 0.45 ? 'ok' : (g > 0.2 ? '' : 'low'));
+        b1.textContent = g > 0.45 ? 'Bien ancré' : (g > 0.2 ? 'Partiellement ancré' : 'Ancrage faible');
+        badges.appendChild(b1);
 
-    const info = document.getElementById('ragInfo');
-    info.innerHTML = `
-      <div>Chunks retenus : ${top.map((c,i)=>`[#${i+1}→${c.id}]`).join(' ')}</div>
-      <div class="score" title="Grounding score"><i style="width:${(g*100).toFixed(0)}%"></i></div>
+        const info = document.getElementById('ragInfo');
+        info.innerHTML = `
+      <div>Chunks retenus : ${top.map((c, i) => `[#${i + 1}→${c.id}]`).join(' ')}</div>
+      <div class="score" title="Grounding score"><i style="width:${(g * 100).toFixed(0)}%"></i></div>
       <div class="muted">Score = recouvrement lexical simplifié, seulement pour montrer le principe.</div>
     `;
 
-  }catch(e){
-    logStepRAG('⛔ '+sanitize(e.message||e), 'bad');
-    alert(e.message||e);
-  }
-};
+      } catch (e) {
+        logStepRAG('⛔ ' + sanitize(e.message || e), 'bad');
+        alert(e.message || e);
+      }
+    };
 
-/* ===== DIFF ===== */
-document.getElementById('improve').onclick = async ()=>{
-  const src = document.getElementById('src').value.trim();
-  const goal = document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec un exemple, en français.';
-  const model = document.getElementById('model').value;
-  if (!src){ alert('Mettez un prompt à gauche.'); return; }
-  document.getElementById('improveStatus').textContent = '⏳ Génération du prompt amélioré…';
-  try{
-    const sys = `You improve user prompts or short pieces of code.
+    /* ===== DIFF ===== */
+    document.getElementById('improve').onclick = async () => {
+      const src = document.getElementById('src').value.trim();
+      const goal = document.getElementById('goal').value || 'Rendre le prompt plus clair, plus détaillé, avec un exemple, en français.';
+      const model = document.getElementById('model').value;
+      if (!src) { alert('Mettez un prompt à gauche.'); return; }
+      document.getElementById('improveStatus').textContent = '⏳ Génération du prompt amélioré…';
+      try {
+        const sys = `You improve user prompts or short pieces of code.
 Return a JSON object with exactly:
 { "code": "...improved prompt...", "why": "short French explanation" }
 No markdown fences.`;
-    const user = `Objectif: ${goal}
+        const user = `Objectif: ${goal}
 === PROMPT ORIGINAL ===
 ${src}`;
 
-    const out = await callLLM([
-      {role:'system', content: sys},
-      {role:'user', content: user}
-    ], model);
-    let payload = out?.choices?.[0]?.message?.content || '';
-    payload = payload.trim().replace(/^```json\s*/,'').replace(/```$/,'');
-    let obj;
-    try{ obj = JSON.parse(payload); }
-    catch{ throw new Error('Réponse non-JSON, réessayez.'); }
+        const out = await callLLM([
+          { role: 'system', content: sys },
+          { role: 'user', content: user }
+        ], model);
+        let payload = out?.choices?.[0]?.message?.content || '';
+        payload = payload.trim().replace(/^```json\s*/, '').replace(/```$/, '');
+        let obj;
+        try { obj = JSON.parse(payload); }
+        catch { throw new Error('Réponse non-JSON, réessayez.'); }
 
-    const dst = obj.code || '';
-    document.getElementById('dst').value = dst;
-    document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez lancer le test sur les 2.';
+        const dst = obj.code || '';
+        document.getElementById('dst').value = dst;
+        document.getElementById('improveStatus').textContent = '✅ Prompt amélioré généré. Vous pouvez lancer le test sur les 2.';
 
-    if (window.diff_match_patch) {
-      const dmp = new diff_match_patch();
-      const diffs = dmp.diff_main(src, dst);
-      dmp.diff_cleanupSemantic(diffs);
-      const html = diffs.map(([op, text])=>{
-        text = sanitize(text);
-        if (op===1) return `<span class="ins">${text}</span>`;
-        if (op===-1) return `<span class="del">${text}</span>`;
-        return text;
-      }).join('');
-      document.getElementById('diff').innerHTML = html;
-    } else {
-      document.getElementById('diff').innerHTML = '<span class="muted">diff_match_patch non chargé.</span>';
-    }
+        if (window.diff_match_patch) {
+          const dmp = new diff_match_patch();
+          const diffs = dmp.diff_main(src, dst);
+          dmp.diff_cleanupSemantic(diffs);
+          const html = diffs.map(([op, text]) => {
+            text = sanitize(text);
+            if (op === 1) return `<span class="ins">${text}</span>`;
+            if (op === -1) return `<span class="del">${text}</span>`;
+            return text;
+          }).join('');
+          document.getElementById('diff').innerHTML = html;
+        } else {
+          document.getElementById('diff').innerHTML = '<span class="muted">diff_match_patch non chargé.</span>';
+        }
 
-  }catch(e){
-    document.getElementById('improveStatus').textContent = '⛔ '+(e.message||e);
-    alert(e.message||e);
-  }
-};
+      } catch (e) {
+        document.getElementById('improveStatus').textContent = '⛔ ' + (e.message || e);
+        alert(e.message || e);
+      }
+    };
 
-document.getElementById('runTest').onclick = async ()=>{
-  const src = document.getElementById('src').value.trim();
-  const dst = document.getElementById('dst').value.trim();
-  const model = document.getElementById('model').value;
-  const ctx = document.getElementById('ctx').value.trim();
-  if (!src){ alert('Pas de prompt original.'); return; }
-  if (!dst){ alert('Générez d’abord le prompt amélioré.'); return; }
+    document.getElementById('runTest').onclick = async () => {
+      const src = document.getElementById('src').value.trim();
+      const dst = document.getElementById('dst').value.trim();
+      const model = document.getElementById('model').value;
+      const ctx = document.getElementById('ctx').value.trim();
+      if (!src) { alert('Pas de prompt original.'); return; }
+      if (!dst) { alert('Générez d’abord le prompt amélioré.'); return; }
 
-  const btn = document.getElementById('runTest');
-  btn.disabled = true;
-  btn.textContent = '⏳ Test en cours…';
-  document.getElementById('outOrig').textContent = '';
-  document.getElementById('outImproved').textContent = '';
-  resetTimelineDiff();
-  logStepDiff('▶️ Lancement du test : 2 appels vont être faits (original + amélioré).');
+      const btn = document.getElementById('runTest');
+      btn.disabled = true;
+      btn.textContent = '⏳ Test en cours…';
+      document.getElementById('outOrig').textContent = '';
+      document.getElementById('outImproved').textContent = '';
+      resetTimelineDiff();
+      logStepDiff('▶️ Lancement du test : 2 appels vont être faits (original + amélioré).');
 
-  try{
-    const start = performance.now();
-    logStepDiff('📨 Appel 1/2 avec le prompt original…');
-    const r1 = await callLLM([
-      {role:'user', content: ctx ? (ctx + '\n\n' + src) : src }
-    ], model);
-    const ms1 = Math.round(performance.now() - start);
-    logStepDiff(`✅ Réponse 1/2 reçue en ${ms1} ms.`, 'ok');
-    const out1 = r1?.choices?.[0]?.message?.content || '(vide)';
-    document.getElementById('outOrig').textContent = out1;
+      try {
+        const start = performance.now();
+        logStepDiff('📨 Appel 1/2 avec le prompt original…');
+        const r1 = await callLLM([
+          { role: 'user', content: ctx ? (ctx + '\n\n' + src) : src }
+        ], model);
+        const ms1 = Math.round(performance.now() - start);
+        logStepDiff(`✅ Réponse 1/2 reçue en ${ms1} ms.`, 'ok');
+        const out1 = r1?.choices?.[0]?.message?.content || '(vide)';
+        document.getElementById('outOrig').textContent = out1;
 
-    const start2 = performance.now();
-    logStepDiff('📨 Appel 2/2 avec le prompt amélioré…');
-    const r2 = await callLLM([
-      {role:'user', content: ctx ? (ctx + '\n\n' + dst) : dst }
-    ], model);
-    const ms2 = Math.round(performance.now() - start2);
-    logStepDiff(`✅ Réponse 2/2 reçue en ${ms2} ms.`, 'ok');
-    const out2 = r2?.choices?.[0]?.message?.content || '(vide)';
-    document.getElementById('outImproved').textContent = out2;
+        const start2 = performance.now();
+        logStepDiff('📨 Appel 2/2 avec le prompt amélioré…');
+        const r2 = await callLLM([
+          { role: 'user', content: ctx ? (ctx + '\n\n' + dst) : dst }
+        ], model);
+        const ms2 = Math.round(performance.now() - start2);
+        logStepDiff(`✅ Réponse 2/2 reçue en ${ms2} ms.`, 'ok');
+        const out2 = r2?.choices?.[0]?.message?.content || '(vide)';
+        document.getElementById('outImproved').textContent = out2;
 
-    logStepDiff('🎯 Test terminé. Comparez visuellement les 2 sorties.','ok');
+        logStepDiff('🎯 Test terminé. Comparez visuellement les 2 sorties.', 'ok');
 
-  }catch(e){
-    logStepDiff('⛔ '+sanitize(e.message||e), 'bad');
-    alert(e.message||e);
-  }finally{
-    btn.disabled = false;
-    btn.textContent = 'Lancer le test sur les 2 prompts';
-  }
-};
-</script>
+      } catch (e) {
+        logStepDiff('⛔ ' + sanitize(e.message || e), 'bad');
+        alert(e.message || e);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Lancer le test sur les 2 prompts';
+      }
+    };
+  </script>
 </body>
+
 </html>

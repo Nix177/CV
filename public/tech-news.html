@@ -221,6 +221,39 @@
       align-items: center;
       flex-wrap: wrap;
     }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tag-cloud .tchip {
+      font-size: 0.8em;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+
+    .tag-cloud .tchip:hover {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--text);
+    }
+
+    .tag-cloud .tchip.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -279,7 +312,11 @@
         <input type="range" id="th" min="0" max="100" step="5" style="vertical-align:middle">
         <span id="thVal" class="bd">—</span>
       </label>
+      </label>
     </div>
+
+    <!-- Dynamic Tag Cloud -->
+    <div id="tagCloud" class="tag-cloud"></div>
 
     <details class="explain">
       <summary>Comment sont calculés le <strong>score</strong> et le <strong>seuil</strong> ?</summary>
@@ -517,6 +554,11 @@
       const cat = catFilter ? catFilter.value : "";
 
       return items.filter(it => {
+        // 0. Dynamic Tag Filter
+        if (SELECTED_TAG) {
+          if (!(it.tags || []).includes(SELECTED_TAG)) return false;
+        }
+
         // 1. Category Filter
         if (cat) {
           const tTags = (it.tags || []).map(t => t.toLowerCase());
@@ -609,8 +651,66 @@
       return `Poids (normés) R/P/I/M: ${r}/${p}/${i}/${m}`;
     }
 
+    let SELECTED_TAG = null;
+
+    function updateTagCloud(items) {
+      const tagCloud = document.getElementById("tagCloud");
+      if (!tagCloud) return;
+
+      const counts = {};
+      items.forEach(it => {
+        (it.tags || []).forEach(t => {
+          const lo = t; // case sensitive? maybe keep as is
+          counts[lo] = (counts[lo] || 0) + 1;
+        });
+      });
+
+      // Sort by count desc
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      // Top 15
+      const top = sorted.slice(0, 15);
+
+      tagCloud.innerHTML = "";
+      if (top.length === 0) {
+        tagCloud.style.display = "none";
+        return;
+      }
+      tagCloud.style.display = "flex";
+
+      // "All" chip (reset)
+      if (SELECTED_TAG) {
+        const resetBtn = document.createElement("div");
+        resetBtn.className = "tchip active";
+        resetBtn.textContent = `✖ ${SELECTED_TAG}`;
+        resetBtn.onclick = () => { SELECTED_TAG = null; render(); };
+        tagCloud.appendChild(resetBtn);
+      }
+
+      top.forEach(([tag, count]) => {
+        if (tag === SELECTED_TAG) return; // already shown as reset btn
+        const btn = document.createElement("div");
+        btn.className = "tchip";
+        btn.textContent = `${tag} (${count})`;
+        btn.onclick = () => {
+          SELECTED_TAG = tag;
+          render();
+        };
+        tagCloud.appendChild(btn);
+      });
+    }
+
     function render() {
-      const itemsAll = filterItems(DATA?.items || []);
+      // 1. We start with ALL items to build the complete tag cloud? 
+      //    Or only filtered items? Usually better to show tags from the current profile set.
+      const allInProfile = DATA?.items || [];
+
+      // Update cloud based on FULL dataset (so you can see what's available), or filtered?
+      // Let's update based on full dataset so the cloud is stable.
+      // But we only do it once or on profile change? 
+      // Let's do it every render but based on allInProfile to be stable vs search.
+      updateTagCloud(allInProfile);
+
+      const itemsAll = filterItems(allInProfile);
       const total = itemsAll.length;
 
       stamp.textContent =
