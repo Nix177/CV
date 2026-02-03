@@ -8,17 +8,17 @@
 
   const I18N = {
     fr: {
-      hello: "Bonjour ! Posez une question sur le candidat (RAG activé).",
+      hello: "Bonjour ! Posez une question sur le candidat.",
       neterr: "— connexion impossible —",
       serv: "— erreur serveur —"
     },
     en: {
-      hello: "Hello! Ask a question about the candidate (RAG enabled).",
+      hello: "Hello! Ask a question about the candidate.",
       neterr: "— connection error —",
       serv: "— server error —"
     },
     de: {
-      hello: "Hallo! Stellen Sie eine Frage zum Kandidaten (RAG aktiv).",
+      hello: "Hallo! Stellen Sie eine Frage zum Kandidaten.",
       neterr: "— Verbindungsfehler —",
       serv: "— Serverfehler —"
     }
