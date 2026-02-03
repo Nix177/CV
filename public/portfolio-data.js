@@ -76,61 +76,61 @@ window.portfolioData = [
   },
   {
     id: "telescope",
-    image: "/assets/portfolio/thumbs/telescope-onstep.png",
+    image: "/assets/portfolio/thumbs/telescope-onstep-v2.png",
     tags: ["Hardware", "Astronomie", "DIY"],
     url: "#",
     i18n: {
       fr: {
         title: "Télescope OnStep (WIP)",
-        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Impression 3D, électronique et calibration."
+        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Impression 3D (modèle Thingiverse), électronique personnalisée."
       },
       en: {
         title: "OnStep Telescope (WIP)",
-        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). 3D printing, electronics, and calibration."
+        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). 3D printing (Thingiverse), custom electronics."
       },
       de: {
         title: "OnStep Teleskop (WIP)",
-        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). 3D-Druck, Elektronik und Kalibrierung."
+        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). 3D-Druck (Thingiverse), Elektronik."
       }
     }
   },
   {
     id: "robotarm",
-    image: "/assets/portfolio/thumbs/robot-arm.png",
+    image: "/assets/portfolio/thumbs/rover-blue.jpg",
     tags: ["Robotics", "3D Print", "ROS"],
     url: "#",
     i18n: {
       fr: {
         title: "Robot & Bras Robotisé (WIP)",
-        description: "Bras 6 axes et rover mobile imprimés en 3D. Expérimentations avec ROS, cinématique inverse et vision."
+        description: "Rover autonome (châssis bleu imprimé 3D) avec projet d'intégration d'un bras Eezybotarm MK2. IA et cinématique."
       },
       en: {
         title: "Robot & Robotic Arm (WIP)",
-        description: "3D printed 6-axis arm and mobile rover. Experiments with ROS, inverse kinematics, and computer vision."
+        description: "Autonomous rover (blue 3D printed chassis) with planned Eezybotarm MK2 integration. AI and kinematics."
       },
       de: {
         title: "Roboter & Roboterarm (WIP)",
-        description: "3D-gedruckter 6-Achsen-Arm und mobiler Rover. Experimente mit ROS, inverser Kinematik und Vision."
+        description: "Autonomer Rover (blaues 3D-Druck-Chassis) mit geplanter Eezybotarm MK2-Integration. KI und Kinematik."
       }
     }
   },
   {
     id: "bm800",
-    image: "/assets/portfolio/thumbs/bm800-mod.png",
+    image: "/assets/portfolio/thumbs/bm800-kit.png",
     tags: ["Audio", "Electronics", "PCB"],
     url: "#",
     i18n: {
       fr: {
         title: "BM-800 Mod (WIP)",
-        description: "Upgrade complet d'un micro bon marché : circuit Schoeps/Alice, capsule RK-47 pour une qualité studio."
+        description: "Upgrade d'un kit BM-800 standard : remplacement du circuit par une PCB Schoeps/Alice et capsule RK-47."
       },
       en: {
         title: "BM-800 Mod (WIP)",
-        description: "Complete upgrade of a cheap mic: Schoeps/Alice circuit, RK-47 capsule for studio quality."
+        description: "Upgrade of a standard BM-800 kit: circuit replacement with Schoeps/Alice PCB and RK-47 capsule."
       },
       de: {
         title: "BM-800 Mod (WIP)",
-        description: "Komplettes Upgrade eines billigen Mikrofons: Schoeps/Alice-Schaltung, RK-47-Kapsel für Studioqualität."
+        description: "Upgrade eines Standard-BM-800-Kits: Schaltungsaustausch durch Schoeps/Alice-PCB und RK-47-Kapsel."
       }
     }
   }
