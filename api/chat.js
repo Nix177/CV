@@ -276,8 +276,15 @@ export default async function handler(req, res) {
 
     if (provider === "google") {
       // Implementation simplifiée Google (Non-streamée pour garantir le résultat sans bug de parsing)
+      const googleKey = (process.env.GOOGLE_API_KEY || "").trim();
+      if (!googleKey) {
+        res.write("[Erreur: Clé Google manquante sur le serveur]");
+        res.end();
+        return;
+      }
+
       // On envoie tout d'un coup, le client l'affichera vite.
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`, {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${googleKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -288,8 +295,11 @@ export default async function handler(req, res) {
           systemInstruction: { parts: [{ text: systemPrompt }] }
         })
       });
+
       if (!r.ok) {
-        res.write(`[Erreur Google: ${r.status}]`);
+        const errTxt = await r.text();
+        console.error("Google Error:", r.status, errTxt);
+        res.write(`[Erreur Google (${r.status}): ${errTxt}]`);
         res.end();
         return;
       }
