@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-02T07:10:23.018Z",
+  "generatedAt": "2026-02-03T07:00:32.855Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,196 @@
     }
   },
   "items": [
+    {
+      "title": "RLAnything: Forge Environment, Policy, and Reward Model in Completely Dynamic RL System",
+      "url": "https://arxiv.org/abs/2602.02488v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-02T18:59:04.000Z",
+      "score": 70,
+      "summary_en": "We propose RLAnything, a reinforcement learning framework that dynamically forges environment, policy, and reward models through closed-loop optimization, amplifying learning signals and strengthening the overall RL system for any LLM or agentic scenarios. Specifically, the policy is trained with integrated feedback from step-wise and outcome signals, while the reward model is jointly optimized via consistency feedback, which in turn further improves policy training. Moreover, our theory-motivated automatic environment adaptation improves training for both the reward and policy models by lever",
+      "summary_fr": "We propose RLAnything, a reinforcement learning framework that dynamically forges environment, policy, and reward models through closed-loop optimization, amplifying learning signals and strengthening the overall RL system for any LLM or agentic scenarios. Specifically, the policy is trained with integrated feedback from step-wise and outcome signals, while the reward model is jointly optimized via consistency feedback, which in turn further improves policy training. Moreover, our theory-motivated automatic environment adaptation improves training for both the reward and policy models by lever",
+      "resume_fr": "We propose RLAnything, a reinforcement learning framework that dynamically forges environment, policy, and reward models through closed-loop optimization, amplifying learning signals and strengthening the overall RL system for any LLM or agentic scenarios. Specifically, the policy is trained with integrated feedback from step-wise and outcome signals, while the reward model is jointly optimized via consistency feedback, which in turn further improves policy training. Moreover, our theory-motivated automatic environment adaptation improves training for both the reward and policy models by lever",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Expanding the Capabilities of Reinforcement Learning via Text Feedback",
+      "url": "https://arxiv.org/abs/2602.02482v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-02T18:56:56.000Z",
+      "score": 50,
+      "summary_en": "The success of RL for LLM post-training stems from an unreasonably uninformative source: a single bit of information per rollout as binary reward or preference label. At the other extreme, distillation offers dense supervision but requires demonstrations, which are costly and difficult to scale. We study text feedback as an intermediate signal: richer than scalar rewards, yet cheaper than complete demonstrations. Textual feedback is a natural mode of human interaction and is already abundant in many real-world settings, where users, annotators, and automated judges routinely critique LLM outpu",
+      "summary_fr": "The success of RL for LLM post-training stems from an unreasonably uninformative source: a single bit of information per rollout as binary reward or preference label. At the other extreme, distillation offers dense supervision but requires demonstrations, which are costly and difficult to scale. We study text feedback as an intermediate signal: richer than scalar rewards, yet cheaper than complete demonstrations. Textual feedback is a natural mode of human interaction and is already abundant in many real-world settings, where users, annotators, and automated judges routinely critique LLM outpu",
+      "resume_fr": "The success of RL for LLM post-training stems from an unreasonably uninformative source: a single bit of information per rollout as binary reward or preference label. At the other extreme, distillation offers dense supervision but requires demonstrations, which are costly and difficult to scale. We study text feedback as an intermediate signal: richer than scalar rewards, yet cheaper than complete demonstrations. Textual feedback is a natural mode of human interaction and is already abundant in many real-world settings, where users, annotators, and automated judges routinely critique LLM outpu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "HumanX: Toward Agile and Generalizable Humanoid Interaction Skills from Human Videos",
+      "url": "https://arxiv.org/abs/2602.02473v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-02T18:53:01.000Z",
+      "score": 70,
+      "summary_en": "Enabling humanoid robots to perform agile and adaptive interactive tasks has long been a core challenge in robotics. Current approaches are bottlenecked by either the scarcity of realistic interaction data or the need for meticulous, task-specific reward engineering, which limits their scalability. To narrow this gap, we present HumanX, a full-stack framework that compiles human video into generalizable, real-world interaction skills for humanoids, without task-specific rewards. HumanX integrates two co-designed components: XGen, a data generation pipeline that synthesizes diverse and physical",
+      "summary_fr": "Enabling humanoid robots to perform agile and adaptive interactive tasks has long been a core challenge in robotics. Current approaches are bottlenecked by either the scarcity of realistic interaction data or the need for meticulous, task-specific reward engineering, which limits their scalability. To narrow this gap, we present HumanX, a full-stack framework that compiles human video into generalizable, real-world interaction skills for humanoids, without task-specific rewards. HumanX integrates two co-designed components: XGen, a data generation pipeline that synthesizes diverse and physical",
+      "resume_fr": "Enabling humanoid robots to perform agile and adaptive interactive tasks has long been a core challenge in robotics. Current approaches are bottlenecked by either the scarcity of realistic interaction data or the need for meticulous, task-specific reward engineering, which limits their scalability. To narrow this gap, we present HumanX, a full-stack framework that compiles human video into generalizable, real-world interaction skills for humanoids, without task-specific rewards. HumanX integrates two co-designed components: XGen, a data generation pipeline that synthesizes diverse and physical",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DrawSim-PD: Simulating Student Science Drawings to Support NGSS-Aligned Teacher Diagnostic Reasoning",
+      "url": "https://arxiv.org/abs/2602.01578v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-02T03:15:51.000Z",
+      "score": 50,
+      "summary_en": "Developing expertise in diagnostic reasoning requires practice with diverse student artifacts, yet privacy regulations prohibit sharing authentic student work for teacher professional development (PD) at scale. We present DrawSim-PD, the first generative framework that simulates NGSS-aligned, student-like science drawings exhibiting controllable pedagogical imperfections to support teacher training. Central to our approach are apability profiles--structured cognitive states encoding what students at each performance level can and cannot yet demonstrate. These profiles ensure cross-modal cohere",
+      "summary_fr": "Developing expertise in diagnostic reasoning requires practice with diverse student artifacts, yet privacy regulations prohibit sharing authentic student work for teacher professional development (PD) at scale. We present DrawSim-PD, the first generative framework that simulates NGSS-aligned, student-like science drawings exhibiting controllable pedagogical imperfections to support teacher training. Central to our approach are apability profiles--structured cognitive states encoding what students at each performance level can and cannot yet demonstrate. These profiles ensure cross-modal cohere",
+      "resume_fr": "Developing expertise in diagnostic reasoning requires practice with diverse student artifacts, yet privacy regulations prohibit sharing authentic student work for teacher professional development (PD) at scale. We present DrawSim-PD, the first generative framework that simulates NGSS-aligned, student-like science drawings exhibiting controllable pedagogical imperfections to support teacher training. Central to our approach are apability profiles--structured cognitive states encoding what students at each performance level can and cannot yet demonstrate. These profiles ensure cross-modal cohere",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Are Security Cues Static? Rethinking Warning and Trust Indicators for Life Transitions",
+      "url": "https://arxiv.org/abs/2602.01544v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-02T02:22:28.000Z",
+      "score": 50,
+      "summary_en": "Security cues, such as warnings and trust signals, are designed as stable interface elements, even though people's lives, contexts, and vulnerabilities change over time. Life transitions including migration, aging, or shifts in institutional environments reshape how risk and trust are understood and acted upon. Yet current systems rarely adapt their security cues to these changing conditions, placing the burden of interpretation on users. In this Works-in-Progress paper, we argue that the static nature of security cues represents a design mismatch with transitional human lives. We draw on prio",
+      "summary_fr": "Security cues, such as warnings and trust signals, are designed as stable interface elements, even though people's lives, contexts, and vulnerabilities change over time. Life transitions including migration, aging, or shifts in institutional environments reshape how risk and trust are understood and acted upon. Yet current systems rarely adapt their security cues to these changing conditions, placing the burden of interpretation on users. In this Works-in-Progress paper, we argue that the static nature of security cues represents a design mismatch with transitional human lives. We draw on prio",
+      "resume_fr": "Security cues, such as warnings and trust signals, are designed as stable interface elements, even though people's lives, contexts, and vulnerabilities change over time. Life transitions including migration, aging, or shifts in institutional environments reshape how risk and trust are understood and acted upon. Yet current systems rarely adapt their security cues to these changing conditions, placing the burden of interpretation on users. In this Works-in-Progress paper, we argue that the static nature of security cues represents a design mismatch with transitional human lives. We draw on prio",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Living Contracts: Beyond Document-Centric Interaction with Legal Agreements",
+      "url": "https://arxiv.org/abs/2602.01396v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-01T19:05:04.000Z",
+      "score": 85,
+      "summary_en": "User interaction with legal contracts has been limited to document reading, which is often complicated by complex, ambiguous legal language. We explore possible futures where contract interfaces go beyond single document interfaces to (1) educate users with legal rights not stated in the contract, (2) transform legal language into alternative representations to aid information tasks before, during, and after signing, and (3) proactively supply contractual information at relevant moments. We refer to these future interfaces collectively as Living Contracts. Using residential leases as a case st",
+      "summary_fr": "User interaction with legal contracts has been limited to document reading, which is often complicated by complex, ambiguous legal language. We explore possible futures where contract interfaces go beyond single document interfaces to (1) educate users with legal rights not stated in the contract, (2) transform legal language into alternative representations to aid information tasks before, during, and after signing, and (3) proactively supply contractual information at relevant moments. We refer to these future interfaces collectively as Living Contracts. Using residential leases as a case st",
+      "resume_fr": "User interaction with legal contracts has been limited to document reading, which is often complicated by complex, ambiguous legal language. We explore possible futures where contract interfaces go beyond single document interfaces to (1) educate users with legal rights not stated in the contract, (2) transform legal language into alternative representations to aid information tasks before, during, and after signing, and (3) proactively supply contractual information at relevant moments. We refer to these future interfaces collectively as Living Contracts. Using residential leases as a case st",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How well can VLMs rate audio descriptions: A multi-dimensional quantitative assessment framework",
+      "url": "https://arxiv.org/abs/2602.01390v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-01T18:51:07.000Z",
+      "score": 85,
+      "summary_en": "Digital video is central to communication, education, and entertainment, but without audio description (AD), blind and low-vision audiences are excluded. While crowdsourced platforms and vision-language-models (VLMs) expand AD production, quality is rarely checked systematically. Existing evaluations rely on NLP metrics and short-clip guidelines, leaving questions about what constitutes quality for full-length content and how to assess it at scale. To address these questions, we first developed a multi-dimensional assessment framework for uninterrupted, full-length video, grounded in professio",
+      "summary_fr": "Digital video is central to communication, education, and entertainment, but without audio description (AD), blind and low-vision audiences are excluded. While crowdsourced platforms and vision-language-models (VLMs) expand AD production, quality is rarely checked systematically. Existing evaluations rely on NLP metrics and short-clip guidelines, leaving questions about what constitutes quality for full-length content and how to assess it at scale. To address these questions, we first developed a multi-dimensional assessment framework for uninterrupted, full-length video, grounded in professio",
+      "resume_fr": "Digital video is central to communication, education, and entertainment, but without audio description (AD), blind and low-vision audiences are excluded. While crowdsourced platforms and vision-language-models (VLMs) expand AD production, quality is rarely checked systematically. Existing evaluations rely on NLP metrics and short-clip guidelines, leaving questions about what constitutes quality for full-length content and how to assess it at scale. To address these questions, we first developed a multi-dimensional assessment framework for uninterrupted, full-length video, grounded in professio",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "GradingAttack: Attacking Large Language Models Towards Short Answer Grading Ability",
+      "url": "https://arxiv.org/abs/2602.00979v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-01T02:39:51.000Z",
+      "score": 50,
+      "summary_en": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
+      "summary_fr": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
+      "resume_fr": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "WordCraft: Scaffolding the Keyword Method for L2 Vocabulary Learning with Multimodal LLMs",
+      "url": "https://arxiv.org/abs/2602.00762v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-31T14:59:43.000Z",
+      "score": 50,
+      "summary_en": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
+      "summary_fr": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
+      "resume_fr": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "\"OpenBloom\": A Question-Based LLM Tool to Support Stigma Reduction in Reproductive Well-Being",
+      "url": "https://arxiv.org/abs/2602.00243v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-01-30T19:05:35.000Z",
+      "score": 50,
+      "summary_en": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
+      "summary_fr": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
+      "resume_fr": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "End-to-end Optimization of Belief and Policy Learning in Shared Autonomy Paradigms",
       "url": "https://arxiv.org/abs/2601.23285v1",
@@ -1043,196 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Taxonomy-Aligned Risk Extraction from 10-K Filings with Autonomous Improvement Using LLMs",
-      "url": "https://arxiv.org/abs/2601.15247v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-21T18:28:31.000Z",
-      "score": 70,
-      "summary_en": "We present a methodology for extracting structured risk factors from corporate 10-K filings while maintaining adherence to a predefined hierarchical taxonomy. Our three-stage pipeline combines LLM extraction with supporting quotes, embedding-based semantic mapping to taxonomy categories, and LLM-as-a-judge validation that filters spurious assignments. To evaluate our approach, we extract 10,688 risk factors from S&P 500 companies and examine risk profile similarity across industry clusters. Beyond extraction, we introduce autonomous taxonomy maintenance where an AI agent analyzes evaluation fe",
-      "summary_fr": "We present a methodology for extracting structured risk factors from corporate 10-K filings while maintaining adherence to a predefined hierarchical taxonomy. Our three-stage pipeline combines LLM extraction with supporting quotes, embedding-based semantic mapping to taxonomy categories, and LLM-as-a-judge validation that filters spurious assignments. To evaluate our approach, we extract 10,688 risk factors from S&P 500 companies and examine risk profile similarity across industry clusters. Beyond extraction, we introduce autonomous taxonomy maintenance where an AI agent analyzes evaluation fe",
-      "resume_fr": "We present a methodology for extracting structured risk factors from corporate 10-K filings while maintaining adherence to a predefined hierarchical taxonomy. Our three-stage pipeline combines LLM extraction with supporting quotes, embedding-based semantic mapping to taxonomy categories, and LLM-as-a-judge validation that filters spurious assignments. To evaluate our approach, we extract 10,688 risk factors from S&P 500 companies and examine risk profile similarity across industry clusters. Beyond extraction, we introduce autonomous taxonomy maintenance where an AI agent analyzes evaluation fe",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Tracing 3D Anatomy in 2D Strokes: A Multi-Stage Projection Driven Approach to Cervical Spine Fracture Identification",
-      "url": "https://arxiv.org/abs/2601.15235v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-21T18:15:47.000Z",
-      "score": 70,
-      "summary_en": "Cervical spine fractures are critical medical conditions requiring precise and efficient detection for effective clinical management. This study explores the viability of 2D projection-based vertebra segmentation for vertebra-level fracture detection in 3D CT volumes, presenting an end-to-end pipeline for automated analysis of cervical vertebrae (C1-C7). By approximating a 3D volume through optimized 2D axial, sagittal, and coronal projections, regions of interest are identified using the YOLOv8 model from all views and combined to approximate the 3D cervical spine area, achieving a 3D mIoU of",
-      "summary_fr": "Cervical spine fractures are critical medical conditions requiring precise and efficient detection for effective clinical management. This study explores the viability of 2D projection-based vertebra segmentation for vertebra-level fracture detection in 3D CT volumes, presenting an end-to-end pipeline for automated analysis of cervical vertebrae (C1-C7). By approximating a 3D volume through optimized 2D axial, sagittal, and coronal projections, regions of interest are identified using the YOLOv8 model from all views and combined to approximate the 3D cervical spine area, achieving a 3D mIoU of",
-      "resume_fr": "Cervical spine fractures are critical medical conditions requiring precise and efficient detection for effective clinical management. This study explores the viability of 2D projection-based vertebra segmentation for vertebra-level fracture detection in 3D CT volumes, presenting an end-to-end pipeline for automated analysis of cervical vertebrae (C1-C7). By approximating a 3D volume through optimized 2D axial, sagittal, and coronal projections, regions of interest are identified using the YOLOv8 model from all views and combined to approximate the 3D cervical spine area, achieving a 3D mIoU of",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Prep for the SAT with practice tests in Gemini",
-      "url": "https://blog.google/products-and-platforms/products/education/practice-sat-gemini/",
-      "source": "Google for Education – Blog",
-      "published": "2026-01-21T08:00:00.000Z",
-      "score": 50,
-      "summary_en": "Gemini now offers full-length, no-cost practice SATs, featuring content from The Princeton Review.",
-      "summary_fr": "Gemini now offers full-length, no-cost practice SATs, featuring content from The Princeton Review.",
-      "resume_fr": "Gemini now offers full-length, no-cost practice SATs, featuring content from The Princeton Review.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/024-BETT26-PracticeTests-Header-Resize-Social.width-1300.png"
-    },
-    {
-      "title": "IB-GRPO: Aligning LLM-based Learning Path Recommendation with Educational Objectives via Indicator-Based Group Relative Policy Optimization",
-      "url": "https://arxiv.org/abs/2601.14686v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-21T06:03:05.000Z",
-      "score": 85,
-      "summary_en": "Learning Path Recommendation (LPR) aims to generate personalized sequences of learning items that maximize long-term learning effect while respecting pedagogical principles and operational constraints. Although large language models (LLMs) offer rich semantic understanding for free-form recommendation, applying them to long-horizon LPR is challenging due to (i) misalignment with pedagogical objectives such as the Zone of Proximal Development (ZPD) under sparse, delayed feedback, (ii) scarce and costly expert demonstrations, and (iii) multi-objective interactions among learning effect, difficul",
-      "summary_fr": "Learning Path Recommendation (LPR) aims to generate personalized sequences of learning items that maximize long-term learning effect while respecting pedagogical principles and operational constraints. Although large language models (LLMs) offer rich semantic understanding for free-form recommendation, applying them to long-horizon LPR is challenging due to (i) misalignment with pedagogical objectives such as the Zone of Proximal Development (ZPD) under sparse, delayed feedback, (ii) scarce and costly expert demonstrations, and (iii) multi-objective interactions among learning effect, difficul",
-      "resume_fr": "Learning Path Recommendation (LPR) aims to generate personalized sequences of learning items that maximize long-term learning effect while respecting pedagogical principles and operational constraints. Although large language models (LLMs) offer rich semantic understanding for free-form recommendation, applying them to long-horizon LPR is challenging due to (i) misalignment with pedagogical objectives such as the Zone of Proximal Development (ZPD) under sparse, delayed feedback, (ii) scarce and costly expert demonstrations, and (iii) multi-objective interactions among learning effect, difficul",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Which Reasoning Trajectories Teach Students to Reason Better? A Simple Metric of Informative Alignment",
-      "url": "https://arxiv.org/abs/2601.14249v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-20T18:58:10.000Z",
-      "score": 65,
-      "summary_en": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
-      "summary_fr": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
-      "resume_fr": "Long chain-of-thought (CoT) trajectories provide rich supervision signals for distilling reasoning from teacher to student LLMs. However, both prior work and our experiments show that trajectories from stronger teachers do not necessarily yield better students, highlighting the importance of data-student suitability in distillation. Existing methods assess suitability primarily through student likelihood, favoring trajectories that closely align with the model's current behavior but overlooking more informative ones. Addressing this, we propose Rank-Surprisal Ratio (RSR), a simple metric that ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Jet-RL: Enabling On-Policy FP8 Reinforcement Learning with Unified Training and Rollout Precision Flow",
-      "url": "https://arxiv.org/abs/2601.14243v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-20T18:54:31.000Z",
-      "score": 70,
-      "summary_en": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
-      "summary_fr": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
-      "resume_fr": "Reinforcement learning (RL) is essential for enhancing the complex reasoning capabilities of large language models (LLMs). However, existing RL training pipelines are computationally inefficient and resource-intensive, with the rollout phase accounting for over 70% of total training time. Quantized RL training, particularly using FP8 precision, offers a promising approach to mitigating this bottleneck. A commonly adopted strategy applies FP8 precision during rollout while retaining BF16 precision for training. In this work, we present the first comprehensive study of FP8 RL training and demons",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Opportunities in AI/ML for the Rubin LSST Dark Energy Science Collaboration",
-      "url": "https://arxiv.org/abs/2601.14235v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-20T18:46:42.000Z",
-      "score": 50,
-      "summary_en": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
-      "summary_fr": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
-      "resume_fr": "The Vera C. Rubin Observatory's Legacy Survey of Space and Time (LSST) will produce unprecedented volumes of heterogeneous astronomical data (images, catalogs, and alerts) that challenge traditional analysis pipelines. The LSST Dark Energy Science Collaboration (DESC) aims to derive robust constraints on dark energy and dark matter from these data, requiring methods that are statistically powerful, scalable, and operationally reliable. Artificial intelligence and machine learning (AI/ML) are already embedded across DESC science workflows, from photometric redshifts and transient classification",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Zero-Shot Speech LLMs for Multi-Aspect Evaluation of L2 Speech: Challenges and Opportunities",
-      "url": "https://arxiv.org/abs/2601.16230v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-20T15:48:38.000Z",
-      "score": 65,
-      "summary_en": "An accurate assessment of L2 English pronunciation is crucial for language learning, as it provides personalized feedback and ensures a fair evaluation of individual progress. However, automated scoring remains challenging due to the complexity of sentence-level fluency, prosody, and completeness. This paper evaluates the zero-shot performance of Qwen2-Audio-7B-Instruct, an instruction-tuned speech-LLM, on 5,000 Speechocean762 utterances. The model generates rubric-aligned scores for accuracy, fluency, prosody, and completeness, showing strong agreement with human ratings within +-2 tolerance,",
-      "summary_fr": "An accurate assessment of L2 English pronunciation is crucial for language learning, as it provides personalized feedback and ensures a fair evaluation of individual progress. However, automated scoring remains challenging due to the complexity of sentence-level fluency, prosody, and completeness. This paper evaluates the zero-shot performance of Qwen2-Audio-7B-Instruct, an instruction-tuned speech-LLM, on 5,000 Speechocean762 utterances. The model generates rubric-aligned scores for accuracy, fluency, prosody, and completeness, showing strong agreement with human ratings within +-2 tolerance,",
-      "resume_fr": "An accurate assessment of L2 English pronunciation is crucial for language learning, as it provides personalized feedback and ensures a fair evaluation of individual progress. However, automated scoring remains challenging due to the complexity of sentence-level fluency, prosody, and completeness. This paper evaluates the zero-shot performance of Qwen2-Audio-7B-Instruct, an instruction-tuned speech-LLM, on 5,000 Speechocean762 utterances. The model generates rubric-aligned scores for accuracy, fluency, prosody, and completeness, showing strong agreement with human ratings within +-2 tolerance,",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Exploring Learners' Expectations and Engagement When Collaborating with Constructively Controversial Peer Agents",
-      "url": "https://arxiv.org/abs/2601.13479v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-20T00:25:33.000Z",
-      "score": 50,
-      "summary_en": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
-      "summary_fr": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
-      "resume_fr": "Peer agents can supplement real-time collaborative learning in asynchronous online courses. Constructive Controversy (CC) theory suggests that humans deepen their understanding of a topic by confronting and resolving controversies. This study explores whether CC's benefits apply to LLM-based peer agents, focusing on the impact of agents' disputatious behaviors and disclosure of agents' behavior designs on the learning process. In our mixed-method study (n=144), we compare LLMs that follow detailed CC guidelines (regulated) to those guided by broader goals (unregulated) and examine the effects ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PhysicsSolutionAgent: Towards Multimodal Explanations for Numerical Physics Problem Solving",
-      "url": "https://arxiv.org/abs/2601.13453v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-19T23:11:02.000Z",
-      "score": 50,
-      "summary_en": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
-      "summary_fr": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
-      "resume_fr": "Explaining numerical physics problems often requires more than text-based solutions; clear visual reasoning can substantially improve conceptual understanding. While large language models (LLMs) demonstrate strong performance on many physics questions in textual form, their ability to generate long, high-quality visual explanations remains insufficiently explored. In this work, we introduce PhysicsSolutionAgent (PSA), an autonomous agent that generates physics-problem explanation videos of up to six minutes using Manim animations. To evaluate the generated videos, we design an assessment pipel",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
