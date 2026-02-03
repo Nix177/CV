@@ -81,36 +81,36 @@ window.portfolioData = [
     url: "https://www.thingiverse.com/thing:5531109",
     i18n: {
       fr: {
-        title: "Télescope OnStep (WIP)",
-        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Projet en cours basé sur le design Thingiverse #5531109."
+        title: "Télescope OnStep (GoTo DIY)",
+        description: "Transformation d'une monture manuelle en système GoTo intelligent (ESP32, suivi sidéral). Compatible ASCOM/INDI pour pilotage via PC/Tablette."
       },
       en: {
-        title: "OnStep Telescope (WIP)",
-        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). Work in progress based on Thingiverse #5531109."
+        title: "OnStep Telescope (GoTo DIY)",
+        description: "Conversion of a manual mount into an intelligent GoTo system (ESP32, sidereal tracking). ASCOM/INDI compatible for PC/Tablet control."
       },
       de: {
-        title: "OnStep Teleskop (WIP)",
-        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). Laufendes Projekt basierend auf Thingiverse #5531109."
+        title: "OnStep Teleskop (GoTo DIY)",
+        description: "Umbau einer manuellen Montierung in ein intelligentes GoTo-System (ESP32, siderische Nachführung). ASCOM/INDI-kompatibel."
       }
     }
   },
   {
     id: "robotarm",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
-    tags: ["Robotics", "3D Print", "ROS"],
+    tags: ["Robotics", "Micro-ROS", "AI"],
     url: "http://www.eezyrobots.it/eba_mk2.html",
     i18n: {
       fr: {
-        title: "Robot & Bras Robotisé (WIP)",
-        description: "Rover autonome (photo) avec intégration prévue du bras EezyBotArm MK2. Projet en cours (ROS, vision)."
+        title: "Rover & Bras (Micro-ROS)",
+        description: "Combinaison d'un Rover (navigation autonome, LiDAR) et d'un Bras 6 axes (cinématique inverse). Architecture distribuée via Micro-ROS."
       },
       en: {
-        title: "Robot & Robotic Arm (WIP)",
-        description: "Autonomous rover (pictured) with planned EezyBotArm MK2 integration. Work in progress (ROS, vision)."
+        title: "Rover & Arm (Micro-ROS)",
+        description: "Combination of a Rover (autonomous navigation, LiDAR) and a 6-axis Arm (inverse kinematics). Distributed architecture via Micro-ROS."
       },
       de: {
-        title: "Roboter & Roboterarm (WIP)",
-        description: "Autonomer Rover (im Bild) mit geplanter EezyBotArm MK2 Integration. Laufendes Projekt (ROS, Vision)."
+        title: "Rover & Arm (Micro-ROS)",
+        description: "Kombination aus Rover (autonome Navigation, LiDAR) und 6-Achsen-Arm (inverse Kinematik). Verteilte Architektur über Micro-ROS."
       }
     }
   },
@@ -121,16 +121,16 @@ window.portfolioData = [
     url: "https://audioimprov.com/AudioImprov/Mics/Entries/2013/8/8_Mic-Parts_RK-47.html",
     i18n: {
       fr: {
-        title: "BM-800 Mod (WIP)",
-        description: "Upgrade complet d'un micro BM-800. Projet en cours inspiré par le mod Schoeps/Alice et capsule RK-47."
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Upgrade complet (circuit Schoeps/Alice + capsule RK-47) pour transformer un micro bon marché en outil de qualité studio."
       },
       en: {
-        title: "BM-800 Mod (WIP)",
-        description: "Complete upgrade of a BM-800 mic. Work in progress inspired by Schoeps/Alice mod and RK-47 capsule."
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Complete upgrade (Schoeps/Alice circuit + RK-47 capsule) to turn a cheap mic into a studio-quality tool."
       },
       de: {
-        title: "BM-800 Mod (WIP)",
-        description: "Komplettes Upgrade eines BM-800. Laufendes Projekt inspiriert vom Schoeps/Alice Mod und RK-47 Kapsel."
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Komplettes Upgrade (Schoeps/Alice-Schaltung + RK-47-Kapsel) zur Umwandlung eines billigen Mikrofons in Studioqualität."
       }
     }
   }
