@@ -1,52 +1,253 @@
 <!doctype html>
 <html lang="de">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KI-Chatbot — Nicolas Tuor</title>
   <link rel="icon" href="/favicon.ico">
   <style>
-    :root{ --bg:#081521; --panel:#0b2237; --ink:#e6f1ff; --muted:#cfe2ff; --bd:#ffffff22; --accent:#3aa7ff; --chip-bg:#0d2a45; --chip-bd:#ffffff22; }
-    html[data-theme="light"]{ --bg:#f7f9fc; --panel:#ffffff; --ink:#0b2237; --muted:#244c6e; --bd:#0b223733; --accent:#0b66d6; --chip-bg:#eef4fb; --chip-bd:#0b223722; }
-    body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-    .container{max-width:1000px;margin:0 auto;padding:18px}
-    h1{font-size:2rem;margin:0 0 10px}
-    .navbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid var(--bd)}
-    .nav-left,.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--chip-bd);background:var(--chip-bg);border-radius:12px;color:var(--ink);text-decoration:none}
-    .chip:hover{filter:brightness(1.08)}
-    .toggle{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--chip-bd);background:var(--chip-bg);border-radius:999px;color:var(--ink);cursor:pointer}
-    .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}
-    fieldset{border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
-    legend{padding:0 6px;color:var(--muted)}
-    .seg{display:flex;gap:10px;align-items:center}
-    .seg label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
-    .card{background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}
-    html[data-theme="light"] .card{background:#ffffff}
-    #chatBox{border:1px solid var(--bd);border-radius:12px;background:#0a1c2e}
-    html[data-theme="light"] #chatBox{background:#ffffff}
-    #chatLog{height:56vh;min-height:360px;max-height:70vh;overflow:auto;padding:12px 12px}
-    .inputBar{display:flex;gap:10px;padding:10px;border-top:1px solid var(--bd)}
-    textarea{flex:1;resize:vertical;min-height:52px;max-height:35vh;background:#0b2237;color:var(--ink);border:1px solid var(--bd);border-radius:10px;padding:10px}
-    html[data-theme="light"] textarea{background:#f2f6fb;color:#0b2237}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:#103258;color:var(--ink);cursor:pointer}
-    .btn:hover{background:#14406f}
-    html[data-theme="light"] .btn{background:#0b66d6;color:#fff;border-color:#0b66d6}
-    .bubble{max-width:75%;padding:10px 12px;margin:6px 0;border-radius:12px;line-height:1.35}
-    .bubble.user{margin-left:auto;background:#073155;border:1px solid #195a8d}
-    .bubble.bot{margin-right:auto;background:#0f2741;border:1px solid #1a446e}
-    html[data-theme="light"] .bubble.user{background:#e7f1ff;border-color:#bfd9ff}
-    html[data-theme="light"] .bubble.bot{background:#f3f7fb;border-color:#d7e4f3}
-    .legacy{display:none}
-    @media (max-width:720px){ #chatLog{height:52vh} .controls{gap:10px} }
+    :root {
+      --bg: #081521;
+      --panel: #0b2237;
+      --ink: #e6f1ff;
+      --muted: #cfe2ff;
+      --bd: #ffffff22;
+      --accent: #3aa7ff;
+      --chip-bg: #0d2a45;
+      --chip-bd: #ffffff22;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f7f9fc;
+      --panel: #ffffff;
+      --ink: #0b2237;
+      --muted: #244c6e;
+      --bd: #0b223733;
+      --accent: #0b66d6;
+      --chip-bg: #eef4fb;
+      --chip-bd: #0b223722;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 18px
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 10px
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--bd)
+    }
+
+    .nav-left,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--chip-bd);
+      background: var(--chip-bg);
+      border-radius: 12px;
+      color: var(--ink);
+      text-decoration: none
+    }
+
+    .chip:hover {
+      filter: brightness(1.08)
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--chip-bd);
+      background: var(--chip-bg);
+      border-radius: 999px;
+      color: var(--ink);
+      cursor: pointer
+    }
+
+    .controls {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 8px 0 14px
+    }
+
+    fieldset {
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 10px 12px
+    }
+
+    legend {
+      padding: 0 6px;
+      color: var(--muted)
+    }
+
+    .seg {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .seg label {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      cursor: pointer
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      padding: 10px 12px
+    }
+
+    html[data-theme="light"] .card {
+      background: #ffffff
+    }
+
+    #chatBox {
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      background: #0a1c2e
+    }
+
+    html[data-theme="light"] #chatBox {
+      background: #ffffff
+    }
+
+    #chatLog {
+      height: 56vh;
+      min-height: 360px;
+      max-height: 70vh;
+      overflow: auto;
+      padding: 12px 12px
+    }
+
+    .inputBar {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid var(--bd)
+    }
+
+    textarea {
+      flex: 1;
+      resize: vertical;
+      min-height: 52px;
+      max-height: 35vh;
+      background: #0b2237;
+      color: var(--ink);
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 10px
+    }
+
+    html[data-theme="light"] textarea {
+      background: #f2f6fb;
+      color: #0b2237
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--bd);
+      background: #103258;
+      color: var(--ink);
+      cursor: pointer
+    }
+
+    .btn:hover {
+      background: #14406f
+    }
+
+    html[data-theme="light"] .btn {
+      background: #0b66d6;
+      color: #fff;
+      border-color: #0b66d6
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 10px 12px;
+      margin: 6px 0;
+      border-radius: 12px;
+      line-height: 1.35;
+      text-align: justify
+    }
+
+    .bubble.user {
+      margin-left: auto;
+      background: #073155;
+      border: 1px solid #195a8d
+    }
+
+    .bubble.bot {
+      margin-right: auto;
+      background: #0f2741;
+      border: 1px solid #1a446e
+    }
+
+    html[data-theme="light"] .bubble.user {
+      background: #e7f1ff;
+      border-color: #bfd9ff
+    }
+
+    html[data-theme="light"] .bubble.bot {
+      background: #f3f7fb;
+      border-color: #d7e4f3
+    }
+
+    .legacy {
+      display: none
+    }
+
+    @media (max-width:720px) {
+      #chatLog {
+        height: 52vh
+      }
+
+      .controls {
+        gap: 10px
+      }
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
   <script defer src="/assets/js/nav.js"></script>
   <script defer src="/assets/js/feedback.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
+
 <body>
- <header aria-label="En-tête">
+  <header aria-label="En-tête">
     <nav class="site-nav" aria-label="Navigation">
       <ul class="menu">
         <li><a class="btn" href="./index.html">Accueil</a></li>
@@ -67,8 +268,11 @@
       </ul>
     </nav>
     <div class="brand" style="display:flex;align-items:center;gap:.75rem;font-weight:800;letter-spacing:.3px">
-      <div class="logo" style="width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#0a1220,#00060d);color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)">N·T</div>
-      <div>Nicolas Tuor — <span style="color:#9fb2c8">Informatikdidaktik & verantwortungsvolle KI im Unterricht</span></div>
+      <div class="logo"
+        style="width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#0a1220,#00060d);color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)">
+        N·T</div>
+      <div>Nicolas Tuor — <span style="color:#9fb2c8">Informatikdidaktik & verantwortungsvolle KI im Unterricht</span>
+      </div>
     </div>
   </header>
 
@@ -106,22 +310,24 @@
     <section id="chatBox">
       <div id="chatLog" aria-live="polite"></div>
       <div class="inputBar">
-        <textarea id="chatInput" placeholder="Nachricht schreiben… (Enter zum Senden, Shift+Enter für neue Zeile)" autocomplete="off"></textarea>
+        <textarea id="chatInput" placeholder="Nachricht schreiben… (Enter zum Senden, Shift+Enter für neue Zeile)"
+          autocomplete="off"></textarea>
         <button id="chatSend" class="btn">Senden</button>
       </div>
     </section>
   </main>
 
   <script>
-    (function(){
-      const root=document.documentElement, key="site-theme", btn=document.getElementById("themeToggle");
-      function apply(t){ if(t==="light"){ root.setAttribute("data-theme","light"); btn.textContent="🌙 Nachtmodus"; } else { root.removeAttribute("data-theme"); btn.textContent="☀️ Helles Thema"; } }
+    (function () {
+      const root = document.documentElement, key = "site-theme", btn = document.getElementById("themeToggle");
+      function apply(t) { if (t === "light") { root.setAttribute("data-theme", "light"); btn.textContent = "🌙 Nachtmodus"; } else { root.removeAttribute("data-theme"); btn.textContent = "☀️ Helles Thema"; } }
       apply(localStorage.getItem(key) || "dark");
-      btn?.addEventListener("click",()=>{ const next=root.getAttribute("data-theme")==="light"?"dark":"light"; localStorage.setItem(key,next); apply(next); });
+      btn?.addEventListener("click", () => { const next = root.getAttribute("data-theme") === "light" ? "dark" : "light"; localStorage.setItem(key, next); apply(next); });
     })();
   </script>
 
-  <script>window.__CHATBOT_LANG="de";</script>
+  <script>window.__CHATBOT_LANG = "de";</script>
   <script src="/chatbot.js"></script>
 </body>
+
 </html>

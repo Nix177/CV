@@ -98,19 +98,19 @@ window.portfolioData = [
     id: "robotarm",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
     tags: ["Robotics", "Micro-ROS", "AI"],
-    url: "http://www.eezyrobots.it/eba_mk2.html",
+    url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
     i18n: {
       fr: {
         title: "Rover & Bras (Micro-ROS)",
-        description: "Combinaison d'un Rover (navigation autonome, LiDAR) et d'un Bras 6 axes (cinématique inverse). Architecture distribuée via Micro-ROS."
+        description: "Combinaison d'un Rover (navigation autonome, LiDAR) et d'un Bras 6 axes (cinématique inverse). Architecture distribuée via Micro-ROS. Basé sur Thingiverse #1454048 & Printables #678307."
       },
       en: {
         title: "Rover & Arm (Micro-ROS)",
-        description: "Combination of a Rover (autonomous navigation, LiDAR) and a 6-axis Arm (inverse kinematics). Distributed architecture via Micro-ROS."
+        description: "Combination of a Rover (autonomous navigation, LiDAR) and a 6-axis Arm (inverse kinematics). Distributed architecture via Micro-ROS. Based on Thingiverse #1454048 & Printables #678307."
       },
       de: {
         title: "Rover & Arm (Micro-ROS)",
-        description: "Kombination aus Rover (autonome Navigation, LiDAR) und 6-Achsen-Arm (inverse Kinematik). Verteilte Architektur über Micro-ROS."
+        description: "Kombination aus Rover (autonome Navigation, LiDAR) und 6-Achsen-Arm (inverse Kinematik). Verteilte Architektur über Micro-ROS. Basierend auf Thingiverse #1454048 & Printables #678307."
       }
     }
   },
