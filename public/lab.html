@@ -377,7 +377,7 @@
         <span class="small muted">Route API : <code class="mono" id="routeHint"></code></span>
       </div>
       <div class="small muted">
-        Par défaut, on passe par votre fonction Vercel <code>/api/llm/chat</code> (clé côté serveur).
+        Par défaut, on passe par votre fonction Vercel <code>/api/llm</code> (clé côté serveur).
         Si vous saisissez une clé perso, l’appel est fait avec <b>votre</b> clé (jamais stockée).
       </div>
       <div class="small" style="margin-top:6px;">
@@ -558,7 +558,7 @@
   </div>
 
   <script>
-    const API_ROUTE = '/api/llm/chat';
+    const API_ROUTE = '/api/llm';
     document.getElementById('routeHint').textContent = API_ROUTE;
 
     document.querySelectorAll('.tab').forEach(t => {
