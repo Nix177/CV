@@ -78,19 +78,19 @@ window.portfolioData = [
     id: "telescope",
     image: "/assets/portfolio/thumbs/telescope-onstep-v2.png",
     tags: ["Hardware", "Astronomie", "DIY"],
-    url: "#",
+    url: "https://www.thingiverse.com/thing:5531109",
     i18n: {
       fr: {
         title: "Télescope OnStep (WIP)",
-        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Impression 3D (modèle Thingiverse), électronique personnalisée."
+        description: "Motorisation GoTo d'une monture équatoriale avec OnStep (ESP32). Projet en cours basé sur le design Thingiverse #5531109."
       },
       en: {
         title: "OnStep Telescope (WIP)",
-        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). 3D printing (Thingiverse), custom electronics."
+        description: "GoTo motorization of an equatorial mount with OnStep (ESP32). Work in progress based on Thingiverse #5531109."
       },
       de: {
         title: "OnStep Teleskop (WIP)",
-        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). 3D-Druck (Thingiverse), Elektronik."
+        description: "GoTo-Motorisierung einer Äquatorialmontierung mit OnStep (ESP32). Laufendes Projekt basierend auf Thingiverse #5531109."
       }
     }
   },
@@ -98,19 +98,19 @@ window.portfolioData = [
     id: "robotarm",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
     tags: ["Robotics", "3D Print", "ROS"],
-    url: "#",
+    url: "http://www.eezyrobots.it/eba_mk2.html",
     i18n: {
       fr: {
         title: "Robot & Bras Robotisé (WIP)",
-        description: "Rover autonome (châssis bleu imprimé 3D) avec projet d'intégration d'un bras Eezybotarm MK2. IA et cinématique."
+        description: "Rover autonome (photo) avec intégration prévue du bras EezyBotArm MK2. Projet en cours (ROS, vision)."
       },
       en: {
         title: "Robot & Robotic Arm (WIP)",
-        description: "Autonomous rover (blue 3D printed chassis) with planned Eezybotarm MK2 integration. AI and kinematics."
+        description: "Autonomous rover (pictured) with planned EezyBotArm MK2 integration. Work in progress (ROS, vision)."
       },
       de: {
         title: "Roboter & Roboterarm (WIP)",
-        description: "Autonomer Rover (blaues 3D-Druck-Chassis) mit geplanter Eezybotarm MK2-Integration. KI und Kinematik."
+        description: "Autonomer Rover (im Bild) mit geplanter EezyBotArm MK2 Integration. Laufendes Projekt (ROS, Vision)."
       }
     }
   },
@@ -118,19 +118,19 @@ window.portfolioData = [
     id: "bm800",
     image: "/assets/portfolio/thumbs/bm800-kit.png",
     tags: ["Audio", "Electronics", "PCB"],
-    url: "#",
+    url: "https://audioimprov.com/AudioImprov/Mics/Entries/2013/8/8_Mic-Parts_RK-47.html",
     i18n: {
       fr: {
         title: "BM-800 Mod (WIP)",
-        description: "Upgrade d'un kit BM-800 standard : remplacement du circuit par une PCB Schoeps/Alice et capsule RK-47."
+        description: "Upgrade complet d'un micro BM-800. Projet en cours inspiré par le mod Schoeps/Alice et capsule RK-47."
       },
       en: {
         title: "BM-800 Mod (WIP)",
-        description: "Upgrade of a standard BM-800 kit: circuit replacement with Schoeps/Alice PCB and RK-47 capsule."
+        description: "Complete upgrade of a BM-800 mic. Work in progress inspired by Schoeps/Alice mod and RK-47 capsule."
       },
       de: {
         title: "BM-800 Mod (WIP)",
-        description: "Upgrade eines Standard-BM-800-Kits: Schaltungsaustausch durch Schoeps/Alice-PCB und RK-47-Kapsel."
+        description: "Komplettes Upgrade eines BM-800. Laufendes Projekt inspiriert vom Schoeps/Alice Mod und RK-47 Kapsel."
       }
     }
   }
