@@ -118,6 +118,46 @@ window.portfolioData = [
     }
   },
   {
+    id: "agora-multi",
+    image: "/assets/portfolio/thumbs/agora-multi.png",
+    tags: ["EdTech", "Ethics", "Web", "Collaborative"],
+    url: "https://nix177.github.io/agora-numerique/index.html",
+    i18n: {
+      fr: {
+        title: "Agora Numérique (Multi-joueurs)",
+        description: "Plateforme collaborative de débats éthiques (Projet BNF - HEP Fribourg). Scénarios immersifs avec dilemmes philosophiques pour enseignement secondaire (Philosophie/Éthique)."
+      },
+      en: {
+        title: "Agora Numérique (Multi-player)",
+        description: "Collaborative ethical debate platform (BNF Project - HEP Fribourg). Immersive scenarios with philosophical dilemmas for secondary education (Philosophy/Ethics)."
+      },
+      de: {
+        title: "Agora Numérique (Mehrspieler)",
+        description: "Kollaborative Debattenplattform für Ethik (BNF-Projekt - HEP Fribourg). Immersive Szenarien mit philosophischen Dilemmata für Sekundarstufe (Philosophie/Ethik)."
+      }
+    }
+  },
+  {
+    id: "agora-solo",
+    image: "/assets/portfolio/thumbs/agora-solo.png",
+    tags: ["EdTech", "Ethics", "Mobile", "Interactive Fiction"],
+    url: "https://nix177.github.io/agora-numerique/index.html",
+    i18n: {
+      fr: {
+        title: "Agora Numérique Solo (Livre Interactif)",
+        description: "Mode solo 'Livre dont vous êtes le héros' pour débats éthiques. Dilemmes moraux interactifs, prévu pour déploiement Android/iOS."
+      },
+      en: {
+        title: "Agora Numérique Solo (Interactive Book)",
+        description: "Solo 'choose-your-own-adventure' mode for ethical debates. Interactive moral dilemmas, planned for Android/iOS deployment."
+      },
+      de: {
+        title: "Agora Numérique Solo (Interaktives Buch)",
+        description: "Solo-Modus 'Spielbuch' für ethische Debatten. Interaktive moralische Dilemmata, geplant für Android/iOS-Bereitstellung."
+      }
+    }
+  },
+  {
     id: "bm800",
     image: "/assets/portfolio/thumbs/bm800-kit.png",
     tags: ["Audio", "Electronics", "PCB"],

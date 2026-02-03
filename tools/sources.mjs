@@ -66,4 +66,19 @@ export const SOURCES = [
   { name: "Anthropic – Research", url: "https://www.anthropic.com/index.xml" }, // Often has research updates
   { name: "ScienceDaily – Artificial Intelligence", url: "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml" },
   { name: "ACM TechNews", url: "https://technews.acm.org/rss.xml" },
+
+  // --- ROBOTICS, HARDWARE, EMERGING TECH ---
+  { name: "IEEE Spectrum – Robotics", url: "https://spectrum.ieee.org/topic/robotics/rss" },
+  { name: "IEEE Spectrum – Automation", url: "https://spectrum.ieee.org/topic/automation/rss" },
+  { name: "arXiv – cs.RO (Robotics)", url: "https://export.arxiv.org/api/query?search_query=cat:cs.RO&max_results=25&sortBy=submittedDate&sortOrder=descending" },
+  { name: "Hackaday", url: "https://hackaday.com/feed/" },
+  { name: "IEEE Spectrum – Computing", url: "https://spectrum.ieee.org/topic/computing/rss" },
+  { name: "MIT CSAIL – News", url: "https://www.csail.mit.edu/news?type=rss" },
+  { name: "Robotics Business Review", url: "https://www.roboticsbusinessreview.com/feed/" },
+
+  // --- PEER-REVIEWED / HIGH-REPUTATION EDTECH ---
+  { name: "British Journal of Educational Technology (Wiley)", url: "https://bera-journals.onlinelibrary.wiley.com/feed/14678535/most-recent" },
+  { name: "Computers & Education (Elsevier) – Research Highlights", url: "https://www.journals.elsevier.com/computers-and-education" },
+  { name: "Journal of Computer Assisted Learning (Wiley)", url: "https://onlinelibrary.wiley.com/feed/13652729/most-recent" },
+  { name: "Educational Technology Research and Development (Springer)", url: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=11423&channel-name=Educational+Technology+Research+and+Development" },
 ];
