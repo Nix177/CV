@@ -104,16 +104,16 @@ window.portfolioData = [
     ],
     i18n: {
       fr: {
-        title: "Rover & Bras (Micro-ROS)",
-        description: "Reproduction et adaptation de designs open-source. Combinaison d'un Rover (ex. Printables #678307) et d'un Bras EEZYbotARM (Thingiverse #1454048). Architecture distribuée via Micro-ROS."
+        title: "Rover & Bras (Architecture Distribuée)",
+        description: "Rover 6x6 'Rocker-Bogie' (WildWilly) + Bras EEZYbotARM Mk2. Architecture 'Cerveau (Pi Zero 2W) + Muscles (ESP32)'. Drivers BTS7960 (3S Li-ion). Vision double (Eye-in-hand + Nav)."
       },
       en: {
-        title: "Rover & Arm (Micro-ROS)",
-        description: "Reproduction and adaptation of open-source designs. Combination of a Rover (e.g. Printables #678307) and an EEZYbotARM (Thingiverse #1454048). Distributed architecture via Micro-ROS."
+        title: "Rover & Arm (Distributed Arch)",
+        description: "6x6 'Rocker-Bogie' Rover (WildWilly) + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' architecture. BTS7960 drivers (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
       },
       de: {
-        title: "Rover & Arm (Micro-ROS)",
-        description: "Reproduktion und Anpassung von Open-Source-Designs. Kombination aus Rover (z.B. Printables #678307) und EEZYbotARM (Thingiverse #1454048). Verteilte Architektur über Micro-ROS."
+        title: "Rover & Arm (Verteilte Architektur)",
+        description: "6x6 'Rocker-Bogie' Rover + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' Architektur. BTS7960 Treiber (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
       }
     }
   },

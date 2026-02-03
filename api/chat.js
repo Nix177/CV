@@ -71,15 +71,18 @@ function getPortfolioData() {
 // --- Providers ---
 
 // OpenAI Streaming
-async function streamOpenAI(res, messages, temp, model = "gpt-4o-mini") {
-  const key = process.env.OPENAI_API_KEY;
-  if (!key) throw new Error("Missing OPENAI_API_KEY");
+async function streamOpenAI(res, messages, temp, model = "gpt-4o") {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""; // renseigner dans Vercel -> Settings -> Environment Variables
+  const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+  const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o"; // Le plus performant demandé (User : 5.2 n'existe pas, 4o est le top actuel)
 
-  const r = await fetch("https://api.openai.com/v1/chat/completions", {
+  if (!OPENAI_API_KEY) throw new Error("Missing OPENAI_API_KEY");
+
+  const r = await fetch(OPENAI_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${key}`
+      "Authorization": `Bearer ${OPENAI_API_KEY}`
     },
     body: JSON.stringify({
       model,

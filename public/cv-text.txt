@@ -92,3 +92,23 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
   – Souffle/Vent : Saleté sur section High-Z (nettoyage alcool 99%).
   – Hum : Problème masse Pin 1 XLR.
   – Faible/Distordu : Mauvais biais ou JFET inversé.
+
+=== Focus Technique : Rover 6x6 & Bras ("Spider-Tank") ===
+• Vision : Rover grimpeur (Rocker-Bogie) avec bras manipulateur et vision embarquée.
+• Architecture "Cerveau + Muscles" :
+  – Cerveau : Raspberry Pi Zero 2W (Gestion réseau, Streaming vidéo, Logique de mission, Web Server Python). 
+  – Muscles : ESP32 (Temps réel, PWM Servos/Moteurs, Sécurité).
+• Motorisation & Puissance :
+  – Alimentation : Pack 3S Li-ion (12.6V) avec BMS 3S.
+  – Drivers : BTS7960 (High Current 43A) pour supporter le 3S (vs DRV8833 limité à 10.8V).
+  – Régulation : Buck 5V (Logique Pi/ESP) + Buck 6V (Servos Bras).
+• Bras : EEZYbotARM Mk2 (Reproduction Instructables/Thingiverse).
+  – Amélioration : Roulement 606zz base, billes acier.
+• Vision (Double Caméra) :
+  – Eye-in-hand : Pi Camera (via nappe adaptateur 15-22 pin sur Pi Zero) pour manipuler.
+  – Navigation : ESP32-CAM indépendant pour la vue large/FPV.
+• Capteurs : VL53L0X (ToF) pour l'approche finale de précision (15-30cm).
+• Roadmap :
+  – Phase 1 (MVP) : Bras stable + Streaming.
+  – Phase 2 : Châssis grimpeur robuste.
+  – Moonshot : Navigation autonome dans l'appartement et manipulation d'objets (ex: canette frigo).
