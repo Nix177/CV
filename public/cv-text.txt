@@ -50,6 +50,12 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
 • Arts martiaux  
 :contentReference[oaicite:7]{index=7}
 
+=== Portfolio (Projets Techniques & Web) ===
+• Telescope OnStep (Hardware/Astronomie) : Motorisation GoTo d'une monture équatoriale (ESP32, ASCOM/INDI).
+• Rover & Bras (Robotics/Micro-ROS) : Rover autonome (LiDAR) + Bras 6 axes, architecture distribuée.
+• BM-800 Mod (Audio/Electronics) : Upgrade micro studio (circuit Schoeps/Alice + capsule RK-47).
+• AdWall, Documate, PetNames : Apps web éducatives et démos IA.
+
 === Ajouts ChatGPT (issus de nos échanges/prototypes) ===
 • Conception d’outils pédagogiques web :
   – “Fun Facts” : cartes retournables + nuage interactif, réponses sourcées (fr/EN/DE), petit moteur de sélection et affichage.  
@@ -64,3 +70,25 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
 • Cible emploi :
   – Pédagogie numérique, ingénierie de formation, accompagnement à l’IA responsable, communication scientifique.
 (Section ajoutée par le chatbot pour fournir du contexte opérationnel aux réponses. Elle synthétise ce que tu m’as confié et ce qu’on a développé ensemble.)
+
+=== Focus Technique : BM-800 Mod ("Pimped Alice") ===
+• Objectif : Transformer un micro bas de gamme (BM-800) en micro studio via un circuit discret "Alice" (dérivé Schoeps CMC5) et une capsule RK-47.
+• Architecture :
+  – Conversion d'impédance : JFET (J305 ou 2SK117) à très haute impédance d'entrée. 
+  – Division de phase : JFET + 2 résistances 2.4kΩ.
+  – Amplification courant : Transistors PNP A1015 (émetteur suiveur) pour piloter la ligne XLR.
+  – Alimentation : Fantôme 48V (Pins 2&3), régulée par Zener 12V pour le JFET.
+• Composants clés :
+  – Capsule : RK-47 (True Condenser, diaphragme 34mm plaqué or, terminaison centrale).
+  – Transistors : A1015 (PNP, attention brochage E-C-B), JFET (J305/2SK117, attention brochage D-G-S variable).
+  – Ajouts "Pimped" : Condensateurs EMI 470pF (filtrage RF), condo 47uF (filtrage Zener), Potentiomètre biais 1MΩ.
+• Montage critique (High-Z) :
+  – "Air-floating" : La gate du JFET et la résistance 1GΩ sont soudées "en l'air" (sans toucher le PCB) pour éviter les fuites de courant (bruit/craquements).
+• Calibration :
+  – Réglage du biais (Bias) via potentiomètre 1MΩ. Cible : Tension Source = Vcc / 4 (ex: 3V pour Vcc=12V).
+  – Assure une oscillation symétrique (max SPL, min distorsion).
+• Dépannage typique :
+  – Silence : Zener/Condo inversé.
+  – Souffle/Vent : Saleté sur section High-Z (nettoyage alcool 99%).
+  – Hum : Problème masse Pin 1 XLR.
+  – Faible/Distordu : Mauvais biais ou JFET inversé.

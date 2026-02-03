@@ -82,35 +82,38 @@ window.portfolioData = [
     i18n: {
       fr: {
         title: "Télescope OnStep (GoTo DIY)",
-        description: "Transformation d'une monture manuelle en système GoTo intelligent (ESP32, suivi sidéral). Compatible ASCOM/INDI pour pilotage via PC/Tablette."
+        description: "Réalisation DIY d'une monture équatoriale motorisée (système OnStep/ESP32). Reproduction adaptée du design Thingiverse #5531109. Pilotage ASCOM/INDI."
       },
       en: {
         title: "OnStep Telescope (GoTo DIY)",
-        description: "Conversion of a manual mount into an intelligent GoTo system (ESP32, sidereal tracking). ASCOM/INDI compatible for PC/Tablet control."
+        description: "DIY build of a motorized equatorial mount (OnStep/ESP32 system). Adapted reproduction of Thingiverse design #5531109. ASCOM/INDI control."
       },
       de: {
         title: "OnStep Teleskop (GoTo DIY)",
-        description: "Umbau einer manuellen Montierung in ein intelligentes GoTo-System (ESP32, siderische Nachführung). ASCOM/INDI-kompatibel."
+        description: "DIY-Bau einer motorisierten parallaktischen Montierung (OnStep/ESP32). Angepasste Reproduktion des Designs Thingiverse #5531109. ASCOM/INDI-Steuerung."
       }
     }
   },
   {
     id: "robotarm",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
-    tags: ["Robotics", "Micro-ROS", "AI"],
     url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
+    extraLinks: [
+      { label: "Design Rover (Printables)", url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm" },
+      { label: "Design Bras (Thingiverse)", url: "https://www.thingiverse.com/thing:1454048" }
+    ],
     i18n: {
       fr: {
         title: "Rover & Bras (Micro-ROS)",
-        description: "Combinaison d'un Rover (navigation autonome, LiDAR) et d'un Bras 6 axes (cinématique inverse). Architecture distribuée via Micro-ROS. Basé sur Thingiverse #1454048 & Printables #678307."
+        description: "Reproduction et adaptation de designs open-source. Combinaison d'un Rover (ex. Printables #678307) et d'un Bras EEZYbotARM (Thingiverse #1454048). Architecture distribuée via Micro-ROS."
       },
       en: {
         title: "Rover & Arm (Micro-ROS)",
-        description: "Combination of a Rover (autonomous navigation, LiDAR) and a 6-axis Arm (inverse kinematics). Distributed architecture via Micro-ROS. Based on Thingiverse #1454048 & Printables #678307."
+        description: "Reproduction and adaptation of open-source designs. Combination of a Rover (e.g. Printables #678307) and an EEZYbotARM (Thingiverse #1454048). Distributed architecture via Micro-ROS."
       },
       de: {
         title: "Rover & Arm (Micro-ROS)",
-        description: "Kombination aus Rover (autonome Navigation, LiDAR) und 6-Achsen-Arm (inverse Kinematik). Verteilte Architektur über Micro-ROS. Basierend auf Thingiverse #1454048 & Printables #678307."
+        description: "Reproduktion und Anpassung von Open-Source-Designs. Kombination aus Rover (z.B. Printables #678307) und EEZYbotARM (Thingiverse #1454048). Verteilte Architektur über Micro-ROS."
       }
     }
   },
@@ -122,15 +125,15 @@ window.portfolioData = [
     i18n: {
       fr: {
         title: "BM-800 Mod (Studio Quality)",
-        description: "Upgrade complet (circuit Schoeps/Alice + capsule RK-47) pour transformer un micro bon marché en outil de qualité studio."
+        description: "Conversion complète (Mod) basée sur l'architecture 'Alice' (Schoeps CMC5 simplifié). Circuit discret (JFET 2SK117/J305 + PNP A1015) et capsule RK-47 (True Condenser) pour une fidélité studio."
       },
       en: {
         title: "BM-800 Mod (Studio Quality)",
-        description: "Complete upgrade (Schoeps/Alice circuit + RK-47 capsule) to turn a cheap mic into a studio-quality tool."
+        description: "Full conversion (Mod) based on 'Alice' architecture (simplified Schoeps CMC5). Discrete circuit (JFET 2SK117/J305 + PNP A1015) and RK-47 capsule (True Condenser) for studio fidelity."
       },
       de: {
         title: "BM-800 Mod (Studio Quality)",
-        description: "Komplettes Upgrade (Schoeps/Alice-Schaltung + RK-47-Kapsel) zur Umwandlung eines billigen Mikrofons in Studioqualität."
+        description: "Komplette Umwandlung (Mod) basierend auf 'Alice'-Architektur (vereinfachtes Schoeps CMC5). Diskrete Schaltung (JFET 2SK117/J305 + PNP A1015) und RK-47 Kapsel (True Condenser) für Studioqualität."
       }
     }
   }

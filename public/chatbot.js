@@ -34,12 +34,12 @@
   // Détection de langue : ?lang=... prioritaire, sinon <html lang="...">
   function detectLang() {
     const qs = new URLSearchParams(location.search);
-    const qlang = (qs.get("lang") || "").slice(0,2).toLowerCase();
-    if (["fr","en","de"].includes(qlang)) return qlang;
+    const qlang = (qs.get("lang") || "").slice(0, 2).toLowerCase();
+    if (["fr", "en", "de"].includes(qlang)) return qlang;
 
     const hlang = (document.documentElement.getAttribute("lang") || "fr")
       .split("-")[0].toLowerCase();
-    return ["fr","en","de"].includes(hlang) ? hlang : "fr";
+    return ["fr", "en", "de"].includes(hlang) ? hlang : "fr";
   }
 
   // Bubbles
@@ -66,9 +66,10 @@
     addBubble(q, "user");
     if (input) input.value = "";
 
+    const checkedLib = $("#liberty input:checked");
     const payload = {
       message: q,
-      liberty: Number(range?.value ?? 2) || 2,   // 0/1/2
+      liberty: Number(checkedLib?.value ?? 2) || 2,   // 0/1/2
       concise: !!(concise && concise.checked),
       lang
     };

@@ -8,28 +8,34 @@
   "use strict";
 
   // -------- Langue --------
-  const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0,2).toLowerCase();
+  const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0, 2).toLowerCase();
   const T = ({
-    fr: { preview:"Aperçu", visit:"Visiter", close:"Fermer",
-          blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
-          loading:"Chargement de l’aperçu…" },
-    en: { preview:"Preview", visit:"Visit", close:"Close",
-          blocked:"This site denies being embedded. ➜ Use “Visit”.",
-          loading:"Loading preview…" },
-    de: { preview:"Vorschau", visit:"Besuchen", close:"Schließen",
-          blocked:"Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen.",
-          loading:"Vorschau wird geladen…" }
+    fr: {
+      preview: "Aperçu", visit: "Visiter", close: "Fermer",
+      blocked: "Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
+      loading: "Chargement de l’aperçu…"
+    },
+    en: {
+      preview: "Preview", visit: "Visit", close: "Close",
+      blocked: "This site denies being embedded. ➜ Use “Visit”.",
+      loading: "Loading preview…"
+    },
+    de: {
+      preview: "Vorschau", visit: "Besuchen", close: "Schließen",
+      blocked: "Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen.",
+      loading: "Vorschau wird geladen…"
+    }
   })[htmlLang] || {
-    preview:"Aperçu", visit:"Visiter", close:"Fermer",
-    blocked:"Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
-    loading:"Chargement de l’aperçu…"
+    preview: "Aperçu", visit: "Visiter", close: "Fermer",
+    blocked: "Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
+    loading: "Chargement de l’aperçu…"
   };
 
   // -------- Helpers --------
-  const $  = (s, r=document) => r.querySelector(s);
-  const el = (tag, attrs={}, children=[]) => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, children = []) => {
     const n = document.createElement(tag);
-    for (const [k,v] of Object.entries(attrs)) {
+    for (const [k, v] of Object.entries(attrs)) {
       if (v == null) continue;
       if (k === "class") n.className = v;
       else if (k === "text") n.textContent = v;
@@ -71,16 +77,16 @@
     let ovl = $("#pfOverlay");
     if (!ovl) {
       // Fallback si markup absent : on construit celui attendu par le CSS
-      ovl = el("div", { id:"pfOverlay", class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"pfTitle" }, [
-        el("div", { class:"pf-panel" }, [
-          el("header", { class:"pf-head" }, [
-            el("strong", { id:"pfTitle", text:"" }),
-            el("button", { id:"pfClose", class:"btn" }, T.close)
+      ovl = el("div", { id: "pfOverlay", class: "overlay", role: "dialog", "aria-modal": "true", "aria-labelledby": "pfTitle" }, [
+        el("div", { class: "pf-panel" }, [
+          el("header", { class: "pf-head" }, [
+            el("strong", { id: "pfTitle", text: "" }),
+            el("button", { id: "pfClose", class: "btn" }, T.close)
           ]),
-          el("div", { class:"pf-frame" }, [
-            el("iframe", { id:"pfFrame", title:T.preview, sandbox:"allow-scripts allow-popups allow-same-origin" })
+          el("div", { class: "pf-frame" }, [
+            el("iframe", { id: "pfFrame", title: T.preview, sandbox: "allow-scripts allow-popups allow-same-origin" })
           ]),
-          el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked)
+          el("div", { id: "pfMsg", class: "muted", style: "display:none;padding:8px 12px" }, T.blocked)
         ])
       ]);
       document.body.appendChild(ovl);
@@ -93,7 +99,7 @@
     if (frame) {
       frame.setAttribute("title", T.preview);
       frame.setAttribute("sandbox", "allow-scripts allow-popups allow-same-origin");
-      Object.assign(frame.style, { width:"100%", height:"100%", border:"0", background:"#fff" });
+      Object.assign(frame.style, { width: "100%", height: "100%", border: "0", background: "#fff" });
     }
     return { ovl, frame, title, close };
   }
@@ -102,7 +108,7 @@
     let msg = $("#pfMsg", ovl);
     if (!msg) {
       const host = ovl.querySelector(".pf-panel, .panel") || ovl;
-      msg = el("div", { id:"pfMsg", class:"muted", style:"display:none;padding:8px 12px" }, T.blocked);
+      msg = el("div", { id: "pfMsg", class: "muted", style: "display:none;padding:8px 12px" }, T.blocked);
       host.appendChild(msg);
     }
     return msg;
@@ -111,7 +117,7 @@
   function ensureSpinner(ovl) {
     let sp = $("#pfSpin", ovl);
     if (!sp) {
-      sp = el("div", { id:"pfSpin", style:"position:absolute;inset:auto 12px 12px auto;background:#0b1f33;color:#e6f1ff;border:1px solid #ffffff33;border-radius:10px;padding:6px 10px;display:none" }, T.loading);
+      sp = el("div", { id: "pfSpin", style: "position:absolute;inset:auto 12px 12px auto;background:#0b1f33;color:#e6f1ff;border:1px solid #ffffff33;border-radius:10px;padding:6px 10px;display:none" }, T.loading);
       (ovl.querySelector(".pf-panel, .panel") || ovl).appendChild(sp);
     }
     return sp;
@@ -124,7 +130,7 @@
     const { ovl, frame, title: titleEl, close } = getPfOverlay();
     if (!ovl || !frame || !close) return;
 
-    const msg  = ensureMsg(ovl);
+    const msg = ensureMsg(ovl);
     const spin = ensureSpinner(ovl);
 
     if (titleEl) titleEl.textContent = title || "";
@@ -136,11 +142,11 @@
 
     // (re)charge l’iframe
     frame.removeAttribute("src");
-    frame.setAttribute("sandbox","allow-scripts allow-popups allow-same-origin");
+    frame.setAttribute("sandbox", "allow-scripts allow-popups allow-same-origin");
 
     let loaded = false;
     const onLoad = () => { loaded = true; spin.style.display = "none"; };
-    frame.addEventListener("load", onLoad, { once:true });
+    frame.addEventListener("load", onLoad, { once: true });
     frame.src = url;
 
     // Si toujours pas chargé après 2s, on affiche le message "refusé"
@@ -168,21 +174,25 @@
   // -------- Cartes --------
   function makeCard(it) {
     const { title, description, url } = pickI18n(it);
-    const img  = it.image || it.thumbnail || null;
+    const img = it.image || it.thumbnail || null;
     const tags = Array.isArray(it.tags) ? it.tags : [];
 
-    const left = el("div", { class:"p-thumb", ...(img ? { style:`background-image:url(${img})` } : {}) });
+    const left = el("div", { class: "p-thumb", ...(img ? { style: `background-image:url(${img})` } : {}) });
     const right = el("div", {}, [
-      el("h3", { class:"p-title", text:title }),
-      description ? el("p", { class:"p-desc", text:description }) : null,
-      tags.length ? el("div", { class:"pf-tags" }, tags.map(t => el("span", { class:"badge", text:t }))) : null,
-      el("div", { class:"p-actions" }, [
-        el("button", { class:"btn linkish", onClick:() => openOverlay(url, title) }, T.preview),
-        el("a", { class:"btn primary", href:url, target:"_blank", rel:"noopener" }, T.visit)
+      el("h3", { class: "p-title", text: title }),
+      description ? el("p", { class: "p-desc", text: description }) : null,
+      tags.length ? el("div", { class: "pf-tags" }, tags.map(t => el("span", { class: "badge", text: t }))) : null,
+      el("div", { class: "p-actions" }, [
+        el("button", { class: "btn linkish", onClick: () => openOverlay(url, title) }, T.preview),
+        el("a", { class: "btn primary", href: url, target: "_blank", rel: "noopener" }, T.visit),
+        // Liens additionnels (ex. Rover + Bras)
+        ...(Array.isArray(it.extraLinks) ? it.extraLinks.map(l =>
+          el("a", { class: "btn", href: l.url, target: "_blank", rel: "noopener", style: "font-size:0.85em;padding:6px 10px;background:rgba(255,255,255,0.05)" }, l.label)
+        ) : [])
       ])
     ]);
 
-    return el("div", { class:"p-card" }, [left, right]);
+    return el("div", { class: "p-card" }, [left, right]);
   }
 
   function renderGrid(items) {
@@ -204,6 +214,6 @@
       if (!n) return;
       e.preventDefault();
       openOverlay(n.getAttribute("data-preview-url"), n.getAttribute("data-title") || "");
-    }, { passive:false });
+    }, { passive: false });
   });
 })();
