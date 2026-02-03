@@ -1,77 +1,75 @@
 /* public/chatbot.js
-   Version stable + i18n automatique :
-   - Enter envoie (Shift+Enter = nouvelle ligne)
-   - Bouton Envoyer
-   - Liberté 0/1/2 + "réponses concises"
-   - Détecte la langue (fr/en/de) depuis <html lang=".."> ou ?lang=
-   - Envoie { message, liberty, concise, lang } à /api/chat
+   Version Streaming + RAG + Multi-Model
 */
 (() => {
   "use strict";
 
-  // ---------- Helpers ----------
   const $ = (s, r = document) => r.querySelector(s);
 
-  // I18N minimal (greeting + erreurs réseau)
   const I18N = {
     fr: {
-      hello: "Bonjour ! Posez une question sur le candidat.",
+      hello: "Bonjour ! Posez une question sur le candidat (RAG activé).",
       neterr: "— connexion impossible —",
       serv: "— erreur serveur —"
     },
     en: {
-      hello: "Hello! Ask a question about the candidate.",
+      hello: "Hello! Ask a question about the candidate (RAG enabled).",
       neterr: "— connection error —",
       serv: "— server error —"
     },
     de: {
-      hello: "Hallo! Stellen Sie eine Frage zum Kandidaten.",
+      hello: "Hallo! Stellen Sie eine Frage zum Kandidaten (RAG aktiv).",
       neterr: "— Verbindungsfehler —",
       serv: "— Serverfehler —"
     }
   };
 
-  // Détection de langue : ?lang=... prioritaire, sinon <html lang="...">
   function detectLang() {
     const qs = new URLSearchParams(location.search);
     const qlang = (qs.get("lang") || "").slice(0, 2).toLowerCase();
     if (["fr", "en", "de"].includes(qlang)) return qlang;
-
-    const hlang = (document.documentElement.getAttribute("lang") || "fr")
-      .split("-")[0].toLowerCase();
+    const hlang = (document.documentElement.getAttribute("lang") || "fr").split("-")[0].toLowerCase();
     return ["fr", "en", "de"].includes(hlang) ? hlang : "fr";
   }
 
-  // Bubbles
   function addBubble(text, who = "bot") {
     const logEl = $("#chatLog");
-    if (!logEl) return;
+    if (!logEl) return null;
     const line = document.createElement("div");
     line.className = "bubble " + who;
     line.textContent = String(text ?? "");
     logEl.appendChild(line);
     logEl.scrollTop = logEl.scrollHeight;
+    return line; // Retourne l'élément pour mise à jour stream
   }
 
-  // Envoi
+  // Envoi avec Streaming
   async function send() {
     const input = $("#chatInput");
-    const range = $("#liberty");
+    const sendBt = $("#chatSend");
+    const range = $("#liberty input:checked"); // Corrected selector for radio
     const concise = $("#concise");
+    const providerEl = $("input[name='provider']:checked"); // Nouveau: sélecteur de modèle
     const lang = detectLang();
 
     const q = (input?.value || "").trim();
     if (!q) return;
 
-    addBubble(q, "user");
     if (input) input.value = "";
+    if (sendBt) sendBt.disabled = true;
 
-    const checkedLib = $("#liberty input:checked");
+    addBubble(q, "user");
+
+    // Bulle bot temporaire (vide ou avec curseur)
+    const botBubble = addBubble("", "bot");
+    botBubble.classList.add("streaming"); // CSS pour effet curseur éventuel
+
     const payload = {
       message: q,
-      liberty: Number(checkedLib?.value ?? 2) || 2,   // 0/1/2
+      liberty: Number(range?.value ?? 2) || 2,
       concise: !!(concise && concise.checked),
-      lang
+      lang,
+      provider: providerEl ? providerEl.value : "openai"
     };
 
     try {
@@ -81,44 +79,47 @@
         body: JSON.stringify(payload)
       });
 
-      // Réponse robuste
-      let txt = I18N[lang].serv;
-      if (r.ok) {
-        const json = await r.json().catch(() => null);
-        if (json?.answer?.content) {
-          txt = String(json.answer.content);
-        } else if (typeof json === "string") {
-          txt = json;
-        } else if (json?.answer?.role && json?.answer?.content) {
-          txt = String(json.answer.content);
-        }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+
+      // Lecture du stream
+      const reader = r.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        botBubble.textContent = fullText;
+        // Auto-scroll basique
+        const logEl = $("#chatLog");
+        if (logEl) logEl.scrollTop = logEl.scrollHeight;
       }
-      addBubble(txt, "bot");
+
+      botBubble.classList.remove("streaming");
+
     } catch (e) {
-      addBubble(I18N[lang].neterr, "sys");
+      botBubble.textContent += "\n" + I18N[lang].neterr;
+      console.error(e);
+    } finally {
+      if (sendBt) sendBt.disabled = false;
+      const logEl = $("#chatLog");
+      if (logEl) logEl.scrollTop = logEl.scrollHeight;
     }
   }
 
-  // Init
   function init() {
     const lang = detectLang();
-    const range = $("#liberty");
-    const concise = $("#concise");
     const input = $("#chatInput");
     const sendBt = $("#chatSend");
 
-    // Valeurs par défaut : liberté = 2, "réponses concises" décoché
-    if (range) range.value = "2";
-    if (concise) concise.checked = false;
-
-    // Message d’accueil localisé
+    // Message d’accueil
     addBubble(I18N[lang].hello, "bot");
 
-    // Enter = envoyer (Shift+Enter = nouvelle ligne)
     input?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
     });
-
     sendBt?.addEventListener("click", send);
   }
 

@@ -298,8 +298,24 @@
 
       <fieldset>
         <legend>Options</legend>
-        <label style="display:inline-flex;gap:6px;align-items:center">
-          <input type="checkbox" id="concise"> Concise answers
+        <label class="toggle" title="Short answers">
+          <input type="checkbox" id="concise">
+          <span class="slider"></span>
+          <small>Concise</small>
+        </label>
+      </fieldset>
+
+      <!-- AI Model Choice -->
+      <fieldset class="radio-group" id="provider"
+        style="margin-top:10px; display:flex; gap:15px; border:none; padding:0;">
+        <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">AI Model</legend>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
+          <input type="radio" name="provider" value="openai" checked>
+          <span>OpenAI (GPT-4o)</span>
+        </label>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
+          <input type="radio" name="provider" value="google">
+          <span>Google (Gemini)</span>
         </label>
       </fieldset>
 
