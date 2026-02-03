@@ -117,7 +117,7 @@ async function streamOpenAI(res, messages, temp, model = "gpt-4o") {
 }
 
 // Google Gemini Streaming
-async function streamGoogle(res, messages, temp, model = "gemini-1.5-flash") {
+async function streamGoogle(res, messages, temp, model = "gemini-2.0-flash-exp") {
   const key = process.env.GOOGLE_API_KEY; // Besoin de cette clé
   if (!key) throw new Error("Missing GOOGLE_API_KEY");
 
