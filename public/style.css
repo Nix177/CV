@@ -346,6 +346,51 @@ a:focus-visible {
   .pf-embed iframe,.pf-live iframe,.pf-preview iframe,.preview iframe,.live-embed iframe{ width: calc(100%/.80); height: calc(100%/.80); transform: scale(.80); }
 }
 
+/* Galerie d'images portfolio (ex: 3D modeling) */
+.p-gallery{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.p-gallery-img{
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  background: #0a1524;
+}
+.p-gallery-img:hover{
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  border-color: var(--accent);
+  z-index: 1;
+  position: relative;
+}
+@media (max-width: 640px){
+  .p-gallery{ grid-template-columns: repeat(2, 1fr); gap: 6px; }
+}
+/* Cartes avec galerie : plus larges */
+.p-card.has-gallery{
+  grid-column: span 2;
+}
+@media (max-width: 960px){
+  .p-card.has-gallery{ grid-column: span 1; }
+}
+/* Modal image plein écran */
+#imgModal{
+  cursor: zoom-out;
+}
+#imgModal img{
+  max-width: 95vw;
+  max-height: 95vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+
 /* =========================================================
    FUN FACTS — v2 (ff-*) : grille, cartes, flip 3D, overrides anti-collision
    ========================================================= */

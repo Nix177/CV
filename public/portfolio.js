@@ -176,23 +176,77 @@
     const { title, description, url } = pickI18n(it);
     const img = it.image || it.thumbnail || null;
     const tags = Array.isArray(it.tags) ? it.tags : [];
+    const extraImages = Array.isArray(it.extraImages) ? it.extraImages : [];
+    const hasGallery = extraImages.length > 0;
+    const hasUrl = url && url.length > 0;
 
     const left = el("div", { class: "p-thumb", ...(img ? { style: `background-image:url(${img})` } : {}) });
+
+    // Actions : Aperçu/Visiter seulement si URL existe
+    const actionsChildren = [];
+    if (hasUrl) {
+      actionsChildren.push(
+        el("button", { class: "btn linkish", onClick: () => openOverlay(url, title) }, T.preview),
+        el("a", { class: "btn primary", href: url, target: "_blank", rel: "noopener" }, T.visit)
+      );
+    }
+    // Liens additionnels (ex. Rover + Bras)
+    if (Array.isArray(it.extraLinks)) {
+      it.extraLinks.forEach(l => {
+        actionsChildren.push(
+          el("a", { class: "btn", href: l.url, target: "_blank", rel: "noopener", style: "font-size:0.85em;padding:6px 10px;background:rgba(255,255,255,0.05)" }, l.label)
+        );
+      });
+    }
+
+    // Galerie d'images pour les entrées avec extraImages
+    const galleryEl = hasGallery ? el("div", { class: "p-gallery" }, [
+      // Image principale
+      el("img", { src: img, alt: title + " - résultat", class: "p-gallery-img", onClick: () => openImageModal(img, title + " - résultat") }),
+      // Images supplémentaires
+      ...extraImages.map((imgSrc, i) => {
+        const labels = ["Blender", "ComfyUI", "PrusaSlicer"];
+        const label = labels[i] || `Image ${i + 1}`;
+        return el("img", { src: imgSrc, alt: title + " - " + label, class: "p-gallery-img", onClick: () => openImageModal(imgSrc, title + " - " + label) });
+      })
+    ]) : null;
+
     const right = el("div", {}, [
       el("h3", { class: "p-title", text: title }),
       description ? el("p", { class: "p-desc", text: description }) : null,
       tags.length ? el("div", { class: "pf-tags" }, tags.map(t => el("span", { class: "badge", text: t }))) : null,
-      el("div", { class: "p-actions" }, [
-        el("button", { class: "btn linkish", onClick: () => openOverlay(url, title) }, T.preview),
-        el("a", { class: "btn primary", href: url, target: "_blank", rel: "noopener" }, T.visit),
-        // Liens additionnels (ex. Rover + Bras)
-        ...(Array.isArray(it.extraLinks) ? it.extraLinks.map(l =>
-          el("a", { class: "btn", href: l.url, target: "_blank", rel: "noopener", style: "font-size:0.85em;padding:6px 10px;background:rgba(255,255,255,0.05)" }, l.label)
-        ) : [])
-      ])
+      // Galerie d'images si présente
+      galleryEl,
+      // Actions (Aperçu/Visiter) seulement si pertinentes
+      actionsChildren.length > 0 ? el("div", { class: "p-actions" }, actionsChildren) : null
+    ].filter(Boolean));
+
+    return el("div", { class: "p-card" + (hasGallery ? " has-gallery" : "") }, [left, right]);
+  }
+
+  // -------- Modal image plein écran --------
+  function openImageModal(src, alt) {
+    const existing = document.getElementById("imgModal");
+    if (existing) existing.remove();
+
+    const modal = el("div", { id: "imgModal", class: "overlay show", style: "cursor:zoom-out" }, [
+      el("img", { src, alt, style: "max-width:95vw;max-height:95vh;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5)" })
     ]);
 
-    return el("div", { class: "p-card" }, [left, right]);
+    const closeModal = () => {
+      modal.classList.remove("show");
+      setTimeout(() => modal.remove(), 100);
+    };
+
+    modal.addEventListener("click", closeModal);
+    document.addEventListener("keydown", function onEsc(e) {
+      if (e.key === "Escape") {
+        closeModal();
+        document.removeEventListener("keydown", onEsc);
+      }
+    });
+
+    document.body.appendChild(modal);
   }
 
   function renderGrid(items) {
