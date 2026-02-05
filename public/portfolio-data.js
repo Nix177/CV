@@ -179,8 +179,9 @@ window.portfolioData = [
   },
   {
     id: "vocal-walls",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
     tags: ["Web", "Audio", "Géolocalisation", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/audio-geo-notes/",
     i18n: {
       fr: {
@@ -199,8 +200,9 @@ window.portfolioData = [
   },
   {
     id: "common-ground",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/common-ground-thumb.png",
     tags: ["Web", "Collaboration", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/common-ground/",
     i18n: {
       fr: {
@@ -219,8 +221,9 @@ window.portfolioData = [
   },
   {
     id: "micro-mentor",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/micro-mentor-thumb.png",
     tags: ["Web", "EdTech", "React", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/Micro-mentor/",
     i18n: {
       fr: {
@@ -239,8 +242,9 @@ window.portfolioData = [
   },
   {
     id: "frustra",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/frustra-thumb.png",
     tags: ["Web", "Startup", "React Native", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/problem-first-db/",
     i18n: {
       fr: {
@@ -259,8 +263,9 @@ window.portfolioData = [
   },
   {
     id: "slow-social",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/slow-social-thumb.png",
     tags: ["Web", "Bien-être", "Social", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/social_wellness_digest/",
     i18n: {
       fr: {
@@ -279,8 +284,9 @@ window.portfolioData = [
   },
   {
     id: "un-algorithm",
-    image: "/assets/portfolio/thumbs/default-thumb.webp",
+    image: "/assets/portfolio/thumbs/un-algorithm-thumb.png",
     tags: ["Web", "IA", "Bien-être", "GitHub Pages"],
+    category: "maquettes",
     url: "https://nix177.github.io/Un-Algorithm/",
     i18n: {
       fr: {
@@ -294,6 +300,30 @@ window.portfolioData = [
       de: {
         title: "The Un-Algorithm — Bewusstseins-Dashboard",
         description: "Kontrolle über Empfehlungs-KI zurückgewinnen. Dashboard mit Relevanz/Entdeckung-Reglern, Kategoriefiltern und teilbaren algorithmischen 'Rezepten'."
+      }
+    }
+  },
+  {
+    id: "3d-printing",
+    image: "/assets/portfolio/thumbs/3d-printed.jpg",
+    tags: ["3D", "Blender", "Impression 3D", "ComfyUI"],
+    extraImages: [
+      "/assets/portfolio/thumbs/3d-blender.png",
+      "/assets/portfolio/thumbs/3d-comfyui.png",
+      "/assets/portfolio/thumbs/3d-prusaslicer.png"
+    ],
+    i18n: {
+      fr: {
+        title: "Modélisation & Impression 3D",
+        description: "Workflow complet : génération IA (ComfyUI/Hunyuan3D), sculpture dans Blender, slicing (PrusaSlicer) et impression PETG. Exemple : masque Oni sculpté et imprimé."
+      },
+      en: {
+        title: "3D Modeling & Printing",
+        description: "Full workflow: AI generation (ComfyUI/Hunyuan3D), Blender sculpting, slicing (PrusaSlicer), and PETG printing. Example: sculpted and printed Oni mask."
+      },
+      de: {
+        title: "3D-Modellierung & Druck",
+        description: "Kompletter Workflow: KI-Generierung (ComfyUI/Hunyuan3D), Blender-Skulptur, Slicing (PrusaSlicer) und PETG-Druck. Beispiel: Oni-Maske modelliert und gedruckt."
       }
     }
   }
