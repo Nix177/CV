@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-04T07:01:15.600Z",
+  "generatedAt": "2026-02-05T07:07:27.284Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,215 @@
     }
   },
   "items": [
+    {
+      "title": "Multi-Head LatentMoE and Head Parallel: Communication-Efficient and Deterministic MoE Parallelism",
+      "url": "https://arxiv.org/abs/2602.04870v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-04T18:57:19.000Z",
+      "score": 50,
+      "summary_en": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
+      "summary_fr": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
+      "resume_fr": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Beyond the Control Equations: An Artifact Study of Implementation Quality in Robot Control Software",
+      "url": "https://arxiv.org/abs/2602.04799v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-04T17:45:59.000Z",
+      "score": 70,
+      "summary_en": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
+      "summary_fr": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
+      "resume_fr": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PuppetAI: A Customizable Platform for Designing Tactile-Rich Affective Robot Interaction",
+      "url": "https://arxiv.org/abs/2602.04787v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-04T17:37:31.000Z",
+      "score": 70,
+      "summary_en": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
+      "summary_fr": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
+      "resume_fr": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Comparative Insights on Adversarial Machine Learning from Industry and Academia: A User-Study Approach",
+      "url": "https://arxiv.org/abs/2602.04753v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-04T16:51:50.000Z",
+      "score": 50,
+      "summary_en": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
+      "summary_fr": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
+      "resume_fr": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AGILE: Hand-Object Interaction Reconstruction from Video via Agentic Generation",
+      "url": "https://arxiv.org/abs/2602.04672v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-04T15:42:58.000Z",
+      "score": 70,
+      "summary_en": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
+      "summary_fr": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
+      "resume_fr": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AI in Education Beyond Learning Outcomes: Cognition, Agency, Emotion, and Ethics",
+      "url": "https://arxiv.org/abs/2602.04598v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-04T14:26:27.000Z",
+      "score": 85,
+      "summary_en": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
+      "summary_fr": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
+      "resume_fr": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Tinker Tales: Supporting Child-AI Collaboration through Co-Creative Storytelling with Educational Scaffolding",
+      "url": "https://arxiv.org/abs/2602.04109v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-04T00:48:12.000Z",
+      "score": 50,
+      "summary_en": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
+      "summary_fr": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
+      "resume_fr": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "From Crafting Text to Crafting Thought: Grounding AI Writing Support to Writing Center Pedagogy",
+      "url": "https://arxiv.org/abs/2602.04047v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-03T22:30:45.000Z",
+      "score": 50,
+      "summary_en": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
+      "summary_fr": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
+      "resume_fr": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring Emerging Norms of AI Disclosure in Programming Education",
+      "url": "https://arxiv.org/abs/2602.04023v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-03T21:14:19.000Z",
+      "score": 50,
+      "summary_en": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
+      "summary_fr": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
+      "resume_fr": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When AI Persuades: Adversarial Explanation Attacks on Human Trust in AI-Assisted Decision Making",
+      "url": "https://arxiv.org/abs/2602.04003v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-03T20:42:44.000Z",
+      "score": 50,
+      "summary_en": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
+      "summary_fr": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
+      "resume_fr": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Enhancing Mathematical Problem Solving in LLMs through Execution-Driven Reasoning Augmentation",
+      "url": "https://arxiv.org/abs/2602.03950v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-03T19:13:31.000Z",
+      "score": 50,
+      "summary_en": "Mathematical problem solving is a fundamental benchmark for assessing the reasoning capabilities of artificial intelligence and a gateway to applications in education, science, and engineering where reliable symbolic reasoning is essential. Although recent advances in multi-agent LLM-based systems have enhanced their mathematical reasoning capabilities, they still lack a reliably revisable representation of the reasoning process. Existing agents either operate in rigid sequential pipelines that cannot correct earlier steps or rely on heuristic self-evaluation that can fail to identify and fix ",
+      "summary_fr": "Mathematical problem solving is a fundamental benchmark for assessing the reasoning capabilities of artificial intelligence and a gateway to applications in education, science, and engineering where reliable symbolic reasoning is essential. Although recent advances in multi-agent LLM-based systems have enhanced their mathematical reasoning capabilities, they still lack a reliably revisable representation of the reasoning process. Existing agents either operate in rigid sequential pipelines that cannot correct earlier steps or rely on heuristic self-evaluation that can fail to identify and fix ",
+      "resume_fr": "Mathematical problem solving is a fundamental benchmark for assessing the reasoning capabilities of artificial intelligence and a gateway to applications in education, science, and engineering where reliable symbolic reasoning is essential. Although recent advances in multi-agent LLM-based systems have enhanced their mathematical reasoning capabilities, they still lack a reliably revisable representation of the reasoning process. Existing agents either operate in rigid sequential pipelines that cannot correct earlier steps or rely on heuristic self-evaluation that can fail to identify and fix ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Accelerating Scientific Research with Gemini: Case Studies and Common Techniques",
       "url": "https://arxiv.org/abs/2602.03837v1",
@@ -1024,215 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Neural Neural Scaling Laws",
-      "url": "https://arxiv.org/abs/2601.19831v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-27T17:38:11.000Z",
-      "score": 70,
-      "summary_en": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
-      "summary_fr": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
-      "resume_fr": "Neural scaling laws predict how language model performance improves with increased compute. While aggregate metrics like validation loss can follow smooth power-law curves, individual downstream tasks exhibit diverse scaling behaviors: some improve monotonically, others plateau, and some even degrade with scale. We argue that predicting downstream performance from validation perplexity suffers from two limitations: averaging token-level losses obscures signal, and no simple parametric family can capture the full spectrum of scaling behaviors. To address this, we propose Neural Neural Scaling L",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "CaseMaster: Designing and Evaluating a Probe for Oral Case Presentation Training with LLM Assistance",
-      "url": "https://arxiv.org/abs/2601.19332v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-27T08:17:11.000Z",
-      "score": 50,
-      "summary_en": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
-      "summary_fr": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
-      "resume_fr": "Preparing an oral case presentation (OCP) is a crucial skill for medical students, requiring clear communication of patient information, clinical findings, and treatment plans. However, inconsistent student participation and limited guidance can make this task challenging. While Large Language Models (LLMs) can provide structured content to streamline the process, their role in facilitating skill development and supporting medical education integration remains underexplored. To address this, we conducted a formative study with six medical educators and developed CaseMaster, an interactive prob",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Voice-Based Chatbots for English Speaking Practice in Multilingual Low-Resource Indian Schools: A Multi-Stakeholder Study",
-      "url": "https://arxiv.org/abs/2601.19304v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-27T07:44:52.000Z",
-      "score": 85,
-      "summary_en": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
-      "summary_fr": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
-      "resume_fr": "Spoken English proficiency is a powerful driver of economic mobility for low-income Indian youth, yet opportunities for spoken practice remain scarce in schools. We investigate the deployment of a voice-based chatbot for English conversation practice across four low-resource schools in Delhi. Through a six-day field study combining observations and interviews, we captured the perspectives of students, teachers, and principals. Findings confirm high demand across all groups, with notable gains in student speaking confidence. Our multi-stakeholder analysis surfaced a tension in long-term adoptio",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "XR Design Framework for Early Childhood Education",
-      "url": "https://arxiv.org/abs/2601.18979v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-26T21:32:35.000Z",
-      "score": 85,
-      "summary_en": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
-      "summary_fr": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
-      "resume_fr": "Extended Reality in early childhood education presents high-risk challenges due to children's rapid developmental changes. While augmented and virtual reality offer immersive pedagogical benefits, they often impose excessive cognitive load or sensory conflict. We introduce the Augmented Human Development (AHD) framework to model these interactions through cognitive, sensory, environmental, and developmental parameters. To ground this framework, we conducted a Systematization of Knowledge (SoK) of 111 peer-reviewed studies involving children aged 3 - 8. Our findings, interpreted through the AHD",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "IEEE Brings Hands-On STEM Activities to India’s Rural Areas",
-      "url": "https://spectrum.ieee.org/ieee-stem-activities-rural-india",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-01-26T19:00:03.000Z",
-      "score": 85,
-      "summary_en": "“Until we get equality in education, we won’t have an equal society.” Spoken by Sonia Sotomayor, associate justice of the U.S. Supreme Court, the words echo sharply across regions of the world where education is not guaranteed. In the far northeastern corner of India—where villages are located in forests, on mountains, and along riverbanks—rural classrooms often operate with limited resources and even fewer opportunities. In districts such as Dhemaji, Assam, and the rural areas of Kharagpur and West Bengal, learning STEM often is just a distant dream. I grew up in rural areas, and I saw how cu",
-      "summary_fr": "“Until we get equality in education, we won’t have an equal society.” Spoken by Sonia Sotomayor, associate justice of the U.S. Supreme Court, the words echo sharply across regions of the world where education is not guaranteed. In the far northeastern corner of India—where villages are located in forests, on mountains, and along riverbanks—rural classrooms often operate with limited resources and even fewer opportunities. In districts such as Dhemaji, Assam, and the rural areas of Kharagpur and West Bengal, learning STEM often is just a distant dream. I grew up in rural areas, and I saw how cu",
-      "resume_fr": "“Until we get equality in education, we won’t have an equal society.” Spoken by Sonia Sotomayor, associate justice of the U.S. Supreme Court, the words echo sharply across regions of the world where education is not guaranteed. In the far northeastern corner of India—where villages are located in forests, on mountains, and along riverbanks—rural classrooms often operate with limited resources and even fewer opportunities. In districts such as Dhemaji, Assam, and the rural areas of Kharagpur and West Bengal, learning STEM often is just a distant dream. I grew up in rural areas, and I saw how cu",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/group-of-higher-secondary-school-students-in-india-holding-up-an-ieee-banner-inside-their-classroom.jpg?id=63278514&width=1200&height=600&coordinates=0%2C98%2C0%2C99"
-    },
-    {
-      "title": "Reuse your FLOPs: Scaling RL on Hard Problems by Conditioning on Very Off-Policy Prefixes",
-      "url": "https://arxiv.org/abs/2601.18795v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-26T18:57:00.000Z",
-      "score": 70,
-      "summary_en": "Typical reinforcement learning (RL) methods for LLM reasoning waste compute on hard problems, where correct on-policy traces are rare, policy gradients vanish, and learning stalls. To bootstrap more efficient RL, we consider reusing old sampling FLOPs (from prior inference or RL training) in the form of off-policy traces. Standard off-policy methods supervise against off-policy data, causing instabilities during RL optimization. We introduce PrefixRL, where we condition on the prefix of successful off-policy traces and run on-policy RL to complete them, side-stepping off-policy instabilities. ",
-      "summary_fr": "Typical reinforcement learning (RL) methods for LLM reasoning waste compute on hard problems, where correct on-policy traces are rare, policy gradients vanish, and learning stalls. To bootstrap more efficient RL, we consider reusing old sampling FLOPs (from prior inference or RL training) in the form of off-policy traces. Standard off-policy methods supervise against off-policy data, causing instabilities during RL optimization. We introduce PrefixRL, where we condition on the prefix of successful off-policy traces and run on-policy RL to complete them, side-stepping off-policy instabilities. ",
-      "resume_fr": "Typical reinforcement learning (RL) methods for LLM reasoning waste compute on hard problems, where correct on-policy traces are rare, policy gradients vanish, and learning stalls. To bootstrap more efficient RL, we consider reusing old sampling FLOPs (from prior inference or RL training) in the form of off-policy traces. Standard off-policy methods supervise against off-policy data, causing instabilities during RL optimization. We introduce PrefixRL, where we condition on the prefix of successful off-policy traces and run on-policy RL to complete them, side-stepping off-policy instabilities. ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Design Techniques for LLM-Powered Interactive Storytelling: A Case Study of the Dramamancer System",
-      "url": "https://arxiv.org/abs/2601.18785v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-26T18:51:20.000Z",
-      "score": 70,
-      "summary_en": "The rise of Large Language Models (LLMs) has enabled a new paradigm for bridging authorial intent and player agency in interactive narrative. We consider this paradigm through the example of Dramamancer, a system that uses an LLM to transform author-created story schemas into player-driven playthroughs. This extended abstract outlines some design techniques and evaluation considerations associated with this system.",
-      "summary_fr": "The rise of Large Language Models (LLMs) has enabled a new paradigm for bridging authorial intent and player agency in interactive narrative. We consider this paradigm through the example of Dramamancer, a system that uses an LLM to transform author-created story schemas into player-driven playthroughs. This extended abstract outlines some design techniques and evaluation considerations associated with this system.",
-      "resume_fr": "The rise of Large Language Models (LLMs) has enabled a new paradigm for bridging authorial intent and player agency in interactive narrative. We consider this paradigm through the example of Dramamancer, a system that uses an LLM to transform author-created story schemas into player-driven playthroughs. This extended abstract outlines some design techniques and evaluation considerations associated with this system.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Multi-Objective Reinforcement Learning for Efficient Tactical Decision Making for Trucks in Highway Traffic",
-      "url": "https://arxiv.org/abs/2601.18783v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-26T18:50:21.000Z",
-      "score": 70,
-      "summary_en": "Balancing safety, efficiency, and operational costs in highway driving poses a challenging decision-making problem for heavy-duty vehicles. A central difficulty is that conventional scalar reward formulations, obtained by aggregating these competing objectives, often obscure the structure of their trade-offs. We present a Proximal Policy Optimization based multi-objective reinforcement learning framework that learns a continuous set of policies explicitly representing these trade-offs and evaluates it on a scalable simulation platform for tactical decision making in trucks. The proposed approa",
-      "summary_fr": "Balancing safety, efficiency, and operational costs in highway driving poses a challenging decision-making problem for heavy-duty vehicles. A central difficulty is that conventional scalar reward formulations, obtained by aggregating these competing objectives, often obscure the structure of their trade-offs. We present a Proximal Policy Optimization based multi-objective reinforcement learning framework that learns a continuous set of policies explicitly representing these trade-offs and evaluates it on a scalable simulation platform for tactical decision making in trucks. The proposed approa",
-      "resume_fr": "Balancing safety, efficiency, and operational costs in highway driving poses a challenging decision-making problem for heavy-duty vehicles. A central difficulty is that conventional scalar reward formulations, obtained by aggregating these competing objectives, often obscure the structure of their trade-offs. We present a Proximal Policy Optimization based multi-objective reinforcement learning framework that learns a continuous set of policies explicitly representing these trade-offs and evaluates it on a scalable simulation platform for tactical decision making in trucks. The proposed approa",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "POPE: Learning to Reason on Hard Problems via Privileged On-Policy Exploration",
-      "url": "https://arxiv.org/abs/2601.18779v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-26T18:47:21.000Z",
-      "score": 70,
-      "summary_en": "Reinforcement learning (RL) has improved the reasoning abilities of large language models (LLMs), yet state-of-the-art methods still fail to learn on many training problems. On hard problems, on-policy RL rarely explores even a single correct rollout, yielding zero reward and no learning signal for driving improvement. We find that natural solutions to remedy this exploration problem from classical RL, such as entropy bonuses, more permissive clipping of the importance ratio, or direct optimization of pass@k objectives, do not resolve this issue and often destabilize optimization without impro",
-      "summary_fr": "Reinforcement learning (RL) has improved the reasoning abilities of large language models (LLMs), yet state-of-the-art methods still fail to learn on many training problems. On hard problems, on-policy RL rarely explores even a single correct rollout, yielding zero reward and no learning signal for driving improvement. We find that natural solutions to remedy this exploration problem from classical RL, such as entropy bonuses, more permissive clipping of the importance ratio, or direct optimization of pass@k objectives, do not resolve this issue and often destabilize optimization without impro",
-      "resume_fr": "Reinforcement learning (RL) has improved the reasoning abilities of large language models (LLMs), yet state-of-the-art methods still fail to learn on many training problems. On hard problems, on-policy RL rarely explores even a single correct rollout, yielding zero reward and no learning signal for driving improvement. We find that natural solutions to remedy this exploration problem from classical RL, such as entropy bonuses, more permissive clipping of the importance ratio, or direct optimization of pass@k objectives, do not resolve this issue and often destabilize optimization without impro",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "From Struggle to Success: Context-Aware Guidance for Screen Reader Users in Computer Use",
-      "url": "https://arxiv.org/abs/2601.18092v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-26T03:02:26.000Z",
-      "score": 85,
-      "summary_en": "Equal access to digital technologies is critical for education, employment, and social participation. However, mainstream interfaces are visually oriented, creating steep learning curves and frequent obstacles for screen reader users, and limiting their independence and opportunities. Existing support is inadequate -- tutorials mainly target sighted users, while human assistance lacks real-time availability. We introduce AskEase, an on-demand AI assistant that provides step-by-step, screen reader user-friendly guidance for computer use. AskEase manages multiple sources of context to infer user",
-      "summary_fr": "Equal access to digital technologies is critical for education, employment, and social participation. However, mainstream interfaces are visually oriented, creating steep learning curves and frequent obstacles for screen reader users, and limiting their independence and opportunities. Existing support is inadequate -- tutorials mainly target sighted users, while human assistance lacks real-time availability. We introduce AskEase, an on-demand AI assistant that provides step-by-step, screen reader user-friendly guidance for computer use. AskEase manages multiple sources of context to infer user",
-      "resume_fr": "Equal access to digital technologies is critical for education, employment, and social participation. However, mainstream interfaces are visually oriented, creating steep learning curves and frequent obstacles for screen reader users, and limiting their independence and opportunities. Existing support is inadequate -- tutorials mainly target sighted users, while human assistance lacks real-time availability. We introduce AskEase, an on-demand AI assistant that provides step-by-step, screen reader user-friendly guidance for computer use. AskEase manages multiple sources of context to infer user",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "\"Crash Test Dummies\" for AI-Enabled Clinical Assessment: Validating Virtual Patient Scenarios with Virtual Learners",
-      "url": "https://arxiv.org/abs/2601.18085v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-26T02:47:28.000Z",
-      "score": 65,
-      "summary_en": "Background: In medical and health professions education (HPE), AI is increasingly used to assess clinical competencies, including via virtual standardized patients. However, most evaluations rely on AI-human interrater reliability and lack a measurement framework for how cases, learners, and raters jointly shape scores. This leaves robustness uncertain and can expose learners to misguidance from unvalidated systems. We address this by using AI \"simulated learners\" to stress-test and psychometrically characterize assessment pipelines before human use. Objective: Develop an open-source AI virtua",
-      "summary_fr": "Background: In medical and health professions education (HPE), AI is increasingly used to assess clinical competencies, including via virtual standardized patients. However, most evaluations rely on AI-human interrater reliability and lack a measurement framework for how cases, learners, and raters jointly shape scores. This leaves robustness uncertain and can expose learners to misguidance from unvalidated systems. We address this by using AI \"simulated learners\" to stress-test and psychometrically characterize assessment pipelines before human use. Objective: Develop an open-source AI virtua",
-      "resume_fr": "Background: In medical and health professions education (HPE), AI is increasingly used to assess clinical competencies, including via virtual standardized patients. However, most evaluations rely on AI-human interrater reliability and lack a measurement framework for how cases, learners, and raters jointly shape scores. This leaves robustness uncertain and can expose learners to misguidance from unvalidated systems. We address this by using AI \"simulated learners\" to stress-test and psychometrically characterize assessment pipelines before human use. Objective: Develop an open-source AI virtua",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
