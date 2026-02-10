@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-09T07:13:33.484Z",
+  "generatedAt": "2026-02-10T07:14:22.648Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,177 @@
   },
   "items": [
     {
+      "title": "$χ_{0}$: Resource-Aware Robust Manipulation via Taming Distributional Inconsistencies",
+      "url": "https://arxiv.org/abs/2602.09021v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-09T18:59:45.000Z",
+      "score": 50,
+      "summary_en": "High-reliability long-horizon robotic manipulation has traditionally relied on large-scale data and compute to understand complex real-world dynamics. However, we identify that the primary bottleneck to real-world robustness is not resource scale alone, but the distributional shift among the human demonstration distribution, the inductive bias learned by the policy, and the test-time execution distribution -- a systematic inconsistency that causes compounding errors in multi-stage tasks. To mitigate these inconsistencies, we propose $χ_{0}$, a resource-efficient framework with effective module",
+      "summary_fr": "High-reliability long-horizon robotic manipulation has traditionally relied on large-scale data and compute to understand complex real-world dynamics. However, we identify that the primary bottleneck to real-world robustness is not resource scale alone, but the distributional shift among the human demonstration distribution, the inductive bias learned by the policy, and the test-time execution distribution -- a systematic inconsistency that causes compounding errors in multi-stage tasks. To mitigate these inconsistencies, we propose $χ_{0}$, a resource-efficient framework with effective module",
+      "resume_fr": "High-reliability long-horizon robotic manipulation has traditionally relied on large-scale data and compute to understand complex real-world dynamics. However, we identify that the primary bottleneck to real-world robustness is not resource scale alone, but the distributional shift among the human demonstration distribution, the inductive bias learned by the policy, and the test-time execution distribution -- a systematic inconsistency that causes compounding errors in multi-stage tasks. To mitigate these inconsistencies, we propose $χ_{0}$, a resource-efficient framework with effective module",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Robustness Is a Function, Not a Number: A Factorized Comprehensive Study of OOD Robustness in Vision-Based Driving",
+      "url": "https://arxiv.org/abs/2602.09018v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-09T18:59:03.000Z",
+      "score": 70,
+      "summary_en": "Out of distribution (OOD) robustness in autonomous driving is often reduced to a single number, hiding what breaks a policy. We decompose environments along five axes: scene (rural/urban), season, weather, time (day/night), and agent mix; and measure performance under controlled $k$-factor perturbations ($k \\in \\{0,1,2,3\\}$). Using closed loop control in VISTA, we benchmark FC, CNN, and ViT policies, train compact ViT heads on frozen foundation-model (FM) features, and vary ID support in scale, diversity, and temporal context. (1) ViT policies are markedly more OOD-robust than comparably sized",
+      "summary_fr": "Out of distribution (OOD) robustness in autonomous driving is often reduced to a single number, hiding what breaks a policy. We decompose environments along five axes: scene (rural/urban), season, weather, time (day/night), and agent mix; and measure performance under controlled $k$-factor perturbations ($k \\in \\{0,1,2,3\\}$). Using closed loop control in VISTA, we benchmark FC, CNN, and ViT policies, train compact ViT heads on frozen foundation-model (FM) features, and vary ID support in scale, diversity, and temporal context. (1) ViT policies are markedly more OOD-robust than comparably sized",
+      "resume_fr": "Out of distribution (OOD) robustness in autonomous driving is often reduced to a single number, hiding what breaks a policy. We decompose environments along five axes: scene (rural/urban), season, weather, time (day/night), and agent mix; and measure performance under controlled $k$-factor perturbations ($k \\in \\{0,1,2,3\\}$). Using closed loop control in VISTA, we benchmark FC, CNN, and ViT policies, train compact ViT heads on frozen foundation-model (FM) features, and vary ID support in scale, diversity, and temporal context. (1) ViT policies are markedly more OOD-robust than comparably sized",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Contact-Anchored Policies: Contact Conditioning Creates Strong Robot Utility Models",
+      "url": "https://arxiv.org/abs/2602.09017v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-09T18:58:50.000Z",
+      "score": 85,
+      "summary_en": "The prevalent paradigm in robot learning attempts to generalize across environments, embodiments, and tasks with language prompts at runtime. A fundamental tension limits this approach: language is often too abstract to guide the concrete physical understanding required for robust manipulation. In this work, we introduce Contact-Anchored Policies (CAP), which replace language conditioning with points of physical contact in space. Simultaneously, we structure CAP as a library of modular utility models rather than a monolithic generalist policy. This factorization allows us to implement a real-t",
+      "summary_fr": "The prevalent paradigm in robot learning attempts to generalize across environments, embodiments, and tasks with language prompts at runtime. A fundamental tension limits this approach: language is often too abstract to guide the concrete physical understanding required for robust manipulation. In this work, we introduce Contact-Anchored Policies (CAP), which replace language conditioning with points of physical contact in space. Simultaneously, we structure CAP as a library of modular utility models rather than a monolithic generalist policy. This factorization allows us to implement a real-t",
+      "resume_fr": "The prevalent paradigm in robot learning attempts to generalize across environments, embodiments, and tasks with language prompts at runtime. A fundamental tension limits this approach: language is often too abstract to guide the concrete physical understanding required for robust manipulation. In this work, we introduce Contact-Anchored Policies (CAP), which replace language conditioning with points of physical contact in space. Simultaneously, we structure CAP as a library of modular utility models rather than a monolithic generalist policy. This factorization allows us to implement a real-t",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Dexterous Manipulation Policies from RGB Human Videos via 4D Hand-Object Trajectory Reconstruction",
+      "url": "https://arxiv.org/abs/2602.09013v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-09T18:56:02.000Z",
+      "score": 50,
+      "summary_en": "Multi-finger robotic hand manipulation and grasping are challenging due to the high-dimensional action space and the difficulty of acquiring large-scale training data. Existing approaches largely rely on human teleoperation with wearable devices or specialized sensing equipment to capture hand-object interactions, which limits scalability. In this work, we propose VIDEOMANIP, a device-free framework that learns dexterous manipulation directly from RGB human videos. Leveraging recent advances in computer vision, VIDEOMANIP reconstructs explicit 4D robot-object trajectories from monocular videos",
+      "summary_fr": "Multi-finger robotic hand manipulation and grasping are challenging due to the high-dimensional action space and the difficulty of acquiring large-scale training data. Existing approaches largely rely on human teleoperation with wearable devices or specialized sensing equipment to capture hand-object interactions, which limits scalability. In this work, we propose VIDEOMANIP, a device-free framework that learns dexterous manipulation directly from RGB human videos. Leveraging recent advances in computer vision, VIDEOMANIP reconstructs explicit 4D robot-object trajectories from monocular videos",
+      "resume_fr": "Multi-finger robotic hand manipulation and grasping are challenging due to the high-dimensional action space and the difficulty of acquiring large-scale training data. Existing approaches largely rely on human teleoperation with wearable devices or specialized sensing equipment to capture hand-object interactions, which limits scalability. In this work, we propose VIDEOMANIP, a device-free framework that learns dexterous manipulation directly from RGB human videos. Leveraging recent advances in computer vision, VIDEOMANIP reconstructs explicit 4D robot-object trajectories from monocular videos",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ShapeCond: Fast Shapelet-Guided Dataset Condensation for Time Series Classification",
+      "url": "https://arxiv.org/abs/2602.09008v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-02-09T18:53:08.000Z",
+      "score": 50,
+      "summary_en": "Time series data supports many domains (e.g., finance and climate science), but its rapid growth strains storage and computation. Dataset condensation can alleviate this by synthesizing a compact training set that preserves key information. Yet most condensation methods are image-centric and often fail on time series because they miss time-series-specific temporal structure, especially local discriminative motifs such as shapelets. In this work, we propose ShapeCond, a novel and efficient condensation framework for time series classification that leverages shapelet-based dataset knowledge via ",
+      "summary_fr": "Time series data supports many domains (e.g., finance and climate science), but its rapid growth strains storage and computation. Dataset condensation can alleviate this by synthesizing a compact training set that preserves key information. Yet most condensation methods are image-centric and often fail on time series because they miss time-series-specific temporal structure, especially local discriminative motifs such as shapelets. In this work, we propose ShapeCond, a novel and efficient condensation framework for time series classification that leverages shapelet-based dataset knowledge via ",
+      "resume_fr": "Time series data supports many domains (e.g., finance and climate science), but its rapid growth strains storage and computation. Dataset condensation can alleviate this by synthesizing a compact training set that preserves key information. Yet most condensation methods are image-centric and often fail on time series because they miss time-series-specific temporal structure, especially local discriminative motifs such as shapelets. In this work, we propose ShapeCond, a novel and efficient condensation framework for time series classification that leverages shapelet-based dataset knowledge via ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Actions Go Off-Task: Detecting and Correcting Misaligned Actions in Computer-Use Agents",
+      "url": "https://arxiv.org/abs/2602.08995v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-02-09T18:41:15.000Z",
+      "score": 70,
+      "summary_en": "Computer-use agents (CUAs) have made tremendous progress in the past year, yet they still frequently produce misaligned actions that deviate from the user's original intent. Such misaligned actions may arise from external attacks (e.g., indirect prompt injection) or from internal limitations (e.g., erroneous reasoning). They not only expose CUAs to safety risks, but also degrade task efficiency and reliability. This work makes the first effort to define and study misaligned action detection in CUAs, with comprehensive coverage of both externally induced and internally arising misaligned action",
+      "summary_fr": "Computer-use agents (CUAs) have made tremendous progress in the past year, yet they still frequently produce misaligned actions that deviate from the user's original intent. Such misaligned actions may arise from external attacks (e.g., indirect prompt injection) or from internal limitations (e.g., erroneous reasoning). They not only expose CUAs to safety risks, but also degrade task efficiency and reliability. This work makes the first effort to define and study misaligned action detection in CUAs, with comprehensive coverage of both externally induced and internally arising misaligned action",
+      "resume_fr": "Computer-use agents (CUAs) have made tremendous progress in the past year, yet they still frequently produce misaligned actions that deviate from the user's original intent. Such misaligned actions may arise from external attacks (e.g., indirect prompt injection) or from internal limitations (e.g., erroneous reasoning). They not only expose CUAs to safety risks, but also degrade task efficiency and reliability. This work makes the first effort to define and study misaligned action detection in CUAs, with comprehensive coverage of both externally induced and internally arising misaligned action",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How University Disability Services Professionals Write Image Descriptions for HCI Figures Using Generative AI",
+      "url": "https://arxiv.org/abs/2602.08937v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-09T17:36:25.000Z",
+      "score": 50,
+      "summary_en": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
+      "summary_fr": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
+      "resume_fr": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Vibe-Automation of Automation: A Proactive Education Framework for Computer Science in the Age of Generative AI",
+      "url": "https://arxiv.org/abs/2602.08295v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-09T06:02:04.000Z",
+      "score": 85,
+      "summary_en": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
+      "summary_fr": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
+      "resume_fr": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Adding More Value Than Work: Practical Guidelines for Integrating Robots into Intercultural Competence Learning",
+      "url": "https://arxiv.org/abs/2602.08123v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-08T21:01:33.000Z",
+      "score": 85,
+      "summary_en": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
+      "summary_fr": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
+      "resume_fr": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "What Predicts (AI‐Mediated) Informal Digital Learning of English in the Global South? The Case of Rural Bangladeshi Students",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70196?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -177,9 +348,9 @@
       "source": "IEEE Spectrum – AI",
       "published": "2026-02-06T17:00:02.000Z",
       "score": 70,
-      "summary_en": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ‪d",
-      "summary_fr": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ‪d",
-      "resume_fr": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ‪d",
+      "summary_en": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ou",
+      "summary_fr": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ou",
+      "resume_fr": "Video Friday is your weekly selection of awesome robotics videos, collected by your friends at IEEE Spectrum robotics. We also post a weekly calendar of upcoming robotics events for the next few months. Please send us your events for inclusion. ICRA 2026: 1–5 June 2026, VIENNA Enjoy today’s videos! To train the next generation of autonomous robots, scientists at Toyota Research Institute are working with Toyota Manufacturing to deploy them on the factory floor. [ Toyota Research Institute ] Thanks, Erin! This is just one story (of many) about how we tried, failed, and learned how to improve ou",
       "tags": [],
       "breakdown": {
         "research": 35,
@@ -1054,177 +1225,6 @@
       "summary_en": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
       "summary_fr": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
       "resume_fr": "Large language models (LLMs) have demonstrated remarkable potential for automatic short answer grading (ASAG), significantly boosting student assessment efficiency and scalability in educational scenarios. However, their vulnerability to adversarial manipulation raises critical concerns about automatic grading fairness and reliability. In this paper, we introduce GradingAttack, a fine-grained adversarial attack framework that systematically evaluates the vulnerability of LLM based ASAG models. Specifically, we align general-purpose attack methods with the specific objectives of ASAG by designi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "WordCraft: Scaffolding the Keyword Method for L2 Vocabulary Learning with Multimodal LLMs",
-      "url": "https://arxiv.org/abs/2602.00762v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-31T14:59:43.000Z",
-      "score": 50,
-      "summary_en": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
-      "summary_fr": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
-      "resume_fr": "Applying the keyword method for vocabulary memorization remains a significant challenge for L1 Chinese-L2 English learners. They frequently struggle to generate phonologically appropriate keywords, construct coherent associations, and create vivid mental imagery to aid long-term retention. Existing approaches, including fully automated keyword generation and outcome-oriented mnemonic aids, either compromise learner engagement or lack adequate process-oriented guidance. To address these limitations, we conducted a formative study with L1 Chinese-L2 English learners and educators (N=18), which r",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "\"OpenBloom\": A Question-Based LLM Tool to Support Stigma Reduction in Reproductive Well-Being",
-      "url": "https://arxiv.org/abs/2602.00243v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-30T19:05:35.000Z",
-      "score": 50,
-      "summary_en": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
-      "summary_fr": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
-      "resume_fr": "Reproductive well-being education remains widely stigmatized across diverse cultural contexts, constraining how individuals access and interpret reproductive health knowledge. We designed and evaluated OpenBloom, a stigma-sensitive, AI-mediated system that uses LLMs to transform reproductive health articles into reflective, question-based learning prompts. We employed OpenBloom as a design probe, aiming to explore the emerging challenges of reproductive well-being stigma through LLMs. Through surveys, semi-structured interviews, and focus group discussions, we examine how sociocultural stigma ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "End-to-end Optimization of Belief and Policy Learning in Shared Autonomy Paradigms",
-      "url": "https://arxiv.org/abs/2601.23285v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-01-30T18:59:16.000Z",
-      "score": 70,
-      "summary_en": "Shared autonomy systems require principled methods for inferring user intent and determining appropriate assistance levels. This is a central challenge in human-robot interaction, where systems must be successful while being mindful of user agency. Previous approaches relied on static blending ratios or separated goal inference from assistance arbitration, leading to suboptimal performance in unstructured environments. We introduce BRACE (Bayesian Reinforcement Assistance with Context Encoding), a novel framework that fine-tunes Bayesian intent inference and context-adaptive assistance through",
-      "summary_fr": "Shared autonomy systems require principled methods for inferring user intent and determining appropriate assistance levels. This is a central challenge in human-robot interaction, where systems must be successful while being mindful of user agency. Previous approaches relied on static blending ratios or separated goal inference from assistance arbitration, leading to suboptimal performance in unstructured environments. We introduce BRACE (Bayesian Reinforcement Assistance with Context Encoding), a novel framework that fine-tunes Bayesian intent inference and context-adaptive assistance through",
-      "resume_fr": "Shared autonomy systems require principled methods for inferring user intent and determining appropriate assistance levels. This is a central challenge in human-robot interaction, where systems must be successful while being mindful of user agency. Previous approaches relied on static blending ratios or separated goal inference from assistance arbitration, leading to suboptimal performance in unstructured environments. We introduce BRACE (Bayesian Reinforcement Assistance with Context Encoding), a novel framework that fine-tunes Bayesian intent inference and context-adaptive assistance through",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Now You Hear Me: Audio Narrative Attacks Against Large Audio-Language Models",
-      "url": "https://arxiv.org/abs/2601.23255v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-30T18:23:02.000Z",
-      "score": 50,
-      "summary_en": "Large audio-language models increasingly operate on raw speech inputs, enabling more seamless integration across domains such as voice assistants, education, and clinical triage. This transition, however, introduces a distinct class of vulnerabilities that remain largely uncharacterized. We examine the security implications of this modality shift by designing a text-to-audio jailbreak that embeds disallowed directives within a narrative-style audio stream. The attack leverages an advanced instruction-following text-to-speech (TTS) model to exploit structural and acoustic properties, thereby ci",
-      "summary_fr": "Large audio-language models increasingly operate on raw speech inputs, enabling more seamless integration across domains such as voice assistants, education, and clinical triage. This transition, however, introduces a distinct class of vulnerabilities that remain largely uncharacterized. We examine the security implications of this modality shift by designing a text-to-audio jailbreak that embeds disallowed directives within a narrative-style audio stream. The attack leverages an advanced instruction-following text-to-speech (TTS) model to exploit structural and acoustic properties, thereby ci",
-      "resume_fr": "Large audio-language models increasingly operate on raw speech inputs, enabling more seamless integration across domains such as voice assistants, education, and clinical triage. This transition, however, introduces a distinct class of vulnerabilities that remain largely uncharacterized. We examine the security implications of this modality shift by designing a text-to-audio jailbreak that embeds disallowed directives within a narrative-style audio stream. The attack leverages an advanced instruction-following text-to-speech (TTS) model to exploit structural and acoustic properties, thereby ci",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Are you going to finish that? A Practical Study of the Tokenization Boundary Problem",
-      "url": "https://arxiv.org/abs/2601.23223v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-01-30T17:47:16.000Z",
-      "score": 70,
-      "summary_en": "Language models (LMs) are trained over sequences of tokens, whereas users interact with LMs via text. This mismatch gives rise to the partial token problem, which occurs when a user ends their prompt in the middle of the expected next-token, leading to distorted next-token predictions. Although this issue has been studied using arbitrary character prefixes, its prevalence and severity in realistic prompts respecting word boundaries remains underexplored. In this work, we identify three domains where token and \"word\" boundaries often do not line up: languages that do not use whitespace, highly ",
-      "summary_fr": "Language models (LMs) are trained over sequences of tokens, whereas users interact with LMs via text. This mismatch gives rise to the partial token problem, which occurs when a user ends their prompt in the middle of the expected next-token, leading to distorted next-token predictions. Although this issue has been studied using arbitrary character prefixes, its prevalence and severity in realistic prompts respecting word boundaries remains underexplored. In this work, we identify three domains where token and \"word\" boundaries often do not line up: languages that do not use whitespace, highly ",
-      "resume_fr": "Language models (LMs) are trained over sequences of tokens, whereas users interact with LMs via text. This mismatch gives rise to the partial token problem, which occurs when a user ends their prompt in the middle of the expected next-token, leading to distorted next-token predictions. Although this issue has been studied using arbitrary character prefixes, its prevalence and severity in realistic prompts respecting word boundaries remains underexplored. In this work, we identify three domains where token and \"word\" boundaries often do not line up: languages that do not use whitespace, highly ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "FACET: Multi-Agent AI Supporting Teachers in Scaling Differentiated Learning for Diverse Students",
-      "url": "https://arxiv.org/abs/2601.22788v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-30T10:08:43.000Z",
-      "score": 50,
-      "summary_en": "Classrooms are becoming increasingly heterogeneous, comprising learners with diverse performance and motivation levels, language proficiencies, and learning differences such as dyslexia and ADHD. While teachers recognize the need for differentiated instruction, growing workloads create substantial barriers, making differentiated instruction an ideal that is often unrealized in practice. Current AI educational tools, which promise differentiated materials, are predominantly student-facing and performance-centric, ignoring other aspects that shape learning outcomes. We introduce FACET, a teacher",
-      "summary_fr": "Classrooms are becoming increasingly heterogeneous, comprising learners with diverse performance and motivation levels, language proficiencies, and learning differences such as dyslexia and ADHD. While teachers recognize the need for differentiated instruction, growing workloads create substantial barriers, making differentiated instruction an ideal that is often unrealized in practice. Current AI educational tools, which promise differentiated materials, are predominantly student-facing and performance-centric, ignoring other aspects that shape learning outcomes. We introduce FACET, a teacher",
-      "resume_fr": "Classrooms are becoming increasingly heterogeneous, comprising learners with diverse performance and motivation levels, language proficiencies, and learning differences such as dyslexia and ADHD. While teachers recognize the need for differentiated instruction, growing workloads create substantial barriers, making differentiated instruction an ideal that is often unrealized in practice. Current AI educational tools, which promise differentiated materials, are predominantly student-facing and performance-centric, ignoring other aspects that shape learning outcomes. We introduce FACET, a teacher",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Beyond Abstract Compliance: Operationalising trust in AI as a moral relationship",
-      "url": "https://arxiv.org/abs/2601.22769v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-30T09:48:24.000Z",
-      "score": 85,
-      "summary_en": "Dominant approaches, e.g. the EU's \"Trustworthy AI framework\", treat trust as a property that can be designed for, evaluated, and governed according to normative and technical criteria. They do not address how trust is subjectively cultivated and experienced, culturally embedded, and inherently relational. This paper proposes some expanded principles for trust in AI that can be incorporated into common development methods and frame trust as a dynamic, temporal relationship, which involves transparency and mutual respect. We draw on relational ethics and, in particular, African communitarian ph",
-      "summary_fr": "Dominant approaches, e.g. the EU's \"Trustworthy AI framework\", treat trust as a property that can be designed for, evaluated, and governed according to normative and technical criteria. They do not address how trust is subjectively cultivated and experienced, culturally embedded, and inherently relational. This paper proposes some expanded principles for trust in AI that can be incorporated into common development methods and frame trust as a dynamic, temporal relationship, which involves transparency and mutual respect. We draw on relational ethics and, in particular, African communitarian ph",
-      "resume_fr": "Dominant approaches, e.g. the EU's \"Trustworthy AI framework\", treat trust as a property that can be designed for, evaluated, and governed according to normative and technical criteria. They do not address how trust is subjectively cultivated and experienced, culturally embedded, and inherently relational. This paper proposes some expanded principles for trust in AI that can be incorporated into common development methods and frame trust as a dynamic, temporal relationship, which involves transparency and mutual respect. We draw on relational ethics and, in particular, African communitarian ph",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Third-Party Access Effect: An Overlooked Challenge in Secondary Use of Educational Real-World Data",
-      "url": "https://arxiv.org/abs/2601.22472v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-01-30T02:36:44.000Z",
-      "score": 50,
-      "summary_en": "Secondary use of growing real-world data (RWD) in education offers significant opportunities for research, yet privacy practices intended to enable third-party access to such RWD are rarely evaluated for their implications for downstream analyses. As a result, potential problems introduced by otherwise standard privacy practices may remain unnoticed. To address this gap, we investigate potential issues arising from common practices by assessing (1) the re-identification risk of fine-grained RWD, (2) how communicating such risks influences learners' privacy behaviour, and (3) the sensitivity of",
-      "summary_fr": "Secondary use of growing real-world data (RWD) in education offers significant opportunities for research, yet privacy practices intended to enable third-party access to such RWD are rarely evaluated for their implications for downstream analyses. As a result, potential problems introduced by otherwise standard privacy practices may remain unnoticed. To address this gap, we investigate potential issues arising from common practices by assessing (1) the re-identification risk of fine-grained RWD, (2) how communicating such risks influences learners' privacy behaviour, and (3) the sensitivity of",
-      "resume_fr": "Secondary use of growing real-world data (RWD) in education offers significant opportunities for research, yet privacy practices intended to enable third-party access to such RWD are rarely evaluated for their implications for downstream analyses. As a result, potential problems introduced by otherwise standard privacy practices may remain unnoticed. To address this gap, we investigate potential issues arising from common practices by assessing (1) the re-identification risk of fine-grained RWD, (2) how communicating such risks influences learners' privacy behaviour, and (3) the sensitivity of",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When LLM meets Fuzzy-TOPSIS for Personnel Selection through Automated Profile Analysis",
-      "url": "https://arxiv.org/abs/2601.22433v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-01-30T00:57:35.000Z",
-      "score": 50,
-      "summary_en": "In this highly competitive employment environment, the selection of suitable personnel is essential for organizational success. This study presents an automated personnel selection system that utilizes sophisticated natural language processing (NLP) methods to assess and rank software engineering applicants. A distinctive dataset was created by aggregating LinkedIn profiles that include essential features such as education, work experience, abilities, and self-introduction, further enhanced with expert assessments to function as standards. The research combines large language models (LLMs) wit",
-      "summary_fr": "In this highly competitive employment environment, the selection of suitable personnel is essential for organizational success. This study presents an automated personnel selection system that utilizes sophisticated natural language processing (NLP) methods to assess and rank software engineering applicants. A distinctive dataset was created by aggregating LinkedIn profiles that include essential features such as education, work experience, abilities, and self-introduction, further enhanced with expert assessments to function as standards. The research combines large language models (LLMs) wit",
-      "resume_fr": "In this highly competitive employment environment, the selection of suitable personnel is essential for organizational success. This study presents an automated personnel selection system that utilizes sophisticated natural language processing (NLP) methods to assess and rank software engineering applicants. A distinctive dataset was created by aggregating LinkedIn profiles that include essential features such as education, work experience, abilities, and self-introduction, further enhanced with expert assessments to function as standards. The research combines large language models (LLMs) wit",
       "tags": [],
       "breakdown": {
         "research": 35,
