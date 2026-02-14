@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-13T07:07:21.574Z",
+  "generatedAt": "2026-02-14T06:55:39.286Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,158 @@
   },
   "items": [
     {
+      "title": "Scaling Verification Can Be More Effective than Scaling Policy Learning for Vision-Language-Action Alignment",
+      "url": "https://arxiv.org/abs/2602.12281v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-12T18:59:59.000Z",
+      "score": 70,
+      "summary_en": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
+      "summary_fr": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
+      "resume_fr": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "On-Policy Context Distillation for Language Models",
+      "url": "https://arxiv.org/abs/2602.12275v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-02-12T18:58:28.000Z",
+      "score": 70,
+      "summary_en": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
+      "summary_fr": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
+      "resume_fr": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Any House Any Task: Scalable Long-Horizon Planning for Abstract Human Tasks",
+      "url": "https://arxiv.org/abs/2602.12244v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-12T18:28:28.000Z",
+      "score": 70,
+      "summary_en": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
+      "summary_fr": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
+      "resume_fr": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Olmix: A Framework for Data Mixing Throughout LM Development",
+      "url": "https://arxiv.org/abs/2602.12237v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-02-12T18:16:05.000Z",
+      "score": 70,
+      "summary_en": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
+      "summary_fr": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
+      "resume_fr": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion",
+      "url": "https://arxiv.org/abs/2602.12215v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-12T17:53:51.000Z",
+      "score": 70,
+      "summary_en": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
+      "summary_fr": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
+      "resume_fr": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "3DGSNav: Enhancing Vision-Language Model Reasoning for Object Navigation via Active 3D Gaussian Splatting",
+      "url": "https://arxiv.org/abs/2602.12159v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-02-12T16:41:26.000Z",
+      "score": 70,
+      "summary_en": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
+      "summary_fr": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
+      "resume_fr": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Commencing-Student Enrolment Forecasting Under Data Sparsity with Time Series Foundation Models",
+      "url": "https://arxiv.org/abs/2602.12120v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-12T16:10:42.000Z",
+      "score": 65,
+      "summary_en": "Many universities face increasing financial pressure and rely on accurate forecasts of commencing enrolments. However, enrolment forecasting in higher education is often data-sparse; annual series are short and affected by reporting changes and regime shifts. Popular classical approaches can be unreliable, as parameter estimation and model selection are unstable with short samples, and structural breaks degrade extrapolation. Recently, TSFMs have provided zero-shot priors, delivering strong gains in annual, data-sparse institutional forecasting under leakage-disciplined covariate construction.",
+      "summary_fr": "Many universities face increasing financial pressure and rely on accurate forecasts of commencing enrolments. However, enrolment forecasting in higher education is often data-sparse; annual series are short and affected by reporting changes and regime shifts. Popular classical approaches can be unreliable, as parameter estimation and model selection are unstable with short samples, and structural breaks degrade extrapolation. Recently, TSFMs have provided zero-shot priors, delivering strong gains in annual, data-sparse institutional forecasting under leakage-disciplined covariate construction.",
+      "resume_fr": "Many universities face increasing financial pressure and rely on accurate forecasts of commencing enrolments. However, enrolment forecasting in higher education is often data-sparse; annual series are short and affected by reporting changes and regime shifts. Popular classical approaches can be unreliable, as parameter estimation and model selection are unstable with short samples, and structural breaks degrade extrapolation. Recently, TSFMs have provided zero-shot priors, delivering strong gains in annual, data-sparse institutional forecasting under leakage-disciplined covariate construction.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CSEval: A Framework for Evaluating Clinical Semantics in Text-to-Image Generation",
+      "url": "https://arxiv.org/abs/2602.12004v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-12T14:35:31.000Z",
+      "score": 85,
+      "summary_en": "Text-to-image generation has been increasingly applied in medical domains for various purposes such as data augmentation and education. Evaluating the quality and clinical reliability of these generated images is essential. However, existing methods mainly assess image realism or diversity, while failing to capture whether the generated images reflect the intended clinical semantics, such as anatomical location and pathology. In this study, we propose the Clinical Semantics Evaluator (CSEval), a framework that leverages language models to assess clinical semantic alignment between the generate",
+      "summary_fr": "Text-to-image generation has been increasingly applied in medical domains for various purposes such as data augmentation and education. Evaluating the quality and clinical reliability of these generated images is essential. However, existing methods mainly assess image realism or diversity, while failing to capture whether the generated images reflect the intended clinical semantics, such as anatomical location and pathology. In this study, we propose the Clinical Semantics Evaluator (CSEval), a framework that leverages language models to assess clinical semantic alignment between the generate",
+      "resume_fr": "Text-to-image generation has been increasingly applied in medical domains for various purposes such as data augmentation and education. Evaluating the quality and clinical reliability of these generated images is essential. However, existing methods mainly assess image realism or diversity, while failing to capture whether the generated images reflect the intended clinical semantics, such as anatomical location and pathology. In this study, we propose the Clinical Semantics Evaluator (CSEval), a framework that leverages language models to assess clinical semantic alignment between the generate",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "How partnerships between youth activists and politicians are improving prospects for Brazil’s youngest learners",
       "url": "https://world-education-blog.org/2026/02/12/how-partnerships-between-youth-activists-and-politicians-are-improving-prospects-for-brazils-youngest-learners/",
       "source": "UNESCO GEM – World Education Blog",
@@ -113,6 +265,44 @@
       },
       "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
       "image": "https://world-education-blog.org/wp-content/uploads/2026/02/Picture1.jpg"
+    },
+    {
+      "title": "Transforming pedagogy with GenAI‐supported formative assessment: Challenges for teacher education",
+      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70051?af=R",
+      "source": "British Journal of Educational Technology (Wiley)",
+      "published": "2026-02-12T10:14:12.000Z",
+      "score": 65,
+      "summary_en": "British Journal of Educational Technology, EarlyView.",
+      "summary_fr": "British Journal of Educational Technology, EarlyView.",
+      "resume_fr": "British Journal of Educational Technology, EarlyView.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Understanding Persuasive Interactions between Generative Social Agents and Humans: The Knowledge-based Persuasion Model (KPM)",
+      "url": "https://arxiv.org/abs/2602.11483v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-12T01:53:28.000Z",
+      "score": 85,
+      "summary_en": "Generative social agents (GSAs) use artificial intelligence to autonomously communicate with human users in a natural and adaptive manner. Currently, there is a lack of theorizing regarding interactions with GSAs, and likewise, few guidelines exist for studying how they influence user attitudes and behaviors. Consequently, we propose the Knowledge-based Persuasion Model (KPM) as a novel theoretical framework. According to the KPM, a GSA's self, user, and context-related knowledge drives its persuasive behavior, which in turn shapes the attitudes and behaviors of a responding human user. By syn",
+      "summary_fr": "Generative social agents (GSAs) use artificial intelligence to autonomously communicate with human users in a natural and adaptive manner. Currently, there is a lack of theorizing regarding interactions with GSAs, and likewise, few guidelines exist for studying how they influence user attitudes and behaviors. Consequently, we propose the Knowledge-based Persuasion Model (KPM) as a novel theoretical framework. According to the KPM, a GSA's self, user, and context-related knowledge drives its persuasive behavior, which in turn shapes the attitudes and behaviors of a responding human user. By syn",
+      "resume_fr": "Generative social agents (GSAs) use artificial intelligence to autonomously communicate with human users in a natural and adaptive manner. Currently, there is a lack of theorizing regarding interactions with GSAs, and likewise, few guidelines exist for studying how they influence user attitudes and behaviors. Consequently, we propose the Knowledge-based Persuasion Model (KPM) as a novel theoretical framework. According to the KPM, a GSA's self, user, and context-related knowledge drives its persuasive behavior, which in turn shapes the attitudes and behaviors of a responding human user. By syn",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Reusability Report: Evaluating the performance of a meta-learning foundation model on predicting the antibacterial activity of natural products",
@@ -169,6 +359,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How to check in continually over 4,000 days on an online learning platform? An empirical experience and a practical solution",
+      "url": "https://arxiv.org/abs/2602.11249v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-11T18:18:08.000Z",
+      "score": 85,
+      "summary_en": "The check-in service is often provided as an incentive system by online learning platforms to help users establish a learning routine and achieve accomplishment. However, according to the questionnaire conducted in this study, 82.5% of users of online English learning platforms that feature a check-in service have failed to maintain the daily check-in behavior for long-term language learning, mainly by reason of demotivation, forgetfulness, boredom, and insufficient time. As a language learner, I have an empirical experience in maintaining a record of over 4,000 daily check-ins on China's lead",
+      "summary_fr": "The check-in service is often provided as an incentive system by online learning platforms to help users establish a learning routine and achieve accomplishment. However, according to the questionnaire conducted in this study, 82.5% of users of online English learning platforms that feature a check-in service have failed to maintain the daily check-in behavior for long-term language learning, mainly by reason of demotivation, forgetfulness, boredom, and insufficient time. As a language learner, I have an empirical experience in maintaining a record of over 4,000 daily check-ins on China's lead",
+      "resume_fr": "The check-in service is often provided as an incentive system by online learning platforms to help users establish a learning routine and achieve accomplishment. However, according to the questionnaire conducted in this study, 82.5% of users of online English learning platforms that feature a check-in service have failed to maintain the daily check-in behavior for long-term language learning, mainly by reason of demotivation, forgetfulness, boredom, and insufficient time. As a language learner, I have an empirical experience in maintaining a record of over 4,000 daily check-ins on China's lead",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -1024,215 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Clinical Validation of Medical-based Large Language Model Chatbots on Ophthalmic Patient Queries with LLM-based Evaluation",
-      "url": "https://arxiv.org/abs/2602.05381v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-02-05T07:00:20.000Z",
-      "score": 65,
-      "summary_en": "Domain specific large language models are increasingly used to support patient education, triage, and clinical decision making in ophthalmology, making rigorous evaluation essential to ensure safety and accuracy. This study evaluated four small medical LLMs Meerkat-7B, BioMistral-7B, OpenBioLLM-8B, and MedLLaMA3-v20 in answering ophthalmology related patient queries and assessed the feasibility of LLM based evaluation against clinician grading. In this cross sectional study, 180 ophthalmology patient queries were answered by each model, generating 2160 responses. Models were selected for param",
-      "summary_fr": "Domain specific large language models are increasingly used to support patient education, triage, and clinical decision making in ophthalmology, making rigorous evaluation essential to ensure safety and accuracy. This study evaluated four small medical LLMs Meerkat-7B, BioMistral-7B, OpenBioLLM-8B, and MedLLaMA3-v20 in answering ophthalmology related patient queries and assessed the feasibility of LLM based evaluation against clinician grading. In this cross sectional study, 180 ophthalmology patient queries were answered by each model, generating 2160 responses. Models were selected for param",
-      "resume_fr": "Domain specific large language models are increasingly used to support patient education, triage, and clinical decision making in ophthalmology, making rigorous evaluation essential to ensure safety and accuracy. This study evaluated four small medical LLMs Meerkat-7B, BioMistral-7B, OpenBioLLM-8B, and MedLLaMA3-v20 in answering ophthalmology related patient queries and assessed the feasibility of LLM based evaluation against clinician grading. In this cross sectional study, 180 ophthalmology patient queries were answered by each model, generating 2160 responses. Models were selected for param",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Multi-Head LatentMoE and Head Parallel: Communication-Efficient and Deterministic MoE Parallelism",
-      "url": "https://arxiv.org/abs/2602.04870v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-02-04T18:57:19.000Z",
-      "score": 50,
-      "summary_en": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
-      "summary_fr": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
-      "resume_fr": "Large language models have transformed many applications but remain expensive to train. Sparse Mixture of Experts (MoE) addresses this through conditional computation, with Expert Parallel (EP) as the standard distributed training method. However, EP has three limitations: communication cost grows linearly with the number of activated experts $k$, load imbalance affects latency and memory usage, and data-dependent communication requires metadata exchange. We propose Multi-Head LatentMoE and Head Parallel (HP), a new architecture and parallelism achieving $O(1)$ communication cost regardless of",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Beyond the Control Equations: An Artifact Study of Implementation Quality in Robot Control Software",
-      "url": "https://arxiv.org/abs/2602.04799v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-04T17:45:59.000Z",
-      "score": 70,
-      "summary_en": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
-      "summary_fr": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
-      "resume_fr": "A controller -- a software module managing hardware behavior -- is a key component of a typical robot system. While control theory gives safety guarantees for standard controller designs, the practical implementation of controllers in software introduces complexities that are often overlooked. Controllers are often designed in continuous space, while the software is executed in discrete space, undermining some of the theoretical guarantees. Despite extensive research on control theory and control modeling, little attention has been paid to the implementations of controllers and how their theor",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PuppetAI: A Customizable Platform for Designing Tactile-Rich Affective Robot Interaction",
-      "url": "https://arxiv.org/abs/2602.04787v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-04T17:37:31.000Z",
-      "score": 70,
-      "summary_en": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
-      "summary_fr": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
-      "resume_fr": "We introduce PuppetAI, a modular soft robot interaction platform. This platform offers a scalable cable-driven actuation system and a customizable, puppet-inspired robot gesture framework, supporting a multitude of interaction gesture robot design formats. The platform comprises a four-layer decoupled software architecture that includes perceptual processing, affective modeling, motion scheduling, and low-level actuation. We also implemented an affective expression loop that connects human input to the robot platform by producing real-time emotional gestural responses to human vocal input. For",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Comparative Insights on Adversarial Machine Learning from Industry and Academia: A User-Study Approach",
-      "url": "https://arxiv.org/abs/2602.04753v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-02-04T16:51:50.000Z",
-      "score": 50,
-      "summary_en": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
-      "summary_fr": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
-      "resume_fr": "An exponential growth of Machine Learning and its Generative AI applications brings with it significant security challenges, often referred to as Adversarial Machine Learning (AML). In this paper, we conducted two comprehensive studies to explore the perspectives of industry professionals and students on different AML vulnerabilities and their educational strategies. In our first study, we conducted an online survey with professionals revealing a notable correlation between cybersecurity education and concern for AML threats. For our second study, we developed two CTF challenges that implement",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "AGILE: Hand-Object Interaction Reconstruction from Video via Agentic Generation",
-      "url": "https://arxiv.org/abs/2602.04672v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-04T15:42:58.000Z",
-      "score": 70,
-      "summary_en": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
-      "summary_fr": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
-      "resume_fr": "Reconstructing dynamic hand-object interactions from monocular videos is critical for dexterous manipulation data collection and creating realistic digital twins for robotics and VR. However, current methods face two prohibitive barriers: (1) reliance on neural rendering often yields fragmented, non-simulation-ready geometries under heavy occlusion, and (2) dependence on brittle Structure-from-Motion (SfM) initialization leads to frequent failures on in-the-wild footage. To overcome these limitations, we introduce AGILE, a robust framework that shifts the paradigm from reconstruction to agenti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "AI in Education Beyond Learning Outcomes: Cognition, Agency, Emotion, and Ethics",
-      "url": "https://arxiv.org/abs/2602.04598v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-04T14:26:27.000Z",
-      "score": 85,
-      "summary_en": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
-      "summary_fr": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
-      "resume_fr": "Artificial intelligence (AI) is rapidly being integrated into educational contexts, promising personalized support and increased efficiency. However, growing evidence suggests that the uncritical adoption of AI may produce unintended harms that extend beyond individual learning outcomes to affect broader societal goals. This paper examines the societal implications of AI in education through an integrative framework with four interrelated dimensions: cognition, agency, emotional well-being, and ethics. Drawing on research from education, cognitive science, psychology, and ethics, we synthesize",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Tinker Tales: Supporting Child-AI Collaboration through Co-Creative Storytelling with Educational Scaffolding",
-      "url": "https://arxiv.org/abs/2602.04109v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-04T00:48:12.000Z",
-      "score": 50,
-      "summary_en": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
-      "summary_fr": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
-      "resume_fr": "Artificial intelligence (AI) is increasingly framed as a collaborative partner in creative activities, yet children's interactions with AI have largely been studied in AI-led instructional settings rather than co-creative collaboration. This leaves open questions about how children can meaningfully engage with AI through iterative co-creation. We present Tinker Tales, a tangible storytelling system designed with narrative and social-emotional scaffolding to support child-AI collaboration. The system combines a physical storytelling board, NFC-embedded toys representing story elements (e.g., ch",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "From Crafting Text to Crafting Thought: Grounding AI Writing Support to Writing Center Pedagogy",
-      "url": "https://arxiv.org/abs/2602.04047v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-03T22:30:45.000Z",
-      "score": 50,
-      "summary_en": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
-      "summary_fr": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
-      "resume_fr": "As AI writing tools evolve from fixing surface errors to creating language with writers, new capabilities raise concerns about negative impacts on student writers, such as replacing their voices and undermining critical thinking skills. To address these challenges, we look at a parallel transition in university writing centers from focusing on fixing errors to preserving student voices. We develop design guidelines informed by writing center literature and interviews with 10 writing tutors. We illustrate these guidelines in a prototype AI tool, Writor. Writor helps writers revise text by setti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Exploring Emerging Norms of AI Disclosure in Programming Education",
-      "url": "https://arxiv.org/abs/2602.04023v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-03T21:14:19.000Z",
-      "score": 50,
-      "summary_en": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
-      "summary_fr": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
-      "resume_fr": "Generative AI blurs the lines of authorship in computing education, creating uncertainty around how students should attribute AI assistance. To examine these emerging norms, we conducted a factorial vignette study with 94 computer science students across 102 unique scenarios, systematically manipulating assessment type, AI autonomy, student activity, prior knowledge, and human refinement effort. This paper details how these factors influence students' perceptions of ownership and disclosure preferences. Our findings indicate that attribution judgments are primarily driven by different levels o",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When AI Persuades: Adversarial Explanation Attacks on Human Trust in AI-Assisted Decision Making",
-      "url": "https://arxiv.org/abs/2602.04003v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-02-03T20:42:44.000Z",
-      "score": 50,
-      "summary_en": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
-      "summary_fr": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
-      "resume_fr": "Most adversarial threats in artificial intelligence target the computational behavior of models rather than the humans who rely on them. Yet modern AI systems increasingly operate within human decision loops, where users interpret and act on model recommendations. Large Language Models generate fluent natural-language explanations that shape how users perceive and trust AI outputs, revealing a new attack surface at the cognitive layer: the communication channel between AI and its users. We introduce adversarial explanation attacks (AEAs), where an attacker manipulates the framing of LLM-genera",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
