@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-18T07:09:26.995Z",
+  "generatedAt": "2026-02-19T07:08:23.095Z",
   "model": "gpt-5",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,158 @@
     }
   },
   "items": [
+    {
+      "title": "Calibrate-Then-Act: Cost-Aware Exploration in LLM Agents",
+      "url": "https://arxiv.org/abs/2602.16699v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-02-18T18:46:14.000Z",
+      "score": 70,
+      "summary_en": "LLMs are increasingly being used for complex problems which are not necessarily resolved in a single response, but require interacting with an environment to acquire information. In these scenarios, LLMs must reason about inherent cost-uncertainty tradeoffs in when to stop exploring and commit to an answer. For instance, on a programming task, an LLM should test a generated code snippet if it is uncertain about the correctness of that code; the cost of writing a test is nonzero, but typically lower than the cost of making a mistake. In this work, we show that we can induce LLMs to explicitly r",
+      "summary_fr": "LLMs are increasingly being used for complex problems which are not necessarily resolved in a single response, but require interacting with an environment to acquire information. In these scenarios, LLMs must reason about inherent cost-uncertainty tradeoffs in when to stop exploring and commit to an answer. For instance, on a programming task, an LLM should test a generated code snippet if it is uncertain about the correctness of that code; the cost of writing a test is nonzero, but typically lower than the cost of making a mistake. In this work, we show that we can induce LLMs to explicitly r",
+      "resume_fr": "LLMs are increasingly being used for complex problems which are not necessarily resolved in a single response, but require interacting with an environment to acquire information. In these scenarios, LLMs must reason about inherent cost-uncertainty tradeoffs in when to stop exploring and commit to an answer. For instance, on a programming task, an LLM should test a generated code snippet if it is uncertain about the correctness of that code; the cost of writing a test is nonzero, but typically lower than the cost of making a mistake. In this work, we show that we can induce LLMs to explicitly r",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AREG: Adversarial Resource Extraction Game for Evaluating Persuasion and Resistance in Large Language Models",
+      "url": "https://arxiv.org/abs/2602.16639v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-02-18T17:28:28.000Z",
+      "score": 70,
+      "summary_en": "Evaluating the social intelligence of Large Language Models (LLMs) increasingly requires moving beyond static text generation toward dynamic, adversarial interaction. We introduce the Adversarial Resource Extraction Game (AREG), a benchmark that operationalizes persuasion and resistance as a multi-turn, zero-sum negotiation over financial resources. Using a round-robin tournament across frontier models, AREG enables joint evaluation of offensive (persuasion) and defensive (resistance) capabilities within a single interactional framework. Our analysis provides evidence that these capabilities a",
+      "summary_fr": "Evaluating the social intelligence of Large Language Models (LLMs) increasingly requires moving beyond static text generation toward dynamic, adversarial interaction. We introduce the Adversarial Resource Extraction Game (AREG), a benchmark that operationalizes persuasion and resistance as a multi-turn, zero-sum negotiation over financial resources. Using a round-robin tournament across frontier models, AREG enables joint evaluation of offensive (persuasion) and defensive (resistance) capabilities within a single interactional framework. Our analysis provides evidence that these capabilities a",
+      "resume_fr": "Evaluating the social intelligence of Large Language Models (LLMs) increasingly requires moving beyond static text generation toward dynamic, adversarial interaction. We introduce the Adversarial Resource Extraction Game (AREG), a benchmark that operationalizes persuasion and resistance as a multi-turn, zero-sum negotiation over financial resources. Using a round-robin tournament across frontier models, AREG enables joint evaluation of offensive (persuasion) and defensive (resistance) capabilities within a single interactional framework. Our analysis provides evidence that these capabilities a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "IndicEval: A Bilingual Indian Educational Evaluation Framework for Large Language Models",
+      "url": "https://arxiv.org/abs/2602.16467v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-02-18T13:55:57.000Z",
+      "score": 85,
+      "summary_en": "The rapid advancement of large language models (LLMs) necessitates evaluation frameworks that reflect real-world academic rigor and multilingual complexity. This paper introduces IndicEval, a scalable benchmarking platform designed to assess LLM performance using authentic high-stakes examination questions from UPSC, JEE, and NEET across STEM and humanities domains in both English and Hindi. Unlike synthetic benchmarks, IndicEval grounds evaluation in real examination standards, enabling realistic measurement of reasoning, domain knowledge, and bilingual adaptability. The framework automates a",
+      "summary_fr": "The rapid advancement of large language models (LLMs) necessitates evaluation frameworks that reflect real-world academic rigor and multilingual complexity. This paper introduces IndicEval, a scalable benchmarking platform designed to assess LLM performance using authentic high-stakes examination questions from UPSC, JEE, and NEET across STEM and humanities domains in both English and Hindi. Unlike synthetic benchmarks, IndicEval grounds evaluation in real examination standards, enabling realistic measurement of reasoning, domain knowledge, and bilingual adaptability. The framework automates a",
+      "resume_fr": "The rapid advancement of large language models (LLMs) necessitates evaluation frameworks that reflect real-world academic rigor and multilingual complexity. This paper introduces IndicEval, a scalable benchmarking platform designed to assess LLM performance using authentic high-stakes examination questions from UPSC, JEE, and NEET across STEM and humanities domains in both English and Hindi. Unlike synthetic benchmarks, IndicEval grounds evaluation in real examination standards, enabling realistic measurement of reasoning, domain knowledge, and bilingual adaptability. The framework automates a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "RelianceScope: An Analytical Framework for Examining Students' Reliance on Generative AI Chatbots in Problem Solving",
+      "url": "https://arxiv.org/abs/2602.16251v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-18T07:59:44.000Z",
+      "score": 85,
+      "summary_en": "Generative AI chatbots enable personalized problem-solving, but effective learning requires students to self-regulate both how they seek help and how they use AI-generated responses. Considering engagement modes across these two actions reveals nuanced reliance patterns: for example, a student may actively engage in help-seeking by clearly specifying areas of need, yet engage passively in response-use by copying AI outputs, or vice versa. However, existing research lacks systematic tools for jointly capturing engagement across help-seeking and response-use, limiting the analysis of such relian",
+      "summary_fr": "Generative AI chatbots enable personalized problem-solving, but effective learning requires students to self-regulate both how they seek help and how they use AI-generated responses. Considering engagement modes across these two actions reveals nuanced reliance patterns: for example, a student may actively engage in help-seeking by clearly specifying areas of need, yet engage passively in response-use by copying AI outputs, or vice versa. However, existing research lacks systematic tools for jointly capturing engagement across help-seeking and response-use, limiting the analysis of such relian",
+      "resume_fr": "Generative AI chatbots enable personalized problem-solving, but effective learning requires students to self-regulate both how they seek help and how they use AI-generated responses. Considering engagement modes across these two actions reveals nuanced reliance patterns: for example, a student may actively engage in help-seeking by clearly specifying areas of need, yet engage passively in response-use by copying AI outputs, or vice versa. However, existing research lacks systematic tools for jointly capturing engagement across help-seeking and response-use, limiting the analysis of such relian",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How do gestural interactions support visuospatial cognition in STEM learning?",
+      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70053?af=R",
+      "source": "British Journal of Educational Technology (Wiley)",
+      "published": "2026-02-18T05:59:33.000Z",
+      "score": 85,
+      "summary_en": "British Journal of Educational Technology, EarlyView.",
+      "summary_fr": "British Journal of Educational Technology, EarlyView.",
+      "resume_fr": "British Journal of Educational Technology, EarlyView.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "\"You Can Actually Do Something\": Shifts in High School Computer Science Teachers' Conceptions of AI/ML Systems and Algorithmic Justice",
+      "url": "https://arxiv.org/abs/2602.16123v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-18T01:27:35.000Z",
+      "score": 85,
+      "summary_en": "The recent proliferation of artificial intelligence and machine learning (AI/ML) systems highlights the need for all people to develop effective competencies to interact with and examine AI/ML systems. We study shifts in five experienced high school CS teachers' understanding of AI/ML systems after one year of participatory design, where they co-developed lessons on AI auditing, a systematic method to query AI/ML systems. Drawing on individual and group interviews, we found that teachers' perspectives became more situated, grounding their understanding in everyday contexts; more critical, refl",
+      "summary_fr": "The recent proliferation of artificial intelligence and machine learning (AI/ML) systems highlights the need for all people to develop effective competencies to interact with and examine AI/ML systems. We study shifts in five experienced high school CS teachers' understanding of AI/ML systems after one year of participatory design, where they co-developed lessons on AI auditing, a systematic method to query AI/ML systems. Drawing on individual and group interviews, we found that teachers' perspectives became more situated, grounding their understanding in everyday contexts; more critical, refl",
+      "resume_fr": "The recent proliferation of artificial intelligence and machine learning (AI/ML) systems highlights the need for all people to develop effective competencies to interact with and examine AI/ML systems. We study shifts in five experienced high school CS teachers' understanding of AI/ML systems after one year of participatory design, where they co-developed lessons on AI auditing, a systematic method to query AI/ML systems. Drawing on individual and group interviews, we found that teachers' perspectives became more situated, grounding their understanding in everyday contexts; more critical, refl",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Generative AI Meets Socratic Method: Investigating Programming Learning Dynamics Through Behaviours, Interaction Qualities and Perceptions",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70210?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-02-18T00:05:41.000Z",
+      "score": 85,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Transforming GenAI Policy to Prompting Instruction: An RCT of Scalable Prompting Interventions in a CS1 Course",
+      "url": "https://arxiv.org/abs/2602.16033v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-02-17T21:40:12.000Z",
+      "score": 100,
+      "summary_en": "Despite universal GenAI adoption, students cannot distinguish task performance from actual learning and lack skills to leverage AI for learning, leading to worse exam performance when AI use remains unreflective. Yet few interventions teaching students to prompt AI as a tutor rather than solution provider have been validated at scale through randomized controlled trials (RCTs). To bridge this gap, we conducted a semester-long RCT (N=979) with four ICAP framework-based instructional conditions varying in engagement intensity with a pre-test, immediate and delayed post-test and surveys. Mixed me",
+      "summary_fr": "Despite universal GenAI adoption, students cannot distinguish task performance from actual learning and lack skills to leverage AI for learning, leading to worse exam performance when AI use remains unreflective. Yet few interventions teaching students to prompt AI as a tutor rather than solution provider have been validated at scale through randomized controlled trials (RCTs). To bridge this gap, we conducted a semester-long RCT (N=979) with four ICAP framework-based instructional conditions varying in engagement intensity with a pre-test, immediate and delayed post-test and surveys. Mixed me",
+      "resume_fr": "Despite universal GenAI adoption, students cannot distinguish task performance from actual learning and lack skills to leverage AI for learning, leading to worse exam performance when AI use remains unreflective. Yet few interventions teaching students to prompt AI as a tutor rather than solution provider have been validated at scale through randomized controlled trials (RCTs). To bridge this gap, we conducted a semester-long RCT (N=979) with four ICAP framework-based instructional conditions varying in engagement intensity with a pre-test, immediate and delayed post-test and surveys. Mixed me",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Dex4D: Task-Agnostic Point Track Policy for Sim-to-Real Dexterous Manipulation",
       "url": "https://arxiv.org/abs/2602.15828v1",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "How University Disability Services Professionals Write Image Descriptions for HCI Figures Using Generative AI",
-      "url": "https://arxiv.org/abs/2602.08937v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-09T17:36:25.000Z",
-      "score": 50,
-      "summary_en": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
-      "summary_fr": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
-      "resume_fr": "Disability Services Office (DSO) professionals at higher education institutions write alt text for {visual content}. However, due to the complexity of visual content, such as HCI figures in research publications, DSO professionals can struggle to write high-quality alt text if they lack subject expertise. Generative AI has shown potential in understanding figures and writing their descriptions, yet its support for DSO professionals is underexplored, and limited work evaluates the quality of alt text generated with AI assistance. In this work, we conducted two studies: first, we investigated ge",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A systematic review of online persistent learning: Methodologies, findings and issues",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70036?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-02-09T17:25:36.000Z",
-      "score": 65,
-      "summary_en": "British Journal of Educational Technology, Volume 57, Issue 2, Page 395-422, March 2026.",
-      "summary_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 395-422, March 2026.",
-      "resume_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 395-422, March 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Issue Information",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70050?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-02-09T17:25:36.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, Volume 57, Issue 2, Page 373-376, March 2026.",
-      "summary_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 373-376, March 2026.",
-      "resume_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 373-376, March 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Podcasts as pedagogy in higher education: A scoping review to map and advance the field",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70021?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-02-09T17:25:36.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, Volume 57, Issue 2, Page 377-394, March 2026.",
-      "summary_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 377-394, March 2026.",
-      "resume_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 377-394, March 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "From simplification to sophistication: Secondary students' conceptual change in understanding machine learning model decision making",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70024?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-02-09T17:25:36.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, Volume 57, Issue 2, Page 423-442, March 2026.",
-      "summary_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 423-442, March 2026.",
-      "resume_fr": "British Journal of Educational Technology, Volume 57, Issue 2, Page 423-442, March 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "The Vibe-Automation of Automation: A Proactive Education Framework for Computer Science in the Age of Generative AI",
-      "url": "https://arxiv.org/abs/2602.08295v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-02-09T06:02:04.000Z",
-      "score": 85,
-      "summary_en": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
-      "summary_fr": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
-      "resume_fr": "The emergence of generative artificial intelligence (GenAI) represents not an incremental technological advance but a qualitative epistemological shift that challenges foundational assumptions of computer science. Whereas machine learning has been described as the automation of automation, generative AI operates by navigating contextual, semantic, and stylistic coherence rather than optimizing predefined objective metrics. This paper introduces the concept of Vibe-Automation to characterize this transition. The central claim is that the significance of GenAI lies in its functional access to op",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Adding More Value Than Work: Practical Guidelines for Integrating Robots into Intercultural Competence Learning",
-      "url": "https://arxiv.org/abs/2602.08123v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-08T21:01:33.000Z",
-      "score": 85,
-      "summary_en": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
-      "summary_fr": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
-      "resume_fr": "While social robots have demonstrated effectiveness in supporting students' intercultural competence development, it is unclear how they can effectively be adopted for integrated use in K-12 schools. We conducted two phases of design workshops with teachers, where they co-designed robot-mediated intercultural activities while considering student needs and school integration concerns. Using thematic analysis, we identify appropriate scenarios and roles for classroom robots, explore how robots could complement rather than replace teachers, and consider how to address ethical and compliance consi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "What Predicts (AI‐Mediated) Informal Digital Learning of English in the Global South? The Case of Rural Bangladeshi Students",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70196?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-02-07T07:39:52.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
