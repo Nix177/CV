@@ -13,9 +13,11 @@ export function canonicalUrl(u) {
   } catch { return (u || "").trim(); }
 }
 
-export async function discoverFeed(pageUrl) {
+export async function discoverFeed(pageUrl, ms = 10000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), ms);
   try {
-    const res = await fetch(pageUrl, { headers: { "User-Agent": "EduNewsBot/1.0" } });
+    const res = await fetch(pageUrl, { signal: ctrl.signal, headers: { "User-Agent": "EduNewsBot/1.0" } });
     const ct = res.headers.get("content-type") || "";
     if (!ct.includes("text/html")) return null;
     const html = await res.text();
@@ -31,12 +33,13 @@ export async function discoverFeed(pageUrl) {
     try {
       const guess = new URL(pageUrl);
       const feed = `${guess.origin}${guess.pathname.replace(/\/$/, "")}/feed/`;
-      const head = await fetch(feed, { method: "HEAD" });
+      const head = await fetch(feed, { method: "HEAD", signal: ctrl.signal });
       if (head.ok) return feed;
     } catch {}
 
     return null;
   } catch { return null; }
+  finally { clearTimeout(tid); }
 }
 
 export async function readFeedMaybe(source) {

@@ -99,10 +99,21 @@ function getWeights(profile) {
 
 // --- gather feeds ---
 async function gatherAll() {
-  const results = await Promise.all(SOURCES.map(readFeedMaybe));
+  console.log(`Starting discovery for ${SOURCES.length} sources...`);
+  const results = await Promise.all(SOURCES.map(async s => {
+    try {
+      const res = await readFeedMaybe(s);
+      console.log(`[OK] ${s.name}: ${res.items?.length || 0} items`);
+      return res;
+    } catch (e) {
+      console.error(`[FAIL] ${s.name}:`, e.message);
+      return { ok: false, items: [] };
+    }
+  }));
   const all = results.flatMap(r => r.items);
   const unique = dedupe(all);
   unique.sort((a, b) => (new Date(b.published || 0)) - (new Date(a.published || 0)));
+  console.log(`Gathered ${unique.length} unique items total.`);
   return unique.slice(0, MAX_ITEMS_TOTAL);
 }
 
