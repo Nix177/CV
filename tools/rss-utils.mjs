@@ -7,7 +7,7 @@ export function canonicalUrl(u) {
   try {
     const url = new URL(u);
     url.hash = "";
-    ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","mc_cid","mc_eid"]
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "mc_cid", "mc_eid"]
       .forEach(p => url.searchParams.delete(p));
     return url.toString();
   } catch { return (u || "").trim(); }
@@ -35,7 +35,7 @@ export async function discoverFeed(pageUrl, ms = 10000) {
       const feed = `${guess.origin}${guess.pathname.replace(/\/$/, "")}/feed/`;
       const head = await fetch(feed, { method: "HEAD", signal: ctrl.signal });
       if (head.ok) return feed;
-    } catch {}
+    } catch { }
 
     return null;
   } catch { return null; }
@@ -49,8 +49,16 @@ export async function readFeedMaybe(source) {
     if (discovered) feedUrl = discovered;
   }
 
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 15000);
+
   try {
-    const feed = await parser.parseURL(feedUrl);
+    const res = await fetch(feedUrl, { signal: ctrl.signal, headers: { "User-Agent": "EduNewsBot/1.0" } });
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+    const xml = await res.text();
+    clearTimeout(tid);
+
+    const feed = await parser.parseString(xml);
     const items = (feed.items || [])
       .filter(it => it.title && it.link)
       .slice(0, 7)
@@ -62,7 +70,8 @@ export async function readFeedMaybe(source) {
         snippet: ((it.contentSnippet || it.summary || it.content || "").replace(/\s+/g, " ").trim()).slice(0, 600)
       }));
     return { ok: true, items };
-  } catch {
+  } catch (e) {
+    clearTimeout(tid);
     return {
       ok: false,
       items: [{
