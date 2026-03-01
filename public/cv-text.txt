@@ -77,6 +77,22 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
   – Pédagogie numérique, ingénierie de formation, accompagnement à l’IA responsable, communication scientifique.
 (Section ajoutée par le chatbot pour fournir du contexte opérationnel aux réponses. Elle synthétise ce que tu m’as confié et ce qu’on a développé ensemble.)
 
+=== Architecture du Site & Développement Logiciel Récents ===
+• Architecture complète de ce site :
+  – Hébergement Vercel avec fonctions Serverless (Node.js/ESM).
+  – Système de Chatbot avancé : frontend en Vanilla JS (léger), réponses en streaming (SSE), RAG in-memory (TF-IDF), support multi-modèle (OpenAI GPT-4o-mini / Gemini) et multi-langues (i18n).
+  – Veille automatisée (News Feed) : scraping RSS, scoring LLM via l'API OpenAI, automatisation CI/CD (GitHub Actions), et gestion réseau robuste (Aborts, fallbacks).
+• Développement d'applications (Web & Mobile) :
+  – Maîtrise de Capacitor et Ionic pour le développement iOS/Android (Builds .aab, intégrations Xcode).
+  – Documate & EditAI : création d'espaces de travail itératifs ("Draft Workspace"), interactions documentaires par IA, et formulaires intelligents basés sur le contexte.
+• Ingénierie Pédagogique Interactive ("L'Observatoire des Possibles") :
+  – Moteur logique JS (engine.js) pour scénarios non-linéaires interactifs avec dilemmes moraux et philosophiques.
+  – Gestion via JSON de scénarios et de "personas" pour le Rôle Play piloté par l'IA.
+  – Modules RPG : vues top-down 2D (rpg.html), sprites, collisions, interactions NPC.
+• Compétences techniques transverses :
+  – JavaScript/Node.js avancé, intégration d'APIs LLM en mode streaming.
+  – DevOps de base : Git, CI/CD (GitHub Actions), résolution de conflits, debugging de requêtes asynchrones et CORS.
+
 === Focus Technique : BM-800 Mod ("Pimped Alice") ===
 • Objectif : Transformer un micro bas de gamme (BM-800) en micro studio via un circuit discret "Alice" (dérivé Schoeps CMC5) et une capsule RK-47.
 • Architecture :
