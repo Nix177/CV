@@ -60,8 +60,15 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
 • Telescope OnStep (Hardware/Astronomie) : Motorisation GoTo d'une monture équatoriale (ESP32, ASCOM/INDI).
 • Rover & Bras (Robotics/Micro-ROS) : Rover autonome (LiDAR) + Bras 6 axes, architecture distribuée.
 • BM-800 Mod (Audio/Electronics) : Upgrade micro studio (circuit Schoeps/Alice + capsule RK-47).
-• AdWall, Documate, PetNames : Apps web éducatives et démos IA.
-
+• AdWall, Documate, PetNames : Apps web éducatives et démos IA (création itérative avec "Draft Workspace").
+• Plateformes Éducatives & Expérimentales :
+  – Vocal Walls : Réalité augmentée sonore (bulles audio géolocalisées sur une grille H3).
+  – Common Ground : "GitHub pour passions", plateforme de team building créatif.
+  – Micro-Mentor : Sessions de mentorat ultra-courtes de 3 minutes.
+  – Frustra : Base de données de doléances réseaux sociaux pour identifier des "problèmes de base" (startup ideas).
+  – Slow Social : Publication hebdomadaire de bien-être numérique contre le burnout.
+  – The Un-Algorithm : Tableau de bord pour reprendre le contrôle des recommandations algorithmiques.
+• Flux de travail automatisé d'impression 3D : Pipeline complet de la génération d'images IA (ComfyUI) à la sculpture Blender ("Mushroom Golem") puis l'impression.
 === Ajouts ChatGPT (issus de nos échanges/prototypes) ===
 • Conception d’outils pédagogiques web :
   – “Fun Facts” : cartes retournables + nuage interactif, réponses sourcées (fr/EN/DE), petit moteur de sélection et affichage.  
@@ -88,7 +95,12 @@ Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’inf
 • Ingénierie Pédagogique Interactive ("L'Observatoire des Possibles") :
   – Moteur logique JS (engine.js) pour scénarios non-linéaires interactifs avec dilemmes moraux et philosophiques.
   – Gestion via JSON de scénarios et de "personas" pour le Rôle Play piloté par l'IA.
-  – Modules RPG : vues top-down 2D (rpg.html), sprites, collisions, interactions NPC.
+  – Modules RPG : vues top-down 2D (rpg.html, game-history.html), sprites, collisions, interactions NPC, narration générée par IA.
+• Expériences UI / UX & Labs Intégrés au Site Web :
+  – AI Lab (lab.html) : "RAG Glassbox" permettant d'inspecter visuellement les étapes d'ingestion et de recherche sémantique des PDF, accompagné d'un "Diff Explorer" pour comparer l'impact des variations de prompts sur le texte généré.
+  – Tech News (tech-news.html) : Flux d'actualités technologiques (EdTech, Dev, IA) auto-alimenté via GitHub Actions, évalué et scoré par l'API OpenAI avec filtres de pertinence côté client.
+  – Fun Facts (fun-facts.html) : Cartes interactives 3D (flip cards) pour déconstruire les mythes courants.
+  – Passions & Convictions (passions.html, index.html) : UI "Steampunk" animée en SVG représentant une ligne de métro/train illustrant les principes pédagogiques, l'enseignement explicite, et l'esprit critique.
 • Compétences techniques transverses :
   – JavaScript/Node.js avancé, intégration d'APIs LLM en mode streaming.
   – DevOps de base : Git, CI/CD (GitHub Actions), résolution de conflits, debugging de requêtes asynchrones et CORS.
