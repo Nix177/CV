@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-02T07:06:35.777Z",
+  "generatedAt": "2026-03-03T07:01:14.735Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,196 @@
     }
   },
   "items": [
+    {
+      "title": "Frontier Models Can Take Actions at Low Probabilities",
+      "url": "https://arxiv.org/abs/2603.02202v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-02T18:56:59.000Z",
+      "score": 85,
+      "summary_en": "Pre-deployment evaluations inspect only a limited sample of model actions. A malicious model seeking to evade oversight could exploit this by randomizing when to \"defect\": misbehaving so rarely that no malicious actions are observed during evaluation, but often enough that they occur eventually in deployment. But this requires taking actions at very low rates, while maintaining calibration. Are frontier models even capable of that? We prompt the GPT-5, Claude-4.5 and Qwen-3 families to take a target action at low probabilities (e.g. 0.01%), either given directly or requiring derivation, and ev",
+      "summary_fr": "Pre-deployment evaluations inspect only a limited sample of model actions. A malicious model seeking to evade oversight could exploit this by randomizing when to \"defect\": misbehaving so rarely that no malicious actions are observed during evaluation, but often enough that they occur eventually in deployment. But this requires taking actions at very low rates, while maintaining calibration. Are frontier models even capable of that? We prompt the GPT-5, Claude-4.5 and Qwen-3 families to take a target action at low probabilities (e.g. 0.01%), either given directly or requiring derivation, and ev",
+      "resume_fr": "Pre-deployment evaluations inspect only a limited sample of model actions. A malicious model seeking to evade oversight could exploit this by randomizing when to \"defect\": misbehaving so rarely that no malicious actions are observed during evaluation, but often enough that they occur eventually in deployment. But this requires taking actions at very low rates, while maintaining calibration. Are frontier models even capable of that? We prompt the GPT-5, Claude-4.5 and Qwen-3 families to take a target action at low probabilities (e.g. 0.01%), either given directly or requiring derivation, and ev",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Conformal Policy Control",
+      "url": "https://arxiv.org/abs/2603.02196v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-02T18:54:36.000Z",
+      "score": 70,
+      "summary_en": "An agent must try new behaviors to explore and improve. In high-stakes environments, an agent that violates safety constraints may cause harm and must be taken offline, curtailing any future interaction. Imitating old behavior is safe, but excessive conservatism discourages exploration. How much behavior change is too much? We show how to use any safe reference policy as a probabilistic regulator for any optimized but untested policy. Conformal calibration on data from the safe policy determines how aggressively the new policy can act, while provably enforcing the user's declared risk toleranc",
+      "summary_fr": "An agent must try new behaviors to explore and improve. In high-stakes environments, an agent that violates safety constraints may cause harm and must be taken offline, curtailing any future interaction. Imitating old behavior is safe, but excessive conservatism discourages exploration. How much behavior change is too much? We show how to use any safe reference policy as a probabilistic regulator for any optimized but untested policy. Conformal calibration on data from the safe policy determines how aggressively the new policy can act, while provably enforcing the user's declared risk toleranc",
+      "resume_fr": "An agent must try new behaviors to explore and improve. In high-stakes environments, an agent that violates safety constraints may cause harm and must be taken offline, curtailing any future interaction. Imitating old behavior is safe, but excessive conservatism discourages exploration. How much behavior change is too much? We show how to use any safe reference policy as a probabilistic regulator for any optimized but untested policy. Conformal calibration on data from the safe policy determines how aggressively the new policy can act, while provably enforcing the user's declared risk toleranc",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "From Leaderboard to Deployment: Code Quality Challenges in AV Perception Repositories",
+      "url": "https://arxiv.org/abs/2603.02194v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-02T18:54:28.000Z",
+      "score": 50,
+      "summary_en": "Autonomous vehicle (AV) perception models are typically evaluated solely on benchmark performance metrics, with limited attention to code quality, production readiness and long-term maintainability. This creates a significant gap between research excellence and real-world deployment in safety-critical systems subject to international safety standards. To address this gap, we present the first large-scale empirical study of software quality in AV perception repositories, systematically analyzing 178 unique models from the KITTI and NuScenes 3D Object Detection leaderboards. Using static analysi",
+      "summary_fr": "Autonomous vehicle (AV) perception models are typically evaluated solely on benchmark performance metrics, with limited attention to code quality, production readiness and long-term maintainability. This creates a significant gap between research excellence and real-world deployment in safety-critical systems subject to international safety standards. To address this gap, we present the first large-scale empirical study of software quality in AV perception repositories, systematically analyzing 178 unique models from the KITTI and NuScenes 3D Object Detection leaderboards. Using static analysi",
+      "resume_fr": "Autonomous vehicle (AV) perception models are typically evaluated solely on benchmark performance metrics, with limited attention to code quality, production readiness and long-term maintainability. This creates a significant gap between research excellence and real-world deployment in safety-critical systems subject to international safety standards. To address this gap, we present the first large-scale empirical study of software quality in AV perception repositories, systematically analyzing 178 unique models from the KITTI and NuScenes 3D Object Detection leaderboards. Using static analysi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Rethinking Camera Choice: An Empirical Study on Fisheye Camera Properties in Robotic Manipulation",
+      "url": "https://arxiv.org/abs/2603.02139v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-02T18:00:37.000Z",
+      "score": 50,
+      "summary_en": "The adoption of fisheye cameras in robotic manipulation, driven by their exceptionally wide Field of View (FoV), is rapidly outpacing a systematic understanding of their downstream effects on policy learning. This paper presents the first comprehensive empirical study to bridge this gap, rigorously analyzing the properties of wrist-mounted fisheye cameras for imitation learning. Through extensive experiments in both simulation and the real world, we investigate three critical research questions: spatial localization, scene generalization, and hardware generalization. Our investigation reveals ",
+      "summary_fr": "The adoption of fisheye cameras in robotic manipulation, driven by their exceptionally wide Field of View (FoV), is rapidly outpacing a systematic understanding of their downstream effects on policy learning. This paper presents the first comprehensive empirical study to bridge this gap, rigorously analyzing the properties of wrist-mounted fisheye cameras for imitation learning. Through extensive experiments in both simulation and the real world, we investigate three critical research questions: spatial localization, scene generalization, and hardware generalization. Our investigation reveals ",
+      "resume_fr": "The adoption of fisheye cameras in robotic manipulation, driven by their exceptionally wide Field of View (FoV), is rapidly outpacing a systematic understanding of their downstream effects on policy learning. This paper presents the first comprehensive empirical study to bridge this gap, rigorously analyzing the properties of wrist-mounted fisheye cameras for imitation learning. Through extensive experiments in both simulation and the real world, we investigate three critical research questions: spatial localization, scene generalization, and hardware generalization. Our investigation reveals ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "LLMs as Strategic Actors: Behavioral Alignment, Risk Calibration, and Argumentation Framing in Geopolitical Simulations",
+      "url": "https://arxiv.org/abs/2603.02128v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-03-02T17:46:17.000Z",
+      "score": 70,
+      "summary_en": "Large language models (LLMs) are increasingly proposed as agents in strategic decision environments, yet their behavior in structured geopolitical simulations remains under-researched. We evaluate six popular state-of-the-art LLMs alongside results from human results across four real-world crisis simulation scenarios, requiring models to select predefined actions and justify their decisions across multiple rounds. We compare models to humans in action alignment, risk calibration through chosen actions' severity, and argumentative framing grounded in international relations theory. Results show",
+      "summary_fr": "Large language models (LLMs) are increasingly proposed as agents in strategic decision environments, yet their behavior in structured geopolitical simulations remains under-researched. We evaluate six popular state-of-the-art LLMs alongside results from human results across four real-world crisis simulation scenarios, requiring models to select predefined actions and justify their decisions across multiple rounds. We compare models to humans in action alignment, risk calibration through chosen actions' severity, and argumentative framing grounded in international relations theory. Results show",
+      "resume_fr": "Large language models (LLMs) are increasingly proposed as agents in strategic decision environments, yet their behavior in structured geopolitical simulations remains under-researched. We evaluate six popular state-of-the-art LLMs alongside results from human results across four real-world crisis simulation scenarios, requiring models to select predefined actions and justify their decisions across multiple rounds. We compare models to humans in action alignment, risk calibration through chosen actions' severity, and argumentative framing grounded in international relations theory. Results show",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "LAD-Drive: Bridging Language and Trajectory with Action-Aware Diffusion Transformers",
+      "url": "https://arxiv.org/abs/2603.02035v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-02T16:21:42.000Z",
+      "score": 85,
+      "summary_en": "While multimodal large language models (MLLMs) provide advanced reasoning for autonomous driving, translating their discrete semantic knowledge into continuous trajectories remains a fundamental challenge. Existing methods often rely on unimodal planning heads that inherently limit their ability to represent multimodal driving behavior. Furthermore, most generative approaches frequently condition on one-hot encoded actions, discarding the nuanced navigational uncertainty critical for complex scenarios. To resolve these limitations, we introduce LAD-Drive, a generative framework that structural",
+      "summary_fr": "While multimodal large language models (MLLMs) provide advanced reasoning for autonomous driving, translating their discrete semantic knowledge into continuous trajectories remains a fundamental challenge. Existing methods often rely on unimodal planning heads that inherently limit their ability to represent multimodal driving behavior. Furthermore, most generative approaches frequently condition on one-hot encoded actions, discarding the nuanced navigational uncertainty critical for complex scenarios. To resolve these limitations, we introduce LAD-Drive, a generative framework that structural",
+      "resume_fr": "While multimodal large language models (MLLMs) provide advanced reasoning for autonomous driving, translating their discrete semantic knowledge into continuous trajectories remains a fundamental challenge. Existing methods often rely on unimodal planning heads that inherently limit their ability to represent multimodal driving behavior. Furthermore, most generative approaches frequently condition on one-hot encoded actions, discarding the nuanced navigational uncertainty critical for complex scenarios. To resolve these limitations, we introduce LAD-Drive, a generative framework that structural",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Demonstrating ViviDoc: Generating Interactive Documents through Human-Agent Collaboration",
+      "url": "https://arxiv.org/abs/2603.01912v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-02T14:27:49.000Z",
+      "score": 85,
+      "summary_en": "Interactive articles help readers engage with complex ideas through exploration, yet creating them remains costly, requiring both domain expertise and web development skills. Recent LLM-based agents can automate content creation, but naively applying them yields uncontrollable and unverifiable outputs. We present ViviDoc, a human-agent collaborative system that generates interactive educational documents from a single topic input. ViviDoc introduces a multi-agent pipeline (Planner, Executor, Evaluator) and the Document Specification (DocSpec), a human-readable intermediate representation that ",
+      "summary_fr": "Interactive articles help readers engage with complex ideas through exploration, yet creating them remains costly, requiring both domain expertise and web development skills. Recent LLM-based agents can automate content creation, but naively applying them yields uncontrollable and unverifiable outputs. We present ViviDoc, a human-agent collaborative system that generates interactive educational documents from a single topic input. ViviDoc introduces a multi-agent pipeline (Planner, Executor, Evaluator) and the Document Specification (DocSpec), a human-readable intermediate representation that ",
+      "resume_fr": "Interactive articles help readers engage with complex ideas through exploration, yet creating them remains costly, requiring both domain expertise and web development skills. Recent LLM-based agents can automate content creation, but naively applying them yields uncontrollable and unverifiable outputs. We present ViviDoc, a human-agent collaborative system that generates interactive educational documents from a single topic input. ViviDoc introduces a multi-agent pipeline (Planner, Executor, Evaluator) and the Document Specification (DocSpec), a human-readable intermediate representation that ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Wakeful targeted memory reactivation during short rest periods modulates early motor learning",
+      "url": "https://www.nature.com/articles/s41539-026-00407-9",
+      "source": "npj Science of Learning (Nature)",
+      "published": "2026-03-02T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
+    },
+    {
+      "title": "Sustainable Care: Designing Technologies That Support Children's Long-Term Engagement with Social Issues",
+      "url": "https://arxiv.org/abs/2603.00996v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-01T08:50:30.000Z",
+      "score": 65,
+      "summary_en": "Children today encounter social issues -- climate change, conflict, inequality -- through digital technologies, and the design of that encounter shapes whether young people move toward lasting civic engagement or toward anxiety and withdrawal. Much of the content children see is optimized for attention through fear and urgency, with few pathways toward meaningful action -- contributing to rising distress and disengagement among young people who care deeply but feel powerless to act. This full-day workshop introduces ``sustainable care'' as a design lens, asking how technology might support chi",
+      "summary_fr": "Children today encounter social issues -- climate change, conflict, inequality -- through digital technologies, and the design of that encounter shapes whether young people move toward lasting civic engagement or toward anxiety and withdrawal. Much of the content children see is optimized for attention through fear and urgency, with few pathways toward meaningful action -- contributing to rising distress and disengagement among young people who care deeply but feel powerless to act. This full-day workshop introduces ``sustainable care'' as a design lens, asking how technology might support chi",
+      "resume_fr": "Children today encounter social issues -- climate change, conflict, inequality -- through digital technologies, and the design of that encounter shapes whether young people move toward lasting civic engagement or toward anxiety and withdrawal. Much of the content children see is optimized for attention through fear and urgency, with few pathways toward meaningful action -- contributing to rising distress and disengagement among young people who care deeply but feel powerless to act. This full-day workshop introduces ``sustainable care'' as a design lens, asking how technology might support chi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Knowledge without Wisdom: Measuring Misalignment between LLMs and Intended Impact",
+      "url": "https://arxiv.org/abs/2603.00883v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-01T03:05:46.000Z",
+      "score": 85,
+      "summary_en": "LLMs increasingly excel on AI benchmarks, but doing so does not guarantee validity for downstream tasks. This study evaluates the performance of leading foundation models (FMs, i.e., generative pre-trained base LLMs) with out-of-distribution (OOD) tasks of the teaching and learning of schoolchildren. Across all FMs, inter-model behaviors on disparate tasks correlate higher than they do with expert human behaviors on target tasks. These biases shared across LLMs are poorly aligned with downstream measures of teaching quality and often \\textit{negatively aligned with learning outcomes}. Further,",
+      "summary_fr": "LLMs increasingly excel on AI benchmarks, but doing so does not guarantee validity for downstream tasks. This study evaluates the performance of leading foundation models (FMs, i.e., generative pre-trained base LLMs) with out-of-distribution (OOD) tasks of the teaching and learning of schoolchildren. Across all FMs, inter-model behaviors on disparate tasks correlate higher than they do with expert human behaviors on target tasks. These biases shared across LLMs are poorly aligned with downstream measures of teaching quality and often \\textit{negatively aligned with learning outcomes}. Further,",
+      "resume_fr": "LLMs increasingly excel on AI benchmarks, but doing so does not guarantee validity for downstream tasks. This study evaluates the performance of leading foundation models (FMs, i.e., generative pre-trained base LLMs) with out-of-distribution (OOD) tasks of the teaching and learning of schoolchildren. Across all FMs, inter-model behaviors on disparate tasks correlate higher than they do with expert human behaviors on target tasks. These biases shared across LLMs are poorly aligned with downstream measures of teaching quality and often \\textit{negatively aligned with learning outcomes}. Further,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Xiangyi Cheng Is Bringing AR to Classrooms and Hospitals",
       "url": "https://spectrum.ieee.org/xiangyi-cheng-ar-classrooms-hospitals",
@@ -1035,196 +1225,6 @@
       "summary_en": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
       "summary_fr": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
       "resume_fr": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Steerable Vision-Language-Action Policies for Embodied Reasoning and Hierarchical Control",
-      "url": "https://arxiv.org/abs/2602.13193v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-13T18:57:56.000Z",
-      "score": 85,
-      "summary_en": "Pretrained vision-language models (VLMs) can make semantic and visual inferences across diverse settings, providing valuable common-sense priors for robotic control. However, effectively grounding this knowledge in robot behaviors remains an open challenge. Prior methods often employ a hierarchical approach where VLMs reason over high-level commands to be executed by separate low-level policies, e.g., vision-language-action models (VLAs). The interface between VLMs and VLAs is usually natural language task instructions, which fundamentally limits how much VLM reasoning can steer low-level beha",
-      "summary_fr": "Pretrained vision-language models (VLMs) can make semantic and visual inferences across diverse settings, providing valuable common-sense priors for robotic control. However, effectively grounding this knowledge in robot behaviors remains an open challenge. Prior methods often employ a hierarchical approach where VLMs reason over high-level commands to be executed by separate low-level policies, e.g., vision-language-action models (VLAs). The interface between VLMs and VLAs is usually natural language task instructions, which fundamentally limits how much VLM reasoning can steer low-level beha",
-      "resume_fr": "Pretrained vision-language models (VLMs) can make semantic and visual inferences across diverse settings, providing valuable common-sense priors for robotic control. However, effectively grounding this knowledge in robot behaviors remains an open challenge. Prior methods often employ a hierarchical approach where VLMs reason over high-level commands to be executed by separate low-level policies, e.g., vision-language-action models (VLAs). The interface between VLMs and VLAs is usually natural language task instructions, which fundamentally limits how much VLM reasoning can steer low-level beha",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "\"It's More of a Lifestyle'': Design Considerations for Supporting Everyday Practices in Community-Based Farming",
-      "url": "https://arxiv.org/abs/2602.13119v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-13T17:16:48.000Z",
-      "score": 85,
-      "summary_en": "Farming plays a significant role in the economy by supporting related industries such as food, retail, and local services. Community-based small farms, while offering unique social and cultural benefits, face persistent challenges, including limited access to formal education and underdeveloped infrastructure, which have been discussed in prior research. This study focuses on community-driven factors, such as workarounds for recording critical information and practices for passing down farming knowledge across generations. Through 11 semi-structured interviews with farmers from a small ethnic ",
-      "summary_fr": "Farming plays a significant role in the economy by supporting related industries such as food, retail, and local services. Community-based small farms, while offering unique social and cultural benefits, face persistent challenges, including limited access to formal education and underdeveloped infrastructure, which have been discussed in prior research. This study focuses on community-driven factors, such as workarounds for recording critical information and practices for passing down farming knowledge across generations. Through 11 semi-structured interviews with farmers from a small ethnic ",
-      "resume_fr": "Farming plays a significant role in the economy by supporting related industries such as food, retail, and local services. Community-based small farms, while offering unique social and cultural benefits, face persistent challenges, including limited access to formal education and underdeveloped infrastructure, which have been discussed in prior research. This study focuses on community-driven factors, such as workarounds for recording critical information and practices for passing down farming knowledge across generations. Through 11 semi-structured interviews with farmers from a small ethnic ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "SoK: Understanding the Pedagogical, Health, Ethical, and Privacy Challenges of Extended Reality in Early Childhood Education",
-      "url": "https://arxiv.org/abs/2602.12749v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-13T09:25:56.000Z",
-      "score": 85,
-      "summary_en": "Extended Reality (XR) combines dense sensing, real-time rendering, and close-range interaction, making its use in early childhood education both promising and high risk. To investigate this, we conduct a Systematization of Knowledge (SoK) of 111 peer-reviewed studies with children aged 3-8, quantifying how technical, pedagogical, health, privacy, and equity challenges arise in practice. We found that AR dominates the landscape (73%), focusing primarily on tablets or phones, while VR remains uncommon and typically relies on head mounted displays (HMDs). We integrate these quantitative patterns ",
-      "summary_fr": "Extended Reality (XR) combines dense sensing, real-time rendering, and close-range interaction, making its use in early childhood education both promising and high risk. To investigate this, we conduct a Systematization of Knowledge (SoK) of 111 peer-reviewed studies with children aged 3-8, quantifying how technical, pedagogical, health, privacy, and equity challenges arise in practice. We found that AR dominates the landscape (73%), focusing primarily on tablets or phones, while VR remains uncommon and typically relies on head mounted displays (HMDs). We integrate these quantitative patterns ",
-      "resume_fr": "Extended Reality (XR) combines dense sensing, real-time rendering, and close-range interaction, making its use in early childhood education both promising and high risk. To investigate this, we conduct a Systematization of Knowledge (SoK) of 111 peer-reviewed studies with children aged 3-8, quantifying how technical, pedagogical, health, privacy, and equity challenges arise in practice. We found that AR dominates the landscape (73%), focusing primarily on tablets or phones, while VR remains uncommon and typically relies on head mounted displays (HMDs). We integrate these quantitative patterns ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A flaw in using pretrained protein language models in protein–protein interaction inference models",
-      "url": "https://www.nature.com/articles/s42256-025-01176-7",
-      "source": "Nature Machine Intelligence",
-      "published": "2026-02-13T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-025-01176-7/MediaObjects/42256_2025_1176_Fig1_HTML.png"
-    },
-    {
-      "title": "Scaling Verification Can Be More Effective than Scaling Policy Learning for Vision-Language-Action Alignment",
-      "url": "https://arxiv.org/abs/2602.12281v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-12T18:59:59.000Z",
-      "score": 70,
-      "summary_en": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
-      "summary_fr": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
-      "resume_fr": "The long-standing vision of general-purpose robots hinges on their ability to understand and act upon natural language instructions. Vision-Language-Action (VLA) models have made remarkable progress toward this goal, yet their generated actions can still misalign with the given instructions. In this paper, we investigate test-time verification as a means to shrink the \"intention-action gap.'' We first characterize the test-time scaling law for embodied instruction following and demonstrate that jointly scaling the number of rephrased instructions and generated actions greatly increases test-ti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "On-Policy Context Distillation for Language Models",
-      "url": "https://arxiv.org/abs/2602.12275v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-02-12T18:58:28.000Z",
-      "score": 70,
-      "summary_en": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
-      "summary_fr": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
-      "resume_fr": "Context distillation enables language models to internalize in-context knowledge into their parameters. In our work, we propose On-Policy Context Distillation (OPCD), a framework that bridges on-policy distillation with context distillation by training a student model on its own generated trajectories while minimizing reverse Kullback-Leibler divergence against a context-conditioned teacher. We demonstrate the effectiveness of OPCD on two important applications: experiential knowledge distillation, where models extract and consolidate transferable knowledge from their historical solution trace",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Any House Any Task: Scalable Long-Horizon Planning for Abstract Human Tasks",
-      "url": "https://arxiv.org/abs/2602.12244v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-12T18:28:28.000Z",
-      "score": 70,
-      "summary_en": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
-      "summary_fr": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
-      "resume_fr": "Open world language conditioned task planning is crucial for robots operating in large-scale household environments. While many recent works attempt to address this problem using Large Language Models (LLMs) via prompting or training, a key challenge remains scalability. Performance often degrades rapidly with increasing environment size, plan length, instruction ambiguity, and constraint complexity. In this work, we propose Any House Any Task (AHAT), a household task planner optimized for long-horizon planning in large environments given ambiguous human instructions. At its core, AHAT utilize",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Olmix: A Framework for Data Mixing Throughout LM Development",
-      "url": "https://arxiv.org/abs/2602.12237v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-02-12T18:16:05.000Z",
-      "score": 70,
-      "summary_en": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
-      "summary_fr": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
-      "resume_fr": "Data mixing -- determining the ratios of data from different domains -- is a first-order concern for training language models (LMs). While existing mixing methods show promise, they fall short when applied during real-world LM development. We present Olmix, a framework that addresses two such challenges. First, the configuration space for developing a mixing method is not well understood -- design choices across existing methods lack justification or consensus and overlook practical issues like data constraints. We conduct a comprehensive empirical study of this space, identifying which design",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion",
-      "url": "https://arxiv.org/abs/2602.12215v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-12T17:53:51.000Z",
-      "score": 70,
-      "summary_en": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
-      "summary_fr": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
-      "resume_fr": "Recent robot foundation models largely rely on large-scale behavior cloning, which imitates expert actions but discards transferable dynamics knowledge embedded in heterogeneous embodied data. While the Unified World Model (UWM) formulation has the potential to leverage such diverse data, existing instantiations struggle to scale to foundation-level due to coarse data usage and fragmented datasets. We introduce LDA-1B, a robot foundation model that scales through universal embodied data ingestion by jointly learning dynamics, policy, and visual forecasting, assigning distinct roles to data of ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "3DGSNav: Enhancing Vision-Language Model Reasoning for Object Navigation via Active 3D Gaussian Splatting",
-      "url": "https://arxiv.org/abs/2602.12159v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-12T16:41:26.000Z",
-      "score": 70,
-      "summary_en": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
-      "summary_fr": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
-      "resume_fr": "Object navigation is a core capability of embodied intelligence, enabling an agent to locate target objects in unknown environments. Recent advances in vision-language models (VLMs) have facilitated zero-shot object navigation (ZSON). However, existing methods often rely on scene abstractions that convert environments into semantic maps or textual representations, causing high-level decision making to be constrained by the accuracy of low-level perception. In this work, we present 3DGSNav, a novel ZSON framework that embeds 3D Gaussian Splatting (3DGS) as persistent memory for VLMs to enhance ",
       "tags": [],
       "breakdown": {
         "research": 35,
