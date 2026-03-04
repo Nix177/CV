@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-03T07:01:14.735Z",
+  "generatedAt": "2026-03-04T06:57:38.116Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,120 @@
     }
   },
   "items": [
+    {
+      "title": "CFG-Ctrl: Control-Based Classifier-Free Diffusion Guidance",
+      "url": "https://arxiv.org/abs/2603.03281v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-03T18:59:48.000Z",
+      "score": 70,
+      "summary_en": "Classifier-Free Guidance (CFG) has emerged as a central approach for enhancing semantic alignment in flow-based diffusion models. In this paper, we explore a unified framework called CFG-Ctrl, which reinterprets CFG as a control applied to the first-order continuous-time generative flow, using the conditional-unconditional discrepancy as an error signal to adjust the velocity field. From this perspective, we summarize vanilla CFG as a proportional controller (P-control) with fixed gain, and typical follow-up variants develop extended control-law designs derived from it. However, existing metho",
+      "summary_fr": "Classifier-Free Guidance (CFG) has emerged as a central approach for enhancing semantic alignment in flow-based diffusion models. In this paper, we explore a unified framework called CFG-Ctrl, which reinterprets CFG as a control applied to the first-order continuous-time generative flow, using the conditional-unconditional discrepancy as an error signal to adjust the velocity field. From this perspective, we summarize vanilla CFG as a proportional controller (P-control) with fixed gain, and typical follow-up variants develop extended control-law designs derived from it. However, existing metho",
+      "resume_fr": "Classifier-Free Guidance (CFG) has emerged as a central approach for enhancing semantic alignment in flow-based diffusion models. In this paper, we explore a unified framework called CFG-Ctrl, which reinterprets CFG as a control applied to the first-order continuous-time generative flow, using the conditional-unconditional discrepancy as an error signal to adjust the velocity field. From this perspective, we summarize vanilla CFG as a proportional controller (P-control) with fixed gain, and typical follow-up variants develop extended control-law designs derived from it. However, existing metho",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning Demographic-Conditioned Mobility Trajectories with Aggregate Supervision",
+      "url": "https://arxiv.org/abs/2603.03275v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-03T18:57:44.000Z",
+      "score": 50,
+      "summary_en": "Human mobility trajectories are widely studied in public health and social science, where different demographic groups exhibit significantly different mobility patterns. However, existing trajectory generation models rarely capture this heterogeneity because most trajectory datasets lack demographic labels. To address this gap in data, we propose ATLAS, a weakly supervised approach for demographic-conditioned trajectory generation using only (i) individual trajectories without demographic labels, (ii) region-level aggregated mobility features, and (iii) region-level demographic compositions fr",
+      "summary_fr": "Human mobility trajectories are widely studied in public health and social science, where different demographic groups exhibit significantly different mobility patterns. However, existing trajectory generation models rarely capture this heterogeneity because most trajectory datasets lack demographic labels. To address this gap in data, we propose ATLAS, a weakly supervised approach for demographic-conditioned trajectory generation using only (i) individual trajectories without demographic labels, (ii) region-level aggregated mobility features, and (iii) region-level demographic compositions fr",
+      "resume_fr": "Human mobility trajectories are widely studied in public health and social science, where different demographic groups exhibit significantly different mobility patterns. However, existing trajectory generation models rarely capture this heterogeneity because most trajectory datasets lack demographic labels. To address this gap in data, we propose ATLAS, a weakly supervised approach for demographic-conditioned trajectory generation using only (i) individual trajectories without demographic labels, (ii) region-level aggregated mobility features, and (iii) region-level demographic compositions fr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning When to Act or Refuse: Guarding Agentic Reasoning Models for Safe Multi-Step Tool Use",
+      "url": "https://arxiv.org/abs/2603.03205v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-03-03T17:59:35.000Z",
+      "score": 70,
+      "summary_en": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
+      "summary_fr": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
+      "resume_fr": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "An HCI Perspective on Sustainable GenAI Integration in Architectural Design Education",
+      "url": "https://arxiv.org/abs/2603.03059v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-03T14:55:33.000Z",
+      "score": 50,
+      "summary_en": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
+      "summary_fr": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
+      "resume_fr": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Changing Pedagogical Paradigms: Integrating Generative AI in Mathematics to Enhance Digital Literacy through 'Mathematical Battles with AI'",
+      "url": "https://arxiv.org/abs/2603.02955v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-03T13:08:03.000Z",
+      "score": 50,
+      "summary_en": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
+      "summary_fr": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
+      "resume_fr": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Faster, Cheaper, More Accurate: Specialised Knowledge Tracing Models Outperform LLMs",
+      "url": "https://arxiv.org/abs/2603.02830v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-03T10:25:52.000Z",
+      "score": 50,
+      "summary_en": "Predicting future student responses to questions is particularly valuable for educational learning platforms where it enables effective interventions. One of the key approaches to do this has been through the use of knowledge tracing (KT) models. These are small, domain-specific, temporal models trained on student question-response data. KT models are optimised for high accuracy on specific educational domains and have fast inference and scalable deployments. The rise of Large Language Models (LLMs) motivates us to ask the following questions: (1) How well can LLMs perform at predicting studen",
+      "summary_fr": "Predicting future student responses to questions is particularly valuable for educational learning platforms where it enables effective interventions. One of the key approaches to do this has been through the use of knowledge tracing (KT) models. These are small, domain-specific, temporal models trained on student question-response data. KT models are optimised for high accuracy on specific educational domains and have fast inference and scalable deployments. The rise of Large Language Models (LLMs) motivates us to ask the following questions: (1) How well can LLMs perform at predicting studen",
+      "resume_fr": "Predicting future student responses to questions is particularly valuable for educational learning platforms where it enables effective interventions. One of the key approaches to do this has been through the use of knowledge tracing (KT) models. These are small, domain-specific, temporal models trained on student question-response data. KT models are optimised for high accuracy on specific educational domains and have fast inference and scalable deployments. The rise of Large Language Models (LLMs) motivates us to ask the following questions: (1) How well can LLMs perform at predicting studen",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Frontier Models Can Take Actions at Low Probabilities",
       "url": "https://arxiv.org/abs/2603.02202v1",
@@ -1111,120 +1225,6 @@
       "summary_en": "Large Language Models (LLMs) are increasingly deployed in contact-center Quality Assurance (QA) to automate agent performance evaluation and coaching feedback. While LLMs offer unprecedented scalability and speed, their reliance on web-scale training data raises concerns regarding demographic and behavioral biases that may distort workforce assessment. We present a counterfactual fairness evaluation of LLM-based QA systems across 13 dimensions spanning three categories: Identity, Context, and Behavioral Style. Fairness is quantified using the Counterfactual Flip Rate (CFR), the frequency of bi",
       "summary_fr": "Large Language Models (LLMs) are increasingly deployed in contact-center Quality Assurance (QA) to automate agent performance evaluation and coaching feedback. While LLMs offer unprecedented scalability and speed, their reliance on web-scale training data raises concerns regarding demographic and behavioral biases that may distort workforce assessment. We present a counterfactual fairness evaluation of LLM-based QA systems across 13 dimensions spanning three categories: Identity, Context, and Behavioral Style. Fairness is quantified using the Counterfactual Flip Rate (CFR), the frequency of bi",
       "resume_fr": "Large Language Models (LLMs) are increasingly deployed in contact-center Quality Assurance (QA) to automate agent performance evaluation and coaching feedback. While LLMs offer unprecedented scalability and speed, their reliance on web-scale training data raises concerns regarding demographic and behavioral biases that may distort workforce assessment. We present a counterfactual fairness evaluation of LLM-based QA systems across 13 dimensions spanning three categories: Identity, Context, and Behavioral Style. Fairness is quantified using the Counterfactual Flip Rate (CFR), the frequency of bi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PAct: Part-Decomposed Single-View Articulated Object Generation",
-      "url": "https://arxiv.org/abs/2602.14965v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-16T17:45:44.000Z",
-      "score": 70,
-      "summary_en": "Articulated objects are central to interactive 3D applications, including embodied AI, robotics, and VR/AR, where functional part decomposition and kinematic motion are essential. Yet producing high-fidelity articulated assets remains difficult to scale because it requires reliable part decomposition and kinematic rigging. Existing approaches largely fall into two paradigms: optimization-based reconstruction or distillation, which can be accurate but often takes tens of minutes to hours per instance, and inference-time methods that rely on template or part retrieval, producing plausible result",
-      "summary_fr": "Articulated objects are central to interactive 3D applications, including embodied AI, robotics, and VR/AR, where functional part decomposition and kinematic motion are essential. Yet producing high-fidelity articulated assets remains difficult to scale because it requires reliable part decomposition and kinematic rigging. Existing approaches largely fall into two paradigms: optimization-based reconstruction or distillation, which can be accurate but often takes tens of minutes to hours per instance, and inference-time methods that rely on template or part retrieval, producing plausible result",
-      "resume_fr": "Articulated objects are central to interactive 3D applications, including embodied AI, robotics, and VR/AR, where functional part decomposition and kinematic motion are essential. Yet producing high-fidelity articulated assets remains difficult to scale because it requires reliable part decomposition and kinematic rigging. Existing approaches largely fall into two paradigms: optimization-based reconstruction or distillation, which can be accurate but often takes tens of minutes to hours per instance, and inference-time methods that rely on template or part retrieval, producing plausible result",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Tool-Aware Planning in Contact Center AI: Evaluating LLMs through Lineage-Guided Query Decomposition",
-      "url": "https://arxiv.org/abs/2602.14955v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-02-16T17:36:05.000Z",
-      "score": 70,
-      "summary_en": "We present a domain-grounded framework and benchmark for tool-aware plan generation in contact centers, where answering a query for business insights, our target use case, requires decomposing it into executable steps over structured tools (Text2SQL (T2S)/Snowflake) and unstructured tools (RAG/transcripts) with explicit depends_on for parallelism. Our contributions are threefold: (i) a reference-based plan evaluation framework operating in two modes - a metric-wise evaluator spanning seven dimensions (e.g., tool-prompt alignment, query adherence) and a one-shot evaluator; (ii) a data curation ",
-      "summary_fr": "We present a domain-grounded framework and benchmark for tool-aware plan generation in contact centers, where answering a query for business insights, our target use case, requires decomposing it into executable steps over structured tools (Text2SQL (T2S)/Snowflake) and unstructured tools (RAG/transcripts) with explicit depends_on for parallelism. Our contributions are threefold: (i) a reference-based plan evaluation framework operating in two modes - a metric-wise evaluator spanning seven dimensions (e.g., tool-prompt alignment, query adherence) and a one-shot evaluator; (ii) a data curation ",
-      "resume_fr": "We present a domain-grounded framework and benchmark for tool-aware plan generation in contact centers, where answering a query for business insights, our target use case, requires decomposing it into executable steps over structured tools (Text2SQL (T2S)/Snowflake) and unstructured tools (RAG/transcripts) with explicit depends_on for parallelism. Our contributions are threefold: (i) a reference-based plan evaluation framework operating in two modes - a metric-wise evaluator spanning seven dimensions (e.g., tool-prompt alignment, query adherence) and a one-shot evaluator; (ii) a data curation ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When OpenClaw AI Agents Teach Each Other: Peer Learning Patterns in the Moltbook Community",
-      "url": "https://arxiv.org/abs/2602.14477v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-16T05:32:06.000Z",
-      "score": 85,
-      "summary_en": "Peer learning, where learners teach and learn from each other, is foundational to educational practice. A novel phenomenon has emerged: AI agents forming communities where they teach each other skills, share discoveries, and collaboratively build knowledge. This paper presents an educational data mining analysis of Moltbook, a large-scale community where over 2.4 million AI agents engage in peer learning, posting tutorials, answering questions, and sharing newly acquired skills. Analyzing 28,683 posts (after filtering automated spam) and 138 comment threads with statistical and qualitative met",
-      "summary_fr": "Peer learning, where learners teach and learn from each other, is foundational to educational practice. A novel phenomenon has emerged: AI agents forming communities where they teach each other skills, share discoveries, and collaboratively build knowledge. This paper presents an educational data mining analysis of Moltbook, a large-scale community where over 2.4 million AI agents engage in peer learning, posting tutorials, answering questions, and sharing newly acquired skills. Analyzing 28,683 posts (after filtering automated spam) and 138 comment threads with statistical and qualitative met",
-      "resume_fr": "Peer learning, where learners teach and learn from each other, is foundational to educational practice. A novel phenomenon has emerged: AI agents forming communities where they teach each other skills, share discoveries, and collaboratively build knowledge. This paper presents an educational data mining analysis of Moltbook, a large-scale community where over 2.4 million AI agents engage in peer learning, posting tutorials, answering questions, and sharing newly acquired skills. Analyzing 28,683 posts (after filtering automated spam) and 138 comment threads with statistical and qualitative met",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Supporting online learners’ regulation skills with the help of learning analytics and generative artificial intelligence",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10595-1",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-02-16T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Students often struggle to stay engaged and effectively regulate their learning in online environments, which can negatively impact their learning experiences. Despite the established importance of self-regulation of learning skills (SRLs) in maintaining engagement, many students face significant challenges in developing and implementing these skills due to a lack of adequate feedback. This is primarily due to tutors' high workloads and the difficulties inherent in engaging students in online settings. This study examines the impact of Learning Analytics (LA)-driven interventions to improve st",
-      "summary_fr": "Students often struggle to stay engaged and effectively regulate their learning in online environments, which can negatively impact their learning experiences. Despite the established importance of self-regulation of learning skills (SRLs) in maintaining engagement, many students face significant challenges in developing and implementing these skills due to a lack of adequate feedback. This is primarily due to tutors' high workloads and the difficulties inherent in engaging students in online settings. This study examines the impact of Learning Analytics (LA)-driven interventions to improve st",
-      "resume_fr": "Students often struggle to stay engaged and effectively regulate their learning in online environments, which can negatively impact their learning experiences. Despite the established importance of self-regulation of learning skills (SRLs) in maintaining engagement, many students face significant challenges in developing and implementing these skills due to a lack of adequate feedback. This is primarily due to tutors' high workloads and the difficulties inherent in engaging students in online settings. This study examines the impact of Learning Analytics (LA)-driven interventions to improve st",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://static-content.springer.com/image/art%3A10.1007%2Fs11423-026-10595-1/MediaObjects/11423_2026_10595_Fig1_HTML.png"
-    },
-    {
-      "title": "Tactile‐Driven Prompting for VR Learning: Effects of Vibration‐Based EEG Feedback on Students' Attention, Performance and Behaviour Patterns",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70204?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-02-14T03:48:28.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Imitating What Works: Simulation-Filtered Modular Policy Learning from Human Videos",
-      "url": "https://arxiv.org/abs/2602.13197v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-02-13T18:59:10.000Z",
-      "score": 70,
-      "summary_en": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
-      "summary_fr": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
-      "resume_fr": "The ability to learn manipulation skills by watching videos of humans has the potential to unlock a new source of highly scalable data for robot learning. Here, we tackle prehensile manipulation, in which tasks involve grasping an object before performing various post-grasp motions. Human videos offer strong signals for learning the post-grasp motions, but they are less useful for learning the prerequisite grasping behaviors, especially for robots without human-like hands. A promising way forward is to use a modular policy design, leveraging a dedicated grasp generator to produce stable grasps",
       "tags": [],
       "breakdown": {
         "research": 35,
