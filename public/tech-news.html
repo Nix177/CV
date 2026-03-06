@@ -60,23 +60,134 @@
     .card {
       background: var(--card);
       border: 1px solid var(--border);
+      border-top: 3px solid transparent;
       border-radius: 14px;
       padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 8px;
       box-shadow: var(--shadow);
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    @media (min-width: 600px) {
+      .card.featured {
+        grid-column: span 2;
+      }
+    }
+
+    .thumb-wrapper {
+      width: 100%;
+      aspect-ratio: 16/9;
+      max-height: 180px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #0d1b2b;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .thumb-wrapper.is-favicon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .thumb {
       width: 100%;
-      aspect-ratio: 16/9;
-      max-height: 180px;
+      height: 100%;
       object-fit: cover;
       object-position: center;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #0d1b2b;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .thumb {
+      transform: scale(1.04);
+    }
+
+    .thumb-wrapper.is-favicon img.thumb {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: var(--card, #fff);
+      padding: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: none;
+    }
+
+    /* Top 3 news section */
+    .top-news {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    .top-news-header {
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      color: var(--text);
+    }
+    
+    .top-news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .top-news-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .top-news-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .top-news-item .rank {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--muted);
+      line-height: 1;
+    }
+    
+    .top-news-content {
+      flex: 1;
+    }
+    
+    .top-news-title {
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      margin-bottom: 4px;
+      display: block;
+    }
+    
+    .top-news-title:hover {
+      text-decoration: underline;
+    }
+    
+    .top-news-summary {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 0;
     }
 
     .meta {
@@ -388,13 +499,21 @@
 
   <main>
     <p class="muted" id="stamp">Chargement…</p>
+    
+    <div id="top3-container" class="top-news" style="display: none;">
+      <h2 class="top-news-header">🔥 À la une aujourd'hui</h2>
+      <div class="top-news-list" id="top3-list"></div>
+    </div>
+
     <div class="grid" id="grid"></div>
     <div class="pager" id="pager"></div>
   </main>
 
   <template id="card-tpl">
     <article class="card">
-      <img class="thumb" alt="Illustration">
+      <div class="thumb-wrapper">
+        <img class="thumb" alt="Illustration">
+      </div>
       <p class="meta"></p>
       <h2 class="t"></h2>
       <p class="r"></p>
@@ -727,6 +846,43 @@
       grid.innerHTML = "";
       pager.innerHTML = "";
 
+      // Update Top 3
+      const top3Container = document.getElementById("top3-container");
+      const top3List = document.getElementById("top3-list");
+      
+      const { map: dayMap, days: availableDays } = groupByDay(itemsAll);
+      
+      if (typeof SELECTED_TAG === "undefined") {
+        var SELECTED_TAG = null;
+      }
+      
+      if (availableDays.length > 0 && PAGE === 1 && VIEW === "pages" && !FILTER && !SELECTED_TAG) {
+        const recentItems = dayMap.get(availableDays[0]) || [];
+        const top3 = [...recentItems].sort((a,b) => (b.score || 0) - (a.score || 0)).slice(0, 3);
+        
+        if (top3.length > 0) {
+          top3Container.style.display = "block";
+          top3List.innerHTML = "";
+          top3.forEach((it, idx) => {
+            const div = document.createElement("div");
+            div.className = "top-news-item";
+            const summaryFr = it.summary_fr || it.resume_fr || it.summary_en || "";
+            div.innerHTML = `
+              <div class="rank">#${idx+1}</div>
+              <div class="top-news-content">
+                <a href="${it.url}" target="_blank" rel="noopener" class="top-news-title">${it.title}</a>
+                <p class="top-news-summary">${summaryFr}</p>
+              </div>
+            `;
+            top3List.appendChild(div);
+          });
+        } else {
+          top3Container.style.display = "none";
+        }
+      } else {
+        if (top3Container) top3Container.style.display = "none";
+      }
+
       if (VIEW === "pages") {
         const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
         if (PAGE > pages) PAGE = pages;
@@ -752,13 +908,39 @@
       }
       slice.forEach(it => {
         const tpl = document.getElementById("card-tpl").content.cloneNode(true);
-        const img = tpl.querySelector(".thumb");
+        
+        const cardEl = tpl.querySelector(".card");
+        const imgEl = tpl.querySelector(".thumb");
+        const wrapEl = tpl.querySelector(".thumb-wrapper");
+        
+        const bd = it.breakdown || {};
+        const maxCat = Object.keys(bd).length ? Object.keys(bd).reduce((a, b) => bd[a] > bd[b] ? a : b, "research") : "research";
+        const colors = { research: "#3b82f6", policy: "#a855f7", institution: "#f59e0b", impact: "#10b981" };
+        if (bd[maxCat] > 0) {
+           cardEl.style.borderTopColor = colors[maxCat];
+        }
+
+        if ((it.score || 0) >= 85) {
+           cardEl.classList.add("featured");
+        }
+
+        let src = "";
+        let isFavicon = false;
         try {
           const h = new URL(it.url).hostname;
           const fallback = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=128`;
-          img.src = toHttps(it.image || fallback);
-        } catch { img.src = toHttps(it.image || ""); }
-        img.alt = it.source ? `Image — ${it.source}` : "Image";
+          src = toHttps(it.image || fallback);
+          if (src.includes("google.com/s2/favicons") || !it.image) isFavicon = true;
+        } catch { src = toHttps(it.image || ""); isFavicon = true; }
+        
+        imgEl.src = src;
+        imgEl.alt = it.source ? `Image — ${it.source}` : "Image";
+
+        if (isFavicon) {
+          wrapEl.classList.add("is-favicon");
+          let hash = it.url ? it.url.length * 15 % 360 : 200;
+          wrapEl.style.background = `linear-gradient(135deg, hsl(${hash}, 40%, 20%), hsl(${(hash + 40)%360}, 50%, 10%))`;
+        }
 
         const a = document.createElement("a");
         a.href = it.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = it.title;
