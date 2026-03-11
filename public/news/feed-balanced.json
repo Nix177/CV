@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-10T06:59:22.422Z",
+  "generatedAt": "2026-03-11T07:02:44.292Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,139 @@
     }
   },
   "items": [
+    {
+      "title": "Kinodynamic Motion Retargeting for Humanoid Locomotion via Multi-Contact Whole-Body Trajectory Optimization",
+      "url": "https://arxiv.org/abs/2603.09956v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-10T17:51:17.000Z",
+      "score": 70,
+      "summary_en": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
+      "summary_fr": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
+      "resume_fr": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Learning Rates Go Wrong: Early Structural Signals in PPO Actor-Critic",
+      "url": "https://arxiv.org/abs/2603.09950v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-10T17:46:31.000Z",
+      "score": 70,
+      "summary_en": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
+      "summary_fr": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
+      "resume_fr": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Robust Cooperative Localization in Featureless Environments: A Comparative Study of DCL, StCL, CCL, CI, and Standard-CL",
+      "url": "https://arxiv.org/abs/2603.09886v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-10T16:44:24.000Z",
+      "score": 70,
+      "summary_en": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
+      "summary_fr": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
+      "resume_fr": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Emerging Extrinsic Dexterity in Cluttered Scenes via Dynamics-aware Policy Learning",
+      "url": "https://arxiv.org/abs/2603.09882v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-10T16:40:30.000Z",
+      "score": 70,
+      "summary_en": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
+      "summary_fr": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
+      "resume_fr": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Inserting Generative Learning Activities During Pauses in Slideshow and Virtual Reality Lessons",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70215?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-03-10T00:15:52.000Z",
+      "score": 85,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Design and Validation of the Metacognitive Diagnostic Disruption in AI Decision‐Making Scale (MDD‐AI Scale) Among Educational Administrators in Jordan: Insights From the Network Analysis Perspective",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70216?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-03-09T23:49:58.000Z",
+      "score": 65,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Integrating Virtual and Augmented Reality into Public Education: Opportunities and Challenges in Language Learning",
+      "url": "https://arxiv.org/abs/2603.08970v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-09T22:02:57.000Z",
+      "score": 65,
+      "summary_en": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
+      "summary_fr": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
+      "resume_fr": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Bilevel Planning with Learned Symbolic Abstractions from Interaction Data",
       "url": "https://arxiv.org/abs/2603.08599v1",
@@ -1101,139 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Efficient Discovery of Approximate Causal Abstractions via Neural Mechanism Sparsification",
-      "url": "https://arxiv.org/abs/2602.24266v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-02-27T18:35:10.000Z",
-      "score": 70,
-      "summary_en": "Neural networks are hypothesized to implement interpretable causal mechanisms, yet verifying this requires finding a causal abstraction -- a simpler, high-level Structural Causal Model (SCM) faithful to the network under interventions. Discovering such abstractions is hard: it typically demands brute-force interchange interventions or retraining. We reframe the problem by viewing structured pruning as a search over approximate abstractions. Treating a trained network as a deterministic SCM, we derive an Interventional Risk objective whose second-order expansion yields closed-form criteria for ",
-      "summary_fr": "Neural networks are hypothesized to implement interpretable causal mechanisms, yet verifying this requires finding a causal abstraction -- a simpler, high-level Structural Causal Model (SCM) faithful to the network under interventions. Discovering such abstractions is hard: it typically demands brute-force interchange interventions or retraining. We reframe the problem by viewing structured pruning as a search over approximate abstractions. Treating a trained network as a deterministic SCM, we derive an Interventional Risk objective whose second-order expansion yields closed-form criteria for ",
-      "resume_fr": "Neural networks are hypothesized to implement interpretable causal mechanisms, yet verifying this requires finding a causal abstraction -- a simpler, high-level Structural Causal Model (SCM) faithful to the network under interventions. Discovering such abstractions is hard: it typically demands brute-force interchange interventions or retraining. We reframe the problem by viewing structured pruning as a search over approximate abstractions. Treating a trained network as a deterministic SCM, we derive an Interventional Risk objective whose second-order expansion yields closed-form criteria for ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Robust Skills, Brittle Grounding: Diagnosing Restricted Generalization in Vision-Language Action Policies via Multi-Object Picking",
-      "url": "https://arxiv.org/abs/2602.24143v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-27T16:20:04.000Z",
-      "score": 85,
-      "summary_en": "Vision-language action (VLA) policies often report strong manipulation benchmark performance with relatively few demonstrations, but it remains unclear whether this reflects robust language-to-object grounding or reliance on object--location correlations that do not transfer beyond the training distribution. We present a controlled multi-object picking study that progressively increases object placement variability up to full workspace randomization and evaluates held-out object--location pairings that break familiar associations without increasing spatial difficulty. Across these stress tests",
-      "summary_fr": "Vision-language action (VLA) policies often report strong manipulation benchmark performance with relatively few demonstrations, but it remains unclear whether this reflects robust language-to-object grounding or reliance on object--location correlations that do not transfer beyond the training distribution. We present a controlled multi-object picking study that progressively increases object placement variability up to full workspace randomization and evaluates held-out object--location pairings that break familiar associations without increasing spatial difficulty. Across these stress tests",
-      "resume_fr": "Vision-language action (VLA) policies often report strong manipulation benchmark performance with relatively few demonstrations, but it remains unclear whether this reflects robust language-to-object grounding or reliance on object--location correlations that do not transfer beyond the training distribution. We present a controlled multi-object picking study that progressively increases object placement variability up to full workspace randomization and evaluates held-out object--location pairings that break familiar associations without increasing spatial difficulty. Across these stress tests",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Planning from Observation and Interaction",
-      "url": "https://arxiv.org/abs/2602.24121v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-27T15:58:11.000Z",
-      "score": 70,
-      "summary_en": "Observational learning requires an agent to learn to perform a task by referencing only observations of the performed task. This work investigates the equivalent setting in real-world robot learning where access to hand-designed rewards and demonstrator actions are not assumed. To address this data-constrained setting, this work presents a planning-based Inverse Reinforcement Learning (IRL) algorithm for world modeling from observation and interaction alone. Experiments conducted entirely in the real-world demonstrate that this paradigm is effective for learning image-based manipulation tasks ",
-      "summary_fr": "Observational learning requires an agent to learn to perform a task by referencing only observations of the performed task. This work investigates the equivalent setting in real-world robot learning where access to hand-designed rewards and demonstrator actions are not assumed. To address this data-constrained setting, this work presents a planning-based Inverse Reinforcement Learning (IRL) algorithm for world modeling from observation and interaction alone. Experiments conducted entirely in the real-world demonstrate that this paradigm is effective for learning image-based manipulation tasks ",
-      "resume_fr": "Observational learning requires an agent to learn to perform a task by referencing only observations of the performed task. This work investigates the equivalent setting in real-world robot learning where access to hand-designed rewards and demonstrator actions are not assumed. To address this data-constrained setting, this work presents a planning-based Inverse Reinforcement Learning (IRL) algorithm for world modeling from observation and interaction alone. Experiments conducted entirely in the real-world demonstrate that this paradigm is effective for learning image-based manipulation tasks ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Geometry-based pneumatic actuators for soft robotics",
-      "url": "https://arxiv.org/abs/2602.24104v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-02-27T15:43:22.000Z",
-      "score": 70,
-      "summary_en": "Soft pneumatic actuators enable safe human-machine interaction with lightweight and powerful applied parts. On the other side, they suffer design limitations as regards complex actuation patterns, including minimum bending radii, multi-states capabilities and structural stability. We present geometry-based pneumatic actuators (GPAs), a design and implementation approach that introduces constraint layers with configurable CNC heat-sealed chambers. The approach achieves predictable deformation, near-zero bending radii, multi-states actuation, and enables customizable and repeatable complex actua",
-      "summary_fr": "Soft pneumatic actuators enable safe human-machine interaction with lightweight and powerful applied parts. On the other side, they suffer design limitations as regards complex actuation patterns, including minimum bending radii, multi-states capabilities and structural stability. We present geometry-based pneumatic actuators (GPAs), a design and implementation approach that introduces constraint layers with configurable CNC heat-sealed chambers. The approach achieves predictable deformation, near-zero bending radii, multi-states actuation, and enables customizable and repeatable complex actua",
-      "resume_fr": "Soft pneumatic actuators enable safe human-machine interaction with lightweight and powerful applied parts. On the other side, they suffer design limitations as regards complex actuation patterns, including minimum bending radii, multi-states capabilities and structural stability. We present geometry-based pneumatic actuators (GPAs), a design and implementation approach that introduces constraint layers with configurable CNC heat-sealed chambers. The approach achieves predictable deformation, near-zero bending radii, multi-states actuation, and enables customizable and repeatable complex actua",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Designing AI Tutors for Interest-Based Learning: Insights from Human Instructors",
-      "url": "https://arxiv.org/abs/2602.24036v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-02-27T14:05:22.000Z",
-      "score": 50,
-      "summary_en": "Interest-based learning (IBL) is a paradigm of instruction in which educational content is contextualized using learners' interests to enhance content relevance. IBL has been shown to result in improved learning outcomes. Unfortunately, high effort is needed for instructors to design and deliver IBL content for individual students. LLMs in the form of AI tutors may allow for IBL to scale across many students. Designing an AI tutor for IBL, however, first requires an understanding of how IBL is implemented in teaching scenarios. This paper presents a study that seeks to derive this understandin",
-      "summary_fr": "Interest-based learning (IBL) is a paradigm of instruction in which educational content is contextualized using learners' interests to enhance content relevance. IBL has been shown to result in improved learning outcomes. Unfortunately, high effort is needed for instructors to design and deliver IBL content for individual students. LLMs in the form of AI tutors may allow for IBL to scale across many students. Designing an AI tutor for IBL, however, first requires an understanding of how IBL is implemented in teaching scenarios. This paper presents a study that seeks to derive this understandin",
-      "resume_fr": "Interest-based learning (IBL) is a paradigm of instruction in which educational content is contextualized using learners' interests to enhance content relevance. IBL has been shown to result in improved learning outcomes. Unfortunately, high effort is needed for instructors to design and deliver IBL content for individual students. LLMs in the form of AI tutors may allow for IBL to scale across many students. Designing an AI tutor for IBL, however, first requires an understanding of how IBL is implemented in teaching scenarios. This paper presents a study that seeks to derive this understandin",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "BRIDGE the Gap: Mitigating Bias Amplification in Automated Scoring of English Language Learners via Inter-group Data Augmentation",
-      "url": "https://arxiv.org/abs/2602.23580v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-02-27T01:11:05.000Z",
-      "score": 50,
-      "summary_en": "In the field of educational assessment, automated scoring systems increasingly rely on deep learning and large language models (LLMs). However, these systems face significant risks of bias amplification, where model prediction gaps between student groups become larger than those observed in training data. This issue is especially severe for underrepresented groups such as English Language Learners (ELLs), as models may inherit and further magnify existing disparities in the data. We identify that this issue is closely tied to representation bias: the scarcity of minority (high-scoring ELL) sam",
-      "summary_fr": "In the field of educational assessment, automated scoring systems increasingly rely on deep learning and large language models (LLMs). However, these systems face significant risks of bias amplification, where model prediction gaps between student groups become larger than those observed in training data. This issue is especially severe for underrepresented groups such as English Language Learners (ELLs), as models may inherit and further magnify existing disparities in the data. We identify that this issue is closely tied to representation bias: the scarcity of minority (high-scoring ELL) sam",
-      "resume_fr": "In the field of educational assessment, automated scoring systems increasingly rely on deep learning and large language models (LLMs). However, these systems face significant risks of bias amplification, where model prediction gaps between student groups become larger than those observed in training data. This issue is especially severe for underrepresented groups such as English Language Learners (ELLs), as models may inherit and further magnify existing disparities in the data. We identify that this issue is closely tied to representation bias: the scarcity of minority (high-scoring ELL) sam",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "This Startup Makes Access to Rehabilitation Facilities Easier",
-      "url": "https://spectrum.ieee.org/carenector-health-care-startup",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-02-26T19:00:03.000Z",
-      "score": 50,
-      "summary_en": "When doctors in the United States refer patients to specialty or post-acute medical care such as physical therapy or long-term nursing care, nearly half never complete the process of finding help. Referrals stall in part because provider directories are outdated, insurance coverage is unclear, and much coordination still relies on phone calls and faxes. Carenector, a Denver-based startup launched in 2024, is working to improve the process with software that quickly connects patients with appropriate care providers while protecting their personal data. Instead of presenting a long list of provi",
-      "summary_fr": "When doctors in the United States refer patients to specialty or post-acute medical care such as physical therapy or long-term nursing care, nearly half never complete the process of finding help. Referrals stall in part because provider directories are outdated, insurance coverage is unclear, and much coordination still relies on phone calls and faxes. Carenector, a Denver-based startup launched in 2024, is working to improve the process with software that quickly connects patients with appropriate care providers while protecting their personal data. Instead of presenting a long list of provi",
-      "resume_fr": "When doctors in the United States refer patients to specialty or post-acute medical care such as physical therapy or long-term nursing care, nearly half never complete the process of finding help. Referrals stall in part because provider directories are outdated, insurance coverage is unclear, and much coordination still relies on phone calls and faxes. Carenector, a Denver-based startup launched in 2024, is working to improve the process with software that quickly connects patients with appropriate care providers while protecting their personal data. Instead of presenting a long list of provi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/naheem-noah-speaking-to-a-small-crowd-while-giving-a-presentation.jpg?id=65026929&width=1200&height=600&coordinates=0%2C125%2C0%2C125"
     }
   ]
 }
