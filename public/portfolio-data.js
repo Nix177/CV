@@ -26,7 +26,27 @@ window.portfolioData = [
       },
       de: {
         title: "AdWall — Plakatwand für den Unterricht",
-        description: "Digitale Wand für Google-Ads-Tests (in Arbeit)."
+        description: "Digitale Wand for Google-Ads-Tests (in Arbeit)."
+      }
+    }
+  },
+  {
+    id: "ia-news-ethique",
+    image: "/assets/portfolio/thumbs/ia-news-ethique.webp",
+    tags: ["React", "n8n", "IA", "Éducation"],
+    url: "https://nix177.github.io/ia-news-ethique-ecole/",
+    i18n: {
+      fr: {
+        title: "IA News Éthique — Plateforme pédagogique",
+        description: "Cette plateforme pédagogique transforme l'actualité mondiale en séances de débats philosophiques adaptées aux élèves de 4 à 15 ans. Propulsé par React et n8n, l'outil analyse les sources journalistiques pour générer des guides complets favorisant l'esprit critique et l'éthique en classe."
+      },
+      en: {
+        title: "AI Ethics News — Educational Platform",
+        description: "Transforming global news into philosophical debate sessions for students aged 4-15. Powered by React and n8n, it analyzes journalistic sources to generate comprehensive guides fostering critical thinking."
+      },
+      de: {
+        title: "KI-Ethik-News — Pädagogische Plattform",
+        description: "Verwandelt globale Nachrichten in philosophische Debatten für Schüler von 4 bis 15 Jahren. Angetrieben von React und n8n analysiert das Tool journalistische Quellen, um Leitfäden für kritisches Denken zu erstellen."
       }
     }
   },
@@ -141,7 +161,7 @@ window.portfolioData = [
     id: "agora-solo",
     image: "/assets/portfolio/thumbs/agora-solo.png",
     tags: ["EdTech", "Ethics", "Mobile", "Interactive Fiction"],
-    url: "https://nix177.github.io/agora-numerique/index.html",
+    url: "https://nix177.github.io/mode-solo-rpg-ethics/",
     i18n: {
       fr: {
         title: "Agora Numérique Solo (Livre Interactif)",
