@@ -10,27 +10,6 @@
 // UPDATE: données corrigées (URLs)
 window.portfolioData = [
   {
-    id: "adwall",
-    image: "/assets/portfolio/thumbs/adwall-thumb.webp",
-    tags: ["Web", "Éducation", "Outil"],
-    // Lien unique pour toutes les langues
-    url: "https://www.adwall.net/",
-    i18n: {
-      fr: {
-        title: "AdWall — mur d'affiches éducatives",
-        description: "Mur numérique pour tests sur les google ads (en cours)."
-      },
-      en: {
-        title: "AdWall — educational poster wall",
-        description: "Digital wall for Google Ads testing (in progress)."
-      },
-      de: {
-        title: "AdWall — Plakatwand für den Unterricht",
-        description: "Digitale Wand for Google-Ads-Tests (in Arbeit)."
-      }
-    }
-  },
-  {
     id: "ia-news-ethique",
     image: "/assets/portfolio/thumbs/ia-news-ethique.webp",
     tags: ["React", "n8n", "IA", "Éducation"],
