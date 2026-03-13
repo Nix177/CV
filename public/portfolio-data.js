@@ -11,7 +11,7 @@
 window.portfolioData = [
   {
     id: "karaoke-studio",
-    image: "/assets/portfolio/thumbs/karaoke-studio.webp",
+    image: "/assets/portfolio/thumbs/karaoke-studio.png",
     tags: ["Web", "Audio", "Éducation", "Outil"],
     url: "https://nix177.github.io/karaoke-playback-generator/",
     i18n: {
@@ -31,7 +31,7 @@ window.portfolioData = [
   },
   {
     id: "ia-news-ethique",
-    image: "/assets/portfolio/thumbs/ia-news-ethique.webp",
+    image: "/assets/portfolio/thumbs/ia-news-ethique.png",
     tags: ["React", "n8n", "IA", "Éducation"],
     url: "https://nix177.github.io/ia-news-ethique-ecole/",
     i18n: {
