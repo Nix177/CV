@@ -10,6 +10,26 @@
 // UPDATE: données corrigées (URLs)
 window.portfolioData = [
   {
+    id: "karaoke-studio",
+    image: "/assets/portfolio/thumbs/karaoke-studio.webp",
+    tags: ["Web", "Audio", "Éducation", "Outil"],
+    url: "https://nix177.github.io/karaoke-playback-generator/",
+    i18n: {
+      fr: {
+        title: "Karaoké Studio : Créez vos propres karaokés",
+        description: "Karaoké Studio : Créez vos propres karaokés pédagogiques en quelques clics ! Importez votre musique, synchronisez les paroles avec la barre d'espace et exportez un lecteur HTML élégant et autonome. Idéal pour les enseignants, cet outil gratuit permet un découpage syllabique automatique et une aide visuelle dynamique pour les élèves."
+      },
+      en: {
+        title: "Karaoke Studio: Create Your Own Karaoke",
+        description: "Create educational karaoke in a few clicks! Import music, sync lyrics with the spacebar, and export a sleek, standalone HTML player. Perfect for teachers, this free tool features automatic syllable splitting and dynamic visual aids."
+      },
+      de: {
+        title: "Karaoke Studio: Eigene Karaoke Erstellen",
+        description: "Pädagogische Karaoke mit wenigen Klicks erstellen! Musik importieren, Liedtexte mit der Leertaste synchronisieren und einen eleganten, eigenständigen HTML-Player exportieren. Ideal für Lehrkräfte, mit automatischer Silbentrennung."
+      }
+    }
+  },
+  {
     id: "ia-news-ethique",
     image: "/assets/portfolio/thumbs/ia-news-ethique.webp",
     tags: ["React", "n8n", "IA", "Éducation"],
