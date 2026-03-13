@@ -93,49 +93,7 @@ window.portfolioData = [
       }
     }
   },
-  {
-    id: "telescope",
-    image: "/assets/portfolio/thumbs/telescope-onstep-v2.png",
-    tags: ["Hardware", "Astronomie", "DIY"],
-    url: "https://www.thingiverse.com/thing:5531109",
-    i18n: {
-      fr: {
-        title: "Télescope OnStep (GoTo DIY)",
-        description: "Réalisation DIY d'une monture équatoriale motorisée (système OnStep/ESP32). Reproduction adaptée du design Thingiverse #5531109. Pilotage ASCOM/INDI."
-      },
-      en: {
-        title: "OnStep Telescope (GoTo DIY)",
-        description: "DIY build of a motorized equatorial mount (OnStep/ESP32 system). Adapted reproduction of Thingiverse design #5531109. ASCOM/INDI control."
-      },
-      de: {
-        title: "OnStep Teleskop (GoTo DIY)",
-        description: "DIY-Bau einer motorisierten parallaktischen Montierung (OnStep/ESP32). Angepasste Reproduktion des Designs Thingiverse #5531109. ASCOM/INDI-Steuerung."
-      }
-    }
-  },
-  {
-    id: "robotarm",
-    image: "/assets/portfolio/thumbs/rover-blue.jpg",
-    url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
-    extraLinks: [
-      { label: "Design Rover (Printables)", url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm" },
-      { label: "Design Bras (Thingiverse)", url: "https://www.thingiverse.com/thing:1454048" }
-    ],
-    i18n: {
-      fr: {
-        title: "Rover & Bras (Architecture Distribuée)",
-        description: "Rover 6x6 'Rocker-Bogie' (WildWilly) + Bras EEZYbotARM Mk2. Architecture 'Cerveau (Pi Zero 2W) + Muscles (ESP32)'. Drivers BTS7960 (3S Li-ion). Vision double (Eye-in-hand + Nav)."
-      },
-      en: {
-        title: "Rover & Arm (Distributed Arch)",
-        description: "6x6 'Rocker-Bogie' Rover (WildWilly) + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' architecture. BTS7960 drivers (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
-      },
-      de: {
-        title: "Rover & Arm (Verteilte Architektur)",
-        description: "6x6 'Rocker-Bogie' Rover + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' Architektur. BTS7960 Treiber (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
-      }
-    }
-  },
+
   {
     id: "agora-multi",
     image: "/assets/portfolio/thumbs/agora-multi.png",
@@ -176,26 +134,7 @@ window.portfolioData = [
       }
     }
   },
-  {
-    id: "bm800",
-    image: "/assets/portfolio/thumbs/bm800-kit.png",
-    tags: ["Audio", "Electronics", "PCB"],
-    url: "https://audioimprov.com/AudioImprov/Mics/Entries/2013/8/8_Mic-Parts_RK-47.html",
-    i18n: {
-      fr: {
-        title: "BM-800 Mod (Studio Quality)",
-        description: "Conversion complète (Mod) basée sur l'architecture 'Alice' (Schoeps CMC5 simplifié). Circuit discret (JFET 2SK117/J305 + PNP A1015) et capsule RK-47 (True Condenser) pour une fidélité studio."
-      },
-      en: {
-        title: "BM-800 Mod (Studio Quality)",
-        description: "Full conversion (Mod) based on 'Alice' architecture (simplified Schoeps CMC5). Discrete circuit (JFET 2SK117/J305 + PNP A1015) and RK-47 capsule (True Condenser) for studio fidelity."
-      },
-      de: {
-        title: "BM-800 Mod (Studio Quality)",
-        description: "Komplette Umwandlung (Mod) basierend auf 'Alice'-Architektur (vereinfachtes Schoeps CMC5). Diskrete Schaltung (JFET 2SK117/J305 + PNP A1015) und RK-47 Kapsel (True Condenser) für Studioqualität."
-      }
-    }
-  },
+
   {
     id: "vocal-walls",
     image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
@@ -319,6 +258,69 @@ window.portfolioData = [
       de: {
         title: "The Un-Algorithm — Bewusstseins-Dashboard",
         description: "Kontrolle über Empfehlungs-KI zurückgewinnen. Dashboard mit Relevanz/Entdeckung-Reglern, Kategoriefiltern und teilbaren algorithmischen 'Rezepten'."
+      }
+    }
+  },
+  {
+    id: "robotarm",
+    image: "/assets/portfolio/thumbs/rover-blue.jpg",
+    url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
+    extraLinks: [
+      { label: "Design Rover (Printables)", url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm" },
+      { label: "Design Bras (Thingiverse)", url: "https://www.thingiverse.com/thing:1454048" }
+    ],
+    i18n: {
+      fr: {
+        title: "Rover & Bras (Architecture Distribuée)",
+        description: "Rover 6x6 'Rocker-Bogie' (WildWilly) + Bras EEZYbotARM Mk2. Architecture 'Cerveau (Pi Zero 2W) + Muscles (ESP32)'. Drivers BTS7960 (3S Li-ion). Vision double (Eye-in-hand + Nav)."
+      },
+      en: {
+        title: "Rover & Arm (Distributed Arch)",
+        description: "6x6 'Rocker-Bogie' Rover (WildWilly) + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' architecture. BTS7960 drivers (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
+      },
+      de: {
+        title: "Rover & Arm (Verteilte Architektur)",
+        description: "6x6 'Rocker-Bogie' Rover + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' Architektur. BTS7960 Treiber (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
+      }
+    }
+  },
+  {
+    id: "bm800",
+    image: "/assets/portfolio/thumbs/bm800-kit.png",
+    tags: [" Audio", "Electronics", "PCB"],
+    url: "https://audioimprov.com/AudioImprov/Mics/Entries/2013/8/8_Mic-Parts_RK-47.html",
+    i18n: {
+      fr: {
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Conversion complète (Mod) basée sur l'architecture 'Alice' (Schoeps CMC5 simplifié). Circuit discret (JFET 2SK117/J305 + PNP A1015) et capsule RK-47 (True Condenser) pour une fidélité studio."
+      },
+      en: {
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Full conversion (Mod) based on 'Alice' architecture (simplified Schoeps CMC5). Discrete circuit (JFET 2SK117/J305 + PNP A1015) and RK-47 capsule (True Condenser) for studio fidelity."
+      },
+      de: {
+        title: "BM-800 Mod (Studio Quality)",
+        description: "Komplette Umwandlung (Mod) basierend auf 'Alice'-Architektur (vereinfachtes Schoeps CMC5). Diskrete Schaltung (JFET 2SK117/J305 + PNP A1015) und RK-47 Kapsel (True Condenser) für Studioqualität."
+      }
+    }
+  },
+  {
+    id: "telescope",
+    image: "/assets/portfolio/thumbs/telescope-onstep-v2.png",
+    tags: ["Hardware", "Astronomie", "DIY"],
+    url: "https://www.thingiverse.com/thing:5531109",
+    i18n: {
+      fr: {
+        title: "Télescope OnStep (GoTo DIY)",
+        description: "Réalisation DIY d'une monture équatoriale motorisée (système OnStep/ESP32). Reproduction adaptée du design Thingiverse #5531109. Pilotage ASCOM/INDI."
+      },
+      en: {
+        title: "OnStep Telescope (GoTo DIY)",
+        description: "DIY build of a motorized equatorial mount (OnStep/ESP32 system). Adapted reproduction of Thingiverse design #5531109. ASCOM/INDI control."
+      },
+      de: {
+        title: "OnStep Teleskop (GoTo DIY)",
+        description: "DIY-Bau einer motorisierten parallaktischen Montierung (OnStep/ESP32). Angepasste Reproduktion des Designs Thingiverse #5531109. ASCOM/INDI-Steuerung."
       }
     }
   },
