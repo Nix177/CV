@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-15T07:06:34.929Z",
+  "generatedAt": "2026-03-16T07:27:10.874Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,63 @@
     }
   },
   "items": [
+    {
+      "title": "BoSS: A Best-of-Strategies Selector as an Oracle for Deep Active Learning",
+      "url": "https://arxiv.org/abs/2603.13109v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-13T16:05:37.000Z",
+      "score": 85,
+      "summary_en": "Active learning (AL) aims to reduce annotation costs while maximizing model performance by iteratively selecting valuable instances. While foundation models have made it easier to identify these instances, existing selection strategies still lack robustness across different models, annotation budgets, and datasets. To highlight the potential weaknesses of existing AL strategies and provide a reference point for research, we explore oracle strategies, i.e., strategies that approximate the optimal selection by accessing ground-truth information unavailable in practical AL scenarios. Current orac",
+      "summary_fr": "Active learning (AL) aims to reduce annotation costs while maximizing model performance by iteratively selecting valuable instances. While foundation models have made it easier to identify these instances, existing selection strategies still lack robustness across different models, annotation budgets, and datasets. To highlight the potential weaknesses of existing AL strategies and provide a reference point for research, we explore oracle strategies, i.e., strategies that approximate the optimal selection by accessing ground-truth information unavailable in practical AL scenarios. Current orac",
+      "resume_fr": "Active learning (AL) aims to reduce annotation costs while maximizing model performance by iteratively selecting valuable instances. While foundation models have made it easier to identify these instances, existing selection strategies still lack robustness across different models, annotation budgets, and datasets. To highlight the potential weaknesses of existing AL strategies and provide a reference point for research, we explore oracle strategies, i.e., strategies that approximate the optimal selection by accessing ground-truth information unavailable in practical AL scenarios. Current orac",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The RIGID Framework: Research-Integrated, Generative AI-Mediated Instructional Design",
+      "url": "https://arxiv.org/abs/2603.12781v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-13T08:34:12.000Z",
+      "score": 85,
+      "summary_en": "Instructional Design (ID) often faces challenges in incorporating research-based knowledge and pedagogical best practices. Although educational researchers and government agencies emphasize grounding ID in evidence, integrating research findings into everyday design workflows is often complex, as it requires considering multiple context-specific demands and constraints. To address this persistent gap, this paper explores how research in the learning sciences (LS) can be systematically integrated across ID workflows and how recent advances in generative AI can help operationalize this integrati",
+      "summary_fr": "Instructional Design (ID) often faces challenges in incorporating research-based knowledge and pedagogical best practices. Although educational researchers and government agencies emphasize grounding ID in evidence, integrating research findings into everyday design workflows is often complex, as it requires considering multiple context-specific demands and constraints. To address this persistent gap, this paper explores how research in the learning sciences (LS) can be systematically integrated across ID workflows and how recent advances in generative AI can help operationalize this integrati",
+      "resume_fr": "Instructional Design (ID) often faces challenges in incorporating research-based knowledge and pedagogical best practices. Although educational researchers and government agencies emphasize grounding ID in evidence, integrating research findings into everyday design workflows is often complex, as it requires considering multiple context-specific demands and constraints. To address this persistent gap, this paper explores how research in the learning sciences (LS) can be systematically integrated across ID workflows and how recent advances in generative AI can help operationalize this integrati",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Virtual reality for large-scale laboratories based on colorized point clouds: design and pedagogical impact",
+      "url": "https://arxiv.org/abs/2603.12727v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-13T07:18:49.000Z",
+      "score": 100,
+      "summary_en": "Effective laboratory training is essential in engineering education, yet conventional on-site instruction is often constrained by time, accessibility, and safety considerations. To address these challenges, this study presents the design, implementation, and evaluation of a web-based virtual reality (WebVR) representation of a large-scale engineering laboratory constructed from massive colorized point cloud data. This study proposes a novel WebVR framework that integrates Unity and Potree for high-fidelity point-cloud visualization combined with advanced interactive capabilities in a browser-b",
+      "summary_fr": "Effective laboratory training is essential in engineering education, yet conventional on-site instruction is often constrained by time, accessibility, and safety considerations. To address these challenges, this study presents the design, implementation, and evaluation of a web-based virtual reality (WebVR) representation of a large-scale engineering laboratory constructed from massive colorized point cloud data. This study proposes a novel WebVR framework that integrates Unity and Potree for high-fidelity point-cloud visualization combined with advanced interactive capabilities in a browser-b",
+      "resume_fr": "Effective laboratory training is essential in engineering education, yet conventional on-site instruction is often constrained by time, accessibility, and safety considerations. To address these challenges, this study presents the design, implementation, and evaluation of a web-based virtual reality (WebVR) representation of a large-scale engineering laboratory constructed from massive colorized point cloud data. This study proposes a novel WebVR framework that integrates Unity and Potree for high-fidelity point-cloud visualization combined with advanced interactive capabilities in a browser-b",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "SaPaVe: Towards Active Perception and Manipulation in Vision-Language-Action Models for Robotics",
       "url": "https://arxiv.org/abs/2603.12193v1",
@@ -1176,63 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning When to Act or Refuse: Guarding Agentic Reasoning Models for Safe Multi-Step Tool Use",
-      "url": "https://arxiv.org/abs/2603.03205v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-03-03T17:59:35.000Z",
-      "score": 70,
-      "summary_en": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
-      "summary_fr": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
-      "resume_fr": "Agentic language models operate in a fundamentally different safety regime than chat models: they must plan, call tools, and execute long-horizon actions where a single misstep, such as accessing files or entering credentials, can cause irreversible harm. Existing alignment methods, largely optimized for static generation and task completion, break down in these settings due to sequential decision-making, adversarial tool feedback, and overconfident intermediate reasoning. We introduce MOSAIC, a post-training framework that aligns agents for safe multi-step tool use by making safety decisions ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "An HCI Perspective on Sustainable GenAI Integration in Architectural Design Education",
-      "url": "https://arxiv.org/abs/2603.03059v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-03T14:55:33.000Z",
-      "score": 50,
-      "summary_en": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
-      "summary_fr": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
-      "resume_fr": "Generative AI (genAI) is increasingly influencing architectural design practice and is expected to affect, or even transform, the profession, even though its benefits and costs remain unresolved. In response, design schools are increasingly integrating genAI into their curricula. Yet this integration creates a paradox: critical engagement with genAI often requires increased use of the tools in question, despite limited methods for estimating their environmental cost in teaching contexts. In this paper, we argue that HCI offers a useful methodological lens for addressing this tension. We propos",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Changing Pedagogical Paradigms: Integrating Generative AI in Mathematics to Enhance Digital Literacy through 'Mathematical Battles with AI'",
-      "url": "https://arxiv.org/abs/2603.02955v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-03T13:08:03.000Z",
-      "score": 50,
-      "summary_en": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
-      "summary_fr": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
-      "resume_fr": "This paper introduces `Math Battles with AI', an innovative competitive format designed at ITMO University to redefine the role of generative AI in mathematics education. Moving away from a purely defensive stance, the authors propose an AI agent with intentionally increased hallucination likelihood in specific modes to train verification skills. We describe the three-stage tournament structure and a specialized assessment system that rewards critical verification over blind reliance. Initial results indicate a significant shift in student mindsets, fostering essential skills in digital hygien",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
