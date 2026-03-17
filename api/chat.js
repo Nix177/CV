@@ -72,9 +72,8 @@ function getPortfolioData() {
 
 // OpenAI Streaming
 async function streamOpenAI(res, messages, temp, model = "gpt-4o") {
-  const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""; // renseigner dans Vercel -> Settings -> Environment Variables
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""; 
   const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-  const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o"; // Le plus performant demandé (User : 5.2 n'existe pas, 4o est le top actuel)
 
   if (!OPENAI_API_KEY) throw new Error("Missing OPENAI_API_KEY");
 
@@ -94,15 +93,25 @@ async function streamOpenAI(res, messages, temp, model = "gpt-4o") {
 
   if (!r.ok) throw new Error(`OpenAI error: ${r.status}`);
 
-  // Passthrough du stream
   const reader = r.body.getReader();
   const decoder = new TextDecoder();
+  
+  let buffer = ""; // 1. On initialise un buffer
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    const chunk = decoder.decode(value);
-    const lines = chunk.split("\n");
+    
+    // 2. { stream: true } évite aussi de couper les caractères accentués en deux (ex: "é")
+    buffer += decoder.decode(value, { stream: true });
+    
+    // 3. On coupe par ligne
+    const lines = buffer.split("\n");
+    
+    // 4. IMPORTANT: Le dernier élément est soit vide, soit une ligne incomplète.
+    // On le retire du tableau 'lines' et on le remet dans le buffer pour le prochain tour.
+    buffer = lines.pop(); 
+
     for (const line of lines) {
       if (line.trim() === "data: [DONE]") continue;
       if (line.startsWith("data: ")) {
@@ -110,7 +119,11 @@ async function streamOpenAI(res, messages, temp, model = "gpt-4o") {
           const json = JSON.parse(line.slice(6));
           const txt = json.choices[0]?.delta?.content || "";
           if (txt) res.write(txt);
-        } catch { }
+        } catch (e) { 
+           // Si une ligne crashe ici, on peut l'ignorer, mais grâce au buffer, 
+           // les coupures réseau ne causeront plus ce crash.
+           console.error("JSON Parse Error on stream:", e);
+        }
       }
     }
   }
