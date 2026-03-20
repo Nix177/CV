@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-19T07:05:19.406Z",
+  "generatedAt": "2026-03-20T07:03:52.342Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,177 @@
   },
   "items": [
     {
+      "title": "Not All Features Are Created Equal: A Mechanistic Study of Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2603.19233v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-19T17:59:55.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
+      "summary_fr": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
+      "resume_fr": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Nemotron-Cascade 2: Post-Training LLMs with Cascade RL and Multi-Domain On-Policy Distillation",
+      "url": "https://arxiv.org/abs/2603.19220v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-19T17:58:52.000Z",
+      "score": 70,
+      "summary_en": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
+      "summary_fr": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
+      "resume_fr": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "OmniVTA: Visuo-Tactile World Modeling for Contact-Rich Robotic Manipulation",
+      "url": "https://arxiv.org/abs/2603.19201v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-19T17:52:42.000Z",
+      "score": 70,
+      "summary_en": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
+      "summary_fr": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
+      "resume_fr": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Evaluating Counterfactual Strategic Reasoning in Large Language Models",
+      "url": "https://arxiv.org/abs/2603.19167v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-03-19T17:23:20.000Z",
+      "score": 70,
+      "summary_en": "We evaluate Large Language Models (LLMs) in repeated game-theoretic settings to assess whether strategic performance reflects genuine reasoning or reliance on memorized patterns. We consider two canonical games, Prisoner's Dilemma (PD) and Rock-Paper-Scissors (RPS), upon which we introduce counterfactual variants that alter payoff structures and action labels, breaking familiar symmetries and dominance relations. Our multi-metric evaluation framework compares default and counterfactual instantiations, showcasing LLM limitations in incentive sensitivity, structural generalization and strategic ",
+      "summary_fr": "We evaluate Large Language Models (LLMs) in repeated game-theoretic settings to assess whether strategic performance reflects genuine reasoning or reliance on memorized patterns. We consider two canonical games, Prisoner's Dilemma (PD) and Rock-Paper-Scissors (RPS), upon which we introduce counterfactual variants that alter payoff structures and action labels, breaking familiar symmetries and dominance relations. Our multi-metric evaluation framework compares default and counterfactual instantiations, showcasing LLM limitations in incentive sensitivity, structural generalization and strategic ",
+      "resume_fr": "We evaluate Large Language Models (LLMs) in repeated game-theoretic settings to assess whether strategic performance reflects genuine reasoning or reliance on memorized patterns. We consider two canonical games, Prisoner's Dilemma (PD) and Rock-Paper-Scissors (RPS), upon which we introduce counterfactual variants that alter payoff structures and action labels, breaking familiar symmetries and dominance relations. Our multi-metric evaluation framework compares default and counterfactual instantiations, showcasing LLM limitations in incentive sensitivity, structural generalization and strategic ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Student views in AI Ethics and Social Impact",
+      "url": "https://arxiv.org/abs/2603.18827v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-19T12:23:14.000Z",
+      "score": 85,
+      "summary_en": "An investigation, from a gender perspective, of how students view the ethical implications and societal effects of artificial intelligence is conducted, examining concepts that could have a big influence on how artificial intelligence may be taught in the future. For this, we conducted a survey on a cohort of 230 second year computer science students to reveal their opinions. The results revealed that AI, from the students' perspective, will significantly impact daily life, particularly in areas such as medicine, education, or media. Men are more aware of potential changes in Computer Science,",
+      "summary_fr": "An investigation, from a gender perspective, of how students view the ethical implications and societal effects of artificial intelligence is conducted, examining concepts that could have a big influence on how artificial intelligence may be taught in the future. For this, we conducted a survey on a cohort of 230 second year computer science students to reveal their opinions. The results revealed that AI, from the students' perspective, will significantly impact daily life, particularly in areas such as medicine, education, or media. Men are more aware of potential changes in Computer Science,",
+      "resume_fr": "An investigation, from a gender perspective, of how students view the ethical implications and societal effects of artificial intelligence is conducted, examining concepts that could have a big influence on how artificial intelligence may be taught in the future. For this, we conducted a survey on a cohort of 230 second year computer science students to reveal their opinions. The results revealed that AI, from the students' perspective, will significantly impact daily life, particularly in areas such as medicine, education, or media. Men are more aware of potential changes in Computer Science,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Phone bans in schools are spreading worldwide as the policy debate rages on",
+      "url": "https://world-education-blog.org/2026/03/19/phone-bans-in-schools-are-spreading-worldwide-as-the-policy-debate-rages-on/",
+      "source": "UNESCO GEM – World Education Blog",
+      "published": "2026-03-19T10:00:56.000Z",
+      "score": 65,
+      "summary_en": "By Anna Cristina D’Addio, GEM Report In just a few years, banning mobile phones in schools has moved from a handful of national initiatives to a widespread global policy trend. Governments increasingly see smartphones as a source of classroom distraction and a potential threat to students’ well-being. The response has been swift. Recent global monitoring […] The post Phone bans in schools are spreading worldwide as the policy debate rages on appeared first on World Education Blog.",
+      "summary_fr": "By Anna Cristina D’Addio, GEM Report In just a few years, banning mobile phones in schools has moved from a handful of national initiatives to a widespread global policy trend. Governments increasingly see smartphones as a source of classroom distraction and a potential threat to students’ well-being. The response has been swift. Recent global monitoring […] The post Phone bans in schools are spreading worldwide as the policy debate rages on appeared first on World Education Blog.",
+      "resume_fr": "By Anna Cristina D’Addio, GEM Report In just a few years, banning mobile phones in schools has moved from a handful of national initiatives to a widespread global policy trend. Governments increasingly see smartphones as a source of classroom distraction and a potential threat to students’ well-being. The response has been swift. Recent global monitoring […] The post Phone bans in schools are spreading worldwide as the policy debate rages on appeared first on World Education Blog.",
+      "tags": [],
+      "breakdown": {
+        "research": 0,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://world-education-blog.org/wp-content/uploads/2026/03/phone-bans.png"
+    },
+    {
+      "title": "CyberJustice Tutor: An Agentic AI Framework for Cybersecurity Learning via Think-Plan-Act Reasoning and Pedagogical Scaffolding",
+      "url": "https://arxiv.org/abs/2603.18470v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-19T04:04:57.000Z",
+      "score": 85,
+      "summary_en": "The integration of Large Language Models (LLMs) into cybersecurity education for criminal justice professionals is currently hindered by the \"statelessness\" of reactive chatbots and the risk of hallucinations in high-stakes legal contexts. To address these limitations, we propose the CyberJustice Tutor, an educational dialogue system powered by an Agentic AI framework. Unlike reactive chatbots, our system employs a \"Think-Plan-Act\" cognitive cycle, enabling autonomous goal decomposition, longitudinal planning, and dynamic context maintenance. We integrate a Pedagogical Scaffolding Layer ground",
+      "summary_fr": "The integration of Large Language Models (LLMs) into cybersecurity education for criminal justice professionals is currently hindered by the \"statelessness\" of reactive chatbots and the risk of hallucinations in high-stakes legal contexts. To address these limitations, we propose the CyberJustice Tutor, an educational dialogue system powered by an Agentic AI framework. Unlike reactive chatbots, our system employs a \"Think-Plan-Act\" cognitive cycle, enabling autonomous goal decomposition, longitudinal planning, and dynamic context maintenance. We integrate a Pedagogical Scaffolding Layer ground",
+      "resume_fr": "The integration of Large Language Models (LLMs) into cybersecurity education for criminal justice professionals is currently hindered by the \"statelessness\" of reactive chatbots and the risk of hallucinations in high-stakes legal contexts. To address these limitations, we propose the CyberJustice Tutor, an educational dialogue system powered by an Agentic AI framework. Unlike reactive chatbots, our system employs a \"Think-Plan-Act\" cognitive cycle, enabling autonomous goal decomposition, longitudinal planning, and dynamic context maintenance. We integrate a Pedagogical Scaffolding Layer ground",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Impact of Corporate AI Washing on Farmers' Digital Financial Behavior Response -- An Analysis from the Perspective of Digital Financial Exclusion",
+      "url": "https://arxiv.org/abs/2603.18421v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-19T02:29:36.000Z",
+      "score": 85,
+      "summary_en": "In the context of the rapid development of digital finance, some financial technology companies exhibit the phenomenon of \"AI washing,\" where they overstate their AI capabilities while underinvesting in actual AI resources. This paper constructs a corporate-level AI washing index based on CHFS2019 data and AI investment data from 15-20 financial technology companies, analyzing and testing its impact on farmers' digital financial behavior response. The study finds that AI washing significantly suppresses farmers' digital financial behavior; the higher the degree of AI washing, the lower the res",
+      "summary_fr": "In the context of the rapid development of digital finance, some financial technology companies exhibit the phenomenon of \"AI washing,\" where they overstate their AI capabilities while underinvesting in actual AI resources. This paper constructs a corporate-level AI washing index based on CHFS2019 data and AI investment data from 15-20 financial technology companies, analyzing and testing its impact on farmers' digital financial behavior response. The study finds that AI washing significantly suppresses farmers' digital financial behavior; the higher the degree of AI washing, the lower the res",
+      "resume_fr": "In the context of the rapid development of digital finance, some financial technology companies exhibit the phenomenon of \"AI washing,\" where they overstate their AI capabilities while underinvesting in actual AI resources. This paper constructs a corporate-level AI washing index based on CHFS2019 data and AI investment data from 15-20 financial technology companies, analyzing and testing its impact on farmers' digital financial behavior response. The study finds that AI washing significantly suppresses farmers' digital financial behavior; the higher the degree of AI washing, the lower the res",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Effects on the learning performance of elementary school students using a situation-based interactive e-book in a flipped mathematics classroom",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10610-5",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-03-19T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "Mathematics is often challenging for young learners due to its abstract nature, making the design of age-appropriate instructional tools essential. This study investigated the effectiveness of a situation-based interactive e-book in a flipped mathematics classroom for first-grade students in China. A quasi-experimental pre-test–post-test design was employed with 90 students randomly assigned to an experimental group, which used the interactive e-book, and a control group, which learned with instructional videos. Both groups received the same in-class instruction. The situation-based interactiv",
+      "summary_fr": "Mathematics is often challenging for young learners due to its abstract nature, making the design of age-appropriate instructional tools essential. This study investigated the effectiveness of a situation-based interactive e-book in a flipped mathematics classroom for first-grade students in China. A quasi-experimental pre-test–post-test design was employed with 90 students randomly assigned to an experimental group, which used the interactive e-book, and a control group, which learned with instructional videos. Both groups received the same in-class instruction. The situation-based interactiv",
+      "resume_fr": "Mathematics is often challenging for young learners due to its abstract nature, making the design of age-appropriate instructional tools essential. This study investigated the effectiveness of a situation-based interactive e-book in a flipped mathematics classroom for first-grade students in China. A quasi-experimental pre-test–post-test design was employed with 90 students randomly assigned to an experimental group, which used the interactive e-book, and a control group, which learned with instructional videos. Both groups received the same in-class instruction. The situation-based interactiv",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://static-content.springer.com/image/art%3A10.1007%2Fs11423-026-10610-5/MediaObjects/11423_2026_10610_Fig1_HTML.png"
+    },
+    {
       "title": "Applying AI Risk Frameworks in Higher Education: What IT Leaders Need to Know",
       "url": "https://edtechmagazine.com/higher/article/2026/03/applying-ai-risk-frameworks-higher-education-what-it-leaders-need-know",
       "source": "EdTech Magazine (Higher Ed)",
@@ -113,6 +284,25 @@
       },
       "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
       "image": "https://edtechmagazine.com/higher/sites/edtechmagazine.com.higher/files/styles/cdw_hero/public/articles/%5Bcdw_tech_site%3Afield_site_shortname%5D/202603/GettyImages-2265540948.jpg?itok=ogAGaEwQ"
+    },
+    {
+      "title": "TeachingCoach: A Fine-Tuned Scaffolding Chatbot for Instructional Guidance to Instructors",
+      "url": "https://arxiv.org/abs/2603.18189v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-18T18:35:53.000Z",
+      "score": 85,
+      "summary_en": "Higher education instructors often lack timely and pedagogically grounded support, as scalable instructional guidance remains limited and existing tools rely on generic chatbot advice or non-scalable teaching center human-human consultations. We present TeachingCoach, a pedagogically grounded chatbot designed to support instructor professional development through real-time, conversational guidance. TeachingCoach is built on a data-centric pipeline that extracts pedagogical rules from educational resources and uses synthetic dialogue generation to fine-tune a specialized language model that gui",
+      "summary_fr": "Higher education instructors often lack timely and pedagogically grounded support, as scalable instructional guidance remains limited and existing tools rely on generic chatbot advice or non-scalable teaching center human-human consultations. We present TeachingCoach, a pedagogically grounded chatbot designed to support instructor professional development through real-time, conversational guidance. TeachingCoach is built on a data-centric pipeline that extracts pedagogical rules from educational resources and uses synthetic dialogue generation to fine-tune a specialized language model that gui",
+      "resume_fr": "Higher education instructors often lack timely and pedagogically grounded support, as scalable instructional guidance remains limited and existing tools rely on generic chatbot advice or non-scalable teaching center human-human consultations. We present TeachingCoach, a pedagogically grounded chatbot designed to support instructor professional development through real-time, conversational guidance. TeachingCoach is built on a data-centric pipeline that extracts pedagogical rules from educational resources and uses synthetic dialogue generation to fine-tune a specialized language model that gui",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "ConGA: Guidelines for Contextual Gender Annotation. A Framework for Annotating Gender in Machine Translation",
@@ -1035,196 +1225,6 @@
       "summary_en": "Robotic disassembly involves contact-rich interactions in which successful manipulation depends not only on geometric alignment but also on force-dependent state transitions. While vision-based policies perform well in structured settings, their reliability often degrades in tight-tolerance, contact-dominated, or deformable scenarios. In this work, we systematically investigate the role of tactile sensing in robotic disassembly through both simulation and real-world experiments. We construct five rigid-body disassembly tasks in simulation with increasing geometric constraints and extraction di",
       "summary_fr": "Robotic disassembly involves contact-rich interactions in which successful manipulation depends not only on geometric alignment but also on force-dependent state transitions. While vision-based policies perform well in structured settings, their reliability often degrades in tight-tolerance, contact-dominated, or deformable scenarios. In this work, we systematically investigate the role of tactile sensing in robotic disassembly through both simulation and real-world experiments. We construct five rigid-body disassembly tasks in simulation with increasing geometric constraints and extraction di",
       "resume_fr": "Robotic disassembly involves contact-rich interactions in which successful manipulation depends not only on geometric alignment but also on force-dependent state transitions. While vision-based policies perform well in structured settings, their reliability often degrades in tight-tolerance, contact-dominated, or deformable scenarios. In this work, we systematically investigate the role of tactile sensing in robotic disassembly through both simulation and real-world experiments. We construct five rigid-body disassembly tasks in simulation with increasing geometric constraints and extraction di",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Agency as a system property in human—AI interaction in education",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70060?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-03-09T04:54:40.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Learning collision risk proactively from naturalistic driving data at scale",
-      "url": "https://www.nature.com/articles/s42256-026-01189-w",
-      "source": "Nature Machine Intelligence",
-      "published": "2026-03-09T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01189-w/MediaObjects/42256_2026_1189_Fig1_HTML.png"
-    },
-    {
-      "title": "AI Misuse in Education Is a Measurement Problem: Toward a Learning Visibility Framework",
-      "url": "https://arxiv.org/abs/2603.07834v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-08T22:35:09.000Z",
-      "score": 85,
-      "summary_en": "The rapid integration of conversational AI systems into educational settings has intensified ethical concerns about academic integrity, fairness, and students' cognitive development. Institutional responses have largely centered on AI detection tools and restrictive policies, yet such approaches have proven unreliable and ethically contentious. This paper reframes AI misuse in education not primarily as a detection problem, but as a measurement problem rooted in the loss of visibility into the learning process. When AI enters the assessment loop, educators often retain access to final outputs ",
-      "summary_fr": "The rapid integration of conversational AI systems into educational settings has intensified ethical concerns about academic integrity, fairness, and students' cognitive development. Institutional responses have largely centered on AI detection tools and restrictive policies, yet such approaches have proven unreliable and ethically contentious. This paper reframes AI misuse in education not primarily as a detection problem, but as a measurement problem rooted in the loss of visibility into the learning process. When AI enters the assessment loop, educators often retain access to final outputs ",
-      "resume_fr": "The rapid integration of conversational AI systems into educational settings has intensified ethical concerns about academic integrity, fairness, and students' cognitive development. Institutional responses have largely centered on AI detection tools and restrictive policies, yet such approaches have proven unreliable and ethically contentious. This paper reframes AI misuse in education not primarily as a detection problem, but as a measurement problem rooted in the loss of visibility into the learning process. When AI enters the assessment loop, educators often retain access to final outputs ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=arxiv.org&sz=128"
-    },
-    {
-      "title": "Directing the Robot: Scaffolding Creative Human-AI-Robot Interaction",
-      "url": "https://arxiv.org/abs/2603.07748v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-08T17:49:38.000Z",
-      "score": 85,
-      "summary_en": "Robots are moving beyond industrial settings into creative, educational, and public environments where interaction is open-ended and improvisational. Yet much of human-AI-robot interaction remains framed around performance and efficiency, positioning humans as supervisors rather than collaborators. We propose a re-framing of AI interaction with robots as scaffolding: infrastructure that enables humans to shape robotic behaviour over time while remaining meaningfully in control. Through scenarios from creative practice, learning-by-teaching, and embodied interaction, we illustrate how humans ca",
-      "summary_fr": "Robots are moving beyond industrial settings into creative, educational, and public environments where interaction is open-ended and improvisational. Yet much of human-AI-robot interaction remains framed around performance and efficiency, positioning humans as supervisors rather than collaborators. We propose a re-framing of AI interaction with robots as scaffolding: infrastructure that enables humans to shape robotic behaviour over time while remaining meaningfully in control. Through scenarios from creative practice, learning-by-teaching, and embodied interaction, we illustrate how humans ca",
-      "resume_fr": "Robots are moving beyond industrial settings into creative, educational, and public environments where interaction is open-ended and improvisational. Yet much of human-AI-robot interaction remains framed around performance and efficiency, positioning humans as supervisors rather than collaborators. We propose a re-framing of AI interaction with robots as scaffolding: infrastructure that enables humans to shape robotic behaviour over time while remaining meaningfully in control. Through scenarios from creative practice, learning-by-teaching, and embodied interaction, we illustrate how humans ca",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Military AI Policy Needs Democratic Oversight",
-      "url": "https://spectrum.ieee.org/military-ai-governance",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-03-08T10:00:03.000Z",
-      "score": 70,
-      "summary_en": "A simmering dispute between the United States Department of Defense (DOD) and Anthropic has now escalated into a full-blown confrontation, raising an uncomfortable but important question: who gets to set the guardrails for military use of artificial intelligence — the executive branch, private companies or Congress and the broader democratic process? The conflict began when Defense Secretary Pete Hegseth reportedly gave Anthropic CEO Dario Amodei a deadline to allow the DOD unrestricted use of its AI systems. When the company refused, the administration moved to designate Anthropic a supply ch",
-      "summary_fr": "A simmering dispute between the United States Department of Defense (DOD) and Anthropic has now escalated into a full-blown confrontation, raising an uncomfortable but important question: who gets to set the guardrails for military use of artificial intelligence — the executive branch, private companies or Congress and the broader democratic process? The conflict began when Defense Secretary Pete Hegseth reportedly gave Anthropic CEO Dario Amodei a deadline to allow the DOD unrestricted use of its AI systems. When the company refused, the administration moved to designate Anthropic a supply ch",
-      "resume_fr": "A simmering dispute between the United States Department of Defense (DOD) and Anthropic has now escalated into a full-blown confrontation, raising an uncomfortable but important question: who gets to set the guardrails for military use of artificial intelligence — the executive branch, private companies or Congress and the broader democratic process? The conflict began when Defense Secretary Pete Hegseth reportedly gave Anthropic CEO Dario Amodei a deadline to allow the DOD unrestricted use of its AI systems. When the company refused, the administration moved to designate Anthropic a supply ch",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/image.jpg?id=65162770&width=1200&height=600&coordinates=0%2C279%2C0%2C971"
-    },
-    {
-      "title": "From Passive Consumption to Active Interaction: Exploring Interactive LLM Scaffolding to Support Learning Engagement",
-      "url": "https://arxiv.org/abs/2603.07277v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-07T16:38:10.000Z",
-      "score": 85,
-      "summary_en": "Large Language Models (LLMs) are increasingly used as learning companions, providing scaffolded explanations, hints, or step-by-step guidance. However, in current LLM-based learning scenarios, scaffolded content is primarily consumed passively, offering limited support for active learner engagement. Learning science research suggests that effective educational scaffolding depends not only on what support is provided, but also on how learners engage with it. In this work, we explore whether embedding lightweight interactive components into LLM-generated scaffolding responses can promote learnin",
-      "summary_fr": "Large Language Models (LLMs) are increasingly used as learning companions, providing scaffolded explanations, hints, or step-by-step guidance. However, in current LLM-based learning scenarios, scaffolded content is primarily consumed passively, offering limited support for active learner engagement. Learning science research suggests that effective educational scaffolding depends not only on what support is provided, but also on how learners engage with it. In this work, we explore whether embedding lightweight interactive components into LLM-generated scaffolding responses can promote learnin",
-      "resume_fr": "Large Language Models (LLMs) are increasingly used as learning companions, providing scaffolded explanations, hints, or step-by-step guidance. However, in current LLM-based learning scenarios, scaffolded content is primarily consumed passively, offering limited support for active learner engagement. Learning science research suggests that effective educational scaffolding depends not only on what support is provided, but also on how learners engage with it. In this work, we explore whether embedding lightweight interactive components into LLM-generated scaffolding responses can promote learnin",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Student Preferences for Online Interaction Platforms in Blended Learning: A Mixed-Methods Study",
-      "url": "https://arxiv.org/abs/2603.07186v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-07T12:55:09.000Z",
-      "score": 85,
-      "summary_en": "As higher education increasingly adopts blended learning, understanding students preferences for online interaction platforms becomes critical for effective course delivery and engagement. This study investigates the platforms undergraduate students prefer for academic communication and explores the underlying reasons for these choices. Data were collected from 37 students enrolled in two summer courses at a Ghanaian university using a structured questionnaire consisting of both closed and open-ended items. Quantitative results revealed a strong preference for instant messaging platforms such ",
-      "summary_fr": "As higher education increasingly adopts blended learning, understanding students preferences for online interaction platforms becomes critical for effective course delivery and engagement. This study investigates the platforms undergraduate students prefer for academic communication and explores the underlying reasons for these choices. Data were collected from 37 students enrolled in two summer courses at a Ghanaian university using a structured questionnaire consisting of both closed and open-ended items. Quantitative results revealed a strong preference for instant messaging platforms such ",
-      "resume_fr": "As higher education increasingly adopts blended learning, understanding students preferences for online interaction platforms becomes critical for effective course delivery and engagement. This study investigates the platforms undergraduate students prefer for academic communication and explores the underlying reasons for these choices. Data were collected from 37 students enrolled in two summer courses at a Ghanaian university using a structured questionnaire consisting of both closed and open-ended items. Quantitative results revealed a strong preference for instant messaging platforms such ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Sources of Professional Learning and K‐12 Teachers' Instructional Practices in Promoting Informal Digital Learning of English",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70219?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-07T08:36:34.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Unified Learning of Temporal Task Structure and Action Timing for Bimanual Robot Manipulation",
-      "url": "https://arxiv.org/abs/2603.06538v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-06T18:25:42.000Z",
-      "score": 70,
-      "summary_en": "Temporal task structure is fundamental for bimanual manipulation: a robot must not only know that one action precedes or overlaps another, but also when each action should occur and how long it should take. While symbolic temporal relations enable high-level reasoning about task structure and alternative execution sequences, concrete timing parameters are equally essential for coordinating two hands at the execution level. Existing approaches address these two levels in isolation, leaving a gap between high-level task planning and low-level movement synchronization. This work presents an appro",
-      "summary_fr": "Temporal task structure is fundamental for bimanual manipulation: a robot must not only know that one action precedes or overlaps another, but also when each action should occur and how long it should take. While symbolic temporal relations enable high-level reasoning about task structure and alternative execution sequences, concrete timing parameters are equally essential for coordinating two hands at the execution level. Existing approaches address these two levels in isolation, leaving a gap between high-level task planning and low-level movement synchronization. This work presents an appro",
-      "resume_fr": "Temporal task structure is fundamental for bimanual manipulation: a robot must not only know that one action precedes or overlaps another, but also when each action should occur and how long it should take. While symbolic temporal relations enable high-level reasoning about task structure and alternative execution sequences, concrete timing parameters are equally essential for coordinating two hands at the execution level. Existing approaches address these two levels in isolation, leaving a gap between high-level task planning and low-level movement synchronization. This work presents an appro",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Underactuated multimodal jumping robot for extraterrestrial exploration",
-      "url": "https://arxiv.org/abs/2603.06525v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-06T18:08:32.000Z",
-      "score": 70,
-      "summary_en": "We present a rolling and jumping underactuated monopedal robot designed to explore multimodal locomotion on low-gravity bodies. It uses only two reaction wheels to control its spatial orientation with two controllers: a balancing controller which can aim the robot's jump direction on the ground, and an aerial reorientation controller which can aim the robot's leg for landing after flight. We demonstrate rolling, targeted jumping and landing, and self-righting using only three actuators total, keeping system size to 0.33m and 1.25kg. Simple switching between locomotion modes enables the system ",
-      "summary_fr": "We present a rolling and jumping underactuated monopedal robot designed to explore multimodal locomotion on low-gravity bodies. It uses only two reaction wheels to control its spatial orientation with two controllers: a balancing controller which can aim the robot's jump direction on the ground, and an aerial reorientation controller which can aim the robot's leg for landing after flight. We demonstrate rolling, targeted jumping and landing, and self-righting using only three actuators total, keeping system size to 0.33m and 1.25kg. Simple switching between locomotion modes enables the system ",
-      "resume_fr": "We present a rolling and jumping underactuated monopedal robot designed to explore multimodal locomotion on low-gravity bodies. It uses only two reaction wheels to control its spatial orientation with two controllers: a balancing controller which can aim the robot's jump direction on the ground, and an aerial reorientation controller which can aim the robot's leg for landing after flight. We demonstrate rolling, targeted jumping and landing, and self-righting using only three actuators total, keeping system size to 0.33m and 1.25kg. Simple switching between locomotion modes enables the system ",
       "tags": [],
       "breakdown": {
         "research": 35,
