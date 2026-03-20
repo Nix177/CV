@@ -136,132 +136,6 @@ window.portfolioData = [
   },
 
   {
-    id: "vocal-walls",
-    image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
-    tags: ["Web", "Audio", "Géolocalisation", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/audio-geo-notes/",
-    i18n: {
-      fr: {
-        title: "Vocal Walls — Réalité Augmentée Sonore",
-        description: "Plateforme de bulles sonores géolocalisées. Créez des pèlerinages numériques : le contenu n'est accessible qu'en se rendant sur place. Grille H3, audio spatial 3D, et entropie numérique."
-      },
-      en: {
-        title: "Vocal Walls — Sonic Augmented Reality",
-        description: "Geolocated audio bubble platform. Create digital pilgrimages: content is only accessible on-site. H3 grid, 3D spatial audio, and digital entropy system."
-      },
-      de: {
-        title: "Vocal Walls — Akustische Augmented Reality",
-        description: "Geolokalisierte Audio-Blasen Plattform. Digitale Pilgerfahrten: Inhalte nur vor Ort zugänglich. H3-Raster, 3D-Raumklang und digitale Entropie."
-      }
-    }
-  },
-  {
-    id: "common-ground",
-    image: "/assets/portfolio/thumbs/common-ground-thumb.png",
-    tags: ["Web", "Collaboration", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/common-ground/",
-    i18n: {
-      fr: {
-        title: "Common Ground — Le GitHub des Passions",
-        description: "Plateforme de co-construction massive pour projets locaux et créatifs. Project Blueprint, Micro Kanban, et Availability Matcher pour assembler des équipes en temps réel."
-      },
-      en: {
-        title: "Common Ground — GitHub for Passions",
-        description: "Massive co-construction platform for local and creative projects. Project Blueprint, Micro Kanban, and Availability Matcher to assemble teams in real-time."
-      },
-      de: {
-        title: "Common Ground — GitHub für Leidenschaften",
-        description: "Massive Co-Konstruktionsplattform für lokale und kreative Projekte. Project Blueprint, Micro Kanban und Availability Matcher für Echtzeit-Teambildung."
-      }
-    }
-  },
-  {
-    id: "micro-mentor",
-    image: "/assets/portfolio/thumbs/micro-mentor-thumb.png",
-    tags: ["Web", "EdTech", "React", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/Micro-mentor/",
-    i18n: {
-      fr: {
-        title: "Micro-Mentor — L'Expertise Instantanée",
-        description: "Plateforme de micro-mentorat en 3 minutes. Sessions ultra-courtes, ranking de réactivité, et système de crédits réciprocité. Débloquez un problème maintenant, aidez quelqu'un après."
-      },
-      en: {
-        title: "Micro-Mentor — Instant Expertise",
-        description: "3-minute micro-mentoring platform. Ultra-short sessions, reactivity ranking, and reciprocity credit system. Unblock a problem now, help someone later."
-      },
-      de: {
-        title: "Micro-Mentor — Sofortige Expertise",
-        description: "3-Minuten Micro-Mentoring Plattform. Ultra-kurze Sessions, Reaktivitäts-Ranking und Reziprozitäts-Kreditsystem. Jetzt Problem lösen, später jemandem helfen."
-      }
-    }
-  },
-  {
-    id: "frustra",
-    image: "/assets/portfolio/thumbs/frustra-thumb.png",
-    tags: ["Web", "Startup", "React Native", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/problem-first-db/",
-    i18n: {
-      fr: {
-        title: "Frustra — Le Catalogue de Problèmes",
-        description: "Transforme la plainte en actif. Identifie les 'Founding Problems' sur les réseaux sociaux pour valider un marché avant d'écrire une ligne de code. Votes 'Moi aussi' et rapports investisseurs."
-      },
-      en: {
-        title: "Frustra — The Problem Catalog",
-        description: "Turns complaints into assets. Identifies 'Founding Problems' on social media to validate a market before writing a line of code. 'Me too' votes and investor reports."
-      },
-      de: {
-        title: "Frustra — Der Problemkatalog",
-        description: "Verwandelt Beschwerden in Werte. Identifiziert 'Gründungsprobleme' in sozialen Medien zur Marktvalidierung vor dem Programmieren. 'Ich auch'-Abstimmungen und Investorenberichte."
-      }
-    }
-  },
-  {
-    id: "slow-social",
-    image: "/assets/portfolio/thumbs/slow-social-thumb.png",
-    tags: ["Web", "Bien-être", "Social", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/social_wellness_digest/",
-    i18n: {
-      fr: {
-        title: "Slow Social — Le Rituel du Dimanche",
-        description: "Combattre le burnout numérique. Publication hebdomadaire unique, capsules éphémères 24h. Pas de publicité, pas d'algorithme. Juste vous, une fois par semaine."
-      },
-      en: {
-        title: "Slow Social — The Sunday Ritual",
-        description: "Fighting digital burnout. Single weekly publication, 24h ephemeral capsules. No ads, no algorithm. Just you, once a week."
-      },
-      de: {
-        title: "Slow Social — Das Sonntagsritual",
-        description: "Gegen digitales Burnout. Eine wöchentliche Veröffentlichung, 24h vergängliche Kapseln. Keine Werbung, kein Algorithmus. Nur Sie, einmal pro Woche."
-      }
-    }
-  },
-  {
-    id: "un-algorithm",
-    image: "/assets/portfolio/thumbs/un-algorithm-thumb.png",
-    tags: ["Web", "IA", "Bien-être", "GitHub Pages"],
-    category: "maquettes",
-    url: "https://nix177.github.io/Un-Algorithm/",
-    i18n: {
-      fr: {
-        title: "The Un-Algorithm — Pilotage de Conscience",
-        description: "Reprendre le pouvoir sur l'IA de recommandation. Tableau de bord avec curseurs Pertinence/Découverte, filtres par catégories, et partage de 'Recettes' algorithmiques."
-      },
-      en: {
-        title: "The Un-Algorithm — Consciousness Dashboard",
-        description: "Take back control from recommendation AI. Dashboard with Relevance/Discovery sliders, category filters, and shareable algorithmic 'Recipes'."
-      },
-      de: {
-        title: "The Un-Algorithm — Bewusstseins-Dashboard",
-        description: "Kontrolle über Empfehlungs-KI zurückgewinnen. Dashboard mit Relevanz/Entdeckung-Reglern, Kategoriefiltern und teilbaren algorithmischen 'Rezepten'."
-      }
-    }
-  },
-  {
     id: "robotarm",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
     url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
@@ -345,6 +219,133 @@ window.portfolioData = [
       de: {
         title: "3D-Modellierung & Druck",
         description: "Kompletter Workflow: KI-Generierung (ComfyUI/Hunyuan3D), Blender-Skulptur, Slicing (PrusaSlicer) und PETG-Druck. Beispiel: Oni-Maske modelliert und gedruckt."
+      }
+    }
+  }
+,
+  {
+    id: "vocal-walls",
+    image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
+    tags: ["Web", "Audio", "Géolocalisation", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/audio-geo-notes/",
+    i18n: {
+      fr: {
+        title: "Vocal Walls — Réalité Augmentée Sonore",
+        description: "Plateforme de bulles sonores géolocalisées. Créez des pèlerinages numériques : le contenu n'est accessible qu'en se rendant sur place. Grille H3, audio spatial 3D, et entropie numérique."
+      },
+      en: {
+        title: "Vocal Walls — Sonic Augmented Reality",
+        description: "Geolocated audio bubble platform. Create digital pilgrimages: content is only accessible on-site. H3 grid, 3D spatial audio, and digital entropy system."
+      },
+      de: {
+        title: "Vocal Walls — Akustische Augmented Reality",
+        description: "Geolokalisierte Audio-Blasen Plattform. Digitale Pilgerfahrten: Inhalte nur vor Ort zugänglich. H3-Raster, 3D-Raumklang und digitale Entropie."
+      }
+    }
+  },
+  {
+    id: "common-ground",
+    image: "/assets/portfolio/thumbs/common-ground-thumb.png",
+    tags: ["Web", "Collaboration", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/common-ground/",
+    i18n: {
+      fr: {
+        title: "Common Ground — Le GitHub des Passions",
+        description: "Plateforme de co-construction massive pour projets locaux et créatifs. Project Blueprint, Micro Kanban, et Availability Matcher pour assembler des équipes en temps réel."
+      },
+      en: {
+        title: "Common Ground — GitHub for Passions",
+        description: "Massive co-construction platform for local and creative projects. Project Blueprint, Micro Kanban, and Availability Matcher to assemble teams in real-time."
+      },
+      de: {
+        title: "Common Ground — GitHub für Leidenschaften",
+        description: "Massive Co-Konstruktionsplattform für lokale und kreative Projekte. Project Blueprint, Micro Kanban und Availability Matcher für Echtzeit-Teambildung."
+      }
+    }
+  },
+  {
+    id: "micro-mentor",
+    image: "/assets/portfolio/thumbs/micro-mentor-thumb.png",
+    tags: ["Web", "EdTech", "React", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/Micro-mentor/",
+    i18n: {
+      fr: {
+        title: "Micro-Mentor — L'Expertise Instantanée",
+        description: "Plateforme de micro-mentorat en 3 minutes. Sessions ultra-courtes, ranking de réactivité, et système de crédits réciprocité. Débloquez un problème maintenant, aidez quelqu'un après."
+      },
+      en: {
+        title: "Micro-Mentor — Instant Expertise",
+        description: "3-minute micro-mentoring platform. Ultra-short sessions, reactivity ranking, and reciprocity credit system. Unblock a problem now, help someone later."
+      },
+      de: {
+        title: "Micro-Mentor — Sofortige Expertise",
+        description: "3-Minuten Micro-Mentoring Plattform. Ultra-kurze Sessions, Reaktivitäts-Ranking und Reziprozitäts-Kreditsystem. Jetzt Problem lösen, später jemandem helfen."
+      }
+    }
+  },
+  {
+    id: "frustra",
+    image: "/assets/portfolio/thumbs/frustra-thumb.png",
+    tags: ["Web", "Startup", "React Native", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/problem-first-db/",
+    i18n: {
+      fr: {
+        title: "Frustra — Le Catalogue de Problèmes",
+        description: "Transforme la plainte en actif. Identifie les 'Founding Problems' sur les réseaux sociaux pour valider un marché avant d'écrire une ligne de code. Votes 'Moi aussi' et rapports investisseurs."
+      },
+      en: {
+        title: "Frustra — The Problem Catalog",
+        description: "Turns complaints into assets. Identifies 'Founding Problems' on social media to validate a market before writing a line of code. 'Me too' votes and investor reports."
+      },
+      de: {
+        title: "Frustra — Der Problemkatalog",
+        description: "Verwandelt Beschwerden in Werte. Identifiziert 'Gründungsprobleme' in sozialen Medien zur Marktvalidierung vor dem Programmieren. 'Ich auch'-Abstimmungen und Investorenberichte."
+      }
+    }
+  },
+  {
+    id: "slow-social",
+    image: "/assets/portfolio/thumbs/slow-social-thumb.png",
+    tags: ["Web", "Bien-être", "Social", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/social_wellness_digest/",
+    i18n: {
+      fr: {
+        title: "Slow Social — Le Rituel du Dimanche",
+        description: "Combattre le burnout numérique. Publication hebdomadaire unique, capsules éphémères 24h. Pas de publicité, pas d'algorithme. Juste vous, une fois par semaine."
+      },
+      en: {
+        title: "Slow Social — The Sunday Ritual",
+        description: "Fighting digital burnout. Single weekly publication, 24h ephemeral capsules. No ads, no algorithm. Just you, once a week."
+      },
+      de: {
+        title: "Slow Social — Das Sonntagsritual",
+        description: "Gegen digitales Burnout. Eine wöchentliche Veröffentlichung, 24h vergängliche Kapseln. Keine Werbung, kein Algorithmus. Nur Sie, einmal pro Woche."
+      }
+    }
+  },
+  {
+    id: "un-algorithm",
+    image: "/assets/portfolio/thumbs/un-algorithm-thumb.png",
+    tags: ["Web", "IA", "Bien-être", "GitHub Pages"],
+    category: "maquette/idées",
+    url: "https://nix177.github.io/Un-Algorithm/",
+    i18n: {
+      fr: {
+        title: "The Un-Algorithm — Pilotage de Conscience",
+        description: "Reprendre le pouvoir sur l'IA de recommandation. Tableau de bord avec curseurs Pertinence/Découverte, filtres par catégories, et partage de 'Recettes' algorithmiques."
+      },
+      en: {
+        title: "The Un-Algorithm — Consciousness Dashboard",
+        description: "Take back control from recommendation AI. Dashboard with Relevance/Discovery sliders, category filters, and shareable algorithmic 'Recipes'."
+      },
+      de: {
+        title: "The Un-Algorithm — Bewusstseins-Dashboard",
+        description: "Kontrolle über Empfehlungs-KI zurückgewinnen. Dashboard mit Relevanz/Entdeckung-Reglern, Kategoriefiltern und teilbaren algorithmischen 'Rezepten'."
       }
     }
   }
