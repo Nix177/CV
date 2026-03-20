@@ -254,7 +254,20 @@
     if (!grid) return;
     grid.innerHTML = "";
     const frag = document.createDocumentFragment();
-    items.forEach(it => frag.appendChild(makeCard(it)));
+    
+    let currentCategory = null;
+
+    items.forEach(it => {
+      if (it.category === "maquette/idées" && currentCategory !== "maquette/idées") {
+        currentCategory = "maquette/idées";
+        const catTitle = el("h2", { 
+          style: "grid-column: 1 / -1; margin-top: 24px; margin-bottom: 8px; font-size: 24px; color: #e6f1ff; border-bottom: 1px solid #ffffff22; padding-bottom: 8px;",
+          text: htmlLang === "en" ? "💡 Mockups / Concepts" : htmlLang === "de" ? "💡 Entwürfe / Konzepte" : "💡 Maquettes / Idées"
+        });
+        frag.appendChild(catTitle);
+      }
+      frag.appendChild(makeCard(it));
+    });
     grid.appendChild(frag);
   }
 
