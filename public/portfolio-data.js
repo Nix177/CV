@@ -221,8 +221,7 @@ window.portfolioData = [
         description: "Kompletter Workflow: KI-Generierung (ComfyUI/Hunyuan3D), Blender-Skulptur, Slicing (PrusaSlicer) und PETG-Druck. Beispiel: Oni-Maske modelliert und gedruckt."
       }
     }
-  }
-,
+  },
   {
     id: "vocal-walls",
     image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
