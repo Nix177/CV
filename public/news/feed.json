@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-22T06:59:21.484Z",
+  "generatedAt": "2026-03-23T07:20:16.082Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -113,6 +113,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "KUKAloha: A General, Low-Cost, and Shared-Control based Teleoperation Framework for Construction Robot Arm",
+      "url": "https://arxiv.org/abs/2603.20129v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-20T16:51:30.000Z",
+      "score": 70,
+      "summary_en": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
+      "summary_fr": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
+      "resume_fr": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Not All Features Are Created Equal: A Mechanistic Study of Vision-Language-Action Models",
@@ -1214,25 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Bilevel Planning with Learned Symbolic Abstractions from Interaction Data",
-      "url": "https://arxiv.org/abs/2603.08599v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-09T16:47:03.000Z",
-      "score": 70,
-      "summary_en": "Intelligent agents must reason over both continuous dynamics and discrete representations to generate effective plans in complex environments. Previous studies have shown that symbolic abstractions can emerge from neural effect predictors trained with a robot's unsupervised exploration. However, these methods rely on deterministic symbolic domains, lack mechanisms to verify the generated symbolic plans, and operate only at the abstract level, often failing to capture the continuous dynamics of the environment. To overcome these limitations, we propose a bilevel neuro-symbolic framework in whic",
-      "summary_fr": "Intelligent agents must reason over both continuous dynamics and discrete representations to generate effective plans in complex environments. Previous studies have shown that symbolic abstractions can emerge from neural effect predictors trained with a robot's unsupervised exploration. However, these methods rely on deterministic symbolic domains, lack mechanisms to verify the generated symbolic plans, and operate only at the abstract level, often failing to capture the continuous dynamics of the environment. To overcome these limitations, we propose a bilevel neuro-symbolic framework in whic",
-      "resume_fr": "Intelligent agents must reason over both continuous dynamics and discrete representations to generate effective plans in complex environments. Previous studies have shown that symbolic abstractions can emerge from neural effect predictors trained with a robot's unsupervised exploration. However, these methods rely on deterministic symbolic domains, lack mechanisms to verify the generated symbolic plans, and operate only at the abstract level, often failing to capture the continuous dynamics of the environment. To overcome these limitations, we propose a bilevel neuro-symbolic framework in whic",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
