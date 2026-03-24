@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-23T07:20:16.082Z",
+  "generatedAt": "2026-03-24T07:12:36.796Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,215 @@
     }
   },
   "items": [
+    {
+      "title": "DualCoT-VLA: Visual-Linguistic Chain of Thought via Parallel Reasoning for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2603.22280v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-23T17:59:25.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) models map visual observations and language instructions directly to robotic actions. While effective for simple tasks, standard VLA models often struggle with complex, multi-step tasks requiring logical planning, as well as precise manipulations demanding fine-grained spatial perception. Recent efforts have incorporated Chain-of-Thought (CoT) reasoning to endow VLA models with a ``thinking before acting'' capability. However, current CoT-based VLA models face two critical limitations: 1) an inability to simultaneously capture low-level visual details and high-leve",
+      "summary_fr": "Vision-Language-Action (VLA) models map visual observations and language instructions directly to robotic actions. While effective for simple tasks, standard VLA models often struggle with complex, multi-step tasks requiring logical planning, as well as precise manipulations demanding fine-grained spatial perception. Recent efforts have incorporated Chain-of-Thought (CoT) reasoning to endow VLA models with a ``thinking before acting'' capability. However, current CoT-based VLA models face two critical limitations: 1) an inability to simultaneously capture low-level visual details and high-leve",
+      "resume_fr": "Vision-Language-Action (VLA) models map visual observations and language instructions directly to robotic actions. While effective for simple tasks, standard VLA models often struggle with complex, multi-step tasks requiring logical planning, as well as precise manipulations demanding fine-grained spatial perception. Recent efforts have incorporated Chain-of-Thought (CoT) reasoning to endow VLA models with a ``thinking before acting'' capability. However, current CoT-based VLA models face two critical limitations: 1) an inability to simultaneously capture low-level visual details and high-leve",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Scaling DoRA: High-Rank Adaptation via Factored Norms and Fused Kernels",
+      "url": "https://arxiv.org/abs/2603.22276v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-23T17:57:24.000Z",
+      "score": 70,
+      "summary_en": "Weight-Decomposed Low-Rank Adaptation (DoRA) extends LoRA by decoupling weight magnitude from direction, but its forward pass requires the row-wise norm of W + sBA, a computation that every major framework we surveyed implements by materializing the dense [d_out, d_in] product BA. At d_in = 8192 and rank r = 384, a single module's norm requires about 512 MB of transient working memory in bf16, making high-rank DoRA costly and often infeasible on common single-GPU setups once hundreds of adapted modules and checkpointing are involved. We present two systems contributions. A factored norm decomp",
+      "summary_fr": "Weight-Decomposed Low-Rank Adaptation (DoRA) extends LoRA by decoupling weight magnitude from direction, but its forward pass requires the row-wise norm of W + sBA, a computation that every major framework we surveyed implements by materializing the dense [d_out, d_in] product BA. At d_in = 8192 and rank r = 384, a single module's norm requires about 512 MB of transient working memory in bf16, making high-rank DoRA costly and often infeasible on common single-GPU setups once hundreds of adapted modules and checkpointing are involved. We present two systems contributions. A factored norm decomp",
+      "resume_fr": "Weight-Decomposed Low-Rank Adaptation (DoRA) extends LoRA by decoupling weight magnitude from direction, but its forward pass requires the row-wise norm of W + sBA, a computation that every major framework we surveyed implements by materializing the dense [d_out, d_in] product BA. At d_in = 8192 and rank r = 384, a single module's norm requires about 512 MB of transient working memory in bf16, making high-rank DoRA costly and often infeasible on common single-GPU setups once hundreds of adapted modules and checkpointing are involved. We present two systems contributions. A factored norm decomp",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Decoupling Exploration and Policy Optimization: Uncertainty Guided Tree Search for Hard Exploration",
+      "url": "https://arxiv.org/abs/2603.22273v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-23T17:56:52.000Z",
+      "score": 70,
+      "summary_en": "The process of discovery requires active exploration -- the act of collecting new and informative data. However, efficient autonomous exploration remains a major unsolved problem. The dominant paradigm addresses this challenge by using Reinforcement Learning (RL) to train agents with intrinsic motivation, maximizing a composite objective of extrinsic and intrinsic rewards. We suggest that this approach incurs unnecessary overhead: while policy optimization is necessary for precise task execution, employing such machinery solely to expand state coverage may be inefficient. In this paper, we pro",
+      "summary_fr": "The process of discovery requires active exploration -- the act of collecting new and informative data. However, efficient autonomous exploration remains a major unsolved problem. The dominant paradigm addresses this challenge by using Reinforcement Learning (RL) to train agents with intrinsic motivation, maximizing a composite objective of extrinsic and intrinsic rewards. We suggest that this approach incurs unnecessary overhead: while policy optimization is necessary for precise task execution, employing such machinery solely to expand state coverage may be inefficient. In this paper, we pro",
+      "resume_fr": "The process of discovery requires active exploration -- the act of collecting new and informative data. However, efficient autonomous exploration remains a major unsolved problem. The dominant paradigm addresses this challenge by using Reinforcement Learning (RL) to train agents with intrinsic motivation, maximizing a composite objective of extrinsic and intrinsic rewards. We suggest that this approach incurs unnecessary overhead: while policy optimization is necessary for precise task execution, employing such machinery solely to expand state coverage may be inefficient. In this paper, we pro",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DexDrummer: In-Hand, Contact-Rich, and Long-Horizon Dexterous Robot Drumming",
+      "url": "https://arxiv.org/abs/2603.22263v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-23T17:49:06.000Z",
+      "score": 70,
+      "summary_en": "Performing in-hand, contact-rich, and long-horizon dexterous manipulation remains an unsolved challenge in robotics. Prior hand dexterity works have considered each of these three challenges in isolation, yet do not combine these skills into a single, complex task. To further test the capabilities of dexterity, we propose drumming as a testbed for dexterous manipulation. Drumming naturally integrates all three challenges: it involves in-hand control for stabilizing and adjusting the drumstick with the fingers, contact-rich interaction through repeated striking of the drum surface, and long-hor",
+      "summary_fr": "Performing in-hand, contact-rich, and long-horizon dexterous manipulation remains an unsolved challenge in robotics. Prior hand dexterity works have considered each of these three challenges in isolation, yet do not combine these skills into a single, complex task. To further test the capabilities of dexterity, we propose drumming as a testbed for dexterous manipulation. Drumming naturally integrates all three challenges: it involves in-hand control for stabilizing and adjusting the drumstick with the fingers, contact-rich interaction through repeated striking of the drum surface, and long-hor",
+      "resume_fr": "Performing in-hand, contact-rich, and long-horizon dexterous manipulation remains an unsolved challenge in robotics. Prior hand dexterity works have considered each of these three challenges in isolation, yet do not combine these skills into a single, complex task. To further test the capabilities of dexterity, we propose drumming as a testbed for dexterous manipulation. Drumming naturally integrates all three challenges: it involves in-hand control for stabilizing and adjusting the drumstick with the fingers, contact-rich interaction through repeated striking of the drum surface, and long-hor",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Characterizing High-Capacity Janus Aminobenzene-Graphene Anode for Sodium-Ion Batteries with Machine Learning",
+      "url": "https://arxiv.org/abs/2603.22254v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-23T17:45:26.000Z",
+      "score": 85,
+      "summary_en": "Sodium-ion batteries require anodes that combine high capacity, low operating voltage, fast Na-ion transport, and mechanical stability, which conventional anodes struggle to deliver. Here, we use the SpookyNet machine-learning force field (MLFF) together with all-electron density-functional theory calculations to characterize Na storage in aminobenzene-functionalized Janus graphene (Na$_x$AB) at room-temperature. Simulations across state of charge reveal a three-stage storage mechanism-site-specific adsorption at aminobenzene groups and Na$_n$@AB$_m$ structure formation, followed by interlayer",
+      "summary_fr": "Sodium-ion batteries require anodes that combine high capacity, low operating voltage, fast Na-ion transport, and mechanical stability, which conventional anodes struggle to deliver. Here, we use the SpookyNet machine-learning force field (MLFF) together with all-electron density-functional theory calculations to characterize Na storage in aminobenzene-functionalized Janus graphene (Na$_x$AB) at room-temperature. Simulations across state of charge reveal a three-stage storage mechanism-site-specific adsorption at aminobenzene groups and Na$_n$@AB$_m$ structure formation, followed by interlayer",
+      "resume_fr": "Sodium-ion batteries require anodes that combine high capacity, low operating voltage, fast Na-ion transport, and mechanical stability, which conventional anodes struggle to deliver. Here, we use the SpookyNet machine-learning force field (MLFF) together with all-electron density-functional theory calculations to characterize Na storage in aminobenzene-functionalized Janus graphene (Na$_x$AB) at room-temperature. Simulations across state of charge reveal a three-stage storage mechanism-site-specific adsorption at aminobenzene groups and Na$_n$@AB$_m$ structure formation, followed by interlayer",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Documents Disagree: Measuring Institutional Variation in Transplant Guidance with Retrieval-Augmented Language Models",
+      "url": "https://arxiv.org/abs/2603.21460v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-23T00:42:40.000Z",
+      "score": 85,
+      "summary_en": "Patient education materials for solid-organ transplantation vary substantially across U.S. centers, yet no systematic method exists to quantify this heterogeneity at scale. We introduce a framework that grounds the same patient questions in different centers' handbooks using retrieval-augmented language models and compares the resulting answers using a five-label consistency taxonomy. Applied to 102 handbooks from 23 centers and 1,115 benchmark questions, the framework quantifies heterogeneity across four dimensions: question, topic, organ, and center. We find that 20.8% of non-absent pairwise",
+      "summary_fr": "Patient education materials for solid-organ transplantation vary substantially across U.S. centers, yet no systematic method exists to quantify this heterogeneity at scale. We introduce a framework that grounds the same patient questions in different centers' handbooks using retrieval-augmented language models and compares the resulting answers using a five-label consistency taxonomy. Applied to 102 handbooks from 23 centers and 1,115 benchmark questions, the framework quantifies heterogeneity across four dimensions: question, topic, organ, and center. We find that 20.8% of non-absent pairwise",
+      "resume_fr": "Patient education materials for solid-organ transplantation vary substantially across U.S. centers, yet no systematic method exists to quantify this heterogeneity at scale. We introduce a framework that grounds the same patient questions in different centers' handbooks using retrieval-augmented language models and compares the resulting answers using a five-label consistency taxonomy. Applied to 102 handbooks from 23 centers and 1,115 benchmark questions, the framework quantifies heterogeneity across four dimensions: question, topic, organ, and center. We find that 20.8% of non-absent pairwise",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Impact of Web‐Based 360° Virtual Laboratory on Cognitive Load, Emotional Patterns and Visual Attention",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70224?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-03-23T00:05:51.000Z",
+      "score": 70,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Computational framework to predict and shape human–machine interactions in closed-loop, co-adaptive neural interfaces",
+      "url": "https://www.nature.com/articles/s42256-026-01194-z",
+      "source": "Nature Machine Intelligence",
+      "published": "2026-03-23T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01194-z/MediaObjects/42256_2026_1194_Fig1_HTML.png"
+    },
+    {
+      "title": "Assessing Data Literacy in K--12 Education: Challenges and Opportunities",
+      "url": "https://arxiv.org/abs/2603.21382v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-22T19:54:07.000Z",
+      "score": 65,
+      "summary_en": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
+      "summary_fr": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
+      "resume_fr": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Unpacking Interaction Profiles and Strategies in Human-AI Collaborative Problem Solving: A Cognitive Distribution and Regulation Perspective",
+      "url": "https://arxiv.org/abs/2603.21288v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-22T15:21:55.000Z",
+      "score": 100,
+      "summary_en": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
+      "summary_fr": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
+      "resume_fr": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AI-Driven Multi-Agent Simulation of Stratified Polyamory Systems: A Computational Framework for Optimizing Social Reproductive Efficiency",
+      "url": "https://arxiv.org/abs/2603.20678v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-03-21T06:38:17.000Z",
+      "score": 85,
+      "summary_en": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
+      "summary_fr": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
+      "resume_fr": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "A systematic review of generative AI in education: Empirical insights from a human–AI interaction perspective",
       "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70055?af=R",
@@ -1024,215 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Contact Coverage-Guided Exploration for General-Purpose Dexterous Manipulation",
-      "url": "https://arxiv.org/abs/2603.10971v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-11T16:55:49.000Z",
-      "score": 70,
-      "summary_en": "Deep Reinforcement learning (DRL) has achieved remarkable success in domains with well-defined reward structures, such as Atari games and locomotion. In contrast, dexterous manipulation lacks general-purpose reward formulations and typically depends on task-specific, handcrafted priors to guide hand-object interactions. We propose Contact Coverage-Guided Exploration (CCGE), a general exploration method designed for general-purpose dexterous manipulation tasks. CCGE represents contact state as the intersection between object surface points and predefined hand keypoints, encouraging dexterous ha",
-      "summary_fr": "Deep Reinforcement learning (DRL) has achieved remarkable success in domains with well-defined reward structures, such as Atari games and locomotion. In contrast, dexterous manipulation lacks general-purpose reward formulations and typically depends on task-specific, handcrafted priors to guide hand-object interactions. We propose Contact Coverage-Guided Exploration (CCGE), a general exploration method designed for general-purpose dexterous manipulation tasks. CCGE represents contact state as the intersection between object surface points and predefined hand keypoints, encouraging dexterous ha",
-      "resume_fr": "Deep Reinforcement learning (DRL) has achieved remarkable success in domains with well-defined reward structures, such as Atari games and locomotion. In contrast, dexterous manipulation lacks general-purpose reward formulations and typically depends on task-specific, handcrafted priors to guide hand-object interactions. We propose Contact Coverage-Guided Exploration (CCGE), a general exploration method designed for general-purpose dexterous manipulation tasks. CCGE represents contact state as the intersection between object surface points and predefined hand keypoints, encouraging dexterous ha",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A benchmarking framework for embodied neuromorphic agents",
-      "url": "https://www.nature.com/articles/s42256-026-01197-w",
-      "source": "Nature Machine Intelligence",
-      "published": "2026-03-11T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01197-w/MediaObjects/42256_2026_1197_Fig1_HTML.png"
-    },
-    {
-      "title": "Evaluating the Impact of AI Tools on Academic Performance and Student Satisfaction",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70225?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-10T23:43:12.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Kinodynamic Motion Retargeting for Humanoid Locomotion via Multi-Contact Whole-Body Trajectory Optimization",
-      "url": "https://arxiv.org/abs/2603.09956v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-10T17:51:17.000Z",
-      "score": 70,
-      "summary_en": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
-      "summary_fr": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
-      "resume_fr": "We present the KinoDynamic Motion Retargeting (KDMR) framework, a novel approach for humanoid locomotion that models the retargeting process as a multi-contact, whole-body trajectory optimization problem. Conventional kinematics-based retargeting methods rely solely on spatial motion capture (MoCap) data, inevitably introducing physically inconsistent artifacts, such as foot sliding and ground penetration, that severely degrade the performance of downstream imitation learning policies. To bridge this gap, KDMR extends beyond pure kinematics by explicitly enforcing rigid-body dynamics and conta",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "When Learning Rates Go Wrong: Early Structural Signals in PPO Actor-Critic",
-      "url": "https://arxiv.org/abs/2603.09950v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-03-10T17:46:31.000Z",
-      "score": 70,
-      "summary_en": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
-      "summary_fr": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
-      "resume_fr": "Deep Reinforcement Learning systems are highly sensitive to the learning rate (LR), and selecting stable and performant training runs often requires extensive hyperparameter search. In Proximal Policy Optimization (PPO) actor--critic methods, small LR values lead to slow convergence, whereas large LR values may induce instability or collapse. We analyse this phenomenon from the behavior of the hidden neurons in the network using the Overfitting-Underfitting Indicator (OUI), a metric that quantifies the balance of binary activation patterns over a fixed probe batch. We introduce an efficient ba",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Robust Cooperative Localization in Featureless Environments: A Comparative Study of DCL, StCL, CCL, CI, and Standard-CL",
-      "url": "https://arxiv.org/abs/2603.09886v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-10T16:44:24.000Z",
-      "score": 70,
-      "summary_en": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
-      "summary_fr": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
-      "resume_fr": "Cooperative localization (CL) enables accurate position estimation in multi-robot systems operating in GPS-denied environments. This paper presents a comparative study of five CL approaches: Centralized Cooperative Localization (CCL), Decentralized Cooperative Localization (DCL), Sequential Cooperative Localization (StCL), Covariance Intersection (CI), and Standard Cooperative Localization (Standard-CL). All methods are implemented in ROS and evaluated through Monte Carlo simulations under two conditions: weak data association and robust detection. Our analysis reveals fundamental trade-offs a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Emerging Extrinsic Dexterity in Cluttered Scenes via Dynamics-aware Policy Learning",
-      "url": "https://arxiv.org/abs/2603.09882v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-10T16:40:30.000Z",
-      "score": 70,
-      "summary_en": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
-      "summary_fr": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
-      "resume_fr": "Extrinsic dexterity leverages environmental contact to overcome the limitations of prehensile manipulation. However, achieving such dexterity in cluttered scenes remains challenging and underexplored, as it requires selectively exploiting contact among multiple interacting objects with inherently coupled dynamics. Existing approaches lack explicit modeling of such complex dynamics and therefore fall short in non-prehensile manipulation in cluttered environments, which in turn limits their practical applicability in real-world environments. In this paper, we introduce a Dynamics-Aware Policy Le",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Comparing the Impact of Individual‐ and Team‐Based ChatGPT Collaboration on High School Students' Cognitive Competencies in Programming Education",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70226?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-10T15:56:39.000Z",
-      "score": 100,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Inserting Generative Learning Activities During Pauses in Slideshow and Virtual Reality Lessons",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70215?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-10T00:15:52.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Design and Validation of the Metacognitive Diagnostic Disruption in AI Decision‐Making Scale (MDD‐AI Scale) Among Educational Administrators in Jordan: Insights From the Network Analysis Perspective",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70216?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-09T23:49:58.000Z",
-      "score": 65,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Integrating Virtual and Augmented Reality into Public Education: Opportunities and Challenges in Language Learning",
-      "url": "https://arxiv.org/abs/2603.08970v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-09T22:02:57.000Z",
-      "score": 65,
-      "summary_en": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
-      "summary_fr": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
-      "resume_fr": "Virtual Reality (VR) and Augmented Reality (AR) are emerging as transformative tools in education, offering new possibilities for engagement and immersion. This paper explores their potential in language learning within public education, focusing on their ability to enhance traditional schooling methods and address existing educational gaps. The integration of VR and AR in schools, however, is not without challenges, including usability, technical barriers, and the alignment of these technologies with existing curricula. Drawing on two empirical studies, this work investigates the opportunitie",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
