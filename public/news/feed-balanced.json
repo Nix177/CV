@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-24T07:12:36.796Z",
+  "generatedAt": "2026-03-25T07:10:59.544Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,120 @@
     }
   },
   "items": [
+    {
+      "title": "VISion On Request: Enhanced VLLM efficiency with sparse, dynamically selected, vision-language interactions",
+      "url": "https://arxiv.org/abs/2603.23495v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-24T17:58:17.000Z",
+      "score": 70,
+      "summary_en": "Existing approaches for improving the efficiency of Large Vision-Language Models (LVLMs) are largely based on the concept of visual token reduction. This approach, however, creates an information bottleneck that impairs performance, especially on challenging tasks that require fine-grained understanding and reasoning. In this work, we challenge this paradigm by introducing VISion On Request (VISOR), a method that reduces inference cost without discarding visual information. Instead of compressing the image, VISOR improves efficiency by sparsifying the interaction between image and text tokens.",
+      "summary_fr": "Existing approaches for improving the efficiency of Large Vision-Language Models (LVLMs) are largely based on the concept of visual token reduction. This approach, however, creates an information bottleneck that impairs performance, especially on challenging tasks that require fine-grained understanding and reasoning. In this work, we challenge this paradigm by introducing VISion On Request (VISOR), a method that reduces inference cost without discarding visual information. Instead of compressing the image, VISOR improves efficiency by sparsifying the interaction between image and text tokens.",
+      "resume_fr": "Existing approaches for improving the efficiency of Large Vision-Language Models (LVLMs) are largely based on the concept of visual token reduction. This approach, however, creates an information bottleneck that impairs performance, especially on challenging tasks that require fine-grained understanding and reasoning. In this work, we challenge this paradigm by introducing VISion On Request (VISOR), a method that reduces inference cost without discarding visual information. Instead of compressing the image, VISOR improves efficiency by sparsifying the interaction between image and text tokens.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "VTAM: Video-Tactile-Action Models for Complex Physical Interaction Beyond VLAs",
+      "url": "https://arxiv.org/abs/2603.23481v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-03-24T17:45:06.000Z",
+      "score": 70,
+      "summary_en": "Video-Action Models (VAMs) have emerged as a promising framework for embodied intelligence, learning implicit world dynamics from raw video streams to produce temporally consistent action predictions. Although such models demonstrate strong performance on long-horizon tasks through visual reasoning, they remain limited in contact-rich scenarios where critical interaction states are only partially observable from vision alone. In particular, fine-grained force modulation and contact transitions are not reliably encoded in visual tokens, leading to unstable or imprecise behaviors. To bridge this",
+      "summary_fr": "Video-Action Models (VAMs) have emerged as a promising framework for embodied intelligence, learning implicit world dynamics from raw video streams to produce temporally consistent action predictions. Although such models demonstrate strong performance on long-horizon tasks through visual reasoning, they remain limited in contact-rich scenarios where critical interaction states are only partially observable from vision alone. In particular, fine-grained force modulation and contact transitions are not reliably encoded in visual tokens, leading to unstable or imprecise behaviors. To bridge this",
+      "resume_fr": "Video-Action Models (VAMs) have emerged as a promising framework for embodied intelligence, learning implicit world dynamics from raw video streams to produce temporally consistent action predictions. Although such models demonstrate strong performance on long-horizon tasks through visual reasoning, they remain limited in contact-rich scenarios where critical interaction states are only partially observable from vision alone. In particular, fine-grained force modulation and contact transitions are not reliably encoded in visual tokens, leading to unstable or imprecise behaviors. To bridge this",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ABot-PhysWorld: Interactive World Foundation Model for Robotic Manipulation with Physics Alignment",
+      "url": "https://arxiv.org/abs/2603.23376v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-03-24T16:07:09.000Z",
+      "score": 70,
+      "summary_en": "Video-based world models offer a powerful paradigm for embodied simulation and planning, yet state-of-the-art models often generate physically implausible manipulations - such as object penetration and anti-gravity motion - due to training on generic visual data and likelihood-based objectives that ignore physical laws. We present ABot-PhysWorld, a 14B Diffusion Transformer model that generates visually realistic, physically plausible, and action-controllable videos. Built on a curated dataset of three million manipulation clips with physics-aware annotation, it uses a novel DPO-based post-tra",
+      "summary_fr": "Video-based world models offer a powerful paradigm for embodied simulation and planning, yet state-of-the-art models often generate physically implausible manipulations - such as object penetration and anti-gravity motion - due to training on generic visual data and likelihood-based objectives that ignore physical laws. We present ABot-PhysWorld, a 14B Diffusion Transformer model that generates visually realistic, physically plausible, and action-controllable videos. Built on a curated dataset of three million manipulation clips with physics-aware annotation, it uses a novel DPO-based post-tra",
+      "resume_fr": "Video-based world models offer a powerful paradigm for embodied simulation and planning, yet state-of-the-art models often generate physically implausible manipulations - such as object penetration and anti-gravity motion - due to training on generic visual data and likelihood-based objectives that ignore physical laws. We present ABot-PhysWorld, a 14B Diffusion Transformer model that generates visually realistic, physically plausible, and action-controllable videos. Built on a curated dataset of three million manipulation clips with physics-aware annotation, it uses a novel DPO-based post-tra",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Off-Policy Value-Based Reinforcement Learning for Large Language Models",
+      "url": "https://arxiv.org/abs/2603.23355v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-03-24T15:55:02.000Z",
+      "score": 70,
+      "summary_en": "Improving data utilization efficiency is critical for scaling reinforcement learning (RL) for long-horizon tasks where generating trajectories is expensive. However, the dominant RL methods for LLMs are largely on-policy: they update each batch of data only once, discard it, and then collect fresh samples, resulting in poor sample efficiency. In this work, we explore an alternative value-based RL framework for LLMs that naturally enables off-policy learning. We propose ReVal, a Bellman-update-based method that combines stepwise signals capturing internal consistency with trajectory-level signa",
+      "summary_fr": "Improving data utilization efficiency is critical for scaling reinforcement learning (RL) for long-horizon tasks where generating trajectories is expensive. However, the dominant RL methods for LLMs are largely on-policy: they update each batch of data only once, discard it, and then collect fresh samples, resulting in poor sample efficiency. In this work, we explore an alternative value-based RL framework for LLMs that naturally enables off-policy learning. We propose ReVal, a Bellman-update-based method that combines stepwise signals capturing internal consistency with trajectory-level signa",
+      "resume_fr": "Improving data utilization efficiency is critical for scaling reinforcement learning (RL) for long-horizon tasks where generating trajectories is expensive. However, the dominant RL methods for LLMs are largely on-policy: they update each batch of data only once, discard it, and then collect fresh samples, resulting in poor sample efficiency. In this work, we explore an alternative value-based RL framework for LLMs that naturally enables off-policy learning. We propose ReVal, a Bellman-update-based method that combines stepwise signals capturing internal consistency with trajectory-level signa",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Three Years with Classroom AI in Introductory Programming: Shifts in Student Awareness, Interaction, and Performance",
+      "url": "https://arxiv.org/abs/2603.22672v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-24T00:46:33.000Z",
+      "score": 85,
+      "summary_en": "Generative AI (GenAI) tools such as ChatGPT now provide novice programmers with instant, personalized support and are reshaping computing education. While a growing body of work examines AI's immediate impacts, longitudinal evidence remains limited on how students' awareness, student-AI interaction patterns, and course outcomes evolve as AI becomes routine in classrooms. To address this gap, we investigate an introductory Python course across three successive AI-supported cohorts (2023-2025). Using questionnaires, coded student-AI dialogue logs, and course assessment records, we examine cohort",
+      "summary_fr": "Generative AI (GenAI) tools such as ChatGPT now provide novice programmers with instant, personalized support and are reshaping computing education. While a growing body of work examines AI's immediate impacts, longitudinal evidence remains limited on how students' awareness, student-AI interaction patterns, and course outcomes evolve as AI becomes routine in classrooms. To address this gap, we investigate an introductory Python course across three successive AI-supported cohorts (2023-2025). Using questionnaires, coded student-AI dialogue logs, and course assessment records, we examine cohort",
+      "resume_fr": "Generative AI (GenAI) tools such as ChatGPT now provide novice programmers with instant, personalized support and are reshaping computing education. While a growing body of work examines AI's immediate impacts, longitudinal evidence remains limited on how students' awareness, student-AI interaction patterns, and course outcomes evolve as AI becomes routine in classrooms. To address this gap, we investigate an introductory Python course across three successive AI-supported cohorts (2023-2025). Using questionnaires, coded student-AI dialogue logs, and course assessment records, we examine cohort",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Practitioner Voices Summit: How Teachers Evaluate AI Tools through Deliberative Sensemaking",
+      "url": "https://arxiv.org/abs/2603.22588v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-03-23T21:26:15.000Z",
+      "score": 85,
+      "summary_en": "Teachers face growing pressure to integrate AI tools into their classrooms, yet are rarely positioned as agentic decision-makers in this process. Understanding the criteria teachers use to evaluate AI tools, and the conditions that support such reasoning, is essential for responsible AI integration. We address this gap through a two-day national summit in which 61 U.S. K-12 mathematics educators developed personal rubrics for evaluating AI classroom tools. The summit was designed to support deliberative sensemaking, a process we conceptualize by integrating Technological Pedagogical Content Kn",
+      "summary_fr": "Teachers face growing pressure to integrate AI tools into their classrooms, yet are rarely positioned as agentic decision-makers in this process. Understanding the criteria teachers use to evaluate AI tools, and the conditions that support such reasoning, is essential for responsible AI integration. We address this gap through a two-day national summit in which 61 U.S. K-12 mathematics educators developed personal rubrics for evaluating AI classroom tools. The summit was designed to support deliberative sensemaking, a process we conceptualize by integrating Technological Pedagogical Content Kn",
+      "resume_fr": "Teachers face growing pressure to integrate AI tools into their classrooms, yet are rarely positioned as agentic decision-makers in this process. Understanding the criteria teachers use to evaluate AI tools, and the conditions that support such reasoning, is essential for responsible AI integration. We address this gap through a two-day national summit in which 61 U.S. K-12 mathematics educators developed personal rubrics for evaluating AI classroom tools. The summit was designed to support deliberative sensemaking, a process we conceptualize by integrating Technological Pedagogical Content Kn",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "DualCoT-VLA: Visual-Linguistic Chain of Thought via Parallel Reasoning for Vision-Language-Action Models",
       "url": "https://arxiv.org/abs/2603.22280v1",
@@ -210,25 +324,6 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
-      "title": "The Impact of Web‐Based 360° Virtual Laboratory on Cognitive Load, Emotional Patterns and Visual Attention",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70224?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-23T00:05:51.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
       "title": "Computational framework to predict and shape human–machine interactions in closed-loop, co-adaptive neural interfaces",
       "url": "https://www.nature.com/articles/s42256-026-01194-z",
       "source": "Nature Machine Intelligence",
@@ -284,6 +379,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Impact of Web‐Based 360° Virtual Laboratory on Cognitive Load, Emotional Patterns and Visual Attention",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70224?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-03-22T07:00:00.000Z",
+      "score": 70,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     },
     {
       "title": "AI-Driven Multi-Agent Simulation of Stratified Polyamory Systems: A Computational Framework for Optimizing Social Reproductive Efficiency",
@@ -1119,120 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Neural Field Thermal Tomography: A Differentiable Physics Framework for Non-Destructive Evaluation",
-      "url": "https://arxiv.org/abs/2603.11045v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-03-11T17:59:42.000Z",
-      "score": 70,
-      "summary_en": "We propose Neural Field Thermal Tomography (NeFTY), a differentiable physics framework for the quantitative 3D reconstruction of material properties from transient surface temperature measurements. While traditional thermography relies on pixel-wise 1D approximations that neglect lateral diffusion, and soft-constrained Physics-Informed Neural Networks (PINNs) often fail in transient diffusion scenarios due to gradient stiffness, NeFTY parameterizes the 3D diffusivity field as a continuous neural field optimized through a rigorous numerical solver. By leveraging a differentiable physics solver,",
-      "summary_fr": "We propose Neural Field Thermal Tomography (NeFTY), a differentiable physics framework for the quantitative 3D reconstruction of material properties from transient surface temperature measurements. While traditional thermography relies on pixel-wise 1D approximations that neglect lateral diffusion, and soft-constrained Physics-Informed Neural Networks (PINNs) often fail in transient diffusion scenarios due to gradient stiffness, NeFTY parameterizes the 3D diffusivity field as a continuous neural field optimized through a rigorous numerical solver. By leveraging a differentiable physics solver,",
-      "resume_fr": "We propose Neural Field Thermal Tomography (NeFTY), a differentiable physics framework for the quantitative 3D reconstruction of material properties from transient surface temperature measurements. While traditional thermography relies on pixel-wise 1D approximations that neglect lateral diffusion, and soft-constrained Physics-Informed Neural Networks (PINNs) often fail in transient diffusion scenarios due to gradient stiffness, NeFTY parameterizes the 3D diffusivity field as a continuous neural field optimized through a rigorous numerical solver. By leveraging a differentiable physics solver,",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DynVLA: Learning World Dynamics for Action Reasoning in Autonomous Driving",
-      "url": "https://arxiv.org/abs/2603.11041v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-11T17:59:31.000Z",
-      "score": 70,
-      "summary_en": "We propose DynVLA, a driving VLA model that introduces a new CoT paradigm termed Dynamics CoT. DynVLA forecasts compact world dynamics before action generation, enabling more informed and physically grounded decision-making. To obtain compact dynamics representations, DynVLA introduces a Dynamics Tokenizer that compresses future evolution into a small set of dynamics tokens. Considering the rich environment dynamics in interaction-intensive driving scenarios, DynVLA decouples ego-centric and environment-centric dynamics, yielding more accurate world dynamics modeling. We then train DynVLA to g",
-      "summary_fr": "We propose DynVLA, a driving VLA model that introduces a new CoT paradigm termed Dynamics CoT. DynVLA forecasts compact world dynamics before action generation, enabling more informed and physically grounded decision-making. To obtain compact dynamics representations, DynVLA introduces a Dynamics Tokenizer that compresses future evolution into a small set of dynamics tokens. Considering the rich environment dynamics in interaction-intensive driving scenarios, DynVLA decouples ego-centric and environment-centric dynamics, yielding more accurate world dynamics modeling. We then train DynVLA to g",
-      "resume_fr": "We propose DynVLA, a driving VLA model that introduces a new CoT paradigm termed Dynamics CoT. DynVLA forecasts compact world dynamics before action generation, enabling more informed and physically grounded decision-making. To obtain compact dynamics representations, DynVLA introduces a Dynamics Tokenizer that compresses future evolution into a small set of dynamics tokens. Considering the rich environment dynamics in interaction-intensive driving scenarios, DynVLA decouples ego-centric and environment-centric dynamics, yielding more accurate world dynamics modeling. We then train DynVLA to g",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "RCTs & Human Uplift Studies: Methodological Challenges and Practical Solutions for Frontier AI Evaluation",
-      "url": "https://arxiv.org/abs/2603.11001v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-03-11T17:25:03.000Z",
-      "score": 100,
-      "summary_en": "Human uplift studies - or studies that measure AI effects on human performance relative to a status quo, typically using randomized controlled trial (RCT) methodology - are increasingly used to inform deployment, governance, and safety decisions for frontier AI systems. While the methods underlying these studies are well-established, their interaction with the distinctive properties of frontier AI systems remains underexamined, particularly when results are used to inform high-stakes decisions. We present findings from interviews with 16 expert practitioners with experience conducting human up",
-      "summary_fr": "Human uplift studies - or studies that measure AI effects on human performance relative to a status quo, typically using randomized controlled trial (RCT) methodology - are increasingly used to inform deployment, governance, and safety decisions for frontier AI systems. While the methods underlying these studies are well-established, their interaction with the distinctive properties of frontier AI systems remains underexamined, particularly when results are used to inform high-stakes decisions. We present findings from interviews with 16 expert practitioners with experience conducting human up",
-      "resume_fr": "Human uplift studies - or studies that measure AI effects on human performance relative to a status quo, typically using randomized controlled trial (RCT) methodology - are increasingly used to inform deployment, governance, and safety decisions for frontier AI systems. While the methods underlying these studies are well-established, their interaction with the distinctive properties of frontier AI systems remains underexamined, particularly when results are used to inform high-stakes decisions. We present findings from interviews with 16 expert practitioners with experience conducting human up",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Factorized Neural Implicit DMD for Parametric Dynamics",
-      "url": "https://arxiv.org/abs/2603.10995v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-03-11T17:20:34.000Z",
-      "score": 70,
-      "summary_en": "A data-driven, model-free approach to modeling the temporal evolution of physical systems mitigates the need for explicit knowledge of the governing equations. Even when physical priors such as partial differential equations are available, such systems often reside in high-dimensional state spaces and exhibit nonlinear dynamics, making traditional numerical solvers computationally expensive and ill-suited for real-time analysis and control. Consider the problem of learning a parametric flow of a dynamical system: with an initial field and a set of physical parameters, we aim to predict the sys",
-      "summary_fr": "A data-driven, model-free approach to modeling the temporal evolution of physical systems mitigates the need for explicit knowledge of the governing equations. Even when physical priors such as partial differential equations are available, such systems often reside in high-dimensional state spaces and exhibit nonlinear dynamics, making traditional numerical solvers computationally expensive and ill-suited for real-time analysis and control. Consider the problem of learning a parametric flow of a dynamical system: with an initial field and a set of physical parameters, we aim to predict the sys",
-      "resume_fr": "A data-driven, model-free approach to modeling the temporal evolution of physical systems mitigates the need for explicit knowledge of the governing equations. Even when physical priors such as partial differential equations are available, such systems often reside in high-dimensional state spaces and exhibit nonlinear dynamics, making traditional numerical solvers computationally expensive and ill-suited for real-time analysis and control. Consider the problem of learning a parametric flow of a dynamical system: with an initial field and a set of physical parameters, we aim to predict the sys",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PPGuide: Steering Diffusion Policies with Performance Predictive Guidance",
-      "url": "https://arxiv.org/abs/2603.10980v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-11T17:10:16.000Z",
-      "score": 85,
-      "summary_en": "Diffusion policies have shown to be very efficient at learning complex, multi-modal behaviors for robotic manipulation. However, errors in generated action sequences can compound over time which can potentially lead to failure. Some approaches mitigate this by augmenting datasets with expert demonstrations or learning predictive world models which might be computationally expensive. We introduce Performance Predictive Guidance (PPGuide), a lightweight, classifier-based framework that steers a pre-trained diffusion policy away from failure modes at inference time. PPGuide makes use of a novel s",
-      "summary_fr": "Diffusion policies have shown to be very efficient at learning complex, multi-modal behaviors for robotic manipulation. However, errors in generated action sequences can compound over time which can potentially lead to failure. Some approaches mitigate this by augmenting datasets with expert demonstrations or learning predictive world models which might be computationally expensive. We introduce Performance Predictive Guidance (PPGuide), a lightweight, classifier-based framework that steers a pre-trained diffusion policy away from failure modes at inference time. PPGuide makes use of a novel s",
-      "resume_fr": "Diffusion policies have shown to be very efficient at learning complex, multi-modal behaviors for robotic manipulation. However, errors in generated action sequences can compound over time which can potentially lead to failure. Some approaches mitigate this by augmenting datasets with expert demonstrations or learning predictive world models which might be computationally expensive. We introduce Performance Predictive Guidance (PPGuide), a lightweight, classifier-based framework that steers a pre-trained diffusion policy away from failure modes at inference time. PPGuide makes use of a novel s",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning Adaptive Force Control for Contact-Rich Sample Scraping with Heterogeneous Materials",
-      "url": "https://arxiv.org/abs/2603.10979v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-11T17:07:55.000Z",
-      "score": 70,
-      "summary_en": "The increasing demand for accelerated scientific discovery, driven by global challenges, highlights the need for advanced AI-driven robotics. Deploying robotic chemists in human-centric labs is key for the next horizon of autonomous discovery, as complex tasks still demand the dexterity of human scientists. Robotic manipulation in this context is uniquely challenged by handling diverse chemicals (granular, powdery, or viscous liquids), under varying lab conditions. For example, humans use spatulas for scraping materials from vial walls. Automating this process is challenging because it goes be",
-      "summary_fr": "The increasing demand for accelerated scientific discovery, driven by global challenges, highlights the need for advanced AI-driven robotics. Deploying robotic chemists in human-centric labs is key for the next horizon of autonomous discovery, as complex tasks still demand the dexterity of human scientists. Robotic manipulation in this context is uniquely challenged by handling diverse chemicals (granular, powdery, or viscous liquids), under varying lab conditions. For example, humans use spatulas for scraping materials from vial walls. Automating this process is challenging because it goes be",
-      "resume_fr": "The increasing demand for accelerated scientific discovery, driven by global challenges, highlights the need for advanced AI-driven robotics. Deploying robotic chemists in human-centric labs is key for the next horizon of autonomous discovery, as complex tasks still demand the dexterity of human scientists. Robotic manipulation in this context is uniquely challenged by handling diverse chemicals (granular, powdery, or viscous liquids), under varying lab conditions. For example, humans use spatulas for scraping materials from vial walls. Automating this process is challenging because it goes be",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
