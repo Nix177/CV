@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-02T07:22:27.191Z",
+  "generatedAt": "2026-04-03T07:18:54.619Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,215 @@
     }
   },
   "items": [
+    {
+      "title": "ActionParty: Multi-Subject Action Binding in Generative Video Games",
+      "url": "https://arxiv.org/abs/2604.02330v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-02T17:59:58.000Z",
+      "score": 70,
+      "summary_en": "Recent advances in video diffusion have enabled the development of \"world models\" capable of simulating interactive environments. However, these models are largely restricted to single-agent settings, failing to control multiple agents simultaneously in a scene. In this work, we tackle a fundamental issue of action binding in existing video diffusion models, which struggle to associate specific actions with their corresponding subjects. For this purpose, we propose ActionParty, an action controllable multi-subject world model for generative video games. It introduces subject state tokens, i.e.",
+      "summary_fr": "Recent advances in video diffusion have enabled the development of \"world models\" capable of simulating interactive environments. However, these models are largely restricted to single-agent settings, failing to control multiple agents simultaneously in a scene. In this work, we tackle a fundamental issue of action binding in existing video diffusion models, which struggle to associate specific actions with their corresponding subjects. For this purpose, we propose ActionParty, an action controllable multi-subject world model for generative video games. It introduces subject state tokens, i.e.",
+      "resume_fr": "Recent advances in video diffusion have enabled the development of \"world models\" capable of simulating interactive environments. However, these models are largely restricted to single-agent settings, failing to control multiple agents simultaneously in a scene. In this work, we tackle a fundamental issue of action binding in existing video diffusion models, which struggle to associate specific actions with their corresponding subjects. For this purpose, we propose ActionParty, an action controllable multi-subject world model for generative video games. It introduces subject state tokens, i.e.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning",
+      "url": "https://arxiv.org/abs/2604.02322v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-02T17:58:50.000Z",
+      "score": 70,
+      "summary_en": "Large Language Models employing Chain-of-Thought reasoning achieve strong performance but suffer from excessive token consumption that inflates inference costs. Existing efficiency methods such as explicit length penalties, difficulty estimators, or multi-stage curricula either degrade reasoning quality or require complex training pipelines. We introduce Batched Contextual Reinforcement, a minimalist, single-stage training paradigm that unlocks efficient reasoning through a simple structural modification: training the model to solve N problems simultaneously within a shared context window, rew",
+      "summary_fr": "Large Language Models employing Chain-of-Thought reasoning achieve strong performance but suffer from excessive token consumption that inflates inference costs. Existing efficiency methods such as explicit length penalties, difficulty estimators, or multi-stage curricula either degrade reasoning quality or require complex training pipelines. We introduce Batched Contextual Reinforcement, a minimalist, single-stage training paradigm that unlocks efficient reasoning through a simple structural modification: training the model to solve N problems simultaneously within a shared context window, rew",
+      "resume_fr": "Large Language Models employing Chain-of-Thought reasoning achieve strong performance but suffer from excessive token consumption that inflates inference costs. Existing efficiency methods such as explicit length penalties, difficulty estimators, or multi-stage curricula either degrade reasoning quality or require complex training pipelines. We introduce Batched Contextual Reinforcement, a minimalist, single-stage training paradigm that unlocks efficient reasoning through a simple structural modification: training the model to solve N problems simultaneously within a shared context window, rew",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Unifying Group-Relative and Self-Distillation Policy Optimization via Sample Routing",
+      "url": "https://arxiv.org/abs/2604.02288v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-02T17:29:18.000Z",
+      "score": 70,
+      "summary_en": "Reinforcement learning with verifiable rewards (RLVR) has become a standard paradigm for post-training large language models. While Group Relative Policy Optimization (GRPO) is widely adopted, its coarse credit assignment uniformly penalizes failed rollouts, lacking the token-level focus needed to efficiently address specific deviations. Self-Distillation Policy Optimization (SDPO) addresses this by providing denser, more targeted logit-level supervision that facilitates rapid early improvement, yet it frequently collapses during prolonged training. We trace this late-stage instability to two ",
+      "summary_fr": "Reinforcement learning with verifiable rewards (RLVR) has become a standard paradigm for post-training large language models. While Group Relative Policy Optimization (GRPO) is widely adopted, its coarse credit assignment uniformly penalizes failed rollouts, lacking the token-level focus needed to efficiently address specific deviations. Self-Distillation Policy Optimization (SDPO) addresses this by providing denser, more targeted logit-level supervision that facilitates rapid early improvement, yet it frequently collapses during prolonged training. We trace this late-stage instability to two ",
+      "resume_fr": "Reinforcement learning with verifiable rewards (RLVR) has become a standard paradigm for post-training large language models. While Group Relative Policy Optimization (GRPO) is widely adopted, its coarse credit assignment uniformly penalizes failed rollouts, lacking the token-level focus needed to efficiently address specific deviations. Self-Distillation Policy Optimization (SDPO) addresses this by providing denser, more targeted logit-level supervision that facilitates rapid early improvement, yet it frequently collapses during prolonged training. We trace this late-stage instability to two ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "De Jure: Iterative LLM Self-Refinement for Structured Extraction of Regulatory Rules",
+      "url": "https://arxiv.org/abs/2604.02276v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-04-02T17:06:50.000Z",
+      "score": 70,
+      "summary_en": "Regulatory documents encode legally binding obligations that LLM-based systems must respect. Yet converting dense, hierarchically structured legal text into machine-readable rules remains a costly, expert-intensive process. We present De Jure, a fully automated, domain-agnostic pipeline for extracting structured regulatory rules from raw documents, requiring no human annotation, domain-specific prompting, or annotated gold data. De Jure operates through four sequential stages: normalization of source documents into structured Markdown; LLM-driven semantic decomposition into structured rule uni",
+      "summary_fr": "Regulatory documents encode legally binding obligations that LLM-based systems must respect. Yet converting dense, hierarchically structured legal text into machine-readable rules remains a costly, expert-intensive process. We present De Jure, a fully automated, domain-agnostic pipeline for extracting structured regulatory rules from raw documents, requiring no human annotation, domain-specific prompting, or annotated gold data. De Jure operates through four sequential stages: normalization of source documents into structured Markdown; LLM-driven semantic decomposition into structured rule uni",
+      "resume_fr": "Regulatory documents encode legally binding obligations that LLM-based systems must respect. Yet converting dense, hierarchically structured legal text into machine-readable rules remains a costly, expert-intensive process. We present De Jure, a fully automated, domain-agnostic pipeline for extracting structured regulatory rules from raw documents, requiring no human annotation, domain-specific prompting, or annotated gold data. De Jure operates through four sequential stages: normalization of source documents into structured Markdown; LLM-driven semantic decomposition into structured rule uni",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "UAV-Track VLA: Embodied Aerial Tracking via Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2604.02241v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-04-02T16:33:38.000Z",
+      "score": 70,
+      "summary_en": "Embodied visual tracking is crucial for Unmanned Aerial Vehicles (UAVs) executing complex real-world tasks. In dynamic urban scenarios with complex semantic requirements, Vision-Language-Action (VLA) models show great promise due to their cross-modal fusion and continuous action generation capabilities. To benchmark multimodal tracking in such environments, we construct a dedicated evaluation benchmark and a large-scale dataset encompassing over 890K frames, 176 tasks, and 85 diverse objects. Furthermore, to address temporal feature redundancy and the lack of spatial geometric priors in existi",
+      "summary_fr": "Embodied visual tracking is crucial for Unmanned Aerial Vehicles (UAVs) executing complex real-world tasks. In dynamic urban scenarios with complex semantic requirements, Vision-Language-Action (VLA) models show great promise due to their cross-modal fusion and continuous action generation capabilities. To benchmark multimodal tracking in such environments, we construct a dedicated evaluation benchmark and a large-scale dataset encompassing over 890K frames, 176 tasks, and 85 diverse objects. Furthermore, to address temporal feature redundancy and the lack of spatial geometric priors in existi",
+      "resume_fr": "Embodied visual tracking is crucial for Unmanned Aerial Vehicles (UAVs) executing complex real-world tasks. In dynamic urban scenarios with complex semantic requirements, Vision-Language-Action (VLA) models show great promise due to their cross-modal fusion and continuous action generation capabilities. To benchmark multimodal tracking in such environments, we construct a dedicated evaluation benchmark and a large-scale dataset encompassing over 890K frames, 176 tasks, and 85 diverse objects. Furthermore, to address temporal feature redundancy and the lack of spatial geometric priors in existi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Generative AI Spotlights the Human Core of Data Science: Implications for Education",
+      "url": "https://arxiv.org/abs/2604.02238v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-02T16:31:32.000Z",
+      "score": 50,
+      "summary_en": "Generative AI (GAI) reveals an irreducible human core at the center of data science: advances in GAI should sharpen, rather than diminish, the focus on human reasoning in data science education. GAI can now execute many routine data science workflows, including cleaning, summarizing, visualizing, modeling, and drafting reports. Yet the competencies that matter most remain irreducibly human: problem formulation, measurement and design, causal identification, statistical and computational reasoning, ethics and accountability, and sensemaking. Drawing on Donoho's Greater Data Science framework, N",
+      "summary_fr": "Generative AI (GAI) reveals an irreducible human core at the center of data science: advances in GAI should sharpen, rather than diminish, the focus on human reasoning in data science education. GAI can now execute many routine data science workflows, including cleaning, summarizing, visualizing, modeling, and drafting reports. Yet the competencies that matter most remain irreducibly human: problem formulation, measurement and design, causal identification, statistical and computational reasoning, ethics and accountability, and sensemaking. Drawing on Donoho's Greater Data Science framework, N",
+      "resume_fr": "Generative AI (GAI) reveals an irreducible human core at the center of data science: advances in GAI should sharpen, rather than diminish, the focus on human reasoning in data science education. GAI can now execute many routine data science workflows, including cleaning, summarizing, visualizing, modeling, and drafting reports. Yet the competencies that matter most remain irreducibly human: problem formulation, measurement and design, causal identification, statistical and computational reasoning, ethics and accountability, and sensemaking. Drawing on Donoho's Greater Data Science framework, N",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Impact of Multimodal and Conversational AI on Learning Outcomes and Experience",
+      "url": "https://arxiv.org/abs/2604.02221v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-04-02T16:12:00.000Z",
+      "score": 85,
+      "summary_en": "Multimodal Large Language Models (MLLMs) offer an opportunity to support multimedia learning through conversational systems grounded in educational content. However, while conversational AI is known to boost engagement, its impact on learning in visually-rich STEM domains remains under-explored. Moreover, there is limited understanding of how multimodality and conversationality jointly influence learning in generative AI systems. This work reports findings from a randomized controlled online study (N = 124) comparing three approaches to learning biology from textbook content: (1) a document-gr",
+      "summary_fr": "Multimodal Large Language Models (MLLMs) offer an opportunity to support multimedia learning through conversational systems grounded in educational content. However, while conversational AI is known to boost engagement, its impact on learning in visually-rich STEM domains remains under-explored. Moreover, there is limited understanding of how multimodality and conversationality jointly influence learning in generative AI systems. This work reports findings from a randomized controlled online study (N = 124) comparing three approaches to learning biology from textbook content: (1) a document-gr",
+      "resume_fr": "Multimodal Large Language Models (MLLMs) offer an opportunity to support multimedia learning through conversational systems grounded in educational content. However, while conversational AI is known to boost engagement, its impact on learning in visually-rich STEM domains remains under-explored. Moreover, there is limited understanding of how multimodality and conversationality jointly influence learning in generative AI systems. This work reports findings from a randomized controlled online study (N = 124) comparing three approaches to learning biology from textbook content: (1) a document-gr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges",
+      "url": "https://arxiv.org/abs/2604.02211v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-02T16:04:52.000Z",
+      "score": 50,
+      "summary_en": "Video recommender systems are among the most popular and impactful applications of AI, shaping content consumption and influencing culture for billions of users. Traditional single-model recommenders, which optimize static engagement metrics, are increasingly limited in addressing the dynamic requirements of modern platforms. In response, multi-agent architectures are redefining how video recommender systems serve, learn, and adapt to both users and datasets. These agent-based systems coordinate specialized agents responsible for video understanding, reasoning, memory, and feedback, to provide",
+      "summary_fr": "Video recommender systems are among the most popular and impactful applications of AI, shaping content consumption and influencing culture for billions of users. Traditional single-model recommenders, which optimize static engagement metrics, are increasingly limited in addressing the dynamic requirements of modern platforms. In response, multi-agent architectures are redefining how video recommender systems serve, learn, and adapt to both users and datasets. These agent-based systems coordinate specialized agents responsible for video understanding, reasoning, memory, and feedback, to provide",
+      "resume_fr": "Video recommender systems are among the most popular and impactful applications of AI, shaping content consumption and influencing culture for billions of users. Traditional single-model recommenders, which optimize static engagement metrics, are increasingly limited in addressing the dynamic requirements of modern platforms. In response, multi-agent architectures are redefining how video recommender systems serve, learn, and adapt to both users and datasets. These agent-based systems coordinate specialized agents responsible for video understanding, reasoning, memory, and feedback, to provide",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "UniDriveVLA: Unifying Understanding, Perception, and Action Planning for Autonomous Driving",
+      "url": "https://arxiv.org/abs/2604.02190v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-04-02T15:48:45.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) models have recently emerged in autonomous driving, with the promise of leveraging rich world knowledge to improve the cognitive capabilities of driving systems. However, adapting such models for driving tasks currently faces a critical dilemma between spatial perception and semantic reasoning. Consequently, existing VLA systems are forced into suboptimal compromises: directly adopting 2D Vision-Language Models yields limited spatial perception, whereas enhancing them with 3D spatial representations often impairs the native reasoning capacity of VLMs. We argue that",
+      "summary_fr": "Vision-Language-Action (VLA) models have recently emerged in autonomous driving, with the promise of leveraging rich world knowledge to improve the cognitive capabilities of driving systems. However, adapting such models for driving tasks currently faces a critical dilemma between spatial perception and semantic reasoning. Consequently, existing VLA systems are forced into suboptimal compromises: directly adopting 2D Vision-Language Models yields limited spatial perception, whereas enhancing them with 3D spatial representations often impairs the native reasoning capacity of VLMs. We argue that",
+      "resume_fr": "Vision-Language-Action (VLA) models have recently emerged in autonomous driving, with the promise of leveraging rich world knowledge to improve the cognitive capabilities of driving systems. However, adapting such models for driving tasks currently faces a critical dilemma between spatial perception and semantic reasoning. Consequently, existing VLA systems are forced into suboptimal compromises: directly adopting 2D Vision-Language Models yields limited spatial perception, whereas enhancing them with 3D spatial representations often impairs the native reasoning capacity of VLMs. We argue that",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Captioning Daily Activity Images in Early Childhood Education: Benchmark and Algorithm",
+      "url": "https://arxiv.org/abs/2604.01941v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-02T12:01:15.000Z",
+      "score": 85,
+      "summary_en": "Image captioning for Early Childhood Education (ECE) is essential for automated activity understanding and educational assessment. However, existing methods face two key challenges. First, the lack of large-scale, domain-specific datasets limits the model's ability to capture fine-grained semantic concepts unique to ECE scenarios, resulting in generic and imprecise descriptions. Second, conventional training paradigms exhibit limitations in enhancing professional object description capability, as supervised learning tends to favor high-frequency expressions, while reinforcement learning may su",
+      "summary_fr": "Image captioning for Early Childhood Education (ECE) is essential for automated activity understanding and educational assessment. However, existing methods face two key challenges. First, the lack of large-scale, domain-specific datasets limits the model's ability to capture fine-grained semantic concepts unique to ECE scenarios, resulting in generic and imprecise descriptions. Second, conventional training paradigms exhibit limitations in enhancing professional object description capability, as supervised learning tends to favor high-frequency expressions, while reinforcement learning may su",
+      "resume_fr": "Image captioning for Early Childhood Education (ECE) is essential for automated activity understanding and educational assessment. However, existing methods face two key challenges. First, the lack of large-scale, domain-specific datasets limits the model's ability to capture fine-grained semantic concepts unique to ECE scenarios, resulting in generic and imprecise descriptions. Second, conventional training paradigms exhibit limitations in enhancing professional object description capability, as supervised learning tends to favor high-frequency expressions, while reinforcement learning may su",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Beyond Detection: Ethical Foundations for Automated Dyslexic Error Attribution",
+      "url": "https://arxiv.org/abs/2604.01853v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-02T10:08:35.000Z",
+      "score": 85,
+      "summary_en": "Dyslexic spelling errors exhibit systematic phonological and orthographic patterns that distinguish them from the errors produced by typically developing writers. While this observation has motivated dyslexic-specific spell-checking and assistive writing tools, prior work has focused predominantly on error correction rather than attribution, and has largely neglected the ethical risks. The risk of harmful labelling, covert screening, algorithmic bias, and institutional misuse that automated classification of learners entails requires the development of robust ethical and legal frameworks for r",
+      "summary_fr": "Dyslexic spelling errors exhibit systematic phonological and orthographic patterns that distinguish them from the errors produced by typically developing writers. While this observation has motivated dyslexic-specific spell-checking and assistive writing tools, prior work has focused predominantly on error correction rather than attribution, and has largely neglected the ethical risks. The risk of harmful labelling, covert screening, algorithmic bias, and institutional misuse that automated classification of learners entails requires the development of robust ethical and legal frameworks for r",
+      "resume_fr": "Dyslexic spelling errors exhibit systematic phonological and orthographic patterns that distinguish them from the errors produced by typically developing writers. While this observation has motivated dyslexic-specific spell-checking and assistive writing tools, prior work has focused predominantly on error correction rather than attribution, and has largely neglected the ethical risks. The risk of harmful labelling, covert screening, algorithmic bias, and institutional misuse that automated classification of learners entails requires the development of robust ethical and legal frameworks for r",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Informal Digital Learning of English (IDLE) as an Innovative Pedagogy: A Catalyst for Holistic Language Development and Sustainable Global Impact",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70237?af=R",
@@ -1024,215 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Computational framework to predict and shape human–machine interactions in closed-loop, co-adaptive neural interfaces",
-      "url": "https://www.nature.com/articles/s42256-026-01194-z",
-      "source": "Nature Machine Intelligence",
-      "published": "2026-03-23T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01194-z/MediaObjects/42256_2026_1194_Fig1_HTML.png"
-    },
-    {
-      "title": "Assessing Data Literacy in K--12 Education: Challenges and Opportunities",
-      "url": "https://arxiv.org/abs/2603.21382v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-22T19:54:07.000Z",
-      "score": 65,
-      "summary_en": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
-      "summary_fr": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
-      "resume_fr": "Data literacy has become a key learning objective in K--12 education, but it remains an ambiguous concept as teachers interpret it differently. When creating assessments, teachers turn broad ideas about \"working with data\" into concrete decisions about what materials to include. Since working with data visualizations is a core component of data literacy, teachers' decisions about how to include them on assessments offer insight into how they interpret data literacy more broadly. Drawing on interviews with 13 teachers, we identify four challenges in enacting data literacy in assessments: (1) co",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Unpacking Interaction Profiles and Strategies in Human-AI Collaborative Problem Solving: A Cognitive Distribution and Regulation Perspective",
-      "url": "https://arxiv.org/abs/2603.21288v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-03-22T15:21:55.000Z",
-      "score": 100,
-      "summary_en": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
-      "summary_fr": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
-      "resume_fr": "This study adopts an integrated distributed cognition and regulation of learning perspective to examine the collaboration patterns and dynamics of human-AI collaboration when college students collaborating with AI for complex problem-solving. Through cluster analysis, three distinct collaborative problem-solving modes were identified in this study: Delegated Reasoning (DR), Concerted Interpretation (CI), and Delegated Elaboration (DE). This study found that the DR group achieved the highest task performance, significantly outperforming the CI group. Additionally, the semantic similarity betwee",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Impact of Web‐Based 360° Virtual Laboratory on Cognitive Load, Emotional Patterns and Visual Attention",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70224?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-22T07:00:00.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "A Serious Game for Mould Prevention Education: A Comparative Study With Video‐Based Learning",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70227?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-03-22T07:00:00.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 2, April 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "AI-Driven Multi-Agent Simulation of Stratified Polyamory Systems: A Computational Framework for Optimizing Social Reproductive Efficiency",
-      "url": "https://arxiv.org/abs/2603.20678v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-03-21T06:38:17.000Z",
-      "score": 85,
-      "summary_en": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
-      "summary_fr": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
-      "resume_fr": "Contemporary societies face a severe crisis of demographic reproduction. Global fertility rates continue to decline precipitously, with East Asian nations exhibiting the most dramatic trends -- China's total fertility rate (TFR) fell to approximately 1.0 in 2023, while South Korea's dropped below 0.72. Simultaneously, the institution of marriage is undergoing structural disintegration: educated women rationally reject unions lacking both emotional fulfillment and economic security, while a growing proportion of men at the lower end of the socioeconomic spectrum experience chronic sexual depriv",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A systematic review of generative AI in education: Empirical insights from a human–AI interaction perspective",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70055?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-03-21T06:30:25.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "KUKAloha: A General, Low-Cost, and Shared-Control based Teleoperation Framework for Construction Robot Arm",
-      "url": "https://arxiv.org/abs/2603.20129v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-20T16:51:30.000Z",
-      "score": 70,
-      "summary_en": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
-      "summary_fr": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
-      "resume_fr": "This paper presents KUKAloha, a general, low-cost, and shared-control teleoperation framework designed for construction robot arms. The proposed system employs a leader-follower paradigm in which a lightweight leading arm enables intuitive human guidance for coarse robot motion, while an autonomous perception module based on AprilTag detection performs precise alignment and grasp execution. By explicitly decoupling human control from fine manipulation, KUKAloha improves safety and repeatability when operating large-scale manipulators. We implement the framework on a KUKA robot arm and conduct ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Not All Features Are Created Equal: A Mechanistic Study of Vision-Language-Action Models",
-      "url": "https://arxiv.org/abs/2603.19233v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-19T17:59:55.000Z",
-      "score": 70,
-      "summary_en": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
-      "summary_fr": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
-      "resume_fr": "Vision-Language-Action (VLA) models combine perception, language, and motor control in a single architecture, yet how they translate multimodal inputs into actions remains poorly understood. We apply activation injection, sparse autoencoders (SAEs), and linear probes to six models spanning 80M--7B parameters across 394,000+ rollout episodes on four benchmarks. The visual pathway dominates action generation across all architectures: injecting baseline activations into null-prompt episodes recovers near-identical behavior, while cross-task injection steers robots toward source-task positions (99",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Nemotron-Cascade 2: Post-Training LLMs with Cascade RL and Multi-Domain On-Policy Distillation",
-      "url": "https://arxiv.org/abs/2603.19220v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-03-19T17:58:52.000Z",
-      "score": 70,
-      "summary_en": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
-      "summary_fr": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
-      "resume_fr": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In con",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "OmniVTA: Visuo-Tactile World Modeling for Contact-Rich Robotic Manipulation",
-      "url": "https://arxiv.org/abs/2603.19201v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-03-19T17:52:42.000Z",
-      "score": 70,
-      "summary_en": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
-      "summary_fr": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
-      "resume_fr": "Contact-rich manipulation tasks, such as wiping and assembly, require accurate perception of contact forces, friction changes, and state transitions that cannot be reliably inferred from vision alone. Despite growing interest in visuo-tactile manipulation, progress is constrained by two persistent limitations: existing datasets are small in scale and narrow in task coverage, and current methods treat tactile signals as passive observations rather than using them to model contact dynamics or enable closed-loop control explicitly. In this paper, we present \\textbf{OmniViTac}, a large-scale visuo",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
