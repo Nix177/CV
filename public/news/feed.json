@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-29T08:26:51.028Z",
+  "generatedAt": "2026-04-30T08:29:46.727Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,158 @@
     }
   },
   "items": [
+    {
+      "title": "Learning Over-Relaxation Policies for ADMM with Convergence Guarantees",
+      "url": "https://arxiv.org/abs/2604.26932v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-29T17:45:52.000Z",
+      "score": 50,
+      "summary_en": "The Alternating Direction Method of Multipliers (ADMM) is a widely used method for structured convex optimization, and its practical performance depends strongly on the choice of penalty and relaxation parameters. Motivated by settings such as Model Predictive Control (MPC), where one repeatedly solves related optimization problems with fixed structure and changing parameter values, we propose learning online updates of the relaxation parameter to improve performance on problem classes of interest. This choice is computationally attractive in OSQP-like architectures, since adapting relaxation ",
+      "summary_fr": "The Alternating Direction Method of Multipliers (ADMM) is a widely used method for structured convex optimization, and its practical performance depends strongly on the choice of penalty and relaxation parameters. Motivated by settings such as Model Predictive Control (MPC), where one repeatedly solves related optimization problems with fixed structure and changing parameter values, we propose learning online updates of the relaxation parameter to improve performance on problem classes of interest. This choice is computationally attractive in OSQP-like architectures, since adapting relaxation ",
+      "resume_fr": "The Alternating Direction Method of Multipliers (ADMM) is a widely used method for structured convex optimization, and its practical performance depends strongly on the choice of penalty and relaxation parameters. Motivated by settings such as Model Predictive Control (MPC), where one repeatedly solves related optimization problems with fixed structure and changing parameter values, we propose learning online updates of the relaxation parameter to improve performance on problem classes of interest. This choice is computationally attractive in OSQP-like architectures, since adapting relaxation ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Causal Learning with Neural Assemblies",
+      "url": "https://arxiv.org/abs/2604.26919v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-29T17:34:33.000Z",
+      "score": 50,
+      "summary_en": "Can Neural Assemblies -- groups of neurons that fire together and strengthen through co-activation -- learn the direction of causal influence between variables? While established as a computationally general substrate for classification, parsing, and planning, neural assemblies have not yet been shown to internalize causal directionality. We demonstrate that the inherent operations of neural assemblies -- projection, local plasticity control, and sparse winner selection -- are sufficient for directional learning. We introduce DIRECT (DIRectional Edge Coupling/Training), a mechanism that co-act",
+      "summary_fr": "Can Neural Assemblies -- groups of neurons that fire together and strengthen through co-activation -- learn the direction of causal influence between variables? While established as a computationally general substrate for classification, parsing, and planning, neural assemblies have not yet been shown to internalize causal directionality. We demonstrate that the inherent operations of neural assemblies -- projection, local plasticity control, and sparse winner selection -- are sufficient for directional learning. We introduce DIRECT (DIRectional Edge Coupling/Training), a mechanism that co-act",
+      "resume_fr": "Can Neural Assemblies -- groups of neurons that fire together and strengthen through co-activation -- learn the direction of causal influence between variables? While established as a computationally general substrate for classification, parsing, and planning, neural assemblies have not yet been shown to internalize causal directionality. We demonstrate that the inherent operations of neural assemblies -- projection, local plasticity control, and sparse winner selection -- are sufficient for directional learning. We introduce DIRECT (DIRectional Edge Coupling/Training), a mechanism that co-act",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Bi-Level Optimization for Contact and Motion Planning in Rope-Assisted Legged Robots",
+      "url": "https://arxiv.org/abs/2604.26910v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-04-29T17:18:29.000Z",
+      "score": 70,
+      "summary_en": "This paper presents a planning pipeline framework for locomotion in rope-assisted robots climbing vertical surfaces. The proposed framework is formulated as a bi-level optimization scheme that addresses a mixed-integer problem: selecting feasible terrain regions for landing while simultaneously optimizing the control inputs, namely rope tensions and leg forces, and landing location. The outer level of the optimization is solved using the Cross-Entropy Method, while the inner level relies on gradient-based nonlinear optimization to compute dynamically feasible motions. The approach is validated",
+      "summary_fr": "This paper presents a planning pipeline framework for locomotion in rope-assisted robots climbing vertical surfaces. The proposed framework is formulated as a bi-level optimization scheme that addresses a mixed-integer problem: selecting feasible terrain regions for landing while simultaneously optimizing the control inputs, namely rope tensions and leg forces, and landing location. The outer level of the optimization is solved using the Cross-Entropy Method, while the inner level relies on gradient-based nonlinear optimization to compute dynamically feasible motions. The approach is validated",
+      "resume_fr": "This paper presents a planning pipeline framework for locomotion in rope-assisted robots climbing vertical surfaces. The proposed framework is formulated as a bi-level optimization scheme that addresses a mixed-integer problem: selecting feasible terrain regions for landing while simultaneously optimizing the control inputs, namely rope tensions and leg forces, and landing location. The outer level of the optimization is solved using the Cross-Entropy Method, while the inner level relies on gradient-based nonlinear optimization to compute dynamically feasible motions. The approach is validated",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ClawGym: A Scalable Framework for Building Effective Claw Agents",
+      "url": "https://arxiv.org/abs/2604.26904v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-04-29T17:12:22.000Z",
+      "score": 70,
+      "summary_en": "Claw-style environments support multi-step workflows over local files, tools, and persistent workspace states. However, scalable development around these environments remains constrained by the absence of a systematic framework, especially one for synthesizing verifiable training data and integrating it with agent training and diagnostic evaluation. To address this challenge, we present ClawGym, a scalable framework that supports the full lifecycle of Claw-style personal agent development. Concretely, we construct ClawGym-SynData, a diverse dataset of 13.5K filtered tasks synthesized from pers",
+      "summary_fr": "Claw-style environments support multi-step workflows over local files, tools, and persistent workspace states. However, scalable development around these environments remains constrained by the absence of a systematic framework, especially one for synthesizing verifiable training data and integrating it with agent training and diagnostic evaluation. To address this challenge, we present ClawGym, a scalable framework that supports the full lifecycle of Claw-style personal agent development. Concretely, we construct ClawGym-SynData, a diverse dataset of 13.5K filtered tasks synthesized from pers",
+      "resume_fr": "Claw-style environments support multi-step workflows over local files, tools, and persistent workspace states. However, scalable development around these environments remains constrained by the absence of a systematic framework, especially one for synthesizing verifiable training data and integrating it with agent training and diagnostic evaluation. To address this challenge, we present ClawGym, a scalable framework that supports the full lifecycle of Claw-style personal agent development. Concretely, we construct ClawGym-SynData, a diverse dataset of 13.5K filtered tasks synthesized from pers",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Stochastic Entanglement of Deterministic Origami Tentacles For Universal Robotic Gripping",
+      "url": "https://arxiv.org/abs/2604.26897v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-04-29T17:08:21.000Z",
+      "score": 50,
+      "summary_en": "Origami-inspired robotic grippers have shown promising potential for object manipulation tasks due to their compact volume and mechanical flexibility. However, robust capture of objects with random shapes in dynamic working environments often comes at the cost of additional actuation channels and control complexity. Here, we introduce a tendon-driven origami tentacle gripper capable of universal object gripping by exploiting a synergy between local, deterministic deformation programming and global, stochastic entanglements. Each origami tentacle is made by cutting thin Mylar sheets; It feature",
+      "summary_fr": "Origami-inspired robotic grippers have shown promising potential for object manipulation tasks due to their compact volume and mechanical flexibility. However, robust capture of objects with random shapes in dynamic working environments often comes at the cost of additional actuation channels and control complexity. Here, we introduce a tendon-driven origami tentacle gripper capable of universal object gripping by exploiting a synergy between local, deterministic deformation programming and global, stochastic entanglements. Each origami tentacle is made by cutting thin Mylar sheets; It feature",
+      "resume_fr": "Origami-inspired robotic grippers have shown promising potential for object manipulation tasks due to their compact volume and mechanical flexibility. However, robust capture of objects with random shapes in dynamic working environments often comes at the cost of additional actuation channels and control complexity. Here, we introduce a tendon-driven origami tentacle gripper capable of universal object gripping by exploiting a synergy between local, deterministic deformation programming and global, stochastic entanglements. Each origami tentacle is made by cutting thin Mylar sheets; It feature",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "STARRY: Spatial-Temporal Action-Centric World Modeling for Robotic Manipulation",
+      "url": "https://arxiv.org/abs/2604.26848v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-04-29T16:13:39.000Z",
+      "score": 70,
+      "summary_en": "Robotic manipulation critically requires reasoning about future spatial-temporal interactions, yet existing VLA policies and world-model-enhanced policies do not fully model action-relevant spatial-temporal interaction structure. We propose STARRY, a world-model-enhanced action-generation policy that aligns spatial-temporal prediction with action generation. STARRY jointly denoises future spatial-temporal latents and action sequences, and introduces Geometry-Aware Selective Attention Modulation to convert predicted depth and end-effector geometry into token-aligned weights for selective action",
+      "summary_fr": "Robotic manipulation critically requires reasoning about future spatial-temporal interactions, yet existing VLA policies and world-model-enhanced policies do not fully model action-relevant spatial-temporal interaction structure. We propose STARRY, a world-model-enhanced action-generation policy that aligns spatial-temporal prediction with action generation. STARRY jointly denoises future spatial-temporal latents and action sequences, and introduces Geometry-Aware Selective Attention Modulation to convert predicted depth and end-effector geometry into token-aligned weights for selective action",
+      "resume_fr": "Robotic manipulation critically requires reasoning about future spatial-temporal interactions, yet existing VLA policies and world-model-enhanced policies do not fully model action-relevant spatial-temporal interaction structure. We propose STARRY, a world-model-enhanced action-generation policy that aligns spatial-temporal prediction with action generation. STARRY jointly denoises future spatial-temporal latents and action sequences, and introduces Geometry-Aware Selective Attention Modulation to convert predicted depth and end-effector geometry into token-aligned weights for selective action",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Human-in-the-Loop Benchmarking of Heterogeneous LLMs for Automated Competency Assessment in Secondary Level Mathematics",
+      "url": "https://arxiv.org/abs/2604.26607v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-29T12:36:19.000Z",
+      "score": 50,
+      "summary_en": "As Competency-Based Education (CBE) is gaining traction around the world, the shift from marks-based assessment to qualitative competency mapping is a manual challenge for educators. This paper tackles the bottleneck issue by suggesting a \"Human-in-the-Loop\" benchmarking framework to assess the effectiveness of multiple LLMs in automating secondary-level mathematics assessment. Based on the Grade 10 Optional Mathematics curriculum in Nepal, we created a multi-dimensional rubric for four topics and four cross-cutting competencies: Comprehension, Knowledge, Operational Fluency, and Behavior and ",
+      "summary_fr": "As Competency-Based Education (CBE) is gaining traction around the world, the shift from marks-based assessment to qualitative competency mapping is a manual challenge for educators. This paper tackles the bottleneck issue by suggesting a \"Human-in-the-Loop\" benchmarking framework to assess the effectiveness of multiple LLMs in automating secondary-level mathematics assessment. Based on the Grade 10 Optional Mathematics curriculum in Nepal, we created a multi-dimensional rubric for four topics and four cross-cutting competencies: Comprehension, Knowledge, Operational Fluency, and Behavior and ",
+      "resume_fr": "As Competency-Based Education (CBE) is gaining traction around the world, the shift from marks-based assessment to qualitative competency mapping is a manual challenge for educators. This paper tackles the bottleneck issue by suggesting a \"Human-in-the-Loop\" benchmarking framework to assess the effectiveness of multiple LLMs in automating secondary-level mathematics assessment. Based on the Grade 10 Optional Mathematics curriculum in Nepal, we created a multi-dimensional rubric for four topics and four cross-cutting competencies: Comprehension, Knowledge, Operational Fluency, and Behavior and ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "STLGT: A Scalable Trace-Based Linear Graph Transformer for Tail Latency Prediction in Microservices",
+      "url": "https://arxiv.org/abs/2604.26422v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-04-29T08:32:14.000Z",
+      "score": 65,
+      "summary_en": "Accurate end-to-end tail-latency forecasting is critical for proactive SLO management in microservice systems. However, modeling long-range dependency propagation and non-stationary, bursty workloads while maintaining inference efficiency at scale remains challenging. We present STLGT (Scalable Trace-based Linear Graph Transformer), a per-API predictor that encodes traces as span graphs for multi-step p95 tail-latency forecasting. STLGT uses a structure-aware linear graph Transformer to propagate cross-service dependencies with inference time linear in span graph size, and a decoupled temporal",
+      "summary_fr": "Accurate end-to-end tail-latency forecasting is critical for proactive SLO management in microservice systems. However, modeling long-range dependency propagation and non-stationary, bursty workloads while maintaining inference efficiency at scale remains challenging. We present STLGT (Scalable Trace-based Linear Graph Transformer), a per-API predictor that encodes traces as span graphs for multi-step p95 tail-latency forecasting. STLGT uses a structure-aware linear graph Transformer to propagate cross-service dependencies with inference time linear in span graph size, and a decoupled temporal",
+      "resume_fr": "Accurate end-to-end tail-latency forecasting is critical for proactive SLO management in microservice systems. However, modeling long-range dependency propagation and non-stationary, bursty workloads while maintaining inference efficiency at scale remains challenging. We present STLGT (Scalable Trace-based Linear Graph Transformer), a per-API predictor that encodes traces as span graphs for multi-step p95 tail-latency forecasting. STLGT uses a structure-aware linear graph Transformer to propagate cross-service dependencies with inference time linear in span graph size, and a decoupled temporal",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Generative AI for Collaborative Learning: Fostering Critical Thinking in Teacher Education",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70256?af=R",
@@ -1081,158 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning Hybrid-Control Policies for High-Precision In-Contact Manipulation Under Uncertainty",
-      "url": "https://arxiv.org/abs/2604.19677v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-21T16:55:48.000Z",
-      "score": 85,
-      "summary_en": "Reinforcement learning-based control policies have been frequently demonstrated to be more effective than analytical techniques for many manipulation tasks. Commonly, these methods learn neural control policies that predict end-effector pose changes directly from observed state information. For tasks like inserting delicate connectors which induce force constraints, pose-based policies have limited explicit control over force and rely on carefully tuned low-level controllers to avoid executing damaging actions. In this work, we present hybrid position-force control policies that learn to dynam",
-      "summary_fr": "Reinforcement learning-based control policies have been frequently demonstrated to be more effective than analytical techniques for many manipulation tasks. Commonly, these methods learn neural control policies that predict end-effector pose changes directly from observed state information. For tasks like inserting delicate connectors which induce force constraints, pose-based policies have limited explicit control over force and rely on carefully tuned low-level controllers to avoid executing damaging actions. In this work, we present hybrid position-force control policies that learn to dynam",
-      "resume_fr": "Reinforcement learning-based control policies have been frequently demonstrated to be more effective than analytical techniques for many manipulation tasks. Commonly, these methods learn neural control policies that predict end-effector pose changes directly from observed state information. For tasks like inserting delicate connectors which induce force constraints, pose-based policies have limited explicit control over force and rely on carefully tuned low-level controllers to avoid executing damaging actions. In this work, we present hybrid position-force control policies that learn to dynam",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Gesture-Based Visual Learning Model for Acoustophoretic Interactions using a Swarm of AcoustoBots",
-      "url": "https://arxiv.org/abs/2604.19643v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-21T16:32:38.000Z",
-      "score": 70,
-      "summary_en": "AcoustoBots are mobile acoustophoretic robots capable of delivering mid-air haptics, directional audio, and acoustic levitation, but existing implementations rely on scripted commands and lack an intuitive interface for real-time human control. This work presents a gesture-based visual learning framework for contactless human-swarm interaction with a multimodal AcoustoBot platform. The system combines ESP32-CAM gesture capture, PhaseSpace motion tracking, centralized processing, and an OpenCLIP-based visual learning model (VLM) with linear probing to classify three hand gestures and map them t",
-      "summary_fr": "AcoustoBots are mobile acoustophoretic robots capable of delivering mid-air haptics, directional audio, and acoustic levitation, but existing implementations rely on scripted commands and lack an intuitive interface for real-time human control. This work presents a gesture-based visual learning framework for contactless human-swarm interaction with a multimodal AcoustoBot platform. The system combines ESP32-CAM gesture capture, PhaseSpace motion tracking, centralized processing, and an OpenCLIP-based visual learning model (VLM) with linear probing to classify three hand gestures and map them t",
-      "resume_fr": "AcoustoBots are mobile acoustophoretic robots capable of delivering mid-air haptics, directional audio, and acoustic levitation, but existing implementations rely on scripted commands and lack an intuitive interface for real-time human control. This work presents a gesture-based visual learning framework for contactless human-swarm interaction with a multimodal AcoustoBot platform. The system combines ESP32-CAM gesture capture, PhaseSpace motion tracking, centralized processing, and an OpenCLIP-based visual learning model (VLM) with linear probing to classify three hand gestures and map them t",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Students Know AI Should Not Replace Thinking, but How Do They Regulate It? The TACO Framework for Human-AI Cognitive Partnership",
-      "url": "https://arxiv.org/abs/2604.18737v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-04-20T18:43:18.000Z",
-      "score": 85,
-      "summary_en": "As generative artificial intelligence becomes increasingly embedded in educational practice, a central concern is whether students use AI as cognitive support or as a substitute for thinking. Prior research shows that learners recognise this boundary conceptually and acknowledge that \"AI should not replace thinking.\" However, whether such awareness translates into structured regulation during actual AI use remains unclear. Drawing on data from Hong Kong secondary students, this study examines how learners perceive their management of the boundary between assistance and outsourcing in practice.",
-      "summary_fr": "As generative artificial intelligence becomes increasingly embedded in educational practice, a central concern is whether students use AI as cognitive support or as a substitute for thinking. Prior research shows that learners recognise this boundary conceptually and acknowledge that \"AI should not replace thinking.\" However, whether such awareness translates into structured regulation during actual AI use remains unclear. Drawing on data from Hong Kong secondary students, this study examines how learners perceive their management of the boundary between assistance and outsourcing in practice.",
-      "resume_fr": "As generative artificial intelligence becomes increasingly embedded in educational practice, a central concern is whether students use AI as cognitive support or as a substitute for thinking. Prior research shows that learners recognise this boundary conceptually and acknowledge that \"AI should not replace thinking.\" However, whether such awareness translates into structured regulation during actual AI use remains unclear. Drawing on data from Hong Kong secondary students, this study examines how learners perceive their management of the boundary between assistance and outsourcing in practice.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "ClawEnvKit: Automatic Environment Generation for Claw-Like Agents",
-      "url": "https://arxiv.org/abs/2604.18543v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-20T17:36:49.000Z",
-      "score": 70,
-      "summary_en": "Constructing environments for training and evaluating claw-like agents remains a manual, human-intensive process that does not scale. We argue that what is needed is not just a dataset, but an automated pipeline capable of generating diverse, verified environments on demand. To this end, we introduce ClawEnvKit, an autonomous generation pipeline that instantiates this formalism from natural language descriptions. The pipeline comprises three modules: (1) a parser that extracts structured generation parameters from natural language input; (2) a generator that produces the task specification, to",
-      "summary_fr": "Constructing environments for training and evaluating claw-like agents remains a manual, human-intensive process that does not scale. We argue that what is needed is not just a dataset, but an automated pipeline capable of generating diverse, verified environments on demand. To this end, we introduce ClawEnvKit, an autonomous generation pipeline that instantiates this formalism from natural language descriptions. The pipeline comprises three modules: (1) a parser that extracts structured generation parameters from natural language input; (2) a generator that produces the task specification, to",
-      "resume_fr": "Constructing environments for training and evaluating claw-like agents remains a manual, human-intensive process that does not scale. We argue that what is needed is not just a dataset, but an automated pipeline capable of generating diverse, verified environments on demand. To this end, we introduce ClawEnvKit, an autonomous generation pipeline that instantiates this formalism from natural language descriptions. The pipeline comprises three modules: (1) a parser that extracts structured generation parameters from natural language input; (2) a generator that produces the task specification, to",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Enhancing creative writing with robot–LLM integration: The interplay of embodiment, AI creativity and user engagement",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70071?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-04-20T09:14:09.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Step‐by‐step towards understanding artificial intelligence: A scaffolded learning progression for young learners",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70069?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-04-20T07:58:17.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Teaching Usable Privacy in HCI Education: Designing, Implementing, and Evaluating an Active Learning Graduate",
-      "url": "https://arxiv.org/abs/2604.17796v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-04-20T04:36:33.000Z",
-      "score": 85,
-      "summary_en": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "summary_fr": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "resume_fr": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Teaching Usable Privacy in HCI Education: Designing, Implementing, and Evaluating an Active Learning Graduate",
-      "url": "https://arxiv.org/abs/2604.17796v2",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-04-20T04:36:33.000Z",
-      "score": 85,
-      "summary_en": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "summary_fr": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "resume_fr": "As digital systems increasingly rely on pervasive data collection and inference, educating future designers and researchers about Usable Privacy has become a critical need for HCI. However, privacy education in higher education is often fragmented, theory-heavy, or detached from real-world applications. Thus, in this paper, we present the design, implementation, and evaluation of a 15-week graduate-level course on Usable Privacy that addresses this through active, practice-oriented pedagogy. The course integrates use cases, structured role playing, case-based discussions, guest lectures, and a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
