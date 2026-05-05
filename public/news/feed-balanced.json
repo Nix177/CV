@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T08:37:18.081Z",
+  "generatedAt": "2026-05-05T08:19:45.365Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,196 @@
     }
   },
   "items": [
+    {
+      "title": "Unsupervised Machine Learning for Detecting Structural Anomalies in European Regional Statistics",
+      "url": "https://arxiv.org/abs/2605.02884v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-04T17:54:36.000Z",
+      "score": 50,
+      "summary_en": "Ensuring the coherence of regional socio-economic statistics is a central task for national statistical institutes. Traditional validation tools, such as range edits, ratio checks, or univariate outlier detection, are effective for identifying extreme values in individual series but are less suited for detecting unusual combinations of indicators in high-dimensional settings. This paper proposes an unsupervised machine learning framework for identifying structurally atypical regional profiles within Europe using publicly available Eurostat data. We construct a cross-sectional dataset of NUTS2 ",
+      "summary_fr": "Ensuring the coherence of regional socio-economic statistics is a central task for national statistical institutes. Traditional validation tools, such as range edits, ratio checks, or univariate outlier detection, are effective for identifying extreme values in individual series but are less suited for detecting unusual combinations of indicators in high-dimensional settings. This paper proposes an unsupervised machine learning framework for identifying structurally atypical regional profiles within Europe using publicly available Eurostat data. We construct a cross-sectional dataset of NUTS2 ",
+      "resume_fr": "Ensuring the coherence of regional socio-economic statistics is a central task for national statistical institutes. Traditional validation tools, such as range edits, ratio checks, or univariate outlier detection, are effective for identifying extreme values in individual series but are less suited for detecting unusual combinations of indicators in high-dimensional settings. This paper proposes an unsupervised machine learning framework for identifying structurally atypical regional profiles within Europe using publicly available Eurostat data. We construct a cross-sectional dataset of NUTS2 ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "MolmoAct2: Action Reasoning Models for Real-world Deployment",
+      "url": "https://arxiv.org/abs/2605.02881v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-04T17:51:21.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) models aim to provide a single generalist controller for robots, but today's systems fall short on the criteria that matter for real-world deployment. Frontier models are closed, open-weight alternatives are tied to expensive hardware, reasoning-augmented policies pay prohibitive latency for their grounding, and fine-tuned success rates remain below the threshold for dependable use. We present MolmoAct2, a fully open action reasoning model built for practical deployment, advancing its predecessor along five axes. We introduce MolmoER, a VLM backbone specialized for",
+      "summary_fr": "Vision-Language-Action (VLA) models aim to provide a single generalist controller for robots, but today's systems fall short on the criteria that matter for real-world deployment. Frontier models are closed, open-weight alternatives are tied to expensive hardware, reasoning-augmented policies pay prohibitive latency for their grounding, and fine-tuned success rates remain below the threshold for dependable use. We present MolmoAct2, a fully open action reasoning model built for practical deployment, advancing its predecessor along five axes. We introduce MolmoER, a VLM backbone specialized for",
+      "resume_fr": "Vision-Language-Action (VLA) models aim to provide a single generalist controller for robots, but today's systems fall short on the criteria that matter for real-world deployment. Frontier models are closed, open-weight alternatives are tied to expensive hardware, reasoning-augmented policies pay prohibitive latency for their grounding, and fine-tuned success rates remain below the threshold for dependable use. We present MolmoAct2, a fully open action reasoning model built for practical deployment, advancing its predecessor along five axes. We introduce MolmoER, a VLM backbone specialized for",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Trust, but Verify: Peeling Low-Bit Transformer Networks for Training Monitoring",
+      "url": "https://arxiv.org/abs/2605.02853v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-04T17:30:50.000Z",
+      "score": 50,
+      "summary_en": "Understanding whether deep neural networks are effectively optimized remains challenging, as training occurs in highly nonconvex landscapes and standard metrics provide limited visibility into layer-wise learning quality. This challenge is particularly acute for transformer-based language models, where training is expensive, models are often reused in frozen form, and poorly optimized layers can silently degrade performance. We propose a layer-wise peeling framework for monitoring training dynamics, in which each transformer layer is locally optimized against intermediate representations of th",
+      "summary_fr": "Understanding whether deep neural networks are effectively optimized remains challenging, as training occurs in highly nonconvex landscapes and standard metrics provide limited visibility into layer-wise learning quality. This challenge is particularly acute for transformer-based language models, where training is expensive, models are often reused in frozen form, and poorly optimized layers can silently degrade performance. We propose a layer-wise peeling framework for monitoring training dynamics, in which each transformer layer is locally optimized against intermediate representations of th",
+      "resume_fr": "Understanding whether deep neural networks are effectively optimized remains challenging, as training occurs in highly nonconvex landscapes and standard metrics provide limited visibility into layer-wise learning quality. This challenge is particularly acute for transformer-based language models, where training is expensive, models are often reused in frozen form, and poorly optimized layers can silently degrade performance. We propose a layer-wise peeling framework for monitoring training dynamics, in which each transformer layer is locally optimized against intermediate representations of th",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "FunFuzz: An LLM-Powered Evolutionary Fuzzing Framework",
+      "url": "https://arxiv.org/abs/2605.02789v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-05-04T16:30:47.000Z",
+      "score": 70,
+      "summary_en": "Modern fuzzers increasingly use Large Language Models (LLMs) to generate structured inputs, but LLM-driven fuzzing is sensitive to prompt initialization and sampling variance, which can reduce exploration efficiency and lead to redundant inputs. We present FunFuzz, a multi-island evolutionary fuzzing framework that runs several isolated searches in parallel and periodically migrates high-value candidates to maintain diversity. FunFuzz derives initial generation prompts from documentation and initializes islands with topic-specific instructions, then continuously adapts prompts using feedback-g",
+      "summary_fr": "Modern fuzzers increasingly use Large Language Models (LLMs) to generate structured inputs, but LLM-driven fuzzing is sensitive to prompt initialization and sampling variance, which can reduce exploration efficiency and lead to redundant inputs. We present FunFuzz, a multi-island evolutionary fuzzing framework that runs several isolated searches in parallel and periodically migrates high-value candidates to maintain diversity. FunFuzz derives initial generation prompts from documentation and initializes islands with topic-specific instructions, then continuously adapts prompts using feedback-g",
+      "resume_fr": "Modern fuzzers increasingly use Large Language Models (LLMs) to generate structured inputs, but LLM-driven fuzzing is sensitive to prompt initialization and sampling variance, which can reduce exploration efficiency and lead to redundant inputs. We present FunFuzz, a multi-island evolutionary fuzzing framework that runs several isolated searches in parallel and periodically migrates high-value candidates to maintain diversity. FunFuzz derives initial generation prompts from documentation and initializes islands with topic-specific instructions, then continuously adapts prompts using feedback-g",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Seeing Realism from Simulation: Efficient Video Transfer for Vision-Language-Action Data Augmentation",
+      "url": "https://arxiv.org/abs/2605.02757v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-04T15:57:07.000Z",
+      "score": 85,
+      "summary_en": "Vision-language-action (VLA) models typically rely on large-scale real-world videos, whereas simulated data, despite being inexpensive and highly parallelizable to collect, often suffers from a substantial visual domain gap and limited environmental diversity, resulting in weak real-world generalization. We present an efficient video augmentation framework that converts simulated VLA videos into realistic training videos while preserving task semantics and action trajectories. Our pipeline extracts structured conditions from simulation via video semantic segmentation and video captioning, rewr",
+      "summary_fr": "Vision-language-action (VLA) models typically rely on large-scale real-world videos, whereas simulated data, despite being inexpensive and highly parallelizable to collect, often suffers from a substantial visual domain gap and limited environmental diversity, resulting in weak real-world generalization. We present an efficient video augmentation framework that converts simulated VLA videos into realistic training videos while preserving task semantics and action trajectories. Our pipeline extracts structured conditions from simulation via video semantic segmentation and video captioning, rewr",
+      "resume_fr": "Vision-language-action (VLA) models typically rely on large-scale real-world videos, whereas simulated data, despite being inexpensive and highly parallelizable to collect, often suffers from a substantial visual domain gap and limited environmental diversity, resulting in weak real-world generalization. We present an efficient video augmentation framework that converts simulated VLA videos into realistic training videos while preserving task semantics and action trajectories. Our pipeline extracts structured conditions from simulation via video semantic segmentation and video captioning, rewr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Latent Bridge: Feature Delta Prediction for Efficient Dual-System Vision-Language-Action Model Inference",
+      "url": "https://arxiv.org/abs/2605.02739v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-04T15:37:55.000Z",
+      "score": 70,
+      "summary_en": "Dual-system Vision-Language-Action (VLA) models achieve state-of-the-art robotic manipulation but are bottlenecked by the VLM backbone, which must execute at every control step while producing temporally redundant features. We propose Latent Bridge, a lightweight model that predicts VLM output deltas between timesteps, enabling the action head to operate on predicted outputs while the expensive VLM backbone is called only periodically. We instantiate Latent Bridge on two architecturally distinct VLAs: GR00T-N1.6 (feature-space bridge) and π0.5 (KV-cache bridge), demonstrating that the approach",
+      "summary_fr": "Dual-system Vision-Language-Action (VLA) models achieve state-of-the-art robotic manipulation but are bottlenecked by the VLM backbone, which must execute at every control step while producing temporally redundant features. We propose Latent Bridge, a lightweight model that predicts VLM output deltas between timesteps, enabling the action head to operate on predicted outputs while the expensive VLM backbone is called only periodically. We instantiate Latent Bridge on two architecturally distinct VLAs: GR00T-N1.6 (feature-space bridge) and π0.5 (KV-cache bridge), demonstrating that the approach",
+      "resume_fr": "Dual-system Vision-Language-Action (VLA) models achieve state-of-the-art robotic manipulation but are bottlenecked by the VLM backbone, which must execute at every control step while producing temporally redundant features. We propose Latent Bridge, a lightweight model that predicts VLM output deltas between timesteps, enabling the action head to operate on predicted outputs while the expensive VLM backbone is called only periodically. We instantiate Latent Bridge on two architecturally distinct VLAs: GR00T-N1.6 (feature-space bridge) and π0.5 (KV-cache bridge), demonstrating that the approach",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Dramaturgies of Deception: AI Humanizers and the Performance of Legitimacy in Higher Education Assessment",
+      "url": "https://arxiv.org/abs/2605.02649v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-04T14:33:53.000Z",
+      "score": 65,
+      "summary_en": "Artificial intelligence (AI) has disrupted assessment in higher education and accelerated a cycle of compounding performances. Institutional policies demand the demonstration of independent authorship, while commercial AI-enabled services allow students to simulate independent thought and writing. This has led to enhanced institutional surveillance, including AI detectors, which are subsequently circumvented using other technologies. AI humanizers, internet-based services that alter AI-generated text to avoid automated or human detection, are a recent symptom of this performative cycle. Little",
+      "summary_fr": "Artificial intelligence (AI) has disrupted assessment in higher education and accelerated a cycle of compounding performances. Institutional policies demand the demonstration of independent authorship, while commercial AI-enabled services allow students to simulate independent thought and writing. This has led to enhanced institutional surveillance, including AI detectors, which are subsequently circumvented using other technologies. AI humanizers, internet-based services that alter AI-generated text to avoid automated or human detection, are a recent symptom of this performative cycle. Little",
+      "resume_fr": "Artificial intelligence (AI) has disrupted assessment in higher education and accelerated a cycle of compounding performances. Institutional policies demand the demonstration of independent authorship, while commercial AI-enabled services allow students to simulate independent thought and writing. This has led to enhanced institutional surveillance, including AI detectors, which are subsequently circumvented using other technologies. AI humanizers, internet-based services that alter AI-generated text to avoid automated or human detection, are a recent symptom of this performative cycle. Little",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Privy: From Fine Print to Fair Practice in Privacy Rights Exercise",
+      "url": "https://arxiv.org/abs/2605.02005v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-03T18:24:40.000Z",
+      "score": 85,
+      "summary_en": "Privacy regulations such as the CCPA and GDPR grant individuals rights over their personal data, yet it remains challenging for most users to exercise them in practice due to vague policy interpretation and unapproachable settings on web interfaces. We introduce Privy, an LLM-powered browser assistant that guides users through exercising their privacy rights on websites. Privy automatically analyzes a website's privacy policy and surfaces the specific rights available as action labels in a side panel. When a user selects a right, Privy provides step-by-step guidance and navigation, presenting ",
+      "summary_fr": "Privacy regulations such as the CCPA and GDPR grant individuals rights over their personal data, yet it remains challenging for most users to exercise them in practice due to vague policy interpretation and unapproachable settings on web interfaces. We introduce Privy, an LLM-powered browser assistant that guides users through exercising their privacy rights on websites. Privy automatically analyzes a website's privacy policy and surfaces the specific rights available as action labels in a side panel. When a user selects a right, Privy provides step-by-step guidance and navigation, presenting ",
+      "resume_fr": "Privacy regulations such as the CCPA and GDPR grant individuals rights over their personal data, yet it remains challenging for most users to exercise them in practice due to vague policy interpretation and unapproachable settings on web interfaces. We introduce Privy, an LLM-powered browser assistant that guides users through exercising their privacy rights on websites. Privy automatically analyzes a website's privacy policy and surfaces the specific rights available as action labels in a side panel. When a user selects a right, Privy provides step-by-step guidance and navigation, presenting ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AI Expert Twin: Capturing Expert Cognition for Human-Centred, Practice-Based Learning",
+      "url": "https://arxiv.org/abs/2605.01401v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-02T11:47:39.000Z",
+      "score": 85,
+      "summary_en": "Tacit knowledge embedded in expert practice remains difficult to capture, formalise, and scale. While AI-driven educational systems have advanced personalisation, learner modelling, affective support, and self-regulated learning, they less often model the tacit reasoning and context-sensitive judgement that underpin expert practice in practice-based domains. This paper introduces the AI Expert Twin, a cognition-centric framework that models expert knowledge as structured, computable representations of procedural actions, semantic concepts, and decision processes. The framework also considers h",
+      "summary_fr": "Tacit knowledge embedded in expert practice remains difficult to capture, formalise, and scale. While AI-driven educational systems have advanced personalisation, learner modelling, affective support, and self-regulated learning, they less often model the tacit reasoning and context-sensitive judgement that underpin expert practice in practice-based domains. This paper introduces the AI Expert Twin, a cognition-centric framework that models expert knowledge as structured, computable representations of procedural actions, semantic concepts, and decision processes. The framework also considers h",
+      "resume_fr": "Tacit knowledge embedded in expert practice remains difficult to capture, formalise, and scale. While AI-driven educational systems have advanced personalisation, learner modelling, affective support, and self-regulated learning, they less often model the tacit reasoning and context-sensitive judgement that underpin expert practice in practice-based domains. This paper introduces the AI Expert Twin, a cognition-centric framework that models expert knowledge as structured, computable representations of procedural actions, semantic concepts, and decision processes. The framework also considers h",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Investigating the Effects of Different Levels of User Control in an Interactive Educational Recommender System",
+      "url": "https://arxiv.org/abs/2605.01400v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-02T11:43:47.000Z",
+      "score": 85,
+      "summary_en": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
+      "summary_fr": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
+      "resume_fr": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Benefits of classroom remote microphone technology for inattentive children",
       "url": "https://www.nature.com/articles/s41539-026-00427-5",
@@ -1043,196 +1233,6 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Zero-Shot Morphological Discovery in Low-Resource Bantu Languages via Cross-Lingual Transfer and Unsupervised Clustering",
-      "url": "https://arxiv.org/abs/2604.22723v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-04-24T17:21:00.000Z",
-      "score": 50,
-      "summary_en": "We present a method for discovering morphological features in low-resource Bantu languages by combining cross-lingual transfer learning with unsupervised clustering. Applied to Giriama (nyf), a language with only 91 labeled paradigms, our pipeline discovers noun class assignments for 2,455 words and identifies two previously undocumented morphological patterns: an a- prefix variant for Class 2 (vowel coalescence - the merger of two adjacent vowels - of wa-, 95.1% consistency) and a contracted k'- prefix (98.5% consistency). External validation on 444 known Giriama verb paradigms confirms 78.2%",
-      "summary_fr": "We present a method for discovering morphological features in low-resource Bantu languages by combining cross-lingual transfer learning with unsupervised clustering. Applied to Giriama (nyf), a language with only 91 labeled paradigms, our pipeline discovers noun class assignments for 2,455 words and identifies two previously undocumented morphological patterns: an a- prefix variant for Class 2 (vowel coalescence - the merger of two adjacent vowels - of wa-, 95.1% consistency) and a contracted k'- prefix (98.5% consistency). External validation on 444 known Giriama verb paradigms confirms 78.2%",
-      "resume_fr": "We present a method for discovering morphological features in low-resource Bantu languages by combining cross-lingual transfer learning with unsupervised clustering. Applied to Giriama (nyf), a language with only 91 labeled paradigms, our pipeline discovers noun class assignments for 2,455 words and identifies two previously undocumented morphological patterns: an a- prefix variant for Class 2 (vowel coalescence - the merger of two adjacent vowels - of wa-, 95.1% consistency) and a contracted k'- prefix (98.5% consistency). External validation on 444 known Giriama verb paradigms confirms 78.2%",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "ATRS: Adaptive Trajectory Re-splitting via a Shared Neural Policy for Parallel Optimization",
-      "url": "https://arxiv.org/abs/2604.22715v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-24T16:58:14.000Z",
-      "score": 70,
-      "summary_en": "Parallel trajectory optimization via the Alternating Direction Method of Multipliers (ADMM) has emerged as a scalable approach to long-horizon motion planning. However, existing frameworks typically decompose the problem into parallel subproblems based on a predefined fixed structure. Such structural rigidity often causes optimization stagnation in highly constrained regions, where a few lagging subproblems delay global convergence. A natural remedy is to adaptively re-split these stagnating segments online. Yet, deciding when, where, and how to split exceeds the capability of rule-based heuri",
-      "summary_fr": "Parallel trajectory optimization via the Alternating Direction Method of Multipliers (ADMM) has emerged as a scalable approach to long-horizon motion planning. However, existing frameworks typically decompose the problem into parallel subproblems based on a predefined fixed structure. Such structural rigidity often causes optimization stagnation in highly constrained regions, where a few lagging subproblems delay global convergence. A natural remedy is to adaptively re-split these stagnating segments online. Yet, deciding when, where, and how to split exceeds the capability of rule-based heuri",
-      "resume_fr": "Parallel trajectory optimization via the Alternating Direction Method of Multipliers (ADMM) has emerged as a scalable approach to long-horizon motion planning. However, existing frameworks typically decompose the problem into parallel subproblems based on a predefined fixed structure. Such structural rigidity often causes optimization stagnation in highly constrained regions, where a few lagging subproblems delay global convergence. A natural remedy is to adaptively re-split these stagnating segments online. Yet, deciding when, where, and how to split exceeds the capability of rule-based heuri",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Thinking Without Words: Efficient Latent Reasoning with Abstract Chain-of-Thought",
-      "url": "https://arxiv.org/abs/2604.22709v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-24T16:45:51.000Z",
-      "score": 70,
-      "summary_en": "While long, explicit chains-of-thought (CoT) have proven effective on complex reasoning tasks, they are costly to generate during inference. Non-verbal reasoning methods have emerged with shorter generation lengths by leveraging continuous representations, yet their performance lags behind verbalized CoT. We propose $\\textbf{Abstract Chain-of-Thought}$, a discrete latent reasoning post-training mechanism in which the language model produces a short sequence of tokens from a reserved vocabulary in lieu of a natural language CoT, before generating a response. To make previously unseen ''abstract",
-      "summary_fr": "While long, explicit chains-of-thought (CoT) have proven effective on complex reasoning tasks, they are costly to generate during inference. Non-verbal reasoning methods have emerged with shorter generation lengths by leveraging continuous representations, yet their performance lags behind verbalized CoT. We propose $\\textbf{Abstract Chain-of-Thought}$, a discrete latent reasoning post-training mechanism in which the language model produces a short sequence of tokens from a reserved vocabulary in lieu of a natural language CoT, before generating a response. To make previously unseen ''abstract",
-      "resume_fr": "While long, explicit chains-of-thought (CoT) have proven effective on complex reasoning tasks, they are costly to generate during inference. Non-verbal reasoning methods have emerged with shorter generation lengths by leveraging continuous representations, yet their performance lags behind verbalized CoT. We propose $\\textbf{Abstract Chain-of-Thought}$, a discrete latent reasoning post-training mechanism in which the language model produces a short sequence of tokens from a reserved vocabulary in lieu of a natural language CoT, before generating a response. To make previously unseen ''abstract",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "RFID-Based Non-Biometric Classroom Attendance System: Proxy Attendance Detection via Weight Sensor Integration",
-      "url": "https://arxiv.org/abs/2604.22697v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-04-24T16:30:32.000Z",
-      "score": 50,
-      "summary_en": "Attendance tracking in educational institutions, when conducted through traditional methods, leads to structural problems that consume instruction time and threaten academic integrity. Attendance durations spanning several minutes in primary and secondary education and exceeding ten minutes in higher education, combined with the proxy attendance problem of signing on behalf of someone else, demonstrate the need for electronic systems. Most existing electronic solutions rely on biometric authentication, which raises legal and ethical risks under the European General Data Protection Regulation (",
-      "summary_fr": "Attendance tracking in educational institutions, when conducted through traditional methods, leads to structural problems that consume instruction time and threaten academic integrity. Attendance durations spanning several minutes in primary and secondary education and exceeding ten minutes in higher education, combined with the proxy attendance problem of signing on behalf of someone else, demonstrate the need for electronic systems. Most existing electronic solutions rely on biometric authentication, which raises legal and ethical risks under the European General Data Protection Regulation (",
-      "resume_fr": "Attendance tracking in educational institutions, when conducted through traditional methods, leads to structural problems that consume instruction time and threaten academic integrity. Attendance durations spanning several minutes in primary and secondary education and exceeding ten minutes in higher education, combined with the proxy attendance problem of signing on behalf of someone else, demonstrate the need for electronic systems. Most existing electronic solutions rely on biometric authentication, which raises legal and ethical risks under the European General Data Protection Regulation (",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "RedVLA: Physical Red Teaming for Vision-Language-Action Models",
-      "url": "https://arxiv.org/abs/2604.22591v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-24T14:18:23.000Z",
-      "score": 70,
-      "summary_en": "The real-world deployment of Vision-Language-Action (VLA) models remains limited by the risk of unpredictable and irreversible physical harm. However, we currently lack effective mechanisms to proactively detect these physical safety risks before deployment. To address this gap, we propose \\textbf{RedVLA}, the first red teaming framework for physical safety in VLA models. We systematically uncover unsafe behaviors through a two-stage process: (I) \\textbf{Risk Scenario Synthesis} constructs a valid and task-feasible initial risk scene. Specifically, it identifies critical interaction regions fr",
-      "summary_fr": "The real-world deployment of Vision-Language-Action (VLA) models remains limited by the risk of unpredictable and irreversible physical harm. However, we currently lack effective mechanisms to proactively detect these physical safety risks before deployment. To address this gap, we propose \\textbf{RedVLA}, the first red teaming framework for physical safety in VLA models. We systematically uncover unsafe behaviors through a two-stage process: (I) \\textbf{Risk Scenario Synthesis} constructs a valid and task-feasible initial risk scene. Specifically, it identifies critical interaction regions fr",
-      "resume_fr": "The real-world deployment of Vision-Language-Action (VLA) models remains limited by the risk of unpredictable and irreversible physical harm. However, we currently lack effective mechanisms to proactively detect these physical safety risks before deployment. To address this gap, we propose \\textbf{RedVLA}, the first red teaming framework for physical safety in VLA models. We systematically uncover unsafe behaviors through a two-stage process: (I) \\textbf{Risk Scenario Synthesis} constructs a valid and task-feasible initial risk scene. Specifically, it identifies critical interaction regions fr",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Scale-Adaptive Framework for Joint Spatiotemporal Super-Resolution with Diffusion Models",
-      "url": "https://arxiv.org/abs/2604.21903v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-04-23T17:49:16.000Z",
-      "score": 70,
-      "summary_en": "Deep-learning video super-resolution has progressed rapidly, but climate applications typically super-resolve (increase resolution) either space or time, and joint spatiotemporal models are often designed for a single pair of super-resolution (SR) factors (upscaling spatial and temporal ratio between the low-resolution sequence and the high-resolution sequence), limiting transfer across spatial resolutions and temporal cadences (frame rates). We present a scale-adaptive framework that reuses the same architecture across factors by decomposing spatiotemporal SR into a deterministic prediction o",
-      "summary_fr": "Deep-learning video super-resolution has progressed rapidly, but climate applications typically super-resolve (increase resolution) either space or time, and joint spatiotemporal models are often designed for a single pair of super-resolution (SR) factors (upscaling spatial and temporal ratio between the low-resolution sequence and the high-resolution sequence), limiting transfer across spatial resolutions and temporal cadences (frame rates). We present a scale-adaptive framework that reuses the same architecture across factors by decomposing spatiotemporal SR into a deterministic prediction o",
-      "resume_fr": "Deep-learning video super-resolution has progressed rapidly, but climate applications typically super-resolve (increase resolution) either space or time, and joint spatiotemporal models are often designed for a single pair of super-resolution (SR) factors (upscaling spatial and temporal ratio between the low-resolution sequence and the high-resolution sequence), limiting transfer across spatial resolutions and temporal cadences (frame rates). We present a scale-adaptive framework that reuses the same architecture across factors by decomposing spatiotemporal SR into a deterministic prediction o",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Mapping the Political Discourse in the Brazilian Chamber of Deputies: A Multi-Faceted Computational Approach",
-      "url": "https://arxiv.org/abs/2604.21897v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-23T17:46:33.000Z",
-      "score": 50,
-      "summary_en": "Analyses of legislative behavior often rely on voting records, overlooking the rich semantic and rhetorical content of political speech. In this paper, we ask three complementary questions about parliamentary discourse: how things are said, what is being said, and who is speaking in discursively similar ways. To answer these questions, we introduce a scalable and generalizable computational framework that combines diachronic stylometric analysis, contextual topic modeling, and semantic clustering of deputies' speeches. We apply this framework to a large-scale case study of the Brazilian Chambe",
-      "summary_fr": "Analyses of legislative behavior often rely on voting records, overlooking the rich semantic and rhetorical content of political speech. In this paper, we ask three complementary questions about parliamentary discourse: how things are said, what is being said, and who is speaking in discursively similar ways. To answer these questions, we introduce a scalable and generalizable computational framework that combines diachronic stylometric analysis, contextual topic modeling, and semantic clustering of deputies' speeches. We apply this framework to a large-scale case study of the Brazilian Chambe",
-      "resume_fr": "Analyses of legislative behavior often rely on voting records, overlooking the rich semantic and rhetorical content of political speech. In this paper, we ask three complementary questions about parliamentary discourse: how things are said, what is being said, and who is speaking in discursively similar ways. To answer these questions, we introduce a scalable and generalizable computational framework that combines diachronic stylometric analysis, contextual topic modeling, and semantic clustering of deputies' speeches. We apply this framework to a large-scale case study of the Brazilian Chambe",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "EVENT5Ws: A Large Dataset for Open-Domain Event Extraction from Documents",
-      "url": "https://arxiv.org/abs/2604.21890v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-23T17:42:07.000Z",
-      "score": 70,
-      "summary_en": "Event extraction identifies the central aspects of events from text. It supports event understanding and analysis, which is crucial for tasks such as informed decision-making in emergencies. Therefore, it is necessary to develop automated event extraction approaches. However, existing datasets for algorithm development have limitations, including limited coverage of event types in closed-domain settings and a lack of large, manually verified dataset in open-domain settings. To address these limitations, we create EVENT5Ws , a large, manually annotated, and statistically verified open-domain ev",
-      "summary_fr": "Event extraction identifies the central aspects of events from text. It supports event understanding and analysis, which is crucial for tasks such as informed decision-making in emergencies. Therefore, it is necessary to develop automated event extraction approaches. However, existing datasets for algorithm development have limitations, including limited coverage of event types in closed-domain settings and a lack of large, manually verified dataset in open-domain settings. To address these limitations, we create EVENT5Ws , a large, manually annotated, and statistically verified open-domain ev",
-      "resume_fr": "Event extraction identifies the central aspects of events from text. It supports event understanding and analysis, which is crucial for tasks such as informed decision-making in emergencies. Therefore, it is necessary to develop automated event extraction approaches. However, existing datasets for algorithm development have limitations, including limited coverage of event types in closed-domain settings and a lack of large, manually verified dataset in open-domain settings. To address these limitations, we create EVENT5Ws , a large, manually annotated, and statistically verified open-domain ev",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Enabling and Inhibitory Pathways of University Students' Willingness to Disclose AI Use: A Cognition-Affect-Conation Perspective",
-      "url": "https://arxiv.org/abs/2604.21733v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-04-23T14:38:15.000Z",
-      "score": 50,
-      "summary_en": "The increasing integration of artificial intelligence (AI) in higher education has raised important questions regarding students' transparency in reporting AI-assisted work. This study investigates the psychological mechanisms underlying university students' willingness to disclose AI use by applying the Cognition--Affect--Conation (CAC) framework. A sequential explanatory mixed-methods design was employed. In the quantitative phase, survey data were collected from 546 university students and analysed using structural equation modelling to examine the relationships among cognitive perceptions,",
-      "summary_fr": "The increasing integration of artificial intelligence (AI) in higher education has raised important questions regarding students' transparency in reporting AI-assisted work. This study investigates the psychological mechanisms underlying university students' willingness to disclose AI use by applying the Cognition--Affect--Conation (CAC) framework. A sequential explanatory mixed-methods design was employed. In the quantitative phase, survey data were collected from 546 university students and analysed using structural equation modelling to examine the relationships among cognitive perceptions,",
-      "resume_fr": "The increasing integration of artificial intelligence (AI) in higher education has raised important questions regarding students' transparency in reporting AI-assisted work. This study investigates the psychological mechanisms underlying university students' willingness to disclose AI use by applying the Cognition--Affect--Conation (CAC) framework. A sequential explanatory mixed-methods design was employed. In the quantitative phase, survey data were collected from 546 university students and analysed using structural equation modelling to examine the relationships among cognitive perceptions,",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Compact Peristaltic Pump Based on Magneto-Elastic Hysteresis with Single Pneumatic Control",
-      "url": "https://arxiv.org/abs/2604.21729v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-23T14:33:31.000Z",
-      "score": 70,
-      "summary_en": "Pumping fluids is fundamental to a wide range of industrial, environmental, and biomedical applications. Among various pumping mechanisms, peristaltic pumps enable efficient and safe fluid transport by deforming an elastic tube without direct contact with the working fluid. Although previous studies have introduced mechanical, pneumatic, or magnetic actuations to drive membrane deformation, these approaches often lead to complex pump architectures and control schemes. In this study, we present a soft membrane pump that achieves peristaltic motion through a single pneumatic input combined with ",
-      "summary_fr": "Pumping fluids is fundamental to a wide range of industrial, environmental, and biomedical applications. Among various pumping mechanisms, peristaltic pumps enable efficient and safe fluid transport by deforming an elastic tube without direct contact with the working fluid. Although previous studies have introduced mechanical, pneumatic, or magnetic actuations to drive membrane deformation, these approaches often lead to complex pump architectures and control schemes. In this study, we present a soft membrane pump that achieves peristaltic motion through a single pneumatic input combined with ",
-      "resume_fr": "Pumping fluids is fundamental to a wide range of industrial, environmental, and biomedical applications. Among various pumping mechanisms, peristaltic pumps enable efficient and safe fluid transport by deforming an elastic tube without direct contact with the working fluid. Although previous studies have introduced mechanical, pneumatic, or magnetic actuations to drive membrane deformation, these approaches often lead to complex pump architectures and control schemes. In this study, we present a soft membrane pump that achieves peristaltic motion through a single pneumatic input combined with ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
