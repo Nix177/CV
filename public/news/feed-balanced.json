@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-06T08:34:40.650Z",
+  "generatedAt": "2026-05-07T08:42:18.018Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,196 @@
   },
   "items": [
     {
+      "title": "Taming Outlier Tokens in Diffusion Transformers",
+      "url": "https://arxiv.org/abs/2605.05206v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-06T17:59:42.000Z",
+      "score": 50,
+      "summary_en": "We study outlier tokens in Diffusion Transformers (DiTs) for image generation. Prior work has shown that Vision Transformers (ViTs) can produce a small number of high-norm tokens that attract disproportionate attention while carrying limited local information, but their role in generative models remains underexplored. We show that this phenomenon appears in both the encoder and denoiser of modern Representation Autoencoder (RAE)-DiT pipelines: pretrained ViT encoders can produce outlier representations, and DiTs themselves can develop internal outlier tokens, especially in intermediate layers.",
+      "summary_fr": "We study outlier tokens in Diffusion Transformers (DiTs) for image generation. Prior work has shown that Vision Transformers (ViTs) can produce a small number of high-norm tokens that attract disproportionate attention while carrying limited local information, but their role in generative models remains underexplored. We show that this phenomenon appears in both the encoder and denoiser of modern Representation Autoencoder (RAE)-DiT pipelines: pretrained ViT encoders can produce outlier representations, and DiTs themselves can develop internal outlier tokens, especially in intermediate layers.",
+      "resume_fr": "We study outlier tokens in Diffusion Transformers (DiTs) for image generation. Prior work has shown that Vision Transformers (ViTs) can produce a small number of high-norm tokens that attract disproportionate attention while carrying limited local information, but their role in generative models remains underexplored. We show that this phenomenon appears in both the encoder and denoiser of modern Representation Autoencoder (RAE)-DiT pipelines: pretrained ViT encoders can produce outlier representations, and DiTs themselves can develop internal outlier tokens, especially in intermediate layers.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Understanding In-Context Learning for Nonlinear Regression with Transformers: Attention as Featurizer",
+      "url": "https://arxiv.org/abs/2605.05176v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-06T17:42:07.000Z",
+      "score": 50,
+      "summary_en": "Pre-trained transformers are able to learn from examples provided as part of the prompt without any weight updates, a remarkable ability known as in-context learning (ICL). Despite its demonstrated efficacy across various domains, the theoretical understanding of ICL is still developing. Whereas most existing theory has focused on linear models, we study ICL in the nonlinear regression setting. Through the interaction mechanism in attention, we explicitly construct transformer networks to realize nonlinear features, such as polynomial or spline bases, which span a wide class of functions. Base",
+      "summary_fr": "Pre-trained transformers are able to learn from examples provided as part of the prompt without any weight updates, a remarkable ability known as in-context learning (ICL). Despite its demonstrated efficacy across various domains, the theoretical understanding of ICL is still developing. Whereas most existing theory has focused on linear models, we study ICL in the nonlinear regression setting. Through the interaction mechanism in attention, we explicitly construct transformer networks to realize nonlinear features, such as polynomial or spline bases, which span a wide class of functions. Base",
+      "resume_fr": "Pre-trained transformers are able to learn from examples provided as part of the prompt without any weight updates, a remarkable ability known as in-context learning (ICL). Despite its demonstrated efficacy across various domains, the theoretical understanding of ICL is still developing. Whereas most existing theory has focused on linear models, we study ICL in the nonlinear regression setting. Through the interaction mechanism in attention, we explicitly construct transformer networks to realize nonlinear features, such as polynomial or spline bases, which span a wide class of functions. Base",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Life Gives You BC, Make Q-functions: Extracting Q-values from Behavior Cloning for On-Robot Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2605.05172v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-06T17:40:11.000Z",
+      "score": 70,
+      "summary_en": "Behavior Cloning (BC) has emerged as a highly effective paradigm for robot learning. However, BC lacks a self-guided mechanism for online improvement after demonstrations have been collected. Existing offline-to-online learning methods often cause policies to replace previously learned good actions due to a distribution mismatch between offline data and online learning. In this work, we propose Q2RL, Q-Estimation and Q-Gating from BC for Reinforcement Learning, an algorithm for efficient offline-to-online learning. Our method consists of two parts: (1) Q-Estimation extracts a Q-function from a",
+      "summary_fr": "Behavior Cloning (BC) has emerged as a highly effective paradigm for robot learning. However, BC lacks a self-guided mechanism for online improvement after demonstrations have been collected. Existing offline-to-online learning methods often cause policies to replace previously learned good actions due to a distribution mismatch between offline data and online learning. In this work, we propose Q2RL, Q-Estimation and Q-Gating from BC for Reinforcement Learning, an algorithm for efficient offline-to-online learning. Our method consists of two parts: (1) Q-Estimation extracts a Q-function from a",
+      "resume_fr": "Behavior Cloning (BC) has emerged as a highly effective paradigm for robot learning. However, BC lacks a self-guided mechanism for online improvement after demonstrations have been collected. Existing offline-to-online learning methods often cause policies to replace previously learned good actions due to a distribution mismatch between offline data and online learning. In this work, we propose Q2RL, Q-Estimation and Q-Gating from BC for Reinforcement Learning, an algorithm for efficient offline-to-online learning. Our method consists of two parts: (1) Q-Estimation extracts a Q-function from a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Superposition Is Not Necessary: A Mechanistic Interpretability Analysis of Transformer Representations for Time Series Forecasting",
+      "url": "https://arxiv.org/abs/2605.05151v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-06T17:23:27.000Z",
+      "score": 50,
+      "summary_en": "Transformer architectures have been widely adopted for time series forecasting, yet whether the representational mechanisms that make them powerful in NLP actually engage on time series data remains unexplored. The persistent competitiveness of simple linear models such as DLinear has fueled ongoing debate, but no mechanistic explanation for this phenomenon has been offered. We address this gap by applying sparse autoencoders (SAEs), a tool from mechanistic interpretability, to probe the internal representations of PatchTST. We first establish that a single-layer, narrow-dimensional transforme",
+      "summary_fr": "Transformer architectures have been widely adopted for time series forecasting, yet whether the representational mechanisms that make them powerful in NLP actually engage on time series data remains unexplored. The persistent competitiveness of simple linear models such as DLinear has fueled ongoing debate, but no mechanistic explanation for this phenomenon has been offered. We address this gap by applying sparse autoencoders (SAEs), a tool from mechanistic interpretability, to probe the internal representations of PatchTST. We first establish that a single-layer, narrow-dimensional transforme",
+      "resume_fr": "Transformer architectures have been widely adopted for time series forecasting, yet whether the representational mechanisms that make them powerful in NLP actually engage on time series data remains unexplored. The persistent competitiveness of simple linear models such as DLinear has fueled ongoing debate, but no mechanistic explanation for this phenomenon has been offered. We address this gap by applying sparse autoencoders (SAEs), a tool from mechanistic interpretability, to probe the internal representations of PatchTST. We first establish that a single-layer, narrow-dimensional transforme",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "What Matters in Practical Learned Image Compression",
+      "url": "https://arxiv.org/abs/2605.05148v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-06T17:17:51.000Z",
+      "score": 70,
+      "summary_en": "One of the major differentiators unlocked by learned codecs relative to their hard-coded traditional counterparts is their ability to be optimized directly to appeal to the human visual system. Despite this potential, a perceptual yet practical image codec is yet to be proposed. In this work, we aim to close this gap. We conduct a comprehensive study of the key modeling choices that govern the design of a practical learned image codec, jointly optimized for perceptual quality and runtime -- including within the ablations several novel techniques. We then perform performance-aware neural archit",
+      "summary_fr": "One of the major differentiators unlocked by learned codecs relative to their hard-coded traditional counterparts is their ability to be optimized directly to appeal to the human visual system. Despite this potential, a perceptual yet practical image codec is yet to be proposed. In this work, we aim to close this gap. We conduct a comprehensive study of the key modeling choices that govern the design of a practical learned image codec, jointly optimized for perceptual quality and runtime -- including within the ablations several novel techniques. We then perform performance-aware neural archit",
+      "resume_fr": "One of the major differentiators unlocked by learned codecs relative to their hard-coded traditional counterparts is their ability to be optimized directly to appeal to the human visual system. Despite this potential, a perceptual yet practical image codec is yet to be proposed. In this work, we aim to close this gap. We conduct a comprehensive study of the key modeling choices that govern the design of a practical learned image codec, jointly optimized for perceptual quality and runtime -- including within the ablations several novel techniques. We then perform performance-aware neural archit",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Beyond Semantics: An Evidential Reasoning-Aware Multi-View Learning Framework for Trustworthy Mental Health Prediction",
+      "url": "https://arxiv.org/abs/2605.05121v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-05-06T16:49:17.000Z",
+      "score": 70,
+      "summary_en": "Automated mental health prediction using textual data has shown promising results with deep learning and large language models. However, deploying these models in high-stakes real-world settings remains challenging, as existing approaches largely rely on semantic representations and often produce overconfident predictions under ambiguous, noisy, or shifted data. Moreover, most methods lack reliable uncertainty estimation, undermining trust in risk-sensitive mental health applications. To address these limitations, we formulate the task as a multi-view learning problem that integrates semantic ",
+      "summary_fr": "Automated mental health prediction using textual data has shown promising results with deep learning and large language models. However, deploying these models in high-stakes real-world settings remains challenging, as existing approaches largely rely on semantic representations and often produce overconfident predictions under ambiguous, noisy, or shifted data. Moreover, most methods lack reliable uncertainty estimation, undermining trust in risk-sensitive mental health applications. To address these limitations, we formulate the task as a multi-view learning problem that integrates semantic ",
+      "resume_fr": "Automated mental health prediction using textual data has shown promising results with deep learning and large language models. However, deploying these models in high-stakes real-world settings remains challenging, as existing approaches largely rely on semantic representations and often produce overconfident predictions under ambiguous, noisy, or shifted data. Moreover, most methods lack reliable uncertainty estimation, undermining trust in risk-sensitive mental health applications. To address these limitations, we formulate the task as a multi-view learning problem that integrates semantic ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reduced-order Neural Modeling with Differentiable Simulation for High-Detail Tactile Perception",
+      "url": "https://arxiv.org/abs/2605.05053v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-06T15:51:06.000Z",
+      "score": 70,
+      "summary_en": "Tactile perception is key to dexterous manipulation, yet simulating high-resolution elastomer deformation remains computationally prohibitive. Finite element methods (FEM) deliver high fidelity but demand costly remeshing, while Material Point Methods (MPM) suffer from heavy particle-memory tradeoffs. We propose a {reduced-order neural simulation framework} that couples coarse-grained MPM dynamics with an implicit neural decoder to reconstruct sub-particle tactile details from compact latent states. The framework learns a continuous deformation manifold from paired high- and low-resolution sim",
+      "summary_fr": "Tactile perception is key to dexterous manipulation, yet simulating high-resolution elastomer deformation remains computationally prohibitive. Finite element methods (FEM) deliver high fidelity but demand costly remeshing, while Material Point Methods (MPM) suffer from heavy particle-memory tradeoffs. We propose a {reduced-order neural simulation framework} that couples coarse-grained MPM dynamics with an implicit neural decoder to reconstruct sub-particle tactile details from compact latent states. The framework learns a continuous deformation manifold from paired high- and low-resolution sim",
+      "resume_fr": "Tactile perception is key to dexterous manipulation, yet simulating high-resolution elastomer deformation remains computationally prohibitive. Finite element methods (FEM) deliver high fidelity but demand costly remeshing, while Material Point Methods (MPM) suffer from heavy particle-memory tradeoffs. We propose a {reduced-order neural simulation framework} that couples coarse-grained MPM dynamics with an implicit neural decoder to reconstruct sub-particle tactile details from compact latent states. The framework learns a continuous deformation manifold from paired high- and low-resolution sim",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "RTMS: A Real-Time Multimodal Scaffolding System for Improving Debugging in Computing Education",
+      "url": "https://arxiv.org/abs/2605.04848v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-06T12:45:31.000Z",
+      "score": 50,
+      "summary_en": "Debugging is a demanding aspect of programming yet guidance on how to teach it effectively remains limited. Novices often struggle to recognize impasses regulate their problem solving and manage cognitive load and stress. This study investigates whether real time multimodal feedback triggered by indicators of cognitive load and physiological stress can improve debugging performance narrow expert novice gaps and reduce the influence of prior programming experience on success. We conducted a between subjects experiment with 120 undergraduate computer science students who debugged a medium sized ",
+      "summary_fr": "Debugging is a demanding aspect of programming yet guidance on how to teach it effectively remains limited. Novices often struggle to recognize impasses regulate their problem solving and manage cognitive load and stress. This study investigates whether real time multimodal feedback triggered by indicators of cognitive load and physiological stress can improve debugging performance narrow expert novice gaps and reduce the influence of prior programming experience on success. We conducted a between subjects experiment with 120 undergraduate computer science students who debugged a medium sized ",
+      "resume_fr": "Debugging is a demanding aspect of programming yet guidance on how to teach it effectively remains limited. Novices often struggle to recognize impasses regulate their problem solving and manage cognitive load and stress. This study investigates whether real time multimodal feedback triggered by indicators of cognitive load and physiological stress can improve debugging performance narrow expert novice gaps and reduce the influence of prior programming experience on success. We conducted a between subjects experiment with 120 undergraduate computer science students who debugged a medium sized ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Guidelines for Designing AI Technologies to Support Adult Learning",
+      "url": "https://arxiv.org/abs/2605.04616v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-05-06T08:06:17.000Z",
+      "score": 65,
+      "summary_en": "AI-powered educational technologies have demonstrated measurable benefits for learners, but their design and evaluation have largely centered on K-12 contexts. As a result, many AI-supported learning systems remain poorly aligned with the needs, constraints, and goals of adult learners. To better understand how AI systems function in adult education, this paper examines the deployment of several AI learning technologies developed within a multidisciplinary, national research institute in the United States focused on adult learning and online education. Drawing on longitudinal deployment data, ",
+      "summary_fr": "AI-powered educational technologies have demonstrated measurable benefits for learners, but their design and evaluation have largely centered on K-12 contexts. As a result, many AI-supported learning systems remain poorly aligned with the needs, constraints, and goals of adult learners. To better understand how AI systems function in adult education, this paper examines the deployment of several AI learning technologies developed within a multidisciplinary, national research institute in the United States focused on adult learning and online education. Drawing on longitudinal deployment data, ",
+      "resume_fr": "AI-powered educational technologies have demonstrated measurable benefits for learners, but their design and evaluation have largely centered on K-12 contexts. As a result, many AI-supported learning systems remain poorly aligned with the needs, constraints, and goals of adult learners. To better understand how AI systems function in adult education, this paper examines the deployment of several AI learning technologies developed within a multidisciplinary, national research institute in the United States focused on adult learning and online education. Drawing on longitudinal deployment data, ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "OPENJ: A Conceptual Framework for Open-Source Digital Human Modeling and Ergonomic Assessment in a CAD Environment",
+      "url": "https://arxiv.org/abs/2605.04270v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-05T20:04:46.000Z",
+      "score": 85,
+      "summary_en": "Industrial workplace challenges range from musculoskeletal disorders -- a leading cause of occupational injury -- to suboptimal workstation layouts, inefficient task sequences, and poor human-equipment fit. Digital human modeling (DHM) tools address several of these challenges by placing a scalable virtual mannequin in a computer-aided design (CAD) environment, enabling engineers to evaluate ergonomic risk through standardized assessment methods (RULA, REBA, NIOSH Lifting Equation, OWAS), optimize workstation layouts for reach and visibility, predict task postures through inverse kinematics, a",
+      "summary_fr": "Industrial workplace challenges range from musculoskeletal disorders -- a leading cause of occupational injury -- to suboptimal workstation layouts, inefficient task sequences, and poor human-equipment fit. Digital human modeling (DHM) tools address several of these challenges by placing a scalable virtual mannequin in a computer-aided design (CAD) environment, enabling engineers to evaluate ergonomic risk through standardized assessment methods (RULA, REBA, NIOSH Lifting Equation, OWAS), optimize workstation layouts for reach and visibility, predict task postures through inverse kinematics, a",
+      "resume_fr": "Industrial workplace challenges range from musculoskeletal disorders -- a leading cause of occupational injury -- to suboptimal workstation layouts, inefficient task sequences, and poor human-equipment fit. Digital human modeling (DHM) tools address several of these challenges by placing a scalable virtual mannequin in a computer-aided design (CAD) environment, enabling engineers to evaluate ergonomic risk through standardized assessment methods (RULA, REBA, NIOSH Lifting Equation, OWAS), optimize workstation layouts for reach and visibility, predict task postures through inverse kinematics, a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Safety and accuracy follow different scaling laws in clinical large language models",
       "url": "https://arxiv.org/abs/2605.04039v1",
       "source": "arXiv – cs.LG + learning analytics",
@@ -169,6 +359,25 @@
         "impact": 0
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A Dialogue-Based Framework for Correcting Multimodal Errors in AI-Assisted STEM Education",
+      "url": "https://arxiv.org/abs/2605.04131v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-05-05T17:07:16.000Z",
+      "score": 85,
+      "summary_en": "Large Language Models (LLMs) are democratizing access to personalized tutoring; however, their effectiveness is hindered by challenges in processing multimodal content, which limits AI's potential to provide equitable, high-quality STEM support. This study evaluates LLM performance on multimodal physics problems, identifies specific failure modes through an empirical error taxonomy, and tests practical interventions designed to overcome multimodal processing limitations. We assessed three publicly available LLMs (Claude, Gemini, and ChatGPT) on multimodal physics problems from the OpenStax dat",
+      "summary_fr": "Large Language Models (LLMs) are democratizing access to personalized tutoring; however, their effectiveness is hindered by challenges in processing multimodal content, which limits AI's potential to provide equitable, high-quality STEM support. This study evaluates LLM performance on multimodal physics problems, identifies specific failure modes through an empirical error taxonomy, and tests practical interventions designed to overcome multimodal processing limitations. We assessed three publicly available LLMs (Claude, Gemini, and ChatGPT) on multimodal physics problems from the OpenStax dat",
+      "resume_fr": "Large Language Models (LLMs) are democratizing access to personalized tutoring; however, their effectiveness is hindered by challenges in processing multimodal content, which limits AI's potential to provide equitable, high-quality STEM support. This study evaluates LLM performance on multimodal physics problems, identifies specific failure modes through an empirical error taxonomy, and tests practical interventions designed to overcome multimodal processing limitations. We assessed three publicly available LLMs (Claude, Gemini, and ChatGPT) on multimodal physics problems from the OpenStax dat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
@@ -1025,215 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DATAREEL: Automated Data-Driven Video Story Generation with Animations",
-      "url": "https://arxiv.org/abs/2604.25220v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-04-28T04:56:25.000Z",
-      "score": 50,
-      "summary_en": "Data videos are a powerful medium for visual data based storytelling, combining animated, chart-centric visualizations with synchronized narration. Widely used in journalism, education, and public communication, they help audiences understand complex data through clear and engaging visual explanations. Despite their growing impact, generating data-driven video stories remains challenging, as it requires careful coordination of visual encoding, temporal progression, and narration and substantial expertise in visualization design, animation, and video-editing tools. Recent advances in large lang",
-      "summary_fr": "Data videos are a powerful medium for visual data based storytelling, combining animated, chart-centric visualizations with synchronized narration. Widely used in journalism, education, and public communication, they help audiences understand complex data through clear and engaging visual explanations. Despite their growing impact, generating data-driven video stories remains challenging, as it requires careful coordination of visual encoding, temporal progression, and narration and substantial expertise in visualization design, animation, and video-editing tools. Recent advances in large lang",
-      "resume_fr": "Data videos are a powerful medium for visual data based storytelling, combining animated, chart-centric visualizations with synchronized narration. Widely used in journalism, education, and public communication, they help audiences understand complex data through clear and engaging visual explanations. Despite their growing impact, generating data-driven video stories remains challenging, as it requires careful coordination of visual encoding, temporal progression, and narration and substantial expertise in visualization design, animation, and video-editing tools. Recent advances in large lang",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Personalized Worked Example Generation from Student Code Submissions using Pattern-based Knowledge Components",
-      "url": "https://arxiv.org/abs/2604.24758v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-04-27T17:56:56.000Z",
-      "score": 50,
-      "summary_en": "Adaptive programming practice often relies on fixed libraries of worked examples and practice problems, which require substantial authoring effort and may not correspond well to the logical errors and partial solutions students produce while writing code. As a result, students may receive learning content that does not directly address the concepts they are working to understand, while instructors must either invest additional effort in expanding content libraries or accept a coarse level of personalization. We present an approach for knowledge-component (KC) guided educational content generat",
-      "summary_fr": "Adaptive programming practice often relies on fixed libraries of worked examples and practice problems, which require substantial authoring effort and may not correspond well to the logical errors and partial solutions students produce while writing code. As a result, students may receive learning content that does not directly address the concepts they are working to understand, while instructors must either invest additional effort in expanding content libraries or accept a coarse level of personalization. We present an approach for knowledge-component (KC) guided educational content generat",
-      "resume_fr": "Adaptive programming practice often relies on fixed libraries of worked examples and practice problems, which require substantial authoring effort and may not correspond well to the logical errors and partial solutions students produce while writing code. As a result, students may receive learning content that does not directly address the concepts they are working to understand, while instructors must either invest additional effort in expanding content libraries or accept a coarse level of personalization. We present an approach for knowledge-component (KC) guided educational content generat",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Contextual Linear Activation Steering of Language Models",
-      "url": "https://arxiv.org/abs/2604.24693v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-27T16:54:16.000Z",
-      "score": 70,
-      "summary_en": "Linear activation steering is a powerful approach for eliciting the capabilities of large language models and specializing their behavior using limited labeled data. While effective, existing methods often apply a fixed steering strength to all tokens, resulting in inconsistent steering quality across diverse input prompts. In this work, we introduce Contextual Linear Activation Steering (CLAS), a method that dynamically adapts linear activation steering to context-dependent steering strengths. Across eleven steering benchmarks and four model families, it consistently outperforms standard line",
-      "summary_fr": "Linear activation steering is a powerful approach for eliciting the capabilities of large language models and specializing their behavior using limited labeled data. While effective, existing methods often apply a fixed steering strength to all tokens, resulting in inconsistent steering quality across diverse input prompts. In this work, we introduce Contextual Linear Activation Steering (CLAS), a method that dynamically adapts linear activation steering to context-dependent steering strengths. Across eleven steering benchmarks and four model families, it consistently outperforms standard line",
-      "resume_fr": "Linear activation steering is a powerful approach for eliciting the capabilities of large language models and specializing their behavior using limited labeled data. While effective, existing methods often apply a fixed steering strength to all tokens, resulting in inconsistent steering quality across diverse input prompts. In this work, we introduce Contextual Linear Activation Steering (CLAS), a method that dynamically adapts linear activation steering to context-dependent steering strengths. Across eleven steering benchmarks and four model families, it consistently outperforms standard line",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Sereact gets Series B funding to expand Cortex 2.0 robot brain, enter U.S. market",
-      "url": "https://www.therobotreport.com/sereact-gets-series-b-funding-expand-cortex-2-robot-brain-enter-u-s-market/",
-      "source": "Robotics Business Review",
-      "published": "2026-04-27T16:52:14.000Z",
-      "score": 50,
-      "summary_en": "Sereact plans to expand Cortex 2.0 from bin picking to tasks such as assembly and kitting, and it is opening a Boston office. The post Sereact gets Series B funding to expand Cortex 2.0 robot brain, enter U.S. market appeared first on The Robot Report.",
-      "summary_fr": "Sereact plans to expand Cortex 2.0 from bin picking to tasks such as assembly and kitting, and it is opening a Boston office. The post Sereact gets Series B funding to expand Cortex 2.0 robot brain, enter U.S. market appeared first on The Robot Report.",
-      "resume_fr": "Sereact plans to expand Cortex 2.0 from bin picking to tasks such as assembly and kitting, and it is opening a Boston office. The post Sereact gets Series B funding to expand Cortex 2.0 robot brain, enter U.S. market appeared first on The Robot Report.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://www.therobotreport.com/wp-content/uploads/2026/04/Sereact_Cortex_2.jpg"
-    },
-    {
-      "title": "Can LLMs Act as Historians? Evaluating Historical Research Capabilities of LLMs via the Chinese Imperial Examination",
-      "url": "https://arxiv.org/abs/2604.24690v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-04-27T16:50:40.000Z",
-      "score": 85,
-      "summary_en": "While Large Language Models (LLMs) have increasingly assisted in historical tasks such as text processing, their capacity for professional-level historical reasoning remains underexplored. Existing benchmarks primarily assess basic knowledge breadth or lexical understanding, failing to capture the higher-order skills, such as evidentiary reasoning,that are central to historical research. To fill this gap, we introduce ProHist-Bench, a novel benchmark anchored in the Chinese Imperial Examination (Keju) system, a comprehensive microcosm of East Asian political, social, and intellectual history s",
-      "summary_fr": "While Large Language Models (LLMs) have increasingly assisted in historical tasks such as text processing, their capacity for professional-level historical reasoning remains underexplored. Existing benchmarks primarily assess basic knowledge breadth or lexical understanding, failing to capture the higher-order skills, such as evidentiary reasoning,that are central to historical research. To fill this gap, we introduce ProHist-Bench, a novel benchmark anchored in the Chinese Imperial Examination (Keju) system, a comprehensive microcosm of East Asian political, social, and intellectual history s",
-      "resume_fr": "While Large Language Models (LLMs) have increasingly assisted in historical tasks such as text processing, their capacity for professional-level historical reasoning remains underexplored. Existing benchmarks primarily assess basic knowledge breadth or lexical understanding, failing to capture the higher-order skills, such as evidentiary reasoning,that are central to historical research. To fill this gap, we introduce ProHist-Bench, a novel benchmark anchored in the Chinese Imperial Examination (Keju) system, a comprehensive microcosm of East Asian political, social, and intellectual history s",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Pushing Radar Odometry Beyond the Pavement: Current Capabilities and Challenges",
-      "url": "https://arxiv.org/abs/2604.24674v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-27T16:34:18.000Z",
-      "score": 50,
-      "summary_en": "Radar offers unique advantages for localization in unstructured environments, including robustness to weather, lighting, and airborne particulates. While most prior work has studied radar odometry in urban, largely planar settings, its performance in off-road environments remains less understood. In this paper, we investigate the potential of radar for off-road odometry estimation and identify key challenges that arise from full $SE(3)$ vehicle motion, terrain-induced ground returns, and sparse or unstable features. To address these issues, we introduce two simple baselines: Radar-KISSICP, whi",
-      "summary_fr": "Radar offers unique advantages for localization in unstructured environments, including robustness to weather, lighting, and airborne particulates. While most prior work has studied radar odometry in urban, largely planar settings, its performance in off-road environments remains less understood. In this paper, we investigate the potential of radar for off-road odometry estimation and identify key challenges that arise from full $SE(3)$ vehicle motion, terrain-induced ground returns, and sparse or unstable features. To address these issues, we introduce two simple baselines: Radar-KISSICP, whi",
-      "resume_fr": "Radar offers unique advantages for localization in unstructured environments, including robustness to weather, lighting, and airborne particulates. While most prior work has studied radar odometry in urban, largely planar settings, its performance in off-road environments remains less understood. In this paper, we investigate the potential of radar for off-road odometry estimation and identify key challenges that arise from full $SE(3)$ vehicle motion, terrain-induced ground returns, and sparse or unstable features. To address these issues, we introduce two simple baselines: Radar-KISSICP, whi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Real-time windrow detection from onboard tractor sensors for automated following",
-      "url": "https://arxiv.org/abs/2604.24628v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-04-27T15:55:02.000Z",
-      "score": 70,
-      "summary_en": "Proprietary design in commercial windrow-detection systems restricts transparency and limits progress in open autonomous forage-harvesting research. We present a multi-modal dataset combining stereo vision and LiDAR from tractor-mounted sensors during real baling operations. The dataset includes synchronized sensor data with GNSS trajectories, partly released as ROS2 Humble bags on Zenodo, with additional data available on request. Using this dataset, we implement a real-time (>20 Hz) centroid-based windrow-following method on an NVIDIA Jetson AGX Orin. Across the critical 4-10 m guidance rang",
-      "summary_fr": "Proprietary design in commercial windrow-detection systems restricts transparency and limits progress in open autonomous forage-harvesting research. We present a multi-modal dataset combining stereo vision and LiDAR from tractor-mounted sensors during real baling operations. The dataset includes synchronized sensor data with GNSS trajectories, partly released as ROS2 Humble bags on Zenodo, with additional data available on request. Using this dataset, we implement a real-time (>20 Hz) centroid-based windrow-following method on an NVIDIA Jetson AGX Orin. Across the critical 4-10 m guidance rang",
-      "resume_fr": "Proprietary design in commercial windrow-detection systems restricts transparency and limits progress in open autonomous forage-harvesting research. We present a multi-modal dataset combining stereo vision and LiDAR from tractor-mounted sensors during real baling operations. The dataset includes synchronized sensor data with GNSS trajectories, partly released as ROS2 Humble bags on Zenodo, with additional data available on request. Using this dataset, we implement a real-time (>20 Hz) centroid-based windrow-following method on an NVIDIA Jetson AGX Orin. Across the critical 4-10 m guidance rang",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Modeling and Simulation Approaches for Modern Power System Studies",
-      "url": "https://content.knowledgehub.wiley.com/power-systems-studies-with-simulink-and-simscape-electrical/",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-04-27T10:00:01.000Z",
-      "score": 50,
-      "summary_en": "This webinar covers power system modeling and simulation across multiple timescales, from quasi-static 8760 analysis through EMT studies, fault classification, and inverter-based resource grid integration. What Attendees will Learn Programmatic network construction and multi-fidelity modeling — Learn how to build power system networks programmatically from standard data formats, configure models for specific engineering objectives, and work across fidelity levels from quasi-static phasor simulation through switched-linear and nonlinear electromagnetic transient (EMT) analysis. Quasi-static and",
-      "summary_fr": "This webinar covers power system modeling and simulation across multiple timescales, from quasi-static 8760 analysis through EMT studies, fault classification, and inverter-based resource grid integration. What Attendees will Learn Programmatic network construction and multi-fidelity modeling — Learn how to build power system networks programmatically from standard data formats, configure models for specific engineering objectives, and work across fidelity levels from quasi-static phasor simulation through switched-linear and nonlinear electromagnetic transient (EMT) analysis. Quasi-static and",
-      "resume_fr": "This webinar covers power system modeling and simulation across multiple timescales, from quasi-static 8760 analysis through EMT studies, fault classification, and inverter-based resource grid integration. What Attendees will Learn Programmatic network construction and multi-fidelity modeling — Learn how to build power system networks programmatically from standard data formats, configure models for specific engineering objectives, and work across fidelity levels from quasi-static phasor simulation through switched-linear and nonlinear electromagnetic transient (EMT) analysis. Quasi-static and",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://content.knowledgehub.wiley.com/wp-content/uploads/2026/03/power-systems-studies-image1-500x345.jpg"
-    },
-    {
-      "title": "Seeing Is No Longer Believing: Frontier Image Generation Models, Synthetic Visual Evidence, and Real-World Risk",
-      "url": "https://arxiv.org/abs/2604.24197v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-04-27T08:59:40.000Z",
-      "score": 50,
-      "summary_en": "Frontier image generation has moved from artistic synthesis toward synthetic visual evidence. Systems such as GPT Image 2, Nano Banana Pro, Nano Banana 2, Grok Imagine, Qwen Image 2.0 Pro, and Seedream 5.0 Lite combine photorealistic rendering, readable typography, reference consistency, editing control, and in several cases reasoning or search-grounded image construction. These capabilities create large benefits for design, education, accessibility, and communication, yet they also weaken one of society's most common trust shortcuts: the belief that a plausible picture is a reliable record. T",
-      "summary_fr": "Frontier image generation has moved from artistic synthesis toward synthetic visual evidence. Systems such as GPT Image 2, Nano Banana Pro, Nano Banana 2, Grok Imagine, Qwen Image 2.0 Pro, and Seedream 5.0 Lite combine photorealistic rendering, readable typography, reference consistency, editing control, and in several cases reasoning or search-grounded image construction. These capabilities create large benefits for design, education, accessibility, and communication, yet they also weaken one of society's most common trust shortcuts: the belief that a plausible picture is a reliable record. T",
-      "resume_fr": "Frontier image generation has moved from artistic synthesis toward synthetic visual evidence. Systems such as GPT Image 2, Nano Banana Pro, Nano Banana 2, Grok Imagine, Qwen Image 2.0 Pro, and Seedream 5.0 Lite combine photorealistic rendering, readable typography, reference consistency, editing control, and in several cases reasoning or search-grounded image construction. These capabilities create large benefits for design, education, accessibility, and communication, yet they also weaken one of society's most common trust shortcuts: the belief that a plausible picture is a reliable record. T",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Contribution to Teaching Analytics: Measuring Teachers' Digital Maturity With Large‐Scale VLE Logs Dataset",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70253?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-04-27T05:22:42.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Primary School Teachers' Competence With Learning Analytics Dashboards: Beliefs, Skills and Teaching Behaviour",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70243?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-04-27T05:11:53.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
