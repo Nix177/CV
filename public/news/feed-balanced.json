@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-11T09:51:45.382Z",
+  "generatedAt": "2026-05-12T08:47:55.854Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,139 @@
   },
   "items": [
     {
+      "title": "HarmoWAM: Harmonizing Generalizable and Precise Manipulation via Adaptive World Action Models",
+      "url": "https://arxiv.org/abs/2605.10942v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-11T17:59:56.000Z",
+      "score": 70,
+      "summary_en": "World Action Models (WAMs) have emerged as a promising paradigm for robot control by modeling physical dynamics. Current WAMs generally follow two paradigms: the \"Imagine-then-Execute\" approach, which uses video prediction to infer actions via inverse dynamics, and the \"Joint Modeling\" approach, which jointly models actions and video representations. Based on systematic experiments, we observe a fundamental trade-off between these paradigms: the former explicitly leverages world models for generalizable transit but lacks interaction precision, whereas the latter enables fine-grained, temporall",
+      "summary_fr": "World Action Models (WAMs) have emerged as a promising paradigm for robot control by modeling physical dynamics. Current WAMs generally follow two paradigms: the \"Imagine-then-Execute\" approach, which uses video prediction to infer actions via inverse dynamics, and the \"Joint Modeling\" approach, which jointly models actions and video representations. Based on systematic experiments, we observe a fundamental trade-off between these paradigms: the former explicitly leverages world models for generalizable transit but lacks interaction precision, whereas the latter enables fine-grained, temporall",
+      "resume_fr": "World Action Models (WAMs) have emerged as a promising paradigm for robot control by modeling physical dynamics. Current WAMs generally follow two paradigms: the \"Imagine-then-Execute\" approach, which uses video prediction to infer actions via inverse dynamics, and the \"Joint Modeling\" approach, which jointly models actions and video representations. Based on systematic experiments, we observe a fundamental trade-off between these paradigms: the former explicitly leverages world models for generalizable transit but lacks interaction precision, whereas the latter enables fine-grained, temporall",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Quantifying Concentration Phenomena of Mean-Field Transformers in the Low-Temperature Regime",
+      "url": "https://arxiv.org/abs/2605.10931v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-11T17:58:14.000Z",
+      "score": 50,
+      "summary_en": "Transformers with self-attention modules as their core components have become an integral architecture in modern large language and foundation models. In this paper, we study the evolution of tokens in deep encoder-only transformers at inference time which is described in the large-token limit by a mean-field continuity equation. Leveraging ideas from the convergence analysis of interacting multi-particle systems, with particles corresponding to tokens, we prove that the token distribution rapidly concentrates onto the push-forward of the initial distribution under a projection map induced by ",
+      "summary_fr": "Transformers with self-attention modules as their core components have become an integral architecture in modern large language and foundation models. In this paper, we study the evolution of tokens in deep encoder-only transformers at inference time which is described in the large-token limit by a mean-field continuity equation. Leveraging ideas from the convergence analysis of interacting multi-particle systems, with particles corresponding to tokens, we prove that the token distribution rapidly concentrates onto the push-forward of the initial distribution under a projection map induced by ",
+      "resume_fr": "Transformers with self-attention modules as their core components have become an integral architecture in modern large language and foundation models. In this paper, we study the evolution of tokens in deep encoder-only transformers at inference time which is described in the large-token limit by a mean-field continuity equation. Leveraging ideas from the convergence analysis of interacting multi-particle systems, with particles corresponding to tokens, we prove that the token distribution rapidly concentrates onto the push-forward of the initial distribution under a projection map induced by ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PriorVLA: Prior-Preserving Adaptation for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2605.10925v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-11T17:56:02.000Z",
+      "score": 70,
+      "summary_en": "Large-scale pretraining has made Vision-Language-Action (VLA) models promising foundations for generalist robot manipulation, yet adapting them to downstream tasks remains necessary. However, the common practice of full fine-tuning treats pretraining as initialization and can shift broad priors toward narrow training-distribution patterns. We propose PriorVLA, a novel framework that preserves pretrained priors and learns to leverage them for effective adaptation. PriorVLA keeps a frozen Prior Expert as a read-only prior source and trains an Adaptation Expert for downstream specialization. Expe",
+      "summary_fr": "Large-scale pretraining has made Vision-Language-Action (VLA) models promising foundations for generalist robot manipulation, yet adapting them to downstream tasks remains necessary. However, the common practice of full fine-tuning treats pretraining as initialization and can shift broad priors toward narrow training-distribution patterns. We propose PriorVLA, a novel framework that preserves pretrained priors and learns to leverage them for effective adaptation. PriorVLA keeps a frozen Prior Expert as a read-only prior source and trains an Adaptation Expert for downstream specialization. Expe",
+      "resume_fr": "Large-scale pretraining has made Vision-Language-Action (VLA) models promising foundations for generalist robot manipulation, yet adapting them to downstream tasks remains necessary. However, the common practice of full fine-tuning treats pretraining as initialization and can shift broad priors toward narrow training-distribution patterns. We propose PriorVLA, a novel framework that preserves pretrained priors and learns to leverage them for effective adaptation. PriorVLA keeps a frozen Prior Expert as a read-only prior source and trains an Adaptation Expert for downstream specialization. Expe",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "WildClawBench: A Benchmark for Real-World, Long-Horizon Agent Evaluation",
+      "url": "https://arxiv.org/abs/2605.10912v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-05-11T17:49:43.000Z",
+      "score": 70,
+      "summary_en": "Large language and vision-language models increasingly power agents that act on a user's behalf through command-line interface (CLI) harnesses. However, most agent benchmarks still rely on synthetic sandboxes, short-horizon tasks, mock-service APIs, and final-answer checks, leaving open whether agents can complete realistic long-horizon work in the runtimes where they are deployed. This work presents WildClawBench, a native-runtime benchmark of 60 human-authored, bilingual, multimodal tasks spanning six thematic categories. Each task averages roughly 8 minutes of wall-clock time and over 20 to",
+      "summary_fr": "Large language and vision-language models increasingly power agents that act on a user's behalf through command-line interface (CLI) harnesses. However, most agent benchmarks still rely on synthetic sandboxes, short-horizon tasks, mock-service APIs, and final-answer checks, leaving open whether agents can complete realistic long-horizon work in the runtimes where they are deployed. This work presents WildClawBench, a native-runtime benchmark of 60 human-authored, bilingual, multimodal tasks spanning six thematic categories. Each task averages roughly 8 minutes of wall-clock time and over 20 to",
+      "resume_fr": "Large language and vision-language models increasingly power agents that act on a user's behalf through command-line interface (CLI) harnesses. However, most agent benchmarks still rely on synthetic sandboxes, short-horizon tasks, mock-service APIs, and final-answer checks, leaving open whether agents can complete realistic long-horizon work in the runtimes where they are deployed. This work presents WildClawBench, a native-runtime benchmark of 60 human-authored, bilingual, multimodal tasks spanning six thematic categories. Each task averages roughly 8 minutes of wall-clock time and over 20 to",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CapVector: Learning Transferable Capability Vectors in Parametric Space for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2605.10903v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-11T17:41:54.000Z",
+      "score": 85,
+      "summary_en": "This paper proposes a novel approach to address the challenge that pretrained VLA models often fail to effectively improve performance and reduce adaptation costs during standard supervised finetuning (SFT). Some advanced finetuning methods with auxiliary training objectives can improve performance and reduce the number of convergence steps. However, they typically incur significant computational overhead due to the additional losses from auxiliary objectives. To simultaneously achieve the enhanced capabilities of auxiliary training with the simplicity of standard SFT, we decouple the two obje",
+      "summary_fr": "This paper proposes a novel approach to address the challenge that pretrained VLA models often fail to effectively improve performance and reduce adaptation costs during standard supervised finetuning (SFT). Some advanced finetuning methods with auxiliary training objectives can improve performance and reduce the number of convergence steps. However, they typically incur significant computational overhead due to the additional losses from auxiliary objectives. To simultaneously achieve the enhanced capabilities of auxiliary training with the simplicity of standard SFT, we decouple the two obje",
+      "resume_fr": "This paper proposes a novel approach to address the challenge that pretrained VLA models often fail to effectively improve performance and reduce adaptation costs during standard supervised finetuning (SFT). Some advanced finetuning methods with auxiliary training objectives can improve performance and reduce the number of convergence steps. However, they typically incur significant computational overhead due to the additional losses from auxiliary objectives. To simultaneously achieve the enhanced capabilities of auxiliary training with the simplicity of standard SFT, we decouple the two obje",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "RubricEM: Meta-RL with Rubric-guided Policy Decomposition beyond Verifiable Rewards",
+      "url": "https://arxiv.org/abs/2605.10899v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-05-11T17:40:38.000Z",
+      "score": 70,
+      "summary_en": "Training deep research agents, namely systems that plan, search, evaluate evidence, and synthesize long-form reports, pushes reinforcement learning beyond the regime of verifiable rewards. Their outputs lack ground-truth answers, their trajectories span many tool-augmented decisions, and standard post-training offers little mechanism for turning past attempts into reusable experience. In this work, we argue that rubrics should serve not merely as final-answer evaluators, but as the shared interface that structures policy execution, judge feedback, and agent memory. Based on this view, we intro",
+      "summary_fr": "Training deep research agents, namely systems that plan, search, evaluate evidence, and synthesize long-form reports, pushes reinforcement learning beyond the regime of verifiable rewards. Their outputs lack ground-truth answers, their trajectories span many tool-augmented decisions, and standard post-training offers little mechanism for turning past attempts into reusable experience. In this work, we argue that rubrics should serve not merely as final-answer evaluators, but as the shared interface that structures policy execution, judge feedback, and agent memory. Based on this view, we intro",
+      "resume_fr": "Training deep research agents, namely systems that plan, search, evaluate evidence, and synthesize long-form reports, pushes reinforcement learning beyond the regime of verifiable rewards. Their outputs lack ground-truth answers, their trajectories span many tool-augmented decisions, and standard post-training offers little mechanism for turning past attempts into reusable experience. In this work, we argue that rubrics should serve not merely as final-answer evaluators, but as the shared interface that structures policy execution, judge feedback, and agent memory. Based on this view, we intro",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "When Should Teachers Control AI Generation for Mathematics Visuals?",
+      "url": "https://arxiv.org/abs/2605.10672v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-11T14:54:27.000Z",
+      "score": 50,
+      "summary_en": "Generative AI has the potential to help teachers rapidly create classroom-ready visual materials, particularly in mathematics where diagrams and visual representations must be pedagogically meaningful and instructionally correct. However, current generative tools primarily support prompting and post-hoc editing, leaving open a key question for correctness-sensitive educational authoring: when in the generation pipeline should teachers exert control? In this paper, we investigate how the timing of human control in AI-assisted generation shapes teachers' visual authoring practices in correctness",
+      "summary_fr": "Generative AI has the potential to help teachers rapidly create classroom-ready visual materials, particularly in mathematics where diagrams and visual representations must be pedagogically meaningful and instructionally correct. However, current generative tools primarily support prompting and post-hoc editing, leaving open a key question for correctness-sensitive educational authoring: when in the generation pipeline should teachers exert control? In this paper, we investigate how the timing of human control in AI-assisted generation shapes teachers' visual authoring practices in correctness",
+      "resume_fr": "Generative AI has the potential to help teachers rapidly create classroom-ready visual materials, particularly in mathematics where diagrams and visual representations must be pedagogically meaningful and instructionally correct. However, current generative tools primarily support prompting and post-hoc editing, leaving open a key question for correctness-sensitive educational authoring: when in the generation pipeline should teachers exert control? In this paper, we investigate how the timing of human control in AI-assisted generation shapes teachers' visual authoring practices in correctness",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "An Interdisciplinary Method of Applying AI‐Empowered Chatbots in Chinese Quatrains' Learning for Chinese Young Pupils",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70260?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -113,6 +246,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Re-thinking human–machine interaction and the governance of AI in the military domain",
+      "url": "https://www.nature.com/articles/s42256-026-01231-x",
+      "source": "Nature Machine Intelligence",
+      "published": "2026-05-11T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01231-x/MediaObjects/42256_2026_1231_Fig1_HTML.png"
     },
     {
       "title": "Uncertainty-Aware Structured Data Extraction from Full CMR Reports via Distilled LLMs",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Investigating the Effects of Different Levels of User Control in an Interactive Educational Recommender System",
-      "url": "https://arxiv.org/abs/2605.01400v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-05-02T11:43:47.000Z",
-      "score": 85,
-      "summary_en": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
-      "summary_fr": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
-      "resume_fr": "Educational recommender systems (ERSs) are becoming increasingly important in enhancing educational outcomes and personalizing learning experiences by providing recommendations of personalized resources and activities to learners, tailored to their individual learning needs. While user control is widely assumed to improve user experience, the effects of different levels of control in ERSs remain underexplored. To address this gap, we designed and evaluated an interactive ERS within the MOOC platform CourseMapper, where learners could interact with the input (i.e., user profile), process (i.e.,",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Benefits of classroom remote microphone technology for inattentive children",
-      "url": "https://www.nature.com/articles/s41539-026-00427-5",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2026-05-02T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
-    },
-    {
-      "title": "SAVGO: Learning State-Action Value Geometry with Cosine Similarity for Continuous Control",
-      "url": "https://arxiv.org/abs/2605.00787v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-05-01T17:09:58.000Z",
-      "score": 70,
-      "summary_en": "While representation and similarity learning have improved the sample efficiency of Reinforcement Learning (RL), they are rarely used to shape policy updates directly in the action space. To bridge this gap, a geometry-aware RL algorithm that explicitly incorporates value-based similarity into the policy update, State-Action Value Geometry Optimization (SAVGO), is proposed. In detail, SAVGO learns a joint state-action embedding space in which pairs with similar action-value estimates exhibit high cosine similarity, while dissimilar pairs are mapped to distinct directions. This learned geometry",
-      "summary_fr": "While representation and similarity learning have improved the sample efficiency of Reinforcement Learning (RL), they are rarely used to shape policy updates directly in the action space. To bridge this gap, a geometry-aware RL algorithm that explicitly incorporates value-based similarity into the policy update, State-Action Value Geometry Optimization (SAVGO), is proposed. In detail, SAVGO learns a joint state-action embedding space in which pairs with similar action-value estimates exhibit high cosine similarity, while dissimilar pairs are mapped to distinct directions. This learned geometry",
-      "resume_fr": "While representation and similarity learning have improved the sample efficiency of Reinforcement Learning (RL), they are rarely used to shape policy updates directly in the action space. To bridge this gap, a geometry-aware RL algorithm that explicitly incorporates value-based similarity into the policy update, State-Action Value Geometry Optimization (SAVGO), is proposed. In detail, SAVGO learns a joint state-action embedding space in which pairs with similar action-value estimates exhibit high cosine similarity, while dissimilar pairs are mapped to distinct directions. This learned geometry",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Characterizing the Expressivity of Local Attention in Transformers",
-      "url": "https://arxiv.org/abs/2605.00768v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-05-01T16:30:52.000Z",
-      "score": 85,
-      "summary_en": "The transformer is the most popular neural architecture for language modeling. The cornerstone of the transformer is its global attention mechanism, which lets the model aggregate information from all preceding tokens before generating the next token. One common variant of attention is called local attention, which restricts each token to aggregating information from a bounded window of predecessors, reducing the quadratic cost of global attention to linear. Although this restriction is usually motivated by efficiency, it has also been found to improve model quality, a phenomenon that has so f",
-      "summary_fr": "The transformer is the most popular neural architecture for language modeling. The cornerstone of the transformer is its global attention mechanism, which lets the model aggregate information from all preceding tokens before generating the next token. One common variant of attention is called local attention, which restricts each token to aggregating information from a bounded window of predecessors, reducing the quadratic cost of global attention to linear. Although this restriction is usually motivated by efficiency, it has also been found to improve model quality, a phenomenon that has so f",
-      "resume_fr": "The transformer is the most popular neural architecture for language modeling. The cornerstone of the transformer is its global attention mechanism, which lets the model aggregate information from all preceding tokens before generating the next token. One common variant of attention is called local attention, which restricts each token to aggregating information from a bounded window of predecessors, reducing the quadratic cost of global attention to linear. Although this restriction is usually motivated by efficiency, it has also been found to improve model quality, a phenomenon that has so f",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Tempus: A Temporally Scalable Resource-Invariant GEMM Streaming Framework for Versal AI Edge",
-      "url": "https://arxiv.org/abs/2605.00536v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-05-01T09:28:34.000Z",
-      "score": 70,
-      "summary_en": "Scaling laws for Large Language Models (LLMs) establish that model quality improves with computational scale, yet edge deployment imposes strict constraints on compute, memory, and power. Since General Matrix Multiplication (GEMM) accounts for up to 90\\% of inference time, efficient GEMM acceleration is critical for edge AI. The Adaptive Intelligent Engines available in the AMD Versal adaptive SoCs are well suited for this task, but existing state-of-the-art (SOTA) frameworks maximize performance through spatial scaling, distributing workloads across hundreds of cores -- an approach that fails",
-      "summary_fr": "Scaling laws for Large Language Models (LLMs) establish that model quality improves with computational scale, yet edge deployment imposes strict constraints on compute, memory, and power. Since General Matrix Multiplication (GEMM) accounts for up to 90\\% of inference time, efficient GEMM acceleration is critical for edge AI. The Adaptive Intelligent Engines available in the AMD Versal adaptive SoCs are well suited for this task, but existing state-of-the-art (SOTA) frameworks maximize performance through spatial scaling, distributing workloads across hundreds of cores -- an approach that fails",
-      "resume_fr": "Scaling laws for Large Language Models (LLMs) establish that model quality improves with computational scale, yet edge deployment imposes strict constraints on compute, memory, and power. Since General Matrix Multiplication (GEMM) accounts for up to 90\\% of inference time, efficient GEMM acceleration is critical for edge AI. The Adaptive Intelligent Engines available in the AMD Versal adaptive SoCs are well suited for this task, but existing state-of-the-art (SOTA) frameworks maximize performance through spatial scaling, distributing workloads across hundreds of cores -- an approach that fails",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The impact of coercive, normative, and mimetic Stress on Chinese teachers' continuance intention to use generative AI: An integrated perspective of the Expectation-Confirmation Model and Institutional Theory",
-      "url": "https://arxiv.org/abs/2605.00522v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-05-01T08:56:13.000Z",
-      "score": 85,
-      "summary_en": "This study investigates Chinese teachers' continuance intention to use generative artificial intelligence (AI) by integrating the Expectation-Confirmation Model with Institutional Theory. A sequential explanatory mixed-methods design was employed. Questionnaire data from 437 teachers were analysed using structural equation modelling, followed by semi-structured interviews with 15 teachers to further interpret the findings. The results indicate that confirmation, perceived usefulness, and satisfaction play important roles in shaping teachers' continuance intention, while institutional pressures",
-      "summary_fr": "This study investigates Chinese teachers' continuance intention to use generative artificial intelligence (AI) by integrating the Expectation-Confirmation Model with Institutional Theory. A sequential explanatory mixed-methods design was employed. Questionnaire data from 437 teachers were analysed using structural equation modelling, followed by semi-structured interviews with 15 teachers to further interpret the findings. The results indicate that confirmation, perceived usefulness, and satisfaction play important roles in shaping teachers' continuance intention, while institutional pressures",
-      "resume_fr": "This study investigates Chinese teachers' continuance intention to use generative artificial intelligence (AI) by integrating the Expectation-Confirmation Model with Institutional Theory. A sequential explanatory mixed-methods design was employed. Questionnaire data from 437 teachers were analysed using structural equation modelling, followed by semi-structured interviews with 15 teachers to further interpret the findings. The results indicate that confirmation, perceived usefulness, and satisfaction play important roles in shaping teachers' continuance intention, while institutional pressures",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "High-Speed Vision Improves Zero-Shot Semantic Understanding of Human Actions",
-      "url": "https://arxiv.org/abs/2605.00496v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-05-01T08:12:26.000Z",
-      "score": 70,
-      "summary_en": "Understanding human actions from visual observations is essential for human--robot interaction, particularly when semantic interpretation of unfamiliar or hard-to-annotate actions is required. In scenarios such as rapid and less common activities, collecting sufficient labeled data for supervised learning is challenging, making zero-shot approaches a practical alternative for semantic understanding without task-specific training. While recent advances in large-scale pretrained models enable such zero-shot reasoning, the impact of temporal resolution, especially for rapid and fine-grained motio",
-      "summary_fr": "Understanding human actions from visual observations is essential for human--robot interaction, particularly when semantic interpretation of unfamiliar or hard-to-annotate actions is required. In scenarios such as rapid and less common activities, collecting sufficient labeled data for supervised learning is challenging, making zero-shot approaches a practical alternative for semantic understanding without task-specific training. While recent advances in large-scale pretrained models enable such zero-shot reasoning, the impact of temporal resolution, especially for rapid and fine-grained motio",
-      "resume_fr": "Understanding human actions from visual observations is essential for human--robot interaction, particularly when semantic interpretation of unfamiliar or hard-to-annotate actions is required. In scenarios such as rapid and less common activities, collecting sufficient labeled data for supervised learning is challenging, making zero-shot approaches a practical alternative for semantic understanding without task-specific training. While recent advances in large-scale pretrained models enable such zero-shot reasoning, the impact of temporal resolution, especially for rapid and fine-grained motio",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Information and Communication Technology Assisted Experiments in K‐12 Science Education: A Systematic Literature Review",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70242?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-05-01T03:30:08.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
