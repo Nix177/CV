@@ -118,7 +118,7 @@ window.portfolioData = [
     id: "agora-solo",
     image: "/assets/portfolio/thumbs/agora-solo.png",
     tags: ["EdTech", "Ethics", "Mobile", "Interactive Fiction"],
-    url: "https://nix177.github.io/mode-solo-rpg-ethics/",
+    url: "https://nix177.github.io/mode-solo-rpg-ethics/action_rpg_mode/index.html",
     i18n: {
       fr: {
         title: "Agora Numérique Solo (Livre Interactif)",
