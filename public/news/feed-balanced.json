@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T10:04:17.664Z",
+  "generatedAt": "2026-05-30T08:34:14.895Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,82 @@
   },
   "items": [
     {
+      "title": "Uncertainty-driven 3D Gaussian Splatting Active Mapping via Anisotropic Visibility Field",
+      "url": "https://arxiv.org/abs/2605.30342v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-28T17:59:32.000Z",
+      "score": 70,
+      "summary_en": "We present Gaussian Splatting Anisotropic Visibility Field (GAVIS), a novel framework for uncertainty quantification and active mapping in 3DGS. Our key insight is that regions unseen from the training views yield unreliable predictions from the 3DGS. To address this, we introduce a principled and efficient method for quantifying the visibility field in 3DGS, defined as the anisotropic visibility of each particle with respect to the training views, and represented using spherical harmonics. The resulting visibility field is integrated into a Bayesian Network-based uncertainty-aware 3DGS raster",
+      "summary_fr": "We present Gaussian Splatting Anisotropic Visibility Field (GAVIS), a novel framework for uncertainty quantification and active mapping in 3DGS. Our key insight is that regions unseen from the training views yield unreliable predictions from the 3DGS. To address this, we introduce a principled and efficient method for quantifying the visibility field in 3DGS, defined as the anisotropic visibility of each particle with respect to the training views, and represented using spherical harmonics. The resulting visibility field is integrated into a Bayesian Network-based uncertainty-aware 3DGS raster",
+      "resume_fr": "We present Gaussian Splatting Anisotropic Visibility Field (GAVIS), a novel framework for uncertainty quantification and active mapping in 3DGS. Our key insight is that regions unseen from the training views yield unreliable predictions from the 3DGS. To address this, we introduce a principled and efficient method for quantifying the visibility field in 3DGS, defined as the anisotropic visibility of each particle with respect to the training views, and represented using spherical harmonics. The resulting visibility field is integrated into a Bayesian Network-based uncertainty-aware 3DGS raster",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Gaze2Act: Gaze-Conditioned Vision-Language-Action Policies for Interactive Robot Manipulation",
+      "url": "https://arxiv.org/abs/2605.30282v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-28T17:37:16.000Z",
+      "score": 85,
+      "summary_en": "Vision-Language-Action (VLA) models have recently shown strong potential for robot learning by following language instructions. However, in practice, language alone is often insufficient to precisely convey human intent. It is difficult to describe which exact object to interact with among similar candidates, where to act on the object, or how the target may change during execution. To address this limitation, we propose Gaze2Act, a novel VLA framework that leverages human gaze as a dynamic and intuitive intent signal for complex interactive manipulation. Gaze2Act first bridges the ego-exo vie",
+      "summary_fr": "Vision-Language-Action (VLA) models have recently shown strong potential for robot learning by following language instructions. However, in practice, language alone is often insufficient to precisely convey human intent. It is difficult to describe which exact object to interact with among similar candidates, where to act on the object, or how the target may change during execution. To address this limitation, we propose Gaze2Act, a novel VLA framework that leverages human gaze as a dynamic and intuitive intent signal for complex interactive manipulation. Gaze2Act first bridges the ego-exo vie",
+      "resume_fr": "Vision-Language-Action (VLA) models have recently shown strong potential for robot learning by following language instructions. However, in practice, language alone is often insufficient to precisely convey human intent. It is difficult to describe which exact object to interact with among similar candidates, where to act on the object, or how the target may change during execution. To address this limitation, we propose Gaze2Act, a novel VLA framework that leverages human gaze as a dynamic and intuitive intent signal for complex interactive manipulation. Gaze2Act first bridges the ego-exo vie",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Qwen-VLA: Unifying Vision-Language-Action Modeling across Tasks, Environments, and Robot Embodiments",
+      "url": "https://arxiv.org/abs/2605.30280v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-28T17:36:31.000Z",
+      "score": 70,
+      "summary_en": "Embodied intelligence is often studied through specialized models for individual tasks such as manipulation or navigation, resulting in fragmented capabilities and limited generalization across tasks, environments, and robot embodiments. In this work, we study whether heterogeneous embodied decision-making problems can be unified within a single vision-language-action model. We present Qwen-VLA, a unified embodied foundation model that extends Qwen's vision-language modeling stack from perception, understanding, and reasoning to continuous action and trajectory generation through a DiT-based a",
+      "summary_fr": "Embodied intelligence is often studied through specialized models for individual tasks such as manipulation or navigation, resulting in fragmented capabilities and limited generalization across tasks, environments, and robot embodiments. In this work, we study whether heterogeneous embodied decision-making problems can be unified within a single vision-language-action model. We present Qwen-VLA, a unified embodied foundation model that extends Qwen's vision-language modeling stack from perception, understanding, and reasoning to continuous action and trajectory generation through a DiT-based a",
+      "resume_fr": "Embodied intelligence is often studied through specialized models for individual tasks such as manipulation or navigation, resulting in fragmented capabilities and limited generalization across tasks, environments, and robot embodiments. In this work, we study whether heterogeneous embodied decision-making problems can be unified within a single vision-language-action model. We present Qwen-VLA, a unified embodied foundation model that extends Qwen's vision-language modeling stack from perception, understanding, and reasoning to continuous action and trajectory generation through a DiT-based a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Uncertainty-Aware Transfer Learning for Cross-Building Energy Forecasting: Toward Robust and Scalable District-Level Energy Management",
+      "url": "https://arxiv.org/abs/2605.29733v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-05-28T10:28:05.000Z",
+      "score": 65,
+      "summary_en": "Scaling data-driven energy forecasting to district level requires models that can be re-used across buildings with minimal target-domain data and honest uncertainty estimates. We present an uncertainty-aware transfer learning (TL) framework for cross-building energy forecasting based on the Temporal Fusion Transformer (TFT), evaluated on a newly released high-resolution real sub-meter dataset: an educational building at Aalborg University, Denmark (source) and the multi-typology NEST building at EMPA, Switzerland (target). We introduce the Transfer Robustness Index (TRI), an architecture-agnos",
+      "summary_fr": "Scaling data-driven energy forecasting to district level requires models that can be re-used across buildings with minimal target-domain data and honest uncertainty estimates. We present an uncertainty-aware transfer learning (TL) framework for cross-building energy forecasting based on the Temporal Fusion Transformer (TFT), evaluated on a newly released high-resolution real sub-meter dataset: an educational building at Aalborg University, Denmark (source) and the multi-typology NEST building at EMPA, Switzerland (target). We introduce the Transfer Robustness Index (TRI), an architecture-agnos",
+      "resume_fr": "Scaling data-driven energy forecasting to district level requires models that can be re-used across buildings with minimal target-domain data and honest uncertainty estimates. We present an uncertainty-aware transfer learning (TL) framework for cross-building energy forecasting based on the Temporal Fusion Transformer (TFT), evaluated on a newly released high-resolution real sub-meter dataset: an educational building at Aalborg University, Denmark (source) and the multi-typology NEST building at EMPA, Switzerland (target). We introduce the Transfer Robustness Index (TRI), an architecture-agnos",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Understanding Phase Noise and Its Impact on RF System Performance",
       "url": "https://content.knowledgehub.wiley.com/understanding-phase-noise-fundamentals/",
       "source": "IEEE Spectrum – AI",
@@ -113,6 +189,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://content.knowledgehub.wiley.com/wp-content/uploads/2026/05/Phase-Noise_1500x400-500x133.jpg"
+    },
+    {
+      "title": "From Prompts to Context: An Ontology-Driven Framework for Human-Generative AI Collaboration",
+      "url": "https://arxiv.org/abs/2605.29675v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-05-28T09:35:59.000Z",
+      "score": 85,
+      "summary_en": "Collaborations with Generative AI often begin with a short prompt and end with an opaque output, leaving implicit who was involved, what task was being pursued, which resources were used, and which constraints should have shaped the process. This limited contextual explicitness hinders trust, traceability, and accountability, particularly when Generative AI is embedded in information-intensive workflows such as search, querying, and profile management. This paper introduces From Prompts to Context, an ontology-driven framework for representing Human-Generative AI collaboration. Its core compon",
+      "summary_fr": "Collaborations with Generative AI often begin with a short prompt and end with an opaque output, leaving implicit who was involved, what task was being pursued, which resources were used, and which constraints should have shaped the process. This limited contextual explicitness hinders trust, traceability, and accountability, particularly when Generative AI is embedded in information-intensive workflows such as search, querying, and profile management. This paper introduces From Prompts to Context, an ontology-driven framework for representing Human-Generative AI collaboration. Its core compon",
+      "resume_fr": "Collaborations with Generative AI often begin with a short prompt and end with an opaque output, leaving implicit who was involved, what task was being pursued, which resources were used, and which constraints should have shaped the process. This limited contextual explicitness hinders trust, traceability, and accountability, particularly when Generative AI is embedded in information-intensive workflows such as search, querying, and profile management. This paper introduces From Prompts to Context, an ontology-driven framework for representing Human-Generative AI collaboration. Its core compon",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "How Generative AI Affects Team Communication in Secondary Education: A Qualitative Investigation",
@@ -1139,101 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10623-0/MediaObjects/11423_2026_10623_Fig1_HTML.png"
-    },
-    {
-      "title": "Eradicating Negative Transfer in Multi-Physics Foundation Models via Sparse Mixture-of-Experts Routing",
-      "url": "https://arxiv.org/abs/2605.15179v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-05-14T17:58:15.000Z",
-      "score": 50,
-      "summary_en": "Scaling Scientific Machine Learning (SciML) toward universal foundation models is bottlenecked by negative transfer: the simultaneous co-training of disparate partial differential equation (PDE) regimes can induce gradient conflict, unstable optimization, and plasticity loss in dense neural operators. In particular, broadband open-channel fluid dynamics and boundary-dominated porous media flows impose incompatible spectral and geometric demands on a single dense parameter path. We introduce Shodh-MoE, a sparse-activated latent transformer architecture for multi-physics transport. Shodh-MoE ope",
-      "summary_fr": "Scaling Scientific Machine Learning (SciML) toward universal foundation models is bottlenecked by negative transfer: the simultaneous co-training of disparate partial differential equation (PDE) regimes can induce gradient conflict, unstable optimization, and plasticity loss in dense neural operators. In particular, broadband open-channel fluid dynamics and boundary-dominated porous media flows impose incompatible spectral and geometric demands on a single dense parameter path. We introduce Shodh-MoE, a sparse-activated latent transformer architecture for multi-physics transport. Shodh-MoE ope",
-      "resume_fr": "Scaling Scientific Machine Learning (SciML) toward universal foundation models is bottlenecked by negative transfer: the simultaneous co-training of disparate partial differential equation (PDE) regimes can induce gradient conflict, unstable optimization, and plasticity loss in dense neural operators. In particular, broadband open-channel fluid dynamics and boundary-dominated porous media flows impose incompatible spectral and geometric demands on a single dense parameter path. We introduce Shodh-MoE, a sparse-activated latent transformer architecture for multi-physics transport. Shodh-MoE ope",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Pelican-Unified 1.0: A Unified Embodied Intelligence Model for Understanding, Reasoning, Imagination and Action",
-      "url": "https://arxiv.org/abs/2605.15153v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-05-14T17:50:42.000Z",
-      "score": 70,
-      "summary_en": "We present Pelican-Unified 1.0, the first embodied foundation model trained according to the principle of unification. Pelican-Unified 1.0 uses a single VLM as a unified understanding module, mapping scenes, instructions, visual contexts, and action histories into a shared semantic space. The same VLM also serves as a unified reasoning module, autoregressively producing task-, action-, and future-oriented chains of thought in a single forward pass and projecting the final hidden state into a dense latent variable. A Unified Future Generator (UFG) then conditions on this latent variable and joi",
-      "summary_fr": "We present Pelican-Unified 1.0, the first embodied foundation model trained according to the principle of unification. Pelican-Unified 1.0 uses a single VLM as a unified understanding module, mapping scenes, instructions, visual contexts, and action histories into a shared semantic space. The same VLM also serves as a unified reasoning module, autoregressively producing task-, action-, and future-oriented chains of thought in a single forward pass and projecting the final hidden state into a dense latent variable. A Unified Future Generator (UFG) then conditions on this latent variable and joi",
-      "resume_fr": "We present Pelican-Unified 1.0, the first embodied foundation model trained according to the principle of unification. Pelican-Unified 1.0 uses a single VLM as a unified understanding module, mapping scenes, instructions, visual contexts, and action histories into a shared semantic space. The same VLM also serves as a unified reasoning module, autoregressively producing task-, action-, and future-oriented chains of thought in a single forward pass and projecting the final hidden state into a dense latent variable. A Unified Future Generator (UFG) then conditions on this latent variable and joi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "CoCo-InEKF: State Estimation with Learned Contact Covariances in Dynamic, Contact-Rich Scenarios",
-      "url": "https://arxiv.org/abs/2605.15122v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-05-14T17:35:06.000Z",
-      "score": 70,
-      "summary_en": "Robust state estimation for highly dynamic motion of legged robots remains challenging, especially in dynamic, contact-rich scenarios. Traditional approaches often rely on binary contact states that fail to capture the nuances of partial contact or directional slippage. This paper presents CoCo-InEKF, a differentiable invariant extended Kalman filter that utilizes continuous contact velocity covariances instead of binary contact states. These learned covariances allow the method to dynamically modulate contact confidence, accounting for more nuanced conditions ranging from firm contact to dire",
-      "summary_fr": "Robust state estimation for highly dynamic motion of legged robots remains challenging, especially in dynamic, contact-rich scenarios. Traditional approaches often rely on binary contact states that fail to capture the nuances of partial contact or directional slippage. This paper presents CoCo-InEKF, a differentiable invariant extended Kalman filter that utilizes continuous contact velocity covariances instead of binary contact states. These learned covariances allow the method to dynamically modulate contact confidence, accounting for more nuanced conditions ranging from firm contact to dire",
-      "resume_fr": "Robust state estimation for highly dynamic motion of legged robots remains challenging, especially in dynamic, contact-rich scenarios. Traditional approaches often rely on binary contact states that fail to capture the nuances of partial contact or directional slippage. This paper presents CoCo-InEKF, a differentiable invariant extended Kalman filter that utilizes continuous contact velocity covariances instead of binary contact states. These learned covariances allow the method to dynamically modulate contact confidence, accounting for more nuanced conditions ranging from firm contact to dire",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "On the Cultural Anachronism and Temporal Reasoning in Vision Language Models",
-      "url": "https://arxiv.org/abs/2605.15071v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-05-14T16:58:16.000Z",
-      "score": 50,
-      "summary_en": "Vision-Language Models (VLMs) are increasingly applied to cultural heritage materials, from digital archives to educational platforms. This work identifies a fundamental issue in how these models interpret historical artifacts. We define this phenomenon as cultural anachronism, the tendency to misinterpret historical objects using temporally inappropriate concepts, materials, or cultural frameworks. To quantify this phenomenon, we introduce the Temporal Anachronism Benchmark for Vision-Language Models (TAB-VLM), a dataset of 600 questions across six categories, designed to evaluate temporal re",
-      "summary_fr": "Vision-Language Models (VLMs) are increasingly applied to cultural heritage materials, from digital archives to educational platforms. This work identifies a fundamental issue in how these models interpret historical artifacts. We define this phenomenon as cultural anachronism, the tendency to misinterpret historical objects using temporally inappropriate concepts, materials, or cultural frameworks. To quantify this phenomenon, we introduce the Temporal Anachronism Benchmark for Vision-Language Models (TAB-VLM), a dataset of 600 questions across six categories, designed to evaluate temporal re",
-      "resume_fr": "Vision-Language Models (VLMs) are increasingly applied to cultural heritage materials, from digital archives to educational platforms. This work identifies a fundamental issue in how these models interpret historical artifacts. We define this phenomenon as cultural anachronism, the tendency to misinterpret historical objects using temporally inappropriate concepts, materials, or cultural frameworks. To quantify this phenomenon, we introduce the Temporal Anachronism Benchmark for Vision-Language Models (TAB-VLM), a dataset of 600 questions across six categories, designed to evaluate temporal re",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Prototyping Framework for Distributed Control of Multi-Robot Systems",
-      "url": "https://arxiv.org/abs/2605.15049v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-05-14T16:44:14.000Z",
-      "score": 70,
-      "summary_en": "This paper presents a prototyping framework for distributed control of multi-robot systems, aimed at bridging theory and practical testing of distributed optimization algorithms. Using the Single Program, Multiple Data (SPMD) paradigm, the framework emulates distributed control on a single computer, with each core running the same algorithm using local states and neighbour-to-neighbour communication. We demonstrate the framework on a four-quadrotor position-swapping task using a non-cooperative game-theoretic distributed algorithm. Computational time and trajectory data are compared across the",
-      "summary_fr": "This paper presents a prototyping framework for distributed control of multi-robot systems, aimed at bridging theory and practical testing of distributed optimization algorithms. Using the Single Program, Multiple Data (SPMD) paradigm, the framework emulates distributed control on a single computer, with each core running the same algorithm using local states and neighbour-to-neighbour communication. We demonstrate the framework on a four-quadrotor position-swapping task using a non-cooperative game-theoretic distributed algorithm. Computational time and trajectory data are compared across the",
-      "resume_fr": "This paper presents a prototyping framework for distributed control of multi-robot systems, aimed at bridging theory and practical testing of distributed optimization algorithms. Using the Single Program, Multiple Data (SPMD) paradigm, the framework emulates distributed control on a single computer, with each core running the same algorithm using local states and neighbour-to-neighbour communication. We demonstrate the framework on a four-quadrotor position-swapping task using a non-cooperative game-theoretic distributed algorithm. Computational time and trajectory data are compared across the",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
