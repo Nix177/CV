@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T08:54:08.173Z",
+  "generatedAt": "2026-06-01T11:46:48.256Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,63 @@
     }
   },
   "items": [
+    {
+      "title": "LongTraceRL: Learning Long-Context Reasoning from Search Agent Trajectories with Rubric Rewards",
+      "url": "https://arxiv.org/abs/2605.31584v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-05-29T17:51:40.000Z",
+      "score": 50,
+      "summary_en": "Long-context reasoning remains a central challenge for large language models, which often fail to locate and integrate key information in extensive distracting content. Reinforcement learning with verifiable rewards (RLVR) has shown promise for this task, yet existing methods are limited by low-confusability distractors and sparse, outcome-only reward signals that cannot supervise intermediate reasoning steps. To address these issues, we introduce \\textsc{LongTraceRL}. For data construction, we generate multi-hop questions via knowledge graph random walks and leverage search agent trajectories",
+      "summary_fr": "Long-context reasoning remains a central challenge for large language models, which often fail to locate and integrate key information in extensive distracting content. Reinforcement learning with verifiable rewards (RLVR) has shown promise for this task, yet existing methods are limited by low-confusability distractors and sparse, outcome-only reward signals that cannot supervise intermediate reasoning steps. To address these issues, we introduce \\textsc{LongTraceRL}. For data construction, we generate multi-hop questions via knowledge graph random walks and leverage search agent trajectories",
+      "resume_fr": "Long-context reasoning remains a central challenge for large language models, which often fail to locate and integrate key information in extensive distracting content. Reinforcement learning with verifiable rewards (RLVR) has shown promise for this task, yet existing methods are limited by low-confusability distractors and sparse, outcome-only reward signals that cannot supervise intermediate reasoning steps. To address these issues, we introduce \\textsc{LongTraceRL}. For data construction, we generate multi-hop questions via knowledge graph random walks and leverage search agent trajectories",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Learning Controlled Separation of Small Objects Between Two Fingers with a Tactile Skin",
+      "url": "https://arxiv.org/abs/2605.31486v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-29T16:08:58.000Z",
+      "score": 70,
+      "summary_en": "We introduce and solve the novel task of controlled separation of small objects with two fingers of a multi-purpose robotic hand: after grasping into a box of small objects, the task is to drop as many of them until a desired number remains between the fingers. The objects are small compared to the width of the fingers but also in absolute terms. In our case little pellets with a diameter of only 6mm are handled. We show that the task can be performed purely tactile (no vision) using a spatially-resolved tactile skin on a fingertip. The separation policy is trained in simulation via reinforcem",
+      "summary_fr": "We introduce and solve the novel task of controlled separation of small objects with two fingers of a multi-purpose robotic hand: after grasping into a box of small objects, the task is to drop as many of them until a desired number remains between the fingers. The objects are small compared to the width of the fingers but also in absolute terms. In our case little pellets with a diameter of only 6mm are handled. We show that the task can be performed purely tactile (no vision) using a spatially-resolved tactile skin on a fingertip. The separation policy is trained in simulation via reinforcem",
+      "resume_fr": "We introduce and solve the novel task of controlled separation of small objects with two fingers of a multi-purpose robotic hand: after grasping into a box of small objects, the task is to drop as many of them until a desired number remains between the fingers. The objects are small compared to the width of the fingers but also in absolute terms. In our case little pellets with a diameter of only 6mm are handled. We show that the task can be performed purely tactile (no vision) using a spatially-resolved tactile skin on a fingertip. The separation policy is trained in simulation via reinforcem",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Actuator-Aware Inverse Kinematics with Joint-Limit Admissibility for Torque-Controlled Redundant Robots",
+      "url": "https://arxiv.org/abs/2605.31436v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-05-29T15:33:10.000Z",
+      "score": 70,
+      "summary_en": "This paper proposes actuator-aware inverse kinematics for torque-controlled redundant robots under joint-limit constraints. In the considered architecture, the inverse-kinematic output is not merely a purely kinematic joint-velocity command; it is the required joint velocity supplied to a downstream torque-level controller. Therefore, a small commanded task residual may not necessarily improve realized motion. The proposed method formulates a convex quadratic programming problem whose decision variable is the joint-level required velocity. Control barrier function style bounds impose reference",
+      "summary_fr": "This paper proposes actuator-aware inverse kinematics for torque-controlled redundant robots under joint-limit constraints. In the considered architecture, the inverse-kinematic output is not merely a purely kinematic joint-velocity command; it is the required joint velocity supplied to a downstream torque-level controller. Therefore, a small commanded task residual may not necessarily improve realized motion. The proposed method formulates a convex quadratic programming problem whose decision variable is the joint-level required velocity. Control barrier function style bounds impose reference",
+      "resume_fr": "This paper proposes actuator-aware inverse kinematics for torque-controlled redundant robots under joint-limit constraints. In the considered architecture, the inverse-kinematic output is not merely a purely kinematic joint-velocity command; it is the required joint velocity supplied to a downstream torque-level controller. Therefore, a small commanded task residual may not necessarily improve realized motion. The proposed method formulates a convex quadratic programming problem whose decision variable is the joint-level required velocity. Control barrier function style bounds impose reference",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Uncertainty-driven 3D Gaussian Splatting Active Mapping via Anisotropic Visibility Field",
       "url": "https://arxiv.org/abs/2605.30342v1",
@@ -1177,63 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning With a Pedagogical Agent in Virtual Reality: Does the Impact of Environment Type and Agent Presence Matter?",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70257?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-05-15T09:28:11.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "From policy to practice: supporting the future of AI in education",
-      "url": "https://blog.google/products-and-platforms/products/education/ai-policy-guidance-labs/",
-      "source": "Google for Education – Blog",
-      "published": "2026-05-15T08:00:00.000Z",
-      "score": 50,
-      "summary_en": "Explore insights from our global AI Policy Labs on building a safe, equitable and teacher-led future for every learner.",
-      "summary_fr": "Explore insights from our global AI Policy Labs on building a safe, equitable and teacher-led future for every learner.",
-      "resume_fr": "Explore insights from our global AI Policy Labs on building a safe, equitable and teacher-led future for every learner.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/AI_Policy_lab_ss.width-1300.png"
-    },
-    {
-      "title": "From sources of self-efficacy to technology integration intentions: a new social cognitive model",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10623-0",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-05-15T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Grounded in social cognitive theory, this study had two purposes. First, it developed and validated the to measure preservice teachers’ perceptions of the four sources of self-efficacy—mastery experiences, vicarious information, verbal persuasion, and emotional arousal—within educational technology coursework. Second, it integrated sources of self-efficacy with established social cognitive variables, including self-efficacy, outcome expectations, and interests, to propose and test a new social cognitive model explaining preservice teachers’ intentions for technology integration. Data were coll",
-      "summary_fr": "Grounded in social cognitive theory, this study had two purposes. First, it developed and validated the to measure preservice teachers’ perceptions of the four sources of self-efficacy—mastery experiences, vicarious information, verbal persuasion, and emotional arousal—within educational technology coursework. Second, it integrated sources of self-efficacy with established social cognitive variables, including self-efficacy, outcome expectations, and interests, to propose and test a new social cognitive model explaining preservice teachers’ intentions for technology integration. Data were coll",
-      "resume_fr": "Grounded in social cognitive theory, this study had two purposes. First, it developed and validated the to measure preservice teachers’ perceptions of the four sources of self-efficacy—mastery experiences, vicarious information, verbal persuasion, and emotional arousal—within educational technology coursework. Second, it integrated sources of self-efficacy with established social cognitive variables, including self-efficacy, outcome expectations, and interests, to propose and test a new social cognitive model explaining preservice teachers’ intentions for technology integration. Data were coll",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10623-0/MediaObjects/11423_2026_10623_Fig1_HTML.png"
     }
   ]
 }
