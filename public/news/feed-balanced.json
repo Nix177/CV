@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T11:08:12.821Z",
+  "generatedAt": "2026-06-09T09:55:43.955Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,196 @@
   },
   "items": [
     {
+      "title": "MemoryVLA++: Temporal Modeling via Memory and Imagination in Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2606.09827v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-08T17:59:53.000Z",
+      "score": 70,
+      "summary_en": "Temporal modeling is essential for robotic manipulation, as effective control requires both memory of past interactions and imagination of future states. However, most VLA models rely primarily on the current observation and therefore struggle with long-horizon, temporally dependent tasks. Cognitive science suggests that humans rely on working memory to buffer short-lived context, the hippocampal system to preserve episodic memory of past experience, and internal models to imagine possible future state evolution. Inspired by these mechanisms, we propose MemoryVLA++, a full temporal modeling fr",
+      "summary_fr": "Temporal modeling is essential for robotic manipulation, as effective control requires both memory of past interactions and imagination of future states. However, most VLA models rely primarily on the current observation and therefore struggle with long-horizon, temporally dependent tasks. Cognitive science suggests that humans rely on working memory to buffer short-lived context, the hippocampal system to preserve episodic memory of past experience, and internal models to imagine possible future state evolution. Inspired by these mechanisms, we propose MemoryVLA++, a full temporal modeling fr",
+      "resume_fr": "Temporal modeling is essential for robotic manipulation, as effective control requires both memory of past interactions and imagination of future states. However, most VLA models rely primarily on the current observation and therefore struggle with long-horizon, temporally dependent tasks. Cognitive science suggests that humans rely on working memory to buffer short-lived context, the hippocampal system to preserve episodic memory of past experience, and internal models to imagine possible future state evolution. Inspired by these mechanisms, we propose MemoryVLA++, a full temporal modeling fr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "An Agency-Transferring Model-Free Policy Enhancement Technique",
+      "url": "https://arxiv.org/abs/2606.09825v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-06-08T17:59:39.000Z",
+      "score": 85,
+      "summary_en": "Training reinforcement learning (RL) policies from scratch is costly: it requires careful reward and environment design, extensive tuning, and substantial computation. Yet many control problems already have a functional but suboptimal policy available as a baseline. This paper proposes a method for embedding such a baseline into the RL training process, simultaneously improving training efficiency relative to from-scratch methods and producing a learning policy that outperforms the baseline. At each step, the method arbitrates between the baseline policy and a trainable learning policy, initia",
+      "summary_fr": "Training reinforcement learning (RL) policies from scratch is costly: it requires careful reward and environment design, extensive tuning, and substantial computation. Yet many control problems already have a functional but suboptimal policy available as a baseline. This paper proposes a method for embedding such a baseline into the RL training process, simultaneously improving training efficiency relative to from-scratch methods and producing a learning policy that outperforms the baseline. At each step, the method arbitrates between the baseline policy and a trainable learning policy, initia",
+      "resume_fr": "Training reinforcement learning (RL) policies from scratch is costly: it requires careful reward and environment design, extensive tuning, and substantial computation. Yet many control problems already have a functional but suboptimal policy available as a baseline. This paper proposes a method for embedding such a baseline into the RL training process, simultaneously improving training efficiency relative to from-scratch methods and producing a learning policy that outperforms the baseline. At each step, the method arbitrates between the baseline policy and a trainable learning policy, initia",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "iMaC: Translating Actions into Motion and Contact Images for Embodied World Models",
+      "url": "https://arxiv.org/abs/2606.09813v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-08T17:55:41.000Z",
+      "score": 70,
+      "summary_en": "Embodied world models have emerged as a pivotal paradigm for visual robotic decision-making and interactive environment simulation. However, conventional embodied frameworks rely on low-dimensional structured action vectors (e.g., joint angles and end-effector poses), which suffer from limited expressive capacity, poor generalization across diverse embodiments, and unnatural dynamic modeling for complex physical interactions. To address these limitations, this paper proposesiMac (Image as Action Control), a novel unified control paradigm that treats raw visual images as native action represent",
+      "summary_fr": "Embodied world models have emerged as a pivotal paradigm for visual robotic decision-making and interactive environment simulation. However, conventional embodied frameworks rely on low-dimensional structured action vectors (e.g., joint angles and end-effector poses), which suffer from limited expressive capacity, poor generalization across diverse embodiments, and unnatural dynamic modeling for complex physical interactions. To address these limitations, this paper proposesiMac (Image as Action Control), a novel unified control paradigm that treats raw visual images as native action represent",
+      "resume_fr": "Embodied world models have emerged as a pivotal paradigm for visual robotic decision-making and interactive environment simulation. However, conventional embodied frameworks rely on low-dimensional structured action vectors (e.g., joint angles and end-effector poses), which suffer from limited expressive capacity, poor generalization across diverse embodiments, and unnatural dynamic modeling for complex physical interactions. To address these limitations, this paper proposesiMac (Image as Action Control), a novel unified control paradigm that treats raw visual images as native action represent",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AHA-WAM:Asynchronous Horizon-Adaptive World-Action Modeling with Observation-Guided Context Routing",
+      "url": "https://arxiv.org/abs/2606.09811v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-08T17:55:18.000Z",
+      "score": 70,
+      "summary_en": "World-action models have emerged as a promising paradigm for robot manipulation, jointly modeling visual scene dynamics and actions to inject physical priors into policy learning. However, existing world-action models couple world prediction and action execution at the same temporal resolution, forcing the world branch to model near-term frame variations that are redundant and weakly informative. We posit that strictly binding world prediction and action execution to the same temporal rhythm may underutilize the potential of the video branch for embodied control. Therefore, we propose AHA-WAM,",
+      "summary_fr": "World-action models have emerged as a promising paradigm for robot manipulation, jointly modeling visual scene dynamics and actions to inject physical priors into policy learning. However, existing world-action models couple world prediction and action execution at the same temporal resolution, forcing the world branch to model near-term frame variations that are redundant and weakly informative. We posit that strictly binding world prediction and action execution to the same temporal rhythm may underutilize the potential of the video branch for embodied control. Therefore, we propose AHA-WAM,",
+      "resume_fr": "World-action models have emerged as a promising paradigm for robot manipulation, jointly modeling visual scene dynamics and actions to inject physical priors into policy learning. However, existing world-action models couple world prediction and action execution at the same temporal resolution, forcing the world branch to model near-term frame variations that are redundant and weakly informative. We posit that strictly binding world prediction and action execution to the same temporal rhythm may underutilize the potential of the video branch for embodied control. Therefore, we propose AHA-WAM,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Echo-Memory: A Controlled Study of Memory in Action World Models",
+      "url": "https://arxiv.org/abs/2606.09803v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-06-08T17:54:10.000Z",
+      "score": 70,
+      "summary_en": "We present \\textbf{Echo-Memory}, a controlled study of memory mechanisms in action-conditioned world models. These models generate multi-segment videos from a first frame, text prompt, and camera-action sequence, but their central failure is often memory rather than local image synthesis: after the camera leaves and returns, the scene or salient object may silently change. Existing memory designs are hard to compare because gains are entangled with backbone, training, retrieval, and evaluation differences. Echo-Memory fixes the action-to-video interface and varies only how history is stored an",
+      "summary_fr": "We present \\textbf{Echo-Memory}, a controlled study of memory mechanisms in action-conditioned world models. These models generate multi-segment videos from a first frame, text prompt, and camera-action sequence, but their central failure is often memory rather than local image synthesis: after the camera leaves and returns, the scene or salient object may silently change. Existing memory designs are hard to compare because gains are entangled with backbone, training, retrieval, and evaluation differences. Echo-Memory fixes the action-to-video interface and varies only how history is stored an",
+      "resume_fr": "We present \\textbf{Echo-Memory}, a controlled study of memory mechanisms in action-conditioned world models. These models generate multi-segment videos from a first frame, text prompt, and camera-action sequence, but their central failure is often memory rather than local image synthesis: after the camera leaves and returns, the scene or salient object may silently change. Existing memory designs are hard to compare because gains are entangled with backbone, training, retrieval, and evaluation differences. Echo-Memory fixes the action-to-video interface and varies only how history is stored an",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "AetheRock: An Arm-Worn Robot Teaching System for Force-Guided Vision-Tactile Learning",
+      "url": "https://arxiv.org/abs/2606.09777v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-08T17:38:57.000Z",
+      "score": 70,
+      "summary_en": "Force and tactile sensing are indispensable in contact-rich manipulation. However, force-aware robot learning faces critical challenges due to the incompatible assembly of tactile and force sensors in handheld or wearable devices. To address these limitations, we first introduce AetheRock for gripper-force, vision, and tactile data collection, which is an arm-worn device featuring a modular and easily manufactured visuo-tactile sensor, GelSlim-MiniFab, at the fingertip, a resistive pressure sensor at the human finger contact region, a customized PCB module, and a wearable kit for comfortable a",
+      "summary_fr": "Force and tactile sensing are indispensable in contact-rich manipulation. However, force-aware robot learning faces critical challenges due to the incompatible assembly of tactile and force sensors in handheld or wearable devices. To address these limitations, we first introduce AetheRock for gripper-force, vision, and tactile data collection, which is an arm-worn device featuring a modular and easily manufactured visuo-tactile sensor, GelSlim-MiniFab, at the fingertip, a resistive pressure sensor at the human finger contact region, a customized PCB module, and a wearable kit for comfortable a",
+      "resume_fr": "Force and tactile sensing are indispensable in contact-rich manipulation. However, force-aware robot learning faces critical challenges due to the incompatible assembly of tactile and force sensors in handheld or wearable devices. To address these limitations, we first introduce AetheRock for gripper-force, vision, and tactile data collection, which is an arm-worn device featuring a modular and easily manufactured visuo-tactile sensor, GelSlim-MiniFab, at the fingertip, a resistive pressure sensor at the human finger contact region, a customized PCB module, and a wearable kit for comfortable a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Your Model Already Knows: Attention-Guided Safety Filter for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2606.09749v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-08T17:11:16.000Z",
+      "score": 70,
+      "summary_en": "Vision-Language-Action (VLA) models have demonstrated impressive end-to-end performance across a variety of robotic manipulation tasks. However, these policies offer no guarantees against collisions with task-irrelevant objects in the scene. Existing safety filters sidestep this problem by querying a vision-language model (VLM) to identify obstacles and their locations. This, however, is too slow to run in the control loop and can only be invoked at episode initialization, leaving the filter unable to track moving obstacles. We discover that a small number of attention heads within a VLA model",
+      "summary_fr": "Vision-Language-Action (VLA) models have demonstrated impressive end-to-end performance across a variety of robotic manipulation tasks. However, these policies offer no guarantees against collisions with task-irrelevant objects in the scene. Existing safety filters sidestep this problem by querying a vision-language model (VLM) to identify obstacles and their locations. This, however, is too slow to run in the control loop and can only be invoked at episode initialization, leaving the filter unable to track moving obstacles. We discover that a small number of attention heads within a VLA model",
+      "resume_fr": "Vision-Language-Action (VLA) models have demonstrated impressive end-to-end performance across a variety of robotic manipulation tasks. However, these policies offer no guarantees against collisions with task-irrelevant objects in the scene. Existing safety filters sidestep this problem by querying a vision-language model (VLM) to identify obstacles and their locations. This, however, is too slow to run in the control loop and can only be invoked at episode initialization, leaving the filter unable to track moving obstacles. We discover that a small number of attention heads within a VLA model",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "The Neutral Mask: How RLHF Provides Shallow Alignment while Leaving Partisan Structure Intact in a Large Language Model",
+      "url": "https://arxiv.org/abs/2606.09735v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-06-08T17:00:31.000Z",
+      "score": 70,
+      "summary_en": "The ambition behind alignment training is to make large language models safe and useful. The primary mechanism, reinforcement learning from human feedback (RLHF), shapes the behavior of deployed language models by aligning them with ``human values.'' Yet the process is opaque. What values are being encoded; whose values are they; and how does RLHF encode them? A growing body of evidence suggests that RLHF produces only functional compliance rather than deep alignment. We offer a mechanistic case study of this phenomenon for partisan political orientation with a comparison of the internal repre",
+      "summary_fr": "The ambition behind alignment training is to make large language models safe and useful. The primary mechanism, reinforcement learning from human feedback (RLHF), shapes the behavior of deployed language models by aligning them with ``human values.'' Yet the process is opaque. What values are being encoded; whose values are they; and how does RLHF encode them? A growing body of evidence suggests that RLHF produces only functional compliance rather than deep alignment. We offer a mechanistic case study of this phenomenon for partisan political orientation with a comparison of the internal repre",
+      "resume_fr": "The ambition behind alignment training is to make large language models safe and useful. The primary mechanism, reinforcement learning from human feedback (RLHF), shapes the behavior of deployed language models by aligning them with ``human values.'' Yet the process is opaque. What values are being encoded; whose values are they; and how does RLHF encode them? A growing body of evidence suggests that RLHF produces only functional compliance rather than deep alignment. We offer a mechanistic case study of this phenomenon for partisan political orientation with a comparison of the internal repre",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Orange Lab: Lowering Barriers to Data Mining through Embedded Interactive Workflows",
+      "url": "https://arxiv.org/abs/2606.09239v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-06-08T09:14:55.000Z",
+      "score": 85,
+      "summary_en": "While visual programming of data analysis workflows has become an important vehicle for the democratization of data science, such systems remain largely confined to standalone applications and offer limited support for transitioning their visual analytics solutions into interactive web environments. As a result, data analysis pipelines are difficult to share, embed, and adapt into user-facing analytical tools. We present Orange Lab, a web-based collaborative environment for visual data analytics. At its core, Orange Lab enables users to visually construct machine learning workflows from modula",
+      "summary_fr": "While visual programming of data analysis workflows has become an important vehicle for the democratization of data science, such systems remain largely confined to standalone applications and offer limited support for transitioning their visual analytics solutions into interactive web environments. As a result, data analysis pipelines are difficult to share, embed, and adapt into user-facing analytical tools. We present Orange Lab, a web-based collaborative environment for visual data analytics. At its core, Orange Lab enables users to visually construct machine learning workflows from modula",
+      "resume_fr": "While visual programming of data analysis workflows has become an important vehicle for the democratization of data science, such systems remain largely confined to standalone applications and offer limited support for transitioning their visual analytics solutions into interactive web environments. As a result, data analysis pipelines are difficult to share, embed, and adapt into user-facing analytical tools. We present Orange Lab, a web-based collaborative environment for visual data analytics. At its core, Orange Lab enables users to visually construct machine learning workflows from modula",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Impacts of Histories and Models on LLM Grading: A Study in Advanced Software Engineering Courses",
+      "url": "https://arxiv.org/abs/2606.08400v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-06-07T01:31:23.000Z",
+      "score": 100,
+      "summary_en": "Graduate-level research reading report assessment creates a substantial labor burden for educators. While large language models (LLMs) hold great potential for automating academic grading, their reliability for this specialized task remains understudied, particularly regarding grading consistency, the lack of which represents a primary obstacle to educational fairness. This paper proposes a human-aligned LLM-assisted grading workflow and presents a case study based on 180 student submissions from a graduate advanced software engineering course. We evaluate two mainstream LLMs, Grok and GPT, in",
+      "summary_fr": "Graduate-level research reading report assessment creates a substantial labor burden for educators. While large language models (LLMs) hold great potential for automating academic grading, their reliability for this specialized task remains understudied, particularly regarding grading consistency, the lack of which represents a primary obstacle to educational fairness. This paper proposes a human-aligned LLM-assisted grading workflow and presents a case study based on 180 student submissions from a graduate advanced software engineering course. We evaluate two mainstream LLMs, Grok and GPT, in",
+      "resume_fr": "Graduate-level research reading report assessment creates a substantial labor burden for educators. While large language models (LLMs) hold great potential for automating academic grading, their reliability for this specialized task remains understudied, particularly regarding grading consistency, the lack of which represents a primary obstacle to educational fairness. This paper proposes a human-aligned LLM-assisted grading workflow and presents a case study based on 180 student submissions from a graduate advanced software engineering course. We evaluate two mainstream LLMs, Grok and GPT, in",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Personal and Social Determinants of School Leaders' Behavioural Intention to Use Generative Artificial Intelligence",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70274?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -132,6 +322,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "TibetCPR: A Multimodal Tactile Feedback System to Enhance Cardiopulmonary Resuscitation Training in High-Altitude Regions of Tibet",
+      "url": "https://arxiv.org/abs/2606.07765v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-06-05T18:24:37.000Z",
+      "score": 85,
+      "summary_en": "High-quality cardiopulmonary resuscitation (CPR) requires stable control of compression rhythm and depth, yet most training systems presuppose instructor mediation, repeated practice, and explanatory guidance-assumptions that do not hold in the Tibet Autonomous Region, where instruction is fragmented and learners' linguistic and educational backgrounds are heterogeneous. We present TibetCPR, a low-cost, self-guided CPR training system that pairs depth-driven electrotactile feedback with rhythm-driven visual cues within a Tibetan-language narrative. In a randomised study with 40 lay community m",
+      "summary_fr": "High-quality cardiopulmonary resuscitation (CPR) requires stable control of compression rhythm and depth, yet most training systems presuppose instructor mediation, repeated practice, and explanatory guidance-assumptions that do not hold in the Tibet Autonomous Region, where instruction is fragmented and learners' linguistic and educational backgrounds are heterogeneous. We present TibetCPR, a low-cost, self-guided CPR training system that pairs depth-driven electrotactile feedback with rhythm-driven visual cues within a Tibetan-language narrative. In a randomised study with 40 lay community m",
+      "resume_fr": "High-quality cardiopulmonary resuscitation (CPR) requires stable control of compression rhythm and depth, yet most training systems presuppose instructor mediation, repeated practice, and explanatory guidance-assumptions that do not hold in the Tibet Autonomous Region, where instruction is fragmented and learners' linguistic and educational backgrounds are heterogeneous. We present TibetCPR, a low-cost, self-guided CPR training system that pairs depth-driven electrotactile feedback with rhythm-driven visual cues within a Tibetan-language narrative. In a randomised study with 40 lay community m",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Agentopia: Long-Term Life Simulation and Learning in Agent Societies",
@@ -1025,215 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01243-7/MediaObjects/42256_2026_1243_Fig1_HTML.png"
-    },
-    {
-      "title": "Meet NASA Low Outgassing Standards With Adhesives for Aerospace and Optical Systems",
-      "url": "https://spectrum.ieee.org/adhesive-outgassing-nasa-standards",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-05-26T10:00:01.000Z",
-      "score": 70,
-      "summary_en": "This sponsored article is brought to you by Master Bond. Outgassing is the release of volatile substances from a cured adhesive over time. These released materials, which may include residual solvents, unreacted monomers, or other chemical species, can deposit on nearby surfaces, causing contamination that interferes with sensitive components. What Is Outgassing and How Is It Measured? The industry standard for measuring outgassing is ASTM E595, developed by NASA. This test exposes a cured sample to 125 °C at high vacuum (10⁻⁵ to 10⁻⁶ torr) for 24 hours, measuring Total Mass Loss (TML) and Col",
-      "summary_fr": "This sponsored article is brought to you by Master Bond. Outgassing is the release of volatile substances from a cured adhesive over time. These released materials, which may include residual solvents, unreacted monomers, or other chemical species, can deposit on nearby surfaces, causing contamination that interferes with sensitive components. What Is Outgassing and How Is It Measured? The industry standard for measuring outgassing is ASTM E595, developed by NASA. This test exposes a cured sample to 125 °C at high vacuum (10⁻⁵ to 10⁻⁶ torr) for 24 hours, measuring Total Mass Loss (TML) and Col",
-      "resume_fr": "This sponsored article is brought to you by Master Bond. Outgassing is the release of volatile substances from a cured adhesive over time. These released materials, which may include residual solvents, unreacted monomers, or other chemical species, can deposit on nearby surfaces, causing contamination that interferes with sensitive components. What Is Outgassing and How Is It Measured? The industry standard for measuring outgassing is ASTM E595, developed by NASA. This test exposes a cured sample to 125 °C at high vacuum (10⁻⁵ to 10⁻⁶ torr) for 24 hours, measuring Total Mass Loss (TML) and Col",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/illustration-of-molecules-leaving-a-surface-as-it-transforms-into-an-ordered-graphene-lattice.jpg?id=66678225&width=1200&height=600&coordinates=0%2C54%2C0%2C54"
-    },
-    {
-      "title": "Facial expression recognition for investigating attention and affective states in synchronous online higher education",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10631-0",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-05-26T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "This study aims to identify students’ emotion and attention levels in live online classes using image processing technologies within the field of affective computing and to examine the factors influencing these emotional states. To this end, the Emotion and Attention Tracking System (EATS) platform was developed. The study also investigates the predictive capacity of the data obtained through EATS. An explanatory sequential mixed-methods design was employed. The sample consisted of 40 undergraduate and graduate students. Data were collected through EATS records, questionnaires, observation for",
-      "summary_fr": "This study aims to identify students’ emotion and attention levels in live online classes using image processing technologies within the field of affective computing and to examine the factors influencing these emotional states. To this end, the Emotion and Attention Tracking System (EATS) platform was developed. The study also investigates the predictive capacity of the data obtained through EATS. An explanatory sequential mixed-methods design was employed. The sample consisted of 40 undergraduate and graduate students. Data were collected through EATS records, questionnaires, observation for",
-      "resume_fr": "This study aims to identify students’ emotion and attention levels in live online classes using image processing technologies within the field of affective computing and to examine the factors influencing these emotional states. To this end, the Emotion and Attention Tracking System (EATS) platform was developed. The study also investigates the predictive capacity of the data obtained through EATS. An explanatory sequential mixed-methods design was employed. The sample consisted of 40 undergraduate and graduate students. Data were collected through EATS records, questionnaires, observation for",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10631-0/MediaObjects/11423_2026_10631_Fig1_HTML.png"
-    },
-    {
-      "title": "IEEE TryEngineering OnCampus Program Expands to 7 Universities",
-      "url": "https://spectrum.ieee.org/tryengineering-oncampus-expansion",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-05-25T18:00:01.000Z",
-      "score": 65,
-      "summary_en": "The OnCampus program, administered by IEEE Educational Activities, last year expanded its engineering experiences from two to seven universities. Part of TryEngineering, the program is held at universities around the world, offering preuniversity students hands-on opportunities to solve engineering problems. The IEEE Innovation Committee provided funding for the additional locations. New participating institutions The electrical engineering and computing faculty at the University of Zagreb, in Croatia, hosted a two-day program in June. Twenty-five children ages 10 to 14 participated in lecture",
-      "summary_fr": "The OnCampus program, administered by IEEE Educational Activities, last year expanded its engineering experiences from two to seven universities. Part of TryEngineering, the program is held at universities around the world, offering preuniversity students hands-on opportunities to solve engineering problems. The IEEE Innovation Committee provided funding for the additional locations. New participating institutions The electrical engineering and computing faculty at the University of Zagreb, in Croatia, hosted a two-day program in June. Twenty-five children ages 10 to 14 participated in lecture",
-      "resume_fr": "The OnCampus program, administered by IEEE Educational Activities, last year expanded its engineering experiences from two to seven universities. Part of TryEngineering, the program is held at universities around the world, offering preuniversity students hands-on opportunities to solve engineering problems. The IEEE Innovation Committee provided funding for the additional locations. New participating institutions The electrical engineering and computing faculty at the University of Zagreb, in Croatia, hosted a two-day program in June. Twenty-five children ages 10 to 14 participated in lecture",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://spectrum.ieee.org/media-library/three-omani-high-school-students-in-kummahs-smiling-together-at-a-computer-desk.jpg?id=66770660&width=1200&height=600&coordinates=0%2C625%2C0%2C625"
-    },
-    {
-      "title": "Investigating the Impact of Virtual Reality Panoramas on Children's Water Safety Knowledge and Interest and Enjoyment",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70268?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-05-25T01:01:07.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Effect of Head Movement‐Based Learning Videos Combined With Demonstration Methods on Impaired Hearing Students in the Sign Language Course",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70264?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-05-23T06:56:39.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 3, June 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "From abstract ethics to situated practice: a bibliometric analysis of AI ethics and professional judgement",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10630-1",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-05-23T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "The rapid proliferation of artificial intelligence (AI) across professional and educational domains has intensified ethical discourse, yet much of the existing literature remains anchored in abstract principles, policy prescriptions, or technical safeguards. Less is known about how AI ethics is articulated in relation to professional practice, contextual judgement, and interpretive decision-making across applied fields. Addressing this gap, the present study adopts a descriptive and evaluative bibliometric approach to examine the evolution, intellectual structure, and practice orientation of A",
-      "summary_fr": "The rapid proliferation of artificial intelligence (AI) across professional and educational domains has intensified ethical discourse, yet much of the existing literature remains anchored in abstract principles, policy prescriptions, or technical safeguards. Less is known about how AI ethics is articulated in relation to professional practice, contextual judgement, and interpretive decision-making across applied fields. Addressing this gap, the present study adopts a descriptive and evaluative bibliometric approach to examine the evolution, intellectual structure, and practice orientation of A",
-      "resume_fr": "The rapid proliferation of artificial intelligence (AI) across professional and educational domains has intensified ethical discourse, yet much of the existing literature remains anchored in abstract principles, policy prescriptions, or technical safeguards. Less is known about how AI ethics is articulated in relation to professional practice, contextual judgement, and interpretive decision-making across applied fields. Addressing this gap, the present study adopts a descriptive and evaluative bibliometric approach to examine the evolution, intellectual structure, and practice orientation of A",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10630-1/MediaObjects/11423_2026_10630_Fig1_HTML.png"
-    },
-    {
-      "title": "Scaffolding systematic reviews in learning design and technology through mentoring and AI integration",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10629-8",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-05-23T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Systematic reviews (SRs) are increasingly conducted in the field of Learning Design and Technology, reflecting both the growth of the field and the need for rigorous synthesis of diverse literature. Although the existing methodological guidelines provide clear procedures, the practical implementation of SRs is often more complex, particularly for novice researchers. Rather than reintroducing standard SR procedures or presenting a model SR, this paper addresses a complementary yet underexplored need: to illuminate the realities of conducting SRs in practice and to provide guidance for novice re",
-      "summary_fr": "Systematic reviews (SRs) are increasingly conducted in the field of Learning Design and Technology, reflecting both the growth of the field and the need for rigorous synthesis of diverse literature. Although the existing methodological guidelines provide clear procedures, the practical implementation of SRs is often more complex, particularly for novice researchers. Rather than reintroducing standard SR procedures or presenting a model SR, this paper addresses a complementary yet underexplored need: to illuminate the realities of conducting SRs in practice and to provide guidance for novice re",
-      "resume_fr": "Systematic reviews (SRs) are increasingly conducted in the field of Learning Design and Technology, reflecting both the growth of the field and the need for rigorous synthesis of diverse literature. Although the existing methodological guidelines provide clear procedures, the practical implementation of SRs is often more complex, particularly for novice researchers. Rather than reintroducing standard SR procedures or presenting a model SR, this paper addresses a complementary yet underexplored need: to illuminate the realities of conducting SRs in practice and to provide guidance for novice re",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10629-8/MediaObjects/11423_2026_10629_Fig1_HTML.png"
-    },
-    {
-      "title": "Using AI-generated virtual instructors in middle school lecture videos: the roles of instructor emotion and lecture script frame",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10636-9",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-05-23T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Artificial intelligence-generated virtual lecturers are increasingly adopted in educational contexts as a cost-effective and scalable alternative to human instructors in lecture video production. These virtual lecturers can simulate human-like facial expressions, gestures, and voices, offering new possibilities for emotionally expressive teaching. However, limited research has examined how the emotional expressions of virtual lecturers and the frame of instructional scripts jointly influence students’ learning outcomes. This study employed a 2 × 2 between-subjects experimental design to invest",
-      "summary_fr": "Artificial intelligence-generated virtual lecturers are increasingly adopted in educational contexts as a cost-effective and scalable alternative to human instructors in lecture video production. These virtual lecturers can simulate human-like facial expressions, gestures, and voices, offering new possibilities for emotionally expressive teaching. However, limited research has examined how the emotional expressions of virtual lecturers and the frame of instructional scripts jointly influence students’ learning outcomes. This study employed a 2 × 2 between-subjects experimental design to invest",
-      "resume_fr": "Artificial intelligence-generated virtual lecturers are increasingly adopted in educational contexts as a cost-effective and scalable alternative to human instructors in lecture video production. These virtual lecturers can simulate human-like facial expressions, gestures, and voices, offering new possibilities for emotionally expressive teaching. However, limited research has examined how the emotional expressions of virtual lecturers and the frame of instructional scripts jointly influence students’ learning outcomes. This study employed a 2 × 2 between-subjects experimental design to invest",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10636-9/MediaObjects/11423_2026_10636_Fig1_HTML.png"
-    },
-    {
-      "title": "LLMs as Noisy Channels: A Shannon Perspective on Model Capacity and Scaling Laws",
-      "url": "https://arxiv.org/abs/2605.23901v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-05-22T17:59:38.000Z",
-      "score": 70,
-      "summary_en": "Existing scaling laws for Large Language Models (LLMs), predominantly monotonic power laws, fail to explain emerging non-monotonic phenomena such as catastrophic overtraining and quantization-induced degradation, where performance deteriorates despite increased compute. We propose the Shannon Scaling Law, a unified theoretical framework that models LLM training as information transmission over a noisy channel, grounded in the Shannon-Hartley theorem. By mapping model parameters to channel bandwidth and training tokens to signal power, our formulation explicitly captures the interaction between",
-      "summary_fr": "Existing scaling laws for Large Language Models (LLMs), predominantly monotonic power laws, fail to explain emerging non-monotonic phenomena such as catastrophic overtraining and quantization-induced degradation, where performance deteriorates despite increased compute. We propose the Shannon Scaling Law, a unified theoretical framework that models LLM training as information transmission over a noisy channel, grounded in the Shannon-Hartley theorem. By mapping model parameters to channel bandwidth and training tokens to signal power, our formulation explicitly captures the interaction between",
-      "resume_fr": "Existing scaling laws for Large Language Models (LLMs), predominantly monotonic power laws, fail to explain emerging non-monotonic phenomena such as catastrophic overtraining and quantization-induced degradation, where performance deteriorates despite increased compute. We propose the Shannon Scaling Law, a unified theoretical framework that models LLM training as information transmission over a noisy channel, grounded in the Shannon-Hartley theorem. By mapping model parameters to channel bandwidth and training tokens to signal power, our formulation explicitly captures the interaction between",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Complete-muE: Optimal Hyperparameter Transfer and Scaling for MoE Models",
-      "url": "https://arxiv.org/abs/2605.23893v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-05-22T17:56:13.000Z",
-      "score": 50,
-      "summary_en": "We propose Complete-muE, a framework which targets hyperparameter transfer across dense FFN and any Mixture-of-Experts (MoE) setups in transformer blocks. Existing tools such as $μ$P (requires fixed architectue) or SDE (requires fixed per-step token count) cannot directly solve the hyperparameter transfer problem in MoE setups because Dense to MoE transfer or MoE total experts scaling changes both architecture and tokens per expert. Complete-muE solves this challenge with a two-bridge system: Bridge~I maps between dense FFN and Dense MoE by active-width $μ$P with a normalized router scale. Bri",
-      "summary_fr": "We propose Complete-muE, a framework which targets hyperparameter transfer across dense FFN and any Mixture-of-Experts (MoE) setups in transformer blocks. Existing tools such as $μ$P (requires fixed architectue) or SDE (requires fixed per-step token count) cannot directly solve the hyperparameter transfer problem in MoE setups because Dense to MoE transfer or MoE total experts scaling changes both architecture and tokens per expert. Complete-muE solves this challenge with a two-bridge system: Bridge~I maps between dense FFN and Dense MoE by active-width $μ$P with a normalized router scale. Bri",
-      "resume_fr": "We propose Complete-muE, a framework which targets hyperparameter transfer across dense FFN and any Mixture-of-Experts (MoE) setups in transformer blocks. Existing tools such as $μ$P (requires fixed architectue) or SDE (requires fixed per-step token count) cannot directly solve the hyperparameter transfer problem in MoE setups because Dense to MoE transfer or MoE total experts scaling changes both architecture and tokens per expert. Complete-muE solves this challenge with a two-bridge system: Bridge~I maps between dense FFN and Dense MoE by active-width $μ$P with a normalized router scale. Bri",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Good Token Hunting: A Hitchhiker's Guide to Token Selection for Visual Geometry Transformers",
-      "url": "https://arxiv.org/abs/2605.23892v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-05-22T17:55:13.000Z",
-      "score": 50,
-      "summary_en": "Visual geometry transformers have become powerful architectures for multi-view 3D reconstruction, enabling joint prediction of multiple 3D attributes in a feed-forward manner. However, their computational cost grows quadratically with the input sequence length due to the global attention layers inside these models. This limits both their scalability and efficiency. In this work, we address this challenge with a simple yet general strategy: restricting the number of key/value tokens that each query interacts with during global attention. To achieve effective token selection, we introduce a two-",
-      "summary_fr": "Visual geometry transformers have become powerful architectures for multi-view 3D reconstruction, enabling joint prediction of multiple 3D attributes in a feed-forward manner. However, their computational cost grows quadratically with the input sequence length due to the global attention layers inside these models. This limits both their scalability and efficiency. In this work, we address this challenge with a simple yet general strategy: restricting the number of key/value tokens that each query interacts with during global attention. To achieve effective token selection, we introduce a two-",
-      "resume_fr": "Visual geometry transformers have become powerful architectures for multi-view 3D reconstruction, enabling joint prediction of multiple 3D attributes in a feed-forward manner. However, their computational cost grows quadratically with the input sequence length due to the global attention layers inside these models. This limits both their scalability and efficiency. In this work, we address this challenge with a simple yet general strategy: restricting the number of key/value tokens that each query interacts with during global attention. To achieve effective token selection, we introduce a two-",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
