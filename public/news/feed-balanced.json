@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T10:47:52.036Z",
+  "generatedAt": "2026-06-12T10:22:41.001Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,120 @@
   },
   "items": [
     {
+      "title": "Improving Robotic Generalist Policies via Flow Reversal Steering",
+      "url": "https://arxiv.org/abs/2606.13675v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-11T17:59:45.000Z",
+      "score": 50,
+      "summary_en": "Generalist policies can learn a wide range of skills from diverse robot datasets. In order to solve or improve on challenging news tasks, we need a way to infer and invoke the appropriate actions from the policy's rich behavioral prior, especially when directly commanding the policy fails. We focus on flow matching generalists and propose Flow Reversal Steering (FRS): a method that takes suboptimal but ``reasonable'' actions, finds their latent noises by passing them through the flow policy in reverse, and maps them to nearby generalist action modes. We evaluate FRS across many simulated and r",
+      "summary_fr": "Generalist policies can learn a wide range of skills from diverse robot datasets. In order to solve or improve on challenging news tasks, we need a way to infer and invoke the appropriate actions from the policy's rich behavioral prior, especially when directly commanding the policy fails. We focus on flow matching generalists and propose Flow Reversal Steering (FRS): a method that takes suboptimal but ``reasonable'' actions, finds their latent noises by passing them through the flow policy in reverse, and maps them to nearby generalist action modes. We evaluate FRS across many simulated and r",
+      "resume_fr": "Generalist policies can learn a wide range of skills from diverse robot datasets. In order to solve or improve on challenging news tasks, we need a way to infer and invoke the appropriate actions from the policy's rich behavioral prior, especially when directly commanding the policy fails. We focus on flow matching generalists and propose Flow Reversal Steering (FRS): a method that takes suboptimal but ``reasonable'' actions, finds their latent noises by passing them through the flow policy in reverse, and maps them to nearby generalist action modes. We evaluate FRS across many simulated and r",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Dense Supervision, Sparse Updates: On the Sparsity and Geometry of On-Policy Distillation",
+      "url": "https://arxiv.org/abs/2606.13657v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-06-11T17:54:09.000Z",
+      "score": 70,
+      "summary_en": "On-policy distillation (\\textsc{OPD}) has recently become a prominent post-training recipe as it combines two desirable ingredients: on-policy student trajectories and dense teacher supervision, yet how this hybrid changes a model's parameters remains unclear. Across several language and vision-language model pairs and use cases, our analysis yields two main findings. On sparsity, \\textsc{OPD}-style updates are small and coordinate-sparse. They are distributed across layers and are usually FFN-heavy. This sparse structure is operationally useful: training only the discovered subnetwork recover",
+      "summary_fr": "On-policy distillation (\\textsc{OPD}) has recently become a prominent post-training recipe as it combines two desirable ingredients: on-policy student trajectories and dense teacher supervision, yet how this hybrid changes a model's parameters remains unclear. Across several language and vision-language model pairs and use cases, our analysis yields two main findings. On sparsity, \\textsc{OPD}-style updates are small and coordinate-sparse. They are distributed across layers and are usually FFN-heavy. This sparse structure is operationally useful: training only the discovered subnetwork recover",
+      "resume_fr": "On-policy distillation (\\textsc{OPD}) has recently become a prominent post-training recipe as it combines two desirable ingredients: on-policy student trajectories and dense teacher supervision, yet how this hybrid changes a model's parameters remains unclear. Across several language and vision-language model pairs and use cases, our analysis yields two main findings. On sparsity, \\textsc{OPD}-style updates are small and coordinate-sparse. They are distributed across layers and are usually FFN-heavy. This sparse structure is operationally useful: training only the discovered subnetwork recover",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "LabVLA: Grounding Vision-Language-Action Models in Scientific Laboratories",
+      "url": "https://arxiv.org/abs/2606.13578v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-11T17:03:53.000Z",
+      "score": 85,
+      "summary_en": "Scientific laboratories increasingly rely on AI systems to reason about experiments, but the physical act of doing science remains largely outside their reach. AI can help read literature, generate hypotheses, and plan protocols, yet the execution of those protocols at the bench still requires a human operator. Vision-Language-Action (VLA) models provide one possible interface between written protocols and robot execution, but existing policies are trained mostly on household and tabletop demonstrations and rarely encounter the instruments, transparent liquids, or fixed protocol workflows foun",
+      "summary_fr": "Scientific laboratories increasingly rely on AI systems to reason about experiments, but the physical act of doing science remains largely outside their reach. AI can help read literature, generate hypotheses, and plan protocols, yet the execution of those protocols at the bench still requires a human operator. Vision-Language-Action (VLA) models provide one possible interface between written protocols and robot execution, but existing policies are trained mostly on household and tabletop demonstrations and rarely encounter the instruments, transparent liquids, or fixed protocol workflows foun",
+      "resume_fr": "Scientific laboratories increasingly rely on AI systems to reason about experiments, but the physical act of doing science remains largely outside their reach. AI can help read literature, generate hypotheses, and plan protocols, yet the execution of those protocols at the bench still requires a human operator. Vision-Language-Action (VLA) models provide one possible interface between written protocols and robot execution, but existing policies are trained mostly on household and tabletop demonstrations and rarely encounter the instruments, transparent liquids, or fixed protocol workflows foun",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "MaskWAM: Unifying Mask Prompting and Prediction for World-Action Models",
+      "url": "https://arxiv.org/abs/2606.13515v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-11T16:02:42.000Z",
+      "score": 70,
+      "summary_en": "World Action Models (WAMs) present a promising paradigm for robotic control via video prediction. However, current WAMs suffer from fundamental spatial bottlenecks: standard text inputs introduce referential ambiguity in cluttered scenes, while unstructured RGB predictions lack semantic grounding and remain biased by task-irrelevant backgrounds. To overcome these limitations, we introduce MaskWAM, an object-centric world-action model. By jointly integrating masks as both explicit inputs and predictions via a unified Mixture of Transformers (MoT), MaskWAM unlocks robust policy generalization. T",
+      "summary_fr": "World Action Models (WAMs) present a promising paradigm for robotic control via video prediction. However, current WAMs suffer from fundamental spatial bottlenecks: standard text inputs introduce referential ambiguity in cluttered scenes, while unstructured RGB predictions lack semantic grounding and remain biased by task-irrelevant backgrounds. To overcome these limitations, we introduce MaskWAM, an object-centric world-action model. By jointly integrating masks as both explicit inputs and predictions via a unified Mixture of Transformers (MoT), MaskWAM unlocks robust policy generalization. T",
+      "resume_fr": "World Action Models (WAMs) present a promising paradigm for robotic control via video prediction. However, current WAMs suffer from fundamental spatial bottlenecks: standard text inputs introduce referential ambiguity in cluttered scenes, while unstructured RGB predictions lack semantic grounding and remain biased by task-irrelevant backgrounds. To overcome these limitations, we introduce MaskWAM, an object-centric world-action model. By jointly integrating masks as both explicit inputs and predictions via a unified Mixture of Transformers (MoT), MaskWAM unlocks robust policy generalization. T",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Humor Style Drives Laughter, Topic Shapes Acceptability: Evaluating Bilingual Personal and Political Robot-Delivered AI Jokes",
+      "url": "https://arxiv.org/abs/2606.13256v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-06-11T12:13:43.000Z",
+      "score": 50,
+      "summary_en": "Humor plays a central role in human social relationships, and recent advances in computational humor create new opportunities for integrating humor into human-robot interaction (HRI). While large language models (LLMs) can generate diverse forms of humor, it remains unclear how humor style, joke content, and language preference shape perceptions of robot-delivered humor in group settings. In this exploratory study, we employed a mixed factorial design in which participants evaluated AI-generated jokes delivered by a robot in a university classroom. We examined the effects of humor type (Affili",
+      "summary_fr": "Humor plays a central role in human social relationships, and recent advances in computational humor create new opportunities for integrating humor into human-robot interaction (HRI). While large language models (LLMs) can generate diverse forms of humor, it remains unclear how humor style, joke content, and language preference shape perceptions of robot-delivered humor in group settings. In this exploratory study, we employed a mixed factorial design in which participants evaluated AI-generated jokes delivered by a robot in a university classroom. We examined the effects of humor type (Affili",
+      "resume_fr": "Humor plays a central role in human social relationships, and recent advances in computational humor create new opportunities for integrating humor into human-robot interaction (HRI). While large language models (LLMs) can generate diverse forms of humor, it remains unclear how humor style, joke content, and language preference shape perceptions of robot-delivered humor in group settings. In this exploratory study, we employed a mixed factorial design in which participants evaluated AI-generated jokes delivered by a robot in a university classroom. We examined the effects of humor type (Affili",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Conceptualising IDLE Within Primary School English Language Teaching",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70276?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-06-11T11:35:34.000Z",
+      "score": 50,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
       "title": "Active play outdoors is missing from early childhood education",
       "url": "https://world-education-blog.org/2026/06/11/active-play-outdoors-is-missing-from-early-childhood-education/",
       "source": "UNESCO GEM – World Education Blog",
@@ -113,6 +227,63 @@
       },
       "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
       "image": "https://world-education-blog.org/wp-content/uploads/2026/06/active-play-outdoors.png"
+    },
+    {
+      "title": "Fault Lines: Navigating Ethics and Responsible AI Where National Policy Meets Local Practice in Public Sector Transformation",
+      "url": "https://arxiv.org/abs/2606.13039v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-06-11T08:18:57.000Z",
+      "score": 100,
+      "summary_en": "The UK government has adopted a pro-AI stance to help transform public service delivery in the face of severe financial pressures, but the path to translate this vision into responsible AI practice remains ill-defined. While UK policy is often set at the national level, local authorities are responsible for most public service delivery, and the rapid advance of AI-first narratives in the public sector is exposing fault lines in knowledge and practice at this national-local interface. This paper examines how responsible AI is interpreted and implemented at the interface between the UK's central",
+      "summary_fr": "The UK government has adopted a pro-AI stance to help transform public service delivery in the face of severe financial pressures, but the path to translate this vision into responsible AI practice remains ill-defined. While UK policy is often set at the national level, local authorities are responsible for most public service delivery, and the rapid advance of AI-first narratives in the public sector is exposing fault lines in knowledge and practice at this national-local interface. This paper examines how responsible AI is interpreted and implemented at the interface between the UK's central",
+      "resume_fr": "The UK government has adopted a pro-AI stance to help transform public service delivery in the face of severe financial pressures, but the path to translate this vision into responsible AI practice remains ill-defined. While UK policy is often set at the national level, local authorities are responsible for most public service delivery, and the rapid advance of AI-first narratives in the public sector is exposing fault lines in knowledge and practice at this national-local interface. This paper examines how responsible AI is interpreted and implemented at the interface between the UK's central",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Definitional alignment before capability alignment: a Design-Science framework for adjudicating claims about AGI",
+      "url": "https://arxiv.org/abs/2606.12713v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-06-10T22:04:56.000Z",
+      "score": 85,
+      "summary_en": "Claims that artificial general intelligence has already arrived and claims that it remains decades away are often defended from overlapping evidence. \"AGI\" lacks a single shared and stable referent and competing operationalizations can return different verdicts on the same system. This article treats that under-specification as a design and governance problem. Following Design Science Research Methodology, it develops DAF-AGI, a second-order conceptual artifact with two coupled components: five ordinal criteria for assessing the adjudicative fitness of candidate definitions and a structured go",
+      "summary_fr": "Claims that artificial general intelligence has already arrived and claims that it remains decades away are often defended from overlapping evidence. \"AGI\" lacks a single shared and stable referent and competing operationalizations can return different verdicts on the same system. This article treats that under-specification as a design and governance problem. Following Design Science Research Methodology, it develops DAF-AGI, a second-order conceptual artifact with two coupled components: five ordinal criteria for assessing the adjudicative fitness of candidate definitions and a structured go",
+      "resume_fr": "Claims that artificial general intelligence has already arrived and claims that it remains decades away are often defended from overlapping evidence. \"AGI\" lacks a single shared and stable referent and competing operationalizations can return different verdicts on the same system. This article treats that under-specification as a design and governance problem. Following Design Science Research Methodology, it develops DAF-AGI, a second-order conceptual artifact with two coupled components: five ordinal criteria for assessing the adjudicative fitness of candidate definitions and a structured go",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "OpenRoundup: Multi-Table Data Wrangling Through Interactive Visualization",
+      "url": "https://arxiv.org/abs/2606.12648v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-06-10T20:18:57.000Z",
+      "score": 85,
+      "summary_en": "Data journalists routinely integrate records across multiple independently published sources to support accountability reporting, yet no existing interactive wrangling tool treats the collection of tables -- rather than the single table -- as its primary unit of work. We present OpenRoundup, an open-source, browser-based system that enables data journalists to consolidate multiple tables into a single analysis-ready output without writing code. The interface comprises five coordinated panels that implement a schema-first, values-on-demand paradigm with live schema previews, ambient data qualit",
+      "summary_fr": "Data journalists routinely integrate records across multiple independently published sources to support accountability reporting, yet no existing interactive wrangling tool treats the collection of tables -- rather than the single table -- as its primary unit of work. We present OpenRoundup, an open-source, browser-based system that enables data journalists to consolidate multiple tables into a single analysis-ready output without writing code. The interface comprises five coordinated panels that implement a schema-first, values-on-demand paradigm with live schema previews, ambient data qualit",
+      "resume_fr": "Data journalists routinely integrate records across multiple independently published sources to support accountability reporting, yet no existing interactive wrangling tool treats the collection of tables -- rather than the single table -- as its primary unit of work. We present OpenRoundup, an open-source, browser-based system that enables data journalists to consolidate multiple tables into a single analysis-ready output without writing code. The interface comprises five coordinated panels that implement a schema-first, values-on-demand paradigm with live schema previews, ambient data qualit",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "FACTR 2: Learning External Force Sensing for Commodity Robot Arms Improves Policy Learning",
@@ -1054,177 +1225,6 @@
       "summary_en": "Intelligent tutoring systems excel at generating explanations but rarely provide principled diagnosis of where and why a learner is wrong. We introduce a misstep-aware coaching capability for Ivy, a neurosymbolic AI coach, built on a two-model architecture that augments a Task-Method-Knowledge (TMK) model with a new Pedagogical Model (PM) in the context of an online graduate AI course at Georgia Tech. The PM makes instructor diagnostic knowledge explicit and machine-readable by encoding, for each quiz question and incorrect response, the learner's underlying belief(a brief statement of the inc",
       "summary_fr": "Intelligent tutoring systems excel at generating explanations but rarely provide principled diagnosis of where and why a learner is wrong. We introduce a misstep-aware coaching capability for Ivy, a neurosymbolic AI coach, built on a two-model architecture that augments a Task-Method-Knowledge (TMK) model with a new Pedagogical Model (PM) in the context of an online graduate AI course at Georgia Tech. The PM makes instructor diagnostic knowledge explicit and machine-readable by encoding, for each quiz question and incorrect response, the learner's underlying belief(a brief statement of the inc",
       "resume_fr": "Intelligent tutoring systems excel at generating explanations but rarely provide principled diagnosis of where and why a learner is wrong. We introduce a misstep-aware coaching capability for Ivy, a neurosymbolic AI coach, built on a two-model architecture that augments a Task-Method-Knowledge (TMK) model with a new Pedagogical Model (PM) in the context of an online graduate AI course at Georgia Tech. The PM makes instructor diagnostic knowledge explicit and machine-readable by encoding, for each quiz question and incorrect response, the learner's underlying belief(a brief statement of the inc",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Technology-supported interventions in intercultural learning: a meta-analytic review",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10641-y",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-06-02T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Technology-supported intercultural learning has become an important means of fostering students’ global competence. While research in this area has increased in recent years, the overall effectiveness of technology-enhanced interventions on the conditions under which they are more effective remain underexplored. To address this gap, the meta-analysis systematically reviewed empirical studies published between 2017 and 2025. Thirty eligible studies were identified through a comprehensive search of six academic databases, domain-relevant journals, and citation snowballing. Based on predefined in",
-      "summary_fr": "Technology-supported intercultural learning has become an important means of fostering students’ global competence. While research in this area has increased in recent years, the overall effectiveness of technology-enhanced interventions on the conditions under which they are more effective remain underexplored. To address this gap, the meta-analysis systematically reviewed empirical studies published between 2017 and 2025. Thirty eligible studies were identified through a comprehensive search of six academic databases, domain-relevant journals, and citation snowballing. Based on predefined in",
-      "resume_fr": "Technology-supported intercultural learning has become an important means of fostering students’ global competence. While research in this area has increased in recent years, the overall effectiveness of technology-enhanced interventions on the conditions under which they are more effective remain underexplored. To address this gap, the meta-analysis systematically reviewed empirical studies published between 2017 and 2025. Thirty eligible studies were identified through a comprehensive search of six academic databases, domain-relevant journals, and citation snowballing. Based on predefined in",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10641-y/MediaObjects/11423_2026_10641_Fig1_HTML.png"
-    },
-    {
-      "title": "Exploring student anxiety and experience in performance-based assessments using AIvaluate: an LLM-augmented emotionally intelligent pedagogical AI conversational agent",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10634-x",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-06-02T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Performance-based assessments such as oral presentations and viva voce exams are valued for their pedagogical benefits but can also be associated with heightened student anxiety, which may affect a range of learners and hinder student motivation and overall assessment experience. This study explores the potential of AIvaluate; an emotionally intelligent, LLM-augmented conversational agent, to provide a more supportive assessment environment for such learners. Using a counterbalanced quasi-experimental, within-subjects design with 35 pre-university students, we compared experiences of tradition",
-      "summary_fr": "Performance-based assessments such as oral presentations and viva voce exams are valued for their pedagogical benefits but can also be associated with heightened student anxiety, which may affect a range of learners and hinder student motivation and overall assessment experience. This study explores the potential of AIvaluate; an emotionally intelligent, LLM-augmented conversational agent, to provide a more supportive assessment environment for such learners. Using a counterbalanced quasi-experimental, within-subjects design with 35 pre-university students, we compared experiences of tradition",
-      "resume_fr": "Performance-based assessments such as oral presentations and viva voce exams are valued for their pedagogical benefits but can also be associated with heightened student anxiety, which may affect a range of learners and hinder student motivation and overall assessment experience. This study explores the potential of AIvaluate; an emotionally intelligent, LLM-augmented conversational agent, to provide a more supportive assessment environment for such learners. Using a counterbalanced quasi-experimental, within-subjects design with 35 pre-university students, we compared experiences of tradition",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10634-x/MediaObjects/11423_2026_10634_Fig1_HTML.png"
-    },
-    {
-      "title": "Characterization and Effects of CS2 Learning with GenAI, Visualization, and Human Support",
-      "url": "https://arxiv.org/abs/2606.02933v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-06-01T22:31:44.000Z",
-      "score": 85,
-      "summary_en": "Generative AI (GenAI) is becoming a widely adopted learning support tool for both students and instructors, as it offers benefits such as personalized tutoring and scaffolded learning. However, recent research highlights potential drawbacks such as overreliance and metacognitive issues, especially in novice programmers. Most prior work focuses on introductory programming courses, and important questions remain about the underlying mechanisms behind the negative effects of GenAI and if findings can be generalized when students learn more advanced computer science concepts. To address this gap, ",
-      "summary_fr": "Generative AI (GenAI) is becoming a widely adopted learning support tool for both students and instructors, as it offers benefits such as personalized tutoring and scaffolded learning. However, recent research highlights potential drawbacks such as overreliance and metacognitive issues, especially in novice programmers. Most prior work focuses on introductory programming courses, and important questions remain about the underlying mechanisms behind the negative effects of GenAI and if findings can be generalized when students learn more advanced computer science concepts. To address this gap, ",
-      "resume_fr": "Generative AI (GenAI) is becoming a widely adopted learning support tool for both students and instructors, as it offers benefits such as personalized tutoring and scaffolded learning. However, recent research highlights potential drawbacks such as overreliance and metacognitive issues, especially in novice programmers. Most prior work focuses on introductory programming courses, and important questions remain about the underlying mechanisms behind the negative effects of GenAI and if findings can be generalized when students learn more advanced computer science concepts. To address this gap, ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "ClinEnv: An Interactive Multi-Stage Long Horizon EHR Environment for Agents",
-      "url": "https://arxiv.org/abs/2606.02568v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-06-01T17:56:26.000Z",
-      "score": 70,
-      "summary_en": "Clinical practice is not the selection of an answer from enumerated options: a physician gathers heterogeneous information incrementally and commits to sequential, irreversible decisions under uncertainty. Static benchmarks cannot probe and existing interactive medical benchmarks each compromise on at least one of them. We present ClinEnv, an interactive benchmark that evaluates LLMs as attending physicians over real inpatient admissions under a paradigm we term Longitudinal Inpatient Simulation. Each case is automatically constructed into an ordered sequence of decision stages; at every stage",
-      "summary_fr": "Clinical practice is not the selection of an answer from enumerated options: a physician gathers heterogeneous information incrementally and commits to sequential, irreversible decisions under uncertainty. Static benchmarks cannot probe and existing interactive medical benchmarks each compromise on at least one of them. We present ClinEnv, an interactive benchmark that evaluates LLMs as attending physicians over real inpatient admissions under a paradigm we term Longitudinal Inpatient Simulation. Each case is automatically constructed into an ordered sequence of decision stages; at every stage",
-      "resume_fr": "Clinical practice is not the selection of an answer from enumerated options: a physician gathers heterogeneous information incrementally and commits to sequential, irreversible decisions under uncertainty. Static benchmarks cannot probe and existing interactive medical benchmarks each compromise on at least one of them. We present ClinEnv, an interactive benchmark that evaluates LLMs as attending physicians over real inpatient admissions under a paradigm we term Longitudinal Inpatient Simulation. Each case is automatically constructed into an ordered sequence of decision stages; at every stage",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "IntraShuffler: A Privacy Preserving Framework for Heterogeneous DP Federated Learning",
-      "url": "https://arxiv.org/abs/2606.02563v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-06-01T17:54:10.000Z",
-      "score": 70,
-      "summary_en": "Heterogeneous Differential Privacy (HDP) in Federated Learning (FL) allows clients to select individual privacy budgets ($\\varepsilon_i$) according to institutional policies and data sensitivity. In practice, many HDP-FL systems employ $\\varepsilon$-aware server aggregation to improve model utility by re-weighting client updates according to their declared privacy budgets. However, gradient updates in FL retain structural patterns induced by non-independent and identically-distributed (non-IID) data, and these additional signals exposed by $\\varepsilon$-aware aggregation create new opportuniti",
-      "summary_fr": "Heterogeneous Differential Privacy (HDP) in Federated Learning (FL) allows clients to select individual privacy budgets ($\\varepsilon_i$) according to institutional policies and data sensitivity. In practice, many HDP-FL systems employ $\\varepsilon$-aware server aggregation to improve model utility by re-weighting client updates according to their declared privacy budgets. However, gradient updates in FL retain structural patterns induced by non-independent and identically-distributed (non-IID) data, and these additional signals exposed by $\\varepsilon$-aware aggregation create new opportuniti",
-      "resume_fr": "Heterogeneous Differential Privacy (HDP) in Federated Learning (FL) allows clients to select individual privacy budgets ($\\varepsilon_i$) according to institutional policies and data sensitivity. In practice, many HDP-FL systems employ $\\varepsilon$-aware server aggregation to improve model utility by re-weighting client updates according to their declared privacy budgets. However, gradient updates in FL retain structural patterns induced by non-independent and identically-distributed (non-IID) data, and these additional signals exposed by $\\varepsilon$-aware aggregation create new opportuniti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Permissive Safety Through Trusted Inference: Verifiable Belief-Space Neural Safety Filters for Assured Interactive Robotics",
-      "url": "https://arxiv.org/abs/2606.02562v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-06-01T17:54:00.000Z",
-      "score": 70,
-      "summary_en": "Autonomous robots that interact with people must make safe and efficient decisions under human-induced uncertainty, such as their preferences, goals, competency, and willingness to cooperate. Safety filters are a popular approach for ensuring safety in interactive robotics, since their modular design separates safety from performance, allowing robots to operate safely around people with minimal impact on task efficiency. While traditional safety filters typically operate only in the physical space, neglecting the robot's ability to learn and adapt online, the recently proposed belief-space saf",
-      "summary_fr": "Autonomous robots that interact with people must make safe and efficient decisions under human-induced uncertainty, such as their preferences, goals, competency, and willingness to cooperate. Safety filters are a popular approach for ensuring safety in interactive robotics, since their modular design separates safety from performance, allowing robots to operate safely around people with minimal impact on task efficiency. While traditional safety filters typically operate only in the physical space, neglecting the robot's ability to learn and adapt online, the recently proposed belief-space saf",
-      "resume_fr": "Autonomous robots that interact with people must make safe and efficient decisions under human-induced uncertainty, such as their preferences, goals, competency, and willingness to cooperate. Safety filters are a popular approach for ensuring safety in interactive robotics, since their modular design separates safety from performance, allowing robots to operate safely around people with minimal impact on task efficiency. While traditional safety filters typically operate only in the physical space, neglecting the robot's ability to learn and adapt online, the recently proposed belief-space saf",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Transferable Self-Harm Surveillance from Emergency Department Triage Notes Using an Evidence-Augmented Machine Learning Approach",
-      "url": "https://arxiv.org/abs/2606.02545v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-06-01T17:48:21.000Z",
-      "score": 50,
-      "summary_en": "Self-harm is a major public health concern, but current surveillance relying on hospital presentations is inadequate due to the low sensitivity of diagnostic codes. Emergency Department (ED) triage notes, recorded at the initial point of contact, provide a succinct summary of presentations and an opportunity to identify self-harm. We developed a three-stage approach, augmenting traditional machine learning with large language model-based screening and evidence extraction to detect self-harm in ED triage notes. We assessed model transferability across three Australian hospitals. Our approach sh",
-      "summary_fr": "Self-harm is a major public health concern, but current surveillance relying on hospital presentations is inadequate due to the low sensitivity of diagnostic codes. Emergency Department (ED) triage notes, recorded at the initial point of contact, provide a succinct summary of presentations and an opportunity to identify self-harm. We developed a three-stage approach, augmenting traditional machine learning with large language model-based screening and evidence extraction to detect self-harm in ED triage notes. We assessed model transferability across three Australian hospitals. Our approach sh",
-      "resume_fr": "Self-harm is a major public health concern, but current surveillance relying on hospital presentations is inadequate due to the low sensitivity of diagnostic codes. Emergency Department (ED) triage notes, recorded at the initial point of contact, provide a succinct summary of presentations and an opportunity to identify self-harm. We developed a three-stage approach, augmenting traditional machine learning with large language model-based screening and evidence extraction to detect self-harm in ED triage notes. We assessed model transferability across three Australian hospitals. Our approach sh",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Guided Sensemaking: Agents in Collaborative Deliberation",
-      "url": "https://arxiv.org/abs/2606.02260v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-06-01T13:48:24.000Z",
-      "score": 50,
-      "summary_en": "Generative AI systems are aggressively reshaping how students engage with information and perform cognitive work; convenience-oriented use has the potential to displace effortful reasoning, reflection, and learning, especially for those who lack domain expertise and effective human-AI interaction strategies. Current AI tools are heavily focused on chat-style interfaces geared towards answer generation and efficiency in a linear and fragmented stream of text, offering limited support for structured reflection, argument construction, and sensemaking in collaborative contexts. We introduce Guided",
-      "summary_fr": "Generative AI systems are aggressively reshaping how students engage with information and perform cognitive work; convenience-oriented use has the potential to displace effortful reasoning, reflection, and learning, especially for those who lack domain expertise and effective human-AI interaction strategies. Current AI tools are heavily focused on chat-style interfaces geared towards answer generation and efficiency in a linear and fragmented stream of text, offering limited support for structured reflection, argument construction, and sensemaking in collaborative contexts. We introduce Guided",
-      "resume_fr": "Generative AI systems are aggressively reshaping how students engage with information and perform cognitive work; convenience-oriented use has the potential to displace effortful reasoning, reflection, and learning, especially for those who lack domain expertise and effective human-AI interaction strategies. Current AI tools are heavily focused on chat-style interfaces geared towards answer generation and efficiency in a linear and fragmented stream of text, offering limited support for structured reflection, argument construction, and sensemaking in collaborative contexts. We introduce Guided",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "An NLP-Driven Framework for Curriculum-Labor Market Alignment: Schema-Constrained LLM Extraction, ESCO-Anchored Semantic Matching, and Multi-Dimensional Gap Quantification",
-      "url": "https://arxiv.org/abs/2606.01982v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-06-01T09:44:37.000Z",
-      "score": 85,
-      "summary_en": "Schema-constrained information extraction from diverse educational and labor-market corpora remains an open challenge in natural language processing because existing pipelines rely primarily on lexical-surface methods that cannot recover implicit competencies, lack grounding in shared taxonomies, and provide no formal measures of extraction reliability or document-level completeness. To address these limitations, this paper proposes a four-stage NLP framework that combines (i) schema-constrained prompting of a two-model frontier-LLM ensemble against a JSON Schema-enforced seven-slot competency",
-      "summary_fr": "Schema-constrained information extraction from diverse educational and labor-market corpora remains an open challenge in natural language processing because existing pipelines rely primarily on lexical-surface methods that cannot recover implicit competencies, lack grounding in shared taxonomies, and provide no formal measures of extraction reliability or document-level completeness. To address these limitations, this paper proposes a four-stage NLP framework that combines (i) schema-constrained prompting of a two-model frontier-LLM ensemble against a JSON Schema-enforced seven-slot competency",
-      "resume_fr": "Schema-constrained information extraction from diverse educational and labor-market corpora remains an open challenge in natural language processing because existing pipelines rely primarily on lexical-surface methods that cannot recover implicit competencies, lack grounding in shared taxonomies, and provide no formal measures of extraction reliability or document-level completeness. To address these limitations, this paper proposes a four-stage NLP framework that combines (i) schema-constrained prompting of a two-model frontier-LLM ensemble against a JSON Schema-enforced seven-slot competency",
       "tags": [],
       "breakdown": {
         "research": 35,
