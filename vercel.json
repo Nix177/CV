@@ -2,6 +2,11 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/ai-lab", "destination": "/lab.html" },
+    { "source": "/ai-lab.html", "destination": "/lab.html" },
+    { "source": "/ai-lab-en.html", "destination": "/lab.html" },
+    { "source": "/ai-lab-de.html", "destination": "/lab.html" },
+    { "source": "/lab", "destination": "/lab.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
     { "source": "/cv", "destination": "/cv.html" },
     { "source": "/chatbot", "destination": "/chatbot.html" },
