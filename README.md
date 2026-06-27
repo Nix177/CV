@@ -79,6 +79,18 @@ GEMINI_CHAT_MODEL=gemini-2.5-flash
 GEMINI_CHAT_MODEL=gemini-2.5-flash-lite
 ```
 
+
+## CV visibles
+
+Les pages CV affichent les PDF publics suivants :
+
+```txt
+public/assets/cv/cv-fr.pdf
+public/assets/cv/cv-en.pdf
+public/assets/cv/cv-de.pdf
+```
+
+Remplacer un PDF visible ne met pas automatiquement à jour le chatbot : vérifier aussi `public/cv-text.txt` pour le contexte narratif RAG et `public/portfolio-data.js` pour les projets affichés dans le portfolio.
 ## Routes principales
 
 `vercel.json` active `cleanUrls` et garde des rewrites de compatibilité.

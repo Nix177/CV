@@ -1,66 +1,85 @@
-Nicolas Tuor — CV (extrait texte pour chatbot)
+Nicolas Tuor — CV et contexte RAG pour chatbot
 Version RAG: sources indexées par /api/chat = public/cv-text.txt + public/portfolio-data.js.
-Le chatbot ne doit répondre qu'à partir de ces sources et signaler clairement les informations absentes.
+Le chatbot ne doit répondre qu'à partir de ces sources et signaler clairement les informations absentes. Les PDF visibles du CV sont dans public/assets/cv/.
 
-=== Profil (synthèse) ===
-Enseignant diplômé et ingénieur pédagogique, titulaire d'un Master en didactique disciplinaire orientation informatique (HEP Lausanne). Profil à l'intersection de la pédagogie numérique, de la pensée critique, de la vulgarisation scientifique et de l'intégration responsable de l'IA en éducation. Expérience en enseignement primaire, conception de formations, accompagnement d'enseignants, prototypage web léger, automatisation et coordination de petites initiatives.
+=== Profil actuel ===
+Nicolas Tuor est enseignant diplômé et titulaire d'un Master en didactique disciplinaire, orientation informatique, obtenu à la HEP Lausanne. Son profil relie enseignement primaire, didactique de l'informatique, pensée critique, vulgarisation scientifique, prototypage numérique et usages responsables de l'IA en éducation. Il travaille avec des élèves, des enseignants, des projets de médiation et des outils numériques, avec une attention forte portée à la confiance, à la vérification et à la responsabilité dans l'usage des technologies.
+
+=== Contact public ===
+Site personnel: https://www.nicolastuor.ch
+Adresse e-mail publique du CV: nicolas.tuor@bluewin.ch
 
 === Compétences clés ===
-• Didactique de l'informatique, ingénierie pédagogique et formation d'enseignants.
-• Enseignement explicite, transfert de stratégies, évaluation et accompagnement d'apprentissages.
-• Pensée critique, IA responsable, littératie numérique, éthique et usages éducatifs des technologies.
-• Vulgarisation scientifique, médiation, création de ressources pédagogiques et de fiches d'évaluation.
+• Méthodologie de recherche, analyse de données et lecture critique de résultats.
+• Pédagogie, didactique, formation et accompagnement d'enseignants.
+• Enseignement explicite, transfert de stratégies, évaluation et création de fiches pédagogiques.
+• Communication scientifique, vulgarisation et médiation pour l'école, les musées et le grand public.
+• Travail d'équipe, collaboration interdisciplinaire, adaptabilité, initiative et résolution de problèmes.
+• IA responsable, littératie numérique, pensée critique, éthique et usages éducatifs des technologies.
 • Prototypage web HTML/CSS/JavaScript, Node.js, APIs LLM, RAG léger, GitHub, Codex et workflows Git.
-• Automatisation avec n8n, structuration de contenus, veille EdTech et documentation opérationnelle.
-• Travail interdisciplinaire, rigueur, fiabilité, adaptation rapide et orientation impact.
+• Automatisation avec n8n, REST APIs, webhooks, structuration de contenus et documentation opérationnelle.
 
-=== Éducation ===
+=== Formation ===
 • 2020-2024 — Master en didactique disciplinaire, orientation informatique, HEP Lausanne.
   – Travail de master : enseignement explicite du débogage systématique et transfert de compétences, sous la direction d'Engin Bumbacher.
-  – Publication 2025 liée à l'enseignement explicite du débogage au primaire : mise en valeur de stratégies transférables pour aider les élèves à analyser, tester et corriger leurs productions informatiques.
+  – Publication scientifique 2025 liée à ce travail sur l'enseignement explicite du débogage au primaire.
 • 2015-2019 — Bachelor en enseignement préscolaire et primaire, HEP Fribourg.
-  – Travail de bachelor : enquête sur la philosophie pour enfants, sous la direction de Samuel Heinzen.
+  – Travail de bachelor : philosophie pour enfants, sous la direction de Samuel Heinzen.
+
+=== Publication 2025 ===
+Tuor, N., El-Hamamsy, L., Chevalier, M., Brender, J., & Bumbacher, E. (2025). Explicitly Teaching Debugging in Primary School: Effectiveness, Transferability and Durability. Proceedings of the 25th Koli Calling International Conference on Computing Education Research. ACM. DOI: 10.1145/3769994.3769999.
+Cette publication porte sur l'enseignement explicite du débogage au primaire et la transférabilité de stratégies de correction et d'analyse.
+
+=== Expérience récente et actuelle ===
+• 2019-présent — Enseignant primaire sur divers degrés scolaires.
+  – Écoles mentionnées dans le CV : Masonnens, Villa-Thérèse, Praroman, Echarlens, Chénens, Corminboeuf, Vuisternens-devant-Romont et École du Bourg 2025-2026.
+• 2025-présent — Projet BNF à la HEP Fribourg.
+  – Développement exploratoire d'outils d'IA pour l'enseignement de l'éthique.
+  – Agora Numérique : scénarios collaboratifs avec dilemmes philosophiques.
+  – Mode solo : expérience interactive de type livre dont vous êtes le héros, avec objectif de déploiement mobile.
+  – URL solo : https://nix177.github.io/mode-solo-rpg-ethics/
+  – URL multi : https://nix177.github.io/agora-numerique/
+• Projets numériques et électroniques en parallèle.
+  – Développement d'apps, de sites web, d'automatisations, de démonstrateurs IA et de projets électroniques accessibles depuis le site personnel.
+• 2024 — CAS Éducation numérique.
+  – Journée de formation à la HEP Fribourg sur informatique et société.
+• 2022-2023 — Stage de master recherche/formation à la HEP Fribourg, CRE/ATE, sous la direction de Lionel Alvarez, avec projet en classe au CO de la Glâne.
+• Service civil.
+  – Accompagnement de réfugiés au centre fédéral d'asile de la Guglera en 2023.
+  – Archivage à la Chancellerie d'État de Fribourg en 2022-2023.
+  – Soutien scolaire, administratif et technique au Lycée Jean-Piaget à Neuchâtel en 2019-2020.
+  – Archivage à l'Hôpital cantonal de Fribourg en 2017.
+• Expériences complémentaires.
+  – ETUCOM 2017-2019, réception à l'Hôtel Elite 2016-2017, stage au Foyer Saint-Etienne 2013 et sécurité chez Phoenix Security 2012-2017.
+
+=== Travaux récents autour d'educa.ch et de l'EdTech ===
+Nicolas suit et analyse des sujets EdTech liés à educa.ch, Navigator, Edulog, à la conformité RGPD/LPD, à la souveraineté numérique et à l'évaluation d'outils numériques éducatifs. Les angles importants sont la confiance, la protection des données, l'utilité pédagogique, la transparence des outils et la capacité des enseignants à juger leurs usages.
 
 === Projet doctoral / recherche en préparation ===
-Projet doctoral centré sur la confiance dans les outils numériques éducatifs et l'IA. Axe de réflexion : extended mind theory, outils numériques comme extensions possibles de l'activité cognitive, et didactique de l'extension critique de soi. L'objectif est d'étudier comment former les élèves et les enseignants à utiliser des outils puissants sans déléguer aveuglément le jugement, la vérification et la responsabilité.
-
-=== Expérience (sélection) ===
-• 2019-présent — Enseignant primaire remplaçant sur divers degrés.
-• 2020-2021 — Enseignant primaire fixe, 5H, école primaire de Corminboeuf.
-• 2022-2023 — Stage de master recherche/formation à la HEP Fribourg, CRE/ATE, sous la direction de Lionel Alvarez.
-• 2024 — Intervention CAS Éducation numérique, journée de formation à la HEP Fribourg sur informatique et société.
-• Travaux récents avec educa.ch : veille et analyse EdTech, Navigator, Edulog, questions RGPD/LPD, évaluation d'outils numériques éducatifs et attention aux enjeux de confiance, conformité, souveraineté et utilité pédagogique.
-• Service civil : soutien scolaire, administratif et technique au Lycée Jean-Piaget à Neuchâtel ; accompagnement de réfugiés.
-• Expériences complémentaires : archivage, accueil, hôtellerie, sécurité, appuis administratifs et techniques.
-
-=== Situation actuelle ===
-• Enseignant à l'École du Bourg, sur divers degrés scolaires.
-• Projet BNF en cours avec la HEP Fribourg : Agora Numérique, plateforme de débats éthiques pour l'enseignement secondaire.
-  – Version multi-joueurs : scénarios collaboratifs avec dilemmes philosophiques.
-  – Version solo : expérience interactive de type livre dont vous êtes le héros, avec objectif de déploiement mobile.
-  – URL : https://nix177.github.io/mode-solo-rpg-ethics/
-  – URL multi : https://nix177.github.io/agora-numerique/
+Projet doctoral envisagé autour de la confiance dans les outils numériques éducatifs et l'IA. Axe de réflexion : extended mind theory, outils numériques comme extensions possibles de l'activité cognitive, et didactique de l'extension critique de soi. L'objectif est d'étudier comment former élèves et enseignants à utiliser des outils puissants sans déléguer aveuglément le jugement, la vérification et la responsabilité.
 
 === Projet Histoire d'Os / osselets / astragales ===
-Projet pédagogique et muséal en cours autour des osselets, astragales et jeux anciens. Le site est un WIP orienté musée-école : activités pour élèves, ressources pour enseignants, fiches et guides imprimables, variantes de médiation, vulgarisation scientifique et attention aux incertitudes archéologiques. Le projet distingue observation, hypothèse et interprétation, évite de présenter les astragales comme des dés naturels universels, et vise des ressources utilisables par des musées, des classes et le grand public.
-
-=== Formations complémentaires ===
-• Archivage et gestion documentaire, Château de Neuchâtel.
-• Service civil : communication et encadrement d'adolescents.
-• Programme SPHAIR, cours de pilotage.
-• Sécurité, Phoenix Security, formations régulières.
+Projet pédagogique et muséal en cours autour des osselets, des astragales et des jeux anciens. Le site est un WIP orienté musée-école : activités pour élèves, ressources pour enseignants, fiches et guides imprimables, variantes de médiation, vulgarisation scientifique et ressources pour enseignants/musées. Le projet distingue observation, hypothèse, interprétation, vérification et incertitude ; il évite de présenter les astragales comme des dés naturels universels et vise des ressources utilisables par des musées, des classes et le grand public.
 
 === Langues ===
-• Français : langue maternelle, C2.
+• Français : langue maternelle.
 • Anglais : C2.
-• Allemand : B2/C1.
+• Allemand : C1, avec un très bon niveau passif et une compréhension très solide ; l'expression active doit être réactivée et entraînée par immersion pour retrouver l'aisance.
+
+=== Outils numériques ===
+• IA générative texte, voix et vidéo : usage quotidien, prompts contextualisés et approche critique.
+• REST APIs, webhooks et automatisations n8n.
+• Microsoft 365, SharePoint et OneNote.
+• ComfyUI, différents modèles génératifs, Blender et Unity.
+• Python, HTML/CSS, JavaScript et C#.
+• GarageBand et Fruity Loops.
 
 === Centres d'intérêt ===
-• Vulgarisation scientifique, pensée critique, histoire des sciences et médiation.
+• Communication scientifique, vulgarisation, pensée critique et histoire des sciences.
 • Astronomie et astrophotographie.
 • Aviron en compétition de 2005 à 2011.
 • Théâtre d'improvisation.
-• Technologies, IA générative, automatisations n8n, création de supports pédagogiques et prototypage.
+• Technologies, IA générative, automatisation, création de supports pédagogiques et prototypage.
 • Arts martiaux.
 
 === Portfolio (projets techniques et web) ===
@@ -79,24 +98,6 @@ Projet pédagogique et muséal en cours autour des osselets, astragales et jeux 
 • The Un-Algorithm : tableau de bord conceptuel pour reprendre le contrôle des recommandations algorithmiques.
 • Workflow impression 3D : génération IA, ComfyUI, Hunyuan3D, Blender, PrusaSlicer et impression.
 
-=== Chatbot de profil et RAG réel ===
-Le chatbot de profil s'appuie sur deux sources locales : public/cv-text.txt pour le contexte narratif et public/portfolio-data.js pour les projets affichés dans le portfolio. Il utilise un RAG in-memory simple, basé sur des chunks et un score lexical, puis envoie seulement les passages retenus au modèle. Le frontend est en JavaScript vanilla, l'API est une fonction serverless Vercel Node.js, et les fournisseurs LLM sont configurables via variables d'environnement. Le curseur de liberté contrôle la température et les réponses doivent rester prudentes lorsque l'information n'est pas présente dans le contexte.
-
-=== Architecture du site et développements récents ===
-• Site statique déployé sur Vercel, avec fonctions serverless Node.js/ESM pour les endpoints IA.
-• Chatbot : streaming texte côté OpenAI, support Gemini, RAG local, i18n FR/EN/DE et messages d'erreur lisibles.
-• AI Lab réel : public/lab.html, avec RAG Glassbox pour inspecter l'ingestion/recherche de PDF et Diff Explorer pour comparer des variations de prompts.
-• Tech News : flux d'actualités EdTech, dev et IA, alimenté par GitHub Actions et analysé par API LLM.
-• Fun Facts : cartes interactives en plusieurs langues pour déconstruire des idées reçues.
-• Passions & Convictions : interfaces visuelles et éléments interactifs autour de l'éducation numérique, de l'IA responsable et de l'esprit critique.
-• Compétences techniques transverses : JavaScript/Node.js, APIs LLM, GitHub, Codex, CI/CD, n8n, debugging de requêtes asynchrones, CORS et documentation.
-
-=== Focus technique : BM-800 Mod (Pimped Alice) ===
-• Objectif : transformer un micro BM-800 en micro de meilleure qualité via un circuit discret Alice dérivé du Schoeps CMC5 et une capsule RK-47.
-• Architecture : JFET J305 ou 2SK117 pour la conversion d'impédance, résistances 2.4 kΩ pour la division de phase, transistors PNP A1015 pour piloter la ligne XLR, alimentation fantôme 48 V régulée par Zener 12 V.
-• Points critiques : section haute impédance, soudure en l'air de la gate du JFET et de la résistance 1 GΩ, nettoyage soigneux, calibration du biais autour de Vcc/4.
-• Dépannage typique : Zener ou condensateur inversé, saletés en haute impédance, masse XLR, mauvais biais ou JFET inversé.
-
 === Focus technique : Rover Nova 6x6 & bras ===
 • Vision : rover grimpeur 6x6 / rocker-bogie avec bras manipulateur, expérimentation robotique, vision embarquée et contrôle distribué.
 • Architecture logique : Raspberry Pi Zero 2W pour réseau, streaming vidéo, logique de mission et serveur web Python ; ESP32 pour contrôle temps réel, PWM, servos, moteurs et sécurité.
@@ -104,3 +105,28 @@ Le chatbot de profil s'appuie sur deux sources locales : public/cv-text.txt pour
 • Actionneurs et mécanique : servos DS3225 pour les efforts principaux du bras, châssis rocker-bogie, bras type EEZYbotARM Mk2 avec améliorations mécaniques possibles.
 • Vision et capteurs : caméra embarquée pour manipulation, caméra de navigation/FPV, capteurs de distance type ToF pour l'approche finale.
 • Roadmap : MVP bras stable + streaming, châssis robuste, puis navigation semi-autonome et manipulation d'objets simples.
+
+=== Focus technique : BM-800 Mod (Pimped Alice) ===
+• Objectif : transformer un micro BM-800 en micro de meilleure qualité via un circuit discret Alice dérivé du Schoeps CMC5 et une capsule RK-47.
+• Architecture : JFET J305 ou 2SK117 pour la conversion d'impédance, résistances 2.4 kΩ pour la division de phase, transistors PNP A1015 pour piloter la ligne XLR, alimentation fantôme 48 V régulée par Zener 12 V.
+• Points critiques : section haute impédance, soudure en l'air de la gate du JFET et de la résistance 1 GΩ, nettoyage soigneux, calibration du biais autour de Vcc/4.
+• Dépannage typique : Zener ou condensateur inversé, saletés en haute impédance, masse XLR, mauvais biais ou JFET inversé.
+
+=== Chatbot de profil et RAG réel ===
+Le chatbot de profil s'appuie sur deux sources locales : public/cv-text.txt pour le contexte narratif et public/portfolio-data.js pour les projets affichés dans le portfolio. Il utilise un RAG in-memory simple, basé sur des chunks et un score lexical, puis envoie seulement les passages retenus au modèle. Le frontend est en JavaScript vanilla, l'API est une fonction serverless Vercel Node.js, et les fournisseurs LLM sont configurables via variables d'environnement. Le curseur de liberté contrôle la température et les réponses doivent rester prudentes lorsque l'information n'est pas présente dans le contexte. profile.json n'est pas utilisé par /api/chat.
+
+=== Architecture du site et développements récents ===
+• Site statique déployé sur Vercel, avec fonctions serverless Node.js/ESM pour les endpoints IA.
+• Chatbot : OpenAI via Responses API, support Gemini, RAG local, i18n FR/EN/DE et messages d'erreur lisibles.
+• AI Lab réel : public/lab.html, avec RAG Glassbox pour inspecter l'ingestion/recherche de PDF et Diff Explorer pour comparer des variations de prompts.
+• Tech News : flux d'actualités EdTech, développement et IA, alimenté par GitHub Actions et analysé par API LLM.
+• Fun Facts : cartes interactives en plusieurs langues pour déconstruire des idées reçues.
+• Passions & Convictions : interfaces visuelles et éléments interactifs autour de l'éducation numérique, de l'IA responsable et de l'esprit critique.
+• Compétences techniques transverses : JavaScript/Node.js, APIs LLM, GitHub, Codex, CI/CD, n8n, debugging de requêtes asynchrones, CORS et documentation.
+
+=== Repères multilingues pour le chatbot ===
+FR — Formation : Master en didactique disciplinaire orientation informatique à la HEP Lausanne ; Bachelor en enseignement préscolaire et primaire à la HEP Fribourg ; publication 2025 sur l'enseignement explicite du débogage au primaire.
+FR — Projets d'éducation numérique : BNF / Agora Numérique, IA News Éthique, Karaoke Studio, chatbot RAG, Histoire d'Os, travaux EdTech autour d'educa.ch, Navigator, Edulog et conformité RGPD/LPD.
+EN — Strengths for an EdTech role: primary teaching, computer science didactics, responsible AI, educational tool evaluation, data/privacy awareness, prototyping, n8n automation, GitHub/Codex workflows and science communication.
+DE — Digitale Bildung: Erfahrung mit Primarschule, Fachdidaktik Informatik, verantwortungsvoller KI, EdTech-Analyse, educa.ch, Navigator, Edulog, Datenschutz nach DSGVO/LPD, n8n-Automatisierung und pädagogischer Vermittlung.
+DE — Ausbildung: Master in Fachdidaktik Informatik an der PH Lausanne, Bachelor Vorschul- und Primarstufe an der PH Freiburg, Deutsch C1 mit sehr sicherem passivem Verständnis; aktive Ausdrucksfähigkeit durch Immersion reaktivierbar, Englisch C2, Französisch Muttersprache.
