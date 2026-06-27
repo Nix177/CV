@@ -68,7 +68,7 @@ OPENAI_CHAT_MODEL remplace le modèle OpenAI par défaut.
 GEMINI_CHAT_MODEL remplace le modèle Gemini par défaut.
 ```
 
-Le fournisseur OpenAI de `/api/chat` utilise `POST /v1/responses` avec un payload minimal (`model`, `instructions`, `input`) pour rester compatible avec les modèles récents/de raisonnement. Le frontend affiche seulement "modèle serveur" : le nom réel du modèle reste côté Vercel.
+Le fournisseur OpenAI de `/api/chat` utilise `POST /v1/responses` avec un payload minimal (`model`, `instructions`, `input`) pour rester compatible avec les modèles récents/de raisonnement. Le frontend affiche le modèle OpenAI recommandé (`gpt-5.5`) dans le libellé du chatbot ; la valeur réellement utilisée reste remplaçable côté Vercel avec `OPENAI_CHAT_MODEL`.
 
 Si OpenAI renvoie une erreur 400, le message utilisateur distingue une requête invalide d'un modèle indisponible pour la clé ou l'endpoint. Si OpenAI renvoie 429, le serveur logge le statut et le body upstream sans exposer de clé API. Si `GOOGLE_API_KEY` est disponible, `/api/chat` tente une bascule automatique vers Gemini ; sinon le message utilisateur indique clairement une limite de quota/rate limit et conseille de réessayer plus tard ou de changer de fournisseur.
 
@@ -109,7 +109,7 @@ curl http://localhost:3000/api/chat
 # attendu: {"ok":true,"ping":"pong"}
 ```
 
-POST OpenAI avec le modèle serveur recommandé :
+POST OpenAI avec le modèle recommandé :
 
 ```bash
 OPENAI_CHAT_MODEL=gpt-5.5 curl -N -X POST http://localhost:3000/api/chat \
