@@ -1,151 +1,106 @@
 Nicolas Tuor — CV (extrait texte pour chatbot)
+Version RAG: sources indexées par /api/chat = public/cv-text.txt + public/portfolio-data.js.
+Le chatbot ne doit répondre qu'à partir de ces sources et signaler clairement les informations absentes.
 
 === Profil (synthèse) ===
-Enseignant diplômé et ingénieur pédagogique (Master en didactique de l’informatique). Pédagogie, pensée critique et intégration responsable de l’IA en éducation. Conception de formations, accompagnement d’enseignants, vulgarisation scientifique. À l’aise avec les outils numériques (web de base, Python/data) et la coordination de petites initiatives. Esprit d’équipe, approche rigoureuse et orientée impact. :contentReference[oaicite:1]{index=1}
+Enseignant diplômé et ingénieur pédagogique, titulaire d'un Master en didactique disciplinaire orientation informatique (HEP Lausanne). Profil à l'intersection de la pédagogie numérique, de la pensée critique, de la vulgarisation scientifique et de l'intégration responsable de l'IA en éducation. Expérience en enseignement primaire, conception de formations, accompagnement d'enseignants, prototypage web léger, automatisation et coordination de petites initiatives.
 
 === Compétences clés ===
-• Méthodologie de recherche et analyse de données
-• Didactique / formation / accompagnement d’enseignants
-• Maîtrise d’outils numériques (HTML/CSS/JS de base, Python)
-• Communication scientifique & vulgarisation
-• Collaboration interdisciplinaire, adaptabilité, initiative
-• Résolution de problèmes, organisation, fiabilité
-:contentReference[oaicite:2]{index=2}
+• Didactique de l'informatique, ingénierie pédagogique et formation d'enseignants.
+• Enseignement explicite, transfert de stratégies, évaluation et accompagnement d'apprentissages.
+• Pensée critique, IA responsable, littératie numérique, éthique et usages éducatifs des technologies.
+• Vulgarisation scientifique, médiation, création de ressources pédagogiques et de fiches d'évaluation.
+• Prototypage web HTML/CSS/JavaScript, Node.js, APIs LLM, RAG léger, GitHub, Codex et workflows Git.
+• Automatisation avec n8n, structuration de contenus, veille EdTech et documentation opérationnelle.
+• Travail interdisciplinaire, rigueur, fiabilité, adaptation rapide et orientation impact.
 
 === Éducation ===
-• 2020–2024 — Master en didactique disciplinaire (orientation informatique), HEP Lausanne.
-  – Travail de master : enseignement explicite du débogage systématique et transfert de compétences (dir. Engin Bumbacher). 
-• 2015–2019 — Bachelor en enseignement préscolaire et primaire, HEP Fribourg.
-  – Travail de bachelor : enquête sur la philosophie pour enfants (dir. Samuel Heinzen).
-:contentReference[oaicite:3]{index=3}
+• 2020-2024 — Master en didactique disciplinaire, orientation informatique, HEP Lausanne.
+  – Travail de master : enseignement explicite du débogage systématique et transfert de compétences, sous la direction d'Engin Bumbacher.
+  – Publication 2025 liée à l'enseignement explicite du débogage au primaire : mise en valeur de stratégies transférables pour aider les élèves à analyser, tester et corriger leurs productions informatiques.
+• 2015-2019 — Bachelor en enseignement préscolaire et primaire, HEP Fribourg.
+  – Travail de bachelor : enquête sur la philosophie pour enfants, sous la direction de Samuel Heinzen.
+
+=== Projet doctoral / recherche en préparation ===
+Projet doctoral centré sur la confiance dans les outils numériques éducatifs et l'IA. Axe de réflexion : extended mind theory, outils numériques comme extensions possibles de l'activité cognitive, et didactique de l'extension critique de soi. L'objectif est d'étudier comment former les élèves et les enseignants à utiliser des outils puissants sans déléguer aveuglément le jugement, la vérification et la responsabilité.
 
 === Expérience (sélection) ===
-• 2019–présent — Enseignant primaire (remplacements, divers degrés). 
-• 2020–2021 — Enseignant primaire fixe (5H, école primaire de Corminboeuf).
-• 2022–2023 — Stage de master (recherche/formation) à la HEP Fribourg (CRE/ATE, dir. Lionel Alvarez).
-• Service civil (soutien scolaire/administratif/technique, Lycée Jean-Piaget, Neuchâtel ; accompagnement de réfugiés).
-• Appuis ponctuels : aide archiviste (Chancellerie de l’État de Fribourg ; Hôpital cantonal), accueil/hôtellerie, sécurité, etc.
-• 2024 — Intervention CAS Éducation numérique (journée de formation, HEP Fribourg : informatique et société).
+• 2019-présent — Enseignant primaire remplaçant sur divers degrés.
+• 2020-2021 — Enseignant primaire fixe, 5H, école primaire de Corminboeuf.
+• 2022-2023 — Stage de master recherche/formation à la HEP Fribourg, CRE/ATE, sous la direction de Lionel Alvarez.
+• 2024 — Intervention CAS Éducation numérique, journée de formation à la HEP Fribourg sur informatique et société.
+• Travaux récents avec educa.ch : veille et analyse EdTech, Navigator, Edulog, questions RGPD/LPD, évaluation d'outils numériques éducatifs et attention aux enjeux de confiance, conformité, souveraineté et utilité pédagogique.
+• Service civil : soutien scolaire, administratif et technique au Lycée Jean-Piaget à Neuchâtel ; accompagnement de réfugiés.
+• Expériences complémentaires : archivage, accueil, hôtellerie, sécurité, appuis administratifs et techniques.
 
-=== SITUATION ACTUELLE ===
-• Enseignant à l'École du Bourg (Divers degrés scolaires).
-• Projet BNF en cours (HEP Fribourg) : Développement de "Agora Numérique", plateforme de débats éthiques pour enseignement secondaire (Philosophie/Éthique). Deux versions :
-  – Multi-joueurs : Scénarios collaboratifs avec dilemmes philosophiques.
-  – Solo : Type "Livre dont vous êtes le héros", prévu aussi pour Android/iOS.
+=== Situation actuelle ===
+• Enseignant à l'École du Bourg, sur divers degrés scolaires.
+• Projet BNF en cours avec la HEP Fribourg : Agora Numérique, plateforme de débats éthiques pour l'enseignement secondaire.
+  – Version multi-joueurs : scénarios collaboratifs avec dilemmes philosophiques.
+  – Version solo : expérience interactive de type livre dont vous êtes le héros, avec objectif de déploiement mobile.
   – URL : https://nix177.github.io/mode-solo-rpg-ethics/
-  – URL (Multi) : https://nix177.github.io/agora-numerique/
+  – URL multi : https://nix177.github.io/agora-numerique/
+
+=== Projet Histoire d'Os / osselets / astragales ===
+Projet pédagogique et muséal en cours autour des osselets, astragales et jeux anciens. Le site est un WIP orienté musée-école : activités pour élèves, ressources pour enseignants, fiches et guides imprimables, variantes de médiation, vulgarisation scientifique et attention aux incertitudes archéologiques. Le projet distingue observation, hypothèse et interprétation, évite de présenter les astragales comme des dés naturels universels, et vise des ressources utilisables par des musées, des classes et le grand public.
 
 === Formations complémentaires ===
-• Archivage & gestion documentaire (½ journée, Château de Neuchâtel)  
-• Service civil : communication et encadrement (adolescents 1&2)  
-• Programme SPHAIR (cours de pilotage)  
-• Sécurité (Phoenix Security, formations régulières)
-:contentReference[oaicite:5]{index=5}
+• Archivage et gestion documentaire, Château de Neuchâtel.
+• Service civil : communication et encadrement d'adolescents.
+• Programme SPHAIR, cours de pilotage.
+• Sécurité, Phoenix Security, formations régulières.
 
 === Langues ===
-• Français (langue maternelle) — C2  
-• Anglais — C2  
-• Allemand — B2/C1  
-:contentReference[oaicite:6]{index=6}
+• Français : langue maternelle, C2.
+• Anglais : C2.
+• Allemand : B2/C1.
 
-=== Centres d’intérêt ===
-• Vulgarisation scientifique & pensée critique  
-• Astronomie / Astrophotographie  
-• Aviron (compétition 2005–2011)  
-• Théâtre d’improvisation  
-• Technologies & outils IA (création d’images/vidéos, jeux avec Copilot/Unity, automatisations n8n)  
-• Arts martiaux  
-:contentReference[oaicite:7]{index=7}
+=== Centres d'intérêt ===
+• Vulgarisation scientifique, pensée critique, histoire des sciences et médiation.
+• Astronomie et astrophotographie.
+• Aviron en compétition de 2005 à 2011.
+• Théâtre d'improvisation.
+• Technologies, IA générative, automatisations n8n, création de supports pédagogiques et prototypage.
+• Arts martiaux.
 
-=== Portfolio (Projets Techniques & Web) ===
-• Telescope OnStep (Hardware/Astronomie) : Motorisation GoTo d'une monture équatoriale (ESP32, ASCOM/INDI).
-• Rover & Bras (Robotics/Micro-ROS) : Rover autonome (LiDAR) + Bras 6 axes, architecture distribuée.
-• BM-800 Mod (Audio/Electronics) : Upgrade micro studio (circuit Schoeps/Alice + capsule RK-47).
-• Karaoke Studio : Créez vos propres karaokés pédagogiques en quelques clics ! Importez votre musique, synchronisez les paroles avec la barre d'espace et exportez un lecteur HTML élégant et autonome.
-• IA News Éthique : Plateforme transformant l'actualité mondiale en débats philosophiques pour élèves (4-15 ans). Analyse journalistique via React/n8n pour générer des guides d'esprit critique.
-• AdWall, Documate, PetNames : Apps web éducatives et démos IA (création itérative avec "Draft Workspace").
-• Plateformes Éducatives & Expérimentales :
-  – Vocal Walls : Réalité augmentée sonore (bulles audio géolocalisées sur une grille H3).
-  – Common Ground : "GitHub pour passions", plateforme de team building créatif.
-  – Micro-Mentor : Sessions de mentorat ultra-courtes de 3 minutes.
-  – Frustra : Base de données de doléances réseaux sociaux pour identifier des "problèmes de base" (startup ideas).
-  – Slow Social : Publication hebdomadaire de bien-être numérique contre le burnout.
-  – The Un-Algorithm : Tableau de bord pour reprendre le contrôle des recommandations algorithmiques.
-• Flux de travail automatisé d'impression 3D : Pipeline complet de la génération d'images IA (ComfyUI) à la sculpture Blender ("Mushroom Golem") puis l'impression.
-=== Ajouts ChatGPT (issus de nos échanges/prototypes) ===
-• Conception d’outils pédagogiques web :
-  – “Fun Facts” : cartes retournables + nuage interactif, réponses sourcées (fr/EN/DE), petit moteur de sélection et affichage.  
-  – Chatbot de profil : lecture /profile.json + /cv_text (ce fichier), curseur “liberté” (contrôle du degré d’extrapolation), intégration d’exemples guidés.  
-  – “Idées IA / AI Lab” : mini-quiz thématique historique, expérimentation d’un mini-jeu (runner/osselets) et de UI ludiques.
-  – Portfolio : pages dynamiques, intégrations sûres (embeds/preview), boutons FR/EN/DE synchronisés.
-• Démonstrateurs visuels :
-  – “Métro interactif” : stations = atouts différenciants (pédagogie IA responsable, vulgarisation, prototypage rapide, coordination, rigueur).
-• Pratiques IA responsables :
-  – Explicitation des limites/biais, appuis sur sources, formulations prudentes quand l’information n’est pas dans le CV.
-  – Prompt-engineering pragmatique (gabarits, consignes, garde-fous).
-• Cible emploi :
-  – Pédagogie numérique, ingénierie de formation, accompagnement à l’IA responsable, communication scientifique.
-(Section ajoutée par le chatbot pour fournir du contexte opérationnel aux réponses. Elle synthétise ce que tu m’as confié et ce qu’on a développé ensemble.)
+=== Portfolio (projets techniques et web) ===
+• Telescope OnStep : motorisation GoTo d'une monture équatoriale, ESP32, ASCOM/INDI, adaptation DIY.
+• Rover Nova & bras robotique : rover 6x6 / rocker-bogie avec bras manipulateur, architecture distribuée et alimentation actuelle 4S 18650.
+• BM-800 Mod : transformation d'un micro BM-800 avec circuit Alice/Schoeps simplifié et capsule RK-47.
+• Karaoke Studio : outil web pour créer des karaokés pédagogiques, synchroniser les paroles et exporter un lecteur HTML autonome.
+• IA News Éthique : plateforme transformant l'actualité en débats philosophiques pour élèves, avec React/n8n et guides d'esprit critique.
+• Agora Numérique : scénarios éthiques collaboratifs et solo pour l'enseignement secondaire.
+• Documate, EditAI, AdWall, PetNames : applications web éducatives, démonstrateurs IA et prototypes itératifs.
+• Vocal Walls : réalité augmentée sonore avec bulles audio géolocalisées.
+• Common Ground : plateforme de co-construction de projets locaux et créatifs.
+• Micro-Mentor : micro-mentorat en sessions courtes.
+• Frustra : base de doléances et analyse de problèmes utilisateurs.
+• Slow Social : publication hebdomadaire pour réduire la surcharge numérique.
+• The Un-Algorithm : tableau de bord conceptuel pour reprendre le contrôle des recommandations algorithmiques.
+• Workflow impression 3D : génération IA, ComfyUI, Hunyuan3D, Blender, PrusaSlicer et impression.
 
-=== Architecture du Site & Développement Logiciel Récents ===
-• Architecture complète de ce site :
-  – Hébergement Vercel avec fonctions Serverless (Node.js/ESM).
-  – Système de Chatbot avancé : frontend en Vanilla JS (léger), réponses en streaming (SSE), RAG in-memory (TF-IDF), support multi-modèle (OpenAI GPT-4o-mini / Gemini) et multi-langues (i18n).
-  – Veille automatisée (News Feed) : scraping RSS, scoring LLM via l'API OpenAI, automatisation CI/CD (GitHub Actions), et gestion réseau robuste (Aborts, fallbacks).
-• Développement d'applications (Web & Mobile) :
-  – Maîtrise de Capacitor et Ionic pour le développement iOS/Android (Builds .aab, intégrations Xcode).
-  – Documate & EditAI : création d'espaces de travail itératifs ("Draft Workspace"), interactions documentaires par IA, et formulaires intelligents basés sur le contexte.
-• Ingénierie Pédagogique Interactive ("L'Observatoire des Possibles") :
-  – Moteur logique JS (engine.js) pour scénarios non-linéaires interactifs avec dilemmes moraux et philosophiques.
-  – Gestion via JSON de scénarios et de "personas" pour le Rôle Play piloté par l'IA.
-  – Modules RPG : vues top-down 2D (rpg.html, game-history.html), sprites, collisions, interactions NPC, narration générée par IA.
-• Expériences UI / UX & Labs Intégrés au Site Web :
-  – AI Lab (lab.html) : "RAG Glassbox" permettant d'inspecter visuellement les étapes d'ingestion et de recherche sémantique des PDF, accompagné d'un "Diff Explorer" pour comparer l'impact des variations de prompts sur le texte généré.
-  – Tech News (tech-news.html) : Flux d'actualités technologiques (EdTech, Dev, IA) auto-alimenté via GitHub Actions, évalué et scoré par l'API OpenAI avec filtres de pertinence côté client.
-  – Fun Facts (fun-facts.html) : Cartes interactives 3D (flip cards) pour déconstruire les mythes courants.
-  – Passions & Convictions (passions.html, index.html) : UI "Steampunk" animée en SVG représentant une ligne de métro/train illustrant les principes pédagogiques, l'enseignement explicite, et l'esprit critique.
-• Compétences techniques transverses :
-  – JavaScript/Node.js avancé, intégration d'APIs LLM en mode streaming.
-  – DevOps de base : Git, CI/CD (GitHub Actions), résolution de conflits, debugging de requêtes asynchrones et CORS.
+=== Chatbot de profil et RAG réel ===
+Le chatbot de profil s'appuie sur deux sources locales : public/cv-text.txt pour le contexte narratif et public/portfolio-data.js pour les projets affichés dans le portfolio. Il utilise un RAG in-memory simple, basé sur des chunks et un score lexical, puis envoie seulement les passages retenus au modèle. Le frontend est en JavaScript vanilla, l'API est une fonction serverless Vercel Node.js, et les fournisseurs LLM sont configurables via variables d'environnement. Le curseur de liberté contrôle la température et les réponses doivent rester prudentes lorsque l'information n'est pas présente dans le contexte.
 
-=== Focus Technique : BM-800 Mod ("Pimped Alice") ===
-• Objectif : Transformer un micro bas de gamme (BM-800) en micro studio via un circuit discret "Alice" (dérivé Schoeps CMC5) et une capsule RK-47.
-• Architecture :
-  – Conversion d'impédance : JFET (J305 ou 2SK117) à très haute impédance d'entrée. 
-  – Division de phase : JFET + 2 résistances 2.4kΩ.
-  – Amplification courant : Transistors PNP A1015 (émetteur suiveur) pour piloter la ligne XLR.
-  – Alimentation : Fantôme 48V (Pins 2&3), régulée par Zener 12V pour le JFET.
-• Composants clés :
-  – Capsule : RK-47 (True Condenser, diaphragme 34mm plaqué or, terminaison centrale).
-  – Transistors : A1015 (PNP, attention brochage E-C-B), JFET (J305/2SK117, attention brochage D-G-S variable).
-  – Ajouts "Pimped" : Condensateurs EMI 470pF (filtrage RF), condo 47uF (filtrage Zener), Potentiomètre biais 1MΩ.
-• Montage critique (High-Z) :
-  – "Air-floating" : La gate du JFET et la résistance 1GΩ sont soudées "en l'air" (sans toucher le PCB) pour éviter les fuites de courant (bruit/craquements).
-• Calibration :
-  – Réglage du biais (Bias) via potentiomètre 1MΩ. Cible : Tension Source = Vcc / 4 (ex: 3V pour Vcc=12V).
-  – Assure une oscillation symétrique (max SPL, min distorsion).
-• Dépannage typique :
-  – Silence : Zener/Condo inversé.
-  – Souffle/Vent : Saleté sur section High-Z (nettoyage alcool 99%).
-  – Hum : Problème masse Pin 1 XLR.
-  – Faible/Distordu : Mauvais biais ou JFET inversé.
+=== Architecture du site et développements récents ===
+• Site statique déployé sur Vercel, avec fonctions serverless Node.js/ESM pour les endpoints IA.
+• Chatbot : streaming texte côté OpenAI, support Gemini, RAG local, i18n FR/EN/DE et messages d'erreur lisibles.
+• AI Lab réel : public/lab.html, avec RAG Glassbox pour inspecter l'ingestion/recherche de PDF et Diff Explorer pour comparer des variations de prompts.
+• Tech News : flux d'actualités EdTech, dev et IA, alimenté par GitHub Actions et analysé par API LLM.
+• Fun Facts : cartes interactives en plusieurs langues pour déconstruire des idées reçues.
+• Passions & Convictions : interfaces visuelles et éléments interactifs autour de l'éducation numérique, de l'IA responsable et de l'esprit critique.
+• Compétences techniques transverses : JavaScript/Node.js, APIs LLM, GitHub, Codex, CI/CD, n8n, debugging de requêtes asynchrones, CORS et documentation.
 
-=== Focus Technique : Rover 6x6 & Bras ("Spider-Tank") ===
-• Vision : Rover grimpeur (Rocker-Bogie) avec bras manipulateur et vision embarquée.
-• Architecture "Cerveau + Muscles" :
-  – Cerveau : Raspberry Pi Zero 2W (Gestion réseau, Streaming vidéo, Logique de mission, Web Server Python). 
-  – Muscles : ESP32 (Temps réel, PWM Servos/Moteurs, Sécurité).
-• Motorisation & Puissance :
-  – Alimentation : Pack 3S Li-ion (12.6V) avec BMS 3S.
-  – Drivers : BTS7960 (High Current 43A) pour supporter le 3S (vs DRV8833 limité à 10.8V).
-  – Régulation : Buck 5V (Logique Pi/ESP) + Buck 6V (Servos Bras).
-• Bras : EEZYbotARM Mk2 (Reproduction Instructables/Thingiverse).
-  – Amélioration : Roulement 606zz base, billes acier.
-• Vision (Double Caméra) :
-  – Eye-in-hand : Pi Camera (via nappe adaptateur 15-22 pin sur Pi Zero) pour manipuler.
-  – Navigation : ESP32-CAM indépendant pour la vue large/FPV.
-• Capteurs : VL53L0X (ToF) pour l'approche finale de précision (15-30cm).
-• Roadmap :
-  – Phase 1 (MVP) : Bras stable + Streaming.
-  – Phase 2 : Châssis grimpeur robuste.
-  – Moonshot : Navigation autonome dans l'appartement et manipulation d'objets (ex: canette frigo).
+=== Focus technique : BM-800 Mod (Pimped Alice) ===
+• Objectif : transformer un micro BM-800 en micro de meilleure qualité via un circuit discret Alice dérivé du Schoeps CMC5 et une capsule RK-47.
+• Architecture : JFET J305 ou 2SK117 pour la conversion d'impédance, résistances 2.4 kΩ pour la division de phase, transistors PNP A1015 pour piloter la ligne XLR, alimentation fantôme 48 V régulée par Zener 12 V.
+• Points critiques : section haute impédance, soudure en l'air de la gate du JFET et de la résistance 1 GΩ, nettoyage soigneux, calibration du biais autour de Vcc/4.
+• Dépannage typique : Zener ou condensateur inversé, saletés en haute impédance, masse XLR, mauvais biais ou JFET inversé.
+
+=== Focus technique : Rover Nova 6x6 & bras ===
+• Vision : rover grimpeur 6x6 / rocker-bogie avec bras manipulateur, expérimentation robotique, vision embarquée et contrôle distribué.
+• Architecture logique : Raspberry Pi Zero 2W pour réseau, streaming vidéo, logique de mission et serveur web Python ; ESP32 pour contrôle temps réel, PWM, servos, moteurs et sécurité.
+• Architecture puissance actuelle : pack Li-ion 4S 18650, BMS 4S 40A, régulation XL4015 réglée à 5.2 V pour la logique, distribution par connecteurs Wago 221, câblage 18 AWG pour les lignes de puissance et 24 AWG pour les signaux.
+• Actionneurs et mécanique : servos DS3225 pour les efforts principaux du bras, châssis rocker-bogie, bras type EEZYbotARM Mk2 avec améliorations mécaniques possibles.
+• Vision et capteurs : caméra embarquée pour manipulation, caméra de navigation/FPV, capteurs de distance type ToF pour l'approche finale.
+• Roadmap : MVP bras stable + streaming, châssis robuste, puis navigation semi-autonome et manipulation d'objets simples.

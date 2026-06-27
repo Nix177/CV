@@ -146,15 +146,15 @@ window.portfolioData = [
     i18n: {
       fr: {
         title: "Rover & Bras (Architecture Distribuée)",
-        description: "Rover 6x6 'Rocker-Bogie' (WildWilly) + Bras EEZYbotARM Mk2. Architecture 'Cerveau (Pi Zero 2W) + Muscles (ESP32)'. Drivers BTS7960 (3S Li-ion). Vision double (Eye-in-hand + Nav)."
+        description: "Rover Nova 6x6 'Rocker-Bogie' + bras EEZYbotARM Mk2. Architecture distribuée Pi Zero 2W + ESP32, alimentation 4S 18650 avec BMS 4S 40A, buck XL4015 5.2V, servos DS3225, Wago 221 et câblage 18/24 AWG."
       },
       en: {
         title: "Rover & Arm (Distributed Arch)",
-        description: "6x6 'Rocker-Bogie' Rover (WildWilly) + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' architecture. BTS7960 drivers (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
+        description: "Nova 6x6 'Rocker-Bogie' rover + EEZYbotARM Mk2 arm. Distributed Pi Zero 2W + ESP32 architecture, 4S 18650 power pack with 4S 40A BMS, XL4015 buck at 5.2V, DS3225 servos, Wago 221 connectors, and 18/24 AWG wiring."
       },
       de: {
         title: "Rover & Arm (Verteilte Architektur)",
-        description: "6x6 'Rocker-Bogie' Rover + EEZYbotARM Mk2. 'Brain (Pi Zero 2W) + Muscle (ESP32)' Architektur. BTS7960 Treiber (3S Li-ion). Dual Vision (Eye-in-hand + Nav)."
+        description: "Nova 6x6 'Rocker-Bogie' Rover + EEZYbotARM Mk2 Arm. Verteilte Architektur mit Pi Zero 2W + ESP32, 4S-18650-Akku mit 4S-40A-BMS, XL4015-Buck auf 5.2V, DS3225-Servos, Wago-221-Klemmen und 18/24-AWG-Verkabelung."
       }
     }
   },
