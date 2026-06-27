@@ -1,7 +1,7 @@
-// api/chat.js — Backend RAG + Streaming + Multi-Model
+// api/chat.js — Backend RAG + Multi-Model
 // - RAG : index local simple basé sur public/cv-text.txt et public/portfolio-data.js.
-// - Streaming : réponse OpenAI en flux texte direct.
-// - Multi-Model : modèles configurables via OPENAI_CHAT_MODEL et GEMINI_CHAT_MODEL.
+// - OpenAI : Responses API, modèle configurable via OPENAI_CHAT_MODEL.
+// - Gemini : modèle configurable via GEMINI_CHAT_MODEL.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -59,8 +59,45 @@ function logUpstreamError(provider, status, body) {
   });
 }
 
+function parseUpstreamErrorBody(body) {
+  try {
+    const parsed = JSON.parse(body || "{}");
+    const err = parsed.error || parsed;
+    return {
+      code: String(err.code || ""),
+      type: String(err.type || ""),
+      message: String(err.message || "")
+    };
+  } catch {
+    return { code: "", type: "", message: String(body || "") };
+  }
+}
+
+function isOpenAIModelError(info) {
+  const haystack = `${info.code} ${info.type} ${info.message}`.toLowerCase();
+  return /model_not_found|unsupported.*model|model.*unsupported|does not exist|not found|not available/.test(haystack);
+}
+
 function toUserErrorMessage(error) {
   if (error instanceof UpstreamError) {
+    const info = parseUpstreamErrorBody(error.body);
+
+    if (error.provider === "OpenAI") {
+      if (isOpenAIModelError(info)) {
+        return "Modèle OpenAI indisponible pour cette clé ou cet endpoint.";
+      }
+      if (error.status === 400) {
+        return "Requête OpenAI invalide : vérifier le modèle et l'endpoint API.";
+      }
+      if (error.status === 429) {
+        return "OpenAI a atteint une limite d'utilisation ou de quota (429). Réessayez plus tard, vérifiez le quota API, ou basculez vers Gemini si disponible.";
+      }
+    }
+
+    if (error.provider === "Google" && error.status === 429) {
+      return "Quota ou limite Gemini atteint ; essayer gemini-2.5-flash ou gemini-2.5-flash-lite.";
+    }
+
     if (error.status === 429) {
       return `${error.provider} a atteint une limite d'utilisation ou de quota (429). Réessayez plus tard, vérifiez le quota API, ou basculez vers l'autre fournisseur si disponible.`;
     }
@@ -126,9 +163,49 @@ function getPortfolioData() {
 
 // --- Providers ---
 
-async function streamOpenAI(res, messages, temp, model = getOpenAIChatModel()) {
+function buildOpenAIResponsesPayload(messages, model = getOpenAIChatModel()) {
+  const instructions = messages
+    .filter(m => m.role === "system" || m.role === "developer")
+    .map(m => m.content)
+    .join("\n\n")
+    .trim();
+
+  const input = messages
+    .filter(m => m.role !== "system" && m.role !== "developer")
+    .map(m => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: m.content
+    }));
+
+  return {
+    model,
+    ...(instructions ? { instructions } : {}),
+    input
+  };
+}
+
+function extractOpenAIResponseText(json) {
+  if (typeof json?.output_text === "string" && json.output_text.trim()) {
+    return json.output_text.trim();
+  }
+
+  const output = Array.isArray(json?.output) ? json.output : [];
+  const parts = [];
+
+  for (const item of output) {
+    const content = Array.isArray(item?.content) ? item.content : [];
+    for (const part of content) {
+      if (typeof part?.text === "string") parts.push(part.text);
+      if (typeof part?.output_text === "string") parts.push(part.output_text);
+    }
+  }
+
+  return parts.join("").trim();
+}
+
+async function generateOpenAIText(messages, model = getOpenAIChatModel()) {
   const openAIKey = envTrim("OPENAI_API_KEY");
-  const openAIUrl = "https://api.openai.com/v1/chat/completions";
+  const openAIUrl = "https://api.openai.com/v1/responses";
 
   if (!openAIKey) throw new Error("Missing OPENAI_API_KEY");
 
@@ -138,12 +215,7 @@ async function streamOpenAI(res, messages, temp, model = getOpenAIChatModel()) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${openAIKey}`
     },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature: temp,
-      stream: true
-    })
+    body: JSON.stringify(buildOpenAIResponsesPayload(messages, model))
   });
 
   if (!r.ok) {
@@ -152,31 +224,8 @@ async function streamOpenAI(res, messages, temp, model = getOpenAIChatModel()) {
     throw new UpstreamError("OpenAI", r.status, errBody);
   }
 
-  const reader = r.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop();
-
-    for (const line of lines) {
-      if (line.trim() === "data: [DONE]") continue;
-      if (!line.startsWith("data: ")) continue;
-
-      try {
-        const json = JSON.parse(line.slice(6));
-        const txt = json.choices?.[0]?.delta?.content || "";
-        if (txt) res.write(txt);
-      } catch (e) {
-        console.error("OpenAI stream JSON parse error", e.message);
-      }
-    }
-  }
+  const json = await r.json();
+  return extractOpenAIResponseText(json) || "OpenAI n'a pas renvoyé de texte exploitable.";
 }
 
 function buildGeminiPayload(messages, temp) {
@@ -267,7 +316,8 @@ async function writeGoogleResponse(res, messages, temp) {
 
 async function writeOpenAIResponseWithFallback(res, messages, temp) {
   try {
-    await streamOpenAI(res, messages, temp);
+    const txt = await generateOpenAIText(messages);
+    res.write(txt);
   } catch (e) {
     if (e instanceof UpstreamError && e.provider === "OpenAI" && e.status === 429 && envTrim("GOOGLE_API_KEY")) {
       res.write(`${toUserErrorMessage(e)}\nBascule automatique vers Gemini disponible, tentative en cours...\n\n`);
@@ -320,6 +370,9 @@ export {
   DEFAULT_GEMINI_CHAT_MODEL,
   UpstreamError,
   buildGeminiPayload,
+  buildOpenAIResponsesPayload,
+  extractOpenAIResponseText,
+  generateOpenAIText,
   getOpenAIChatModel,
   getGeminiChatModel,
   normalizeGeminiModel,
