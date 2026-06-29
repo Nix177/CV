@@ -11,6 +11,7 @@
 window.portfolioData = [
   {
     id: "karaoke-studio",
+    status: "stable",
     image: "/assets/portfolio/thumbs/karaoke-studio.png",
     tags: ["Web", "Audio", "Éducation", "Outil"],
     url: "https://nix177.github.io/karaoke-playback-generator/",
@@ -31,6 +32,7 @@ window.portfolioData = [
   },
   {
     id: "ia-news-ethique",
+    status: "demo",
     image: "/assets/portfolio/thumbs/ia-news-ethique.png",
     tags: ["React", "n8n", "IA", "Éducation"],
     url: "https://nix177.github.io/ia-news-ethique-ecole/",
@@ -51,6 +53,7 @@ window.portfolioData = [
   },
   {
     id: "documate",
+    status: "demo",
     image: "/assets/portfolio/thumbs/documate-thumb.webp",
     tags: ["Web", "Generator", "Docs"],
     i18n: {
@@ -73,6 +76,7 @@ window.portfolioData = [
   },
   {
     id: "petnames",
+    status: "demo",
     image: "/assets/portfolio/thumbs/petnames-thumb.webp",
     tags: ["JS", "Demo", "GitHub Pages"],
     i18n: {
@@ -96,6 +100,7 @@ window.portfolioData = [
 
   {
     id: "agora-multi",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/agora-multi.png",
     tags: ["EdTech", "Ethics", "Web", "Collaborative"],
     url: "https://nix177.github.io/agora-numerique/index.html",
@@ -116,6 +121,7 @@ window.portfolioData = [
   },
   {
     id: "agora-solo",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/agora-solo.png",
     tags: ["EdTech", "Ethics", "Mobile", "Interactive Fiction"],
     url: "https://nix177.github.io/mode-solo-rpg-ethics/action_rpg_mode/index.html",
@@ -137,6 +143,7 @@ window.portfolioData = [
 
   {
     id: "robotarm",
+    status: "experimental",
     image: "/assets/portfolio/thumbs/rover-blue.jpg",
     url: "https://www.printables.com/model/678307-esp32-cam-rover-with-robotic-arm",
     extraLinks: [
@@ -160,6 +167,7 @@ window.portfolioData = [
   },
   {
     id: "bm800",
+    status: "experimental",
     image: "/assets/portfolio/thumbs/bm800-kit.png",
     tags: [" Audio", "Electronics", "PCB"],
     url: "https://audioimprov.com/AudioImprov/Mics/Entries/2013/8/8_Mic-Parts_RK-47.html",
@@ -180,6 +188,7 @@ window.portfolioData = [
   },
   {
     id: "telescope",
+    status: "stable",
     image: "/assets/portfolio/thumbs/telescope-onstep-v2.png",
     tags: ["Hardware", "Astronomie", "DIY"],
     url: "https://www.thingiverse.com/thing:5531109",
@@ -200,6 +209,7 @@ window.portfolioData = [
   },
   {
     id: "3d-printing",
+    status: "demo",
     image: "/assets/portfolio/thumbs/3d-printed.jpg",
     tags: ["3D", "Blender", "Impression 3D", "ComfyUI"],
     extraImages: [
@@ -224,6 +234,7 @@ window.portfolioData = [
   },
   {
     id: "vocal-walls",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/vocal-walls-thumb.png",
     tags: ["Web", "Audio", "Géolocalisation", "GitHub Pages"],
     category: "maquette/idées",
@@ -245,6 +256,7 @@ window.portfolioData = [
   },
   {
     id: "common-ground",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/common-ground-thumb.png",
     tags: ["Web", "Collaboration", "GitHub Pages"],
     category: "maquette/idées",
@@ -266,6 +278,7 @@ window.portfolioData = [
   },
   {
     id: "micro-mentor",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/micro-mentor-thumb.png",
     tags: ["Web", "EdTech", "React", "GitHub Pages"],
     category: "maquette/idées",
@@ -287,6 +300,7 @@ window.portfolioData = [
   },
   {
     id: "frustra",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/frustra-thumb.png",
     tags: ["Web", "Startup", "React Native", "GitHub Pages"],
     category: "maquette/idées",
@@ -308,6 +322,7 @@ window.portfolioData = [
   },
   {
     id: "slow-social",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/slow-social-thumb.png",
     tags: ["Web", "Bien-être", "Social", "GitHub Pages"],
     category: "maquette/idées",
@@ -329,6 +344,7 @@ window.portfolioData = [
   },
   {
     id: "un-algorithm",
+    status: "prototype",
     image: "/assets/portfolio/thumbs/un-algorithm-thumb.png",
     tags: ["Web", "IA", "Bien-être", "GitHub Pages"],
     category: "maquette/idées",

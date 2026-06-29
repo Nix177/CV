@@ -12,16 +12,25 @@
   const T = ({
     fr: {
       preview: "Aperçu", visit: "Visiter", close: "Fermer",
+      filters: { all: "Tous", ready: "Stables & démos", experimental: "Prototypes expérimentaux" },
+      status: { stable: "Stable", demo: "Démo", prototype: "Prototype", experimental: "Expérimental", improve: "À améliorer" },
+      empty: "Aucun projet ne correspond à ce filtre.",
       blocked: "Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
       loading: "Chargement de l’aperçu…"
     },
     en: {
       preview: "Preview", visit: "Visit", close: "Close",
+      filters: { all: "All", ready: "Stable tools & demos", experimental: "Experimental prototypes" },
+      status: { stable: "Stable", demo: "Demo", prototype: "Prototype", experimental: "Experimental", improve: "To improve" },
+      empty: "No project matches this filter.",
       blocked: "This site denies being embedded. ➜ Use “Visit”.",
       loading: "Loading preview…"
     },
     de: {
       preview: "Vorschau", visit: "Besuchen", close: "Schließen",
+      filters: { all: "Alle", ready: "Stabile Tools & Demos", experimental: "Experimentelle Prototypen" },
+      status: { stable: "Stabil", demo: "Demo", prototype: "Prototyp", experimental: "Experimentell", improve: "Zu verbessern" },
+      empty: "Kein Projekt entspricht diesem Filter.",
       blocked: "Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen.",
       loading: "Vorschau wird geladen…"
     }
@@ -67,6 +76,24 @@
     };
   }
 
+  function getStatusKey(it) {
+    return String(it.status || "prototype").trim().toLowerCase();
+  }
+
+  function getStatusLabel(it) {
+    const key = getStatusKey(it);
+    return T.status?.[key] || key;
+  }
+
+  function isExperimentalProject(it) {
+    return ["prototype", "experimental", "improve"].includes(getStatusKey(it)) || it.category === "maquette/idées";
+  }
+
+  function filterPortfolio(items, filter) {
+    if (filter === "ready") return items.filter(it => ["stable", "demo"].includes(getStatusKey(it)));
+    if (filter === "experimental") return items.filter(isExperimentalProject);
+    return items;
+  }
   // -------- Overlay / Aperçu (UNIQUEMENT #pfOverlay) --------
   function toAbsoluteUrl(url) {
     try { return new URL(url, location.href).toString(); }
@@ -176,6 +203,7 @@
     const { title, description, url } = pickI18n(it);
     const img = it.image || it.thumbnail || null;
     const tags = Array.isArray(it.tags) ? it.tags : [];
+    const statusKey = getStatusKey(it);
     const extraImages = Array.isArray(it.extraImages) ? it.extraImages : [];
     const hasGallery = extraImages.length > 0;
     const hasUrl = url && url.length > 0;
@@ -214,7 +242,10 @@
     const right = el("div", {}, [
       el("h3", { class: "p-title", text: title }),
       description ? el("p", { class: "p-desc", text: description }) : null,
-      tags.length ? el("div", { class: "pf-tags" }, tags.map(t => el("span", { class: "badge", text: t }))) : null,
+      el("div", { class: "pf-tags" }, [
+        el("span", { class: `badge status-badge status-${statusKey}`, text: getStatusLabel(it) }),
+        ...tags.map(t => el("span", { class: "badge", text: t }))
+      ]),
       // Galerie d'images si présente
       galleryEl,
       // Actions (Aperçu/Visiter) seulement si pertinentes
@@ -249,20 +280,51 @@
     document.body.appendChild(modal);
   }
 
+  let activeFilter = "all";
+
+  function ensurePortfolioFilters(items) {
+    const grid = document.getElementById("portfolioGrid");
+    if (!grid || document.getElementById("portfolioFilters")) return;
+
+    const filters = ["all", "ready", "experimental"].filter(key => filterPortfolio(items, key).length > 0);
+    const bar = el("div", { id: "portfolioFilters", class: "portfolio-filters", "aria-label": "Portfolio filters" },
+      filters.map(key => el("button", {
+        type: "button",
+        class: "btn portfolio-filter" + (key === activeFilter ? " active" : ""),
+        "data-filter": key,
+        onClick: () => {
+          activeFilter = key;
+          document.querySelectorAll(".portfolio-filter").forEach(button => {
+            button.classList.toggle("active", button.getAttribute("data-filter") === key);
+          });
+          renderGrid(filterPortfolio(items, activeFilter));
+        }
+      }, T.filters?.[key] || key))
+    );
+
+    grid.parentNode.insertBefore(bar, grid);
+  }
+
   function renderGrid(items) {
     const grid = document.getElementById("portfolioGrid");
     if (!grid) return;
     grid.innerHTML = "";
     const frag = document.createDocumentFragment();
-    
+
+    if (!items.length) {
+      frag.appendChild(el("p", { class: "muted", style: "grid-column: 1 / -1", text: T.empty }));
+      grid.appendChild(frag);
+      return;
+    }
+
     let currentCategory = null;
 
     items.forEach(it => {
       if (it.category === "maquette/idées" && currentCategory !== "maquette/idées") {
         currentCategory = "maquette/idées";
-        const catTitle = el("h2", { 
+        const catTitle = el("h2", {
           style: "grid-column: 1 / -1; margin-top: 24px; margin-bottom: 8px; font-size: 24px; color: #e6f1ff; border-bottom: 1px solid #ffffff22; padding-bottom: 8px;",
-          text: htmlLang === "en" ? "💡 Mockups / Concepts" : htmlLang === "de" ? "💡 Entwürfe / Konzepte" : "💡 Maquettes / Idées"
+          text: htmlLang === "en" ? "Mockups / Concepts" : htmlLang === "de" ? "Entwürfe / Konzepte" : "Maquettes / Idées"
         });
         frag.appendChild(catTitle);
       }
@@ -270,10 +332,11 @@
     });
     grid.appendChild(frag);
   }
-
   // -------- Boot --------
   document.addEventListener("DOMContentLoaded", () => {
-    renderGrid(loadData());
+    const items = loadData();
+    ensurePortfolioFilters(items);
+    renderGrid(filterPortfolio(items, activeFilter));
 
     // Filet de sécurité : autres markups avec data-preview-url
     document.addEventListener("click", (e) => {
