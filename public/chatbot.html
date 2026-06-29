@@ -235,6 +235,44 @@
       display: none
     }
 
+
+    .chat-source-note {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: -2px 0 12px;
+    }
+
+    .suggestions {
+      margin: 8px 0 14px;
+    }
+
+    .suggestions h2 {
+      font-size: 1rem;
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .suggestion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px;
+    }
+
+    .suggestion {
+      text-align: left;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-bd);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 9px 10px;
+      cursor: pointer;
+      line-height: 1.25;
+    }
+
+    .suggestion:hover {
+      border-color: var(--accent);
+    }
     @media (max-width:720px) {
       #chatLog {
         height: 52vh
@@ -283,6 +321,8 @@
       Les questions sont uniquement traitées par l'IA, je ne collecte rien.
     </p>
 
+    <p class="chat-source-note">Réponses basées sur le CV et le portfolio du site.</p>
+
     <div class="controls">
       <fieldset id="liberty">
         <legend>Liberté</legend>
@@ -303,15 +343,15 @@
 
         <!-- Choix du Modèle -->
         <fieldset class="radio-group" id="provider"
-          style="margin-top:10px; display:flex; gap:15px; border:none; padding:0;">
-          <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">Modèle IA</legend>
+          style="margin-top:10px; display:flex; gap:12px; border:none; padding:0; flex-wrap:wrap;">
+          <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">Fournisseur IA</legend>
           <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
             <input type="radio" name="provider" value="openai" checked>
-            <span>OpenAI (gpt-5.5)</span>
+            <span data-model-label="openai">OpenAI (gpt-5.5)</span>
           </label>
           <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
             <input type="radio" name="provider" value="google">
-            <span>Google (Gemini)</span>
+            <span data-model-label="google">Google Gemini (si disponible)</span>
           </label>
         </fieldset>
       </fieldset>
@@ -321,6 +361,16 @@
         <input type="range" id="libertySlider" min="0" max="2" step="1" value="2">
       </div>
     </div>
+
+    <section class="suggestions" aria-label="Questions suggérées">
+      <h2>Questions suggérées</h2>
+      <div class="suggestion-grid">
+        <button type="button" class="suggestion" data-chat-question="Résumez le profil de Nicolas en 5 lignes.">Résumez le profil de Nicolas en 5 lignes.</button>
+        <button type="button" class="suggestion" data-chat-question="Quels sont ses points forts pour un poste EdTech ?">Quels sont ses points forts pour un poste EdTech ?</button>
+        <button type="button" class="suggestion" data-chat-question="Quelle est son expérience en éducation numérique ?">Quelle est son expérience en éducation numérique ?</button>
+        <button type="button" class="suggestion" data-chat-question="Quels projets montrent ses compétences techniques ?">Quels projets montrent ses compétences techniques ?</button>
+      </div>
+    </section>
 
     <section id="chatBox">
       <div id="chatLog" aria-live="polite"></div>

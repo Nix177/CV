@@ -9,7 +9,7 @@ import path from "node:path";
 export const config = { runtime: "nodejs" }; // Vercel: Force Node.js runtime for fs access
 
 const DEFAULT_OPENAI_CHAT_MODEL = "gpt-5.5";
-const DEFAULT_GEMINI_CHAT_MODEL = "gemini-2.5-pro";
+const DEFAULT_GEMINI_CHAT_MODEL = "gemini-2.5-flash";
 
 class UpstreamError extends Error {
   constructor(provider, status, body) {
@@ -35,6 +35,17 @@ function getGeminiChatModel() {
 
 function normalizeGeminiModel(model) {
   return String(model || "").trim().replace(/^models\//, "");
+}
+
+function getPublicChatMeta() {
+  return {
+    ok: true,
+    ping: "pong",
+    models: {
+      openai: getOpenAIChatModel(),
+      google: normalizeGeminiModel(getGeminiChatModel())
+    }
+  };
 }
 
 function sanitizeForLog(value) {
@@ -330,7 +341,11 @@ async function writeOpenAIResponseWithFallback(res, messages, temp) {
 
 // Handler Main
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(200).json({ ok: true, ping: "pong" });
+  if (req.method !== "POST") {
+    const url = new URL(req.url || "/api/chat", "http://localhost");
+    if (url.searchParams.get("meta") === "1") return res.status(200).json(getPublicChatMeta());
+    return res.status(200).json({ ok: true, ping: "pong" });
+  }
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
@@ -375,6 +390,7 @@ export {
   generateOpenAIText,
   getOpenAIChatModel,
   getGeminiChatModel,
+  getPublicChatMeta,
   normalizeGeminiModel,
   toUserErrorMessage
 };

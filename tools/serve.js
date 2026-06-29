@@ -23,6 +23,21 @@ const handlers = {
     '/api/lang-seed': lang
 };
 
+const rewrites = new Map([
+    ['/ai-lab', '/lab.html'],
+    ['/ai-lab.html', '/lab.html'],
+    ['/ai-lab-en', '/lab.html'],
+    ['/ai-lab-en.html', '/lab.html'],
+    ['/ai-lab-de', '/lab.html'],
+    ['/ai-lab-de.html', '/lab.html'],
+    ['/lab', '/lab.html'],
+    ['/portfolio', '/portfolio.html'],
+    ['/cv', '/cv.html'],
+    ['/chatbot', '/chatbot.html'],
+    ['/fun-facts', '/fun-facts.html'],
+    ['/passions', '/passions.html']
+]);
+
 function handleApi(req, res, handler) {
     let body = [];
     req.on('data', chunk => body.push(chunk));
@@ -63,7 +78,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     // Static
-    let file = path.join(process.cwd(), 'public', url.pathname === '/' ? 'index.html' : url.pathname);
+    const publicPath = rewrites.get(url.pathname) || (url.pathname === '/' ? '/index.html' : url.pathname);
+    let file = path.join(process.cwd(), 'public', publicPath);
 
     // Clean URL support (e.g. /chatbot -> /chatbot.html)
     if (!fs.existsSync(file) && !path.extname(file)) {

@@ -230,6 +230,44 @@
       display: none
     }
 
+
+    .chat-source-note {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: -2px 0 12px;
+    }
+
+    .suggestions {
+      margin: 8px 0 14px;
+    }
+
+    .suggestions h2 {
+      font-size: 1rem;
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .suggestion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px;
+    }
+
+    .suggestion {
+      text-align: left;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-bd);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 9px 10px;
+      cursor: pointer;
+      line-height: 1.25;
+    }
+
+    .suggestion:hover {
+      border-color: var(--accent);
+    }
     @media (max-width:720px) {
       #chatLog {
         height: 52vh
@@ -287,6 +325,8 @@
       <strong>2</strong> = interpretativ (Extrapolationen gekennzeichnet).
     </p>
 
+    <p class="chat-source-note">Antworten basieren auf dem Lebenslauf und dem Portfolio dieser Website.</p>
+
     <div class="controls">
       <fieldset id="liberty">
         <legend>Freiheit</legend>
@@ -305,23 +345,33 @@
           <small>Prägnant</small>
         </label>
 
-        <!-- KI-Modell Wahl -->
+        <!-- KI-Anbieter Wahl -->
         <fieldset class="radio-group" id="provider"
-          style="margin-top:10px; display:flex; gap:15px; border:none; padding:0;">
-          <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">KI-Modell</legend>
+          style="margin-top:10px; display:flex; gap:12px; border:none; padding:0; flex-wrap:wrap;">
+          <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">KI-Anbieter</legend>
           <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
             <input type="radio" name="provider" value="openai" checked>
-            <span>OpenAI (gpt-5.5)</span>
+            <span data-model-label="openai">OpenAI (gpt-5.5)</span>
           </label>
           <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
             <input type="radio" name="provider" value="google">
-            <span>Google (Gemini)</span>
+            <span data-model-label="google">Google Gemini (falls verfügbar)</span>
           </label>
         </fieldset>
       </fieldset>
 
       <div class="legacy"><input type="range" id="libertySlider" min="0" max="2" step="1" value="2"></div>
     </div>
+
+    <section class="suggestions" aria-label="Vorgeschlagene Fragen">
+      <h2>Vorgeschlagene Fragen</h2>
+      <div class="suggestion-grid">
+        <button type="button" class="suggestion" data-chat-question="Fassen Sie Nicolas' Profil in fünf Zeilen zusammen.">Fassen Sie Nicolas' Profil in fünf Zeilen zusammen.</button>
+        <button type="button" class="suggestion" data-chat-question="Welche Stärken bringt er für eine EdTech-Rolle mit?">Welche Stärken bringt er für eine EdTech-Rolle mit?</button>
+        <button type="button" class="suggestion" data-chat-question="Welche Erfahrung hat er in der digitalen Bildung?">Welche Erfahrung hat er in der digitalen Bildung?</button>
+        <button type="button" class="suggestion" data-chat-question="Welche Projekte zeigen seine technischen Kompetenzen?">Welche Projekte zeigen seine technischen Kompetenzen?</button>
+      </div>
+    </section>
 
     <section id="chatBox">
       <div id="chatLog" aria-live="polite"></div>
@@ -336,7 +386,7 @@
   <script>
     (function () {
       const root = document.documentElement, key = "site-theme", btn = document.getElementById("themeToggle");
-      function apply(t) { if (t === "light") { root.setAttribute("data-theme", "light"); btn.textContent = "🌙 Nachtmodus"; } else { root.removeAttribute("data-theme"); btn.textContent = "☀️ Helles Thema"; } }
+      function apply(t) { if (t === "light") { root.setAttribute("data-theme", "light"); if (btn) btn.textContent = "🌙 Nachtmodus"; } else { root.removeAttribute("data-theme"); if (btn) btn.textContent = "☀️ Helles Thema"; } }
       apply(localStorage.getItem(key) || "dark");
       btn?.addEventListener("click", () => { const next = root.getAttribute("data-theme") === "light" ? "dark" : "light"; localStorage.setItem(key, next); apply(next); });
     })();

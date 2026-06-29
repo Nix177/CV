@@ -230,6 +230,44 @@
       display: none
     }
 
+
+    .chat-source-note {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: -2px 0 12px;
+    }
+
+    .suggestions {
+      margin: 8px 0 14px;
+    }
+
+    .suggestions h2 {
+      font-size: 1rem;
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .suggestion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px;
+    }
+
+    .suggestion {
+      text-align: left;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-bd);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 9px 10px;
+      cursor: pointer;
+      line-height: 1.25;
+    }
+
+    .suggestion:hover {
+      border-color: var(--accent);
+    }
     @media (max-width:720px) {
       #chatLog {
         height: 52vh
@@ -286,6 +324,8 @@
       <strong>2</strong> = interpretative (extrapolations flagged).
     </p>
 
+    <p class="chat-source-note">Answers are based on the CV and portfolio published on this site.</p>
+
     <div class="controls">
       <fieldset id="liberty">
         <legend>Freedom</legend>
@@ -305,22 +345,32 @@
         </label>
       </fieldset>
 
-      <!-- AI Model Choice -->
+      <!-- AI provider Choice -->
       <fieldset class="radio-group" id="provider"
-        style="margin-top:10px; display:flex; gap:15px; border:none; padding:0;">
-        <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">AI Model</legend>
+        style="margin-top:10px; display:flex; gap:12px; border:none; padding:0; flex-wrap:wrap;">
+        <legend style="font-size:0.8em; opacity:0.7; margin-bottom:4px">AI provider</legend>
         <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
           <input type="radio" name="provider" value="openai" checked>
-          <span>OpenAI (gpt-5.5)</span>
+          <span data-model-label="openai">OpenAI (gpt-5.5)</span>
         </label>
         <label style="cursor:pointer; display:flex; align-items:center; gap:5px">
           <input type="radio" name="provider" value="google">
-          <span>Google (Gemini)</span>
+          <span data-model-label="google">Google Gemini (if available)</span>
         </label>
       </fieldset>
 
       <div class="legacy"><input type="range" id="libertySlider" min="0" max="2" step="1" value="2"></div>
     </div>
+
+    <section class="suggestions" aria-label="Suggested questions">
+      <h2>Suggested questions</h2>
+      <div class="suggestion-grid">
+        <button type="button" class="suggestion" data-chat-question="Summarize Nicolas's profile in five lines.">Summarize Nicolas's profile in five lines.</button>
+        <button type="button" class="suggestion" data-chat-question="What are his strengths for an EdTech role?">What are his strengths for an EdTech role?</button>
+        <button type="button" class="suggestion" data-chat-question="What is his experience in digital education?">What is his experience in digital education?</button>
+        <button type="button" class="suggestion" data-chat-question="Which projects show his technical skills?">Which projects show his technical skills?</button>
+      </div>
+    </section>
 
     <section id="chatBox">
       <div id="chatLog" aria-live="polite"></div>
@@ -335,7 +385,7 @@
   <script>
     (function () {
       const root = document.documentElement, key = "site-theme", btn = document.getElementById("themeToggle");
-      function apply(t) { if (t === "light") { root.setAttribute("data-theme", "light"); btn.textContent = "🌙 Dark mode"; } else { root.removeAttribute("data-theme"); btn.textContent = "☀️ Light mode"; } }
+      function apply(t) { if (t === "light") { root.setAttribute("data-theme", "light"); if (btn) btn.textContent = "🌙 Dark mode"; } else { root.removeAttribute("data-theme"); if (btn) btn.textContent = "☀️ Light mode"; } }
       apply(localStorage.getItem(key) || "dark");
       btn?.addEventListener("click", () => { const next = root.getAttribute("data-theme") === "light" ? "dark" : "light"; localStorage.setItem(key, next); apply(next); });
     })();

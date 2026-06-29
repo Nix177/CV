@@ -44,7 +44,7 @@
   }
 
   // Envoi avec Streaming
-  async function send() {
+  async function send(questionOverride = "") {
     const input = $("#chatInput");
     const sendBt = $("#chatSend");
     const range = $("#liberty input:checked"); // Corrected selector for radio
@@ -52,7 +52,7 @@
     const providerEl = $("input[name='provider']:checked"); // Nouveau: sélecteur de modèle
     const lang = detectLang();
 
-    const q = (input?.value || "").trim();
+    const q = (questionOverride || input?.value || "").trim();
     if (!q) return;
 
     if (input) input.value = "";
@@ -109,18 +109,46 @@
     }
   }
 
+  async function updateProviderLabels() {
+    const openaiLabel = document.querySelector("[data-model-label='openai']");
+    const googleLabel = document.querySelector("[data-model-label='google']");
+    if (!openaiLabel && !googleLabel) return;
+
+    try {
+      const r = await fetch("/api/chat?meta=1", { headers: { accept: "application/json" } });
+      if (!r.ok) return;
+      const meta = await r.json();
+      const openaiModel = String(meta?.models?.openai || "").trim();
+      const googleModel = String(meta?.models?.google || "").trim();
+      if (openaiLabel && openaiModel) openaiLabel.textContent = `OpenAI (${openaiModel})`;
+      if (googleLabel && googleModel) googleLabel.textContent = `Google Gemini (${googleModel})`;
+    } catch {
+      // Static pages and local previews can run without the serverless API.
+    }
+  }
+
   function init() {
     const lang = detectLang();
     const input = $("#chatInput");
     const sendBt = $("#chatSend");
 
     // Message d’accueil
+    updateProviderLabels();
+
     addBubble(I18N[lang].hello, "bot");
 
     input?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
     });
-    sendBt?.addEventListener("click", send);
+    sendBt?.addEventListener("click", () => send());
+
+    document.querySelectorAll("[data-chat-question]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const question = (button.getAttribute("data-chat-question") || button.textContent || "").trim();
+        if (input) input.value = question;
+        send(question);
+      });
+    });
   }
 
   init();
