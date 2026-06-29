@@ -116,6 +116,57 @@
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
       flex: 0 0 32px;
     }
+    .brand-text { min-width: 0; }
+    .quick-profile {
+      position: relative;
+      margin-left: .35rem;
+      font-family: sans-serif;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+    .quick-profile summary {
+      list-style: none;
+      cursor: pointer;
+      border: 1px solid rgba(255, 183, 3, .55);
+      border-radius: 10px;
+      padding: .4rem .62rem;
+      color: #ffecb3;
+      background: rgba(93, 64, 55, .72);
+      white-space: nowrap;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .quick-profile summary::-webkit-details-marker { display: none; }
+    .quick-profile summary::after { content: " +"; color: #ffb703; }
+    .quick-profile[open] summary::after { content: " -"; }
+    .quick-profile-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      width: min(420px, 82vw);
+      padding: 12px;
+      background: rgba(26, 18, 11, .98);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 12;
+    }
+    .quick-profile-panel p {
+      margin: 0 0 .55rem;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+    .quick-profile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .quick-profile-actions .btn {
+      font-size: 13px;
+      padding: .42rem .62rem;
+    }
 
     /* Boutons style Steampunk */
     .btn,
@@ -345,6 +396,19 @@
     }
 
     @media (max-width: 880px) {
+      header:not(#nt-global-nav) { align-items: flex-start; }
+      .brand { flex-wrap: wrap; max-width: 100%; }
+      .quick-profile {
+        order: -1;
+        flex: 1 0 100%;
+        margin: 0 0 .45rem 0;
+      }
+      .quick-profile summary { width: max-content; max-width: 100%; }
+      .quick-profile-panel {
+        left: 0;
+        right: auto;
+        width: min(100%, 340px);
+      }
       main {
         grid-template-columns: 1fr;
         padding-right: 12px;
@@ -392,8 +456,19 @@
 
     <div class="brand">
       <div class="logo" aria-hidden="true">N·T</div>
-      <div>Nicolas Tuor — <span style="color:var(--muted)">education, science & technology - created in collaboration
-          with LLM/AI agents; work in progress</span></div>
+      <div class="brand-text">Nicolas Tuor — <span style="color:var(--muted)">education, science & technology - created in collaboration with LLM/AI agents</span></div>
+      <details class="quick-profile">
+        <summary>In 30 seconds</summary>
+        <div class="quick-profile-panel">
+          <p>Primary teacher with a Master’s in computer science didactics, I design resources, training formats and prototypes for digital education.</p>
+          <p>A profile combining classroom practice, didactics research, responsible AI and lightweight web prototyping.</p>
+          <div class="quick-profile-actions">
+            <a class="btn" href="/cv-en.html">CV</a>
+            <a class="btn" href="/portfolio-en.html">Projects</a>
+            <a class="btn" href="mailto:nicolas.tuor@bluewin.ch">Contact</a>
+          </div>
+        </div>
+      </details>
     </div>
   </header>
 
@@ -761,7 +836,6 @@
     }
     init();
   </script>
-  <script src="/assets/js/site.js" defer></script>
 </body>
 
 </html>
