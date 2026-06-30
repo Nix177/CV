@@ -11,7 +11,7 @@
   const I18N = {
     fr: {
       langName: "Français",
-      eyebrow: "Prototype local - vrai modèle 3D du site",
+      eyebrow: "Prototype du site - vrai modèle 3D",
       title: "Écrire avec les os - Fil & alphabet",
       intro: "Un os percé peut cacher un message. Tourne l'astragale, suis le fil et retrouve le mot secret.",
       badges: ["Prototype pédagogique", "Histoire antique", "3D interactive", "À améliorer / en stabilisation"],
@@ -62,7 +62,7 @@
     },
     en: {
       langName: "English",
-      eyebrow: "Local prototype - real 3D model from the site",
+      eyebrow: "Site prototype - real 3D model",
       title: "Write with the bones - Thread & alphabet",
       intro: "A pierced bone can hide a message. Rotate the astragalus, follow the thread, and recover the secret word.",
       badges: ["Educational prototype", "Ancient history", "Interactive 3D", "Needs improvement / stabilizing"],
@@ -113,7 +113,7 @@
     },
     de: {
       langName: "Deutsch",
-      eyebrow: "Lokaler Prototyp - echtes 3D-Modell der Website",
+      eyebrow: "Website-Prototyp - echtes 3D-Modell",
       title: "Mit den Knochen schreiben - Faden & Alphabet",
       intro: "Ein durchbohrter Knochen kann eine Botschaft verbergen. Drehe den Astragalus, folge dem Faden und finde das geheime Wort.",
       badges: ["Pädagogischer Prototyp", "Antike Geschichte", "Interaktive 3D", "Zu verbessern / in Stabilisierung"],
