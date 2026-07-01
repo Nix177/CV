@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T09:51:16.849Z",
+  "generatedAt": "2026-07-01T09:59:57.848Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,139 @@
     }
   },
   "items": [
+    {
+      "title": "Regulation competencies and social well-being in at-risk adolescents: a systematic review of behavioral and neurophysiological research",
+      "url": "https://www.nature.com/articles/s41539-026-00435-5",
+      "source": "npj Science of Learning (Nature)",
+      "published": "2026-07-01T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
+    },
+    {
+      "title": "Adapting Generalist Robot Policies with Semantic Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2606.31958v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-30T17:00:33.000Z",
+      "score": 50,
+      "summary_en": "Generalist robot policies learn a diverse repertoire of behaviors from large-scale pretraining. In principle, this makes them excellent priors for downstream adaptation via reinforcement learning (RL). In practice, however, standard RL methods leveraging this prior optimize directly over robot actions, requiring the base policy's action distribution to be close to that of a performant policy from the start. This assumption breaks down for complex or long-horizon tasks that fall outside the pretraining distribution. Our key insight is that, for sufficiently expressive generalist policies, langu",
+      "summary_fr": "Generalist robot policies learn a diverse repertoire of behaviors from large-scale pretraining. In principle, this makes them excellent priors for downstream adaptation via reinforcement learning (RL). In practice, however, standard RL methods leveraging this prior optimize directly over robot actions, requiring the base policy's action distribution to be close to that of a performant policy from the start. This assumption breaks down for complex or long-horizon tasks that fall outside the pretraining distribution. Our key insight is that, for sufficiently expressive generalist policies, langu",
+      "resume_fr": "Generalist robot policies learn a diverse repertoire of behaviors from large-scale pretraining. In principle, this makes them excellent priors for downstream adaptation via reinforcement learning (RL). In practice, however, standard RL methods leveraging this prior optimize directly over robot actions, requiring the base policy's action distribution to be close to that of a performant policy from the start. This assumption breaks down for complex or long-horizon tasks that fall outside the pretraining distribution. Our key insight is that, for sufficiently expressive generalist policies, langu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "RRT-Rope: A deterministic shortening approach for fast near-optimal path planning in large-scale uncluttered 3D environments",
+      "url": "https://arxiv.org/abs/2606.31948v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-06-30T16:54:00.000Z",
+      "score": 50,
+      "summary_en": "Many path planning algorithms have been introduced so far, but most are costly, in path cost and in processing time, in large-scale uncluttered 3D environments such as underground mining stopes explored by an unmanned aerial vehicle (UAV). Rapidly-exploring Random Tree (RRT) algorithms are popular because of their probabilistic completeness and rapidity in finding a feasible path in single-query problems. Many of the algorithms (e.g. Informed RRT*, RRT#) developed to improve RRT need considerable time to converge in large environments. Shortcutting an RRT is an old idea that has been proven to",
+      "summary_fr": "Many path planning algorithms have been introduced so far, but most are costly, in path cost and in processing time, in large-scale uncluttered 3D environments such as underground mining stopes explored by an unmanned aerial vehicle (UAV). Rapidly-exploring Random Tree (RRT) algorithms are popular because of their probabilistic completeness and rapidity in finding a feasible path in single-query problems. Many of the algorithms (e.g. Informed RRT*, RRT#) developed to improve RRT need considerable time to converge in large environments. Shortcutting an RRT is an old idea that has been proven to",
+      "resume_fr": "Many path planning algorithms have been introduced so far, but most are costly, in path cost and in processing time, in large-scale uncluttered 3D environments such as underground mining stopes explored by an unmanned aerial vehicle (UAV). Rapidly-exploring Random Tree (RRT) algorithms are popular because of their probabilistic completeness and rapidity in finding a feasible path in single-query problems. Many of the algorithms (e.g. Informed RRT*, RRT#) developed to improve RRT need considerable time to converge in large environments. Shortcutting an RRT is an old idea that has been proven to",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PPT-Eval: A Benchmark for Computer-Use Agents on PowerPoint Tasks",
+      "url": "https://arxiv.org/abs/2606.31154v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-06-30T05:26:51.000Z",
+      "score": 50,
+      "summary_en": "Creating and editing slides is a rich, multimodal activity that is ubiquitous in professional and educational settings, making it an ideal testbed for real-world computer-use agents. Microsoft PowerPoint is among the most widely adopted and feature-rich environments for presentation creation. We introduce PPT-Eval, a benchmark of 120 PowerPoint tasks across 12 files that cover both content creation and presentation editing scenarios, organized by difficulty. A central challenge in this domain is evaluation: tasks are complex, multimodal, and often admit many valid solutions. Moreover, today's ",
+      "summary_fr": "Creating and editing slides is a rich, multimodal activity that is ubiquitous in professional and educational settings, making it an ideal testbed for real-world computer-use agents. Microsoft PowerPoint is among the most widely adopted and feature-rich environments for presentation creation. We introduce PPT-Eval, a benchmark of 120 PowerPoint tasks across 12 files that cover both content creation and presentation editing scenarios, organized by difficulty. A central challenge in this domain is evaluation: tasks are complex, multimodal, and often admit many valid solutions. Moreover, today's ",
+      "resume_fr": "Creating and editing slides is a rich, multimodal activity that is ubiquitous in professional and educational settings, making it an ideal testbed for real-world computer-use agents. Microsoft PowerPoint is among the most widely adopted and feature-rich environments for presentation creation. We introduce PPT-Eval, a benchmark of 120 PowerPoint tasks across 12 files that cover both content creation and presentation editing scenarios, organized by difficulty. A central challenge in this domain is evaluation: tasks are complex, multimodal, and often admit many valid solutions. Moreover, today's ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Evaluating Interactivity: Toward Automated Assessment of AI-Generated Explorable Explanations",
+      "url": "https://arxiv.org/abs/2606.31012v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-06-30T00:57:50.000Z",
+      "score": 85,
+      "summary_en": "While large language models now enable rapid generation of interactive learning materials, evaluating the interaction quality of these explorable explanations remains an open challenge. Existing benchmarks largely focus on code executability or visual fidelity, providing limited insight into dynamic interaction behaviors such as learner-controlled state transitions and context-sensitive system responses, which are factors that critically shape learners' conceptual understanding. We present EE-Eval, an automated evaluation framework that formalizes interactivity as a finite space of learner-con",
+      "summary_fr": "While large language models now enable rapid generation of interactive learning materials, evaluating the interaction quality of these explorable explanations remains an open challenge. Existing benchmarks largely focus on code executability or visual fidelity, providing limited insight into dynamic interaction behaviors such as learner-controlled state transitions and context-sensitive system responses, which are factors that critically shape learners' conceptual understanding. We present EE-Eval, an automated evaluation framework that formalizes interactivity as a finite space of learner-con",
+      "resume_fr": "While large language models now enable rapid generation of interactive learning materials, evaluating the interaction quality of these explorable explanations remains an open challenge. Existing benchmarks largely focus on code executability or visual fidelity, providing limited insight into dynamic interaction behaviors such as learner-controlled state transitions and context-sensitive system responses, which are factors that critically shape learners' conceptual understanding. We present EE-Eval, an automated evaluation framework that formalizes interactivity as a finite space of learner-con",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Pathways to learning: exploring high school students’ learning of AI-powered educational robotics",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10651-w",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-06-30T00:00:00.000Z",
+      "score": 50,
+      "summary_en": "As Artificial Intelligence (AI) becomes more embedded in daily life, it is also reshaping educational tools, including robotics in K-12 settings. AI-powered robots offer new opportunities in educational robotics by enabling capabilities such as perceiving their surroundings, understanding movement patterns, recognizing images, and responding to user input. While prior research highlights the positive impact of educational robots on learners’ computer science attitudes and skills, less is known about how students develop their understanding of robotics itself. Drawing on constructionist theorie",
+      "summary_fr": "As Artificial Intelligence (AI) becomes more embedded in daily life, it is also reshaping educational tools, including robotics in K-12 settings. AI-powered robots offer new opportunities in educational robotics by enabling capabilities such as perceiving their surroundings, understanding movement patterns, recognizing images, and responding to user input. While prior research highlights the positive impact of educational robots on learners’ computer science attitudes and skills, less is known about how students develop their understanding of robotics itself. Drawing on constructionist theorie",
+      "resume_fr": "As Artificial Intelligence (AI) becomes more embedded in daily life, it is also reshaping educational tools, including robotics in K-12 settings. AI-powered robots offer new opportunities in educational robotics by enabling capabilities such as perceiving their surroundings, understanding movement patterns, recognizing images, and responding to user input. While prior research highlights the positive impact of educational robots on learners’ computer science attitudes and skills, less is known about how students develop their understanding of robotics itself. Drawing on constructionist theorie",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10651-w/MediaObjects/11423_2026_10651_Fig1_HTML.png"
+    },
+    {
+      "title": "Enhancing programming learning with the peer-adaptive-clustering learning approach in virtual learning environments",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10645-8",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-06-30T00:00:00.000Z",
+      "score": 50,
+      "summary_en": "The acquisition of programming skills is instrumental in the development of computational thinking while also fostering abilities like collaboration and creativity. Collaborative learning has been examined as one possible approach to support student engagement and learning in programming education. However, to fully realize its potential, effective implementation of collaborative learning relies on appropriate grouping strategies to enhance learning achievement. Among these strategies, differentiated grouping based on learner characteristics is considered a key method for promoting more effect",
+      "summary_fr": "The acquisition of programming skills is instrumental in the development of computational thinking while also fostering abilities like collaboration and creativity. Collaborative learning has been examined as one possible approach to support student engagement and learning in programming education. However, to fully realize its potential, effective implementation of collaborative learning relies on appropriate grouping strategies to enhance learning achievement. Among these strategies, differentiated grouping based on learner characteristics is considered a key method for promoting more effect",
+      "resume_fr": "The acquisition of programming skills is instrumental in the development of computational thinking while also fostering abilities like collaboration and creativity. Collaborative learning has been examined as one possible approach to support student engagement and learning in programming education. However, to fully realize its potential, effective implementation of collaborative learning relies on appropriate grouping strategies to enhance learning achievement. Among these strategies, differentiated grouping based on learner characteristics is considered a key method for promoting more effect",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10645-8/MediaObjects/11423_2026_10645_Fig1_HTML.png"
+    },
     {
       "title": "VLK: Learning Humanoid Loco-Manipulation from Synthetic Interactions in Reconstructed Scenes",
       "url": "https://arxiv.org/abs/2606.30645v1",
@@ -1092,139 +1225,6 @@
       "summary_en": "Robust robotic manipulation in the real world requires not only an understanding of the current observation, but also memory and dynamics modeling. World action models (WAMs) possess these capabilities by jointly modeling visual foresight and actions conditioned on both current and historical observations, making them a promising paradigm for robotic manipulation. However, existing WAMs face a fundamental trade-off: methods with efficient inference typically condition only on a bounded window of recent observations and therefore struggle in non-Markovian environments, whereas methods that pres",
       "summary_fr": "Robust robotic manipulation in the real world requires not only an understanding of the current observation, but also memory and dynamics modeling. World action models (WAMs) possess these capabilities by jointly modeling visual foresight and actions conditioned on both current and historical observations, making them a promising paradigm for robotic manipulation. However, existing WAMs face a fundamental trade-off: methods with efficient inference typically condition only on a bounded window of recent observations and therefore struggle in non-Markovian environments, whereas methods that pres",
       "resume_fr": "Robust robotic manipulation in the real world requires not only an understanding of the current observation, but also memory and dynamics modeling. World action models (WAMs) possess these capabilities by jointly modeling visual foresight and actions conditioned on both current and historical observations, making them a promising paradigm for robotic manipulation. However, existing WAMs face a fundamental trade-off: methods with efficient inference typically condition only on a bounded window of recent observations and therefore struggle in non-Markovian environments, whereas methods that pres",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "LedgerAgent: Structured State for Policy-Adherent Tool-Calling Agents",
-      "url": "https://arxiv.org/abs/2606.20529v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-06-18T17:41:56.000Z",
-      "score": 70,
-      "summary_en": "Policy-adherent tool-calling agents in customer-service domains must maintain task states across turns while calling tools and obeying domain policies. Task states consist of relevant facts, identifiers, constraints, and conditions observed through user interaction and tool calls. In standard agents, task states are not represented separately. Observations, tool returns, and policy instructions are placed in the prompt, leaving agents to reconstruct the relevant states from the prompt each time they decide what to do next. This design makes state management implicit, creating two common failur",
-      "summary_fr": "Policy-adherent tool-calling agents in customer-service domains must maintain task states across turns while calling tools and obeying domain policies. Task states consist of relevant facts, identifiers, constraints, and conditions observed through user interaction and tool calls. In standard agents, task states are not represented separately. Observations, tool returns, and policy instructions are placed in the prompt, leaving agents to reconstruct the relevant states from the prompt each time they decide what to do next. This design makes state management implicit, creating two common failur",
-      "resume_fr": "Policy-adherent tool-calling agents in customer-service domains must maintain task states across turns while calling tools and obeying domain policies. Task states consist of relevant facts, identifiers, constraints, and conditions observed through user interaction and tool calls. In standard agents, task states are not represented separately. Observations, tool returns, and policy instructions are placed in the prompt, leaving agents to reconstruct the relevant states from the prompt each time they decide what to do next. This design makes state management implicit, creating two common failur",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Evaluating Students' Learning Experiences in Blended Learning Environment Integrated With Interactive GeoGebra Applets: A Self‐Determination Theory Perspective",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70283?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-06-18T17:36:13.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Fast Human Attention Prediction for Fixation-guided Active Perception in Autonomous Navigation",
-      "url": "https://arxiv.org/abs/2606.20491v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-06-18T17:08:06.000Z",
-      "score": 70,
-      "summary_en": "Human visual attention relies on structured scanpaths to efficiently process scenes, yet instilling this behavior into robot autonomy is in its infancy and hindered by the high,computational costs of existing predictive models. To address this, we introduce GazeLNN, a computationally lightweight,scanpath prediction model that leverages Liquid Neural Networks as its recurrent engine and employs MobileNetV3 for feature extraction. Operating auto-regressively, the architecture predicts sequential fixation heatmaps conditioned on the current visual stimulus and fixation history. Despite requiring ",
-      "summary_fr": "Human visual attention relies on structured scanpaths to efficiently process scenes, yet instilling this behavior into robot autonomy is in its infancy and hindered by the high,computational costs of existing predictive models. To address this, we introduce GazeLNN, a computationally lightweight,scanpath prediction model that leverages Liquid Neural Networks as its recurrent engine and employs MobileNetV3 for feature extraction. Operating auto-regressively, the architecture predicts sequential fixation heatmaps conditioned on the current visual stimulus and fixation history. Despite requiring ",
-      "resume_fr": "Human visual attention relies on structured scanpaths to efficiently process scenes, yet instilling this behavior into robot autonomy is in its infancy and hindered by the high,computational costs of existing predictive models. To address this, we introduce GazeLNN, a computationally lightweight,scanpath prediction model that leverages Liquid Neural Networks as its recurrent engine and employs MobileNetV3 for feature extraction. Operating auto-regressively, the architecture predicts sequential fixation heatmaps conditioned on the current visual stimulus and fixation history. Despite requiring ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Interplay of Teacher Agency and TPACK in AI‐Integrated Science Education: Insights From Exemplary Practice Cases",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70281?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-06-18T02:02:16.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "A practical implementation science framework for education",
-      "url": "https://www.nature.com/articles/s41539-026-00430-w",
-      "source": "npj Science of Learning (Nature)",
-      "published": "2026-06-18T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=www.nature.com&sz=128"
-    },
-    {
-      "title": "Native Active Perception as Reasoning for Omni-Modal Understanding",
-      "url": "https://arxiv.org/abs/2606.19341v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-06-17T17:59:56.000Z",
-      "score": 70,
-      "summary_en": "Passive models for long video understanding typically rely on a \"watch-it-all\" paradigm, processing frames uniformly regardless of query difficulty, causing computational cost to grow with video duration. Although interactive frameworks have emerged, they often rely on global pre-scanning, and their context cost still scales with video length. We propose OmniAgent, the first native omni-modal agent that formulates video understanding as a POMDP-based iterative Observation-Thought-Action cycle. OmniAgent executes on-demand actions to selectively distill audio-visual cues into a persistent textu",
-      "summary_fr": "Passive models for long video understanding typically rely on a \"watch-it-all\" paradigm, processing frames uniformly regardless of query difficulty, causing computational cost to grow with video duration. Although interactive frameworks have emerged, they often rely on global pre-scanning, and their context cost still scales with video length. We propose OmniAgent, the first native omni-modal agent that formulates video understanding as a POMDP-based iterative Observation-Thought-Action cycle. OmniAgent executes on-demand actions to selectively distill audio-visual cues into a persistent textu",
-      "resume_fr": "Passive models for long video understanding typically rely on a \"watch-it-all\" paradigm, processing frames uniformly regardless of query difficulty, causing computational cost to grow with video duration. Although interactive frameworks have emerged, they often rely on global pre-scanning, and their context cost still scales with video length. We propose OmniAgent, the first native omni-modal agent that formulates video understanding as a POMDP-based iterative Observation-Thought-Action cycle. OmniAgent executes on-demand actions to selectively distill audio-visual cues into a persistent textu",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Freeing the Law with LOCUS: A Local Ordinance Corpus for the United States",
-      "url": "https://arxiv.org/abs/2606.19334v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-06-17T17:58:22.000Z",
-      "score": 70,
-      "summary_en": "Progress in legal AI increasingly depends on access to authoritative legal text at scale. Yet one of the most consequential layers of American law remains largely absent from existing machine-readable corpora: local ordinances. Local codes govern zoning, housing, business licensing, public health, noise, animal control, and many other domains of everyday regulation, but they are fragmented across vendor platforms designed for human browsing rather than bulk research access. We introduce LOCUS - the Local Ordinance Corpus for the United States - a comprehensive corpus and county-harmonized acce",
-      "summary_fr": "Progress in legal AI increasingly depends on access to authoritative legal text at scale. Yet one of the most consequential layers of American law remains largely absent from existing machine-readable corpora: local ordinances. Local codes govern zoning, housing, business licensing, public health, noise, animal control, and many other domains of everyday regulation, but they are fragmented across vendor platforms designed for human browsing rather than bulk research access. We introduce LOCUS - the Local Ordinance Corpus for the United States - a comprehensive corpus and county-harmonized acce",
-      "resume_fr": "Progress in legal AI increasingly depends on access to authoritative legal text at scale. Yet one of the most consequential layers of American law remains largely absent from existing machine-readable corpora: local ordinances. Local codes govern zoning, housing, business licensing, public health, noise, animal control, and many other domains of everyday regulation, but they are fragmented across vendor platforms designed for human browsing rather than bulk research access. We introduce LOCUS - the Local Ordinance Corpus for the United States - a comprehensive corpus and county-harmonized acce",
       "tags": [],
       "breakdown": {
         "research": 35,
