@@ -27,8 +27,6 @@
       levelTitle: "Progression",
       level: "Niveau",
       helperTitle: "Aides optionnelles",
-      showA: "Afficher A",
-      showLetters: "Afficher les lettres",
       xray: "Mode rayon X",
       wordHint: "Indice sur le mot",
       score: "Score",
@@ -78,8 +76,6 @@
       levelTitle: "Progression",
       level: "Level",
       helperTitle: "Optional aids",
-      showA: "Show A",
-      showLetters: "Show letters",
       xray: "X-ray mode",
       wordHint: "Word hint",
       score: "Score",
@@ -129,8 +125,6 @@
       levelTitle: "Progression",
       level: "Niveau",
       helperTitle: "Optionale Hilfen",
-      showA: "A anzeigen",
-      showLetters: "Buchstaben anzeigen",
       xray: "Röntgenmodus",
       wordHint: "Worthinweis",
       score: "Punkte",
@@ -164,46 +158,135 @@
     }
   };
 
+
+  const UI_PATCH = {
+    fr: {
+      tutorial: [
+        "Exemples 1 à 4 : clique les trous dans l'ordre du mot donné.",
+        "La carte lettres-trous indique quelle lettre correspond à chaque trou.",
+        "Mode décodage : suis le fil, lis les lettres sur la carte, puis tape le mot trouvé."
+      ],
+      helperTitle: "Options utiles",
+      xray: "Voir le fil derrière l'os",
+      wordHint: "Indice",
+      faceTitle: "Carte lettres-trous",
+      faceNote: "Carte précomplétée : chaque lettre indique le trou correspondant. En mode décodage, elle sert à lire le fil sans afficher de lettres sur l'osselet.",
+      targetWord: "Mot à écrire",
+      decodeTargetWord: "Mot à décoder",
+      decodePlaceholder: "Tape le mot trouvé",
+      clearAnswer: "Effacer",
+      feedbackStart: "Clique les trous dans l'ordre du mot affiché.",
+      feedbackDecodeStart: "Suis le fil, lis les lettres sur la carte, puis tape le mot trouvé.",
+      feedbackDecodeWrong: "Ce n'est pas encore le bon mot. Compare chaque trou relié avec la carte des lettres.",
+      feedbackDecodeSuccess: "Bravo, le mot codé par le fil est retrouvé.",
+      faceRecto: "Recto",
+      faceVerso: "Verso",
+      mapSideNote: "lettres visibles sur la carte, pas sur l'osselet",
+      writeResult: "Exemple d'écriture : le fil relie les trous du mot donné.",
+      decodeResult: "Décodage : le mot est lu en suivant le fil et la carte des lettres."
+    },
+    en: {
+      tutorial: [
+        "Examples 1 to 4: click the holes in the order of the given word.",
+        "The letter-hole map shows which letter belongs to each hole.",
+        "Decode mode: follow the thread, read the letters on the map, then type the word you found."
+      ],
+      helperTitle: "Useful options",
+      xray: "Show thread behind the bone",
+      wordHint: "Hint",
+      faceTitle: "Letter-hole map",
+      faceNote: "Pre-filled map: each letter marks its matching hole. In decode mode, it lets you read the thread without showing letters on the astragalus.",
+      targetWord: "Word to write",
+      decodeTargetWord: "Word to decode",
+      decodePlaceholder: "Type the word you found",
+      clearAnswer: "Clear",
+      feedbackStart: "Click the holes in the order of the displayed word.",
+      feedbackDecodeStart: "Follow the thread, read the letters on the map, then type the word you found.",
+      feedbackDecodeWrong: "That is not the word yet. Compare each threaded hole with the letter map.",
+      feedbackDecodeSuccess: "Well done, the word encoded by the thread has been recovered.",
+      faceRecto: "Front",
+      faceVerso: "Back",
+      mapSideNote: "letters visible on the map, not on the astragalus",
+      writeResult: "Writing example: the thread links the holes of the given word.",
+      decodeResult: "Decoding: the word is read by following the thread and the letter map."
+    },
+    de: {
+      tutorial: [
+        "Beispiele 1 bis 4: Klicke die Löcher in der Reihenfolge des vorgegebenen Wortes.",
+        "Die Buchstaben-Loch-Karte zeigt, welcher Buchstabe zu welchem Loch gehört.",
+        "Decodiermodus: Folge dem Faden, lies die Buchstaben auf der Karte und tippe das gefundene Wort ein."
+      ],
+      helperTitle: "Nützliche Optionen",
+      xray: "Faden hinter dem Knochen zeigen",
+      wordHint: "Hinweis",
+      faceTitle: "Buchstaben-Loch-Karte",
+      faceNote: "Vorausgefüllte Karte: Jeder Buchstabe markiert sein Loch. Im Decodiermodus liest man damit den Faden, ohne Buchstaben auf dem Astragalus anzuzeigen.",
+      targetWord: "Zu schreibendes Wort",
+      decodeTargetWord: "Zu decodierendes Wort",
+      decodePlaceholder: "Gefundenes Wort eintippen",
+      clearAnswer: "Löschen",
+      feedbackStart: "Klicke die Löcher in der Reihenfolge des angezeigten Wortes.",
+      feedbackDecodeStart: "Folge dem Faden, lies die Buchstaben auf der Karte und tippe das gefundene Wort ein.",
+      feedbackDecodeWrong: "Das ist noch nicht das richtige Wort. Vergleiche jedes Loch am Faden mit der Buchstabenkarte.",
+      feedbackDecodeSuccess: "Bravo, das vom Faden codierte Wort wurde gefunden.",
+      faceRecto: "Vorderseite",
+      faceVerso: "Rückseite",
+      mapSideNote: "Buchstaben auf der Karte, nicht auf dem Astragalus",
+      writeResult: "Schreibbeispiel: Der Faden verbindet die Löcher des vorgegebenen Wortes.",
+      decodeResult: "Decodierung: Das Wort wird über den Faden und die Buchstabenkarte gelesen."
+    }
+  };
+  for (const lang of Object.keys(UI_PATCH)) Object.assign(I18N[lang], UI_PATCH[lang]);
+
   const LEVELS = [
     {
-      id: 1, mode: "adapted",
+      id: 1, mode: "write",
+      navTitle: { fr: "Exemple 1", en: "Example 1", de: "Beispiel 1" },
       words: { fr: "OBJET", en: "BONES", de: "FADEN" },
-      translations: { fr: "objet ancien à observer", en: "bones, the project material", de: "Faden, der die Botschaft trägt" },
-      hint: { fr: "Ce que l'on observe au musée ou en classe.", en: "The project is built around this kind of material.", de: "Damit wird die geheime Botschaft geführt." },
-      setup: { showA: true, showLetters: true, partialLetters: false },
-      label: { fr: "5 lettres, mot du projet", en: "5 letters, project word", de: "5 Buchstaben, Projektwort" }
+      translations: { fr: "mot donné pour apprendre à passer le fil", en: "given word for learning the thread path", de: "vorgegebenes Wort zum Führen des Fadens" },
+      hint: { fr: "Suis simplement les lettres du mot affiché.", en: "Just follow the letters of the displayed word.", de: "Folge einfach den Buchstaben des angezeigten Wortes." },
+      setup: { showLetters: true, partialLetters: false },
+      label: { fr: "Écrire OBJET", en: "Write BONES", de: "FADEN schreiben" }
     },
     {
-      id: 2, mode: "adapted",
-      words: { fr: "FIBRE", en: "THREAD", de: "KNOCH" },
-      translations: { fr: "fil ou matière qui guide le message", en: "thread", de: "début de Knochen, os" },
-      hint: { fr: "Pense à ce qui relie les trous.", en: "It passes through the holes.", de: "Es renvoie au Knochen, l'os." },
-      setup: { showA: true, showLetters: false, partialLetters: true },
-      label: { fr: "5-6 lettres, lettres partielles", en: "5-6 letters, partial labels", de: "5-6 Buchstaben, teils sichtbar" }
+      id: 2, mode: "write",
+      navTitle: { fr: "Exemple 2", en: "Example 2", de: "Beispiel 2" },
+      words: { fr: "FIBRE", en: "THREAD", de: "FASER" },
+      translations: { fr: "le fil ou la matière qui relie les trous", en: "the thread that links the holes", de: "Faser oder Fadenmaterial, das die Löcher verbindet" },
+      hint: { fr: "Cherche chaque lettre sur l'osselet puis clique le trou.", en: "Find each letter on the astragalus, then click its hole.", de: "Suche jeden Buchstaben auf dem Astragalus und klicke sein Loch." },
+      setup: { showLetters: true, partialLetters: false },
+      label: { fr: "Écrire FIBRE", en: "Write THREAD", de: "FASER schreiben" }
     },
     {
-      id: 3, mode: "adapted",
+      id: 3, mode: "write",
+      navTitle: { fr: "Exemple 3", en: "Example 3", de: "Beispiel 3" },
       words: { fr: "SIGNE", en: "CODES", de: "CODES" },
-      translations: { fr: "marque qui porte une information", en: "marks that carry information", de: "Codes" },
-      hint: { fr: "Un trou peut devenir une marque à lire.", en: "A hole can become one of these.", de: "Damit kann man eine Botschaft verschlüsseln." },
-      setup: { showA: true, showLetters: false, partialLetters: false },
-      label: { fr: "Mot simple de lecture", en: "Simple reading word", de: "Einfaches Code-Wort" }
+      translations: { fr: "un signe porte une information", en: "marks can carry information", de: "Codes als geordnete Zeichen" },
+      hint: { fr: "Le fil transforme une suite de trous en message.", en: "The thread turns a sequence of holes into a message.", de: "Der Faden verwandelt eine Lochfolge in eine Botschaft." },
+      setup: { showLetters: true, partialLetters: false },
+      label: { fr: "Écrire SIGNE", en: "Write CODES", de: "CODES schreiben" }
     },
     {
-      id: 4, mode: "adapted",
+      id: 4, mode: "write",
+      navTitle: { fr: "Exemple 4", en: "Example 4", de: "Beispiel 4" },
       words: { fr: "TRACE", en: "TOKEN", de: "DINGE" },
-      translations: { fr: "trace laissée par le fil", en: "marker or coded token", de: "Dinge, objets à observer" },
-      hint: { fr: "Ce que le fil laisse à suivre.", en: "A small sign that can carry meaning.", de: "Objekte, die man beschreiben und ordnen kann." },
-      setup: { showA: true, showLetters: false, partialLetters: true },
-      label: { fr: "Adaptation pédagogique", en: "Educational adaptation", de: "Pädagogische Anpassung" }
+      translations: { fr: "trace laissée par le fil", en: "a small sign carrying meaning", de: "Dinge, objets à observer" },
+      hint: { fr: "Dernier exemple guidé avant de lire un mot sans lettres sur l'osselet.", en: "Last guided example before reading a word without letters on the astragalus.", de: "Letztes geführtes Beispiel vor dem Lesen ohne Buchstaben auf dem Astragalus." },
+      setup: { showLetters: true, partialLetters: false },
+      label: { fr: "Écrire TRACE", en: "Write TOKEN", de: "DINGE schreiben" }
     },
     {
-      id: 5, mode: "adapted",
-      words: { fr: "CODES", en: "CIPHER", de: "CODEX" },
-      translations: { fr: "messages codés", en: "encoded message system", de: "Code-Buch oder codierte Ordnung" },
-      hint: { fr: "Le jeu entraîne à écrire ce type de message.", en: "This is another word for a coded message system.", de: "Ein kurzes Wort für eine codierte Ordnung." },
-      setup: { showA: false, showLetters: false, partialLetters: false },
-      label: { fr: "Défi sans A visible", en: "Challenge, no visible A", de: "Herausforderung ohne A" }
+      id: 5, mode: "decode",
+      navTitle: { fr: "Décoder", en: "Decode", de: "Decodieren" },
+      words: {
+        fr: ["OBJET", "TRACE", "SIGNE", "FIBRE", "CODE", "LIEN", "CLEF", "CARTE", "INDEX", "FORME"],
+        en: ["BONES", "THREAD", "CODES", "TRACE", "TOKEN", "CIPHER", "CLUE", "MARK", "SHAPE", "FIBER"],
+        de: ["FADEN", "FASER", "CODES", "DINGE", "CODEX", "SPUR", "KARTE", "FORM", "MARK", "OBJEKT"]
+      },
+      translations: { fr: "mot à lire grâce au fil et à la carte", en: "word to read from the thread and map", de: "Wort, das mit Faden und Karte gelesen wird" },
+      hint: { fr: "Observe les trous traversés par le fil, puis reporte-toi à la carte.", en: "Look at the holes crossed by the thread, then use the map.", de: "Beobachte die Löcher am Faden und nutze dann die Karte." },
+      setup: { showLetters: false, partialLetters: false },
+      label: { fr: "10 mots à trouver, sans lettres sur l'osselet", en: "10 words to find, no letters on the astragalus", de: "10 Wörter finden, ohne Buchstaben auf dem Astragalus" }
     }
   ];
 
@@ -213,7 +296,8 @@
     path: [],
     mistakes: 0,
     helpers: new Set(),
-    showA: true,
+    answerText: "",
+    decodeIndex: 0,
     showLetters: true,
     xray: false,
     hint: false,
@@ -272,13 +356,33 @@
 
   function level() { return LEVELS[state.levelIndex]; }
   function alphabet() { return LATIN24; }
-  function word() { return level().words ? level().words[LANG] || level().words.fr : level().word; }
+  function localizedWords(item = level()) {
+    const source = item.words || item.word || "";
+    if (typeof source === "string") return source;
+    return source[LANG] || source.fr || "";
+  }
+  function decodeWords(item = level()) {
+    const words = localizedWords(item);
+    return Array.isArray(words) ? words : [words];
+  }
+  function isDecodeMode() { return level().mode === "decode"; }
+  function word() {
+    const words = decodeWords();
+    return words[state.decodeIndex % words.length] || "";
+  }
+  function normalizeWord(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .replace(/[^A-X]/g, "");
+  }
   function translit() {
     return word();
   }
   function sequence() {
     const letters = alphabet();
-    return word().split("").map(letter => letters.indexOf(letter)).filter(index => index >= 0);
+    return normalizeWord(word()).split("").map(letter => letters.indexOf(letter)).filter(index => index >= 0);
   }
 
   function initText() {
@@ -465,15 +569,13 @@
   }
 
   function updateAnchorMarkers() {
-    const seq = new Set(state.path);
-    const letters = alphabet();
+    const selected = new Set(state.path);
     game.anchorMeshes.forEach((mesh, index) => {
-      const selected = seq.has(index);
+      const selectedHole = selected.has(index);
       const hover = state.hover === index;
-      const aVisible = state.showA && letters[index] === "A";
-      mesh.scale.setScalar(hover ? 1.55 : selected ? 1.35 : aVisible ? 1.18 : 1);
-      mesh.material.color.set(selected ? 0x22c55e : hover ? 0xfacc15 : 0x0ea5a3);
-      mesh.material.opacity = game.hidden[index] && !state.xray && !selected ? 0.16 : 0.92;
+      mesh.scale.setScalar(hover ? 1.55 : selectedHole ? 1.35 : 1);
+      mesh.material.color.set(selectedHole ? 0x22c55e : hover ? 0xfacc15 : 0x0ea5a3);
+      mesh.material.opacity = game.hidden[index] && !state.xray && !selectedHole ? 0.16 : 0.92;
       mesh.material.depthTest = !state.xray;
     });
   }
@@ -514,7 +616,7 @@
     document.getElementById("btnZoomIn").addEventListener("click", () => changeZoom(1.1));
     document.getElementById("btnValidate").addEventListener("click", validate);
     document.getElementById("btnUndo").addEventListener("click", undo);
-    document.getElementById("btnNextWord").addEventListener("click", () => setLevel((state.levelIndex + 1) % LEVELS.length));
+    document.getElementById("btnNextWord").addEventListener("click", nextStep);
     document.querySelectorAll("[data-helper]").forEach(button => {
       button.addEventListener("click", () => toggleHelper(button.dataset.helper));
     });
@@ -673,14 +775,7 @@
       if (!point.visible) continue;
       const selected = state.path.includes(point.index);
       const hover = state.hover === point.index;
-      const isA = letters[point.index] === "A";
-      const showLetter = point.readable && (
-        state.showLetters ||
-        (state.showA && isA) ||
-        selected ||
-        hover ||
-        (level().setup.partialLetters && point.face === state.face && point.index % 2 === 0)
-      );
+      const showLetter = !isDecodeMode() && point.readable && !!level().setup.showLetters;
       const radius = hover ? 24 : 19;
 
       ctx.save();
@@ -703,7 +798,7 @@
 
       if (showLetter) {
         ctx.fillStyle = "#fff";
-        ctx.font = `800 ${Math.round(radius * .86)}px ui-sans-serif, system-ui`;
+        ctx.font = "800 " + Math.round(radius * .86) + "px ui-sans-serif, system-ui";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(letters[point.index], point.x, point.y + 1);
@@ -712,20 +807,21 @@
     }
   }
 
-  function setLevel(index) {
+  function setLevel(index, options = {}) {
     state.levelIndex = index;
+    if (!options.keepDecodeIndex) state.decodeIndex = 0;
     state.path = [];
+    state.answerText = "";
     state.mistakes = 0;
     state.helpers = new Set();
     state.solved = false;
-    state.showA = !!level().setup.showA;
     state.showLetters = !!level().setup.showLetters;
     state.xray = false;
     state.hint = false;
     state.hover = -1;
     state.flash = null;
     els.resultPanel.classList.remove("is-visible");
-    feedback(tr.feedbackStart);
+    feedback(isDecodeMode() ? tr.feedbackDecodeStart : tr.feedbackStart);
     recenter();
     renderUi();
   }
@@ -766,8 +862,24 @@
     renderUi();
   }
 
+  function nextStep() {
+    if (isDecodeMode()) {
+      const total = decodeWords().length;
+      state.decodeIndex = (state.decodeIndex + 1) % total;
+      setLevel(state.levelIndex, { keepDecodeIndex: true });
+    } else {
+      setLevel((state.levelIndex + 1) % LEVELS.length);
+    }
+  }
+
   function clickHole(index) {
     if (state.solved) return;
+    if (isDecodeMode()) {
+      state.flash = { index, good: sequence().includes(index), until: performance.now() + 520 };
+      feedback(tr.feedbackDecodeStart);
+      renderUi();
+      return;
+    }
     const seq = sequence();
     if (state.path.length >= seq.length) {
       feedback(tr.feedbackReady, "good");
@@ -790,6 +902,18 @@
   }
 
   function validate() {
+    if (isDecodeMode()) {
+      const ok = normalizeWord(state.answerText) === normalizeWord(word());
+      if (!ok) {
+        state.mistakes += 1;
+        feedback(tr.feedbackDecodeWrong, "bad");
+        renderScore();
+        return;
+      }
+      state.solved = true;
+      finishWord();
+      return;
+    }
     const seq = sequence();
     const ok = state.path.length === seq.length && state.path.every((index, i) => index === seq[i]);
     if (!ok) {
@@ -803,6 +927,12 @@
   }
 
   function undo() {
+    if (isDecodeMode()) {
+      state.answerText = "";
+      feedback(tr.feedbackDecodeStart);
+      renderUi();
+      return;
+    }
     if (!state.path.length) return;
     state.path.pop();
     state.solved = false;
@@ -821,22 +951,20 @@
     const displayWord = word();
     const displayTranslit = translit();
     els.resultWord.textContent = displayTranslit && displayTranslit !== displayWord
-      ? `${tr.found} : ${displayWord} (${displayTranslit})`
-      : `${tr.found} : ${displayWord}`;
-    els.resultTranslation.textContent = `${tr.translation} : ${level().translations[LANG] || level().translations.fr}`;
-    els.resultHistory.textContent = level().mode === "adapted" ? tr.modernNotice : tr.historical;
+      ? tr.found + " : " + displayWord + " (" + displayTranslit + ")"
+      : tr.found + " : " + displayWord;
+    els.resultTranslation.textContent = tr.translation + " : " + (level().translations[LANG] || level().translations.fr);
+    els.resultHistory.textContent = isDecodeMode() ? tr.decodeResult : tr.writeResult;
   }
 
   function finishWord() {
     if (state.solved && els.celebration?.classList.contains("is-visible")) return;
     state.solved = true;
-    feedback(tr.feedbackSuccess, "good");
+    feedback(isDecodeMode() ? tr.feedbackDecodeSuccess : tr.feedbackSuccess, "good");
     showResult();
     renderScore();
     showCelebration();
-    window.setTimeout(() => {
-      setLevel((state.levelIndex + 1) % LEVELS.length);
-    }, 1350);
+    window.setTimeout(nextStep, 1350);
   }
 
   function showCelebration() {
@@ -860,8 +988,16 @@
 
   function renderTargetWord() {
     if (!els.targetWordPanel) return;
-    const label = el("span", "", tr.targetWord);
+    const label = el("span", "", isDecodeMode() ? tr.decodeTargetWord : tr.targetWord);
     const letters = el("div", "target-letters");
+    if (isDecodeMode()) {
+      const progress = el("span", "target-meta", (state.decodeIndex + 1) + "/" + decodeWords().length);
+      for (let i = 0; i < sequence().length; i++) {
+        letters.appendChild(el("b", "target-letter is-hidden", "?"));
+      }
+      els.targetWordPanel.replaceChildren(label, progress, letters);
+      return;
+    }
     for (const letter of word()) {
       letters.appendChild(el("b", "target-letter", letter));
     }
@@ -874,7 +1010,10 @@
       button.type = "button";
       button.className = "level-btn";
       button.setAttribute("aria-pressed", String(index === state.levelIndex));
-      button.innerHTML = `<strong>${tr.level} ${item.id}</strong><span>${item.label[LANG] || item.label.fr}</span>`;
+      const title = item.navTitle?.[LANG] || item.navTitle?.fr || (tr.level + " " + item.id);
+      let label = item.label[LANG] || item.label.fr;
+      if (item.mode === "decode" && index === state.levelIndex) label += " · " + (state.decodeIndex + 1) + "/" + decodeWords(item).length;
+      button.innerHTML = "<strong>" + title + "</strong><span>" + label + "</span>";
       button.addEventListener("click", () => setLevel(index));
       return button;
     }));
@@ -890,8 +1029,32 @@
 
   function renderAnswer() {
     const letters = alphabet();
+    const undoButton = document.getElementById("btnUndo");
+    if (undoButton) undoButton.textContent = isDecodeMode() ? tr.clearAnswer : tr.undo;
+    els.answerSlots.classList.toggle("is-decode", isDecodeMode());
+    if (isDecodeMode()) {
+      const input = document.createElement("input");
+      input.className = "decode-input";
+      input.type = "text";
+      input.value = state.answerText;
+      input.placeholder = tr.decodePlaceholder;
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.maxLength = Math.max(8, word().length + 2);
+      input.addEventListener("input", event => {
+        state.answerText = event.target.value.toUpperCase();
+      });
+      input.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          validate();
+        }
+      });
+      els.answerSlots.replaceChildren(input);
+      return;
+    }
     els.answerSlots.replaceChildren(...sequence().map((holeIndex, i) => {
-      const slot = el("span", `slot${state.path.length > i ? " is-filled" : ""}`);
+      const slot = el("span", "slot" + (state.path.length > i ? " is-filled" : ""));
       slot.textContent = state.path.length > i ? letters[holeIndex] : "";
       return slot;
     }));
@@ -899,17 +1062,28 @@
 
   function renderFaceMap() {
     const selected = new Set(state.path);
-    els.faceMap.replaceChildren(...FACE_ORDER.map(face => {
-      const cell = el("div", `face-cell${face === state.face ? " active" : ""}`);
-      cell.appendChild(el("span", "", tr.faceNames[face] || face));
-      const grid = el("div", "dot-grid");
-      for (let i = 0; i < 6; i++) {
-        const dot = el("i", "mini-dot");
-        const globalIndex = FACE_ORDER.indexOf(face) * 6 + i;
-        if (selected.has(globalIndex)) dot.classList.add("used");
-        grid.appendChild(dot);
-      }
-      cell.appendChild(grid);
+    const letters = alphabet();
+    const sides = [
+      { label: tr.faceRecto, faces: ["bassin", "ventre"] },
+      { label: tr.faceVerso, faces: ["dos", "membres"] }
+    ];
+    els.faceMap.replaceChildren(...sides.map(side => {
+      const cell = el("div", "face-cell" + (side.faces.includes(state.face) ? " active" : ""));
+      cell.appendChild(el("span", "side-title", side.label));
+      cell.appendChild(el("p", "map-side-note", tr.mapSideNote));
+      side.faces.forEach(face => {
+        const sub = el("div", "face-subface" + (face === state.face ? " active" : ""));
+        sub.appendChild(el("span", "face-name", tr.faceNames[face] || face));
+        const grid = el("div", "dot-grid");
+        for (let i = 0; i < 6; i++) {
+          const globalIndex = FACE_ORDER.indexOf(face) * 6 + i;
+          const dot = el("i", "mini-dot", letters[globalIndex]);
+          if (selected.has(globalIndex)) dot.classList.add("used");
+          grid.appendChild(dot);
+        }
+        sub.appendChild(grid);
+        cell.appendChild(sub);
+      });
       return cell;
     }));
   }
@@ -921,7 +1095,7 @@
   }
 
   function renderHint() {
-    els.hintText.textContent = state.hint ? `${tr.hint} : ${level().hint[LANG] || level().hint.fr}` : "";
+    els.hintText.textContent = state.hint ? tr.hint + " : " + (level().hint[LANG] || level().hint.fr) : "";
   }
 
   function pointerPoint(event) {
