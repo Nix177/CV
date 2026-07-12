@@ -177,26 +177,26 @@
   <!-- Lab -->
   <script src="/ai-lab.js" defer></script>
 
-  <!-- React + Babel (UMD) -->
+  <!-- React UMD for interactive prototypes -->
  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
 
   <script src="https://unpkg.com/three@0.147.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
   <!-- Jeux Osselets -->
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-runner.tsx"></script>
+  <script src="/osselets-runner.js" defer></script>
 
   <!-- L2 passe en JS (avec cache-buster + flag debug) -->
   <script>window.__L2_DEBUG = true; console.info("[HTML] __L2_DEBUG=on");</script>
   <script src="/osselets-level2.js?v=debug-v3" defer></script>
 
-  <!-- L3 (React/TSX) -->
-  <script type="text/babel" data-presets="typescript,react" data-plugins="transform-typescript" src="/osselets-level3.tsx"></script>
+  <!-- L3 (React, public JavaScript) -->
+  <script src="/osselets-level3.js" defer></script>
 
   <!-- Montage / Navigation (supporte React ET jeux externes) -->
-  <script type="text/babel">
+  <script>
   (function () {
     const reactRoots   = new Map();   // id -> ReactRoot
     const externalApps = new Map();   // id -> { destroy() }
