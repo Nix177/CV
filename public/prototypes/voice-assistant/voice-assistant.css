@@ -345,9 +345,9 @@ body[data-state="error"] .state-light {
 }
 
 .console-heading h1 {
-  max-width: 14ch;
+  max-width: 18ch;
   margin: 0 0 13px;
-  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-size: 2.5rem;
   line-height: 1.02;
   letter-spacing: 0;
 }
@@ -525,6 +525,10 @@ body[data-state="listening"] .record-dot {
   line-height: 1.5;
 }
 
+.compatibility-note:empty {
+  display: none;
+}
+
 .debug-panel {
   border-top: 1px solid var(--line);
   background: #0e1114;
@@ -657,7 +661,7 @@ body[data-state="listening"] .record-dot {
 
   .console-heading h1 {
     max-width: 17ch;
-    font-size: 2.2rem;
+    font-size: 1.85rem;
   }
 
   .state-indicators {
