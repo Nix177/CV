@@ -2,6 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/api/check-news", "destination": "/api/news?action=check" },
+    { "source": "/api/news-env", "destination": "/api/news?action=env" },
     { "source": "/ai-lab", "destination": "/lab.html" },
     { "source": "/ai-lab.html", "destination": "/lab.html" },
     { "source": "/ai-lab-en.html", "destination": "/lab.html" },
