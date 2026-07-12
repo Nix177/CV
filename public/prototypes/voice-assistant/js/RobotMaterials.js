@@ -52,6 +52,14 @@ export class RobotMaterials {
       metalness: 0.18
     });
 
+    this.mouthGlow = new THREE.MeshStandardMaterial({
+      color: 0x4ac9de,
+      emissive: 0x159ab5,
+      emissiveIntensity: 0.7,
+      roughness: 0.2,
+      metalness: 0.08
+    });
+
     this.marking = new THREE.MeshStandardMaterial({
       color: 0x374047,
       roughness: 0.62,
@@ -75,6 +83,8 @@ export class RobotMaterials {
     this.eyeGlow.emissiveIntensity = intensity;
     this.chestGlow.color.copy(value);
     this.chestGlow.emissive.copy(value);
+    this.mouthGlow.color.copy(value);
+    this.mouthGlow.emissive.copy(value);
   }
 
   dispose() {

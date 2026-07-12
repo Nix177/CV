@@ -38,12 +38,27 @@
         <span id="stateLabel">Disponible</span>
       </div>
 
-      <div class="state-tester" aria-label="Tester les animations">
-        <button type="button" data-test-state="idle">Idle</button>
-        <button type="button" data-test-state="listening">Listening</button>
-        <button type="button" data-test-state="thinking">Thinking</button>
-        <button type="button" data-test-state="speaking">Speaking</button>
-        <button type="button" data-test-state="error">Error</button>
+      <div class="state-indicators" aria-label="État du robot">
+        <span class="state-indicator" data-state-indicator="idle" aria-current="true">
+          <span class="state-diode" aria-hidden="true"></span>
+          <span data-i18n="stateIdle">Repos</span>
+        </span>
+        <span class="state-indicator" data-state-indicator="listening" aria-current="false">
+          <span class="state-diode" aria-hidden="true"></span>
+          <span data-i18n="stateListening">Écoute</span>
+        </span>
+        <span class="state-indicator" data-state-indicator="thinking" aria-current="false">
+          <span class="state-diode" aria-hidden="true"></span>
+          <span data-i18n="stateThinking">Réflexion</span>
+        </span>
+        <span class="state-indicator" data-state-indicator="speaking" aria-current="false">
+          <span class="state-diode" aria-hidden="true"></span>
+          <span data-i18n="stateSpeaking">Parole</span>
+        </span>
+        <span class="state-indicator" data-state-indicator="error" aria-current="false">
+          <span class="state-diode" aria-hidden="true"></span>
+          <span data-i18n="stateError">Erreur</span>
+        </span>
       </div>
     </section>
 
@@ -101,7 +116,7 @@
     </section>
   </main>
 
-  <details class="debug-panel">
+  <details id="robotDebugPanel" class="debug-panel" hidden>
     <summary data-i18n="debugTitle">Reglages du robot</summary>
     <div id="robotDebugControls"></div>
   </details>

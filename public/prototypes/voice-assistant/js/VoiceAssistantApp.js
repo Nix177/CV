@@ -21,7 +21,7 @@ export class VoiceAssistantApp {
     this.liveClient = null;
     this.recording = false;
     this.turnComplete = false;
-    this.testAudioTimer = 0;
+    this.debugMode = this.isLocalDebugMode();
     this.elements = {};
   }
 
@@ -60,6 +60,7 @@ export class VoiceAssistantApp {
       mute: byId("muteControl"),
       reducedMotion: byId("reducedMotionControl"),
       compatibility: byId("compatibilityNote"),
+      debugPanel: byId("robotDebugPanel"),
       debug: byId("robotDebugControls")
     };
   }
@@ -76,12 +77,15 @@ export class VoiceAssistantApp {
         fallback: this.elements.fallback
       });
       this.robotRenderer.init();
-      this.debugPanel = new RobotDebugPanel({
-        container: this.elements.debug,
-        controller: this.robotController,
-        renderer: this.robotRenderer
-      });
-      this.debugPanel.init();
+      if (this.debugMode) {
+        this.elements.debugPanel.hidden = false;
+        this.debugPanel = new RobotDebugPanel({
+          container: this.elements.debug,
+          controller: this.robotController,
+          renderer: this.robotRenderer
+        });
+        this.debugPanel.init();
+      }
     } catch (error) {
       console.error("Robot creation failed", error);
       this.elements.fallback.hidden = false;
@@ -163,10 +167,6 @@ export class VoiceAssistantApp {
       button.addEventListener("click", () => this.changeLanguage(button.dataset.lang));
     });
 
-    document.querySelectorAll("[data-test-state]").forEach((button) => {
-      button.addEventListener("click", () => this.testState(button.dataset.testState));
-    });
-
     window.addEventListener("beforeunload", () => this.dispose(), { once: true });
   }
 
@@ -231,21 +231,14 @@ export class VoiceAssistantApp {
     document.body.dataset.state = state;
     this.robotController?.setState(state);
     this.elements.stateLabel.textContent = customLabel || I18N[this.lang][state] || state;
-    document.querySelectorAll("[data-test-state]").forEach((button) => {
-      button.setAttribute("aria-pressed", String(button.dataset.testState === state));
+    document.querySelectorAll("[data-state-indicator]").forEach((indicator) => {
+      indicator.setAttribute("aria-current", String(indicator.dataset.stateIndicator === state));
     });
   }
 
-  testState(state) {
-    clearInterval(this.testAudioTimer);
-    this.robotController?.setAudioLevel(null);
-    this.setState(state);
-    if (state === "speaking") {
-      this.testAudioTimer = setInterval(() => {
-        const level = 0.18 + Math.abs(Math.sin(performance.now() * 0.011)) * 0.62;
-        this.robotController?.setAudioLevel(level);
-      }, 50);
-    }
+  isLocalDebugMode() {
+    const localHosts = new Set(["localhost", "127.0.0.1", "::1"]);
+    return localHosts.has(location.hostname) && new URLSearchParams(location.search).get("debug") === "1";
   }
 
   async changeLanguage(lang) {
@@ -309,9 +302,9 @@ export class VoiceAssistantApp {
   }
 
   async dispose() {
-    clearInterval(this.testAudioTimer);
-    await this.microphone?.stop();
+    // Mark the Live socket as an intentional close before async cleanup starts.
     this.liveClient?.close();
+    await this.microphone?.stop();
     await this.audioPlayer?.dispose();
     this.robotRenderer?.dispose();
     this.robotController?.dispose();

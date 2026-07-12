@@ -4,6 +4,7 @@ const CONTROLS = [
   ["headPitch", "Head pitch", -0.5, 0.5, 0.01],
   ["jawOpening", "Jaw test", 0, 1, 0.01],
   ["jawMaxAngle", "Jaw max angle", 0.12, 0.65, 0.01],
+  ["mouthGain", "Mouth wave gain", 0.4, 2, 0.05],
   ["eyeBrightness", "Eye brightness", 0.1, 3, 0.05],
   ["leftShoulder", "Left shoulder", -0.7, 0.7, 0.01],
   ["rightShoulder", "Right shoulder", -0.7, 0.7, 0.01],

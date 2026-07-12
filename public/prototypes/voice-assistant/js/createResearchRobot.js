@@ -236,6 +236,10 @@ function createHead(THREE, geometries, materials) {
     position: [0, 0.23, 0.29],
     scale: [0.68, 0.52, 0.19]
   });
+  const opticVisor = makeMesh(THREE, geometries.box, materials.blackOptical, "OpticVisor", {
+    position: [0, 0.31, 0.415],
+    scale: [0.5, 0.17, 0.055]
+  });
   const brow = makeMesh(THREE, geometries.box, materials.ceramic, "BrowPlate", {
     position: [0, 0.52, 0.39],
     scale: [0.7, 0.14, 0.13]
@@ -247,14 +251,60 @@ function createHead(THREE, geometries, materials) {
   });
   const cheekRight = cheekLeft.clone();
   cheekRight.name = "RightCheekPlate";
-  cheekRight.position.x = -0.34;
+  cheekRight.position.x = -0.29;
   cheekRight.rotation.y = -0.08;
   cheekRight.rotation.z = 0.08;
   const lowerMask = makeMesh(THREE, geometries.box, materials.ceramicShadow, "LowerFaceMask", {
     position: [0, -0.015, 0.39],
     scale: [0.46, 0.12, 0.1]
   });
-  facePlate.add(faceCore, brow, cheekLeft, cheekRight, lowerMask);
+  const noseBridge = makeMesh(THREE, geometries.box, materials.brushedMetal, "NoseBridge", {
+    position: [0, 0.17, 0.485],
+    scale: [0.055, 0.17, 0.05]
+  });
+  const foreheadSensor = makeMesh(THREE, geometries.box, materials.mouthGlow, "ForeheadSensor", {
+    position: [0, 0.555, 0.47],
+    scale: [0.16, 0.018, 0.018]
+  });
+  const leftTemple = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, "LeftTempleSensor", {
+    position: [0.43, 0.3, 0.41],
+    rotation: [Math.PI / 2, 0, 0],
+    scale: [0.055, 0.035, 0.055]
+  });
+  const rightTemple = leftTemple.clone();
+  rightTemple.name = "RightTempleSensor";
+  rightTemple.position.x = -0.43;
+
+  const mouthDisplay = new THREE.Group();
+  mouthDisplay.name = "MouthDisplay";
+  mouthDisplay.position.set(0, -0.015, 0.46);
+  const mouthScreen = makeMesh(THREE, geometries.box, materials.blackOptical, "MouthScreen", {
+    scale: [0.33, 0.074, 0.022]
+  });
+  const mouthWaveBars = [];
+  for (let index = 0; index < 9; index += 1) {
+    const bar = makeMesh(THREE, geometries.box, materials.mouthGlow, `MouthWaveBar${index + 1}`, {
+      position: [(index - 4) * 0.057, 0, 0.029],
+      scale: [0.014, 0.012, 0.008]
+    });
+    mouthWaveBars.push(bar);
+    mouthDisplay.add(bar);
+  }
+  mouthDisplay.add(mouthScreen);
+
+  facePlate.add(
+    faceCore,
+    opticVisor,
+    brow,
+    cheekLeft,
+    cheekRight,
+    lowerMask,
+    noseBridge,
+    foreheadSensor,
+    leftTemple,
+    rightTemple,
+    mouthDisplay
+  );
   headPitch.add(facePlate);
 
   const leftEye = createEye(THREE, geometries, materials, "LeftEye", SIDE.left * 0.17);
@@ -299,6 +349,8 @@ function createHead(THREE, geometries, materials) {
     rightEye,
     leftEyeShutter,
     rightEyeShutter,
+    mouthDisplay,
+    mouthWaveBars,
     jawPivot,
     mechanicalJaw
   };
