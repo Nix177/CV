@@ -20,6 +20,7 @@
 
     { slug: 'passions',  label: { fr: 'Passions',       en: 'Passions',              de: 'Leidenschaften' } },
     { slug: 'chatbot',   label: { fr: 'Chatbot',        en: 'Chatbot',               de: 'Chatbot' } },
+    { slug: 'voice-assistant', label: { fr: 'Assistant vocal', en: 'Voice assistant', de: 'Sprachassistent' } },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
     { slug: 'tech-news', label: { fr: 'Tech News',      en: 'Tech News',             de: 'Tech News' } },
   ];
@@ -41,6 +42,9 @@
   const urlFor = (s, L) => {
     // lab = une seule page (pas de variantes -en/-de pour éviter 404)
     if (s === 'lab') return '/lab.html';
+    if (s === 'voice-assistant') {
+      return L === 'fr' ? '/voice-assistant' : `/voice-assistant?lang=${L}`;
+    }
     if (L === 'fr') return `/${s}.html`;
     if (L === 'en') return `/${s}-en.html`;
     if (L === 'de') return `/${s}-de.html`;

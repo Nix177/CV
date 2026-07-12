@@ -1,7 +1,7 @@
 export const I18N = {
   fr: {
     labLabel: "Laboratoire vocal",
-    localBadge: "Prévisualisation privée",
+    localBadge: "Assistant vocal",
     eyebrow: "Assistant de profil en direct",
     title: "Parler avec l'assistant de Nicolas",
     intro: "Posez une question sur son parcours, ses recherches ou ses projets. La réponse de l'assistant est uniquement vocale.",
@@ -46,7 +46,7 @@ export const I18N = {
   },
   en: {
     labLabel: "Voice lab",
-    localBadge: "Private preview",
+    localBadge: "Voice assistant",
     eyebrow: "Live profile assistant",
     title: "Talk with Nicolas's assistant",
     intro: "Ask about his background, research, or projects. The assistant's answer is voice-only.",
@@ -91,7 +91,7 @@ export const I18N = {
   },
   de: {
     labLabel: "Sprachlabor",
-    localBadge: "Private Vorschau",
+    localBadge: "Sprachassistent",
     eyebrow: "Live-Profilassistent",
     title: "Mit Nicolas' Assistenten sprechen",
     intro: "Fragen Sie nach seinem Werdegang, seiner Forschung oder seinen Projekten. Die Antwort des Assistenten wird nur gesprochen.",
