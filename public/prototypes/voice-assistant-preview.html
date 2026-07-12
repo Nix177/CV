@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Assistant vocal 3D - prototype local</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/prototypes/voice-assistant/voice-assistant.css">
+</head>
+<body>
+  <header class="preview-bar">
+    <div>
+      <span class="preview-kicker" data-i18n="labLabel">Laboratoire vocal</span>
+      <strong>Nicolas Tuor</strong>
+    </div>
+    <div class="preview-actions">
+      <span class="local-badge" data-i18n="localBadge">Simulation locale</span>
+      <div class="language-switch" role="group" aria-label="Langue">
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="de" aria-pressed="false">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="assistant-layout">
+    <section class="robot-stage" aria-label="Aperçu du robot assistant">
+      <div id="robotViewport" class="robot-viewport">
+        <div id="robotFallback" class="robot-fallback" hidden>
+          <div class="fallback-face" aria-hidden="true"><span></span><span></span></div>
+          <p data-i18n="webglFallback">Le robot 3D n'est pas disponible, mais l'assistant vocal reste utilisable.</p>
+        </div>
+      </div>
+
+      <div class="state-readout" aria-live="polite">
+        <span class="state-light" aria-hidden="true"></span>
+        <span id="stateLabel">Disponible</span>
+      </div>
+
+      <div class="state-tester" aria-label="Tester les animations">
+        <button type="button" data-test-state="idle">Idle</button>
+        <button type="button" data-test-state="listening">Listening</button>
+        <button type="button" data-test-state="thinking">Thinking</button>
+        <button type="button" data-test-state="speaking">Speaking</button>
+        <button type="button" data-test-state="error">Error</button>
+      </div>
+    </section>
+
+    <section class="assistant-console" aria-labelledby="assistantTitle">
+      <div class="console-heading">
+        <p class="eyebrow" data-i18n="eyebrow">Prototype d'assistant de profil</p>
+        <h1 id="assistantTitle" data-i18n="title">Parler avec l'assistant de Nicolas</h1>
+        <p data-i18n="intro">Posez une question sur son parcours, ses recherches ou ses projets. La reponse de l'assistant est uniquement vocale.</p>
+      </div>
+
+      <div class="question-display" aria-live="polite">
+        <span data-i18n="yourQuestion">Votre question</span>
+        <p id="questionEcho" data-i18n="questionPlaceholder">Elle apparaitra ici pendant la conversation.</p>
+        <small id="sourceStatus">Sources locales pretes : CV + portfolio</small>
+      </div>
+
+      <div class="suggestion-block">
+        <span class="control-label" data-i18n="suggestionsLabel">Essayer une question</span>
+        <div id="suggestions" class="suggestions"></div>
+      </div>
+
+      <form id="assistantForm" class="assistant-form">
+        <label for="assistantInput" data-i18n="inputLabel">Question ecrite</label>
+        <div class="input-row">
+          <input id="assistantInput" type="text" autocomplete="off" data-i18n-placeholder="inputPlaceholder" placeholder="Ex. Quelle est son experience en EdTech ?">
+          <button class="send-button" type="submit" data-i18n="send">Envoyer</button>
+        </div>
+      </form>
+
+      <div class="voice-controls" aria-label="Commandes vocales">
+        <button id="micButton" type="button" class="primary-control">
+          <span class="record-dot" aria-hidden="true"></span>
+          <span data-i18n="microphone">Micro</span>
+        </button>
+        <button id="stopRecordingButton" type="button" disabled data-i18n="stopRecording">Arreter l'ecoute</button>
+        <button id="stopSpeakingButton" type="button" disabled data-i18n="stopSpeaking">Arreter la voix</button>
+      </div>
+
+      <div class="audio-settings">
+        <label class="volume-control" for="volumeControl">
+          <span data-i18n="volume">Volume</span>
+          <input id="volumeControl" type="range" min="0" max="1" value="0.8" step="0.05">
+        </label>
+        <label class="toggle-control">
+          <input id="muteControl" type="checkbox">
+          <span data-i18n="mute">Couper le son</span>
+        </label>
+        <label class="toggle-control">
+          <input id="reducedMotionControl" type="checkbox">
+          <span data-i18n="reducedMotion">Mouvements reduits</span>
+        </label>
+      </div>
+
+      <p id="compatibilityNote" class="compatibility-note" data-i18n="privacyNote">Cette simulation ne contacte aucun modele IA et n'utilise aucune cle API. Le micro depend des fonctions disponibles dans le navigateur.</p>
+    </section>
+  </main>
+
+  <details class="debug-panel">
+    <summary data-i18n="debugTitle">Reglages du robot</summary>
+    <div id="robotDebugControls"></div>
+  </details>
+
+  <script src="/prototypes/vendor/three-0.147.0.min.js"></script>
+  <script type="module" src="/prototypes/voice-assistant/js/app.js"></script>
+</body>
+</html>

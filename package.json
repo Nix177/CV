@@ -7,7 +7,8 @@
   },
   "scripts": {
     "build": "echo \"No build needed (static site + Vercel functions)\"",
-    "build:news": "node tools/build-news.mjs"
+    "build:news": "node tools/build-news.mjs",
+    "preview:voice": "node tools/voice-preview-server.mjs"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",

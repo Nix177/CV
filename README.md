@@ -16,6 +16,19 @@ python -m http.server 5173 -d public
 # http://localhost:5173/
 ```
 
+### Assistant vocal 3D (prévisualisation)
+
+La branche de prévisualisation contient un assistant vocal Gemini Live avec robot 3D procédural, saisie texte, microphone, RAG local et réponse uniquement audio.
+
+Créer un fichier `.env` local à partir de `.env.example`, puis renseigner `GOOGLE_API_KEY`. `.env` est ignoré par Git.
+
+```bash
+npm run preview:voice
+# http://localhost:3001/prototypes/voice-assistant-preview.html
+```
+
+Le navigateur ne reçoit jamais la clé API permanente. `/api/live-token` l'utilise côté serveur pour créer un jeton Gemini Live éphémère, à usage unique et à durée limitée.
+
 ## Déploiement Vercel
 
 Le site reste statique côté public. Les routes API vivent dans `api/` et sont exécutées comme fonctions serverless Node.js.
@@ -27,6 +40,8 @@ OPENAI_API_KEY=...
 OPENAI_CHAT_MODEL=gpt-5.5
 GOOGLE_API_KEY=...
 GEMINI_CHAT_MODEL=gemini-2.5-flash
+GEMINI_LIVE_MODEL=gemini-3.1-flash-live-preview
+GEMINI_LIVE_VOICE=Sadaltager
 ```
 
 Fallbacks OpenAI possibles si le modèle recommandé n'est pas disponible pour la clé ou l'endpoint :
@@ -47,6 +62,8 @@ GEMINI_CHAT_MODEL=gemini-2.5-flash-lite
 `ALLOWED_ORIGINS` est utilisé par certains endpoints pour le CORS, notamment `/api/llm`, si l'accès doit être limité à des origines précises.
 
 Ne jamais commiter de clé API. Les clés doivent rester dans les variables d'environnement Vercel ou dans un environnement local non versionné.
+
+`GEMINI_LIVE_MODEL` et `GEMINI_LIVE_VOICE` pilotent uniquement l'assistant vocal temps réel. Le chatbot texte continue d'utiliser `GEMINI_CHAT_MODEL`.
 
 ## Chatbot et RAG
 
