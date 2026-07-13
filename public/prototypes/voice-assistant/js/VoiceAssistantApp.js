@@ -1,4 +1,5 @@
 import { createResearchRobot } from "./createResearchRobot.js";
+import { createGlbResearchRobot } from "./createGlbResearchRobot.js";
 import { RobotStateController } from "./RobotStateController.js";
 import { RobotRenderer } from "./RobotRenderer.js";
 import { RobotDebugPanel } from "./RobotDebugPanel.js";
@@ -27,7 +28,7 @@ export class VoiceAssistantApp {
 
   async init() {
     this.collectElements();
-    this.initRobot();
+    await this.initRobot();
     this.initAudioAndLiveClient();
     this.bindInterface();
     this.applyLanguage(this.lang);
@@ -65,9 +66,14 @@ export class VoiceAssistantApp {
     };
   }
 
-  initRobot() {
+  async initRobot() {
     try {
-      this.robot = createResearchRobot(globalThis.THREE);
+      try {
+        this.robot = await createGlbResearchRobot(globalThis.THREE);
+      } catch (error) {
+        console.warn("GLB voice robot unavailable; using procedural fallback", error);
+        this.robot = createResearchRobot(globalThis.THREE);
+      }
       this.robotController = new RobotStateController(this.robot);
       this.robotRenderer = new RobotRenderer({
         THREE: globalThis.THREE,
@@ -82,7 +88,8 @@ export class VoiceAssistantApp {
         this.debugPanel = new RobotDebugPanel({
           container: this.elements.debug,
           controller: this.robotController,
-          renderer: this.robotRenderer
+          renderer: this.robotRenderer,
+          onStateChange: (state) => this.setState(state)
         });
         this.debugPanel.init();
       }
@@ -138,6 +145,10 @@ export class VoiceAssistantApp {
   }
 
   bindInterface() {
+    const notifyRobotInteraction = () => this.robotController?.notifyInteraction();
+    document.addEventListener("pointerdown", notifyRobotInteraction, { passive: true });
+    document.addEventListener("keydown", notifyRobotInteraction);
+
     this.elements.form.addEventListener("submit", (event) => {
       event.preventDefault();
       const question = this.elements.input.value.trim();
@@ -173,7 +184,7 @@ export class VoiceAssistantApp {
   async ensureLiveSession() {
     await this.audioPlayer.ensureContext();
     const analyser = this.audioPlayer.getAnalyserNode();
-    if (analyser) this.robotController?.connectAudioNode(analyser);
+    if (analyser) this.robotController?.connectAssistantAudioNode(analyser);
     await this.liveClient.connect(this.lang);
   }
 

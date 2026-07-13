@@ -39,12 +39,37 @@ function makeChestGeometry(THREE) {
   return geometry;
 }
 
+function makeRoundedPanelGeometry(THREE, width = 0.92, height = 0.62, radius = 0.16, depth = 0.12) {
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+  const shape = new THREE.Shape();
+  shape.moveTo(-halfWidth + radius, -halfHeight);
+  shape.lineTo(halfWidth - radius, -halfHeight);
+  shape.quadraticCurveTo(halfWidth, -halfHeight, halfWidth, -halfHeight + radius);
+  shape.lineTo(halfWidth, halfHeight - radius);
+  shape.quadraticCurveTo(halfWidth, halfHeight, halfWidth - radius, halfHeight);
+  shape.lineTo(-halfWidth + radius, halfHeight);
+  shape.quadraticCurveTo(-halfWidth, halfHeight, -halfWidth, halfHeight - radius);
+  shape.lineTo(-halfWidth, -halfHeight + radius);
+  shape.quadraticCurveTo(-halfWidth, -halfHeight, -halfWidth + radius, -halfHeight);
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: true,
+    bevelSegments: 2,
+    steps: 1,
+    bevelSize: 0.025,
+    bevelThickness: 0.025,
+    curveSegments: 8
+  });
+  geometry.center();
+  return geometry;
+}
+
 function addJoint(THREE, group, geometries, materials, name, scale = 1) {
   const joint = makeMesh(THREE, geometries.sphere, materials.brushedMetal, `${name}Joint`, {
     scale: [0.25 * scale, 0.25 * scale, 0.25 * scale]
   });
   const collar = makeMesh(THREE, geometries.torus, materials.titanium, `${name}Collar`, {
-    rotation: [Math.PI / 2, 0, 0],
     scale: [0.32 * scale, 0.32 * scale, 0.32 * scale]
   });
   group.add(joint, collar);
@@ -55,34 +80,64 @@ function createHand(THREE, geometries, materials, sideName, sideSign) {
   hand.name = `${sideName}Hand`;
 
   const palm = makeMesh(THREE, geometries.box, materials.ceramicShadow, `${sideName}Palm`, {
-    position: [0, -0.19, 0],
-    scale: [0.31, 0.36, 0.2]
+    position: [0, -0.17, 0],
+    scale: [0.29, 0.31, 0.18]
   });
-  hand.add(palm);
+  const dorsalPlate = makeMesh(THREE, geometries.box, materials.ceramic, `${sideName}DorsalPlate`, {
+    position: [0, -0.17, 0.105],
+    scale: [0.235, 0.245, 0.035]
+  });
+  hand.add(palm, dorsalPlate);
 
-  for (let index = 0; index < 3; index += 1) {
-    const finger = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, `${sideName}Finger${index + 1}`, {
-      position: [sideSign * (index - 1) * 0.085, -0.48, 0.015],
-      rotation: [0, 0, sideSign * (index - 1) * 0.04],
-      scale: [0.038, 0.18, 0.038]
+  const fingerPivots = [];
+  [-0.155, -0.052, 0.052, 0.155].forEach((x, index) => {
+    const knuckle = new THREE.Group();
+    knuckle.name = `${sideName}Finger${index + 1}Knuckle`;
+    knuckle.position.set(x, -0.39, 0.015);
+
+    const joint = makeMesh(THREE, geometries.sphere, materials.titanium, `${sideName}Finger${index + 1}Joint`, {
+      scale: [0.043, 0.043, 0.043]
     });
-    hand.add(finger);
-  }
-
-  const thumb = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, `${sideName}Thumb`, {
-    position: [-sideSign * 0.25, -0.28, 0.02],
-    rotation: [0, 0, -sideSign * 0.78],
-    scale: [0.045, 0.14, 0.045]
+    const proximal = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, `${sideName}Finger${index + 1}Proximal`, {
+      position: [0, -0.105, 0],
+      scale: [0.034, 0.11, 0.034]
+    });
+    const distalPivot = new THREE.Group();
+    distalPivot.name = `${sideName}Finger${index + 1}DistalPivot`;
+    distalPivot.position.set(0, -0.21, 0);
+    const distal = makeMesh(THREE, geometries.cylinder, materials.ceramicShadow, `${sideName}Finger${index + 1}Distal`, {
+      position: [0, -0.075, 0],
+      scale: [0.03, 0.08, 0.03]
+    });
+    distalPivot.add(distal);
+    knuckle.add(joint, proximal, distalPivot);
+    hand.add(knuckle);
+    fingerPivots.push({ knuckle, distal: distalPivot });
   });
-  hand.add(thumb);
+
+  const thumbPivot = new THREE.Group();
+  thumbPivot.name = `${sideName}ThumbPivot`;
+  thumbPivot.position.set(-sideSign * 0.255, -0.22, 0.02);
+  thumbPivot.rotation.z = -sideSign * 0.68;
+  const thumbJoint = makeMesh(THREE, geometries.sphere, materials.titanium, `${sideName}ThumbJoint`, {
+    scale: [0.048, 0.048, 0.048]
+  });
+  const thumb = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, `${sideName}Thumb`, {
+    position: [0, -0.115, 0],
+    scale: [0.04, 0.125, 0.04]
+  });
+  thumbPivot.add(thumbJoint, thumb);
+  hand.add(thumbPivot);
+  hand.userData.fingerPivots = fingerPivots;
+  hand.userData.thumbPivot = thumbPivot;
   return hand;
 }
 
 function createArm(THREE, geometries, materials, sideName, sideSign) {
   const shoulderPivot = new THREE.Group();
   shoulderPivot.name = `${sideName}ShoulderPivot`;
-  shoulderPivot.position.set(sideSign * 1.13, 1.92, 0);
-  addJoint(THREE, shoulderPivot, geometries, materials, `${sideName}Shoulder`, 1.16);
+  shoulderPivot.position.set(sideSign * 0.98, 1.92, 0);
+  addJoint(THREE, shoulderPivot, geometries, materials, `${sideName}Shoulder`, 1.02);
 
   const upperArm = new THREE.Group();
   upperArm.name = `${sideName}UpperArm`;
@@ -95,7 +150,7 @@ function createArm(THREE, geometries, materials, sideName, sideSign) {
   const upperShellFront = makeMesh(THREE, geometries.box, materials.ceramic, `${sideName}UpperArmShellFront`, {
     position: [0, -0.45, 0.14],
     rotation: [0.04, 0, -sideSign * 0.04],
-    scale: [0.34, 0.72, 0.12]
+    scale: [0.29, 0.72, 0.12]
   });
   const upperShellSide = makeMesh(THREE, geometries.box, materials.ceramicShadow, `${sideName}UpperArmShellSide`, {
     position: [sideSign * 0.16, -0.45, -0.02],
@@ -141,75 +196,72 @@ function createArm(THREE, geometries, materials, sideName, sideSign) {
 }
 
 function createEye(THREE, geometries, materials, name, x) {
-  const eye = new THREE.Group();
-  eye.name = name;
-  eye.position.set(x, 0.31, 0.48);
+  const root = new THREE.Group();
+  root.name = name;
+  root.position.set(x, 0.34, 0.48);
 
-  const socket = makeMesh(THREE, geometries.cylinder, materials.blackOptical, `${name}Socket`, {
-    rotation: [Math.PI / 2, 0, 0],
-    scale: [0.105, 0.075, 0.105]
+  const socket = makeMesh(THREE, geometries.sphere, materials.blackOptical, `${name}Socket`, {
+    scale: [0.1, 0.042, 0.028]
   });
-  const lens = makeMesh(THREE, geometries.sphere, materials.eyeGlow, `${name}Lens`, {
-    position: [0, 0, 0.078],
-    scale: [0.045, 0.045, 0.03]
+  const light = makeMesh(THREE, geometries.sphere, materials.eyeGlow, `${name}Light`, {
+    position: [0, 0, 0.022],
+    scale: [0.064, 0.018, 0.016]
   });
-  const rim = makeMesh(THREE, geometries.torus, materials.brushedMetal, `${name}Rim`, {
-    position: [0, 0, 0.085],
-    scale: [0.075, 0.075, 0.075]
-  });
-  eye.add(socket, lens, rim);
-  return eye;
+  root.add(socket, light);
+  return { root, light };
 }
 
-function createEyeShutter(THREE, geometries, materials, name, x) {
-  const shutter = new THREE.Group();
-  shutter.name = name;
-  shutter.position.set(x, 0.31, 0.595);
+function createWaveformMouth(THREE, geometries, materials) {
+  const display = new THREE.Group();
+  display.name = "MouthDisplay";
+  display.position.set(0, 0.09, 0.49);
 
-  const upper = makeMesh(THREE, geometries.box, materials.ceramicShadow, `${name}Upper`, {
-    position: [0, 0.145, 0],
-    scale: [0.145, 0.045, 0.022]
-  });
-  const lower = makeMesh(THREE, geometries.box, materials.ceramicShadow, `${name}Lower`, {
-    position: [0, -0.145, 0],
-    scale: [0.145, 0.045, 0.022]
-  });
-  shutter.add(upper, lower);
-  shutter.userData.openY = 0.145;
-  return shutter;
+  const pointCount = 13;
+  const xValues = Array.from({ length: pointCount }, (_, index) => -0.22 + index * (0.44 / (pointCount - 1)));
+  const segments = [];
+  for (let index = 0; index < pointCount - 1; index += 1) {
+    const length = xValues[index + 1] - xValues[index];
+    const segment = makeMesh(THREE, geometries.box, materials.mouthGlow, `MouthWaveSegment${index + 1}`, {
+      position: [(xValues[index] + xValues[index + 1]) / 2, 0, 0],
+      scale: [length * 1.04, 0.008, 0.012]
+    });
+    segments.push(segment);
+    display.add(segment);
+  }
+  return { display, segments, xValues };
 }
 
 function createHead(THREE, geometries, materials) {
   const neckPivot = new THREE.Group();
   neckPivot.name = "NeckPivot";
-  neckPivot.position.set(0, 2.36, 0);
+  neckPivot.position.set(0, 2.34, 0);
 
   const neckColumn = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, "NeckColumn", {
-    position: [0, 0.03, 0],
-    scale: [0.22, 0.27, 0.22]
+    position: [0, 0.02, 0],
+    scale: [0.19, 0.28, 0.19]
   });
   const neckRingTop = makeMesh(THREE, geometries.torus, materials.titanium, "NeckRingTop", {
-    position: [0, 0.24, 0],
+    position: [0, 0.25, 0],
     rotation: [Math.PI / 2, 0, 0],
-    scale: [0.28, 0.28, 0.28]
+    scale: [0.25, 0.25, 0.25]
   });
   const neckRingBottom = neckRingTop.clone();
   neckRingBottom.name = "NeckRingBottom";
-  neckRingBottom.position.y = -0.18;
+  neckRingBottom.position.y = -0.19;
   neckPivot.add(neckColumn, neckRingTop, neckRingBottom);
 
-  for (let index = -1; index <= 1; index += 2) {
-    const actuator = makeMesh(THREE, geometries.cylinder, materials.titanium, `NeckActuator${index}`, {
-      position: [index * 0.17, 0.02, -0.04],
-      rotation: [0, 0, index * 0.18],
-      scale: [0.045, 0.26, 0.045]
+  for (const sign of [-1, 1]) {
+    const actuator = makeMesh(THREE, geometries.cylinder, materials.titanium, `NeckActuator${sign}`, {
+      position: [sign * 0.14, 0.01, -0.045],
+      rotation: [0, 0, sign * 0.14],
+      scale: [0.038, 0.27, 0.038]
     });
     neckPivot.add(actuator);
   }
 
   const headYaw = new THREE.Group();
   headYaw.name = "HeadYaw";
-  headYaw.position.set(0, 0.25, 0);
+  headYaw.position.set(0, 0.27, 0);
   neckPivot.add(headYaw);
 
   const headPitch = new THREE.Group();
@@ -219,125 +271,67 @@ function createHead(THREE, geometries, materials) {
   const skull = new THREE.Group();
   skull.name = "Skull";
   const cranium = makeMesh(THREE, geometries.sphere, materials.ceramic, "Cranium", {
-    position: [0, 0.28, -0.02],
-    scale: [0.54, 0.44, 0.43]
+    position: [0, 0.28, -0.035],
+    scale: [0.5, 0.46, 0.39]
   });
   const rearBand = makeMesh(THREE, geometries.torus, materials.titanium, "RearCraniumBand", {
-    position: [0, 0.28, -0.13],
+    position: [0, 0.29, -0.16],
     rotation: [Math.PI / 2, 0, 0],
-    scale: [0.49, 0.49, 0.49]
+    scale: [0.43, 0.43, 0.43]
   });
   skull.add(cranium, rearBand);
   headPitch.add(skull);
 
   const facePlate = new THREE.Group();
   facePlate.name = "FacePlate";
-  const faceCore = makeMesh(THREE, geometries.box, materials.titanium, "FaceCore", {
-    position: [0, 0.23, 0.29],
-    scale: [0.68, 0.52, 0.19]
+  const visorFrame = makeMesh(THREE, geometries.facePanel, materials.ceramicShadow, "VisorFrame", {
+    position: [0, 0.26, 0.35],
+    scale: [1.035, 1.04, 0.82]
   });
-  const opticVisor = makeMesh(THREE, geometries.box, materials.blackOptical, "OpticVisor", {
-    position: [0, 0.31, 0.415],
-    scale: [0.5, 0.17, 0.055]
+  const opticVisor = makeMesh(THREE, geometries.facePanel, materials.blackOptical, "OpticVisor", {
+    position: [0, 0.26, 0.405],
+    scale: [0.95, 0.92, 0.46]
   });
-  const brow = makeMesh(THREE, geometries.box, materials.ceramic, "BrowPlate", {
-    position: [0, 0.52, 0.39],
-    scale: [0.7, 0.14, 0.13]
+  const browCap = makeMesh(THREE, geometries.facePanel, materials.ceramic, "BrowCap", {
+    position: [0, 0.59, 0.16],
+    scale: [0.68, 0.22, 0.64]
   });
-  const cheekLeft = makeMesh(THREE, geometries.box, materials.ceramic, "LeftCheekPlate", {
-    position: [0.29, 0.14, 0.4],
-    rotation: [0, 0.08, -0.08],
-    scale: [0.18, 0.29, 0.11]
+  const lowerShell = makeMesh(THREE, geometries.facePanel, materials.ceramicShadow, "LowerHeadShell", {
+    position: [0, -0.065, 0.16],
+    scale: [0.65, 0.22, 0.62]
   });
-  const cheekRight = cheekLeft.clone();
-  cheekRight.name = "RightCheekPlate";
-  cheekRight.position.x = -0.29;
-  cheekRight.rotation.y = -0.08;
-  cheekRight.rotation.z = 0.08;
-  const lowerMask = makeMesh(THREE, geometries.box, materials.ceramicShadow, "LowerFaceMask", {
-    position: [0, -0.015, 0.39],
-    scale: [0.46, 0.12, 0.1]
-  });
-  const noseBridge = makeMesh(THREE, geometries.box, materials.brushedMetal, "NoseBridge", {
-    position: [0, 0.17, 0.485],
-    scale: [0.055, 0.17, 0.05]
-  });
-  const foreheadSensor = makeMesh(THREE, geometries.box, materials.mouthGlow, "ForeheadSensor", {
-    position: [0, 0.555, 0.47],
-    scale: [0.16, 0.018, 0.018]
-  });
-  const leftTemple = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, "LeftTempleSensor", {
-    position: [0.43, 0.3, 0.41],
-    rotation: [Math.PI / 2, 0, 0],
-    scale: [0.055, 0.035, 0.055]
-  });
-  const rightTemple = leftTemple.clone();
-  rightTemple.name = "RightTempleSensor";
-  rightTemple.position.x = -0.43;
-
-  const mouthDisplay = new THREE.Group();
-  mouthDisplay.name = "MouthDisplay";
-  mouthDisplay.position.set(0, -0.015, 0.46);
-  const mouthScreen = makeMesh(THREE, geometries.box, materials.blackOptical, "MouthScreen", {
-    scale: [0.33, 0.074, 0.022]
-  });
-  const mouthWaveBars = [];
-  for (let index = 0; index < 9; index += 1) {
-    const bar = makeMesh(THREE, geometries.box, materials.mouthGlow, `MouthWaveBar${index + 1}`, {
-      position: [(index - 4) * 0.057, 0, 0.029],
-      scale: [0.014, 0.012, 0.008]
-    });
-    mouthWaveBars.push(bar);
-    mouthDisplay.add(bar);
-  }
-  mouthDisplay.add(mouthScreen);
-
-  facePlate.add(
-    faceCore,
-    opticVisor,
-    brow,
-    cheekLeft,
-    cheekRight,
-    lowerMask,
-    noseBridge,
-    foreheadSensor,
-    leftTemple,
-    rightTemple,
-    mouthDisplay
-  );
+  facePlate.add(visorFrame, opticVisor, browCap, lowerShell);
   headPitch.add(facePlate);
+
+  for (const sign of [-1, 1]) {
+    const joint = makeMesh(THREE, geometries.cylinder, materials.titanium, `HeadSideJoint${sign}`, {
+      position: [sign * 0.46, 0.27, 0.02],
+      rotation: [0, 0, Math.PI / 2],
+      scale: [0.13, 0.055, 0.13]
+    });
+    const cover = makeMesh(THREE, geometries.cylinder, materials.ceramicShadow, `HeadSideCover${sign}`, {
+      position: [sign * 0.49, 0.27, 0.02],
+      rotation: [0, 0, Math.PI / 2],
+      scale: [0.1, 0.04, 0.1]
+    });
+    headPitch.add(joint, cover);
+  }
 
   const leftEye = createEye(THREE, geometries, materials, "LeftEye", SIDE.left * 0.17);
   const rightEye = createEye(THREE, geometries, materials, "RightEye", SIDE.right * 0.17);
-  const leftEyeShutter = createEyeShutter(THREE, geometries, materials, "LeftEyeShutter", SIDE.left * 0.17);
-  const rightEyeShutter = createEyeShutter(THREE, geometries, materials, "RightEyeShutter", SIDE.right * 0.17);
-  headPitch.add(leftEye, rightEye, leftEyeShutter, rightEyeShutter);
+  headPitch.add(leftEye.root, rightEye.root);
 
-  const jawPivot = new THREE.Group();
-  jawPivot.name = "JawPivot";
-  jawPivot.position.set(0, -0.04, 0.28);
-  headPitch.add(jawPivot);
+  const mouth = createWaveformMouth(THREE, geometries, materials);
+  headPitch.add(mouth.display);
 
-  const mechanicalJaw = new THREE.Group();
-  mechanicalJaw.name = "MechanicalJaw";
-  const jawBar = makeMesh(THREE, geometries.box, materials.brushedMetal, "JawBar", {
-    position: [0, -0.14, 0.16],
-    scale: [0.44, 0.09, 0.11]
+  const leftStatusLight = makeMesh(THREE, geometries.sphere, materials.chestGlow, "LeftHeadStatus", {
+    position: [0.4, 0.07, 0.39],
+    scale: [0.025, 0.025, 0.016]
   });
-  const jawGuard = makeMesh(THREE, geometries.box, materials.ceramicShadow, "JawGuard", {
-    position: [0, -0.16, 0.24],
-    scale: [0.31, 0.07, 0.08]
-  });
-  const jawHingeLeft = makeMesh(THREE, geometries.cylinder, materials.titanium, "JawHingeLeft", {
-    position: [0.33, -0.07, 0.05],
-    rotation: [Math.PI / 2, 0, 0],
-    scale: [0.075, 0.08, 0.075]
-  });
-  const jawHingeRight = jawHingeLeft.clone();
-  jawHingeRight.name = "JawHingeRight";
-  jawHingeRight.position.x = -0.33;
-  mechanicalJaw.add(jawBar, jawGuard, jawHingeLeft, jawHingeRight);
-  jawPivot.add(mechanicalJaw);
+  const rightStatusLight = leftStatusLight.clone();
+  rightStatusLight.name = "RightHeadStatus";
+  rightStatusLight.position.x = -0.4;
+  headPitch.add(leftStatusLight, rightStatusLight);
 
   return {
     neckPivot,
@@ -345,14 +339,15 @@ function createHead(THREE, geometries, materials) {
     headPitch,
     skull,
     facePlate,
-    leftEye,
-    rightEye,
-    leftEyeShutter,
-    rightEyeShutter,
-    mouthDisplay,
-    mouthWaveBars,
-    jawPivot,
-    mechanicalJaw
+    leftEye: leftEye.root,
+    rightEye: rightEye.root,
+    leftEyeLight: leftEye.light,
+    rightEyeLight: rightEye.light,
+    mouthDisplay: mouth.display,
+    mouthWaveSegments: mouth.segments,
+    mouthWaveX: mouth.xValues,
+    leftStatusLight,
+    rightStatusLight
   };
 }
 
@@ -366,7 +361,8 @@ export function createResearchRobot(THREE = globalThis.THREE) {
     cylinder: new THREE.CylinderGeometry(1, 1, 1, 24, 1),
     forearm: new THREE.CylinderGeometry(0.2, 0.28, 1, 20, 1),
     torus: new THREE.TorusGeometry(1, 0.16, 10, 30),
-    chest: makeChestGeometry(THREE)
+    chest: makeChestGeometry(THREE),
+    facePanel: makeRoundedPanelGeometry(THREE)
   };
 
   const robotRoot = new THREE.Group();
@@ -381,18 +377,13 @@ export function createResearchRobot(THREE = globalThis.THREE) {
     position: [0, 0.18, 0],
     scale: [0.68, 0.28, 0.68]
   });
-  const waistRing = makeMesh(THREE, geometries.torus, materials.brushedMetal, "WaistRing", {
-    position: [0, 0.35, 0],
-    rotation: [Math.PI / 2, 0, 0],
-    scale: [0.72, 0.72, 0.72]
-  });
-  torsoRoot.add(waist, waistRing);
+  torsoRoot.add(waist);
 
   const chestCore = new THREE.Group();
   chestCore.name = "ChestCore";
   const chestCoreBody = makeMesh(THREE, geometries.chest, materials.titanium, "ChestCoreBody", {
     position: [0, 1.28, -0.02],
-    scale: [0.93, 0.88, 1.22]
+    scale: [0.8, 0.88, 1.22]
   });
   const spine = makeMesh(THREE, geometries.cylinder, materials.brushedMetal, "SpineActuator", {
     position: [0, 1.22, -0.38],
@@ -405,16 +396,16 @@ export function createResearchRobot(THREE = globalThis.THREE) {
   chestArmor.name = "ChestArmor";
   const upperArmor = makeMesh(THREE, geometries.chest, materials.ceramic, "UpperChestArmor", {
     position: [0, 1.49, 0.33],
-    scale: [0.9, 0.62, 0.42]
+    scale: [0.77, 0.62, 0.42]
   });
   const sternum = makeMesh(THREE, geometries.box, materials.ceramicShadow, "SternumPlate", {
     position: [0, 1.23, 0.58],
     scale: [0.25, 0.86, 0.09]
   });
   const leftRib = makeMesh(THREE, geometries.box, materials.ceramic, "LeftRibPlate", {
-    position: [0.57, 1.13, 0.48],
+    position: [0.48, 1.13, 0.48],
     rotation: [0, -0.08, -0.09],
-    scale: [0.44, 0.7, 0.1]
+    scale: [0.35, 0.7, 0.1]
   });
   const rightRib = leftRib.clone();
   rightRib.name = "RightRibPlate";
@@ -424,25 +415,16 @@ export function createResearchRobot(THREE = globalThis.THREE) {
 
   const chestLightHousing = makeMesh(THREE, geometries.torus, materials.brushedMetal, "ChestLightHousing", {
     position: [0, 1.55, 0.7],
-    scale: [0.22, 0.22, 0.22]
+    scale: [0.14, 0.14, 0.14]
   });
   const chestLight = makeMesh(THREE, geometries.cylinder, materials.chestGlow, "ChestLight", {
     position: [0, 1.55, 0.71],
     rotation: [Math.PI / 2, 0, 0],
-    scale: [0.14, 0.025, 0.14]
+    scale: [0.075, 0.02, 0.075]
   });
 
   chestArmor.add(upperArmor, sternum, leftRib, rightRib, chestLightHousing, chestLight);
   torsoRoot.add(chestArmor);
-
-  const markingBars = [0.76, 0.88, 1.0].map((y, index) => makeMesh(
-    THREE,
-    geometries.box,
-    materials.marking,
-    `TechnicalMarking${index + 1}`,
-    { position: [-0.62 + index * 0.045, y, 0.6], scale: [0.18 - index * 0.025, 0.018, 0.018] }
-  ));
-  chestArmor.add(...markingBars);
 
   const leftArm = createArm(THREE, geometries, materials, "Left", SIDE.left);
   const rightArm = createArm(THREE, geometries, materials, "Right", SIDE.right);

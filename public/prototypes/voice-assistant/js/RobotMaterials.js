@@ -3,7 +3,7 @@ export class RobotMaterials {
     this.THREE = THREE;
 
     this.ceramic = new THREE.MeshPhysicalMaterial({
-      color: 0xdfdbcf,
+      color: 0xe8eceb,
       roughness: 0.34,
       metalness: 0.04,
       clearcoat: 0.22,
@@ -11,7 +11,7 @@ export class RobotMaterials {
     });
 
     this.ceramicShadow = new THREE.MeshStandardMaterial({
-      color: 0xb9bbb7,
+      color: 0xb8c0c2,
       roughness: 0.48,
       metalness: 0.08
     });
@@ -23,8 +23,8 @@ export class RobotMaterials {
     });
 
     this.brushedMetal = new THREE.MeshStandardMaterial({
-      color: 0x7a858c,
-      roughness: 0.4,
+      color: 0x465057,
+      roughness: 0.44,
       metalness: 0.88
     });
 
@@ -60,11 +60,6 @@ export class RobotMaterials {
       metalness: 0.08
     });
 
-    this.marking = new THREE.MeshStandardMaterial({
-      color: 0x374047,
-      roughness: 0.62,
-      metalness: 0.44
-    });
   }
 
   setSurfaceTuning({ roughness, metalness } = {}) {

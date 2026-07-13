@@ -16,7 +16,9 @@ export class RobotRenderer {
     this.intersectionObserver = null;
     this.listeners = [];
     this.lights = {};
-    this.cameraPosition = { x: 0, y: 0.58, z: 8.05 };
+    this.hierarchyHelpers = [];
+    this.cameraPosition = { x: 0, y: 0.82, z: 8.2 };
+    this.cameraTarget = { x: 0, y: 0.68, z: 0 };
   }
 
   init() {
@@ -30,14 +32,14 @@ export class RobotRenderer {
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
       this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
-      this.camera.lookAt(0, 0.42, 0);
+      this.camera.lookAt(this.cameraTarget.x, this.cameraTarget.y, this.cameraTarget.z);
 
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
       this.renderer.setPixelRatio(Math.min(2, globalThis.devicePixelRatio || 1));
       this.renderer.outputEncoding = THREE.sRGBEncoding;
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       this.renderer.toneMappingExposure = 0.88;
-      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.enabled = this.robot.renderProfile?.shadows !== false;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       this.container.appendChild(this.renderer.domElement);
 
@@ -91,6 +93,7 @@ export class RobotRenderer {
   }
 
   createGroundShadow() {
+    if (this.robot.renderProfile?.showGround === false) return;
     const THREE = this.THREE;
     const ground = new THREE.Mesh(
       new THREE.CircleGeometry(2.2, 48),
@@ -144,11 +147,36 @@ export class RobotRenderer {
     Object.assign(this.cameraPosition, patch);
     if (!this.camera) return;
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
-    this.camera.lookAt(0, 0.42, 0);
+    this.camera.lookAt(this.cameraTarget.x, this.cameraTarget.y, this.cameraTarget.z);
   }
 
   setLightIntensity(name, value) {
     if (this.lights[name]) this.lights[name].intensity = Number(value);
+  }
+
+  setHierarchyVisible(visible) {
+    if (visible && this.hierarchyHelpers.length === 0) {
+      const pivotKeys = [
+        "torsoRoot",
+        "headYaw",
+        "headPitch",
+        "leftShoulderPivot",
+        "leftElbowPivot",
+        "leftWristPivot",
+        "rightShoulderPivot",
+        "rightElbowPivot",
+        "rightWristPivot"
+      ];
+      for (const key of pivotKeys) {
+        const pivot = this.robot.parts[key];
+        if (!pivot) continue;
+        const helper = new this.THREE.AxesHelper(0.028);
+        helper.name = `DebugAxes_${key}`;
+        pivot.add(helper);
+        this.hierarchyHelpers.push(helper);
+      }
+    }
+    for (const helper of this.hierarchyHelpers) helper.visible = Boolean(visible);
   }
 
   setPaused(paused) {
@@ -172,6 +200,13 @@ export class RobotRenderer {
     this.resizeObserver?.disconnect();
     this.intersectionObserver?.disconnect();
     for (const [target, type, listener] of this.listeners) target.removeEventListener(type, listener);
+    for (const helper of this.hierarchyHelpers) {
+      helper.removeFromParent();
+      helper.geometry?.dispose?.();
+      if (Array.isArray(helper.material)) helper.material.forEach((material) => material.dispose());
+      else helper.material?.dispose?.();
+    }
+    this.hierarchyHelpers = [];
     this.renderer?.dispose();
     this.renderer?.domElement.remove();
   }
