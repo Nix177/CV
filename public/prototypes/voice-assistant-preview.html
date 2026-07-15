@@ -9,10 +9,17 @@
 </head>
 <body>
   <header class="preview-bar">
-    <div>
+    <div class="preview-identity">
       <span class="preview-kicker" data-i18n="labLabel">Laboratoire vocal</span>
       <strong>Nicolas Tuor</strong>
     </div>
+    <nav class="preview-nav" aria-label="Navigation principale" data-i18n-aria-label="navigationLabel">
+      <a href="/index.html" data-nav-route="home" data-i18n="navHome">Accueil</a>
+      <a href="/cv.html" data-nav-route="cv" data-i18n="navCv">CV</a>
+      <a href="/portfolio.html" data-nav-route="portfolio" data-i18n="navPortfolio">Portfolio</a>
+      <a href="/chatbot.html" data-nav-route="chatbot" data-i18n="navChatbot">Chatbot</a>
+      <a href="/lab.html" data-nav-route="lab" data-i18n="navLab">Labo IA</a>
+    </nav>
     <div class="preview-actions">
       <span class="local-badge" data-i18n="localBadge">Simulation locale</span>
       <div class="language-switch" role="group" aria-label="Langue">
@@ -111,9 +118,40 @@
         </label>
       </div>
 
+      <div class="conversation-tools">
+        <label class="conversation-consent" for="conversationConsent">
+          <input id="conversationConsent" type="checkbox">
+          <span data-i18n="conversationConsent">Autoriser l'enregistrement local de la transcription</span>
+        </label>
+        <button id="downloadConversation" class="download-conversation" type="button" disabled data-i18n="downloadConversation">Télécharger la conversation</button>
+        <p data-i18n="conversationLocalNote">Facultatif : texte seulement, dans ce navigateur. Aucun audio n'est enregistré.</p>
+      </div>
+
+      <section id="conversationTranscript" class="conversation-transcript" aria-labelledby="transcriptTitle" hidden>
+        <div class="transcript-heading">
+          <h2 id="transcriptTitle" data-i18n="transcriptTitle">Transcription</h2>
+          <span data-i18n="transcriptLocalBadge">Mémoire locale</span>
+        </div>
+        <p id="transcriptEmpty" class="transcript-empty" data-i18n="transcriptEmpty">La transcription commencera avec votre prochaine question.</p>
+        <div id="transcriptEntries" class="transcript-entries" aria-live="polite"></div>
+      </section>
+
       <p id="compatibilityNote" class="compatibility-note" aria-live="polite"></p>
     </section>
   </main>
+
+  <details class="privacy-panel">
+    <summary data-i18n="privacyTitle">Protection des données</summary>
+    <div class="privacy-content">
+      <p class="privacy-lead" data-i18n="privacyIntro">Nicolas Tuor ne collecte, ne consulte et ne conserve aucune conversation.</p>
+      <ul>
+        <li data-i18n="privacyProcessed">Pour répondre, la question écrite ou l'audio du microphone, ainsi que les passages pertinents du CV et du portfolio, sont transmis à Google Gemini Live.</li>
+        <li data-i18n="privacyTechnical">Google et l'hébergeur Vercel peuvent traiter des données techniques de connexion selon leurs propres conditions.</li>
+        <li data-i18n="privacyRecording">La case d'enregistrement est facultative. Si elle est cochée, seule la transcription texte est gardée temporairement dans la mémoire de ce navigateur ; aucun enregistrement audio n'est créé.</li>
+        <li data-i18n="privacyDeletion">Décochez la case ou rechargez la page pour effacer la transcription. Le téléchargement crée uniquement un fichier local sur votre appareil.</li>
+      </ul>
+    </div>
+  </details>
 
   <details id="robotDebugPanel" class="debug-panel" hidden>
     <summary data-i18n="debugTitle">Reglages du robot</summary>

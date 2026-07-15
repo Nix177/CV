@@ -373,6 +373,14 @@
     </section>
 
     <section id="chatBox">
+      <div class="chat-record-tools">
+        <label class="chat-record-consent" for="chatConsent">
+          <input id="chatConsent" type="checkbox">
+          <span>Allow local recording of this conversation</span>
+        </label>
+        <button id="chatDownload" class="chat-download" type="button" disabled>Download conversation</button>
+        <p>Optional: a text copy in this browser's memory, never in a database controlled by Nicolas.</p>
+      </div>
       <div id="chatLog" aria-live="polite"></div>
       <div class="inputBar">
         <textarea id="chatInput" placeholder="Type your message… (Enter to send, Shift+Enter for a new line)"
@@ -381,6 +389,19 @@
       </div>
     </section>
   </main>
+
+  <details class="chat-privacy-panel">
+    <summary>Data protection</summary>
+    <div class="chat-privacy-content">
+      <p><strong>Nicolas Tuor does not collect, view, or retain any conversation.</strong></p>
+      <ul>
+        <li>To provide an answer, your question, selected settings, and relevant CV and portfolio passages are sent through the server function to the selected provider: OpenAI or Google Gemini.</li>
+        <li>Vercel and the AI provider may process technical connection and API usage data under their own terms.</li>
+        <li>Recording is optional. When enabled, an exportable text copy is kept only in this browser's memory.</li>
+        <li>Untick the box or reload the page to erase that copy. Downloading creates a file only on your device.</li>
+      </ul>
+    </div>
+  </details>
 
   <script>
     (function () {

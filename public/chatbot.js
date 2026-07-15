@@ -9,20 +9,100 @@
   const I18N = {
     fr: {
       hello: "Bonjour ! Posez une question sur le candidat.",
+      exportTitle: "Conversation avec le chatbot de Nicolas Tuor",
+      exportDate: "Exporté le",
+      exportNote: "Copie locale créée à votre demande. Nicolas Tuor ne reçoit ni ne conserve ce fichier.",
+      user: "Vous",
+      assistant: "Assistant",
+      provider: "Fournisseur",
       neterr: "— connexion impossible —",
       serv: "— erreur serveur —"
     },
     en: {
       hello: "Hello! Ask a question about the candidate.",
+      exportTitle: "Conversation with Nicolas Tuor's chatbot",
+      exportDate: "Exported on",
+      exportNote: "Local copy created at your request. Nicolas Tuor does not receive or retain this file.",
+      user: "You",
+      assistant: "Assistant",
+      provider: "Provider",
       neterr: "— connection error —",
       serv: "— server error —"
     },
     de: {
       hello: "Hallo! Stellen Sie eine Frage zum Kandidaten.",
+      exportTitle: "Gespräch mit Nicolas Tuors Chatbot",
+      exportDate: "Exportiert am",
+      exportNote: "Lokale Kopie auf Ihren Wunsch. Nicolas Tuor erhält oder speichert diese Datei nicht.",
+      user: "Sie",
+      assistant: "Assistent",
+      provider: "Anbieter",
       neterr: "— Verbindungsfehler —",
       serv: "— Serverfehler —"
     }
   };
+
+  let recordedTurns = [];
+  let activeRecordedTurn = null;
+
+  function isRecordingEnabled() {
+    return Boolean($("#chatConsent")?.checked);
+  }
+
+  function syncDownloadButton() {
+    const button = $("#chatDownload");
+    if (button) button.disabled = !isRecordingEnabled() || recordedTurns.length === 0;
+  }
+
+  function clearRecordedConversation() {
+    recordedTurns = [];
+    activeRecordedTurn = null;
+    syncDownloadButton();
+  }
+
+  function startRecordedTurn(question, providerEl) {
+    if (!isRecordingEnabled()) return null;
+    const providerName = providerEl?.parentElement?.textContent?.trim() || providerEl?.value || "";
+    const turn = { question, answer: "", provider: providerName, at: Date.now() };
+    recordedTurns.push(turn);
+    activeRecordedTurn = turn;
+    syncDownloadButton();
+    return turn;
+  }
+
+  function updateRecordedAnswer(turn, answer) {
+    if (!turn || !isRecordingEnabled() || !recordedTurns.includes(turn)) return;
+    turn.answer = String(answer || "");
+  }
+
+  function downloadRecordedConversation() {
+    if (!isRecordingEnabled() || !recordedTurns.length) return;
+    const lang = detectLang();
+    const copy = I18N[lang];
+    const locale = lang === "de" ? "de-CH" : lang === "en" ? "en-GB" : "fr-CH";
+    const lines = [
+      `# ${copy.exportTitle}`,
+      "",
+      `${copy.exportDate}: ${new Date().toLocaleString(locale)}`,
+      "",
+      `_${copy.exportNote}_`,
+      ""
+    ];
+    recordedTurns.forEach((turn, index) => {
+      lines.push(`## ${index + 1}. ${copy.user}`, "", turn.question, "");
+      if (turn.provider) lines.push(`_${copy.provider}: ${turn.provider}_`, "");
+      lines.push(`### ${copy.assistant}`, "", turn.answer || "-", "");
+    });
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `conversation-chatbot-${new Date().toISOString().slice(0, 10)}.md`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
   function detectLang() {
     const qs = new URLSearchParams(location.search);
@@ -54,6 +134,7 @@
 
     const q = (questionOverride || input?.value || "").trim();
     if (!q) return;
+    const recordedTurn = startRecordedTurn(q, providerEl);
 
     if (input) input.value = "";
     if (sendBt) sendBt.disabled = true;
@@ -72,6 +153,7 @@
       provider: providerEl ? providerEl.value : "openai"
     };
 
+    let fullText = "";
     try {
       const r = await fetch("/api/chat", {
         method: "POST",
@@ -84,7 +166,6 @@
       // Lecture du stream
       const reader = r.body.getReader();
       const decoder = new TextDecoder();
-      let fullText = "";
 
       while (true) {
         const { done, value } = await reader.read();
@@ -92,6 +173,7 @@
         const chunk = decoder.decode(value, { stream: true });
         fullText += chunk;
         botBubble.textContent = fullText;
+        updateRecordedAnswer(recordedTurn, fullText);
         // Auto-scroll basique
         const logEl = $("#chatLog");
         if (logEl) logEl.scrollTop = logEl.scrollHeight;
@@ -100,9 +182,13 @@
       botBubble.classList.remove("streaming");
 
     } catch (e) {
-      botBubble.textContent += "\n" + I18N[lang].neterr;
+      const errorText = `${fullText}${fullText ? "\n" : ""}${I18N[lang].neterr}`;
+      botBubble.textContent = errorText;
+      updateRecordedAnswer(recordedTurn, errorText);
       console.error(e);
     } finally {
+      if (activeRecordedTurn === recordedTurn) activeRecordedTurn = null;
+      syncDownloadButton();
       if (sendBt) sendBt.disabled = false;
       const logEl = $("#chatLog");
       if (logEl) logEl.scrollTop = logEl.scrollHeight;
@@ -131,11 +217,23 @@
     const lang = detectLang();
     const input = $("#chatInput");
     const sendBt = $("#chatSend");
+    const consent = $("#chatConsent");
+    const download = $("#chatDownload");
 
     // Message d’accueil
     updateProviderLabels();
 
     addBubble(I18N[lang].hello, "bot");
+
+    if (consent) {
+      consent.checked = false;
+      consent.addEventListener("change", () => {
+        if (!consent.checked) clearRecordedConversation();
+        else syncDownloadButton();
+      });
+    }
+    download?.addEventListener("click", downloadRecordedConversation);
+    syncDownloadButton();
 
     input?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
