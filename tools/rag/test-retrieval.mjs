@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync, statSync, writeFileSync } from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   UpstreamError,
   buildMessages,
@@ -6,7 +9,8 @@ import {
   retrieve_project_code_context,
   toUserErrorMessage
 } from "../../api/chat.js";
-import { buildSystemInstruction } from "../../public/prototypes/voice-assistant/js/GeminiLiveClient.js";
+import { GeminiLiveClient, buildSystemInstruction } from "../../public/prototypes/voice-assistant/js/GeminiLiveClient.js";
+import { walkFiles } from "./index-projects.mjs";
 import { containsInstructionLikeContent } from "./prompt-injection-guard.mjs";
 
 const vote = retrieve_project_code_context({
@@ -105,4 +109,108 @@ assert.ok(/quota \(429\).*Gemini/i.test(openAiRateLimit));
 assert.ok(/gemini-2\.5-flash.*gemini-2\.5-flash-lite/i.test(geminiRateLimit));
 assert.ok(/Modèle OpenAI indisponible/i.test(invalidOpenAiModel));
 
-console.log("RAG retrieval tests passed: profile FR/DE, status caution, technical evidence and indirect prompt-injection isolation.");
+const indexerFixture = mkdtempSync(path.join(os.tmpdir(), "cv-rag-indexer-"));
+try {
+  const readableFile = path.join(indexerFixture, "readable.js");
+  const inaccessibleFile = path.join(indexerFixture, "inaccessible.js");
+  writeFileSync(readableFile, "export const readable = true;\n", "utf8");
+  writeFileSync(inaccessibleFile, "export const inaccessible = true;\n", "utf8");
+
+  const files = walkFiles(indexerFixture, indexerFixture, [], (file) => {
+    if (file === inaccessibleFile) {
+      const error = new Error("Access denied for test fixture");
+      error.code = "EACCES";
+      throw error;
+    }
+    return statSync(file);
+  });
+
+  assert.deepEqual(files.map((file) => file.relative), ["readable.js"]);
+} finally {
+  rmSync(indexerFixture, { recursive: true, force: true });
+}
+
+const originalFetch = globalThis.fetch;
+const originalWebSocket = globalThis.WebSocket;
+class TestWebSocket {
+  static OPEN = 1;
+}
+
+try {
+  let tokenRequests = 0;
+  const audioParts = [];
+  const inputTranscripts = [];
+  const outputTranscripts = [];
+  let interruptions = 0;
+  let completedTurns = 0;
+  let ragResult = null;
+  const sentPayloads = [];
+
+  globalThis.fetch = async () => {
+    tokenRequests += 1;
+    throw new Error("An established audio-only session must not reconnect");
+  };
+  globalThis.WebSocket = TestWebSocket;
+
+  const liveClient = new GeminiLiveClient({
+    retriever: {
+      retrieve: () => ({ context: "Verified local context", sources: ["profile"] })
+    },
+    onAudio: (audio) => audioParts.push(audio),
+    onInputTranscript: (text) => inputTranscripts.push(text),
+    onOutputTranscript: (text) => outputTranscripts.push(text),
+    onRag: (result) => { ragResult = result; },
+    onInterrupted: () => { interruptions += 1; },
+    onTurnComplete: () => { completedTurns += 1; }
+  });
+  liveClient.socket = {
+    readyState: TestWebSocket.OPEN,
+    send: (payload) => sentPayloads.push(JSON.parse(payload))
+  };
+  liveClient.language = "fr";
+  liveClient.sessionTranscriptionEnabled = false;
+  liveClient.setTranscriptionEnabled(false);
+
+  await liveClient.connect("fr");
+  await liveClient.sendText("Question audio sans transcription");
+  await liveClient.handleMessage({
+    data: JSON.stringify({
+      serverContent: {
+        modelTurn: {
+          parts: [{ inlineData: { mimeType: "audio/pcm;rate=24000", data: "AQ==" } }]
+        },
+        inputTranscription: { text: "must remain hidden" },
+        outputTranscription: { text: "must remain hidden" },
+        interrupted: true,
+        turnComplete: true
+      }
+    })
+  });
+
+  assert.equal(tokenRequests, 0);
+  assert.deepEqual(audioParts, ["AQ=="]);
+  assert.deepEqual(inputTranscripts, []);
+  assert.deepEqual(outputTranscripts, []);
+  assert.equal(interruptions, 1);
+  assert.equal(completedTurns, 1);
+  assert.equal(ragResult?.context, "Verified local context");
+  assert.ok(sentPayloads.some((payload) => /Verified local context/.test(payload.realtimeInput?.text || "")));
+
+  liveClient.sessionTranscriptionEnabled = true;
+  await liveClient.handleMessage({
+    data: JSON.stringify({
+      serverContent: {
+        inputTranscription: { text: "local user transcript" },
+        outputTranscription: { text: "local assistant transcript" }
+      }
+    })
+  });
+  assert.deepEqual(inputTranscripts, ["local user transcript"]);
+  assert.deepEqual(outputTranscripts, ["local assistant transcript"]);
+} finally {
+  globalThis.fetch = originalFetch;
+  if (originalWebSocket === undefined) delete globalThis.WebSocket;
+  else globalThis.WebSocket = originalWebSocket;
+}
+
+console.log("RAG retrieval tests passed: profile FR/DE, status caution, technical evidence, safe indexing, prompt isolation and consent-aware voice audio.");

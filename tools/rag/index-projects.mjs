@@ -53,16 +53,21 @@ function ensureRepository(project, repository, sourceRoot) {
   return local;
 }
 
-function walkFiles(root, current = root, output = []) {
+export function walkFiles(root, current = root, output = [], statFile = statSync) {
   for (const entry of readdirSync(current, { withFileTypes: true })) {
     const full = path.join(current, entry.name);
     const relative = path.relative(root, full).replaceAll("\\", "/");
     if (entry.isDirectory()) {
-      if (!IGNORED_DIRS.has(entry.name) && !entry.name.startsWith(".")) walkFiles(root, full, output);
+      if (!IGNORED_DIRS.has(entry.name) && !entry.name.startsWith(".")) walkFiles(root, full, output, statFile);
       continue;
     }
     if (IGNORED_FILES.test(relative) || IGNORED_SUFFIXES.test(relative) || !INDEXABLE_SUFFIXES.test(relative)) continue;
-    const size = statSync(full).size;
+    let size;
+    try {
+      size = statFile(full).size;
+    } catch {
+      continue;
+    }
     if (size > 350_000) continue;
     output.push({ full, relative, size });
   }
@@ -369,4 +374,4 @@ function main() {
   console.log(`Missing repositories: ${report.repositoriesMissing.length}; errors: ${report.errors.length}.`);
 }
 
-main();
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
