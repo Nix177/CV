@@ -1,106 +1,151 @@
-const SOURCE_URLS = [
-  { name: "CV", url: "/cv-text.txt" },
-  { name: "Portfolio", url: "/portfolio-data.js" }
-];
+import {
+  detectTechnicalQuestion,
+  formatRetrievedChunks,
+  normalizeSearchText,
+  rankLexicalChunks
+} from "../../../rag/weighted-lexical-retriever.js";
 
-const STOP_WORDS = new Set([
-  "avec", "dans", "des", "les", "une", "pour", "que", "qui", "son", "ses", "sur", "est", "sont",
-  "the", "and", "for", "with", "what", "his", "about", "does", "ist", "und", "der", "die", "das",
-  "mit", "was", "wie", "von", "zu", "ein", "eine", "auf", "nicolas", "tuor"
-]);
+const SOURCE_URLS = {
+  knowledgeBase: "/data/rag-knowledge-base.json",
+  codeIndex: "/rag/project-code-index.json"
+};
 
-function normalize(value) {
-  return String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+function projectAliases(project) {
+  return [project.id, project.title, ...Object.values(project.display?.i18n || {}).map((entry) => entry?.title)]
+    .filter(Boolean)
+    .map(normalizeSearchText);
 }
 
-function tokenize(value) {
-  return normalize(value)
-    .match(/[a-z0-9]+/g)
-    ?.filter((token) => token.length > 2 && !STOP_WORDS.has(token)) || [];
+function identifyProject(projects, question, requestedProjectId = "") {
+  const explicit = normalizeSearchText(requestedProjectId).trim();
+  if (explicit) return projects.find((project) => normalizeSearchText(project.id) === explicit) || null;
+  const normalizedQuestion = normalizeSearchText(question);
+  return projects.find((project) => projectAliases(project).some((alias) => alias.length > 3 && normalizedQuestion.includes(alias))) || null;
 }
 
-function cleanChunk(value) {
-  return String(value || "")
-    .replace(/\/\*[\s\S]*?\*\//g, " ")
-    .replace(/^\s*\/\/.*$/gm, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function splitCv(text) {
-  return String(text || "")
-    .split(/(?=^=== .+ ===$)/gm)
-    .map(cleanChunk)
-    .filter((chunk) => chunk.length > 60);
-}
-
-function splitPortfolio(text) {
-  return String(text || "")
-    .split(/\n\s{2}\{\s*\n(?=\s{4}id:)/)
-    .map(cleanChunk)
-    .filter((chunk) => chunk.length > 80);
+function buildKnowledgeChunks(knowledgeBase) {
+  const profileChunks = Object.entries(knowledgeBase.profile || {}).map(([key, value]) => ({
+    id: `profile:${key}`,
+    projectId: "profile",
+    path: `/data/rag-knowledge-base.json#profile.${key}`,
+    chunkType: "profile",
+    implementationStatus: "verified-profile-data",
+    content: `${key}: ${Array.isArray(value) ? value.join("\n") : typeof value === "object" ? JSON.stringify(value) : value}`
+  }));
+  const projectChunks = (knowledgeBase.projects || []).map((project) => ({
+    id: `project:${project.id}`,
+    projectId: project.id,
+    projectTitle: project.title,
+    path: `/data/rag-knowledge-base.json#projects.${project.id}`,
+    chunkType: "project-summary",
+    implementationStatus: project.status,
+    content: JSON.stringify({
+      title: project.title,
+      status: project.status,
+      summary: project.summary,
+      purpose: project.purpose,
+      implemented: project.implemented,
+      partiallyImplemented: project.partiallyImplemented,
+      simulated: project.simulated,
+      planned: project.planned,
+      notImplemented: project.notImplemented,
+      currentLimitations: project.currentLimitations,
+      technologies: project.technologies,
+      architecture: project.architecture,
+      contribution: project.contribution,
+      aiAssistance: project.aiAssistance,
+      safeClaims: project.safeClaims,
+      forbiddenClaims: project.forbiddenClaims
+    })
+  }));
+  return profileChunks.concat(projectChunks);
 }
 
 export class RagRetriever {
   constructor() {
-    this.chunks = [];
+    this.knowledgeBase = { profile: {}, projects: [] };
+    this.codeIndex = { chunks: [] };
+    this.knowledgeChunks = [];
     this.ready = false;
   }
 
   async load() {
-    const responses = await Promise.all(SOURCE_URLS.map(async (source) => {
-      const response = await fetch(source.url, { cache: "no-store" });
-      if (!response.ok) throw new Error(`Unable to load ${source.name} source`);
-      return { ...source, text: await response.text() };
-    }));
+    const [knowledgeResponse, indexResponse] = await Promise.all([
+      fetch(SOURCE_URLS.knowledgeBase, { cache: "no-store" }),
+      fetch(SOURCE_URLS.codeIndex, { cache: "no-store" })
+    ]);
+    if (!knowledgeResponse.ok) throw new Error("Unable to load the verified knowledge base");
+    if (!indexResponse.ok) throw new Error("Unable to load the project code index");
 
-    this.chunks = responses.flatMap((source) => {
-      const parts = source.name === "CV" ? splitCv(source.text) : splitPortfolio(source.text);
-      return parts.map((content, index) => ({
-        id: `${source.name.toLowerCase()}-${index + 1}`,
-        source: source.name,
-        content,
-        normalized: normalize(content),
-        tokens: tokenize(content)
-      }));
-    });
-    this.ready = this.chunks.length > 0;
+    this.knowledgeBase = await knowledgeResponse.json();
+    this.codeIndex = await indexResponse.json();
+    this.knowledgeChunks = buildKnowledgeChunks(this.knowledgeBase);
+    this.ready = this.knowledgeChunks.length > 0;
     return this;
   }
 
-  retrieve(query, limit = 5) {
-    const queryTokens = tokenize(query);
-    if (!this.ready || queryTokens.length === 0) {
-      return { query, context: "", sources: [], found: false };
+  retrieve(query, limit = 6) {
+    if (!this.ready) return { query, context: "", sources: [], found: false, passageIds: [] };
+    const project = identifyProject(this.knowledgeBase.projects || [], query);
+    const ranked = rankLexicalChunks(query, this.knowledgeChunks, { projectId: project?.id, limit });
+    let context = formatRetrievedChunks(ranked, { maxChars: 9000 });
+    let technical = null;
+
+    if (detectTechnicalQuestion(query)) {
+      technical = this.retrieveProjectCodeContext({ projectId: project?.id, question: query });
+      if (technical.context) context = `${context}\n\n=== TECHNICAL CODE EVIDENCE ===\n${technical.context}\n\n${technical.summary}`;
     }
-
-    const ranked = this.chunks.map((chunk) => {
-      let score = 0;
-      for (const token of queryTokens) {
-        const occurrences = chunk.normalized.split(token).length - 1;
-        if (occurrences > 0) score += 1.5 + Math.min(occurrences, 4) * 0.45 + (token.length > 6 ? 0.8 : 0);
-      }
-      const phrase = normalize(query).trim();
-      if (phrase.length > 8 && chunk.normalized.includes(phrase)) score += 6;
-      return { ...chunk, score };
-    }).filter((chunk) => chunk.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
-
-    const context = ranked
-      .map((chunk) => `[Source: ${chunk.source}; passage: ${chunk.id}]\n${chunk.content.slice(0, 2200)}`)
-      .join("\n\n---\n\n")
-      .slice(0, 9000);
 
     return {
       query,
-      context,
-      sources: [...new Set(ranked.map((chunk) => chunk.source))],
+      context: context.slice(0, 17000),
+      sources: [...new Set(ranked.map((chunk) => chunk.projectId === "profile" ? "Profile" : chunk.projectTitle || chunk.projectId))],
       found: ranked.length > 0,
-      passageIds: ranked.map((chunk) => chunk.id)
+      passageIds: ranked.map((chunk) => chunk.id),
+      technical
+    };
+  }
+
+  retrieveProjectCodeContext({ projectId = "", question = "", language = "fr" } = {}) {
+    const projects = this.knowledgeBase.projects || [];
+    const project = identifyProject(projects, question, projectId);
+    const candidates = project
+      ? (this.codeIndex.chunks || []).filter((chunk) => chunk.projectId === project.id)
+      : (this.codeIndex.chunks || []);
+    const ranked = rankLexicalChunks(question, candidates, { projectId: project?.id, limit: 7 });
+    const hasCodeEvidence = ranked.some((chunk) => chunk.chunkType !== "repository-metadata");
+    const repositories = [...new Map(ranked.map((chunk) => [chunk.repository, { repository: chunk.repository, branch: chunk.branch }])).values()];
+    const paths = [...new Set(ranked.map((chunk) => chunk.path).filter(Boolean))];
+    const summary = !project
+      ? "No verified project matched the request."
+      : hasCodeEvidence
+        ? `${project.title}: ${project.status}. Code evidence was found, but it does not by itself prove a production deployment.`
+        : ranked.length
+          ? `${project.title}: ${project.status}. Only cautious repository metadata is available; raw code was not indexed.`
+        : "The repository describes this feature, but there was not enough code or test evidence to confirm it is operational.";
+
+    return {
+      project: project ? { id: project.id, title: project.title, status: project.status } : null,
+      repositories,
+      paths,
+      excerpts: ranked.map((chunk) => ({
+        repository: chunk.repository,
+        branch: chunk.branch,
+        path: chunk.path,
+        symbolName: chunk.symbolName,
+        chunkType: chunk.chunkType,
+        implementationStatus: chunk.implementationStatus,
+        sourceUrl: chunk.sourceUrl,
+        lastIndexedCommit: chunk.lastIndexedCommit,
+        content: String(chunk.content || "").slice(0, 2400)
+      })),
+      context: formatRetrievedChunks(ranked, { maxChars: 8000 }),
+      summary,
+      implementationStatus: project?.status || "unverified",
+      readmeDivergences: project?.readmeDivergences || [],
+      language,
+      evidenceLevel: hasCodeEvidence ? "code-indexed" : ranked.length ? "metadata-only" : "not-found",
+      verified: Boolean(project && ranked.length && hasCodeEvidence)
     };
   }
 }

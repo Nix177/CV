@@ -11,25 +11,25 @@
   const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0, 2).toLowerCase();
   const T = ({
     fr: {
-      preview: "Aperçu", visit: "Visiter", close: "Fermer",
+      preview: "Aperçu", visit: "Visiter", close: "Fermer", source: "Code source", details: "État technique et limites", limits: "Limites actuelles",
       filters: { all: "Tous", ready: "Stables & démos", experimental: "Prototypes expérimentaux" },
-      status: { stable: "Stable", demo: "Démo", prototype: "Prototype", experimental: "Expérimental", improve: "À améliorer" },
+      status: { concept: "Concept", mockup: "Maquette", prototype: "Prototype", demo: "Démo", experimental: "Expérimental", stable: "Stable", archived: "Archivé" },
       empty: "Aucun projet ne correspond à ce filtre.",
       blocked: "Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
       loading: "Chargement de l’aperçu…"
     },
     en: {
-      preview: "Preview", visit: "Visit", close: "Close",
+      preview: "Preview", visit: "Visit", close: "Close", source: "Source code", details: "Technical status and limits", limits: "Current limits",
       filters: { all: "All", ready: "Stable tools & demos", experimental: "Experimental prototypes" },
-      status: { stable: "Stable", demo: "Demo", prototype: "Prototype", experimental: "Experimental", improve: "To improve" },
+      status: { concept: "Concept", mockup: "Mockup", prototype: "Prototype", demo: "Demo", experimental: "Experimental", stable: "Stable", archived: "Archived" },
       empty: "No project matches this filter.",
       blocked: "This site denies being embedded. ➜ Use “Visit”.",
       loading: "Loading preview…"
     },
     de: {
-      preview: "Vorschau", visit: "Besuchen", close: "Schließen",
+      preview: "Vorschau", visit: "Besuchen", close: "Schließen", source: "Quellcode", details: "Technischer Stand und Grenzen", limits: "Aktuelle Grenzen",
       filters: { all: "Alle", ready: "Stabile Tools & Demos", experimental: "Experimentelle Prototypen" },
-      status: { stable: "Stabil", demo: "Demo", prototype: "Prototyp", experimental: "Experimentell", improve: "Zu verbessern" },
+      status: { concept: "Konzept", mockup: "Entwurf", prototype: "Prototyp", demo: "Demo", experimental: "Experimentell", stable: "Stabil", archived: "Archiviert" },
       empty: "Kein Projekt entspricht diesem Filter.",
       blocked: "Diese Seite untersagt Einbettung. ➜ «Besuchen» nutzen.",
       loading: "Vorschau wird geladen…"
@@ -86,7 +86,7 @@
   }
 
   function isExperimentalProject(it) {
-    return ["prototype", "experimental", "improve"].includes(getStatusKey(it)) || it.category === "maquette/idées";
+    return ["concept", "mockup", "prototype", "experimental"].includes(getStatusKey(it)) || it.category === "maquette/idées";
   }
 
   function filterPortfolio(items, filter) {
@@ -226,6 +226,24 @@
         );
       });
     }
+    if (Array.isArray(it.repositoryUrls)) {
+      it.repositoryUrls.forEach((repositoryUrl) => {
+        actionsChildren.push(
+          el("a", { class: "btn", href: repositoryUrl, target: "_blank", rel: "noopener" }, T.source)
+        );
+      });
+    }
+
+    const technicalDetails = it.implementationSummary || (it.currentLimitations || []).length
+      ? el("details", { class: "project-details" }, [
+          el("summary", { text: T.details }),
+          it.implementationSummary ? el("p", { text: it.implementationSummary }) : null,
+          (it.currentLimitations || []).length ? el("strong", { text: T.limits }) : null,
+          (it.currentLimitations || []).length
+            ? el("ul", {}, it.currentLimitations.map((limit) => el("li", { text: limit })))
+            : null
+        ].filter(Boolean))
+      : null;
 
     // Galerie d'images pour les entrées avec extraImages
     const galleryEl = hasGallery ? el("div", { class: "p-gallery" }, [
@@ -246,6 +264,7 @@
         el("span", { class: `badge status-badge status-${statusKey}`, text: getStatusLabel(it) }),
         ...tags.map(t => el("span", { class: "badge", text: t }))
       ]),
+      technicalDetails,
       // Galerie d'images si présente
       galleryEl,
       // Actions (Aperçu/Visiter) seulement si pertinentes
@@ -333,8 +352,10 @@
     grid.appendChild(frag);
   }
   // -------- Boot --------
-  document.addEventListener("DOMContentLoaded", () => {
-    const items = loadData();
+  document.addEventListener("DOMContentLoaded", async () => {
+    const items = window.portfolioDataReady
+      ? await window.portfolioDataReady
+      : loadData();
     ensurePortfolioFilters(items);
     renderGrid(filterPortfolio(items, activeFilter));
 
