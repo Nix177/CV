@@ -8,9 +8,9 @@ export const I18N = {
     navPortfolio: "Portfolio",
     navChatbot: "Chatbot",
     navLab: "Labo IA",
-    conversationConsent: "Autoriser l'enregistrement local de la transcription",
+    conversationConsent: "Garder une trace locale de la transcription (facultatif)",
     downloadConversation: "Télécharger la conversation",
-    conversationLocalNote: "Facultatif : texte seulement, dans ce navigateur. Aucun audio n'est enregistré.",
+    conversationLocalNote: "Uniquement si vous souhaitez conserver une copie personnelle : texte dans ce navigateur, sans enregistrement audio ni envoi à Nicolas.",
     transcriptTitle: "Transcription",
     transcriptLocalBadge: "Mémoire locale",
     transcriptEmpty: "La transcription commencera avec votre prochaine question.",
@@ -23,7 +23,7 @@ export const I18N = {
     privacyIntro: "Nicolas Tuor ne collecte, ne consulte et ne conserve aucune conversation.",
     privacyProcessed: "Pour répondre, la question écrite ou l'audio du microphone, ainsi que les passages pertinents du CV et du portfolio, sont transmis à Google Gemini Live.",
     privacyTechnical: "Google et l'hébergeur Vercel peuvent traiter des données techniques de connexion selon leurs propres conditions.",
-    privacyRecording: "La case d'enregistrement est facultative. Si elle est cochée, seule la transcription texte est gardée temporairement dans la mémoire de ce navigateur ; aucun enregistrement audio n'est créé.",
+    privacyRecording: "Cette option sert uniquement à vous permettre de garder une trace personnelle. Si elle est cochée, seule la transcription texte reste temporairement dans la mémoire de ce navigateur ; Nicolas ne la collecte pas et aucun audio n'est enregistré.",
     privacyDeletion: "Décochez la case ou rechargez la page pour effacer la transcription. Le téléchargement crée uniquement un fichier local sur votre appareil.",
     eyebrow: "Assistant de profil en direct",
     title: "Parler avec l'assistant de Nicolas",
@@ -61,10 +61,10 @@ export const I18N = {
     liveNotConfigured: "Gemini Live n'est pas encore configuré sur le serveur.",
     micUnavailable: "Le navigateur n'autorise pas le microphone. La saisie texte reste disponible.",
     questions: [
-      "Quel est le profil de Nicolas ?",
-      "Quelle est son expérience en EdTech ?",
-      "Parlez-moi de sa recherche sur le débogage.",
-      "Quels projets techniques a-t-il réalisés ?"
+      "Quels sont les principaux points forts de Nicolas, avec des exemples concrets ?",
+      "Que montre sa recherche publiée sur l’enseignement du débogage ?",
+      "Comment Nicolas transforme-t-il un besoin en projet numérique fonctionnel ?",
+      "Qu’apporterait Nicolas à une équipe pluridisciplinaire ?"
     ]
   },
   en: {
@@ -76,9 +76,9 @@ export const I18N = {
     navPortfolio: "Portfolio",
     navChatbot: "Chatbot",
     navLab: "AI Lab",
-    conversationConsent: "Allow local recording of the transcript",
+    conversationConsent: "Keep a local copy of the transcript (optional)",
     downloadConversation: "Download conversation",
-    conversationLocalNote: "Optional: text only, in this browser. No audio is recorded.",
+    conversationLocalNote: "Only if you want a personal record: text stays in this browser, with no audio recording and nothing sent to Nicolas.",
     transcriptTitle: "Transcript",
     transcriptLocalBadge: "Local memory",
     transcriptEmpty: "The transcript will start with your next question.",
@@ -91,7 +91,7 @@ export const I18N = {
     privacyIntro: "Nicolas Tuor does not collect, view, or retain any conversation.",
     privacyProcessed: "To provide an answer, your typed question or microphone audio and relevant CV and portfolio passages are sent to Google Gemini Live.",
     privacyTechnical: "Google and the Vercel hosting service may process technical connection data under their own terms.",
-    privacyRecording: "Recording is optional. When enabled, only the text transcript is kept temporarily in this browser's memory; no audio recording is created.",
+    privacyRecording: "This option exists only so you can keep a personal record. When enabled, only the text transcript stays temporarily in this browser's memory; Nicolas does not collect it and no audio is recorded.",
     privacyDeletion: "Untick the box or reload the page to erase the transcript. Downloading creates a file only on your device.",
     eyebrow: "Live profile assistant",
     title: "Talk with Nicolas's assistant",
@@ -129,10 +129,10 @@ export const I18N = {
     liveNotConfigured: "Gemini Live is not configured on the server yet.",
     micUnavailable: "Microphone access is unavailable. Text input still works.",
     questions: [
-      "What is Nicolas's professional profile?",
-      "What experience does he have in EdTech?",
-      "Tell me about his debugging research.",
-      "Which technical projects has he built?"
+      "What are Nicolas's main strengths, with concrete examples?",
+      "What does his published research show about teaching debugging?",
+      "How does Nicolas turn a need into a functional digital project?",
+      "What would Nicolas bring to a multidisciplinary team?"
     ]
   },
   de: {
@@ -144,9 +144,9 @@ export const I18N = {
     navPortfolio: "Portfolio",
     navChatbot: "Chatbot",
     navLab: "KI-Labor",
-    conversationConsent: "Lokale Speicherung des Transkripts erlauben",
+    conversationConsent: "Lokale Kopie des Transkripts behalten (optional)",
     downloadConversation: "Gespräch herunterladen",
-    conversationLocalNote: "Optional: nur Text in diesem Browser. Es wird kein Audio aufgezeichnet.",
+    conversationLocalNote: "Nur wenn Sie eine persönliche Kopie wünschen: Text bleibt in diesem Browser, ohne Audioaufnahme oder Übermittlung an Nicolas.",
     transcriptTitle: "Transkript",
     transcriptLocalBadge: "Lokaler Speicher",
     transcriptEmpty: "Das Transkript beginnt mit Ihrer nächsten Frage.",
@@ -159,7 +159,7 @@ export const I18N = {
     privacyIntro: "Nicolas Tuor erhebt, liest oder speichert keine Gespräche.",
     privacyProcessed: "Für die Antwort werden Ihre eingegebene Frage oder das Mikrofonaudio sowie relevante Passagen aus Lebenslauf und Portfolio an Google Gemini Live übermittelt.",
     privacyTechnical: "Google und der Hosting-Dienst Vercel können technische Verbindungsdaten nach ihren eigenen Bedingungen verarbeiten.",
-    privacyRecording: "Die Speicherung ist optional. Wenn sie aktiviert ist, bleibt nur das Texttranskript vorübergehend im Speicher dieses Browsers; es wird keine Audioaufnahme erstellt.",
+    privacyRecording: "Diese Option dient ausschließlich dazu, dass Sie eine persönliche Kopie behalten können. Nur das Texttranskript bleibt vorübergehend im Speicher dieses Browsers; Nicolas erhebt es nicht und es wird kein Audio aufgezeichnet.",
     privacyDeletion: "Deaktivieren Sie die Option oder laden Sie die Seite neu, um das Transkript zu löschen. Der Download erstellt nur eine Datei auf Ihrem Gerät.",
     eyebrow: "Live-Profilassistent",
     title: "Mit Nicolas' Assistenten sprechen",
@@ -197,10 +197,10 @@ export const I18N = {
     liveNotConfigured: "Gemini Live ist auf dem Server noch nicht konfiguriert.",
     micUnavailable: "Das Mikrofon ist nicht verfügbar. Die Texteingabe funktioniert weiterhin.",
     questions: [
-      "Wie sieht Nicolas' berufliches Profil aus?",
-      "Welche Erfahrung hat er im EdTech-Bereich?",
-      "Was hat er über Debugging erforscht?",
-      "Welche technischen Projekte hat er umgesetzt?"
+      "Was sind Nicolas' wichtigste Stärken, mit konkreten Beispielen?",
+      "Was zeigt seine veröffentlichte Forschung zur Vermittlung von Debugging?",
+      "Wie überführt Nicolas einen Bedarf in ein funktionsfähiges digitales Projekt?",
+      "Was würde Nicolas in ein interdisziplinäres Team einbringen?"
     ]
   }
 };

@@ -213,8 +213,37 @@
     .bubble.bot {
       margin-right: auto;
       background: #0f2741;
-      border: 1px solid #1a446e
+      border: 1px solid #1a446e;
+      text-align: left
     }
+
+    .bubble.bot p,
+    .bubble.bot ul,
+    .bubble.bot ol,
+    .bubble.bot h3,
+    .bubble.bot h4,
+    .bubble.bot h5 {
+      margin: .55em 0
+    }
+
+    .bubble.bot > :first-child { margin-top: 0 }
+    .bubble.bot > :last-child { margin-bottom: 0 }
+    .bubble.bot ul,
+    .bubble.bot ol { padding-left: 1.35rem }
+    .bubble.bot li + li { margin-top: .3em }
+    .bubble.bot h3,
+    .bubble.bot h4,
+    .bubble.bot h5 {
+      font-size: 1rem;
+      line-height: 1.3;
+      letter-spacing: 0
+    }
+    .bubble.bot a {
+      color: #7fc4ff;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px
+    }
+    html[data-theme="light"] .bubble.bot a { color: #075eb8 }
 
     html[data-theme="light"] .bubble.user {
       background: #e7f1ff;
@@ -365,10 +394,10 @@
     <section class="suggestions" aria-label="Suggested questions">
       <h2>Suggested questions</h2>
       <div class="suggestion-grid">
-        <button type="button" class="suggestion" data-chat-question="Summarize Nicolas's profile in five lines.">Summarize Nicolas's profile in five lines.</button>
-        <button type="button" class="suggestion" data-chat-question="What are his strengths for an EdTech role?">What are his strengths for an EdTech role?</button>
-        <button type="button" class="suggestion" data-chat-question="What is his experience in digital education?">What is his experience in digital education?</button>
-        <button type="button" class="suggestion" data-chat-question="Which projects show his technical skills?">Which projects show his technical skills?</button>
+        <button type="button" class="suggestion" data-chat-question="What are Nicolas's main strengths, with concrete examples?">What are Nicolas's main strengths, with concrete examples?</button>
+        <button type="button" class="suggestion" data-chat-question="What does his published research show about teaching debugging?">What does his published research show about teaching debugging?</button>
+        <button type="button" class="suggestion" data-chat-question="How does Nicolas turn a need into a functional digital project?">How does Nicolas turn a need into a functional digital project?</button>
+        <button type="button" class="suggestion" data-chat-question="What would Nicolas bring to a multidisciplinary team?">What would Nicolas bring to a multidisciplinary team?</button>
       </div>
     </section>
 
@@ -376,10 +405,10 @@
       <div class="chat-record-tools">
         <label class="chat-record-consent" for="chatConsent">
           <input id="chatConsent" type="checkbox">
-          <span>Allow local recording of this conversation</span>
+          <span>Keep a local copy of this conversation (optional)</span>
         </label>
         <button id="chatDownload" class="chat-download" type="button" disabled>Download conversation</button>
-        <p>Optional: a text copy in this browser's memory, never in a database controlled by Nicolas.</p>
+        <p>Use this only if you want a personal record: the text stays in this browser's memory and is not sent to Nicolas.</p>
       </div>
       <div id="chatLog" aria-live="polite"></div>
       <div class="inputBar">
@@ -397,7 +426,7 @@
       <ul>
         <li>To provide an answer, your question, selected settings, and relevant CV and portfolio passages are sent through the server function to the selected provider: OpenAI or Google Gemini.</li>
         <li>Vercel and the AI provider may process technical connection and API usage data under their own terms.</li>
-        <li>Recording is optional. When enabled, an exportable text copy is kept only in this browser's memory.</li>
+        <li>This option exists only so you can keep a personal record. When enabled, an exportable text copy stays in this browser's memory; Nicolas does not collect it.</li>
         <li>Untick the box or reload the page to erase that copy. Downloading creates a file only on your device.</li>
       </ul>
     </div>

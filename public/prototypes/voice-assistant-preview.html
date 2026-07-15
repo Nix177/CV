@@ -121,10 +121,10 @@
       <div class="conversation-tools">
         <label class="conversation-consent" for="conversationConsent">
           <input id="conversationConsent" type="checkbox">
-          <span data-i18n="conversationConsent">Autoriser l'enregistrement local de la transcription</span>
+          <span data-i18n="conversationConsent">Garder une trace locale de la transcription (facultatif)</span>
         </label>
         <button id="downloadConversation" class="download-conversation" type="button" disabled data-i18n="downloadConversation">Télécharger la conversation</button>
-        <p data-i18n="conversationLocalNote">Facultatif : texte seulement, dans ce navigateur. Aucun audio n'est enregistré.</p>
+        <p data-i18n="conversationLocalNote">Uniquement si vous souhaitez conserver une copie personnelle : texte dans ce navigateur, sans enregistrement audio ni envoi à Nicolas.</p>
       </div>
 
       <section id="conversationTranscript" class="conversation-transcript" aria-labelledby="transcriptTitle" hidden>
@@ -147,7 +147,7 @@
       <ul>
         <li data-i18n="privacyProcessed">Pour répondre, la question écrite ou l'audio du microphone, ainsi que les passages pertinents du CV et du portfolio, sont transmis à Google Gemini Live.</li>
         <li data-i18n="privacyTechnical">Google et l'hébergeur Vercel peuvent traiter des données techniques de connexion selon leurs propres conditions.</li>
-        <li data-i18n="privacyRecording">La case d'enregistrement est facultative. Si elle est cochée, seule la transcription texte est gardée temporairement dans la mémoire de ce navigateur ; aucun enregistrement audio n'est créé.</li>
+        <li data-i18n="privacyRecording">Cette option sert uniquement à vous permettre de garder une trace personnelle. Si elle est cochée, seule la transcription texte reste temporairement dans la mémoire de ce navigateur ; Nicolas ne la collecte pas et aucun audio n'est enregistré.</li>
         <li data-i18n="privacyDeletion">Décochez la case ou rechargez la page pour effacer la transcription. Le téléchargement crée uniquement un fichier local sur votre appareil.</li>
       </ul>
     </div>

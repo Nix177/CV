@@ -1,15 +1,19 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
   UpstreamError,
+  buildGeminiPayload,
   buildMessages,
+  buildOpenAIResponsesPayload,
   buildUntrustedContextMessage,
+  getOutputLimits,
   retrieve_project_code_context,
   toUserErrorMessage
 } from "../../api/chat.js";
 import { GeminiLiveClient, buildSystemInstruction } from "../../public/prototypes/voice-assistant/js/GeminiLiveClient.js";
+import { I18N as VOICE_I18N } from "../../public/prototypes/voice-assistant/js/i18n.js";
 import { walkFiles } from "./index-projects.mjs";
 import { containsInstructionLikeContent } from "./prompt-injection-guard.mjs";
 
@@ -71,6 +75,66 @@ const germanMessages = buildMessages({
 });
 assert.ok(/Antworte auf Deutsch/.test(germanMessages[0].content));
 assert.ok(/C1/.test(germanMessages[1].content));
+
+const researchMessages = buildMessages({
+  message: "Que montre sa recherche publiée sur l’enseignement du débogage ?",
+  liberty: 1,
+  concise: false,
+  lang: "fr"
+});
+assert.ok(/mené cette recherche.*Master/i.test(researchMessages[1].content));
+assert.ok(/36 élèves.*deux classes de 5H/i.test(researchMessages[1].content));
+assert.ok(/p = 0,009.*p < 0,001/s.test(researchMessages[1].content));
+assert.ok(/dix semaines.*quatre groupes/i.test(researchMessages[1].content));
+assert.ok(/150 à 230 mots/i.test(researchMessages[0].content));
+
+const conciseMessages = buildMessages({
+  message: "Quels sont les principaux points forts de Nicolas, avec des exemples concrets ?",
+  liberty: 1,
+  concise: true,
+  lang: "fr"
+});
+assert.ok(/60 à 100 mots/i.test(conciseMessages[0].content));
+assert.deepEqual(getOutputLimits(true), { openai: 320, google: 256 });
+assert.deepEqual(getOutputLimits(false), { openai: 900, google: 768 });
+assert.equal(buildOpenAIResponsesPayload(conciseMessages, "test-model", 320).max_output_tokens, 320);
+assert.equal(buildGeminiPayload(conciseMessages, 0.3, 256).generationConfig.maxOutputTokens, 256);
+
+const recruiterQuestions = {
+  fr: [
+    "Quels sont les principaux points forts de Nicolas, avec des exemples concrets ?",
+    "Que montre sa recherche publiée sur l’enseignement du débogage ?",
+    "Comment Nicolas transforme-t-il un besoin en projet numérique fonctionnel ?",
+    "Qu’apporterait Nicolas à une équipe pluridisciplinaire ?"
+  ],
+  en: [
+    "What are Nicolas's main strengths, with concrete examples?",
+    "What does his published research show about teaching debugging?",
+    "How does Nicolas turn a need into a functional digital project?",
+    "What would Nicolas bring to a multidisciplinary team?"
+  ],
+  de: [
+    "Was sind Nicolas' wichtigste Stärken, mit konkreten Beispielen?",
+    "Was zeigt seine veröffentlichte Forschung zur Vermittlung von Debugging?",
+    "Wie überführt Nicolas einen Bedarf in ein funktionsfähiges digitales Projekt?",
+    "Was würde Nicolas in ein interdisziplinäres Team einbringen?"
+  ]
+};
+for (const [lang, questions] of Object.entries(recruiterQuestions)) {
+  assert.deepEqual(VOICE_I18N[lang].questions, questions);
+  const suffix = lang === "fr" ? "" : `-${lang}`;
+  const html = readFileSync(path.resolve(`public/chatbot${suffix}.html`), "utf8");
+  assert.equal((html.match(/data-chat-question=/g) || []).length, 4);
+  for (const question of questions) assert.ok(html.includes(question));
+}
+
+const chatbotClient = readFileSync(path.resolve("public/chatbot.js"), "utf8");
+assert.ok(/renderMarkdown\(botBubble, fullText\)/.test(chatbotClient));
+assert.ok(!/\.innerHTML\s*=/.test(chatbotClient));
+assert.ok(/\["http:", "https:"\]/.test(chatbotClient));
+assert.match(VOICE_I18N.fr.conversationLocalNote, /copie personnelle/i);
+assert.match(VOICE_I18N.en.conversationLocalNote, /personal record/i);
+assert.match(VOICE_I18N.de.conversationLocalNote, /persönliche Kopie/i);
 
 const statusMessages = buildMessages({
   message: "Qu'est-ce que Common Ground et est-ce fonctionnel ?",

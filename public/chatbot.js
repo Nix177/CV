@@ -112,6 +112,99 @@
     return ["fr", "en", "de"].includes(hlang) ? hlang : "fr";
   }
 
+  function appendInlineMarkdown(container, source) {
+    const text = String(source || "");
+    const tokenPattern = /(\*\*([^*\n]+)\*\*|\[([^\]\n]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\))/g;
+    let cursor = 0;
+    let match;
+
+    while ((match = tokenPattern.exec(text))) {
+      if (match.index > cursor) container.append(document.createTextNode(text.slice(cursor, match.index)));
+
+      if (match[2]) {
+        const strong = document.createElement("strong");
+        strong.textContent = match[2];
+        container.append(strong);
+      } else {
+        let url;
+        try {
+          url = new URL(match[4], location.href);
+        } catch {
+          url = null;
+        }
+
+        if (url && ["http:", "https:"].includes(url.protocol)) {
+          const link = document.createElement("a");
+          link.textContent = match[3];
+          link.href = url.href;
+          link.rel = "noopener noreferrer";
+          if (url.origin !== location.origin) link.target = "_blank";
+          container.append(link);
+        } else {
+          container.append(document.createTextNode(match[3]));
+        }
+      }
+
+      cursor = tokenPattern.lastIndex;
+    }
+
+    if (cursor < text.length) container.append(document.createTextNode(text.slice(cursor)));
+  }
+
+  function renderMarkdown(container, markdown) {
+    const lines = String(markdown || "").replace(/\r\n?/g, "\n").split("\n");
+    const fragment = document.createDocumentFragment();
+    let paragraphLines = [];
+    let activeList = null;
+
+    const flushParagraph = () => {
+      if (!paragraphLines.length) return;
+      const paragraph = document.createElement("p");
+      appendInlineMarkdown(paragraph, paragraphLines.join(" "));
+      fragment.append(paragraph);
+      paragraphLines = [];
+    };
+    const closeList = () => { activeList = null; };
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) {
+        flushParagraph();
+        closeList();
+        continue;
+      }
+
+      const heading = line.match(/^(#{1,6})\s+(.+)$/);
+      const unordered = line.match(/^[-*]\s+(.+)$/);
+      const ordered = line.match(/^\d+\.\s+(.+)$/);
+
+      if (heading) {
+        flushParagraph();
+        closeList();
+        const level = Math.min(5, heading[1].length + 2);
+        const title = document.createElement(`h${level}`);
+        appendInlineMarkdown(title, heading[2]);
+        fragment.append(title);
+      } else if (unordered || ordered) {
+        flushParagraph();
+        const tagName = ordered ? "OL" : "UL";
+        if (!activeList || activeList.tagName !== tagName) {
+          activeList = document.createElement(tagName.toLowerCase());
+          fragment.append(activeList);
+        }
+        const item = document.createElement("li");
+        appendInlineMarkdown(item, (unordered || ordered)[1]);
+        activeList.append(item);
+      } else {
+        closeList();
+        paragraphLines.push(line);
+      }
+    }
+
+    flushParagraph();
+    container.replaceChildren(fragment);
+  }
+
   function addBubble(text, who = "bot") {
     const logEl = $("#chatLog");
     if (!logEl) return null;
@@ -180,6 +273,7 @@
       }
 
       botBubble.classList.remove("streaming");
+      renderMarkdown(botBubble, fullText);
 
     } catch (e) {
       const errorText = `${fullText}${fullText ? "\n" : ""}${I18N[lang].neterr}`;

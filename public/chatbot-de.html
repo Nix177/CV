@@ -213,8 +213,37 @@
     .bubble.bot {
       margin-right: auto;
       background: #0f2741;
-      border: 1px solid #1a446e
+      border: 1px solid #1a446e;
+      text-align: left
     }
+
+    .bubble.bot p,
+    .bubble.bot ul,
+    .bubble.bot ol,
+    .bubble.bot h3,
+    .bubble.bot h4,
+    .bubble.bot h5 {
+      margin: .55em 0
+    }
+
+    .bubble.bot > :first-child { margin-top: 0 }
+    .bubble.bot > :last-child { margin-bottom: 0 }
+    .bubble.bot ul,
+    .bubble.bot ol { padding-left: 1.35rem }
+    .bubble.bot li + li { margin-top: .3em }
+    .bubble.bot h3,
+    .bubble.bot h4,
+    .bubble.bot h5 {
+      font-size: 1rem;
+      line-height: 1.3;
+      letter-spacing: 0
+    }
+    .bubble.bot a {
+      color: #7fc4ff;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px
+    }
+    html[data-theme="light"] .bubble.bot a { color: #075eb8 }
 
     html[data-theme="light"] .bubble.user {
       background: #e7f1ff;
@@ -366,10 +395,10 @@
     <section class="suggestions" aria-label="Vorgeschlagene Fragen">
       <h2>Vorgeschlagene Fragen</h2>
       <div class="suggestion-grid">
-        <button type="button" class="suggestion" data-chat-question="Fassen Sie Nicolas' Profil in fünf Zeilen zusammen.">Fassen Sie Nicolas' Profil in fünf Zeilen zusammen.</button>
-        <button type="button" class="suggestion" data-chat-question="Welche Stärken bringt er für eine EdTech-Rolle mit?">Welche Stärken bringt er für eine EdTech-Rolle mit?</button>
-        <button type="button" class="suggestion" data-chat-question="Welche Erfahrung hat er in der digitalen Bildung?">Welche Erfahrung hat er in der digitalen Bildung?</button>
-        <button type="button" class="suggestion" data-chat-question="Welche Projekte zeigen seine technischen Kompetenzen?">Welche Projekte zeigen seine technischen Kompetenzen?</button>
+        <button type="button" class="suggestion" data-chat-question="Was sind Nicolas' wichtigste Stärken, mit konkreten Beispielen?">Was sind Nicolas' wichtigste Stärken, mit konkreten Beispielen?</button>
+        <button type="button" class="suggestion" data-chat-question="Was zeigt seine veröffentlichte Forschung zur Vermittlung von Debugging?">Was zeigt seine veröffentlichte Forschung zur Vermittlung von Debugging?</button>
+        <button type="button" class="suggestion" data-chat-question="Wie überführt Nicolas einen Bedarf in ein funktionsfähiges digitales Projekt?">Wie überführt Nicolas einen Bedarf in ein funktionsfähiges digitales Projekt?</button>
+        <button type="button" class="suggestion" data-chat-question="Was würde Nicolas in ein interdisziplinäres Team einbringen?">Was würde Nicolas in ein interdisziplinäres Team einbringen?</button>
       </div>
     </section>
 
@@ -377,10 +406,10 @@
       <div class="chat-record-tools">
         <label class="chat-record-consent" for="chatConsent">
           <input id="chatConsent" type="checkbox">
-          <span>Lokale Speicherung dieses Gesprächs erlauben</span>
+          <span>Lokale Kopie dieses Gesprächs behalten (optional)</span>
         </label>
         <button id="chatDownload" class="chat-download" type="button" disabled>Gespräch herunterladen</button>
-        <p>Optional: eine Textkopie im Speicher dieses Browsers, niemals in einer von Nicolas betriebenen Datenbank.</p>
+        <p>Nur wenn Sie eine persönliche Kopie wünschen: Der Text bleibt im Speicher dieses Browsers und wird nicht an Nicolas gesendet.</p>
       </div>
       <div id="chatLog" aria-live="polite"></div>
       <div class="inputBar">
@@ -398,7 +427,7 @@
       <ul>
         <li>Für die Antwort werden Ihre Frage, die gewählten Einstellungen und relevante Passagen aus Lebenslauf und Portfolio über die Serverfunktion an den gewählten Anbieter übermittelt: OpenAI oder Google Gemini.</li>
         <li>Vercel und der KI-Anbieter können technische Verbindungs- und API-Nutzungsdaten nach ihren eigenen Bedingungen verarbeiten.</li>
-        <li>Die Speicherung ist optional. Wenn sie aktiviert ist, bleibt eine exportierbare Textkopie ausschließlich im Speicher dieses Browsers.</li>
+        <li>Diese Option dient ausschließlich dazu, dass Sie eine persönliche Kopie behalten können. Der exportierbare Text bleibt im Speicher dieses Browsers; Nicolas erhebt ihn nicht.</li>
         <li>Deaktivieren Sie die Option oder laden Sie die Seite neu, um die Kopie zu löschen. Der Download erstellt nur eine Datei auf Ihrem Gerät.</li>
       </ul>
     </div>
