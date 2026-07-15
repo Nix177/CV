@@ -1,0 +1,165 @@
+{
+  "generatedAt": "2026-07-15T00:00:00.000Z",
+  "projectsIndexed": [
+    "karaoke-studio",
+    "ia-news-ethique",
+    "petnames",
+    "agora-multi",
+    "agora-solo",
+    "vocal-walls",
+    "common-ground",
+    "micro-mentor",
+    "frustra",
+    "slow-social",
+    "un-algorithm",
+    "histoire-os"
+  ],
+  "repositoriesAccessible": [
+    {
+      "projectId": "karaoke-studio",
+      "repository": "Nix177/karaoke-playback-generator",
+      "branch": "main",
+      "commit": "04217f94bdd172e816c731c14fe8aca21f1e6ca3",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "ia-news-ethique",
+      "repository": "Nix177/ia-news-ethique-ecole",
+      "branch": "main",
+      "commit": "e59ed523c971e58095d31dd13018a7806890e221",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "petnames",
+      "repository": "PetNameGenerator/petname",
+      "branch": "main",
+      "commit": "f4dcecf7cdc99c91c4269f19f8920c809600e20a",
+      "indexPolicy": "metadata-only",
+      "licenseStatus": "Aucune licence explicite trouvée le 2026-07-15"
+    },
+    {
+      "projectId": "agora-multi",
+      "repository": "Nix177/agora-numerique",
+      "branch": "main",
+      "commit": "f50f44de59987d844a590579cd5a2656a939d00d",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "agora-solo",
+      "repository": "Nix177/mode-solo-rpg-ethics",
+      "branch": "main",
+      "commit": "80c82ee113d9b61f9d39785bc7db34e8ab7261d0",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "vocal-walls",
+      "repository": "Nix177/audio-geo-notes",
+      "branch": "main",
+      "commit": "b053d3f176dfc4bbd75171327c0da736ff2c3ba2",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "common-ground",
+      "repository": "Nix177/common-ground",
+      "branch": "master",
+      "commit": "aa2227fd517a2fa912da27b0b122347daa090735",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "micro-mentor",
+      "repository": "Nix177/Micro-mentor",
+      "branch": "main",
+      "commit": "ef65df93636c2918ba5ecd896a3bdecf647b6e45",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "frustra",
+      "repository": "Nix177/problem-first-db",
+      "branch": "master",
+      "commit": "a27363f282a7acf5cc2ecbfbfb31c97da6cf726c",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "slow-social",
+      "repository": "Nix177/social_wellness_digest",
+      "branch": "master",
+      "commit": "815850391e545c67d494fa523e8b990a7af9f40e",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "un-algorithm",
+      "repository": "Nix177/Un-Algorithm",
+      "branch": "main",
+      "commit": "890b06f7615e479034fb2a66dad0a59312970676",
+      "indexPolicy": "code",
+      "licenseStatus": "not-documented"
+    },
+    {
+      "projectId": "histoire-os",
+      "repository": "Histoire-d-os/Histoire-d-os",
+      "branch": "main",
+      "commit": "e3197d3e25984c25ff4361d961c484fe9d3a7640",
+      "indexPolicy": "metadata-only",
+      "licenseStatus": "Aucune licence explicite trouvée le 2026-07-15"
+    }
+  ],
+  "repositoriesMissing": [],
+  "filesAnalyzed": 241,
+  "chunksGenerated": 732,
+  "symbolsDetected": 507,
+  "routesDetected": 20,
+  "testsDetected": 7,
+  "ambiguousStatuses": [
+    {
+      "projectId": "documate",
+      "reason": "No auditable repository linked"
+    },
+    {
+      "projectId": "robotarm",
+      "reason": "No auditable repository linked"
+    },
+    {
+      "projectId": "bm800",
+      "reason": "No auditable repository linked"
+    },
+    {
+      "projectId": "telescope",
+      "reason": "No auditable repository linked"
+    },
+    {
+      "projectId": "3d-printing",
+      "reason": "No auditable repository linked"
+    }
+  ],
+  "metadataOnlyRepositories": [
+    {
+      "projectId": "petnames",
+      "repository": "PetNameGenerator/petname",
+      "reason": "Aucune licence explicite trouvée le 2026-07-15"
+    },
+    {
+      "projectId": "histoire-os",
+      "repository": "Histoire-d-os/Histoire-d-os",
+      "reason": "Aucune licence explicite trouvée le 2026-07-15"
+    }
+  ],
+  "suspiciousInstructionChunks": [
+    {
+      "projectId": "agora-multi",
+      "repository": "Nix177/agora-numerique",
+      "path": "scenarios/eoliennes/assets/app.js",
+      "lineStart": 660
+    }
+  ],
+  "skippedSensitiveFiles": [],
+  "errors": []
+}

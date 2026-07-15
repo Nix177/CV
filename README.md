@@ -69,14 +69,46 @@ Ne jamais commiter de clé API. Les clés doivent rester dans les variables d'en
 
 La route principale du chatbot est `POST /api/chat`.
 
-Le RAG réel indexe :
+La source de vérité maintenue pour le profil, les statuts et les projets est :
 
 ```txt
-public/cv-text.txt
-public/portfolio-data.js
+public/data/rag-knowledge-base.json
 ```
 
-`public/cv-text.txt` contient le contexte narratif et professionnel. `public/portfolio-data.js` contient les projets réellement affichés dans le portfolio. Le chatbot ne dépend pas de `profile.json` pour `/api/chat`.
+Le portfolio charge cette base via `public/portfolio-data.js`. `public/profile.json` est une copie de compatibilité générée, et non une seconde source à modifier manuellement. `public/cv-text.txt` reste le récit professionnel lisible; `npm run rag:validate` vérifie les clarifications factuelles critiques entre ces sources.
+
+L'index technique préconstruit se trouve dans :
+
+```txt
+public/rag/project-code-index.json
+public/rag/project-index-report.json
+public/rag/projects/*.md
+```
+
+`retrieve_project_code_context({ projectId, question, language })` sélectionne au maximum quelques passages pertinents. Les métadonnées conservent le dépôt, la branche, le chemin, le symbole, le type de passage, le statut d'implémentation, l'URL GitHub et le commit indexé. Le code, les tests et la configuration sont favorisés par rapport au README; aucun dépôt complet n'est injecté dans une requête.
+
+Les dépôts sans licence explicite ou dont la réutilisation du code n'est pas clairement autorisée utilisent `indexPolicy: "metadata-only"`. L'index conserve alors uniquement une fiche prudente, le commit et des liens de vérification, sans copier d'extrait de code. C'est notamment le cas de PetNames et d'Histoire d'Os dans l'état vérifié le 15 juillet 2026.
+
+Régénération et contrôle :
+
+```bash
+npm run rag:build
+npm run rag:index-projects
+npm run rag:validate
+npm run rag:test
+```
+
+Pour auditer des clones locaux existants sans accès réseau :
+
+```bash
+node tools/rag/index-projects.mjs --source-root /chemin/vers/les-depots
+```
+
+L'indexeur ignore les fichiers `.env`, secrets, builds, dépendances copiées, binaires et médias lourds. Il clone ou lit les dépôts sans exécuter leur code. Il marque aussi les passages qui ressemblent à des instructions de prompt; ces passages restent des données non fiables et ne sont jamais placés dans l'instruction système.
+
+Le chatbot texte place le contexte récupéré dans un bloc utilisateur délimité `BEGIN_UNTRUSTED_RETRIEVED_CONTEXT` / `END_UNTRUSTED_RETRIEVED_CONTEXT`. L'assistant vocal applique la même règle aux blocs RAG et aux réponses d'outil: le contenu des dépôts ne peut pas modifier le rôle, demander un secret ou déclencher un outil.
+
+Le workflow `.github/workflows/rag-project-index.yml` fonctionne avec `contents: read`. Il reconstruit et teste l'index, publie le résultat comme artifact de revue, puis échoue si les fichiers versionnés ne sont pas à jour. Il ne committe et ne pousse jamais automatiquement sur `main`.
 
 Les modèles ne sont pas codés en dur dans les appels :
 
@@ -107,7 +139,7 @@ public/assets/cv/cv-en.pdf
 public/assets/cv/cv-de.pdf
 ```
 
-Remplacer un PDF visible ne met pas automatiquement à jour le chatbot : vérifier aussi `public/cv-text.txt` pour le contexte narratif RAG et `public/portfolio-data.js` pour les projets affichés dans le portfolio.
+Remplacer un PDF visible ne met pas automatiquement à jour le chatbot : vérifier aussi `public/cv-text.txt` et `public/data/rag-knowledge-base.json`, puis lancer `npm run rag:build`, `npm run rag:validate` et `npm run rag:test`.
 ## Routes principales
 
 `vercel.json` active `cleanUrls` et garde des rewrites de compatibilité.
@@ -155,3 +187,5 @@ GEMINI_CHAT_MODEL=gemini-2.5-flash-lite curl -N -X POST http://localhost:3000/ap
 ```
 
 Tests d'erreur à couvrir avant livraison : clé OpenAI absente, clé Google absente, et erreur upstream 429. Les messages utilisateur doivent rester compréhensibles et ne jamais exposer de clé API.
+
+Tests RAG à couvrir avant livraison : questions générales sur le profil, statut réel des projets, vote Frustra, absence de collecteur social Frustra, architecture Vocal Walls et prudence lorsque le code ne suffit pas à confirmer une fonction.

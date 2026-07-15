@@ -1,0 +1,66 @@
+name: Refresh project RAG index
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [project-repository-updated]
+  schedule:
+    - cron: "23 4 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "public/data/rag-knowledge-base.json"
+      - "tools/rag/**"
+      - "package.json"
+      - ".github/workflows/rag-project-index.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rag-project-index-main
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out CV repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install CV tooling
+        run: npm ci
+
+      - name: Rebuild compatibility data
+        run: npm run rag:build
+
+      - name: Index linked project repositories
+        run: npm run rag:index-projects
+
+      - name: Validate factual and security constraints
+        run: npm run rag:validate
+
+      - name: Test retrieval behavior
+        run: npm run rag:test
+
+      - name: Upload generated RAG review artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-rag-index
+          path: |
+            public/profile.json
+            public/rag/project-code-index.json
+            public/rag/project-index-report.json
+            public/rag/projects
+
+      - name: Verify checked-in RAG files are current
+        run: git diff --exit-code -- public/profile.json public/rag/project-code-index.json public/rag/project-index-report.json public/rag/projects

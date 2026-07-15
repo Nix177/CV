@@ -1,196 +1,50 @@
 {
+  "schemaVersion": 1,
+  "generatedFrom": "/data/rag-knowledge-base.json",
+  "generatedAt": "2026-07-15T00:00:00.000Z",
   "name": "Nicolas Tuor",
-  "location": "Fribourg (CH)",
-  "cv_link": "/CV_Nicolas_Tuor.pdf",
-  "birth": "05.10.1992",
-
-  "summary": "Enseignant et concepteur pédagogique, formé en didactique de l’informatique (HEP Lausanne) et enseignement primaire (HEP Fribourg). Intérêt fort pour l’éducation numérique, l’IA responsable et la conception de dispositifs simples, utiles et transférables.",
-
-  "contact": {
-    "email": "nicolas.tuor@bluewin.ch",
-    "phone": "+41 79 762 26 67",
-    "cv_pdf": "/CV_Nicolas_Tuor.pdf",
-    "site": "https://www.nicolastuor.ch"
-  },
-
+  "location": "Fribourg, Suisse",
+  "summary": "Enseignant et concepteur pédagogique formé en didactique de l'informatique et en enseignement primaire. Il relie pédagogie, recherche, culture scientifique, technologies éducatives et prototypage assisté par IA.",
   "education": [
-    {
-      "title": "Master en didactique disciplinaire – orientation informatique",
-      "school": "HEP Lausanne",
-      "years": "2020–2024",
-      "highlights": [
-        "Enseignement explicite du débogage et transfert de compétences",
-        "Bases Python / HTML-CSS / C++"
-      ]
-    },
-    {
-      "title": "Bachelor en enseignement préscolaire & primaire",
-      "school": "HEP Fribourg",
-      "years": "2015–2019",
-      "highlights": [
-        "Philosophie pour enfants (travail de bachelor)",
-        "Pratiques de classe et gestion pédagogique"
-      ]
-    }
+    "Master en didactique disciplinaire, orientation informatique, HEP Lausanne, 2020-2024.",
+    "Bachelor en enseignement préscolaire et primaire, HEP Fribourg, 2015-2019."
   ],
-
   "languages": [
-    { "name": "français", "level": "natif (C2)" },
-    { "name": "anglais", "level": "C2 (usage professionnel)" },
-    { "name": "allemand", "level": "B2/c1 (bon niveau scolaire/pro ; revient vite avec pratique)" },
-    { "name": "italien", "level": "A2 (notions de base)" },
-    { "name": "russe", "level": "débutant (apprentissage libre)" },
-    { "name": "japonais", "level": "débutant (apprentissage libre)" },
-    { "name": "espagnol", "level": "débutant (apprentissage libre)" }
+    "Français: langue maternelle.",
+    "Anglais: C2, usage professionnel.",
+    "Allemand / Deutsch / German: C1. Très bonne compréhension et bon niveau passif; l'expression active peut être rapidement réactivée par la pratique et l'immersion.",
+    "Italien: A2."
   ],
-  "publications": [
-    "Tuor, N., El-Hamamsy, L., Chevalier, M., Brender, J., & Bumbacher, E. (2025). Explicitly Teaching Debugging in Primary School: Effectiveness, Transferability and Durability. Proceedings of the 25th Koli Calling International Conference on Computing Education Research. ACM. DOI: 10.1145/3769994.3769999"
+  "verifiedFacts": [
+    "Nicolas n'a jamais travaillé pour educa.ch. Il a réalisé une veille et une préparation personnelles autour des services et enjeux liés à educa.ch, Navigator, Edulog, la LPD/RGPD, la souveraineté numérique et l'évaluation d'outils EdTech.",
+    "Nicolas a auparavant développé et soumis une proposition de projet doctoral autour de la confiance dans les outils numériques éducatifs. La proposition n'a pas été retenue ou financée et aucun projet doctoral n'est actuellement en cours.",
+    "En 2024, Nicolas a donné une intervention d'une journée dans le CAS Éducation numérique de la HEP Fribourg autour de l'informatique et de la société. Il n'a pas obtenu ce CAS.",
+    "Une partie importante des prototypes a été conçue avec des assistants IA et Codex. Nicolas définit les besoins, structure les fonctionnalités, dirige les itérations, teste, débogue, adapte et documente les résultats.",
+    "Nicolas n'est pas présenté comme développeur logiciel senior, ingénieur full-stack ou expert avancé de toutes les technologies citées."
+  ],
+  "skills": [
+    "Conception de séquences, évaluations et fiches pédagogiques.",
+    "Enseignement explicite, transfert de stratégies et analyse des apprentissages.",
+    "Recherche documentaire, lecture critique et vulgarisation scientifique.",
+    "Évaluation prudente d'outils numériques éducatifs et IA responsable.",
+    "Prototypage web assisté par Codex/GitHub, automatisations n8n, tests, débogage et documentation.",
+    "Bases pratiques en Python, HTML, CSS et JavaScript, sans revendication d'expertise senior."
+  ],
+  "publication": "Tuor, N., El-Hamamsy, L., Chevalier, M., Brender, J., & Bumbacher, E. (2025). Explicitly Teaching Debugging in Primary School: Effectiveness, Transferability and Durability. Koli Calling 2025. DOI: 10.1145/3769994.3769999.",
+  "currentProjects": [
+    "Histoire d'Os / osselets / astragales: activités pédagogiques musée-école, site en développement, vulgarisation scientifique et ressources pour enseignants et musées.",
+    "Prototypes numériques et éducatifs présentés dans le portfolio, avec statuts et limites documentés projet par projet."
+  ],
+  "safeClaims": [
+    "Relier des objectifs pédagogiques à des prototypes concrets et testables.",
+    "Diriger des itérations assistées par IA, tester et documenter les résultats.",
+    "Formuler prudemment les limites, les preuves disponibles et les incertitudes."
+  ],
+  "forbiddenClaims": [
+    "Nicolas a travaillé chez educa.ch.",
+    "Nicolas mène actuellement un doctorat.",
+    "Nicolas a obtenu le CAS Éducation numérique.",
+    "Nicolas est développeur senior ou ingénieur full-stack.",
+    "Nicolas a écrit manuellement chaque ligne des prototypes."
   ]
-  "values": [
-    "regard critique, remise en question",
-    "collaboration avec tous les acteurs",
-    "rigueur et traçabilité",
-    "curiosité et apprentissages",
-    "éthique et sobriété des solutions"
-  ],
-
-  "skills": {
-    "pedagogy": [
-      "pédagogie explicite et guidage progressif",
-      "conception de séquences et critères de réussite",
-      "évaluation et mesure de l’impact",
-      "vulgarisation et structuration claire",
-      "intérêt pour les apprentissages (enseignant et apprenant)"
-    ],
-    "project": [
-      "analyse de besoins",
-      "objectifs atteignables et itérations",
-      "coordination pluridisciplinaire",
-      "documentation et traçabilité"
-    ],
-    "research": [
-      "méthodologie et lecture critique",
-      "analyse simple de données d’apprentissage",
-      "synthèse opérationnelle"
-    ],
-    "tech": [
-      "Python",
-      "HTML/CSS/JS (bases)",
-      "C++ (bases)",
-      "Moodle, Nextcloud",
-      "Outils IA (images/vidéos), Copilot",
-      "Unity (bases)",
-      "n8n (automatisations légères)"
-    ]
-  },
-
-  "role_aligned_competencies": [
-    {
-      "name": "Conception & pilotage de séquences",
-      "detail": "Planifie des séquences alignées PER, conçoit supports/critères, teste en classe et ajuste en fonction des retours et hétérogénéités."
-    },
-    {
-      "name": "Évaluation & mesure d’impact",
-      "detail": "Met en place des pré/mid/post-tests, observe les progrès et communique prudemment les limites et résultats."
-    },
-    {
-      "name": "Transfert de compétences",
-      "detail": "Conçoit des activités favorisant la réutilisation de stratégies (ex. débogage) entre outils/environnements."
-    },
-    {
-      "name": "Ingénierie EdTech légère & intégration",
-      "detail": "Monte des dispositifs simples et pédagogiques (p. ex. Nextcloud de classe, conteneurs), avec gestion d’accès et accompagnement."
-    },
-    {
-      "name": "Résolution de problèmes & autonomie technique",
-      "detail": "Diagnostique contraintes matérielles/logiciels, documente les étapes et assure la continuité pédagogique."
-    },
-    {
-      "name": "Éducation au numérique & pensée critique",
-      "detail": "Conçoit des ateliers modulables (IA, deepfakes, qualité des sources) avec ressources sourcées et activités transférables."
-    },
-    {
-      "name": "Formation d’adultes / intervention",
-      "detail": "Anime des séances pour collègues/étudiants HEP, structure des apports ‘juste ce qu’il faut’ et capitalise dans des supports réutilisables."
-    },
-    {
-      "name": "Documentation & reproductibilité",
-      "detail": "Produit des annexes, fiches et modes d’emploi pour faciliter la reprise autonome par d’autres enseignants."
-    }
-  ],
-
-  "experience": [
-    { "period": "2019–…", "role": "Enseignant primaire (remplacements)", "org": "Divers établissements FR", "focus": "multi-degrés, inclusion, travail d’équipe" },
-    { "period": "2020–2021", "role": "Enseignant titulaire 5H", "org": "École de Corminboeuf", "focus": "pilotage de classe complète" },
-    { "period": "2022–2023", "role": "Stage de master (recherche/formation)", "org": "HEP Fribourg – CRE/ATE", "focus": "intégration du numérique & formation" },
-    { "period": "2024", "role": "Formateur (journée)", "org": "HEP Fribourg", "focus": "éducation numérique & IA responsable" },
-    { "period": "Divers", "role": "Service civil et postes variés", "org": "FR/NE", "focus": "organisation, relationnel, rigueur (archivage, accueil, sécurité, soutien scolaire)" }
-  ],
-
-  "target_roles": [
-    "Conseiller numérique / collaborateur pédagogique",
-    "Maître d’enseignement HES / conseiller pédagogique",
-    "Chargé d’enseignement (éducation numérique)",
-    "Formateur responsable (laboratoire école informatique)",
-    "Responsable de projet (politiques/stratégies éducatives)",
-    "Spécialiste formation & développement du personnel",
-    "Education specialist (instructional support)",
-    "Open science / données ouvertes",
-    "Vulgarisation scientifique",
-    "Médiation scientifique et/ou culturelle"
-  ],
-
-  "narrative": "Approche concrète et outillée : écouter les besoins réels, fixer des objectifs atteignables, proposer des activités claires et évaluables, documenter les progrès. Démarche critique sur l’IA générative (fiabilité, éthique, données), avec l’ambition d’en faire un levier au service des apprentissages.",
-
-  "ai_policy": {
-    "stance": "pragmatique et responsable",
-    "guardrails": [
-      "ne pas surestimer l’IA ni la sous-estimer",
-      "citer les limites et sources",
-      "protéger les données",
-      "préserver l’exigence académique"
-    ]
-  },
-
-  "talking_points": [
-    "Apprend vite et se met à niveau si nécessaire",
-    "Traduire un sujet complexe en parcours actionnable",
-    "Sens de la synthèse et de la priorisation",
-    "Cadrage clair et critères visibles"
-  ],
-
-  "notes": [
-    "Ne pas inventer d’éléments non listés (diplômes, niveaux, responsabilités).",
-    "Si une info manque, l’indiquer simplement.",
-    "Rappeler avec mesure la capacité d’apprentissage et mise à niveau rapide.",
-    "Si extrapolation, le préciser."
-  ],
-
-  "allowed_topics": [
-    "profil et parcours",
-    "compétences et expériences",
-    "valeurs et posture pédagogique",
-    "éducation numérique et IA responsable",
-    "projets présentés dans le portfolio/CV"
-  ],
-
-  "interests": [
-    "vulgarisation scientifique et pensée critique",
-    "astronomie / astrophotographie",
-    "aviron (ancien compétiteur)",
-    "théâtre d’improvisation",
-    "apprentissages continus",
-    "technologies, jeux vidéo, automatisations n8n",
-    "arts martiaux",
-    "culture et histoire"
-  ],
-
-  "chatgpt_additions": {
-    "source": "Synthèse prudente de lettres de motivation, rapport de stage et travaux fournis.",
-    "highlights": [
-      "Aptitude à relier pédagogie, pensée critique et usages concrets de l’IA.",
-      "Préférence pour des solutions sobres, documentées et réutilisables.",
-      "Bon relationnel et travail en équipe ; posture humble, itérative."
-    ]
-  }
 }

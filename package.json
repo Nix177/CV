@@ -8,7 +8,11 @@
   "scripts": {
     "build": "echo \"No build needed (static site + Vercel functions)\"",
     "build:news": "node tools/build-news.mjs",
-    "preview:voice": "node tools/voice-preview-server.mjs"
+    "preview:voice": "node tools/voice-preview-server.mjs",
+    "rag:build": "node tools/rag/build-compatibility-data.mjs",
+    "rag:index-projects": "node tools/rag/index-projects.mjs",
+    "rag:validate": "node tools/rag/validate.mjs",
+    "rag:test": "node tools/rag/test-retrieval.mjs"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
