@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T08:37:23.190Z",
+  "generatedAt": "2026-07-22T08:36:35.980Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,177 @@
     }
   },
   "items": [
+    {
+      "title": "Masked Visual Actions for Unified World Modeling",
+      "url": "https://arxiv.org/abs/2607.19343v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-21T17:59:11.000Z",
+      "score": 70,
+      "summary_en": "Video models absorb rich priors over how the visual world moves, interacts, and responds to contact, making them promising substrates for robotic world modeling. The central challenge is how to communicate action to such models in a form aligned with the visual space in which they learned these interaction priors, yet still grounded in physical manipulation. We introduce Masked Visual Actions, a pixel-space control interface that expresses action as a partially revealed trajectory of an arbitrary entity in a video. Revealing robot motion makes the model act as a forward dynamics model that pre",
+      "summary_fr": "Video models absorb rich priors over how the visual world moves, interacts, and responds to contact, making them promising substrates for robotic world modeling. The central challenge is how to communicate action to such models in a form aligned with the visual space in which they learned these interaction priors, yet still grounded in physical manipulation. We introduce Masked Visual Actions, a pixel-space control interface that expresses action as a partially revealed trajectory of an arbitrary entity in a video. Revealing robot motion makes the model act as a forward dynamics model that pre",
+      "resume_fr": "Video models absorb rich priors over how the visual world moves, interacts, and responds to contact, making them promising substrates for robotic world modeling. The central challenge is how to communicate action to such models in a form aligned with the visual space in which they learned these interaction priors, yet still grounded in physical manipulation. We introduce Masked Visual Actions, a pixel-space control interface that expresses action as a partially revealed trajectory of an arbitrary entity in a video. Revealing robot motion makes the model act as a forward dynamics model that pre",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Two-Level Meta-Rubrics for Evaluating Open-Ended Generation: GAMUT, a Benchmark for Factual Completeness",
+      "url": "https://arxiv.org/abs/2607.19322v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-21T17:42:50.000Z",
+      "score": 70,
+      "summary_en": "Evaluating the factuality of long-form generations has focused predominantly on precision, measuring whether the claims a model makes are correct. The dominant decompose-search-verify pipeline catches incorrect claims well but says little about whether a response contains all the information it should. Measuring factual completeness, the missing half of factuality, is harder: it requires enumerating the full set of facts a complete answer should contain, and these facts rarely form a flat list. They often involve open-ended sets where coverage is what matters, ordered processes, and relationsh",
+      "summary_fr": "Evaluating the factuality of long-form generations has focused predominantly on precision, measuring whether the claims a model makes are correct. The dominant decompose-search-verify pipeline catches incorrect claims well but says little about whether a response contains all the information it should. Measuring factual completeness, the missing half of factuality, is harder: it requires enumerating the full set of facts a complete answer should contain, and these facts rarely form a flat list. They often involve open-ended sets where coverage is what matters, ordered processes, and relationsh",
+      "resume_fr": "Evaluating the factuality of long-form generations has focused predominantly on precision, measuring whether the claims a model makes are correct. The dominant decompose-search-verify pipeline catches incorrect claims well but says little about whether a response contains all the information it should. Measuring factual completeness, the missing half of factuality, is harder: it requires enumerating the full set of facts a complete answer should contain, and these facts rarely form a flat list. They often involve open-ended sets where coverage is what matters, ordered processes, and relationsh",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "From Distances to Trajectories: Real-Time Signed Distance Function Mapping and Distance-Accelerated Motion Planning for UAVs",
+      "url": "https://arxiv.org/abs/2607.19306v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-21T17:18:46.000Z",
+      "score": 50,
+      "summary_en": "Autonomous flight in cluttered environments requires a robot to build a geometric map of its surroundings and plan safe, dynamically feasible trajectories, all onboard and in real time. Conventional approaches treat mapping and planning as separate stages and often rely on binary occupancy for collision checking. We argue that these two stages should be co-designed around a single representation: a signed distance function (SDF). By encoding distance to the nearest obstacle, an SDF provides richer information for planning and trajectory optimization than occupancy alone. We develop an Octree R",
+      "summary_fr": "Autonomous flight in cluttered environments requires a robot to build a geometric map of its surroundings and plan safe, dynamically feasible trajectories, all onboard and in real time. Conventional approaches treat mapping and planning as separate stages and often rely on binary occupancy for collision checking. We argue that these two stages should be co-designed around a single representation: a signed distance function (SDF). By encoding distance to the nearest obstacle, an SDF provides richer information for planning and trajectory optimization than occupancy alone. We develop an Octree R",
+      "resume_fr": "Autonomous flight in cluttered environments requires a robot to build a geometric map of its surroundings and plan safe, dynamically feasible trajectories, all onboard and in real time. Conventional approaches treat mapping and planning as separate stages and often rely on binary occupancy for collision checking. We argue that these two stages should be co-designed around a single representation: a signed distance function (SDF). By encoding distance to the nearest obstacle, an SDF provides richer information for planning and trajectory optimization than occupancy alone. We develop an Octree R",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Stochastic Multi-Objective Kinodynamic Planning Against Adversaries",
+      "url": "https://arxiv.org/abs/2607.19284v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-21T16:56:34.000Z",
+      "score": 50,
+      "summary_en": "This paper addresses multi-objective kinodynamic planning in environments with stochastic hybrid adversaries that probabilistically transition to adversarial modes based on the ego state. The goal is to construct the Pareto-front of paths that trade off execution cost and the probability of safety constraint violation (risk). Existing chance-constrained planners evaluate risk over open-loop trajectories, yielding overly conservative solutions that fail to account for ego-agent reactivity. To address this limitation, we shift the planning space to sequences of closed-loop policies, and integrat",
+      "summary_fr": "This paper addresses multi-objective kinodynamic planning in environments with stochastic hybrid adversaries that probabilistically transition to adversarial modes based on the ego state. The goal is to construct the Pareto-front of paths that trade off execution cost and the probability of safety constraint violation (risk). Existing chance-constrained planners evaluate risk over open-loop trajectories, yielding overly conservative solutions that fail to account for ego-agent reactivity. To address this limitation, we shift the planning space to sequences of closed-loop policies, and integrat",
+      "resume_fr": "This paper addresses multi-objective kinodynamic planning in environments with stochastic hybrid adversaries that probabilistically transition to adversarial modes based on the ego state. The goal is to construct the Pareto-front of paths that trade off execution cost and the probability of safety constraint violation (risk). Existing chance-constrained planners evaluate risk over open-loop trajectories, yielding overly conservative solutions that fail to account for ego-agent reactivity. To address this limitation, we shift the planning space to sequences of closed-loop policies, and integrat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Sequential Learner Modeling Using Multi-Relational Graph Convolutional Networks",
+      "url": "https://arxiv.org/abs/2607.19253v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-07-21T16:23:16.000Z",
+      "score": 50,
+      "summary_en": "User modeling is a critical task in a variety of personalized systems. Recognizing their effectiveness in learning from graph-structured data, Graph Neural Networks (GNNs), particularly Graph Convolutional Networks (GCNs), are increasingly employed for user modeling. However, existing approaches typically treat different relation types in a graph as homogeneous, limiting their ability to capture richer semantics and construct more informative user models. While multi-relational GNNs (MR-GNNs) have been adopted for representation learning and recommendation, their application for user modeling ",
+      "summary_fr": "User modeling is a critical task in a variety of personalized systems. Recognizing their effectiveness in learning from graph-structured data, Graph Neural Networks (GNNs), particularly Graph Convolutional Networks (GCNs), are increasingly employed for user modeling. However, existing approaches typically treat different relation types in a graph as homogeneous, limiting their ability to capture richer semantics and construct more informative user models. While multi-relational GNNs (MR-GNNs) have been adopted for representation learning and recommendation, their application for user modeling ",
+      "resume_fr": "User modeling is a critical task in a variety of personalized systems. Recognizing their effectiveness in learning from graph-structured data, Graph Neural Networks (GNNs), particularly Graph Convolutional Networks (GCNs), are increasingly employed for user modeling. However, existing approaches typically treat different relation types in a graph as homogeneous, limiting their ability to capture richer semantics and construct more informative user models. While multi-relational GNNs (MR-GNNs) have been adopted for representation learning and recommendation, their application for user modeling ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Inference-Time Steering for Cross-Lingual Factual Consistency in LLMs",
+      "url": "https://arxiv.org/abs/2607.19243v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-21T16:15:05.000Z",
+      "score": 70,
+      "summary_en": "Although Large Language Models (LLMs) demonstrate remarkable multilingual fluency, their internal knowledge representations remain disproportionately biased toward high-resource languages. This leads to cross-lingual factual inconsistency, where they shift their empirical answer distributions based solely on the prompt language. We investigate whether these biases can be mitigated at inference time, forcing an English-prompted model to answer as if it were queried in target languages (German, Spanish, Bulgarian), and evaluate four intervention strategies: zero-shot contextual steering (persona",
+      "summary_fr": "Although Large Language Models (LLMs) demonstrate remarkable multilingual fluency, their internal knowledge representations remain disproportionately biased toward high-resource languages. This leads to cross-lingual factual inconsistency, where they shift their empirical answer distributions based solely on the prompt language. We investigate whether these biases can be mitigated at inference time, forcing an English-prompted model to answer as if it were queried in target languages (German, Spanish, Bulgarian), and evaluate four intervention strategies: zero-shot contextual steering (persona",
+      "resume_fr": "Although Large Language Models (LLMs) demonstrate remarkable multilingual fluency, their internal knowledge representations remain disproportionately biased toward high-resource languages. This leads to cross-lingual factual inconsistency, where they shift their empirical answer distributions based solely on the prompt language. We investigate whether these biases can be mitigated at inference time, forcing an English-prompted model to answer as if it were queried in target languages (German, Spanish, Bulgarian), and evaluate four intervention strategies: zero-shot contextual steering (persona",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Language, language, language: some impressions from the 2026 Yidan Prize conference in Dakar",
+      "url": "https://world-education-blog.org/2026/07/21/language-language-language-some-impressions-from-the-2026-yidan-prize-conference-in-dakar/",
+      "source": "UNESCO GEM – World Education Blog",
+      "published": "2026-07-21T16:04:46.000Z",
+      "score": 65,
+      "summary_en": "By: Manos Antoninis, Director, GEM Report The Yidan Prize has established itself over the last 10 years in a competitive field as a respected and coveted education award. The prize, which bears the name of Charles CHEN Yidan, a core founder of the Chinese internet giant Tencent, aims to ‘recognize the brightest minds in education […] The post Language, language, language: some impressions from the 2026 Yidan Prize conference in Dakar appeared first on World Education Blog.",
+      "summary_fr": "By: Manos Antoninis, Director, GEM Report The Yidan Prize has established itself over the last 10 years in a competitive field as a respected and coveted education award. The prize, which bears the name of Charles CHEN Yidan, a core founder of the Chinese internet giant Tencent, aims to ‘recognize the brightest minds in education […] The post Language, language, language: some impressions from the 2026 Yidan Prize conference in Dakar appeared first on World Education Blog.",
+      "resume_fr": "By: Manos Antoninis, Director, GEM Report The Yidan Prize has established itself over the last 10 years in a competitive field as a respected and coveted education award. The prize, which bears the name of Charles CHEN Yidan, a core founder of the Chinese internet giant Tencent, aims to ‘recognize the brightest minds in education […] The post Language, language, language: some impressions from the 2026 Yidan Prize conference in Dakar appeared first on World Education Blog.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://world-education-blog.org/wp-content/uploads/2026/07/yidan.jpg"
+    },
+    {
+      "title": "STL-GCS: A Planner-Controller Framework for Signal Temporal Logic via Graphs of Time-varying Convex Sets",
+      "url": "https://arxiv.org/abs/2607.19196v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-21T15:30:55.000Z",
+      "score": 70,
+      "summary_en": "We present a unified trajectory planning and control framework for the satisfaction of Signal Temporal Logic (STL) specifications defined over convex predicates. At the planning layer, STL tasks are encoded as time-varying convex sets in configuration space, specifically designed so that forward invariance of the system with respect to these sets implies satisfaction of the specification with a prescribed robustness margin. This representation is then lifted to the joint time--configuration space and combined with the Graphs of Convex Sets (GCS) framework, yielding a shortest-path formulation ",
+      "summary_fr": "We present a unified trajectory planning and control framework for the satisfaction of Signal Temporal Logic (STL) specifications defined over convex predicates. At the planning layer, STL tasks are encoded as time-varying convex sets in configuration space, specifically designed so that forward invariance of the system with respect to these sets implies satisfaction of the specification with a prescribed robustness margin. This representation is then lifted to the joint time--configuration space and combined with the Graphs of Convex Sets (GCS) framework, yielding a shortest-path formulation ",
+      "resume_fr": "We present a unified trajectory planning and control framework for the satisfaction of Signal Temporal Logic (STL) specifications defined over convex predicates. At the planning layer, STL tasks are encoded as time-varying convex sets in configuration space, specifically designed so that forward invariance of the system with respect to these sets implies satisfaction of the specification with a prescribed robustness margin. This representation is then lifted to the joint time--configuration space and combined with the Graphs of Convex Sets (GCS) framework, yielding a shortest-path formulation ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "An exploration of the importance of instructional design competencies in the field",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10681-4",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-07-21T00:00:00.000Z",
+      "score": 65,
+      "summary_en": "This study replicates and extends prior research examining instructional designers’ perceptions of the importance of the 2012 International Board of Standards for Training, Performance and Instruction (IBSTPI) instructional design competencies. As instructional design practice continues to evolve, periodic reassessment of competency frameworks is necessary to ensure alignment with professional demands. Using a survey research design, data were collected from 439 instructional design practitioners representing a variety of professional contexts. Participants rated the importance of IBSTPI compe",
+      "summary_fr": "This study replicates and extends prior research examining instructional designers’ perceptions of the importance of the 2012 International Board of Standards for Training, Performance and Instruction (IBSTPI) instructional design competencies. As instructional design practice continues to evolve, periodic reassessment of competency frameworks is necessary to ensure alignment with professional demands. Using a survey research design, data were collected from 439 instructional design practitioners representing a variety of professional contexts. Participants rated the importance of IBSTPI compe",
+      "resume_fr": "This study replicates and extends prior research examining instructional designers’ perceptions of the importance of the 2012 International Board of Standards for Training, Performance and Instruction (IBSTPI) instructional design competencies. As instructional design practice continues to evolve, periodic reassessment of competency frameworks is necessary to ensure alignment with professional demands. Using a survey research design, data were collected from 439 instructional design practitioners representing a variety of professional contexts. Participants rated the importance of IBSTPI compe",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10681-4/MediaObjects/11423_2026_10681_Fig1_HTML.png"
+    },
     {
       "title": "Patch Policy: Efficient Embodied Control via Dense Visual Representations",
       "url": "https://arxiv.org/abs/2607.18236v1",
@@ -232,7 +403,7 @@
       "title": "Self‐Explanation‐Guided Virtual Museum Learning for Knowledge Co‐Construction Based on the Constructivist Framework: A Randomised Control Study",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70296?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-20T00:18:48.000Z",
+      "published": "2026-07-19T07:00:00.000Z",
       "score": 70,
       "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
       "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
@@ -1063,177 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10673-4/MediaObjects/11423_2026_10673_Fig1_HTML.png"
-    },
-    {
-      "title": "Improving the transfer of inquiry strategies by using short instructional videos",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10648-5",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-07-13T00:00:00.000Z",
-      "score": 65,
-      "summary_en": "Five experiments compared the effectiveness of different instructional videos and a no-video control group for the learning and transfer of inquiry strategies. In each experiment, students first tried to discover the laws governing a balance scale simulation. Afterwards, most students watched one of several instructional videos. The most complete video taught the effective strategy of converting each weight into a base-weight equivalent (e.g., blue = 2 reds). It also described a common ineffective strategy of piling on weights until the scale balances. It told students the ineffective strategy",
-      "summary_fr": "Five experiments compared the effectiveness of different instructional videos and a no-video control group for the learning and transfer of inquiry strategies. In each experiment, students first tried to discover the laws governing a balance scale simulation. Afterwards, most students watched one of several instructional videos. The most complete video taught the effective strategy of converting each weight into a base-weight equivalent (e.g., blue = 2 reds). It also described a common ineffective strategy of piling on weights until the scale balances. It told students the ineffective strategy",
-      "resume_fr": "Five experiments compared the effectiveness of different instructional videos and a no-video control group for the learning and transfer of inquiry strategies. In each experiment, students first tried to discover the laws governing a balance scale simulation. Afterwards, most students watched one of several instructional videos. The most complete video taught the effective strategy of converting each weight into a base-weight equivalent (e.g., blue = 2 reds). It also described a common ineffective strategy of piling on weights until the scale balances. It told students the ineffective strategy",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10648-5/MediaObjects/11423_2026_10648_Fig1_HTML.jpg"
-    },
-    {
-      "title": "Prompting self-explanation in different gameplay contexts: effects on response quality and content learning",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10672-5",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-07-13T00:00:00.000Z",
-      "score": 50,
-      "summary_en": "Asking students to self-explain their in-game actions using targeted content knowledge can support reflection and enhance learning in educational games. However, in the highly engaging and performance-focused context of educational games, it remains unclear how such prompts can be designed and embedded in gameplay to ensure that learners meaningfully respond to them. This study examines how self-explanation prompts embedded in different prompting contexts—integrated within ongoing gameplay or positioned as a separate reflective activity after gameplay—influence students’ response quality and c",
-      "summary_fr": "Asking students to self-explain their in-game actions using targeted content knowledge can support reflection and enhance learning in educational games. However, in the highly engaging and performance-focused context of educational games, it remains unclear how such prompts can be designed and embedded in gameplay to ensure that learners meaningfully respond to them. This study examines how self-explanation prompts embedded in different prompting contexts—integrated within ongoing gameplay or positioned as a separate reflective activity after gameplay—influence students’ response quality and c",
-      "resume_fr": "Asking students to self-explain their in-game actions using targeted content knowledge can support reflection and enhance learning in educational games. However, in the highly engaging and performance-focused context of educational games, it remains unclear how such prompts can be designed and embedded in gameplay to ensure that learners meaningfully respond to them. This study examines how self-explanation prompts embedded in different prompting contexts—integrated within ongoing gameplay or positioned as a separate reflective activity after gameplay—influence students’ response quality and c",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10672-5/MediaObjects/11423_2026_10672_Fig1_HTML.jpg"
-    },
-    {
-      "title": "Rethinking Coding and Network Approaches in CSCL: From Words and Codes to Inferences in a Transactional Perspective",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70292?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-11T08:52:14.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "PHINN-EEG: Topological Time-Series Analysis of Dream-State EEG -- Dynamic Betti Curves for Dream Content Classification and Topology-Conditioned Neural Signal Synthesis",
-      "url": "https://arxiv.org/abs/2607.09662v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-10T17:59:45.000Z",
-      "score": 50,
-      "summary_en": "Current electroencephalography (EEG)-based dream detection relies on power spectral density (PSD) and statistical moment features, achieving a state-of-the-art area under the receiver operating characteristic curve (AUC) of approximately 0.70 on the DREAM database (Wong et al., 2025, Nature Communications). We introduce PHINN-EEG (Persistent Homology Inspired Neural Network for EEG), the first topological time-series framework for dream mentation analysis. Using sliding-window Takens delay embeddings and Vietoris-Rips filtrations on multichannel pre-awakening EEG epochs, we extract Dynamic Bet",
-      "summary_fr": "Current electroencephalography (EEG)-based dream detection relies on power spectral density (PSD) and statistical moment features, achieving a state-of-the-art area under the receiver operating characteristic curve (AUC) of approximately 0.70 on the DREAM database (Wong et al., 2025, Nature Communications). We introduce PHINN-EEG (Persistent Homology Inspired Neural Network for EEG), the first topological time-series framework for dream mentation analysis. Using sliding-window Takens delay embeddings and Vietoris-Rips filtrations on multichannel pre-awakening EEG epochs, we extract Dynamic Bet",
-      "resume_fr": "Current electroencephalography (EEG)-based dream detection relies on power spectral density (PSD) and statistical moment features, achieving a state-of-the-art area under the receiver operating characteristic curve (AUC) of approximately 0.70 on the DREAM database (Wong et al., 2025, Nature Communications). We introduce PHINN-EEG (Persistent Homology Inspired Neural Network for EEG), the first topological time-series framework for dream mentation analysis. Using sliding-window Takens delay embeddings and Vietoris-Rips filtrations on multichannel pre-awakening EEG epochs, we extract Dynamic Bet",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "B-spline Policy: Accelerating Manipulation Policies via B-spline Action Representations",
-      "url": "https://arxiv.org/abs/2607.09648v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-10T17:46:32.000Z",
-      "score": 85,
-      "summary_en": "In this work, we present B-spline Policy (BSP), an action representation designed for accelerating robot manipulation policies. Rather than predicting discrete-time action chunks, BSP parameterizes actions as continuous B-spline curves defined by a set of knots and control points. This representation yields smooth, time-continuous trajectories that can be temporally scaled and executed by low-level controllers at higher frequencies and speeds. We show that B-spline-parameterized actions can be seamlessly integrated into standard policy learning pipelines by directly predicting B-spline paramet",
-      "summary_fr": "In this work, we present B-spline Policy (BSP), an action representation designed for accelerating robot manipulation policies. Rather than predicting discrete-time action chunks, BSP parameterizes actions as continuous B-spline curves defined by a set of knots and control points. This representation yields smooth, time-continuous trajectories that can be temporally scaled and executed by low-level controllers at higher frequencies and speeds. We show that B-spline-parameterized actions can be seamlessly integrated into standard policy learning pipelines by directly predicting B-spline paramet",
-      "resume_fr": "In this work, we present B-spline Policy (BSP), an action representation designed for accelerating robot manipulation policies. Rather than predicting discrete-time action chunks, BSP parameterizes actions as continuous B-spline curves defined by a set of knots and control points. This representation yields smooth, time-continuous trajectories that can be temporally scaled and executed by low-level controllers at higher frequencies and speeds. We show that B-spline-parameterized actions can be seamlessly integrated into standard policy learning pipelines by directly predicting B-spline paramet",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Semantic Pareto-DQN: A Multi-Objective Reinforcement Learning Framework for Financial Anomaly Detection",
-      "url": "https://arxiv.org/abs/2607.09641v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-10T17:39:00.000Z",
-      "score": 70,
-      "summary_en": "Financial anomaly detection suffers from extreme class imbalance, causing traditional single-objective algorithms to exhibit ``fraud collapse'', defaulting to the majority class and failing to balance anomaly interdiction with customer friction. To overcome this without distortive data resampling, we propose the Semantic Pareto-DQN, a multi-objective reinforcement learning framework. Our approach synthesizes heterogeneous transaction features into cohesive natural-language narratives, encoded by large language models, thereby producing a robust, scale-invariant state representation. The agent ",
-      "summary_fr": "Financial anomaly detection suffers from extreme class imbalance, causing traditional single-objective algorithms to exhibit ``fraud collapse'', defaulting to the majority class and failing to balance anomaly interdiction with customer friction. To overcome this without distortive data resampling, we propose the Semantic Pareto-DQN, a multi-objective reinforcement learning framework. Our approach synthesizes heterogeneous transaction features into cohesive natural-language narratives, encoded by large language models, thereby producing a robust, scale-invariant state representation. The agent ",
-      "resume_fr": "Financial anomaly detection suffers from extreme class imbalance, causing traditional single-objective algorithms to exhibit ``fraud collapse'', defaulting to the majority class and failing to balance anomaly interdiction with customer friction. To overcome this without distortive data resampling, we propose the Semantic Pareto-DQN, a multi-objective reinforcement learning framework. Our approach synthesizes heterogeneous transaction features into cohesive natural-language narratives, encoded by large language models, thereby producing a robust, scale-invariant state representation. The agent ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Indirect and Direct AI Scaffolding for Computational Problem Posing: A Pilot Experience Report",
-      "url": "https://arxiv.org/abs/2607.09628v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-07-10T17:25:34.000Z",
-      "score": 50,
-      "summary_en": "Problem posing is a valuable learning activity in computing education, encouraging learners to actively construct, refine, and reflect on problems rather than simply solving them. This experience report presents the design and pilot deployment of two LLM-powered scaffolding systems for supporting problem posing across two computational scenarios with different levels of task openness. Both systems assessed student-generated problems using Bloom's Taxonomy-based criteria and applied the same assessment framework, differing only in output modality: one provided guiding questions (Indirect scaffo",
-      "summary_fr": "Problem posing is a valuable learning activity in computing education, encouraging learners to actively construct, refine, and reflect on problems rather than simply solving them. This experience report presents the design and pilot deployment of two LLM-powered scaffolding systems for supporting problem posing across two computational scenarios with different levels of task openness. Both systems assessed student-generated problems using Bloom's Taxonomy-based criteria and applied the same assessment framework, differing only in output modality: one provided guiding questions (Indirect scaffo",
-      "resume_fr": "Problem posing is a valuable learning activity in computing education, encouraging learners to actively construct, refine, and reflect on problems rather than simply solving them. This experience report presents the design and pilot deployment of two LLM-powered scaffolding systems for supporting problem posing across two computational scenarios with different levels of task openness. Both systems assessed student-generated problems using Bloom's Taxonomy-based criteria and applied the same assessment framework, differing only in output modality: one provided guiding questions (Indirect scaffo",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "LLM for EDA in Front-End Design: Challenges and Opportunities",
-      "url": "https://arxiv.org/abs/2607.09616v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-10T17:15:54.000Z",
-      "score": 50,
-      "summary_en": "As chip complexity increases and time-to-market pressures grow, front-end design has become a critical bottleneck in chip development. Recently, Large Language Models (LLMs) have shown great potential in Electronic Design Automation (EDA). Beyond specification understanding, LLMs show the potential to serve as a unified intelligent interface for hardware description language (HDL) generation, testbench construction, and design space exploration. The rise of agentic AI, represented by pioneering systems such as OpenClaw, offers a strategic roadmap for the next generation EDA. From this perspect",
-      "summary_fr": "As chip complexity increases and time-to-market pressures grow, front-end design has become a critical bottleneck in chip development. Recently, Large Language Models (LLMs) have shown great potential in Electronic Design Automation (EDA). Beyond specification understanding, LLMs show the potential to serve as a unified intelligent interface for hardware description language (HDL) generation, testbench construction, and design space exploration. The rise of agentic AI, represented by pioneering systems such as OpenClaw, offers a strategic roadmap for the next generation EDA. From this perspect",
-      "resume_fr": "As chip complexity increases and time-to-market pressures grow, front-end design has become a critical bottleneck in chip development. Recently, Large Language Models (LLMs) have shown great potential in Electronic Design Automation (EDA). Beyond specification understanding, LLMs show the potential to serve as a unified intelligent interface for hardware description language (HDL) generation, testbench construction, and design space exploration. The rise of agentic AI, represented by pioneering systems such as OpenClaw, offers a strategic roadmap for the next generation EDA. From this perspect",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PAC-ACT: Post-training Actor-Critic for Action Chunking Transformers",
-      "url": "https://arxiv.org/abs/2607.09590v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-10T16:42:17.000Z",
-      "score": 85,
-      "summary_en": "Precision industrial contact manipulation requires reliable robot policies under pose perturbations and contact-force constraints. Vision-language-action models offer broad generalization but often introduce high inference latency and GPU-memory cost, while vision-action chunking policies are more suitable for real-time industrial control. However, these policies are usually trained by behavior cloning and suffer from distribution shift in contact-rich tasks. This paper proposes PAC-ACT, a reinforcement-learning post-training framework for pretrained Action Chunking Transformer policies. PAC-A",
-      "summary_fr": "Precision industrial contact manipulation requires reliable robot policies under pose perturbations and contact-force constraints. Vision-language-action models offer broad generalization but often introduce high inference latency and GPU-memory cost, while vision-action chunking policies are more suitable for real-time industrial control. However, these policies are usually trained by behavior cloning and suffer from distribution shift in contact-rich tasks. This paper proposes PAC-ACT, a reinforcement-learning post-training framework for pretrained Action Chunking Transformer policies. PAC-A",
-      "resume_fr": "Precision industrial contact manipulation requires reliable robot policies under pose perturbations and contact-force constraints. Vision-language-action models offer broad generalization but often introduce high inference latency and GPU-memory cost, while vision-action chunking policies are more suitable for real-time industrial control. However, these policies are usually trained by behavior cloning and suffer from distribution shift in contact-rich tasks. This paper proposes PAC-ACT, a reinforcement-learning post-training framework for pretrained Action Chunking Transformer policies. PAC-A",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
