@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-22T08:36:35.980Z",
+  "generatedAt": "2026-07-23T08:38:40.278Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,139 @@
     }
   },
   "items": [
+    {
+      "title": "Train the Model, Not the Reader: Decodability Supervision for Verifiable Activation Explanations",
+      "url": "https://arxiv.org/abs/2607.20379v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-22T17:10:23.000Z",
+      "score": 70,
+      "summary_en": "Natural-language autoencoders score explanations of hidden activations by reconstruction: an explanation is deemed faithful if the activation can be regenerated from it. The test is structurally insensitive to individual false claims: if flipping a claim does not change the reconstruction, the claim is never penalized. We show the test is passed in two ways, neither faithful. On a released Qwen-2.5-7B verbalizer, explanations reconstruct well above chance while ~2% of specific claims are reconstruction-dependent, so the score tracks gist, not specific facts. Under exact synthetic ground truth,",
+      "summary_fr": "Natural-language autoencoders score explanations of hidden activations by reconstruction: an explanation is deemed faithful if the activation can be regenerated from it. The test is structurally insensitive to individual false claims: if flipping a claim does not change the reconstruction, the claim is never penalized. We show the test is passed in two ways, neither faithful. On a released Qwen-2.5-7B verbalizer, explanations reconstruct well above chance while ~2% of specific claims are reconstruction-dependent, so the score tracks gist, not specific facts. Under exact synthetic ground truth,",
+      "resume_fr": "Natural-language autoencoders score explanations of hidden activations by reconstruction: an explanation is deemed faithful if the activation can be regenerated from it. The test is structurally insensitive to individual false claims: if flipping a claim does not change the reconstruction, the claim is never penalized. We show the test is passed in two ways, neither faithful. On a released Qwen-2.5-7B verbalizer, explanations reconstruct well above chance while ~2% of specific claims are reconstruction-dependent, so the score tracks gist, not specific facts. Under exact synthetic ground truth,",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Notes to Self: Can LLMs Benefit from Experiential Abstractions?",
+      "url": "https://arxiv.org/abs/2607.20372v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-22T17:02:34.000Z",
+      "score": 70,
+      "summary_en": "Humans distill experience into reusable abstractions, e.g., strategies and cautionary reminders, and apply them to gradually solve problems more effectively. We study whether Large Language Models (LLMs) can similarly benefit from such experiential abstractions. From LLMs' solution traces on the MATH training set, a stronger teacher or the LLMs themselves extract natural-language abstractions into a retrievable library. We explore two usage modes: (1) inference-time retrieval and (2) reinforcement learning (RL) with abstraction-augmented training prompts. Experiential abstractions improve LLM ",
+      "summary_fr": "Humans distill experience into reusable abstractions, e.g., strategies and cautionary reminders, and apply them to gradually solve problems more effectively. We study whether Large Language Models (LLMs) can similarly benefit from such experiential abstractions. From LLMs' solution traces on the MATH training set, a stronger teacher or the LLMs themselves extract natural-language abstractions into a retrievable library. We explore two usage modes: (1) inference-time retrieval and (2) reinforcement learning (RL) with abstraction-augmented training prompts. Experiential abstractions improve LLM ",
+      "resume_fr": "Humans distill experience into reusable abstractions, e.g., strategies and cautionary reminders, and apply them to gradually solve problems more effectively. We study whether Large Language Models (LLMs) can similarly benefit from such experiential abstractions. From LLMs' solution traces on the MATH training set, a stronger teacher or the LLMs themselves extract natural-language abstractions into a retrievable library. We explore two usage modes: (1) inference-time retrieval and (2) reinforcement learning (RL) with abstraction-augmented training prompts. Experiential abstractions improve LLM ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Closing the Lab-to-Store Gap: A Data-Efficient Post-Training and Experience-Driven Learning VLA Framework for Retail Humanoids",
+      "url": "https://arxiv.org/abs/2607.20345v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-22T16:30:51.000Z",
+      "score": 70,
+      "summary_en": "Closing the gap between benchmark performance and reliable real-world operation remains a central challenge for Vision-Language-Action (VLA) humanoid robots, which must handle execution errors, distribution shifts, and environmental variability. This paper presents DEED (Data-Efficient Post-Training and Experience-Driven Learning), a systems-level approach evaluated on a supermarket chip-restocking task using a Unitree G1-Edu humanoid robot and the GR00T N1.6 foundation model. DEED comprises three key components: (1) a data-efficient post-training pipeline with control-frequency alignment, dat",
+      "summary_fr": "Closing the gap between benchmark performance and reliable real-world operation remains a central challenge for Vision-Language-Action (VLA) humanoid robots, which must handle execution errors, distribution shifts, and environmental variability. This paper presents DEED (Data-Efficient Post-Training and Experience-Driven Learning), a systems-level approach evaluated on a supermarket chip-restocking task using a Unitree G1-Edu humanoid robot and the GR00T N1.6 foundation model. DEED comprises three key components: (1) a data-efficient post-training pipeline with control-frequency alignment, dat",
+      "resume_fr": "Closing the gap between benchmark performance and reliable real-world operation remains a central challenge for Vision-Language-Action (VLA) humanoid robots, which must handle execution errors, distribution shifts, and environmental variability. This paper presents DEED (Data-Efficient Post-Training and Experience-Driven Learning), a systems-level approach evaluated on a supermarket chip-restocking task using a Unitree G1-Edu humanoid robot and the GR00T N1.6 foundation model. DEED comprises three key components: (1) a data-efficient post-training pipeline with control-frequency alignment, dat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Experiential Versus Instructional Approaches for Eliciting Metacognitive Awareness in AI-Assisted Learning: A Short-Term Longitudinal Study",
+      "url": "https://arxiv.org/abs/2607.20047v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-07-22T11:42:01.000Z",
+      "score": 50,
+      "summary_en": "With generative AI (GenAI) entering classrooms the question to which teaching approach best supports metacognitive skill acquisition in AI-assisted learning becomes pressing. In this short-term longitudinal study we investigate two contrasting approaches: experiential learning encompassing hands-on approaches and instructional learning such as classical lectures. We conducted a quasi-experiment with 126 university students from a first-year engineering course which were distributed across the two conditions and completed a two hour session on learning with GenAI in the corresponding learning s",
+      "summary_fr": "With generative AI (GenAI) entering classrooms the question to which teaching approach best supports metacognitive skill acquisition in AI-assisted learning becomes pressing. In this short-term longitudinal study we investigate two contrasting approaches: experiential learning encompassing hands-on approaches and instructional learning such as classical lectures. We conducted a quasi-experiment with 126 university students from a first-year engineering course which were distributed across the two conditions and completed a two hour session on learning with GenAI in the corresponding learning s",
+      "resume_fr": "With generative AI (GenAI) entering classrooms the question to which teaching approach best supports metacognitive skill acquisition in AI-assisted learning becomes pressing. In this short-term longitudinal study we investigate two contrasting approaches: experiential learning encompassing hands-on approaches and instructional learning such as classical lectures. We conducted a quasi-experiment with 126 university students from a first-year engineering course which were distributed across the two conditions and completed a two hour session on learning with GenAI in the corresponding learning s",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "TINY_SCHILLER: A Drop-In German Drama Corpus for Small Language Models",
+      "url": "https://arxiv.org/abs/2607.19992v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-07-22T10:23:33.000Z",
+      "score": 50,
+      "summary_en": "tiny_schiller closes the small-language-model prototyping, fine-tuning, education, and research gap for German literary text, providing a single-file, drop-in counterpart to Karpathy's tiny_shakespeare. The available German literary corpora are larger and richer, but require parser engineering before a single line of training or fine-tuning code can run. tiny_schiller is a 2.07-megabyte single file of eleven public-domain Schiller dramas, sourced from DraCor's GerDraCor export (CC0) and processed by deterministic parser engineering. Character-level, GPT-2 byte-pair encoding, and cl100k_base to",
+      "summary_fr": "tiny_schiller closes the small-language-model prototyping, fine-tuning, education, and research gap for German literary text, providing a single-file, drop-in counterpart to Karpathy's tiny_shakespeare. The available German literary corpora are larger and richer, but require parser engineering before a single line of training or fine-tuning code can run. tiny_schiller is a 2.07-megabyte single file of eleven public-domain Schiller dramas, sourced from DraCor's GerDraCor export (CC0) and processed by deterministic parser engineering. Character-level, GPT-2 byte-pair encoding, and cl100k_base to",
+      "resume_fr": "tiny_schiller closes the small-language-model prototyping, fine-tuning, education, and research gap for German literary text, providing a single-file, drop-in counterpart to Karpathy's tiny_shakespeare. The available German literary corpora are larger and richer, but require parser engineering before a single line of training or fine-tuning code can run. tiny_schiller is a 2.07-megabyte single file of eleven public-domain Schiller dramas, sourced from DraCor's GerDraCor export (CC0) and processed by deterministic parser engineering. Character-level, GPT-2 byte-pair encoding, and cl100k_base to",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Did Alice Do Wrong? Cross-Cultural Differences in Student Perceptions of Generative AI Use in University Computing Education",
+      "url": "https://arxiv.org/abs/2607.19699v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-07-22T03:02:06.000Z",
+      "score": 50,
+      "summary_en": "The rise of generative AI (GenAI) in higher education has prompted urgent debates surrounding academic integrity and ethical use. This study examines cross-cultural differences in student perceptions of GenAI use, comparing responses from students at Canadian and South Korean universities. Using a scenario-based survey administered in Fall 2024, we analyzed how students judged the ethicality and rule compliance of AI-assisted coding practices. Results reveal that Canadian students were consistently more likely to perceive the use of GenAI as both unethical and against institutional policies co",
+      "summary_fr": "The rise of generative AI (GenAI) in higher education has prompted urgent debates surrounding academic integrity and ethical use. This study examines cross-cultural differences in student perceptions of GenAI use, comparing responses from students at Canadian and South Korean universities. Using a scenario-based survey administered in Fall 2024, we analyzed how students judged the ethicality and rule compliance of AI-assisted coding practices. Results reveal that Canadian students were consistently more likely to perceive the use of GenAI as both unethical and against institutional policies co",
+      "resume_fr": "The rise of generative AI (GenAI) in higher education has prompted urgent debates surrounding academic integrity and ethical use. This study examines cross-cultural differences in student perceptions of GenAI use, comparing responses from students at Canadian and South Korean universities. Using a scenario-based survey administered in Fall 2024, we analyzed how students judged the ethicality and rule compliance of AI-assisted coding practices. Results reveal that Canadian students were consistently more likely to perceive the use of GenAI as both unethical and against institutional policies co",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Understanding Developer Pain Points in Federated Learning: Insights from Stack Overflow and GitHub",
+      "url": "https://arxiv.org/abs/2607.19621v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-07-21T23:06:00.000Z",
+      "score": 50,
+      "summary_en": "Federated Learning (FL) enables collaborative model training without centralizing raw data, but building and operating FL systems remains difficult due to distributed execution, rapidly evolving frameworks, and privacy and governance requirements. In this paper, we present an empirical study of FL developer challenges by independently analyzing 495 Stack Overflow posts and 9,116 GitHub issues and pull requests from 92 FL-related projects. Using BERTopic-based topic modeling and difficulty indicators such as unresolved rates and median resolution time, we characterize recurring problem areas an",
+      "summary_fr": "Federated Learning (FL) enables collaborative model training without centralizing raw data, but building and operating FL systems remains difficult due to distributed execution, rapidly evolving frameworks, and privacy and governance requirements. In this paper, we present an empirical study of FL developer challenges by independently analyzing 495 Stack Overflow posts and 9,116 GitHub issues and pull requests from 92 FL-related projects. Using BERTopic-based topic modeling and difficulty indicators such as unresolved rates and median resolution time, we characterize recurring problem areas an",
+      "resume_fr": "Federated Learning (FL) enables collaborative model training without centralizing raw data, but building and operating FL systems remains difficult due to distributed execution, rapidly evolving frameworks, and privacy and governance requirements. In this paper, we present an empirical study of FL developer challenges by independently analyzing 495 Stack Overflow posts and 9,116 GitHub issues and pull requests from 92 FL-related projects. Using BERTopic-based topic modeling and difficulty indicators such as unresolved rates and median resolution time, we characterize recurring problem areas an",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Masked Visual Actions for Unified World Modeling",
       "url": "https://arxiv.org/abs/2607.19343v1",
@@ -227,6 +360,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
       "image": "https://world-education-blog.org/wp-content/uploads/2026/07/yidan.jpg"
+    },
+    {
+      "title": "Computing on the Fly: Navigating a Vision for the Future of Drone Computing",
+      "url": "https://arxiv.org/abs/2607.19213v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-07-21T15:42:35.000Z",
+      "score": 50,
+      "summary_en": "The report envisions a decade in which drones move goods, medical supplies, and information at a scale comparable to national infrastructure investments like highways and the electric grid. Potential applications include natural disaster detection drones that spot wildfire sources within minutes, medical supply chains that bypass ground congestion to reach rural hospitals, and nationwide fleets that continuously inspect bridges and power lines. Realizing this future, however, requires closing what report authors call a \"capability gap,\" where hardware and aspirations are outpacing the software",
+      "summary_fr": "The report envisions a decade in which drones move goods, medical supplies, and information at a scale comparable to national infrastructure investments like highways and the electric grid. Potential applications include natural disaster detection drones that spot wildfire sources within minutes, medical supply chains that bypass ground congestion to reach rural hospitals, and nationwide fleets that continuously inspect bridges and power lines. Realizing this future, however, requires closing what report authors call a \"capability gap,\" where hardware and aspirations are outpacing the software",
+      "resume_fr": "The report envisions a decade in which drones move goods, medical supplies, and information at a scale comparable to national infrastructure investments like highways and the electric grid. Potential applications include natural disaster detection drones that spot wildfire sources within minutes, medical supply chains that bypass ground congestion to reach rural hospitals, and nationwide fleets that continuously inspect bridges and power lines. Realizing this future, however, requires closing what report authors call a \"capability gap,\" where hardware and aspirations are outpacing the software",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "STL-GCS: A Planner-Controller Framework for Signal Temporal Logic via Graphs of Time-varying Convex Sets",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Invariant Learning Dynamics of Transformers in Inductive Reasoning Tasks",
-      "url": "https://arxiv.org/abs/2607.11875v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-13T17:56:11.000Z",
-      "score": 50,
-      "summary_en": "We present a theoretical framework to explain the emergence of inductive reasoning abilities in Transformer language models. While previous works on Transformer learning dynamics have so far been mostly tied to specific tasks, we study a generalized class of inductive tasks that unifies several synthetic tasks known in the literature, including in-context n-grams and multi-hop reasoning. In this class, we theoretically prove that the training dynamics of attention models can be confined to a highly interpretable, low-dimensional invariant manifold. On this manifold, the learning dynamics are c",
-      "summary_fr": "We present a theoretical framework to explain the emergence of inductive reasoning abilities in Transformer language models. While previous works on Transformer learning dynamics have so far been mostly tied to specific tasks, we study a generalized class of inductive tasks that unifies several synthetic tasks known in the literature, including in-context n-grams and multi-hop reasoning. In this class, we theoretically prove that the training dynamics of attention models can be confined to a highly interpretable, low-dimensional invariant manifold. On this manifold, the learning dynamics are c",
-      "resume_fr": "We present a theoretical framework to explain the emergence of inductive reasoning abilities in Transformer language models. While previous works on Transformer learning dynamics have so far been mostly tied to specific tasks, we study a generalized class of inductive tasks that unifies several synthetic tasks known in the literature, including in-context n-grams and multi-hop reasoning. In this class, we theoretically prove that the training dynamics of attention models can be confined to a highly interpretable, low-dimensional invariant manifold. On this manifold, the learning dynamics are c",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Durability and Cross-Language Transfer Benchmark for a Validated Teaching-Feedback Classification Protocol",
-      "url": "https://arxiv.org/abs/2607.11873v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-13T17:56:05.000Z",
-      "score": 50,
-      "summary_en": "Institutions collect far more open-ended teaching-evaluation feedback than they read. A prior study introduced a validated protocol for classifying such comments by thematic category and sentiment, built from a documented annotation guide, an intra-annotator reliability measurement, stratified cross-validation, and a held-out evaluation on a Spanish institutional corpus with a frozen-encoder design. Two questions limit its reuse: whether a protocol fixed to 2019-era frozen embeddings stays competitive as representation methods advance, and whether it transfers to a second language. We re-run i",
-      "summary_fr": "Institutions collect far more open-ended teaching-evaluation feedback than they read. A prior study introduced a validated protocol for classifying such comments by thematic category and sentiment, built from a documented annotation guide, an intra-annotator reliability measurement, stratified cross-validation, and a held-out evaluation on a Spanish institutional corpus with a frozen-encoder design. Two questions limit its reuse: whether a protocol fixed to 2019-era frozen embeddings stays competitive as representation methods advance, and whether it transfers to a second language. We re-run i",
-      "resume_fr": "Institutions collect far more open-ended teaching-evaluation feedback than they read. A prior study introduced a validated protocol for classifying such comments by thematic category and sentiment, built from a documented annotation guide, an intra-annotator reliability measurement, stratified cross-validation, and a held-out evaluation on a Spanish institutional corpus with a frozen-encoder design. Two questions limit its reuse: whether a protocol fixed to 2019-era frozen embeddings stays competitive as representation methods advance, and whether it transfers to a second language. We re-run i",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Transformer-Guided Swarm Intelligence for Frugal Neural Architecture Search",
-      "url": "https://arxiv.org/abs/2607.11826v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-13T17:18:24.000Z",
-      "score": 50,
-      "summary_en": "Neural Architecture Search (NAS) has automated the design of deep learning models but traditionally requires massive computational resources, often measured in thousands of GPU-days. In this paper, we propose a frugal and memetic NAS framework designed to democratize architecture design on consumer-grade hardware. Our approach combines the global macro-search capabilities of an autoregressive Transformer controller, trained via Reinforcement Learning (RL), with the local micro-exploitation of an Artificial Bee Colony (ABC) algorithm. To prevent premature convergence during the RL phase, we int",
-      "summary_fr": "Neural Architecture Search (NAS) has automated the design of deep learning models but traditionally requires massive computational resources, often measured in thousands of GPU-days. In this paper, we propose a frugal and memetic NAS framework designed to democratize architecture design on consumer-grade hardware. Our approach combines the global macro-search capabilities of an autoregressive Transformer controller, trained via Reinforcement Learning (RL), with the local micro-exploitation of an Artificial Bee Colony (ABC) algorithm. To prevent premature convergence during the RL phase, we int",
-      "resume_fr": "Neural Architecture Search (NAS) has automated the design of deep learning models but traditionally requires massive computational resources, often measured in thousands of GPU-days. In this paper, we propose a frugal and memetic NAS framework designed to democratize architecture design on consumer-grade hardware. Our approach combines the global macro-search capabilities of an autoregressive Transformer controller, trained via Reinforcement Learning (RL), with the local micro-exploitation of an Artificial Bee Colony (ABC) algorithm. To prevent premature convergence during the RL phase, we int",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Active Noise Floor Estimation for Reliability-Optimal POMDPs: A Value-of-Noise-Information Approach",
-      "url": "https://arxiv.org/abs/2607.11822v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-13T17:16:26.000Z",
-      "score": 70,
-      "summary_en": "Finite Reliability Representations (FRR) certify when a cell-constant policy is sufficient for reliable decision-making in a partially observed system with a known physical noise floor. In practice, however, sensing and execution noise can be latent and context-dependent. This paper develops a certificate-aware active disambiguation framework for an unknown physical noise parameter theta = (sigma_y, sigma_u), with the sensor-only case obtained by fixing sigma_u. We define the Value of Noise Information (VoNI) as the expected excess FRR certificate gap caused by using a reliability cover calibr",
-      "summary_fr": "Finite Reliability Representations (FRR) certify when a cell-constant policy is sufficient for reliable decision-making in a partially observed system with a known physical noise floor. In practice, however, sensing and execution noise can be latent and context-dependent. This paper develops a certificate-aware active disambiguation framework for an unknown physical noise parameter theta = (sigma_y, sigma_u), with the sensor-only case obtained by fixing sigma_u. We define the Value of Noise Information (VoNI) as the expected excess FRR certificate gap caused by using a reliability cover calibr",
-      "resume_fr": "Finite Reliability Representations (FRR) certify when a cell-constant policy is sufficient for reliable decision-making in a partially observed system with a known physical noise floor. In practice, however, sensing and execution noise can be latent and context-dependent. This paper develops a certificate-aware active disambiguation framework for an unknown physical noise parameter theta = (sigma_y, sigma_u), with the sensor-only case obtained by fixing sigma_u. We define the Value of Noise Information (VoNI) as the expected excess FRR certificate gap caused by using a reliability cover calibr",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Compact Top-Loading Robot for Endovascular Interventions: Design, Control and Evaluation",
-      "url": "https://arxiv.org/abs/2607.11779v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-13T16:35:14.000Z",
-      "score": 70,
-      "summary_en": "Robot-assisted endovascular intervention can potentially reduce radiation exposure, improve surgeon ergonomics, enable telesurgery, support active assistance and autonomy, and enhance procedural precision. However, existing systems often suffer from limited procedural coverage because constrained patient-side setups, restricted flexibility, and complex instrument exchange hinder clinical workflow integration. This work presents a compact robotic system for endovascular interventions that enables continuous translational and rotational manipulation of standard endovascular instruments. The syst",
-      "summary_fr": "Robot-assisted endovascular intervention can potentially reduce radiation exposure, improve surgeon ergonomics, enable telesurgery, support active assistance and autonomy, and enhance procedural precision. However, existing systems often suffer from limited procedural coverage because constrained patient-side setups, restricted flexibility, and complex instrument exchange hinder clinical workflow integration. This work presents a compact robotic system for endovascular interventions that enables continuous translational and rotational manipulation of standard endovascular instruments. The syst",
-      "resume_fr": "Robot-assisted endovascular intervention can potentially reduce radiation exposure, improve surgeon ergonomics, enable telesurgery, support active assistance and autonomy, and enhance procedural precision. However, existing systems often suffer from limited procedural coverage because constrained patient-side setups, restricted flexibility, and complex instrument exchange hinder clinical workflow integration. This work presents a compact robotic system for endovascular interventions that enables continuous translational and rotational manipulation of standard endovascular instruments. The syst",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Programming Language Policy as an AI Literacy Equity Problem: A 15-Nation Comparative Analysis",
-      "url": "https://arxiv.org/abs/2607.11314v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-07-13T09:27:09.000Z",
-      "score": 85,
-      "summary_en": "The promise of AI literacy ``for all'' confronts a structural challenge embedded in how nations organise secondary computer science education. In most systems, a general-track subject -- Digital Literacy, ICT, TIC, or SNT -- bears the weight of universal AI literacy, while a specialist Informatics course serves STEM pathways separately. Yet the content and depth of the general track are shaped by governance decisions made largely with reference to the specialist one. This paper presents a comparative analysis of curricula and examination frameworks across fifteen countries, identifying two str",
-      "summary_fr": "The promise of AI literacy ``for all'' confronts a structural challenge embedded in how nations organise secondary computer science education. In most systems, a general-track subject -- Digital Literacy, ICT, TIC, or SNT -- bears the weight of universal AI literacy, while a specialist Informatics course serves STEM pathways separately. Yet the content and depth of the general track are shaped by governance decisions made largely with reference to the specialist one. This paper presents a comparative analysis of curricula and examination frameworks across fifteen countries, identifying two str",
-      "resume_fr": "The promise of AI literacy ``for all'' confronts a structural challenge embedded in how nations organise secondary computer science education. In most systems, a general-track subject -- Digital Literacy, ICT, TIC, or SNT -- bears the weight of universal AI literacy, while a specialist Informatics course serves STEM pathways separately. Yet the content and depth of the general track are shaped by governance decisions made largely with reference to the specialist one. This paper presents a comparative analysis of curricula and examination frameworks across fifteen countries, identifying two str",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The Paternalistic Filter: Epistemic Injustice and Differential Refusal in LLM-Mediated History Education for Marginalized Romanian Students",
-      "url": "https://arxiv.org/abs/2607.11292v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-07-13T09:10:19.000Z",
-      "score": 50,
-      "summary_en": "As Large Language Models (LLMs) are increasingly deployed as conversational tutors, they risk institutionalizing systemic inequalities. This study presents a systematic API audit of four LLMs acting as history tutors, evaluating 1,800 responses regarding the 1989 Romanian Revolution across five student personas varying by ethnicity and socio-economic tier. We uncover four interconnected patterns of \\emph{epistemic paternalism}: (1)~\\textbf{Differential Refusal}, where safety-aligned models block 76.7\\% of educational requests from low-tier students; (2)~\\textbf{Epistemic Gatekeeping}, evidence",
-      "summary_fr": "As Large Language Models (LLMs) are increasingly deployed as conversational tutors, they risk institutionalizing systemic inequalities. This study presents a systematic API audit of four LLMs acting as history tutors, evaluating 1,800 responses regarding the 1989 Romanian Revolution across five student personas varying by ethnicity and socio-economic tier. We uncover four interconnected patterns of \\emph{epistemic paternalism}: (1)~\\textbf{Differential Refusal}, where safety-aligned models block 76.7\\% of educational requests from low-tier students; (2)~\\textbf{Epistemic Gatekeeping}, evidence",
-      "resume_fr": "As Large Language Models (LLMs) are increasingly deployed as conversational tutors, they risk institutionalizing systemic inequalities. This study presents a systematic API audit of four LLMs acting as history tutors, evaluating 1,800 responses regarding the 1989 Romanian Revolution across five student personas varying by ethnicity and socio-economic tier. We uncover four interconnected patterns of \\emph{epistemic paternalism}: (1)~\\textbf{Differential Refusal}, where safety-aligned models block 76.7\\% of educational requests from low-tier students; (2)~\\textbf{Epistemic Gatekeeping}, evidence",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Comparison of impact between block-based and text-based cognitive tool on data inquiry competence in data science education",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10673-4",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-07-13T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "This study explores the differential impacts of block-based and text-based cognitive tools on the development of students’ data inquiry competence. The research compared two cognitive tools—RapidMiner (block-based) and R Studio (text-based)—in an 18-week course focused on educational data mining and learning analytics. Participants (32 undergraduate students) were randomly assigned to one of two groups, with both completing individual assignments and a capstone project. The study examined the learners’ data inquiry processes using epistemic network analysis and assessed learning outcomes in te",
-      "summary_fr": "This study explores the differential impacts of block-based and text-based cognitive tools on the development of students’ data inquiry competence. The research compared two cognitive tools—RapidMiner (block-based) and R Studio (text-based)—in an 18-week course focused on educational data mining and learning analytics. Participants (32 undergraduate students) were randomly assigned to one of two groups, with both completing individual assignments and a capstone project. The study examined the learners’ data inquiry processes using epistemic network analysis and assessed learning outcomes in te",
-      "resume_fr": "This study explores the differential impacts of block-based and text-based cognitive tools on the development of students’ data inquiry competence. The research compared two cognitive tools—RapidMiner (block-based) and R Studio (text-based)—in an 18-week course focused on educational data mining and learning analytics. Participants (32 undergraduate students) were randomly assigned to one of two groups, with both completing individual assignments and a capstone project. The study examined the learners’ data inquiry processes using epistemic network analysis and assessed learning outcomes in te",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10673-4/MediaObjects/11423_2026_10673_Fig1_HTML.png"
     }
   ]
 }
