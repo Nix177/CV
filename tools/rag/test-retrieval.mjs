@@ -67,6 +67,43 @@ assert.ok(/non fiables/i.test(profileMessages[0].content));
 assert.ok(/BEGIN_UNTRUSTED_RETRIEVED_CONTEXT/.test(profileMessages[1].content));
 assert.ok(!/BEGIN_UNTRUSTED_RETRIEVED_CONTEXT/.test(profileMessages[0].content));
 
+const contactMessages = buildMessages({
+  message: "Comment puis-je contacter Nicolas ? Y a-t-il un formulaire de contact ?",
+  liberty: 1,
+  concise: true,
+  lang: "fr"
+});
+assert.ok(/aucun formulaire de contact n'existe/i.test(contactMessages[0].content));
+assert.ok(/page CV \(\/cv\)/i.test(contactMessages[0].content));
+assert.ok(/nicolas\.tuor@bluewin\.ch/i.test(contactMessages[1].content));
+assert.ok(/ne possède pas de formulaire de contact/i.test(contactMessages[1].content));
+
+const englishContactMessages = buildMessages({
+  message: "How can I contact Nicolas? Is there a contact form?",
+  liberty: 1,
+  concise: true,
+  lang: "en"
+});
+assert.ok(/There is no contact form/i.test(englishContactMessages[0].content));
+assert.ok(/CV page \(\/cv-en\)/i.test(englishContactMessages[0].content));
+
+const germanContactMessages = buildMessages({
+  message: "Wie kann ich Nicolas kontaktieren? Gibt es ein Kontaktformular?",
+  liberty: 1,
+  concise: true,
+  lang: "de"
+});
+assert.ok(/kein Kontaktformular/i.test(germanContactMessages[0].content));
+assert.ok(/Lebenslauf-Seite \(\/cv-de\)/i.test(germanContactMessages[0].content));
+
+const musicProjectMessages = buildMessages({
+  message: "Nicolas a-t-il mené un projet de musique électronique avec ses élèves ?",
+  liberty: 1,
+  concise: true,
+  lang: "fr"
+});
+assert.ok(/production de musique électronique.*GarageBand/i.test(musicProjectMessages[1].content));
+
 const germanMessages = buildMessages({
   message: "Wie gut spricht Nicolas Deutsch?",
   liberty: 1,
@@ -161,6 +198,8 @@ assert.ok(wrappedMaliciousComment.includes("[BEGIN_UNTRUSTED_RETRIEVED_CONTEXT]"
 assert.ok(wrappedMaliciousComment.includes(maliciousComment));
 assert.ok(!profileMessages[0].content.includes(maliciousComment));
 assert.ok(/untrusted data/i.test(buildSystemInstruction("en")));
+assert.ok(/no contact form/i.test(buildSystemInstruction("en")));
+assert.ok(/CV page/i.test(buildSystemInstruction("en")));
 
 const openAiRateLimit = toUserErrorMessage(new UpstreamError("OpenAI", 429, "quota"));
 const geminiRateLimit = toUserErrorMessage(new UpstreamError("Google", 429, "quota"));
