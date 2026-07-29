@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T08:48:38.289Z",
+  "generatedAt": "2026-07-29T12:11:24.576Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,196 @@
   },
   "items": [
     {
+      "title": "Pass the Baton: Trajectory-Relayed On-Policy Distillation",
+      "url": "https://arxiv.org/abs/2607.26057v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-28T17:59:46.000Z",
+      "score": 70,
+      "summary_en": "On-policy distillation (OPD) grounds token-level supervision in the student's own trajectory, yet suffers from prefix failure: once the student commits to a wrong reasoning direction, all subsequent generation builds on this deviation, producing misdirected continuations that elicit unreliable supervision and waste compute. We identify a teacher-student continuation asymmetry on failed prefixes, where the teacher tends to redirect while the student continues along the original direction, and convert it into a label-free handoff trigger in Relay On-Policy Distillation (Relay-OPD). During traini",
+      "summary_fr": "On-policy distillation (OPD) grounds token-level supervision in the student's own trajectory, yet suffers from prefix failure: once the student commits to a wrong reasoning direction, all subsequent generation builds on this deviation, producing misdirected continuations that elicit unreliable supervision and waste compute. We identify a teacher-student continuation asymmetry on failed prefixes, where the teacher tends to redirect while the student continues along the original direction, and convert it into a label-free handoff trigger in Relay On-Policy Distillation (Relay-OPD). During traini",
+      "resume_fr": "On-policy distillation (OPD) grounds token-level supervision in the student's own trajectory, yet suffers from prefix failure: once the student commits to a wrong reasoning direction, all subsequent generation builds on this deviation, producing misdirected continuations that elicit unreliable supervision and waste compute. We identify a teacher-student continuation asymmetry on failed prefixes, where the teacher tends to redirect while the student continues along the original direction, and convert it into a label-free handoff trigger in Relay On-Policy Distillation (Relay-OPD). During traini",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "INTACT: Isomorphic Intent-to-Action Learning for Search-Free World Models",
+      "url": "https://arxiv.org/abs/2607.26056v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-28T17:59:40.000Z",
+      "score": 70,
+      "summary_en": "Forward latent world models predict how actions change a scene, but recover actions for a desired change only through expensive test-time search. We introduce INTACT (INtent-To-ACTion), an end-to-end JEPA that turns action-labeled, reward-free trajectories into a deployable intent-to-action interface. Each transition supplies physical intent $z_{t+1}-z_t$, while a future goal supplies deployment intent $\\operatorname{sg}(z_g)-z_t$. The architecture is isomorphic between the local and goal motion-intent backbone-input graphs through an identical four-slot grammar and shared parameters, and betw",
+      "summary_fr": "Forward latent world models predict how actions change a scene, but recover actions for a desired change only through expensive test-time search. We introduce INTACT (INtent-To-ACTion), an end-to-end JEPA that turns action-labeled, reward-free trajectories into a deployable intent-to-action interface. Each transition supplies physical intent $z_{t+1}-z_t$, while a future goal supplies deployment intent $\\operatorname{sg}(z_g)-z_t$. The architecture is isomorphic between the local and goal motion-intent backbone-input graphs through an identical four-slot grammar and shared parameters, and betw",
+      "resume_fr": "Forward latent world models predict how actions change a scene, but recover actions for a desired change only through expensive test-time search. We introduce INTACT (INtent-To-ACTion), an end-to-end JEPA that turns action-labeled, reward-free trajectories into a deployable intent-to-action interface. Each transition supplies physical intent $z_{t+1}-z_t$, while a future goal supplies deployment intent $\\operatorname{sg}(z_g)-z_t$. The architecture is isomorphic between the local and goal motion-intent backbone-input graphs through an identical four-slot grammar and shared parameters, and betw",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "$π\\mathbf{R}^2$: Reactive Real-time Flow Policies",
+      "url": "https://arxiv.org/abs/2607.26055v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-07-28T17:59:31.000Z",
+      "score": 85,
+      "summary_en": "Generalist manipulation policies increasingly take the form of action-chunking flow policies built on large pretrained backbones. Such chunks run open-loop, so the policy cannot react to sensory input arriving mid-execution, sacrificing \\emph{reactivity}. Replanning more often would restore it, but the perception-to-action pipeline (a large backbone plus multiple denoising steps) is too slow: this \\emph{latency} forbids frequent replanning and leaves committed actions stale, making such policies ill-suited for dynamic, closed-loop control. We present $π\\mathbf{R}^2$, which makes these policies",
+      "summary_fr": "Generalist manipulation policies increasingly take the form of action-chunking flow policies built on large pretrained backbones. Such chunks run open-loop, so the policy cannot react to sensory input arriving mid-execution, sacrificing \\emph{reactivity}. Replanning more often would restore it, but the perception-to-action pipeline (a large backbone plus multiple denoising steps) is too slow: this \\emph{latency} forbids frequent replanning and leaves committed actions stale, making such policies ill-suited for dynamic, closed-loop control. We present $π\\mathbf{R}^2$, which makes these policies",
+      "resume_fr": "Generalist manipulation policies increasingly take the form of action-chunking flow policies built on large pretrained backbones. Such chunks run open-loop, so the policy cannot react to sensory input arriving mid-execution, sacrificing \\emph{reactivity}. Replanning more often would restore it, but the perception-to-action pipeline (a large backbone plus multiple denoising steps) is too slow: this \\emph{latency} forbids frequent replanning and leaves committed actions stale, making such policies ill-suited for dynamic, closed-loop control. We present $π\\mathbf{R}^2$, which makes these policies",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Re-thinking Mammography Transfer Learning: The Dataset-Informed Transfer Learning (DITL) Framework for Breast Cancer Screening and Lesion Diagnosis",
+      "url": "https://arxiv.org/abs/2607.26043v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-07-28T17:52:36.000Z",
+      "score": 85,
+      "summary_en": "Enhancing classification performance in mammography remains a persistent challenge across both small curated datasets and large-scale clinical cohorts. Conventional transfer learning approaches often neglect dataset-specific characteristics, while recent neighborhood-informed methods have been restricted to narrow tasks with rigid formulations, limiting their scalability to population-level datasets. To address these challenges, we propose the Dataset-Informed Transfer Learning (DITL) framework, which integrates dataset-derived difficulty signals with neighborhood-based triplet supervision in ",
+      "summary_fr": "Enhancing classification performance in mammography remains a persistent challenge across both small curated datasets and large-scale clinical cohorts. Conventional transfer learning approaches often neglect dataset-specific characteristics, while recent neighborhood-informed methods have been restricted to narrow tasks with rigid formulations, limiting their scalability to population-level datasets. To address these challenges, we propose the Dataset-Informed Transfer Learning (DITL) framework, which integrates dataset-derived difficulty signals with neighborhood-based triplet supervision in ",
+      "resume_fr": "Enhancing classification performance in mammography remains a persistent challenge across both small curated datasets and large-scale clinical cohorts. Conventional transfer learning approaches often neglect dataset-specific characteristics, while recent neighborhood-informed methods have been restricted to narrow tasks with rigid formulations, limiting their scalability to population-level datasets. To address these challenges, we propose the Dataset-Informed Transfer Learning (DITL) framework, which integrates dataset-derived difficulty signals with neighborhood-based triplet supervision in ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "VetClaw: An Edge-Cloud Multimodal Agentic System for Veterinary Disease Screening",
+      "url": "https://arxiv.org/abs/2607.26042v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-07-28T17:50:25.000Z",
+      "score": 70,
+      "summary_en": "We present VetClaw, an edge-cloud multimodal agentic system for early veterinary disease screening. VetClaw uses a camera module as an edge sensing device and sends captured images, together with optional symptom descriptions, to a server-hosted vision-language model for zero-shot disease classification. The system separates agent interaction from workflow orchestration: OpenClaw provides scheduling, tool access, user interaction, and notification services on the edge device, while LangGraph manages the stateful screening workflow, including input validation, image transmission, model invocati",
+      "summary_fr": "We present VetClaw, an edge-cloud multimodal agentic system for early veterinary disease screening. VetClaw uses a camera module as an edge sensing device and sends captured images, together with optional symptom descriptions, to a server-hosted vision-language model for zero-shot disease classification. The system separates agent interaction from workflow orchestration: OpenClaw provides scheduling, tool access, user interaction, and notification services on the edge device, while LangGraph manages the stateful screening workflow, including input validation, image transmission, model invocati",
+      "resume_fr": "We present VetClaw, an edge-cloud multimodal agentic system for early veterinary disease screening. VetClaw uses a camera module as an edge sensing device and sends captured images, together with optional symptom descriptions, to a server-hosted vision-language model for zero-shot disease classification. The system separates agent interaction from workflow orchestration: OpenClaw provides scheduling, tool access, user interaction, and notification services on the edge device, while LangGraph manages the stateful screening workflow, including input validation, image transmission, model invocati",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reinformed Dreamer: An Asymmetric World Model Efficiently Trained through Latent Guidance",
+      "url": "https://arxiv.org/abs/2607.26040v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-07-28T17:49:29.000Z",
+      "score": 70,
+      "summary_en": "Much like humans benefit from guidance while learning, reinforcement learning algorithms may benefit from additional supervision beyond rewards. Leveraging additional information during training to learn better representations and behaviors has been the focus of asymmetric reinforcement learning. This learning paradigm has proven effective under partial observability when additional state information is available, but also under full observability when more refined state information is available. Focusing on model-based reinforcement learning, we study the effect of asymmetric learning on obse",
+      "summary_fr": "Much like humans benefit from guidance while learning, reinforcement learning algorithms may benefit from additional supervision beyond rewards. Leveraging additional information during training to learn better representations and behaviors has been the focus of asymmetric reinforcement learning. This learning paradigm has proven effective under partial observability when additional state information is available, but also under full observability when more refined state information is available. Focusing on model-based reinforcement learning, we study the effect of asymmetric learning on obse",
+      "resume_fr": "Much like humans benefit from guidance while learning, reinforcement learning algorithms may benefit from additional supervision beyond rewards. Leveraging additional information during training to learn better representations and behaviors has been the focus of asymmetric reinforcement learning. This learning paradigm has proven effective under partial observability when additional state information is available, but also under full observability when more refined state information is available. Focusing on model-based reinforcement learning, we study the effect of asymmetric learning on obse",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Untangling Co-Drift: Proactive Multi-Intent Failure Prediction and Root-Cause Disambiguation for Self-Driving Networks",
+      "url": "https://arxiv.org/abs/2607.25989v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-28T17:06:24.000Z",
+      "score": 70,
+      "summary_en": "The vision of self-driving networks that monitor, reason, and act upon themselves with minimal human intervention relies on tightly coupled monitoring, analytics, and actuation functions. In this work, we treat these functions as three operational macro-intents: continuous telemetry, real-time analytics, and programmatic actuation, and formalize the health of each function as an intent that the network must continuously satisfy. A critical, yet underexplored, challenge stems from the causal coupling among these intents, where a singular fault within one macro-intent propagates as a co-drift an",
+      "summary_fr": "The vision of self-driving networks that monitor, reason, and act upon themselves with minimal human intervention relies on tightly coupled monitoring, analytics, and actuation functions. In this work, we treat these functions as three operational macro-intents: continuous telemetry, real-time analytics, and programmatic actuation, and formalize the health of each function as an intent that the network must continuously satisfy. A critical, yet underexplored, challenge stems from the causal coupling among these intents, where a singular fault within one macro-intent propagates as a co-drift an",
+      "resume_fr": "The vision of self-driving networks that monitor, reason, and act upon themselves with minimal human intervention relies on tightly coupled monitoring, analytics, and actuation functions. In this work, we treat these functions as three operational macro-intents: continuous telemetry, real-time analytics, and programmatic actuation, and formalize the health of each function as an intent that the network must continuously satisfy. A critical, yet underexplored, challenge stems from the causal coupling among these intents, where a singular fault within one macro-intent propagates as a co-drift an",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Physics-Aware End-to-End Deep Reinforcement Learning for Quadcopter Control with Actuator Dynamics",
+      "url": "https://arxiv.org/abs/2607.25985v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-28T17:05:47.000Z",
+      "score": 70,
+      "summary_en": "Unmanned aerial vehicles (UAVs), particularly quadcopters, present unique challenges for autonomous control due to their underactuated dynamics: only four available control inputs must govern six degrees of freedom. This paper investigates a physics-aware, end-to-end deep reinforcement learning (DRL) approach that acts directly on low-level body inputs, total thrust and body torques $(T, τ_x, τ_y, τ_z)$, and closes the loop through a high-fidelity Simulink environment. Our simulator integrates a 12-state rigid-body model (MATLAB Level-2 S-Function) with (i) an Action2RPM allocation based on th",
+      "summary_fr": "Unmanned aerial vehicles (UAVs), particularly quadcopters, present unique challenges for autonomous control due to their underactuated dynamics: only four available control inputs must govern six degrees of freedom. This paper investigates a physics-aware, end-to-end deep reinforcement learning (DRL) approach that acts directly on low-level body inputs, total thrust and body torques $(T, τ_x, τ_y, τ_z)$, and closes the loop through a high-fidelity Simulink environment. Our simulator integrates a 12-state rigid-body model (MATLAB Level-2 S-Function) with (i) an Action2RPM allocation based on th",
+      "resume_fr": "Unmanned aerial vehicles (UAVs), particularly quadcopters, present unique challenges for autonomous control due to their underactuated dynamics: only four available control inputs must govern six degrees of freedom. This paper investigates a physics-aware, end-to-end deep reinforcement learning (DRL) approach that acts directly on low-level body inputs, total thrust and body torques $(T, τ_x, τ_y, τ_z)$, and closes the loop through a high-fidelity Simulink environment. Our simulator integrates a 12-state rigid-body model (MATLAB Level-2 S-Function) with (i) an Action2RPM allocation based on th",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A Cost-Effective Multimodal LLM Reasoning Framework for Question Answering over Irregular Clinical Time Series",
+      "url": "https://arxiv.org/abs/2607.25947v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-07-28T16:33:41.000Z",
+      "score": 85,
+      "summary_en": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
+      "summary_fr": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
+      "resume_fr": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DC-WAM: Dynamic-Centric Visual Supervision and Reasoning for World-Action Models",
+      "url": "https://arxiv.org/abs/2607.25918v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-07-28T16:08:50.000Z",
+      "score": 70,
+      "summary_en": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
+      "summary_fr": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
+      "resume_fr": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Human or GenAI Support? Conditions Impacting Students' Strategy Choices in an Essay Revision Task",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70300?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -189,6 +379,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Memdora: Designing Cognitively-Grounded Flashcard Interactions for AI-Powered Spaced Repetition",
+      "url": "https://arxiv.org/abs/2607.25096v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-07-27T21:40:14.000Z",
+      "score": 85,
+      "summary_en": "Spaced repetition systems (SRS) have demonstrated robust effects on long-term retention, yet existing tools reduce the flashcard interaction to a single binary gesture: flip and self-rate. This impoverished interaction model fails to leverage decades of cognitive science evidence on retrieval practice, and requires learners to context-switch out of their reading flow to create cards manually. We present Memdora, a cross-platform AI spaced repetition system that addresses these limitations through four contributions: (1) a taxonomy of 17 cognitively-grounded interaction types across three learn",
+      "summary_fr": "Spaced repetition systems (SRS) have demonstrated robust effects on long-term retention, yet existing tools reduce the flashcard interaction to a single binary gesture: flip and self-rate. This impoverished interaction model fails to leverage decades of cognitive science evidence on retrieval practice, and requires learners to context-switch out of their reading flow to create cards manually. We present Memdora, a cross-platform AI spaced repetition system that addresses these limitations through four contributions: (1) a taxonomy of 17 cognitively-grounded interaction types across three learn",
+      "resume_fr": "Spaced repetition systems (SRS) have demonstrated robust effects on long-term retention, yet existing tools reduce the flashcard interaction to a single binary gesture: flip and self-rate. This impoverished interaction model fails to leverage decades of cognitive science evidence on retrieval practice, and requires learners to context-switch out of their reading flow to create cards manually. We present Memdora, a cross-platform AI spaced repetition system that addresses these limitations through four contributions: (1) a taxonomy of 17 cognitively-grounded interaction types across three learn",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Rethinking Classifier-Free Guidance in On-Policy Diffusion Distillation",
@@ -1016,215 +1225,6 @@
       "summary_en": "Vision-language-action (VLA) models have achieved impressive generalization in robotic manipulation, and recent memory-augmented VLAs have relaxed the Markovian assumption by conditioning on past images or language summaries. Vision-based memory approaches address this by conditioning on sampled past image frames, but they are computationally expensive and fundamentally limited when temporal events are visually ambiguous, e.g., pushing a button multiple times with small movements. We propose FM-VLA, a VLA model with force-based memory, enabling temporal context reasoning for non-Markovian, con",
       "summary_fr": "Vision-language-action (VLA) models have achieved impressive generalization in robotic manipulation, and recent memory-augmented VLAs have relaxed the Markovian assumption by conditioning on past images or language summaries. Vision-based memory approaches address this by conditioning on sampled past image frames, but they are computationally expensive and fundamentally limited when temporal events are visually ambiguous, e.g., pushing a button multiple times with small movements. We propose FM-VLA, a VLA model with force-based memory, enabling temporal context reasoning for non-Markovian, con",
       "resume_fr": "Vision-language-action (VLA) models have achieved impressive generalization in robotic manipulation, and recent memory-augmented VLAs have relaxed the Markovian assumption by conditioning on past images or language summaries. Vision-based memory approaches address this by conditioning on sampled past image frames, but they are computationally expensive and fundamentally limited when temporal events are visually ambiguous, e.g., pushing a button multiple times with small movements. We propose FM-VLA, a VLA model with force-based memory, enabling temporal context reasoning for non-Markovian, con",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Causal Discovery on Irregular Time Series",
-      "url": "https://arxiv.org/abs/2607.18226v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-20T17:57:45.000Z",
-      "score": 50,
-      "summary_en": "Causal discovery methods have shown strong performance in temporal systems, but they typically rely on regular and discrete lag structures, limiting their applicability to regularly sampled data. However, many real-world tasks require dealing with irregularly sampled streams of events, such as sensor streams, healthcare data, and financial transactions. In this work, we propose an extension of PCMCI+, a state-of-the-art method for causal discovery on regular multivariate time series, to allow for handling irregular time series. Instead of modelling causal relations through fixed-lag dependenci",
-      "summary_fr": "Causal discovery methods have shown strong performance in temporal systems, but they typically rely on regular and discrete lag structures, limiting their applicability to regularly sampled data. However, many real-world tasks require dealing with irregularly sampled streams of events, such as sensor streams, healthcare data, and financial transactions. In this work, we propose an extension of PCMCI+, a state-of-the-art method for causal discovery on regular multivariate time series, to allow for handling irregular time series. Instead of modelling causal relations through fixed-lag dependenci",
-      "resume_fr": "Causal discovery methods have shown strong performance in temporal systems, but they typically rely on regular and discrete lag structures, limiting their applicability to regularly sampled data. However, many real-world tasks require dealing with irregularly sampled streams of events, such as sensor streams, healthcare data, and financial transactions. In this work, we propose an extension of PCMCI+, a state-of-the-art method for causal discovery on regular multivariate time series, to allow for handling irregular time series. Instead of modelling causal relations through fixed-lag dependenci",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Vector Search As Nearest Neighbor Matching: RAG-based Policy Learning in Causal Inference",
-      "url": "https://arxiv.org/abs/2607.18225v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-20T17:57:20.000Z",
-      "score": 70,
-      "summary_en": "We propose one-step and two-step methods for policy learning with retrieval-augmented generation (RAG). We formulate RAG-based action selection under the potential outcome framework. In the two-step method, vector search retrieves action-specific neighboring evidence in an embedding space, the generator estimates conditional expected outcomes or their contrasts, and a plug-in rule selects an action. This formulation connects action-specific vector search with nearest-neighbor matching in causal inference. We decompose the regret of the two-step method into candidate-generation regret and withi",
-      "summary_fr": "We propose one-step and two-step methods for policy learning with retrieval-augmented generation (RAG). We formulate RAG-based action selection under the potential outcome framework. In the two-step method, vector search retrieves action-specific neighboring evidence in an embedding space, the generator estimates conditional expected outcomes or their contrasts, and a plug-in rule selects an action. This formulation connects action-specific vector search with nearest-neighbor matching in causal inference. We decompose the regret of the two-step method into candidate-generation regret and withi",
-      "resume_fr": "We propose one-step and two-step methods for policy learning with retrieval-augmented generation (RAG). We formulate RAG-based action selection under the potential outcome framework. In the two-step method, vector search retrieves action-specific neighboring evidence in an embedding space, the generator estimates conditional expected outcomes or their contrasts, and a plug-in rule selects an action. This formulation connects action-specific vector search with nearest-neighbor matching in causal inference. We decompose the regret of the two-step method into candidate-generation regret and withi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Unveiling Invariant and Transferable Latent Factors Across Heterogeneous Environments via ATLAS",
-      "url": "https://arxiv.org/abs/2607.18209v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-20T17:44:57.000Z",
-      "score": 85,
-      "summary_en": "This paper considers a multi-environment factor model in which high-dimensional covariates are collected from heterogeneous environments, with auxiliary labels available in a subset of these environments. The joint distribution of the covariates may vary across environments, whereas the latent structure is decomposed into invariant factors with shared loadings and heterogeneous factors with environment-specific loadings. Such a model is motivated by transfer learning and latent factor regression, where one seeks stable low-dimensional representations for both interpretation and robust out-of-s",
-      "summary_fr": "This paper considers a multi-environment factor model in which high-dimensional covariates are collected from heterogeneous environments, with auxiliary labels available in a subset of these environments. The joint distribution of the covariates may vary across environments, whereas the latent structure is decomposed into invariant factors with shared loadings and heterogeneous factors with environment-specific loadings. Such a model is motivated by transfer learning and latent factor regression, where one seeks stable low-dimensional representations for both interpretation and robust out-of-s",
-      "resume_fr": "This paper considers a multi-environment factor model in which high-dimensional covariates are collected from heterogeneous environments, with auxiliary labels available in a subset of these environments. The joint distribution of the covariates may vary across environments, whereas the latent structure is decomposed into invariant factors with shared loadings and heterogeneous factors with environment-specific loadings. Such a model is motivated by transfer learning and latent factor regression, where one seeks stable low-dimensional representations for both interpretation and robust out-of-s",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "PPL-Factory: Task-Aware and Budget-Aware Data Selection from Language Modeling to Reasoning",
-      "url": "https://arxiv.org/abs/2607.18199v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-20T17:38:38.000Z",
-      "score": 70,
-      "summary_en": "Not all training samples contribute equally to large language model fine-tuning. Selecting informative training samples can reduce the computational cost while preserving downstream performance. Many existing data selection methods rely on indirect heuristics, such as data quality, diversity or reasoning trace length. However, the effectiveness of these fixed criteria is task-dependent and difficult to generalize across diverse downstream tasks. Perplexity-based data selection provides a simple and model-aware solution to estimate the sample difficulty, but existing approaches typically score ",
-      "summary_fr": "Not all training samples contribute equally to large language model fine-tuning. Selecting informative training samples can reduce the computational cost while preserving downstream performance. Many existing data selection methods rely on indirect heuristics, such as data quality, diversity or reasoning trace length. However, the effectiveness of these fixed criteria is task-dependent and difficult to generalize across diverse downstream tasks. Perplexity-based data selection provides a simple and model-aware solution to estimate the sample difficulty, but existing approaches typically score ",
-      "resume_fr": "Not all training samples contribute equally to large language model fine-tuning. Selecting informative training samples can reduce the computational cost while preserving downstream performance. Many existing data selection methods rely on indirect heuristics, such as data quality, diversity or reasoning trace length. However, the effectiveness of these fixed criteria is task-dependent and difficult to generalize across diverse downstream tasks. Perplexity-based data selection provides a simple and model-aware solution to estimate the sample difficulty, but existing approaches typically score ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "World Translation: Minimizing Sim-to-Real Gap with Backward Dynamics Extraction and Unpaired Domain Translation",
-      "url": "https://arxiv.org/abs/2607.18154v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-20T16:52:58.000Z",
-      "score": 70,
-      "summary_en": "The gap between simulation and reality remains a fundamental challenge in deploying simulation-trained robotic policies in the real world. Real-to-sim methods narrow this gap from the real side, learning transition dynamics from real data to build a more realistic digital world. Learned dynamics models are their dominant instance. Such methods, however, face a partial observability problem: the same observation may branch to different transitions due to unobservable factors. Existing methods assume these factors can be recovered from observation history. However, this may fail whenever observa",
-      "summary_fr": "The gap between simulation and reality remains a fundamental challenge in deploying simulation-trained robotic policies in the real world. Real-to-sim methods narrow this gap from the real side, learning transition dynamics from real data to build a more realistic digital world. Learned dynamics models are their dominant instance. Such methods, however, face a partial observability problem: the same observation may branch to different transitions due to unobservable factors. Existing methods assume these factors can be recovered from observation history. However, this may fail whenever observa",
-      "resume_fr": "The gap between simulation and reality remains a fundamental challenge in deploying simulation-trained robotic policies in the real world. Real-to-sim methods narrow this gap from the real side, learning transition dynamics from real data to build a more realistic digital world. Learned dynamics models are their dominant instance. Such methods, however, face a partial observability problem: the same observation may branch to different transitions due to unobservable factors. Existing methods assume these factors can be recovered from observation history. However, this may fail whenever observa",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Self‐Explanation‐Guided Virtual Museum Learning for Knowledge Co‐Construction Based on the Constructivist Framework: A Randomised Control Study",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70296?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-19T07:00:00.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 4, August 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Not a universal benefit: Examining the differential effects of emotional AI on L2 pre‐service teachers' language learning",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70078?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-07-18T09:01:15.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Impact of an educational robot-based intervention on second-graders computational thinking skills: experimental evaluation of the  program in Paraguay",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10675-2",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-07-18T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "In this article, we present the impact evaluation of , an educational robot-based intervention aimed at developing second-grade students' computational thinking (CT) skills in Paraguay. Our results indicate that the program had an effect of 0.089 standard deviations on the students' CT skills, focusing on abilities such as abstraction, algorithmic thinking, and evaluation. These findings suggest that with age-appropriate instructional design, young children could develop CT skills, and that smart devices and electronic toys can contribute to their development. Beyond its effects on CT skills, ",
-      "summary_fr": "In this article, we present the impact evaluation of , an educational robot-based intervention aimed at developing second-grade students' computational thinking (CT) skills in Paraguay. Our results indicate that the program had an effect of 0.089 standard deviations on the students' CT skills, focusing on abilities such as abstraction, algorithmic thinking, and evaluation. These findings suggest that with age-appropriate instructional design, young children could develop CT skills, and that smart devices and electronic toys can contribute to their development. Beyond its effects on CT skills, ",
-      "resume_fr": "In this article, we present the impact evaluation of , an educational robot-based intervention aimed at developing second-grade students' computational thinking (CT) skills in Paraguay. Our results indicate that the program had an effect of 0.089 standard deviations on the students' CT skills, focusing on abilities such as abstraction, algorithmic thinking, and evaluation. These findings suggest that with age-appropriate instructional design, young children could develop CT skills, and that smart devices and electronic toys can contribute to their development. Beyond its effects on CT skills, ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10675-2/MediaObjects/11423_2026_10675_Fig1_HTML.jpg"
-    },
-    {
-      "title": "This Graduate Student Equips NASA’s Robots With Assembly Skills",
-      "url": "https://spectrum.ieee.org/graduate-student-nasas-robots-assembly",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-07-17T18:00:01.000Z",
-      "score": 50,
-      "summary_en": "Like many engineers, Sarah Downs says she knew she wanted to pursue a STEM career from a young age. As a teenager, she discovered robotics through her Tulsa, Okla., middle school’s First Lego League team, and she fell in love with the field, she says. Downs participated in the international robotics program from 2014 to 2016. Watching PBS specials on NASA Mars rovers Spirit and Opportunity, and seeing the live broadcast of the Curiosity rover launch in 2011, inspired the teen to dream of a career working with NASA. Sarah Downs MEMBER GRADE Graduate student member UNIVERSITY Texas A&M Universit",
-      "summary_fr": "Like many engineers, Sarah Downs says she knew she wanted to pursue a STEM career from a young age. As a teenager, she discovered robotics through her Tulsa, Okla., middle school’s First Lego League team, and she fell in love with the field, she says. Downs participated in the international robotics program from 2014 to 2016. Watching PBS specials on NASA Mars rovers Spirit and Opportunity, and seeing the live broadcast of the Curiosity rover launch in 2011, inspired the teen to dream of a career working with NASA. Sarah Downs MEMBER GRADE Graduate student member UNIVERSITY Texas A&M Universit",
-      "resume_fr": "Like many engineers, Sarah Downs says she knew she wanted to pursue a STEM career from a young age. As a teenager, she discovered robotics through her Tulsa, Okla., middle school’s First Lego League team, and she fell in love with the field, she says. Downs participated in the international robotics program from 2014 to 2016. Watching PBS specials on NASA Mars rovers Spirit and Opportunity, and seeing the live broadcast of the Curiosity rover launch in 2011, inspired the teen to dream of a career working with NASA. Sarah Downs MEMBER GRADE Graduate student member UNIVERSITY Texas A&M Universit",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://spectrum.ieee.org/media-library/a-young-woman-with-blonde-hair-softly-smiling-next-to-a-pair-of-collaborative-robot-arms.jpg?id=67499761&width=1200&height=600&coordinates=0%2C312%2C0%2C313"
-    },
-    {
-      "title": "An Exam for Active Observers",
-      "url": "https://arxiv.org/abs/2607.16165v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-17T17:46:23.000Z",
-      "score": 70,
-      "summary_en": "Human vision is a closed loop: gaze is continuously redirected by intermediate hypotheses rather than a single snapshot. Decades of psychophysics and cognitive science have argued that this active observation is essential for a wide range of tasks. Whether today's multimodal large language models (MLLMs) exercise active observation is an empirical question that current vision-language benchmarks do not answer. We introduce ActiveVision, a benchmark that makes active observation measurable for MLLMs, comprising 17 tasks across 3 categories. Tasks are designed to force repeated visual perception",
-      "summary_fr": "Human vision is a closed loop: gaze is continuously redirected by intermediate hypotheses rather than a single snapshot. Decades of psychophysics and cognitive science have argued that this active observation is essential for a wide range of tasks. Whether today's multimodal large language models (MLLMs) exercise active observation is an empirical question that current vision-language benchmarks do not answer. We introduce ActiveVision, a benchmark that makes active observation measurable for MLLMs, comprising 17 tasks across 3 categories. Tasks are designed to force repeated visual perception",
-      "resume_fr": "Human vision is a closed loop: gaze is continuously redirected by intermediate hypotheses rather than a single snapshot. Decades of psychophysics and cognitive science have argued that this active observation is essential for a wide range of tasks. Whether today's multimodal large language models (MLLMs) exercise active observation is an empirical question that current vision-language benchmarks do not answer. We introduce ActiveVision, a benchmark that makes active observation measurable for MLLMs, comprising 17 tasks across 3 categories. Tasks are designed to force repeated visual perception",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "VTLoc: Learning-based Tactile Contact Localization in Visual Point Clouds",
-      "url": "https://arxiv.org/abs/2607.16146v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-17T17:27:08.000Z",
-      "score": 70,
-      "summary_en": "Vision and touch are complementary modalities essential for robotic perception and manipulation. While vision provides global object context, touch offers precise local information at contact points. Integrating these modalities for contact localization, i.e., predicting the location of touch on an object's surface, poses significant challenges due to the need for accurate spatial alignment between tactile data and visual geometry. To address this challenge, we propose VTLoc, a novel visual-tactile framework that localizes contact points from tactile readings using a 3D point cloud as visual i",
-      "summary_fr": "Vision and touch are complementary modalities essential for robotic perception and manipulation. While vision provides global object context, touch offers precise local information at contact points. Integrating these modalities for contact localization, i.e., predicting the location of touch on an object's surface, poses significant challenges due to the need for accurate spatial alignment between tactile data and visual geometry. To address this challenge, we propose VTLoc, a novel visual-tactile framework that localizes contact points from tactile readings using a 3D point cloud as visual i",
-      "resume_fr": "Vision and touch are complementary modalities essential for robotic perception and manipulation. While vision provides global object context, touch offers precise local information at contact points. Integrating these modalities for contact localization, i.e., predicting the location of touch on an object's surface, poses significant challenges due to the need for accurate spatial alignment between tactile data and visual geometry. To address this challenge, we propose VTLoc, a novel visual-tactile framework that localizes contact points from tactile readings using a 3D point cloud as visual i",
       "tags": [],
       "breakdown": {
         "research": 35,
