@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T08:44:16.864Z",
+  "generatedAt": "2026-08-06T08:45:41.351Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,101 @@
     }
   },
   "items": [
+    {
+      "title": "AI-based single-shot structured-light depth reconstruction for real-time laparoscopic surgical guidance",
+      "url": "https://arxiv.org/abs/2608.05109v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-05T17:44:21.000Z",
+      "score": 70,
+      "summary_en": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
+      "summary_fr": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
+      "resume_fr": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exact Model-Free Policy Iteration for Co-safe LTL Planning",
+      "url": "https://arxiv.org/abs/2608.05047v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-05T16:58:25.000Z",
+      "score": 70,
+      "summary_en": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
+      "summary_fr": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
+      "resume_fr": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "BridgeVLA++: A Data-Efficient, Generalizable, and Memory-Augmented Vision-Language-Action Framework for 3D Manipulation",
+      "url": "https://arxiv.org/abs/2608.05042v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-05T16:54:25.000Z",
+      "score": 70,
+      "summary_en": "Leveraging pre-trained vision-language models (VLMs) to construct vision-language-action (VLA) models has emerged as a promising paradigm for 3D robot manipulation. However, existing 3D VLA methods remain data-hungry, exhibit limited generalization under distribution shifts, and lack explicit memory of past observations. These limitations hinder their application to data-scarce, open-world, and memory-dependent manipulation scenarios. Our previous work, BridgeVLA, improves data efficiency and generalization by preserving the input--output alignment of a pre-trained VLM during 3D action learnin",
+      "summary_fr": "Leveraging pre-trained vision-language models (VLMs) to construct vision-language-action (VLA) models has emerged as a promising paradigm for 3D robot manipulation. However, existing 3D VLA methods remain data-hungry, exhibit limited generalization under distribution shifts, and lack explicit memory of past observations. These limitations hinder their application to data-scarce, open-world, and memory-dependent manipulation scenarios. Our previous work, BridgeVLA, improves data efficiency and generalization by preserving the input--output alignment of a pre-trained VLM during 3D action learnin",
+      "resume_fr": "Leveraging pre-trained vision-language models (VLMs) to construct vision-language-action (VLA) models has emerged as a promising paradigm for 3D robot manipulation. However, existing 3D VLA methods remain data-hungry, exhibit limited generalization under distribution shifts, and lack explicit memory of past observations. These limitations hinder their application to data-scarce, open-world, and memory-dependent manipulation scenarios. Our previous work, BridgeVLA, improves data efficiency and generalization by preserving the input--output alignment of a pre-trained VLM during 3D action learnin",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DreamWAM: Beyond RGB Future Prediction for World Action Models",
+      "url": "https://arxiv.org/abs/2608.04996v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-05T16:04:23.000Z",
+      "score": 70,
+      "summary_en": "World Action Models (WAMs) learn action-relevant representations by predicting how the observed world will evolve. Most existing WAMs define this future in RGB space, where task-relevant state transitions are entangled with nuisance variations in texture, illumination, background, and viewpoint. We argue that WAMs should explicitly predict action-relevant future state rather than relying on RGB prediction alone. We introduce DreamWAM, which reformulates future prediction as structured world modeling beyond RGB, representing future states through complementary views of appearance, motion, geome",
+      "summary_fr": "World Action Models (WAMs) learn action-relevant representations by predicting how the observed world will evolve. Most existing WAMs define this future in RGB space, where task-relevant state transitions are entangled with nuisance variations in texture, illumination, background, and viewpoint. We argue that WAMs should explicitly predict action-relevant future state rather than relying on RGB prediction alone. We introduce DreamWAM, which reformulates future prediction as structured world modeling beyond RGB, representing future states through complementary views of appearance, motion, geome",
+      "resume_fr": "World Action Models (WAMs) learn action-relevant representations by predicting how the observed world will evolve. Most existing WAMs define this future in RGB space, where task-relevant state transitions are entangled with nuisance variations in texture, illumination, background, and viewpoint. We argue that WAMs should explicitly predict action-relevant future state rather than relying on RGB prediction alone. We introduce DreamWAM, which reformulates future prediction as structured world modeling beyond RGB, representing future states through complementary views of appearance, motion, geome",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring Fraction Comprehension and Interest in Elementary Education Through AI-Powered Personalized Learning",
+      "url": "https://arxiv.org/abs/2608.04892v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-08-05T14:17:19.000Z",
+      "score": 85,
+      "summary_en": "Artificial intelligence systems that adapt instruction to individual learners are increasingly deployed in K-12 classrooms, yet empirical evidence on their effects in authentic elementary settings remains limited, particularly for students with mathematics learning difficulties. This dissertation examines AI-powered personalized learning during primary school fraction instruction, a domain that is foundational to later mathematics and STEM achievement. The first manuscript presents a systematic review of research on artificial intelligence in mathematics education published between 2020 and 20",
+      "summary_fr": "Artificial intelligence systems that adapt instruction to individual learners are increasingly deployed in K-12 classrooms, yet empirical evidence on their effects in authentic elementary settings remains limited, particularly for students with mathematics learning difficulties. This dissertation examines AI-powered personalized learning during primary school fraction instruction, a domain that is foundational to later mathematics and STEM achievement. The first manuscript presents a systematic review of research on artificial intelligence in mathematics education published between 2020 and 20",
+      "resume_fr": "Artificial intelligence systems that adapt instruction to individual learners are increasingly deployed in K-12 classrooms, yet empirical evidence on their effects in authentic elementary settings remains limited, particularly for students with mathematics learning difficulties. This dissertation examines AI-powered personalized learning during primary school fraction instruction, a domain that is foundational to later mathematics and STEM achievement. The first manuscript presents a systematic review of research on artificial intelligence in mathematics education published between 2020 and 20",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "SocietyBench: Forecasting Counterfactual Social-World Evolution",
       "url": "https://arxiv.org/abs/2608.04009v1",
@@ -284,6 +379,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10678-z/MediaObjects/11423_2026_10678_Fig1_HTML.png"
+    },
+    {
+      "title": "Reconstructing Persistent Worlds from Narratives for Narrative-Grounded Interactive Experiences",
+      "url": "https://arxiv.org/abs/2608.04037v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-08-03T20:06:13.000Z",
+      "score": 85,
+      "summary_en": "Designing narrative-grounded interactive experiences remains labor-intensive because interactive content must align with the underlying world implied by the narrative. Existing approaches formulate problems such as narrative planning, scene generation, and gameplay generation, each constructing computational representations tailored to specific downstream tasks rather than explicitly reconstructing and maintaining the persistent world that grounds them. We investigate reconstructing explicit persistent worlds from narrative descriptions as the central computational objective for narrative-grou",
+      "summary_fr": "Designing narrative-grounded interactive experiences remains labor-intensive because interactive content must align with the underlying world implied by the narrative. Existing approaches formulate problems such as narrative planning, scene generation, and gameplay generation, each constructing computational representations tailored to specific downstream tasks rather than explicitly reconstructing and maintaining the persistent world that grounds them. We investigate reconstructing explicit persistent worlds from narrative descriptions as the central computational objective for narrative-grou",
+      "resume_fr": "Designing narrative-grounded interactive experiences remains labor-intensive because interactive content must align with the underlying world implied by the narrative. Existing approaches formulate problems such as narrative planning, scene generation, and gameplay generation, each constructing computational representations tailored to specific downstream tasks rather than explicitly reconstructing and maintaining the persistent world that grounds them. We investigate reconstructing explicit persistent worlds from narrative descriptions as the central computational objective for narrative-grou",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Bridging Artificial Intelligence and Power Systems Education Using a Hands-On Executable Framework",
@@ -1120,120 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Cost-Effective Multimodal LLM Reasoning Framework for Question Answering over Irregular Clinical Time Series",
-      "url": "https://arxiv.org/abs/2607.25947v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-07-28T16:33:41.000Z",
-      "score": 85,
-      "summary_en": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
-      "summary_fr": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
-      "resume_fr": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clin",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DC-WAM: Dynamic-Centric Visual Supervision and Reasoning for World-Action Models",
-      "url": "https://arxiv.org/abs/2607.25918v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-28T16:08:50.000Z",
-      "score": 70,
-      "summary_en": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
-      "summary_fr": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
-      "resume_fr": "World-Action Models (WAMs) augment robot policies with future visual prediction, but it remains unclear what the visual modality should learn for control. While photorealistic future prediction provides dense supervision, it also incurs substantial computation and can allocate capacity to texture, illumination, and background variations that are only weakly related to action selection. Recent efficient WAM variants suggest that the main benefit of the video branch may not lie in the rendered future itself, but in the control-relevant visual representations induced during training. In this work",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Human or GenAI Support? Conditions Impacting Students' Strategy Choices in an Essay Revision Task",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70300?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-28T02:36:19.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Development and Validation of the AI Learning, Metacognitive, and Epistemic Barriers Scale (AIME‐B) for Secondary School Principals in Jordan",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70301?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-28T02:35:35.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "From Competency to Agency: Teachers' Views of the Purposes of AI Education",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70302?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-28T02:32:34.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Can Generative AI Empower Tibetan Students in English Writing? Exploring Performance Gains, Self‐Efficacy Enhancement and Cultural Expression",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70298?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-28T02:20:40.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
