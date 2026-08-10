@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T07:03:52.137Z",
+  "generatedAt": "2026-08-10T07:51:17.957Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -113,6 +113,101 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Wasserstein Policy Gradient for Entropy-Regularized Linear-Quadratic Control",
+      "url": "https://arxiv.org/abs/2608.07433v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-08-07T17:17:58.000Z",
+      "score": 70,
+      "summary_en": "Wasserstein policy gradient (WPG) updates state-conditional action laws by transport in the action space. We study entropy-regularized discounted linear-quadratic (LQ) control. A Bellman verification argument shows that the unrestricted problem has a linear-Gaussian optimal policy, and the discounted-occupancy-weighted statewise Wasserstein gradient is tangent to this policy class. WPG therefore reduces exactly to a finite-dimensional ODE for the feedback gain and action covariance. We prove that this ODE is globally well posed and converges exponentially from every admissible initialization. ",
+      "summary_fr": "Wasserstein policy gradient (WPG) updates state-conditional action laws by transport in the action space. We study entropy-regularized discounted linear-quadratic (LQ) control. A Bellman verification argument shows that the unrestricted problem has a linear-Gaussian optimal policy, and the discounted-occupancy-weighted statewise Wasserstein gradient is tangent to this policy class. WPG therefore reduces exactly to a finite-dimensional ODE for the feedback gain and action covariance. We prove that this ODE is globally well posed and converges exponentially from every admissible initialization. ",
+      "resume_fr": "Wasserstein policy gradient (WPG) updates state-conditional action laws by transport in the action space. We study entropy-regularized discounted linear-quadratic (LQ) control. A Bellman verification argument shows that the unrestricted problem has a linear-Gaussian optimal policy, and the discounted-occupancy-weighted statewise Wasserstein gradient is tangent to this policy class. WPG therefore reduces exactly to a finite-dimensional ODE for the feedback gain and action covariance. We prove that this ODE is globally well posed and converges exponentially from every admissible initialization. ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "People Are Not Just Their Countries. Disentangling Social Determinants of LLM Value Alignment Across Europe",
+      "url": "https://arxiv.org/abs/2608.07367v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-08-07T16:10:53.000Z",
+      "score": 65,
+      "summary_en": "As Large Language Models (LLMs) are increasingly used as a primary source of information and advice, understanding their alignment to humans in terms of values becomes a pressing concern. A growing literature has leveraged large scale surveys to investigate to what extent LLMs' and humans' stated values and opinions align. With limited exceptions, studied populations have been defined country borders or cultural bounds. Yet, this focus neglects the role that socio-demographic divides may play for value alignment disparities. Relying on the European Social Survey, we address this knowledge gap ",
+      "summary_fr": "As Large Language Models (LLMs) are increasingly used as a primary source of information and advice, understanding their alignment to humans in terms of values becomes a pressing concern. A growing literature has leveraged large scale surveys to investigate to what extent LLMs' and humans' stated values and opinions align. With limited exceptions, studied populations have been defined country borders or cultural bounds. Yet, this focus neglects the role that socio-demographic divides may play for value alignment disparities. Relying on the European Social Survey, we address this knowledge gap ",
+      "resume_fr": "As Large Language Models (LLMs) are increasingly used as a primary source of information and advice, understanding their alignment to humans in terms of values becomes a pressing concern. A growing literature has leveraged large scale surveys to investigate to what extent LLMs' and humans' stated values and opinions align. With limited exceptions, studied populations have been defined country borders or cultural bounds. Yet, this focus neglects the role that socio-demographic divides may play for value alignment disparities. Relying on the European Social Survey, we address this knowledge gap ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Depth-Wise Probing and Pruning of the Planning Token in a Driving Vision-Language-Action Model",
+      "url": "https://arxiv.org/abs/2608.07361v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-07T16:02:34.000Z",
+      "score": 70,
+      "summary_en": "Vision-language-action (VLA) models route driving decisions through a deep language model, but it is unclear how much of that depth the action itself requires. We study a representative driving VLA whose entire plan is carried by a single planning token that a generative planner decodes into a trajectory. Borrowing the planner as a trajectory-space logit lens, we decode the planning token from every one of the 32 decoder layers and measure two signals: the linear decodability of the navigation command and trajectory compatibility with the frozen native planner. Our diagnostic shows that semant",
+      "summary_fr": "Vision-language-action (VLA) models route driving decisions through a deep language model, but it is unclear how much of that depth the action itself requires. We study a representative driving VLA whose entire plan is carried by a single planning token that a generative planner decodes into a trajectory. Borrowing the planner as a trajectory-space logit lens, we decode the planning token from every one of the 32 decoder layers and measure two signals: the linear decodability of the navigation command and trajectory compatibility with the frozen native planner. Our diagnostic shows that semant",
+      "resume_fr": "Vision-language-action (VLA) models route driving decisions through a deep language model, but it is unclear how much of that depth the action itself requires. We study a representative driving VLA whose entire plan is carried by a single planning token that a generative planner decodes into a trajectory. Borrowing the planner as a trajectory-space logit lens, we decode the planning token from every one of the 32 decoder layers and measure two signals: the linear decodability of the navigation command and trajectory compatibility with the frozen native planner. Our diagnostic shows that semant",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "TEMPO: Semantic-Action Decoupled RL Post-Training for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2608.07314v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-07T15:09:51.000Z",
+      "score": 70,
+      "summary_en": "Vision-language-action (VLA) models are commonly adapted to downstream manipulation tasks via supervised fine-tuning (SFT) or online reinforcement learning (RL) post-training. SFT is prone to distribution mismatch, and existing RL approaches typically apply a single, uniform update strategy to all model components, ignoring their distinct functional roles. We propose TEMPO, a semantic-action decoupled, two-timescale RL post-training framework for VLA models. TEMPO freezes the pretrained vision-language backbone to preserve general semantic representations, and restricts adaptation to two compo",
+      "summary_fr": "Vision-language-action (VLA) models are commonly adapted to downstream manipulation tasks via supervised fine-tuning (SFT) or online reinforcement learning (RL) post-training. SFT is prone to distribution mismatch, and existing RL approaches typically apply a single, uniform update strategy to all model components, ignoring their distinct functional roles. We propose TEMPO, a semantic-action decoupled, two-timescale RL post-training framework for VLA models. TEMPO freezes the pretrained vision-language backbone to preserve general semantic representations, and restricts adaptation to two compo",
+      "resume_fr": "Vision-language-action (VLA) models are commonly adapted to downstream manipulation tasks via supervised fine-tuning (SFT) or online reinforcement learning (RL) post-training. SFT is prone to distribution mismatch, and existing RL approaches typically apply a single, uniform update strategy to all model components, ignoring their distinct functional roles. We propose TEMPO, a semantic-action decoupled, two-timescale RL post-training framework for VLA models. TEMPO freezes the pretrained vision-language backbone to preserve general semantic representations, and restricts adaptation to two compo",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "SetEasy: A Multi-Modal Classroom Engagement Assessment and Seating Optimization Framework",
+      "url": "https://arxiv.org/abs/2608.07188v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-08-07T13:05:12.000Z",
+      "score": 85,
+      "summary_en": "SetEasy optimizes classroom engagement in fixed seating grids. It fuses multimodal sensing (wristband physiology, 4K video, environmental data) and trains a v-Gage model grounded in a revised ISEQ. Each week, two-week engagement forecasts are mapped to a student-seat utility matrix, and CP-SAT generates seating plans under visual-access and social-dynamics constraints. In a four-week deployment (23 students, 331 classes), v-Gage converged across affective, behavioral, cognitive, and overall dimensions, cutting RMSE from 0.75 to 0.53. Optimization raised mean engagement from 0.30 to 0.70, with ",
+      "summary_fr": "SetEasy optimizes classroom engagement in fixed seating grids. It fuses multimodal sensing (wristband physiology, 4K video, environmental data) and trains a v-Gage model grounded in a revised ISEQ. Each week, two-week engagement forecasts are mapped to a student-seat utility matrix, and CP-SAT generates seating plans under visual-access and social-dynamics constraints. In a four-week deployment (23 students, 331 classes), v-Gage converged across affective, behavioral, cognitive, and overall dimensions, cutting RMSE from 0.75 to 0.53. Optimization raised mean engagement from 0.30 to 0.70, with ",
+      "resume_fr": "SetEasy optimizes classroom engagement in fixed seating grids. It fuses multimodal sensing (wristband physiology, 4K video, environmental data) and trains a v-Gage model grounded in a revised ISEQ. Each week, two-week engagement forecasts are mapped to a student-seat utility matrix, and CP-SAT generates seating plans under visual-access and social-dynamics constraints. In a four-week deployment (23 students, 331 classes), v-Gage converged across affective, behavioral, cognitive, and overall dimensions, cutting RMSE from 0.75 to 0.53. Optimization raised mean engagement from 0.30 to 0.70, with ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "A systematic review of generative AI in education: Empirical insights from a human–AI interaction perspective",
@@ -1130,101 +1225,6 @@
       "summary_en": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
       "summary_fr": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
       "resume_fr": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Can AI agents conduct open-ended AI research? Early evidence from two case studies",
-      "url": "https://arxiv.org/abs/2607.27191v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-07-29T17:57:19.000Z",
-      "score": 50,
-      "summary_en": "Forecasts of explosive AI progress hinge on AI agents automating AI research. But evidence on whether agents can carry out open-ended AI research is thin. Current evaluations either test agents on narrow, verifiable tasks, which excludes open-ended research, or submit AI-generated papers to blind peer review, which is overstretched, stochastic, and suffers from poor review quality. We introduce a third way to measure progress towards AI R\\&D automation. An agent takes on the central, open-ended research question of a high-quality unpublished paper, and the paper's original authors grade its ou",
-      "summary_fr": "Forecasts of explosive AI progress hinge on AI agents automating AI research. But evidence on whether agents can carry out open-ended AI research is thin. Current evaluations either test agents on narrow, verifiable tasks, which excludes open-ended research, or submit AI-generated papers to blind peer review, which is overstretched, stochastic, and suffers from poor review quality. We introduce a third way to measure progress towards AI R\\&D automation. An agent takes on the central, open-ended research question of a high-quality unpublished paper, and the paper's original authors grade its ou",
-      "resume_fr": "Forecasts of explosive AI progress hinge on AI agents automating AI research. But evidence on whether agents can carry out open-ended AI research is thin. Current evaluations either test agents on narrow, verifiable tasks, which excludes open-ended research, or submit AI-generated papers to blind peer review, which is overstretched, stochastic, and suffers from poor review quality. We introduce a third way to measure progress towards AI R\\&D automation. An agent takes on the central, open-ended research question of a high-quality unpublished paper, and the paper's original authors grade its ou",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "HumanCLAW: Can Vision-Language Models Act Through a Body?",
-      "url": "https://arxiv.org/abs/2607.27180v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-29T17:51:36.000Z",
-      "score": 70,
-      "summary_en": "Evaluating whether a vision-language model (VLM) can act through a physical body is challenging. The outcome of an action couples the VLM's decision with motor control. When a task fails, it is hard to tell whether the VLM made a bad choice or the motor controller simply failed to execute it, e.g., losing balance and falling. In this work, we introduce HumanCLAW, an evaluation framework that decouples action decision-making from low-level execution. At every step, a harnessed, off-the-shelf VLM issues an atomic skill command, and the command is translated into a sub-second chunk of continuous ",
-      "summary_fr": "Evaluating whether a vision-language model (VLM) can act through a physical body is challenging. The outcome of an action couples the VLM's decision with motor control. When a task fails, it is hard to tell whether the VLM made a bad choice or the motor controller simply failed to execute it, e.g., losing balance and falling. In this work, we introduce HumanCLAW, an evaluation framework that decouples action decision-making from low-level execution. At every step, a harnessed, off-the-shelf VLM issues an atomic skill command, and the command is translated into a sub-second chunk of continuous ",
-      "resume_fr": "Evaluating whether a vision-language model (VLM) can act through a physical body is challenging. The outcome of an action couples the VLM's decision with motor control. When a task fails, it is hard to tell whether the VLM made a bad choice or the motor controller simply failed to execute it, e.g., losing balance and falling. In this work, we introduce HumanCLAW, an evaluation framework that decouples action decision-making from low-level execution. At every step, a harnessed, off-the-shelf VLM issues an atomic skill command, and the command is translated into a sub-second chunk of continuous ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DenseOn with the LateOn: Fully Open Dense and Late-Interaction Models for Multilingual, Long-Context, and Code Search",
-      "url": "https://arxiv.org/abs/2607.27178v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-07-29T17:50:51.000Z",
-      "score": 70,
-      "summary_en": "State-of-the-art retrieval models increasingly rely on closed training data, creating a reproducibility gap. We present an open end-to-end recipe for training retrieval models and study how English supervision transfers to multilingual retrieval through translate-train. We first reconstruct and curate 665M English contrastive pre-training pairs from 1.4B pairs across 34 public sources and build 1.88M supervised fine-tuning pairs with mined hard negatives. Training yields two 149M-parameter models: DenseOn, a single-vector dense model, and LateOn, a ColBERT-style late-interaction model. They ac",
-      "summary_fr": "State-of-the-art retrieval models increasingly rely on closed training data, creating a reproducibility gap. We present an open end-to-end recipe for training retrieval models and study how English supervision transfers to multilingual retrieval through translate-train. We first reconstruct and curate 665M English contrastive pre-training pairs from 1.4B pairs across 34 public sources and build 1.88M supervised fine-tuning pairs with mined hard negatives. Training yields two 149M-parameter models: DenseOn, a single-vector dense model, and LateOn, a ColBERT-style late-interaction model. They ac",
-      "resume_fr": "State-of-the-art retrieval models increasingly rely on closed training data, creating a reproducibility gap. We present an open end-to-end recipe for training retrieval models and study how English supervision transfers to multilingual retrieval through translate-train. We first reconstruct and curate 665M English contrastive pre-training pairs from 1.4B pairs across 34 public sources and build 1.88M supervised fine-tuning pairs with mined hard negatives. Training yields two 149M-parameter models: DenseOn, a single-vector dense model, and LateOn, a ColBERT-style late-interaction model. They ac",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DLAM: Distributional Latent Actions with Temporal Constraints",
-      "url": "https://arxiv.org/abs/2607.27138v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-29T17:09:48.000Z",
-      "score": 70,
-      "summary_en": "Vision-language-action (VLA) models remain constrained by scarce action-labeled robot data, whereas action-free videos offer abundant observations of physical change. Latent action models can extract such priors, but reconstruction-trained codes may predict future observations without the structure required for joint generation with robot actions. Existing structured methods add temporal constraints but retain deterministic transition points, so residual errors in locally inferred transitions may propagate and compound under recursive composition. We introduce DLAM, a distributional latent-act",
-      "summary_fr": "Vision-language-action (VLA) models remain constrained by scarce action-labeled robot data, whereas action-free videos offer abundant observations of physical change. Latent action models can extract such priors, but reconstruction-trained codes may predict future observations without the structure required for joint generation with robot actions. Existing structured methods add temporal constraints but retain deterministic transition points, so residual errors in locally inferred transitions may propagate and compound under recursive composition. We introduce DLAM, a distributional latent-act",
-      "resume_fr": "Vision-language-action (VLA) models remain constrained by scarce action-labeled robot data, whereas action-free videos offer abundant observations of physical change. Latent action models can extract such priors, but reconstruction-trained codes may predict future observations without the structure required for joint generation with robot actions. Existing structured methods add temporal constraints but retain deterministic transition points, so residual errors in locally inferred transitions may propagate and compound under recursive composition. We introduce DLAM, a distributional latent-act",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "RL$^2$-VLA: Adaptive RL Latent Compositional Steering with Test-Time Scaling for Vision-Language-Action Models",
-      "url": "https://arxiv.org/abs/2607.26991v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-29T14:49:56.000Z",
-      "score": 70,
-      "summary_en": "Despite the impressive visuomotor capabilities enabled by Vision-Language-Action (VLA) models, their performance often degrades on challenging and out-of-domain tasks. Recent test-time steering and scaling methods improve performance without extensive data collection and retraining, but action samples often remain concentrated around similar behaviors and therefore inherit correlated failure modes. Moreover, existing methods apply the same intervention strategy at every timestep, regardless of whether the base policy is already likely to succeed. To address these limitations, we introduce $RL^",
-      "summary_fr": "Despite the impressive visuomotor capabilities enabled by Vision-Language-Action (VLA) models, their performance often degrades on challenging and out-of-domain tasks. Recent test-time steering and scaling methods improve performance without extensive data collection and retraining, but action samples often remain concentrated around similar behaviors and therefore inherit correlated failure modes. Moreover, existing methods apply the same intervention strategy at every timestep, regardless of whether the base policy is already likely to succeed. To address these limitations, we introduce $RL^",
-      "resume_fr": "Despite the impressive visuomotor capabilities enabled by Vision-Language-Action (VLA) models, their performance often degrades on challenging and out-of-domain tasks. Recent test-time steering and scaling methods improve performance without extensive data collection and retraining, but action samples often remain concentrated around similar behaviors and therefore inherit correlated failure modes. Moreover, existing methods apply the same intervention strategy at every timestep, regardless of whether the base policy is already likely to succeed. To address these limitations, we introduce $RL^",
       "tags": [],
       "breakdown": {
         "research": 35,
