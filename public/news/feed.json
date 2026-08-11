@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T07:51:17.957Z",
+  "generatedAt": "2026-08-11T07:16:17.891Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,101 @@
     }
   },
   "items": [
+    {
+      "title": "XPolicyLab: A Unified Standard and Open Ecosystem for Robot Policy Evaluation and Deployment",
+      "url": "https://arxiv.org/abs/2608.09892v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-10T17:41:04.000Z",
+      "score": 70,
+      "summary_en": "Robot policy evaluation and deployment remain fragmented by model-specific software dependencies, data representations, and runtime interfaces, so that connecting N policies to M evaluation environments requires O(NM) separate integrations. We present XPolicyLab, a unified standard and open ecosystem that reduces this cost to O(N+M). XPolicyLab specifies common observation, action, and trajectory schemas together with a minimal adapter interface for observation updates, action prediction, batched execution, and episode reset, while a dependency-isolated client/server architecture separates pol",
+      "summary_fr": "Robot policy evaluation and deployment remain fragmented by model-specific software dependencies, data representations, and runtime interfaces, so that connecting N policies to M evaluation environments requires O(NM) separate integrations. We present XPolicyLab, a unified standard and open ecosystem that reduces this cost to O(N+M). XPolicyLab specifies common observation, action, and trajectory schemas together with a minimal adapter interface for observation updates, action prediction, batched execution, and episode reset, while a dependency-isolated client/server architecture separates pol",
+      "resume_fr": "Robot policy evaluation and deployment remain fragmented by model-specific software dependencies, data representations, and runtime interfaces, so that connecting N policies to M evaluation environments requires O(NM) separate integrations. We present XPolicyLab, a unified standard and open ecosystem that reduces this cost to O(N+M). XPolicyLab specifies common observation, action, and trajectory schemas together with a minimal adapter interface for observation updates, action prediction, batched execution, and episode reset, while a dependency-isolated client/server architecture separates pol",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Hierarchical Fast--Slow ReAct Agent for Zero-Shot Object-Goal Navigation",
+      "url": "https://arxiv.org/abs/2608.09816v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-10T16:34:26.000Z",
+      "score": 70,
+      "summary_en": "Zero-shot object-goal navigation (ZSON) requires a robot to find a named object category in a building it has never entered. The prevailing approach scores frontiers with a vision--language \\emph{value map}: every decision is another argmax over the map as it currently stands, and the evidence behind that score is discarded the moment it is taken. Systems that place a large vision--language model inside the perception--action loop typically query it on a fixed schedule from the current view alone; a room the robot walked through minutes earlier is never reconsidered, and a failed call has no d",
+      "summary_fr": "Zero-shot object-goal navigation (ZSON) requires a robot to find a named object category in a building it has never entered. The prevailing approach scores frontiers with a vision--language \\emph{value map}: every decision is another argmax over the map as it currently stands, and the evidence behind that score is discarded the moment it is taken. Systems that place a large vision--language model inside the perception--action loop typically query it on a fixed schedule from the current view alone; a room the robot walked through minutes earlier is never reconsidered, and a failed call has no d",
+      "resume_fr": "Zero-shot object-goal navigation (ZSON) requires a robot to find a named object category in a building it has never entered. The prevailing approach scores frontiers with a vision--language \\emph{value map}: every decision is another argmax over the map as it currently stands, and the evidence behind that score is discarded the moment it is taken. Systems that place a large vision--language model inside the perception--action loop typically query it on a fixed schedule from the current view alone; a room the robot walked through minutes earlier is never reconsidered, and a failed call has no d",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How do students’ AI interactions, dispositions, and prompt engineering skills shape human–AI collaboration in middle school STEM education?",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10692-1",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-08-10T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "Although generative AI is increasingly integrated into K–12 education, prior research has emphasized post-intervention outcomes rather than how students interact with AI or how post-intervention competencies support human–AI collaboration. This mixed-methods study examined phase-based changes in students’ AI interactions, pre–post changes in AI dispositions, prompt engineering skills, and human–AI collaboration competencies, and predictors of post-intervention collaboration competencies. Sixty-nine eighth-grade students participated in a five-day STEM–AI curriculum using ChatGPT. Data from stu",
+      "summary_fr": "Although generative AI is increasingly integrated into K–12 education, prior research has emphasized post-intervention outcomes rather than how students interact with AI or how post-intervention competencies support human–AI collaboration. This mixed-methods study examined phase-based changes in students’ AI interactions, pre–post changes in AI dispositions, prompt engineering skills, and human–AI collaboration competencies, and predictors of post-intervention collaboration competencies. Sixty-nine eighth-grade students participated in a five-day STEM–AI curriculum using ChatGPT. Data from stu",
+      "resume_fr": "Although generative AI is increasingly integrated into K–12 education, prior research has emphasized post-intervention outcomes rather than how students interact with AI or how post-intervention competencies support human–AI collaboration. This mixed-methods study examined phase-based changes in students’ AI interactions, pre–post changes in AI dispositions, prompt engineering skills, and human–AI collaboration competencies, and predictors of post-intervention collaboration competencies. Sixty-nine eighth-grade students participated in a five-day STEM–AI curriculum using ChatGPT. Data from stu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10692-1/MediaObjects/11423_2026_10692_Fig1_HTML.png"
+    },
+    {
+      "title": "Impact-resistant, autonomous robots inspired by tensegrity architecture",
+      "url": "https://www.nature.com/articles/s42256-026-01280-2",
+      "source": "Nature Machine Intelligence",
+      "published": "2026-08-10T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01280-2/MediaObjects/42256_2026_1280_Fig1_HTML.png"
+    },
+    {
+      "title": "Imagining the Musical Metaverse: a study on the needs and creative practices of composers and musicians",
+      "url": "https://arxiv.org/abs/2608.08938v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-08-09T22:13:49.000Z",
+      "score": 85,
+      "summary_en": "This study explores user needs for the Musical Metaverse (MM) through a series of workshops with electroacoustic composers, classical musicians, and music producers. Using a design approach based on the prompt \"as if by magic,\" participants were invited to reflect on how the MM could impact their practice in composition, performance, and education domains. While groups maintain distinct priorities based on their roles, they share interests in educational applications and creative learning environments. Key themes include preference for mixed reality over purely virtual environments, virtual sp",
+      "summary_fr": "This study explores user needs for the Musical Metaverse (MM) through a series of workshops with electroacoustic composers, classical musicians, and music producers. Using a design approach based on the prompt \"as if by magic,\" participants were invited to reflect on how the MM could impact their practice in composition, performance, and education domains. While groups maintain distinct priorities based on their roles, they share interests in educational applications and creative learning environments. Key themes include preference for mixed reality over purely virtual environments, virtual sp",
+      "resume_fr": "This study explores user needs for the Musical Metaverse (MM) through a series of workshops with electroacoustic composers, classical musicians, and music producers. Using a design approach based on the prompt \"as if by magic,\" participants were invited to reflect on how the MM could impact their practice in composition, performance, and education domains. While groups maintain distinct priorities based on their roles, they share interests in educational applications and creative learning environments. Key themes include preference for mixed reality over purely virtual environments, virtual sp",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "From emotion regulation to academic success: A self‐determination theory‐based emotional agent‐mediated approach",
       "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70083?af=R",
@@ -1130,101 +1225,6 @@
       "summary_en": "Curved tactile fingertips for dexterous manipulation must resolve fine contact geometry, distinguish normal and tangential loads, and capture transient signals. Existing curved vision-based tactile sensors struggle to combine accurate 3D reconstruction, three-axis force estimation, and high-speed processing in a compact form. This article presents FasTac, a curved vision-based tactile sensor integrating multispectral photometric stereo, dynamic-convolution force estimation, and hardware acceleration on a field-programmable gate array (FPGA). Single-image-sensor simultaneous multispectral imagi",
       "summary_fr": "Curved tactile fingertips for dexterous manipulation must resolve fine contact geometry, distinguish normal and tangential loads, and capture transient signals. Existing curved vision-based tactile sensors struggle to combine accurate 3D reconstruction, three-axis force estimation, and high-speed processing in a compact form. This article presents FasTac, a curved vision-based tactile sensor integrating multispectral photometric stereo, dynamic-convolution force estimation, and hardware acceleration on a field-programmable gate array (FPGA). Single-image-sensor simultaneous multispectral imagi",
       "resume_fr": "Curved tactile fingertips for dexterous manipulation must resolve fine contact geometry, distinguish normal and tangential loads, and capture transient signals. Existing curved vision-based tactile sensors struggle to combine accurate 3D reconstruction, three-axis force estimation, and high-speed processing in a compact form. This article presents FasTac, a curved vision-based tactile sensor integrating multispectral photometric stereo, dynamic-convolution force estimation, and hardware acceleration on a field-programmable gate array (FPGA). Single-image-sensor simultaneous multispectral imagi",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Beyond pilotitis: Zimbabwe calls for continental action on foundational numeracy",
-      "url": "https://world-education-blog.org/2026/07/30/beyond-pilotitis-zimbabwe-calls-for-continental-action-on-foundational-numeracy/",
-      "source": "UNESCO GEM – World Education Blog",
-      "published": "2026-07-30T14:46:07.000Z",
-      "score": 65,
-      "summary_en": "By Prof. Torerayi Moyo, Honorable Minister of Primary and Secondary Education, Zimbabwe During the Foundational Learning Exchange 2026 in Lilongwe, Zimbabwe’s Minister of Primary and Secondary Education, Hon. Prof. Torerayi Moyo, made the case for giving foundational numeracy the same priority as literacy — and called for the development of an Africa Foundational Numeracy White […] The post Beyond pilotitis: Zimbabwe calls for continental action on foundational numeracy appeared first on World Education Blog.",
-      "summary_fr": "By Prof. Torerayi Moyo, Honorable Minister of Primary and Secondary Education, Zimbabwe During the Foundational Learning Exchange 2026 in Lilongwe, Zimbabwe’s Minister of Primary and Secondary Education, Hon. Prof. Torerayi Moyo, made the case for giving foundational numeracy the same priority as literacy — and called for the development of an Africa Foundational Numeracy White […] The post Beyond pilotitis: Zimbabwe calls for continental action on foundational numeracy appeared first on World Education Blog.",
-      "resume_fr": "By Prof. Torerayi Moyo, Honorable Minister of Primary and Secondary Education, Zimbabwe During the Foundational Learning Exchange 2026 in Lilongwe, Zimbabwe’s Minister of Primary and Secondary Education, Hon. Prof. Torerayi Moyo, made the case for giving foundational numeracy the same priority as literacy — and called for the development of an Africa Foundational Numeracy White […] The post Beyond pilotitis: Zimbabwe calls for continental action on foundational numeracy appeared first on World Education Blog.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://world-education-blog.org/wp-content/uploads/2026/07/54040348253_86c0bee632_k.jpg"
-    },
-    {
-      "title": "Hybrid intelligence feedback systems in design thinking development: Stage‐specific insights on pedagogical effects and characteristics of generative AI and instructors",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70080?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-07-30T10:18:39.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Reusability report: Exploring the utility and extensibility of an integrated modelling framework for liquid electrolyte design",
-      "url": "https://www.nature.com/articles/s42256-026-01277-x",
-      "source": "Nature Machine Intelligence",
-      "published": "2026-07-30T00:00:00.000Z",
-      "score": 70,
-      "summary_en": "",
-      "summary_fr": "",
-      "resume_fr": "",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01277-x/MediaObjects/42256_2026_1277_Fig1_HTML.png"
-    },
-    {
-      "title": "The Contribution of Generative Artificial Intelligence as a Novice Learner to Students in the Learning by Teaching Model",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70299?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-07-29T22:46:59.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "TurboVLA: Real-Time Vision-Language-Action Model at 32 Hz on an RTX 4090 with <1 GB VRAM",
-      "url": "https://arxiv.org/abs/2607.27205v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-07-29T17:59:58.000Z",
-      "score": 70,
-      "summary_en": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
-      "summary_fr": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
-      "resume_fr": "Vision-language-action (VLA) models commonly adopt an LLM-centric $V \\to L \\to A$ pathway, where visual observations are projected into the representation space of a large language model before being decoded into robot actions. Although effective, this design incurs substantial computation and memory overhead at every policy invocation. In this work, we introduce TurboVLA, a new VLA paradigm that reformulates the conventional $V \\to L \\to A$ pathway as a direct $V + L \\to A$ mapping. Instead of using a large language model as the central interface between perception and action, TurboVLA indepe",
       "tags": [],
       "breakdown": {
         "research": 35,
