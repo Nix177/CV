@@ -11,7 +11,7 @@
   const htmlLang = (document.documentElement.getAttribute("lang") || "fr").slice(0, 2).toLowerCase();
   const T = ({
     fr: {
-      preview: "Aperçu", visit: "Visiter", close: "Fermer", source: "Code source", details: "État technique et limites", limits: "Limites actuelles",
+      preview: "Aperçu", visit: "Visiter", close: "Fermer", source: "Code source", details: "État technique et limites", limits: "Limites actuelles", video: "Vidéo", videoFallback: "Votre navigateur ne peut pas lire cette vidéo.",
       filters: { all: "Tous", ready: "Stables & démos", experimental: "Prototypes expérimentaux" },
       status: { concept: "Concept", mockup: "Maquette", prototype: "Prototype", demo: "Démo", experimental: "Expérimental", stable: "Stable", archived: "Archivé" },
       empty: "Aucun projet ne correspond à ce filtre.",
@@ -19,7 +19,7 @@
       loading: "Chargement de l’aperçu…"
     },
     en: {
-      preview: "Preview", visit: "Visit", close: "Close", source: "Source code", details: "Technical status and limits", limits: "Current limits",
+      preview: "Preview", visit: "Visit", close: "Close", source: "Source code", details: "Technical status and limits", limits: "Current limits", video: "Video", videoFallback: "Your browser cannot play this video.",
       filters: { all: "All", ready: "Stable tools & demos", experimental: "Experimental prototypes" },
       status: { concept: "Concept", mockup: "Mockup", prototype: "Prototype", demo: "Demo", experimental: "Experimental", stable: "Stable", archived: "Archived" },
       empty: "No project matches this filter.",
@@ -27,7 +27,7 @@
       loading: "Loading preview…"
     },
     de: {
-      preview: "Vorschau", visit: "Besuchen", close: "Schließen", source: "Quellcode", details: "Technischer Stand und Grenzen", limits: "Aktuelle Grenzen",
+      preview: "Vorschau", visit: "Besuchen", close: "Schließen", source: "Quellcode", details: "Technischer Stand und Grenzen", limits: "Aktuelle Grenzen", video: "Video", videoFallback: "Ihr Browser kann dieses Video nicht abspielen.",
       filters: { all: "Alle", ready: "Stabile Tools & Demos", experimental: "Experimentelle Prototypen" },
       status: { concept: "Konzept", mockup: "Entwurf", prototype: "Prototyp", demo: "Demo", experimental: "Experimentell", stable: "Stabil", archived: "Archiviert" },
       empty: "Kein Projekt entspricht diesem Filter.",
@@ -35,7 +35,7 @@
       loading: "Vorschau wird geladen…"
     }
   })[htmlLang] || {
-    preview: "Aperçu", visit: "Visiter", close: "Fermer",
+    preview: "Aperçu", visit: "Visiter", close: "Fermer", video: "Vidéo", videoFallback: "Votre navigateur ne peut pas lire cette vidéo.",
     blocked: "Ce site refuse l’aperçu embarqué. ➜ Utilisez « Visiter ».",
     loading: "Chargement de l’aperçu…"
   };
@@ -207,6 +207,7 @@
     const extraImages = Array.isArray(it.extraImages) ? it.extraImages : [];
     const hasGallery = extraImages.length > 0;
     const hasUrl = url && url.length > 0;
+    const video = it.video && it.video.url ? it.video : null;
 
     const left = el("div", { class: "p-thumb", ...(img ? { style: `background-image:url(${img})` } : {}) });
 
@@ -257,6 +258,14 @@
       })
     ]) : null;
 
+    const videoEl = video ? el("details", { class: "project-video" }, [
+      el("summary", { text: video.label || T.video }),
+      el("video", { class: "project-video-player", controls: "", preload: "metadata", playsinline: "" }, [
+        el("source", { src: video.url, type: video.type || "video/mp4" }),
+        T.videoFallback
+      ])
+    ]) : null;
+
     const right = el("div", {}, [
       el("h3", { class: "p-title", text: title }),
       description ? el("p", { class: "p-desc", text: description }) : null,
@@ -267,6 +276,7 @@
       technicalDetails,
       // Galerie d'images si présente
       galleryEl,
+      videoEl,
       // Actions (Aperçu/Visiter) seulement si pertinentes
       actionsChildren.length > 0 ? el("div", { class: "p-actions" }, actionsChildren) : null
     ].filter(Boolean));

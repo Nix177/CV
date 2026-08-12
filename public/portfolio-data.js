@@ -13,6 +13,7 @@
       url: project.liveDemoUrl || "",
       extraLinks: display.extraLinks || [],
       extraImages: display.extraImages || [],
+      video: display.video || null,
       implementationSummary: project.summary,
       currentLimitations: project.currentLimitations || [],
       repositoryUrls: project.repositoryUrls || [],
