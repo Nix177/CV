@@ -298,6 +298,22 @@ a:focus-visible {
 #nt-global-nav .menu, #nt-global-nav .lang { display:flex; align-items:center; gap:8px; margin:0; padding:0; list-style:none; }
 #nt-global-nav .menu { flex-wrap: wrap; }
 #nt-global-nav .lang { margin-left: auto; flex-wrap: wrap; }
+#nt-global-nav .chip{ position:relative; }
+#nt-global-nav .nav-badge{
+  position:absolute;
+  left:50%;
+  top:-9px;
+  transform:translateX(-50%);
+  padding:1px 5px;
+  border:1px solid color-mix(in oklab, var(--accent), #fff 20%);
+  border-radius:999px;
+  background:var(--accent);
+  color:#03131f;
+  font-size:0.58rem;
+  font-weight:800;
+  line-height:1.1;
+  text-transform:uppercase;
+}
 #nt-global-nav .chip[aria-current="page"] { background: color-mix(in oklab, var(--surface), #fff 6%); }
 @media (max-width: 620px) {
   #nt-global-nav .site-nav { flex-wrap: wrap; }

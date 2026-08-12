@@ -20,7 +20,7 @@
 
     { slug: 'passions',  label: { fr: 'Passions',       en: 'Passions',              de: 'Leidenschaften' } },
     { slug: 'chatbot',   label: { fr: 'Chatbot',        en: 'Chatbot',               de: 'Chatbot' } },
-    { slug: 'voice-assistant', label: { fr: 'Assistant vocal', en: 'Voice assistant', de: 'Sprachassistent' } },
+    { slug: 'voice-assistant', label: { fr: 'Assistant vocal', en: 'Voice assistant', de: 'Sprachassistent' }, badge: 'new' },
     { slug: 'fun-facts', label: { fr: 'Idées reçues',   en: 'Common Misconceptions', de: 'Irrtümer' } },
     { slug: 'tech-news', label: { fr: 'Tech News',      en: 'Tech News',             de: 'Tech News' } },
   ];
@@ -74,6 +74,12 @@
     a.className = 'chip';
     a.href = urlFor(p.slug, lang);
     a.textContent = p.label[lang] || p.label.fr;
+    if (p.badge) {
+      const badge = document.createElement('span');
+      badge.className = 'nav-badge';
+      badge.textContent = p.badge;
+      a.appendChild(badge);
+    }
     if (p.slug === slug) a.setAttribute('aria-current', 'page');
     li.appendChild(a);
     left.appendChild(li);

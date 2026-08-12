@@ -77,25 +77,55 @@ summary:focus-visible {
 }
 
 .preview-nav {
+  flex: 1 1 auto;
   min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
+  justify-content: flex-start;
+  gap: 2px;
+  overflow-x: auto;
+  padding-top: 8px;
+  scrollbar-width: thin;
 }
 
 .preview-nav a {
   min-height: 34px;
   display: inline-flex;
   align-items: center;
-  padding: 7px 9px;
+  padding: 6px 7px;
   border: 1px solid transparent;
   border-radius: 4px;
   color: #c8cfd5;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 720;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.preview-nav a[aria-current="page"] {
+  border-color: #48626a;
+  background: #19343b;
+  color: #e8fbff;
+}
+
+.preview-nav .has-new-badge {
+  position: relative;
+}
+
+.preview-nav .new-badge {
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  padding: 1px 5px;
+  border: 1px solid #79ebff;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #05242c;
+  font-size: 0.56rem;
+  font-weight: 850;
+  line-height: 1.05;
+  text-transform: uppercase;
 }
 
 .preview-nav a:hover {

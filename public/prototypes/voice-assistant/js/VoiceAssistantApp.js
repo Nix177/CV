@@ -343,7 +343,11 @@ export class VoiceAssistantApp {
       cv: `/cv${suffix}.html`,
       portfolio: `/portfolio${suffix}.html`,
       chatbot: `/chatbot${suffix}.html`,
-      lab: "/lab.html"
+      lab: "/lab.html",
+      passions: `/passions${suffix}.html`,
+      voiceAssistant: lang === "fr" ? "/voice-assistant" : `/voice-assistant?lang=${lang}`,
+      funFacts: `/fun-facts${suffix}.html`,
+      techNews: lang === "de" ? "/tech-news.html" : `/tech-news${suffix}.html`
     };
     document.querySelectorAll("[data-nav-route]").forEach((link) => {
       const href = routes[link.dataset.navRoute];

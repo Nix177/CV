@@ -12,6 +12,7 @@ const MIME = {
     '.js': 'text/javascript',
     '.png': 'image/png',
     '.jpg': 'image/jpeg',
+    '.mp4': 'video/mp4',
     '.json': 'application/json',
     '.svg': 'image/svg+xml',
     '.pdf': 'application/pdf'
@@ -24,6 +25,7 @@ const handlers = {
 };
 
 const rewrites = new Map([
+    ['/voice-assistant', '/prototypes/voice-assistant-preview.html'],
     ['/ai-lab', '/lab.html'],
     ['/ai-lab.html', '/lab.html'],
     ['/ai-lab-en', '/lab.html'],
