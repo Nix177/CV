@@ -1,5 +1,5 @@
-// api/llm.ts
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+// api/llm.js
+export const config = { runtime: 'nodejs' };
 
 /* ---------------- CORS ---------------- */
 const ALLOWED = (process.env.ALLOWED_ORIGINS || '*')
@@ -7,8 +7,8 @@ const ALLOWED = (process.env.ALLOWED_ORIGINS || '*')
   .map(s => s.trim())
   .filter(Boolean);
 
-function setCORS(res: VercelResponse, req: VercelRequest) {
-  const origin = (req.headers?.origin as string) || '*';
+function setCORS(res, req) {
+  const origin = req.headers?.origin || '*';
   const allow =
     ALLOWED.includes('*') || ALLOWED.includes(origin) ? origin : '*';
   res.setHeader('Access-Control-Allow-Origin', allow);
@@ -22,9 +22,9 @@ function baseURL() {
   return process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
 }
 
-function getApiKey(req: VercelRequest): string | null {
+function getApiKey(req) {
   // headers durcis (case-insensitive)
-  const h = (req.headers || {}) as Record<string, any>;
+  const h = req.headers || {};
   const user =
     (h['x-user-api-key'] ??
       h['X-User-Api-Key'] ??
@@ -34,22 +34,22 @@ function getApiKey(req: VercelRequest): string | null {
   return trimmed || process.env.OPENAI_API_KEY || null;
 }
 
-async function readJSON(req: VercelRequest) {
+async function readJSON(req) {
   if (!('body' in req) || req.body == null) return {};
   if (typeof req.body === 'string') {
     try { return JSON.parse(req.body); } catch { return {}; }
   }
-  return req.body as any;
+  return req.body;
 }
 
-async function fetchJSON(url: string, init: RequestInit) {
+async function fetchJSON(url, init) {
   const r = await fetch(url, init);
   const text = await r.text();
   if (!r.ok) throw new Error(text || `${r.status} ${r.statusText}`);
   try { return JSON.parse(text); } catch { return text; }
 }
 
-async function urlToBase64(url: string): Promise<string> {
+async function urlToBase64(url) {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`Fetch image failed: ${r.status} ${r.statusText}`);
   const ab = await r.arrayBuffer();
@@ -57,7 +57,7 @@ async function urlToBase64(url: string): Promise<string> {
 }
 
 /* ---------------- handlers ---------------- */
-async function handleChat(req: VercelRequest, res: VercelResponse, body: any) {
+async function handleChat(req, res, body) {
   const { messages = [], model = (process.env.MODEL_NAME || 'gpt-4o-mini') } = body || {};
   const key = getApiKey(req);
 
@@ -72,7 +72,7 @@ async function handleChat(req: VercelRequest, res: VercelResponse, body: any) {
   }
 
   // ⚠️ ne pas forcer temperature (certains modèles ne le supportent pas)
-  const payload: any = { model, messages };
+  const payload = { model, messages };
   const data = await fetchJSON(`${baseURL()}/chat/completions`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -81,7 +81,7 @@ async function handleChat(req: VercelRequest, res: VercelResponse, body: any) {
   return res.json(data);
 }
 
-async function handleImage(req: VercelRequest, res: VercelResponse, body: any) {
+async function handleImage(req, res, body) {
   // Par défaut on évite gpt-image-1 (souvent gated) → dall-e-3
   const {
     prompt,
@@ -101,17 +101,17 @@ async function handleImage(req: VercelRequest, res: VercelResponse, body: any) {
     return res.json({ mode: 'image', model: 'mock', image_base64: blank });
   }
 
-  const tryGenerate = async (modelName: string) => {
+  const tryGenerate = async (modelName) => {
     // IMPORTANT : ne PAS envoyer response_format (cause de 400 chez certains proxys)
-    const payload: any = { model: modelName, prompt, size, n };
+    const payload = { model: modelName, prompt, size, n };
     const resp = await fetchJSON(`${baseURL()}/images/generations`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const first = resp?.data?.[0] || {};
-    let b64: string | undefined = first.b64_json;
-    if (!b64 && first.url) b64 = await urlToBase64(first.url as string);
+    let b64 = first.b64_json;
+    if (!b64 && first.url) b64 = await urlToBase64(first.url);
     if (!b64) throw new Error('No image returned from provider');
     return { image_base64: b64, used_model: modelName };
   };
@@ -120,7 +120,7 @@ async function handleImage(req: VercelRequest, res: VercelResponse, body: any) {
     // 1) tenter le modèle demandé (peut être gpt-image-1 si l’utilisateur le force)
     const out = await tryGenerate(requestedModel);
     return res.json({ mode: 'image', model: out.used_model, image_base64: out.image_base64 });
-  } catch (e: any) {
+  } catch (e) {
     const msg = String(e?.message || '');
 
     // 2) fallback automatique → dall-e-3 si gating / pas d’accès
@@ -142,7 +142,7 @@ async function handleImage(req: VercelRequest, res: VercelResponse, body: any) {
           fallbackFrom: requestedModel,
           note: 'Le modèle image demandé est indisponible pour cette clé ; utilisation de dall-e-3.'
         });
-      } catch (e2: any) {
+      } catch (e2) {
         return res.status(502).json({
           error: 'image_upstream_error',
           message: String(e2?.message || 'fallback failed'),
@@ -163,7 +163,7 @@ async function handleImage(req: VercelRequest, res: VercelResponse, body: any) {
 }
 
 /* ---------------- entrypoint ---------------- */
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   setCORS(res, req);
   try {
     if (req.method === 'OPTIONS') return res.status(204).end();
@@ -179,7 +179,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const body = await readJSON(req);
     if (body?.mode === 'image') return await handleImage(req, res, body);
     return await handleChat(req, res, body);
-  } catch (e: any) {
+  } catch (e) {
     return res.status(500).json({ error: e?.message || 'server error' });
   }
 }
