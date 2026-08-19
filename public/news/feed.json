@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T06:52:30.925Z",
+  "generatedAt": "2026-08-19T06:52:53.830Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,177 @@
     }
   },
   "items": [
+    {
+      "title": "Hydra-0: Action Flow for Generalist World Modeling and Control",
+      "url": "https://arxiv.org/abs/2608.18077v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-18T17:59:30.000Z",
+      "score": 70,
+      "summary_en": "We introduce Hydra-0, a generalist world model conditioned on action flow, which represents robot actions as pixel motion. This shared visual interface enables generalist world modeling and control by learning action consequences across embodiments, tasks, environments, and video-generation backbones. Our best configuration achieves 90.4% lower robot-motion error and 60.2% lower object-motion error than our action-conditioned baseline, while supporting zero-shot composition and data-efficient adaptation. On the RoboLab benchmark, Hydra-0 achieves a Pearson correlation of r=0.96 between replaye",
+      "summary_fr": "We introduce Hydra-0, a generalist world model conditioned on action flow, which represents robot actions as pixel motion. This shared visual interface enables generalist world modeling and control by learning action consequences across embodiments, tasks, environments, and video-generation backbones. Our best configuration achieves 90.4% lower robot-motion error and 60.2% lower object-motion error than our action-conditioned baseline, while supporting zero-shot composition and data-efficient adaptation. On the RoboLab benchmark, Hydra-0 achieves a Pearson correlation of r=0.96 between replaye",
+      "resume_fr": "We introduce Hydra-0, a generalist world model conditioned on action flow, which represents robot actions as pixel motion. This shared visual interface enables generalist world modeling and control by learning action consequences across embodiments, tasks, environments, and video-generation backbones. Our best configuration achieves 90.4% lower robot-motion error and 60.2% lower object-motion error than our action-conditioned baseline, while supporting zero-shot composition and data-efficient adaptation. On the RoboLab benchmark, Hydra-0 achieves a Pearson correlation of r=0.96 between replaye",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PRISM: Precision and contact-rich Real-world Industrial Skill dataset with Multimodal sensing",
+      "url": "https://arxiv.org/abs/2608.17962v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-18T16:16:23.000Z",
+      "score": 70,
+      "summary_en": "Recent progress in robotic learning has been fueled by large-scale datasets collected in everyday environments. However, most existing datasets emphasize short-horizon, low-contact tasks such as pick-and-place, and therefore do not capture the precision control, force/torque or tactile regulation, and multimodal feedback required for industrial assembly. To address this gap, we introduce PRISM, a large-scale multimodal dataset for contact-rich industrial operations. The dataset spans more than 25 manipulation tasks (e.g., electronic components plug/unplug, conveyor-based sorting) and covers di",
+      "summary_fr": "Recent progress in robotic learning has been fueled by large-scale datasets collected in everyday environments. However, most existing datasets emphasize short-horizon, low-contact tasks such as pick-and-place, and therefore do not capture the precision control, force/torque or tactile regulation, and multimodal feedback required for industrial assembly. To address this gap, we introduce PRISM, a large-scale multimodal dataset for contact-rich industrial operations. The dataset spans more than 25 manipulation tasks (e.g., electronic components plug/unplug, conveyor-based sorting) and covers di",
+      "resume_fr": "Recent progress in robotic learning has been fueled by large-scale datasets collected in everyday environments. However, most existing datasets emphasize short-horizon, low-contact tasks such as pick-and-place, and therefore do not capture the precision control, force/torque or tactile regulation, and multimodal feedback required for industrial assembly. To address this gap, we introduce PRISM, a large-scale multimodal dataset for contact-rich industrial operations. The dataset spans more than 25 manipulation tasks (e.g., electronic components plug/unplug, conveyor-based sorting) and covers di",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Keep your SAT prep on track with practice tests in Gemini.",
+      "url": "https://blog.google/innovation-and-ai/products/gemini-app/how-to-take-practice-sat/",
+      "source": "Google for Education – Blog",
+      "published": "2026-08-18T16:00:00.000Z",
+      "score": 50,
+      "summary_en": "Google’s Gemini app offers full-length practice SAT tests at no cost. Here’s how to take these SAT practice tests as you prep.",
+      "summary_fr": "Google’s Gemini app offers full-length practice SAT tests at no cost. Here’s how to take these SAT practice tests as you prep.",
+      "resume_fr": "Google’s Gemini app offers full-length practice SAT tests at no cost. Here’s how to take these SAT practice tests as you prep.",
+      "tags": [],
+      "breakdown": {
+        "research": 0,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/SAT_tests_in_Gemini_social.max-1440x810.png"
+    },
+    {
+      "title": "A Theoretical Framework for Parallel Lifelong MAPF Using Group Decentralized Planning",
+      "url": "https://arxiv.org/abs/2608.17928v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-18T15:48:18.000Z",
+      "score": 70,
+      "summary_en": "In the Lifelong Multi-Agent Path Finding (L-MAPF) problem, agents must repeatedly move from one destination to another while avoiding obstacles and inter-agent collisions. Widely regarded as one of the highest-performing solutions to this problem is the Rolling-Horizon Collision Resolution (RHCR) framework. However, commensurate with its quality solutions, it incurs a computational cost that limits its applicability to even modest agent counts. In this paper, leveraging theoretical methods from the Locally Interdependent Multi-Agent MDP literature, we first theoretically prove the near-optimal",
+      "summary_fr": "In the Lifelong Multi-Agent Path Finding (L-MAPF) problem, agents must repeatedly move from one destination to another while avoiding obstacles and inter-agent collisions. Widely regarded as one of the highest-performing solutions to this problem is the Rolling-Horizon Collision Resolution (RHCR) framework. However, commensurate with its quality solutions, it incurs a computational cost that limits its applicability to even modest agent counts. In this paper, leveraging theoretical methods from the Locally Interdependent Multi-Agent MDP literature, we first theoretically prove the near-optimal",
+      "resume_fr": "In the Lifelong Multi-Agent Path Finding (L-MAPF) problem, agents must repeatedly move from one destination to another while avoiding obstacles and inter-agent collisions. Widely regarded as one of the highest-performing solutions to this problem is the Rolling-Horizon Collision Resolution (RHCR) framework. However, commensurate with its quality solutions, it incurs a computational cost that limits its applicability to even modest agent counts. In this paper, leveraging theoretical methods from the Locally Interdependent Multi-Agent MDP literature, we first theoretically prove the near-optimal",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Analysis of Types of Inquiries in Student-AI Interaction: A case study of two CS2 tasks",
+      "url": "https://arxiv.org/abs/2608.17919v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-08-18T15:45:06.000Z",
+      "score": 100,
+      "summary_en": "Background and Context: Question and inquiry are integral parts of knowledge seeking and learning. Despite their importance, students tend not to ask enough questions in the classroom. However, studies have shown that students interact extensively with generative AI systems for learning and problem solving. Objective: In this paper, we seek to better understand the types of questions that students ask AI systems, and how those questions evolve during problem solving and across tasks. Method: We use the Graesser et al. taxonomy to classify students' inquiries into 18 types. We develop a few-sho",
+      "summary_fr": "Background and Context: Question and inquiry are integral parts of knowledge seeking and learning. Despite their importance, students tend not to ask enough questions in the classroom. However, studies have shown that students interact extensively with generative AI systems for learning and problem solving. Objective: In this paper, we seek to better understand the types of questions that students ask AI systems, and how those questions evolve during problem solving and across tasks. Method: We use the Graesser et al. taxonomy to classify students' inquiries into 18 types. We develop a few-sho",
+      "resume_fr": "Background and Context: Question and inquiry are integral parts of knowledge seeking and learning. Despite their importance, students tend not to ask enough questions in the classroom. However, studies have shown that students interact extensively with generative AI systems for learning and problem solving. Objective: In this paper, we seek to better understand the types of questions that students ask AI systems, and how those questions evolve during problem solving and across tasks. Method: We use the Graesser et al. taxonomy to classify students' inquiries into 18 types. We develop a few-sho",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ControlledShifts: Towards Standardizing Robustness Evaluation in Trajectory Prediction Under Distribution Shifts",
+      "url": "https://arxiv.org/abs/2608.17882v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-08-18T15:16:52.000Z",
+      "score": 70,
+      "summary_en": "Trajectory prediction is central to safety in autonomous driving, yet learning-based predictors tend to degrade sharply when encountering scenarios poorly represented by their training data. Many methods attempt to mitigate distribution shift degradation through data-centric or test-time adaptation approaches; however, they are typically validated along fragmented axes of generalization, leaving the field without a standardized way to compare robustness across shifts a model may encounter. To address this, we introduce ControlledShifts, a framework and benchmark suite that systematically re-sp",
+      "summary_fr": "Trajectory prediction is central to safety in autonomous driving, yet learning-based predictors tend to degrade sharply when encountering scenarios poorly represented by their training data. Many methods attempt to mitigate distribution shift degradation through data-centric or test-time adaptation approaches; however, they are typically validated along fragmented axes of generalization, leaving the field without a standardized way to compare robustness across shifts a model may encounter. To address this, we introduce ControlledShifts, a framework and benchmark suite that systematically re-sp",
+      "resume_fr": "Trajectory prediction is central to safety in autonomous driving, yet learning-based predictors tend to degrade sharply when encountering scenarios poorly represented by their training data. Many methods attempt to mitigate distribution shift degradation through data-centric or test-time adaptation approaches; however, they are typically validated along fragmented axes of generalization, leaving the field without a standardized way to compare robustness across shifts a model may encounter. To address this, we introduce ControlledShifts, a framework and benchmark suite that systematically re-sp",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "From Student Risk Prediction to SC2R: Semantics-Constrained Counterfactual Recourse for Educational Decision Support",
+      "url": "https://arxiv.org/abs/2608.17618v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-08-18T10:33:21.000Z",
+      "score": 85,
+      "summary_en": "Learning analytics models can identify students at risk of poor performance, but they do not directly indicate which interventions are feasible, actionable, and compatible with educational constraints. This paper introduces SC2R, a semantics-constrained counterfactual recourse framework for educational decision support. SC2R combines a calibrated predictive model, integer-programming-based recourse generation over discrete action variables, a lightweight RDF vocabulary for intervention-plan representation, and SHACL validation for enforcing timing, budget, immutability, and availability constr",
+      "summary_fr": "Learning analytics models can identify students at risk of poor performance, but they do not directly indicate which interventions are feasible, actionable, and compatible with educational constraints. This paper introduces SC2R, a semantics-constrained counterfactual recourse framework for educational decision support. SC2R combines a calibrated predictive model, integer-programming-based recourse generation over discrete action variables, a lightweight RDF vocabulary for intervention-plan representation, and SHACL validation for enforcing timing, budget, immutability, and availability constr",
+      "resume_fr": "Learning analytics models can identify students at risk of poor performance, but they do not directly indicate which interventions are feasible, actionable, and compatible with educational constraints. This paper introduces SC2R, a semantics-constrained counterfactual recourse framework for educational decision support. SC2R combines a calibrated predictive model, integer-programming-based recourse generation over discrete action variables, a lightweight RDF vocabulary for intervention-plan representation, and SHACL validation for enforcing timing, budget, immutability, and availability constr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Explainable AI-Powered Framework for Video-Based Skill Assessment in Cataract Surgery",
+      "url": "https://arxiv.org/abs/2608.17522v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-08-18T08:45:27.000Z",
+      "score": 85,
+      "summary_en": "Persistent shortages in the surgical workforce and inherent limitations of traditional training methods highlight the necessity of automated, data-driven approaches in surgical education. This study addresses these challenges by introducing a novel, explainable AI-powered framework for automated skill assessment, specifically focusing on cataract surgery. We present the world's largest dataset of cataract surgery videos, comprising 2,000 recordings. Additionally, we propose an AI-powered analytical framework that employs advanced computer vision and signal-processing techniques to automaticall",
+      "summary_fr": "Persistent shortages in the surgical workforce and inherent limitations of traditional training methods highlight the necessity of automated, data-driven approaches in surgical education. This study addresses these challenges by introducing a novel, explainable AI-powered framework for automated skill assessment, specifically focusing on cataract surgery. We present the world's largest dataset of cataract surgery videos, comprising 2,000 recordings. Additionally, we propose an AI-powered analytical framework that employs advanced computer vision and signal-processing techniques to automaticall",
+      "resume_fr": "Persistent shortages in the surgical workforce and inherent limitations of traditional training methods highlight the necessity of automated, data-driven approaches in surgical education. This study addresses these challenges by introducing a novel, explainable AI-powered framework for automated skill assessment, specifically focusing on cataract surgery. We present the world's largest dataset of cataract surgery videos, comprising 2,000 recordings. Additionally, we propose an AI-powered analytical framework that employs advanced computer vision and signal-processing techniques to automaticall",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "From Substitution to Scaffolding: Breaking the Self-Reinforcing Harm Cycle of AI in Education (and Beyond)",
+      "url": "https://arxiv.org/abs/2608.17451v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-08-18T07:32:04.000Z",
+      "score": 50,
+      "summary_en": "Artificial intelligence is being adopted in educational settings faster than its consequences are understood. We argue that the central risk is misalignment: AI that eliminates human effort erodes the very capacities education is meant to build. We organize this risk into an integrative framework of four interrelated dimensions -cognition, agency, emotional well-being, and ethics- linked by a self-reinforcing cycle where cognitive offloading reduces effort, weakens agency, and compounds emotional and ethical harm. We ground the framework in the perspective of a small cohort of students: an exp",
+      "summary_fr": "Artificial intelligence is being adopted in educational settings faster than its consequences are understood. We argue that the central risk is misalignment: AI that eliminates human effort erodes the very capacities education is meant to build. We organize this risk into an integrative framework of four interrelated dimensions -cognition, agency, emotional well-being, and ethics- linked by a self-reinforcing cycle where cognitive offloading reduces effort, weakens agency, and compounds emotional and ethical harm. We ground the framework in the perspective of a small cohort of students: an exp",
+      "resume_fr": "Artificial intelligence is being adopted in educational settings faster than its consequences are understood. We argue that the central risk is misalignment: AI that eliminates human effort erodes the very capacities education is meant to build. We organize this risk into an integrative framework of four interrelated dimensions -cognition, agency, emotional well-being, and ethics- linked by a self-reinforcing cycle where cognitive offloading reduces effort, weakens agency, and compounds emotional and ethical harm. We ground the framework in the perspective of a small cohort of students: an exp",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "An Analytical-Prior Framework for Data-Efficient Prediction of Sound-Reduction Frequencies in Rectangular Side-Branch Helmholtz Resonators",
       "url": "https://arxiv.org/abs/2608.16873v1",
@@ -1063,177 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10627-w/MediaObjects/11423_2026_10627_Fig1_HTML.png"
-    },
-    {
-      "title": "Facts or fiction? Exploring the potential of  board game as a pedagogical tool for African archaeology and recent history",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10690-3",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-08-07T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "In this study, I examine The Great Zimbabwe () board game as a pedagogical tool for teaching African archaeology and recent history through tabletop play. As digital and analog games increasingly shape 21st-century storytelling, their capacity to represent, reinterpret, and commodify the past demands critical analysis. Through analysis of the game’s design, mechanics, artwork, and player experience, I explore how constructs, represent, and transmit knowledge about ancient African civilizations. The findings indicate that the game embeds rich historical references within an economy-driven gamep",
-      "summary_fr": "In this study, I examine The Great Zimbabwe () board game as a pedagogical tool for teaching African archaeology and recent history through tabletop play. As digital and analog games increasingly shape 21st-century storytelling, their capacity to represent, reinterpret, and commodify the past demands critical analysis. Through analysis of the game’s design, mechanics, artwork, and player experience, I explore how constructs, represent, and transmit knowledge about ancient African civilizations. The findings indicate that the game embeds rich historical references within an economy-driven gamep",
-      "resume_fr": "In this study, I examine The Great Zimbabwe () board game as a pedagogical tool for teaching African archaeology and recent history through tabletop play. As digital and analog games increasingly shape 21st-century storytelling, their capacity to represent, reinterpret, and commodify the past demands critical analysis. Through analysis of the game’s design, mechanics, artwork, and player experience, I explore how constructs, represent, and transmit knowledge about ancient African civilizations. The findings indicate that the game embeds rich historical references within an economy-driven gamep",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10690-3/MediaObjects/11423_2026_10690_Fig1_HTML.jpg"
-    },
-    {
-      "title": "$ω$-0: A Latent Predictive World Action Model for Concurrent Humanoid Loco-Manipulation",
-      "url": "https://arxiv.org/abs/2608.06375v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-08-06T17:59:31.000Z",
-      "score": 70,
-      "summary_en": "Humanoid household tasks often require concurrent loco-manipulation, where the robot must move, adjust posture, maintain balance, and manipulate objects as a single coordinated behavior. Yet existing humanoid policies typically decompose locomotion and manipulation, while recent world-action models remain either arm-centric or video-centered. We present $ω$-0, a latent predictive whole-body world-action model for real-world humanoid concurrent loco-manipulation. Given a language instruction, current visual observation, and robot proprioceptive state, $ω$-0 directly predicts controller-compatib",
-      "summary_fr": "Humanoid household tasks often require concurrent loco-manipulation, where the robot must move, adjust posture, maintain balance, and manipulate objects as a single coordinated behavior. Yet existing humanoid policies typically decompose locomotion and manipulation, while recent world-action models remain either arm-centric or video-centered. We present $ω$-0, a latent predictive whole-body world-action model for real-world humanoid concurrent loco-manipulation. Given a language instruction, current visual observation, and robot proprioceptive state, $ω$-0 directly predicts controller-compatib",
-      "resume_fr": "Humanoid household tasks often require concurrent loco-manipulation, where the robot must move, adjust posture, maintain balance, and manipulate objects as a single coordinated behavior. Yet existing humanoid policies typically decompose locomotion and manipulation, while recent world-action models remain either arm-centric or video-centered. We present $ω$-0, a latent predictive whole-body world-action model for real-world humanoid concurrent loco-manipulation. Given a language instruction, current visual observation, and robot proprioceptive state, $ω$-0 directly predicts controller-compatib",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "RP-OPSD: Reasoning-Pivot-Guided On-Policy Self-Distillation for Multilingual Reasoning Transfer",
-      "url": "https://arxiv.org/abs/2608.06347v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-08-06T17:52:06.000Z",
-      "score": 85,
-      "summary_en": "Multilingual reasoning transfer is crucial for extending reasoning capabilities of large language models (LLMs) beyond high-resource languages. On-policy self-distillation (OPSD) and its variants have emerged as a promising paradigm, providing dense token-level supervision on student-generated rollouts, yet their objectives do not explicitly prioritize reasoning signals most critical to cross-lingual transfer. We characterize that target-language reasoning comprises the generation of both surface text and reasoning pivots, which are decisions that advance or redirect the reasoning process and ",
-      "summary_fr": "Multilingual reasoning transfer is crucial for extending reasoning capabilities of large language models (LLMs) beyond high-resource languages. On-policy self-distillation (OPSD) and its variants have emerged as a promising paradigm, providing dense token-level supervision on student-generated rollouts, yet their objectives do not explicitly prioritize reasoning signals most critical to cross-lingual transfer. We characterize that target-language reasoning comprises the generation of both surface text and reasoning pivots, which are decisions that advance or redirect the reasoning process and ",
-      "resume_fr": "Multilingual reasoning transfer is crucial for extending reasoning capabilities of large language models (LLMs) beyond high-resource languages. On-policy self-distillation (OPSD) and its variants have emerged as a promising paradigm, providing dense token-level supervision on student-generated rollouts, yet their objectives do not explicitly prioritize reasoning signals most critical to cross-lingual transfer. We characterize that target-language reasoning comprises the generation of both surface text and reasoning pivots, which are decisions that advance or redirect the reasoning process and ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "GeniWorld: A Generalizable Interactive World Model for Robotic Manipulation via Visual Actions",
-      "url": "https://arxiv.org/abs/2608.06332v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-08-06T17:40:32.000Z",
-      "score": 70,
-      "summary_en": "Generalist robot policies exhibit strong capabilities, but their robustness in complex and unseen environments remains limited. Scaling robot learning and evaluation in diverse real-world environments remains costly and challenging. Action-conditioned world models offer a promising alternative, but they often suffer from limited action controllability and poor generalization to out-of-distribution (OOD) scenarios. To this end, we present GeniWorld, an interactive world model for robots that generalizes robustly across unseen scenarios. Building on pretrained video generative models, we use URD",
-      "summary_fr": "Generalist robot policies exhibit strong capabilities, but their robustness in complex and unseen environments remains limited. Scaling robot learning and evaluation in diverse real-world environments remains costly and challenging. Action-conditioned world models offer a promising alternative, but they often suffer from limited action controllability and poor generalization to out-of-distribution (OOD) scenarios. To this end, we present GeniWorld, an interactive world model for robots that generalizes robustly across unseen scenarios. Building on pretrained video generative models, we use URD",
-      "resume_fr": "Generalist robot policies exhibit strong capabilities, but their robustness in complex and unseen environments remains limited. Scaling robot learning and evaluation in diverse real-world environments remains costly and challenging. Action-conditioned world models offer a promising alternative, but they often suffer from limited action controllability and poor generalization to out-of-distribution (OOD) scenarios. To this end, we present GeniWorld, an interactive world model for robots that generalizes robustly across unseen scenarios. Building on pretrained video generative models, we use URD",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Benchmarking and Enhancing LLMs for Rule-Intensive Review of National Standard Documents",
-      "url": "https://arxiv.org/abs/2608.06312v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-08-06T17:27:23.000Z",
-      "score": 70,
-      "summary_en": "Large language models (LLMs) increasingly support complex professional tasks, yet their capabilities in rule-intensive document review remain insufficiently evaluated. National standard documents, such as China GB/T standards, offer a representative testbed: they are lengthy, highly structured, and governed by explicit rules for scope, terminology, normative wording, and cross-section consistency. Existing benchmarks focus on domain knowledge and question answering, largely overlooking intrinsic quality review for professional documents. Such reviews rely heavily on human experts, making them ",
-      "summary_fr": "Large language models (LLMs) increasingly support complex professional tasks, yet their capabilities in rule-intensive document review remain insufficiently evaluated. National standard documents, such as China GB/T standards, offer a representative testbed: they are lengthy, highly structured, and governed by explicit rules for scope, terminology, normative wording, and cross-section consistency. Existing benchmarks focus on domain knowledge and question answering, largely overlooking intrinsic quality review for professional documents. Such reviews rely heavily on human experts, making them ",
-      "resume_fr": "Large language models (LLMs) increasingly support complex professional tasks, yet their capabilities in rule-intensive document review remain insufficiently evaluated. National standard documents, such as China GB/T standards, offer a representative testbed: they are lengthy, highly structured, and governed by explicit rules for scope, terminology, normative wording, and cross-section consistency. Existing benchmarks focus on domain knowledge and question answering, largely overlooking intrinsic quality review for professional documents. Such reviews rely heavily on human experts, making them ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "VIDP: Variable Impedance Diffusion Policy for Compliant Robot Manipulation from Diverse Demonstrations",
-      "url": "https://arxiv.org/abs/2608.06210v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-08-06T16:03:00.000Z",
-      "score": 70,
-      "summary_en": "Contact-rich manipulation requires precise tracking and mechanical compliance, where variable impedance control can improve robustness in task success, whereas static compliance cannot adapt to varying contact constraints. Variable impedance skills can be learned from demonstrations, avoiding complex modeling, but compliance is a hidden variable in force-agnostic kinematic data. While existing methods infer compliance from trajectory variations, these variations may reflect geometric adaptation and not intentional compliance when subject to changing spatial layouts. Therefore, this letter intr",
-      "summary_fr": "Contact-rich manipulation requires precise tracking and mechanical compliance, where variable impedance control can improve robustness in task success, whereas static compliance cannot adapt to varying contact constraints. Variable impedance skills can be learned from demonstrations, avoiding complex modeling, but compliance is a hidden variable in force-agnostic kinematic data. While existing methods infer compliance from trajectory variations, these variations may reflect geometric adaptation and not intentional compliance when subject to changing spatial layouts. Therefore, this letter intr",
-      "resume_fr": "Contact-rich manipulation requires precise tracking and mechanical compliance, where variable impedance control can improve robustness in task success, whereas static compliance cannot adapt to varying contact constraints. Variable impedance skills can be learned from demonstrations, avoiding complex modeling, but compliance is a hidden variable in force-agnostic kinematic data. While existing methods infer compliance from trajectory variations, these variations may reflect geometric adaptation and not intentional compliance when subject to changing spatial layouts. Therefore, this letter intr",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Decolonizing Linguistic Policies in Automated Speech Recognition: A Framework for Cross-Culturally Competent Speech AI",
-      "url": "https://arxiv.org/abs/2608.06141v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-08-06T15:10:29.000Z",
-      "score": 100,
-      "summary_en": "This paper focuses on automatic speech recognition (ASR) and ASR-mediated voice interfaces that shape access to public services, healthcare, and education. We argue that persistent failures for low-resource, Indigenous, and non-standard language varieties are not only technical errors, but also implicit linguistic policies that reproduce colonial language hierarchies. Drawing on linguistic capital, raciolinguistic ideology, language policy research, and decolonial computing, we show how data, metrics, and model priors determine whose voices become machine-legible. We introduce the Three Harms ",
-      "summary_fr": "This paper focuses on automatic speech recognition (ASR) and ASR-mediated voice interfaces that shape access to public services, healthcare, and education. We argue that persistent failures for low-resource, Indigenous, and non-standard language varieties are not only technical errors, but also implicit linguistic policies that reproduce colonial language hierarchies. Drawing on linguistic capital, raciolinguistic ideology, language policy research, and decolonial computing, we show how data, metrics, and model priors determine whose voices become machine-legible. We introduce the Three Harms ",
-      "resume_fr": "This paper focuses on automatic speech recognition (ASR) and ASR-mediated voice interfaces that shape access to public services, healthcare, and education. We argue that persistent failures for low-resource, Indigenous, and non-standard language varieties are not only technical errors, but also implicit linguistic policies that reproduce colonial language hierarchies. Drawing on linguistic capital, raciolinguistic ideology, language policy research, and decolonial computing, we show how data, metrics, and model priors determine whose voices become machine-legible. We introduce the Three Harms ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "AI-based single-shot structured-light depth reconstruction for real-time laparoscopic surgical guidance",
-      "url": "https://arxiv.org/abs/2608.05109v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-08-05T17:44:21.000Z",
-      "score": 70,
-      "summary_en": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
-      "summary_fr": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
-      "resume_fr": "Significance. Accurate intraoperative depth perception is important for autonomous and semi-autonomous robotic laparoscopic surgery. Conventional fringe projection profilometry can achieve millimeter-scale accuracy but often requires multi-shot acquisition, digital-micromirror-device projection, and projector-camera synchronization, complicating integration into compact laparoscopic systems. Aim. To develop a synchronization-free, single-shot depth-sensing platform using a passive LED-illuminated binary mask and a VQ-VAE prior with a custom U-Net depth head. Approach. A compact projection modu",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Exact Model-Free Policy Iteration for Co-safe LTL Planning",
-      "url": "https://arxiv.org/abs/2608.05047v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-08-05T16:58:25.000Z",
-      "score": 70,
-      "summary_en": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
-      "summary_fr": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
-      "resume_fr": "This work studies model-free reinforcement learning for co-safe linear temporal logic (sc-LTL) objectives in finite Markov decision processes, which can be reduced to maximal reachability objectives via the standard product construction. For this problem, direct sample-based bootstrap methods (e.g., TD or Q-learning) may fail to converge to optimal policies due to the noncontractive nature and nonuniqueness of solutions to the Bellman equation. We develop a new two-step model-free reinforcement learning method that first uses a discounted surrogate to identify a clamp set that resolves this no",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
