@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T11:28:58.043Z",
+  "generatedAt": "2026-09-16T11:14:39.950Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,101 @@
   },
   "items": [
     {
+      "title": "Modality-Autoregressive World-Action Models",
+      "url": "https://arxiv.org/abs/2609.17524v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-09-15T17:56:24.000Z",
+      "score": 70,
+      "summary_en": "World-action models (WAMs) jointly model future observations and actions, typically predicting the future as RGB images. Other visual modalities such as depth, pretrained visual features, and point tracks can more efficiently capture geometric, semantic, and motion features. However, how best to combine these modalities within WAMs remains an open question. We introduce ModAR, the first WAM to autoregressively denoise multiple future modalities before predicting actions. This allows each prediction to condition on previously generated modalities. We train from scratch to systematically study h",
+      "summary_fr": "World-action models (WAMs) jointly model future observations and actions, typically predicting the future as RGB images. Other visual modalities such as depth, pretrained visual features, and point tracks can more efficiently capture geometric, semantic, and motion features. However, how best to combine these modalities within WAMs remains an open question. We introduce ModAR, the first WAM to autoregressively denoise multiple future modalities before predicting actions. This allows each prediction to condition on previously generated modalities. We train from scratch to systematically study h",
+      "resume_fr": "World-action models (WAMs) jointly model future observations and actions, typically predicting the future as RGB images. Other visual modalities such as depth, pretrained visual features, and point tracks can more efficiently capture geometric, semantic, and motion features. However, how best to combine these modalities within WAMs remains an open question. We introduce ModAR, the first WAM to autoregressively denoise multiple future modalities before predicting actions. This allows each prediction to condition on previously generated modalities. We train from scratch to systematically study h",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ScienceBuddy: Recursive-in-Recursive Self-Improvement for Interactive Scientific Agents",
+      "url": "https://arxiv.org/abs/2609.17523v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-09-15T17:55:28.000Z",
+      "score": 70,
+      "summary_en": "We introduce and release ScienceBuddy, an interactive scientific research workspace that brings continually improving scientific agents into researchers' everyday workflows. ScienceBuddy supports researchers in carrying out scientific tasks while transforming their requests, feedback, and execution evidence into tasks and evaluation rubrics for continual learning. At its core is recursive-in-recursive self-improvement, a paradigm that couples harness evolution with model reinforcement learning: the inner recursion improves the harness with the model fixed, while the outer recursion trains the ",
+      "summary_fr": "We introduce and release ScienceBuddy, an interactive scientific research workspace that brings continually improving scientific agents into researchers' everyday workflows. ScienceBuddy supports researchers in carrying out scientific tasks while transforming their requests, feedback, and execution evidence into tasks and evaluation rubrics for continual learning. At its core is recursive-in-recursive self-improvement, a paradigm that couples harness evolution with model reinforcement learning: the inner recursion improves the harness with the model fixed, while the outer recursion trains the ",
+      "resume_fr": "We introduce and release ScienceBuddy, an interactive scientific research workspace that brings continually improving scientific agents into researchers' everyday workflows. ScienceBuddy supports researchers in carrying out scientific tasks while transforming their requests, feedback, and execution evidence into tasks and evaluation rubrics for continual learning. At its core is recursive-in-recursive self-improvement, a paradigm that couples harness evolution with model reinforcement learning: the inner recursion improves the harness with the model fixed, while the outer recursion trains the ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Coupled Calibration and Learning: Mitigating Teacher Bias in LLM Distillation without Target-Domain Reward Feedback",
+      "url": "https://arxiv.org/abs/2609.17474v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-09-15T17:15:40.000Z",
+      "score": 50,
+      "summary_en": "Large language model (LLM) distillation aims to transfer the capabilities of a powerful teacher to a smaller student. Direct imitation, however, can also transfer the teacher's systematic bias and errors. This challenge is particularly pronounced under covariate shift, when the teacher's reliability on target questions is uncertain and target-domain reward feedback is unavailable. We propose Coupled Calibration and Learning (CCL), an LLM distillation algorithm that couples teacher calibration with student updates through token-level branching, using reward feedback only on source questions. Ea",
+      "summary_fr": "Large language model (LLM) distillation aims to transfer the capabilities of a powerful teacher to a smaller student. Direct imitation, however, can also transfer the teacher's systematic bias and errors. This challenge is particularly pronounced under covariate shift, when the teacher's reliability on target questions is uncertain and target-domain reward feedback is unavailable. We propose Coupled Calibration and Learning (CCL), an LLM distillation algorithm that couples teacher calibration with student updates through token-level branching, using reward feedback only on source questions. Ea",
+      "resume_fr": "Large language model (LLM) distillation aims to transfer the capabilities of a powerful teacher to a smaller student. Direct imitation, however, can also transfer the teacher's systematic bias and errors. This challenge is particularly pronounced under covariate shift, when the teacher's reliability on target questions is uncertain and target-domain reward feedback is unavailable. We propose Coupled Calibration and Learning (CCL), an LLM distillation algorithm that couples teacher calibration with student updates through token-level branching, using reward feedback only on source questions. Ea",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "SlotDiT: Object-Centric Representations for Diffusion Transformers",
+      "url": "https://arxiv.org/abs/2609.17414v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-09-15T16:38:33.000Z",
+      "score": 50,
+      "summary_en": "Text-conditioned latent diffusion models perform strongly in video generation and are promising backbones for robotic applications. However, existing approaches rely on pixel-level or VAE-based latent representations that lack explicit semantic structure, leaving the impact of the representation space largely unexplored. Slot-based object-centric representations offer a structured alternative by decomposing scenes into object-level latents, or slots. While they have shown success in dynamics modeling and planning, they have not yet been explored for diffusion-based generative modeling. We intr",
+      "summary_fr": "Text-conditioned latent diffusion models perform strongly in video generation and are promising backbones for robotic applications. However, existing approaches rely on pixel-level or VAE-based latent representations that lack explicit semantic structure, leaving the impact of the representation space largely unexplored. Slot-based object-centric representations offer a structured alternative by decomposing scenes into object-level latents, or slots. While they have shown success in dynamics modeling and planning, they have not yet been explored for diffusion-based generative modeling. We intr",
+      "resume_fr": "Text-conditioned latent diffusion models perform strongly in video generation and are promising backbones for robotic applications. However, existing approaches rely on pixel-level or VAE-based latent representations that lack explicit semantic structure, leaving the impact of the representation space largely unexplored. Slot-based object-centric representations offer a structured alternative by decomposing scenes into object-level latents, or slots. While they have shown success in dynamics modeling and planning, they have not yet been explored for diffusion-based generative modeling. We intr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Optimized Wrench Polytope Analysis for Real-Time Stability Control of Legged Robots in Complex Multi-Contact Configurations",
+      "url": "https://arxiv.org/abs/2609.17405v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-09-15T16:35:02.000Z",
+      "score": 70,
+      "summary_en": "Legged robots offer a variety of automation applications in real-world scenarios. But areas that are difficult to traverse, like slopes, caves, or scaffolding, still pose a great challenge for traversal. To tackle this problem, we propose an optimized algorithm for evaluating the full actuatable wrench polytope for arbitrary contact scenarios. With our improved analysis algorithm, the torques for each joint of the robot can be calculated within a control frequency of 49 Hz. The achieved speedup allows for deployment within a regular control loop for actuating robot poses for different contact ",
+      "summary_fr": "Legged robots offer a variety of automation applications in real-world scenarios. But areas that are difficult to traverse, like slopes, caves, or scaffolding, still pose a great challenge for traversal. To tackle this problem, we propose an optimized algorithm for evaluating the full actuatable wrench polytope for arbitrary contact scenarios. With our improved analysis algorithm, the torques for each joint of the robot can be calculated within a control frequency of 49 Hz. The achieved speedup allows for deployment within a regular control loop for actuating robot poses for different contact ",
+      "resume_fr": "Legged robots offer a variety of automation applications in real-world scenarios. But areas that are difficult to traverse, like slopes, caves, or scaffolding, still pose a great challenge for traversal. To tackle this problem, we propose an optimized algorithm for evaluating the full actuatable wrench polytope for arbitrary contact scenarios. With our improved analysis algorithm, the torques for each joint of the robot can be calculated within a control frequency of 49 Hz. The achieved speedup allows for deployment within a regular control loop for actuating robot poses for different contact ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Countries Seek to Curb Social Media Addiction for Kids",
       "url": "https://spectrum.ieee.org/countries-seek-to-curb-social-media-addiction-for-kids",
       "source": "IEEE Spectrum – AI",
@@ -172,6 +267,25 @@
       "image": "https://www.google.com/s2/favicons?domain=webinars.on24.com&sz=128"
     },
     {
+      "title": "ProIQA: A Process-Based Framework for Fine-Grained Math Item Quality Assessment",
+      "url": "https://arxiv.org/abs/2609.15292v2",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-09-14T09:46:49.000Z",
+      "score": 85,
+      "summary_en": "Automatic Item Generation (AIG) is pivotal for personalized education, yet guaranteeing the pedagogical value of generated items remains a bottleneck. Existing Item Quality Assessment (IQA) methods typically rely on unscalable manual reviews or shallow stem-based metrics, failing to capture the reasoning process required for mathematical problem-solving. To bridge this gap, this paper proposes Process-based Item Quality Assessment (ProIQA), a process-aware framework for fine-grained quality assessment of math items. We first formulate IQA across three heterogeneous dimensions, including knowle",
+      "summary_fr": "Automatic Item Generation (AIG) is pivotal for personalized education, yet guaranteeing the pedagogical value of generated items remains a bottleneck. Existing Item Quality Assessment (IQA) methods typically rely on unscalable manual reviews or shallow stem-based metrics, failing to capture the reasoning process required for mathematical problem-solving. To bridge this gap, this paper proposes Process-based Item Quality Assessment (ProIQA), a process-aware framework for fine-grained quality assessment of math items. We first formulate IQA across three heterogeneous dimensions, including knowle",
+      "resume_fr": "Automatic Item Generation (AIG) is pivotal for personalized education, yet guaranteeing the pedagogical value of generated items remains a bottleneck. Existing Item Quality Assessment (IQA) methods typically rely on unscalable manual reviews or shallow stem-based metrics, failing to capture the reasoning process required for mathematical problem-solving. To bridge this gap, this paper proposes Process-based Item Quality Assessment (ProIQA), a process-aware framework for fine-grained quality assessment of math items. We first formulate IQA across three heterogeneous dimensions, including knowle",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Ethical legitimacy and pedagogical activation: generational sensemaking of GenAI in language teaching",
       "url": "https://link.springer.com/article/10.1007/s11423-026-10712-0",
       "source": "Educational Technology Research and Development (Springer)",
@@ -208,6 +322,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Evaluating AI Tutoring at the Speed of Innovation: Practitioner-Led Micro-Randomised Trials of an AI Tutoring Platform in GCSE Science",
+      "url": "https://arxiv.org/abs/2609.14789v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-09-13T21:02:21.000Z",
+      "score": 85,
+      "summary_en": "Artificial intelligence (AI) systems in education are developing on timescales that sit uneasily with conventional evaluation. By the time a large-scale trial has been designed, delivered, analysed and published, the technology under study may have changed materially. This creates a temporal problem for evidence-informed education: the need for timely evidence can encourage reliance on weak observational or usage data, while conventional rigorous evaluation may produce evidence too slowly to guide rapidly evolving practice. We examine teacher-led micro-randomised controlled trials (micro-RCTs)",
+      "summary_fr": "Artificial intelligence (AI) systems in education are developing on timescales that sit uneasily with conventional evaluation. By the time a large-scale trial has been designed, delivered, analysed and published, the technology under study may have changed materially. This creates a temporal problem for evidence-informed education: the need for timely evidence can encourage reliance on weak observational or usage data, while conventional rigorous evaluation may produce evidence too slowly to guide rapidly evolving practice. We examine teacher-led micro-randomised controlled trials (micro-RCTs)",
+      "resume_fr": "Artificial intelligence (AI) systems in education are developing on timescales that sit uneasily with conventional evaluation. By the time a large-scale trial has been designed, delivered, analysed and published, the technology under study may have changed materially. This creates a temporal problem for evidence-informed education: the need for timely evidence can encourage reliance on weak observational or usage data, while conventional rigorous evaluation may produce evidence too slowly to guide rapidly evolving practice. We examine teacher-led micro-randomised controlled trials (micro-RCTs)",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Beyond Content Digitization: A Smart Contract‐Based Solution for Ownership and Motivation in Online Learning (Course‐Chain)",
@@ -1101,139 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "The PIONEER Project: A PrIvacy companion for mOtivatioN and knowlEdge transfER",
-      "url": "https://arxiv.org/abs/2609.02700v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-09-02T15:06:27.000Z",
-      "score": 65,
-      "summary_en": "Remaining control over their private data is one of the key challenges in this century for users. We know from prior work that users are often neither in a position to fully grasp the content of the usually complicated texts, nor are they motivated to spend the time necessary to do so. We report on the progress made by the PIONEER project on a privacy support tool that combines knowledge transfer and persuasive elements to increase users' privacy awareness and motivation; thus empowering them to more privacy sovereignty. Throughout the research and design process, we consider user group specif",
-      "summary_fr": "Remaining control over their private data is one of the key challenges in this century for users. We know from prior work that users are often neither in a position to fully grasp the content of the usually complicated texts, nor are they motivated to spend the time necessary to do so. We report on the progress made by the PIONEER project on a privacy support tool that combines knowledge transfer and persuasive elements to increase users' privacy awareness and motivation; thus empowering them to more privacy sovereignty. Throughout the research and design process, we consider user group specif",
-      "resume_fr": "Remaining control over their private data is one of the key challenges in this century for users. We know from prior work that users are often neither in a position to fully grasp the content of the usually complicated texts, nor are they motivated to spend the time necessary to do so. We report on the progress made by the PIONEER project on a privacy support tool that combines knowledge transfer and persuasive elements to increase users' privacy awareness and motivation; thus empowering them to more privacy sovereignty. Throughout the research and design process, we consider user group specif",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "From Proxy Learning to Driving Decisions: A Transfer-Based Framework for Evaluating Future-Aware Autonomous Driving Planners",
-      "url": "https://arxiv.org/abs/2609.02688v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-02T14:55:14.000Z",
-      "score": 85,
-      "summary_en": "Future-aware representations and world models are increasingly used in proposal-based autonomous-driving planners to improve trajectory selection. However, improvements in proxy objectives or restricted subsets are often interpreted as planning gains without verifying proposal ordering, selected trajectories, full-scale utility, and critical driving components. We propose the Proxy-to-Decision Transfer (PDT) Framework, an analysis framework that evaluates when learned future information supports a reliable driving-performance improvement claim. Its Decision-Transfer Decomposition Module locali",
-      "summary_fr": "Future-aware representations and world models are increasingly used in proposal-based autonomous-driving planners to improve trajectory selection. However, improvements in proxy objectives or restricted subsets are often interpreted as planning gains without verifying proposal ordering, selected trajectories, full-scale utility, and critical driving components. We propose the Proxy-to-Decision Transfer (PDT) Framework, an analysis framework that evaluates when learned future information supports a reliable driving-performance improvement claim. Its Decision-Transfer Decomposition Module locali",
-      "resume_fr": "Future-aware representations and world models are increasingly used in proposal-based autonomous-driving planners to improve trajectory selection. However, improvements in proxy objectives or restricted subsets are often interpreted as planning gains without verifying proposal ordering, selected trajectories, full-scale utility, and critical driving components. We propose the Proxy-to-Decision Transfer (PDT) Framework, an analysis framework that evaluates when learned future information supports a reliable driving-performance improvement claim. Its Decision-Transfer Decomposition Module locali",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Latent Cluster Analysis for Vision-Language-Action Models",
-      "url": "https://arxiv.org/abs/2609.02634v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-02T14:10:47.000Z",
-      "score": 70,
-      "summary_en": "Vision-Language-Action (VLA) Models are increasingly used in robotics for their ability to ground language and perception into action, yet the internal representations driving their behaviour remain poorly understood. We propose LAVLA, a framework for latent cluster analysis of VLA models, and conduct a layer-wise study of the state-of-the-art GR00T N1.5 model, with particular focus on its action decoder. To better characterise the latent space during action diffusion, we introduce a cross-attention-based embedding-weighting method that amplifies relevant features while suppressing less inform",
-      "summary_fr": "Vision-Language-Action (VLA) Models are increasingly used in robotics for their ability to ground language and perception into action, yet the internal representations driving their behaviour remain poorly understood. We propose LAVLA, a framework for latent cluster analysis of VLA models, and conduct a layer-wise study of the state-of-the-art GR00T N1.5 model, with particular focus on its action decoder. To better characterise the latent space during action diffusion, we introduce a cross-attention-based embedding-weighting method that amplifies relevant features while suppressing less inform",
-      "resume_fr": "Vision-Language-Action (VLA) Models are increasingly used in robotics for their ability to ground language and perception into action, yet the internal representations driving their behaviour remain poorly understood. We propose LAVLA, a framework for latent cluster analysis of VLA models, and conduct a layer-wise study of the state-of-the-art GR00T N1.5 model, with particular focus on its action decoder. To better characterise the latent space during action diffusion, we introduce a cross-attention-based embedding-weighting method that amplifies relevant features while suppressing less inform",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Structure and Implementation of New Practical English Textbooks Driven by Artificial Intelligence",
-      "url": "https://arxiv.org/abs/2609.02981v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-09-02T13:10:23.000Z",
-      "score": 85,
-      "summary_en": "Artificial intelligence is changing the form of applied English materials from fixed paper sequences to adaptive learning systems that can diagnose learners, recommend tasks, and provide formative feedback. This paper studies the structure and application of a new practical English textbook driven by artificial intelligence. A five-layer architecture is proposed: knowledge mapping, learner profiling, task generation, feedback orchestration, and teacher-side governance. A prototype was tested on 186 non-English-major undergraduates for eight weeks of teaching. Compared with a static digital tex",
-      "summary_fr": "Artificial intelligence is changing the form of applied English materials from fixed paper sequences to adaptive learning systems that can diagnose learners, recommend tasks, and provide formative feedback. This paper studies the structure and application of a new practical English textbook driven by artificial intelligence. A five-layer architecture is proposed: knowledge mapping, learner profiling, task generation, feedback orchestration, and teacher-side governance. A prototype was tested on 186 non-English-major undergraduates for eight weeks of teaching. Compared with a static digital tex",
-      "resume_fr": "Artificial intelligence is changing the form of applied English materials from fixed paper sequences to adaptive learning systems that can diagnose learners, recommend tasks, and provide formative feedback. This paper studies the structure and application of a new practical English textbook driven by artificial intelligence. A five-layer architecture is proposed: knowledge mapping, learner profiling, task generation, feedback orchestration, and teacher-side governance. A prototype was tested on 186 non-English-major undergraduates for eight weeks of teaching. Compared with a static digital tex",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Addressing Trust in AI Systems through Education: A Didactic Perspective",
-      "url": "https://arxiv.org/abs/2609.02453v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-09-02T11:20:14.000Z",
-      "score": 85,
-      "summary_en": "Machine learning (ML) education faces two persistent and connected obstacles: many educational tools present ML as an opaque black box, which leaves learners with a superficial understanding, and this same opacity prevents users from forming the calibrated trust that appropriate reliance on AI systems requires. We present ICE-T, a didactic framework that integrates three mutually reinforcing facets: intermodal transfer grounded in Bruner's enactive, iconic, and symbolic modes of representation, computational thinking operationalized through the Use-Modify-Create progression, and explanatory th",
-      "summary_fr": "Machine learning (ML) education faces two persistent and connected obstacles: many educational tools present ML as an opaque black box, which leaves learners with a superficial understanding, and this same opacity prevents users from forming the calibrated trust that appropriate reliance on AI systems requires. We present ICE-T, a didactic framework that integrates three mutually reinforcing facets: intermodal transfer grounded in Bruner's enactive, iconic, and symbolic modes of representation, computational thinking operationalized through the Use-Modify-Create progression, and explanatory th",
-      "resume_fr": "Machine learning (ML) education faces two persistent and connected obstacles: many educational tools present ML as an opaque black box, which leaves learners with a superficial understanding, and this same opacity prevents users from forming the calibrated trust that appropriate reliance on AI systems requires. We present ICE-T, a didactic framework that integrates three mutually reinforcing facets: intermodal transfer grounded in Bruner's enactive, iconic, and symbolic modes of representation, computational thinking operationalized through the Use-Modify-Create progression, and explanatory th",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Enhancing Peer Exposure and Creating Opportunities for Bridging Social Capital Through an AI‐Generated Summary‐Driven Learning Design in Online Discussion Forums",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70317?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-09-02T05:45:12.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Instructors’ perceptions of a large language model framework for generating automated multiple-choice questions from video transcripts",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10646-7",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-09-02T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Video-Based Learning has become a central modality in digital education, with embedded Multiple-Choice Questions (MCQs) recognized as an effective strategy for promoting engagement and assessing comprehension. However, manually creating high-quality MCQs is challenging for instructors. This study presents a framework that leverages Large Language Models (LLM) to automate MCQ generation from video transcripts while ensuring alignment with established item-writing criteria. Unlike most prior approaches, the framework explicitly integrates the Item-Writing Flaws (IWF) checklist into the generatio",
-      "summary_fr": "Video-Based Learning has become a central modality in digital education, with embedded Multiple-Choice Questions (MCQs) recognized as an effective strategy for promoting engagement and assessing comprehension. However, manually creating high-quality MCQs is challenging for instructors. This study presents a framework that leverages Large Language Models (LLM) to automate MCQ generation from video transcripts while ensuring alignment with established item-writing criteria. Unlike most prior approaches, the framework explicitly integrates the Item-Writing Flaws (IWF) checklist into the generatio",
-      "resume_fr": "Video-Based Learning has become a central modality in digital education, with embedded Multiple-Choice Questions (MCQs) recognized as an effective strategy for promoting engagement and assessing comprehension. However, manually creating high-quality MCQs is challenging for instructors. This study presents a framework that leverages Large Language Models (LLM) to automate MCQ generation from video transcripts while ensuring alignment with established item-writing criteria. Unlike most prior approaches, the framework explicitly integrates the Item-Writing Flaws (IWF) checklist into the generatio",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10646-7/MediaObjects/11423_2026_10646_Fig1_HTML.png"
     }
   ]
 }
