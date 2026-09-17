@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T11:14:39.950Z",
+  "generatedAt": "2026-09-17T11:23:05.416Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,215 @@
     }
   },
   "items": [
+    {
+      "title": "Dreaming the Sound of Contact: Leveraging Video and Audio Generation for Zero-Shot Force-Aware Manipulation and Data Generation",
+      "url": "https://arxiv.org/abs/2609.19137v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-09-16T17:56:44.000Z",
+      "score": 70,
+      "summary_en": "Recent advances in video generation allow robots to learn manipulation trajectories from generated videos. However, these approaches produce purely kinematic trajectories that lack force information, causing failures in contact-rich tasks where appropriate contact forces are essential for success. In this work, we explore augmenting generated video with audio to shape a bounded, time-varying desired-force profile using the loudness of generated contact sounds. We present a pipeline that jointly leverages generated video and audio to derive motion trajectories and corresponding desired-force pr",
+      "summary_fr": "Recent advances in video generation allow robots to learn manipulation trajectories from generated videos. However, these approaches produce purely kinematic trajectories that lack force information, causing failures in contact-rich tasks where appropriate contact forces are essential for success. In this work, we explore augmenting generated video with audio to shape a bounded, time-varying desired-force profile using the loudness of generated contact sounds. We present a pipeline that jointly leverages generated video and audio to derive motion trajectories and corresponding desired-force pr",
+      "resume_fr": "Recent advances in video generation allow robots to learn manipulation trajectories from generated videos. However, these approaches produce purely kinematic trajectories that lack force information, causing failures in contact-rich tasks where appropriate contact forces are essential for success. In this work, we explore augmenting generated video with audio to shape a bounded, time-varying desired-force profile using the loudness of generated contact sounds. We present a pipeline that jointly leverages generated video and audio to derive motion trajectories and corresponding desired-force pr",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exponential Hardness of Off-Policy Evaluation under History-Dependent Logging",
+      "url": "https://arxiv.org/abs/2609.19135v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-09-16T17:56:12.000Z",
+      "score": 70,
+      "summary_en": "Can a logged dataset visit every hidden state frequently and still be exponentially uninformative about a target policy's value? We show that it can when the logger depends on history. For every horizon $H \\ge 3$, we construct two POMDPs with at most two latent states per stage, three actions, and a common logger with three memory states. Action coverage, belief coverage, and two behavior-marginal outcome-revealing conditions all have constants independent of $H$. Nevertheless, evaluating a known deterministic target policy to accuracy $1/8$ requires $Θ((3/2)^H \\log(1/δ))$ logged episodes at c",
+      "summary_fr": "Can a logged dataset visit every hidden state frequently and still be exponentially uninformative about a target policy's value? We show that it can when the logger depends on history. For every horizon $H \\ge 3$, we construct two POMDPs with at most two latent states per stage, three actions, and a common logger with three memory states. Action coverage, belief coverage, and two behavior-marginal outcome-revealing conditions all have constants independent of $H$. Nevertheless, evaluating a known deterministic target policy to accuracy $1/8$ requires $Θ((3/2)^H \\log(1/δ))$ logged episodes at c",
+      "resume_fr": "Can a logged dataset visit every hidden state frequently and still be exponentially uninformative about a target policy's value? We show that it can when the logger depends on history. For every horizon $H \\ge 3$, we construct two POMDPs with at most two latent states per stage, three actions, and a common logger with three memory states. Action coverage, belief coverage, and two behavior-marginal outcome-revealing conditions all have constants independent of $H$. Nevertheless, evaluating a known deterministic target policy to accuracy $1/8$ requires $Θ((3/2)^H \\log(1/δ))$ logged episodes at c",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Cognitive Extensions for Dual-Process Language Agents: Memory and Self-Reflection in Interactive Environments",
+      "url": "https://arxiv.org/abs/2609.19128v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-09-16T17:50:42.000Z",
+      "score": 70,
+      "summary_en": "Language agents remain brittle in interactive environments, where success requires long-horizon state tracking, valid action execution, and recovery from failed steps. We extend SwiftSage, a dual-process agent that combines a fast action proposer with a slower planner, using two modular cognitive extensions: an Adaptive Memory Module (AMM) for salience-gated episodic storage and trigger-driven retrieval, and a Self-Reflection Module (SRM) for bounded execution-time validation and corrective intervention. Both modules are implemented as feature-flagged extensions over the same execution substra",
+      "summary_fr": "Language agents remain brittle in interactive environments, where success requires long-horizon state tracking, valid action execution, and recovery from failed steps. We extend SwiftSage, a dual-process agent that combines a fast action proposer with a slower planner, using two modular cognitive extensions: an Adaptive Memory Module (AMM) for salience-gated episodic storage and trigger-driven retrieval, and a Self-Reflection Module (SRM) for bounded execution-time validation and corrective intervention. Both modules are implemented as feature-flagged extensions over the same execution substra",
+      "resume_fr": "Language agents remain brittle in interactive environments, where success requires long-horizon state tracking, valid action execution, and recovery from failed steps. We extend SwiftSage, a dual-process agent that combines a fast action proposer with a slower planner, using two modular cognitive extensions: an Adaptive Memory Module (AMM) for salience-gated episodic storage and trigger-driven retrieval, and a Self-Reflection Module (SRM) for bounded execution-time validation and corrective intervention. Both modules are implemented as feature-flagged extensions over the same execution substra",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Playing log(N)-Questions over Wikipedia Abstracts: Communication Efficiency Between Paired Frontier Models",
+      "url": "https://arxiv.org/abs/2609.19113v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-09-16T17:41:12.000Z",
+      "score": 70,
+      "summary_en": "We evaluate six frontier language models on the two-agent $\\log(N)$-Questions game. A questioner sees $N$ Wikipedia lead paragraphs and must identify a secretly chosen target using exactly $\\log_2 N$ yes/no questions. An answerer sees only the target and the question, and replies with one word. Both roles run on the same provider, so the game measures how well a model communicates with itself across an information asymmetry. We run 408 games over document sets of 4 to 1024 paragraphs at a total API cost of \\$363. One model finishes well behind the others: Claude Opus 5 wins 28 of 68 games, aga",
+      "summary_fr": "We evaluate six frontier language models on the two-agent $\\log(N)$-Questions game. A questioner sees $N$ Wikipedia lead paragraphs and must identify a secretly chosen target using exactly $\\log_2 N$ yes/no questions. An answerer sees only the target and the question, and replies with one word. Both roles run on the same provider, so the game measures how well a model communicates with itself across an information asymmetry. We run 408 games over document sets of 4 to 1024 paragraphs at a total API cost of \\$363. One model finishes well behind the others: Claude Opus 5 wins 28 of 68 games, aga",
+      "resume_fr": "We evaluate six frontier language models on the two-agent $\\log(N)$-Questions game. A questioner sees $N$ Wikipedia lead paragraphs and must identify a secretly chosen target using exactly $\\log_2 N$ yes/no questions. An answerer sees only the target and the question, and replies with one word. Both roles run on the same provider, so the game measures how well a model communicates with itself across an information asymmetry. We run 408 games over document sets of 4 to 1024 paragraphs at a total API cost of \\$363. One model finishes well behind the others: Claude Opus 5 wins 28 of 68 games, aga",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "rMuscle: Robotic Muscle Memory for Efficient Vision-Language-Action Model Inference",
+      "url": "https://arxiv.org/abs/2609.19104v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-09-16T17:34:43.000Z",
+      "score": 70,
+      "summary_en": "Factory work is a promising early scenario for embodied AI: assigning repetitive manual jobs to robots has clear economic payoff, and a structured station keeps the jobs tractable for current policies. Vision-Language-Action (VLA) models now dominate as the policy paradigm for these robots. The inference latency of VLA models directly affects robot responsiveness and motion smoothness. However, existing VLA inference frameworks do not fully exploit the characteristics of embodied workloads or account for the distinct bottlenecks across different stages of VLA inference. In this paper, we first",
+      "summary_fr": "Factory work is a promising early scenario for embodied AI: assigning repetitive manual jobs to robots has clear economic payoff, and a structured station keeps the jobs tractable for current policies. Vision-Language-Action (VLA) models now dominate as the policy paradigm for these robots. The inference latency of VLA models directly affects robot responsiveness and motion smoothness. However, existing VLA inference frameworks do not fully exploit the characteristics of embodied workloads or account for the distinct bottlenecks across different stages of VLA inference. In this paper, we first",
+      "resume_fr": "Factory work is a promising early scenario for embodied AI: assigning repetitive manual jobs to robots has clear economic payoff, and a structured station keeps the jobs tractable for current policies. Vision-Language-Action (VLA) models now dominate as the policy paradigm for these robots. The inference latency of VLA models directly affects robot responsiveness and motion smoothness. However, existing VLA inference frameworks do not fully exploit the characteristics of embodied workloads or account for the distinct bottlenecks across different stages of VLA inference. In this paper, we first",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reporting Practice Matters: The Impact of Reference Choice on Chest X-ray Report Evaluation",
+      "url": "https://arxiv.org/abs/2609.19093v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-09-16T17:28:51.000Z",
+      "score": 70,
+      "summary_en": "Radiologists follow heterogeneous reporting practices. Two radiologists examining the same image and identifying the same clinical findings might nevertheless compose superficially distinct reports, varying in terminology, shorthand, formatting, and level of detail. These variations in reporting norms represent an under-appreciated obstacle in efforts to evaluate AI-based radiology report generation (RRG) models, where machine-generated reports are typically assessed based on their concordance with human-generated references. In this paper, we quantify the sensitivity of established evaluation",
+      "summary_fr": "Radiologists follow heterogeneous reporting practices. Two radiologists examining the same image and identifying the same clinical findings might nevertheless compose superficially distinct reports, varying in terminology, shorthand, formatting, and level of detail. These variations in reporting norms represent an under-appreciated obstacle in efforts to evaluate AI-based radiology report generation (RRG) models, where machine-generated reports are typically assessed based on their concordance with human-generated references. In this paper, we quantify the sensitivity of established evaluation",
+      "resume_fr": "Radiologists follow heterogeneous reporting practices. Two radiologists examining the same image and identifying the same clinical findings might nevertheless compose superficially distinct reports, varying in terminology, shorthand, formatting, and level of detail. These variations in reporting norms represent an under-appreciated obstacle in efforts to evaluate AI-based radiology report generation (RRG) models, where machine-generated reports are typically assessed based on their concordance with human-generated references. In this paper, we quantify the sensitivity of established evaluation",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A General Kernel Framework for Non-CND Distance Measures Using |D|-Dimensional Sparse Landmark Embeddings",
+      "url": "https://arxiv.org/abs/2609.19083v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-09-16T17:23:50.000Z",
+      "score": 70,
+      "summary_en": "Kernel methods, and Gaussian Processes (GPs) in particular, require a Hilbertian distance measure---one whose square is conditionally negative definite (CND)---to guarantee positive semi-definiteness (PSD) of the kernel matrix; a condition that fails for many natural input spaces, including smooth manifolds and spaces of probability distributions. We propose the Sparse Landmark Embedding (SLE) kernel, which eliminates this requirement entirely. Each input is embedded into a sparse feature vector via compactly supported bump functions centered at all |D| training points; applying any standard P",
+      "summary_fr": "Kernel methods, and Gaussian Processes (GPs) in particular, require a Hilbertian distance measure---one whose square is conditionally negative definite (CND)---to guarantee positive semi-definiteness (PSD) of the kernel matrix; a condition that fails for many natural input spaces, including smooth manifolds and spaces of probability distributions. We propose the Sparse Landmark Embedding (SLE) kernel, which eliminates this requirement entirely. Each input is embedded into a sparse feature vector via compactly supported bump functions centered at all |D| training points; applying any standard P",
+      "resume_fr": "Kernel methods, and Gaussian Processes (GPs) in particular, require a Hilbertian distance measure---one whose square is conditionally negative definite (CND)---to guarantee positive semi-definiteness (PSD) of the kernel matrix; a condition that fails for many natural input spaces, including smooth manifolds and spaces of probability distributions. We propose the Sparse Landmark Embedding (SLE) kernel, which eliminates this requirement entirely. Each input is embedded into a sparse feature vector via compactly supported bump functions centered at all |D| training points; applying any standard P",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Integrating Flipped Learning and Generative AI for Practice-Based Design Education: Evidence from a Knit Yarn Design Course",
+      "url": "https://arxiv.org/abs/2609.18505v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-09-16T11:40:53.000Z",
+      "score": 85,
+      "summary_en": "In practice-based design courses such as knit yarn design, students must turn visual ideas into feasible material outcomes. This is difficult because creative decisions are tied to yarn properties, stitch structures, machine operation, and limited opportunities for physical sampling. This study presents an integrated pedagogical framework that combines flipped learning, exemplar-based reference, GenAI-assisted visual prototyping, and studio feedback in an undergraduate knit yarn design course. The framework was implemented through a cross-device platform with pre-class micro-videos, formative ",
+      "summary_fr": "In practice-based design courses such as knit yarn design, students must turn visual ideas into feasible material outcomes. This is difficult because creative decisions are tied to yarn properties, stitch structures, machine operation, and limited opportunities for physical sampling. This study presents an integrated pedagogical framework that combines flipped learning, exemplar-based reference, GenAI-assisted visual prototyping, and studio feedback in an undergraduate knit yarn design course. The framework was implemented through a cross-device platform with pre-class micro-videos, formative ",
+      "resume_fr": "In practice-based design courses such as knit yarn design, students must turn visual ideas into feasible material outcomes. This is difficult because creative decisions are tied to yarn properties, stitch structures, machine operation, and limited opportunities for physical sampling. This study presents an integrated pedagogical framework that combines flipped learning, exemplar-based reference, GenAI-assisted visual prototyping, and studio feedback in an undergraduate knit yarn design course. The framework was implemented through a cross-device platform with pre-class micro-videos, formative ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Hardware-Free Robotics Laboratories in Mixed Reality",
+      "url": "https://arxiv.org/abs/2609.18434v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-09-16T10:25:41.000Z",
+      "score": 65,
+      "summary_en": "Teaching robotics relies on screen-based simulation, showing robot motion in an abstract coordinate frame rather than at real scale in the learner's own space, while access to physical hardware is limited by cost, safety, and scheduling constraints. We present MR-Robotics LAB, a mixed-reality (MR) platform that replays MATLAB-generated robot trajectories at real scale within the learner's physical environment. A browser-based service validates a MATLAB workspace file (.mat), normalizes units, and publishes a versioned JSON trajectory; a Unity application on a Meta Quest 3 then reproduces the a",
+      "summary_fr": "Teaching robotics relies on screen-based simulation, showing robot motion in an abstract coordinate frame rather than at real scale in the learner's own space, while access to physical hardware is limited by cost, safety, and scheduling constraints. We present MR-Robotics LAB, a mixed-reality (MR) platform that replays MATLAB-generated robot trajectories at real scale within the learner's physical environment. A browser-based service validates a MATLAB workspace file (.mat), normalizes units, and publishes a versioned JSON trajectory; a Unity application on a Meta Quest 3 then reproduces the a",
+      "resume_fr": "Teaching robotics relies on screen-based simulation, showing robot motion in an abstract coordinate frame rather than at real scale in the learner's own space, while access to physical hardware is limited by cost, safety, and scheduling constraints. We present MR-Robotics LAB, a mixed-reality (MR) platform that replays MATLAB-generated robot trajectories at real scale within the learner's physical environment. A browser-based service validates a MATLAB workspace file (.mat), normalizes units, and publishes a versioned JSON trajectory; a Unity application on a Meta Quest 3 then reproduces the a",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Teaching AI, Robotics, & Community: A Hubs-Based K-12 Education Framework for Reaching Rural Schools",
+      "url": "https://arxiv.org/abs/2609.18072v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-09-16T03:18:24.000Z",
+      "score": 85,
+      "summary_en": "K-12 robotics and AI education remains difficult to scale, especially in rural regions lacking sustained technical mentorship. Programs like FIRST provide competition pathways and instructional opportunities, but they do not eliminate the need for local programming and robotics expertise. We introduce AI, Robotics, & Community (ARC), a hubs-based framework where colleges train undergraduate mentors and host workshops for nearby K-12 teams. Mature school programs can become secondary hubs that support additional schools, creating a self-reinforcing education loop where mentorship reach propagat",
+      "summary_fr": "K-12 robotics and AI education remains difficult to scale, especially in rural regions lacking sustained technical mentorship. Programs like FIRST provide competition pathways and instructional opportunities, but they do not eliminate the need for local programming and robotics expertise. We introduce AI, Robotics, & Community (ARC), a hubs-based framework where colleges train undergraduate mentors and host workshops for nearby K-12 teams. Mature school programs can become secondary hubs that support additional schools, creating a self-reinforcing education loop where mentorship reach propagat",
+      "resume_fr": "K-12 robotics and AI education remains difficult to scale, especially in rural regions lacking sustained technical mentorship. Programs like FIRST provide competition pathways and instructional opportunities, but they do not eliminate the need for local programming and robotics expertise. We introduce AI, Robotics, & Community (ARC), a hubs-based framework where colleges train undergraduate mentors and host workshops for nearby K-12 teams. Mature school programs can become secondary hubs that support additional schools, creating a self-reinforcing education loop where mentorship reach propagat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Designing an intelligent language tutoring system for learning Chinese characters",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10721-z",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-09-16T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "Recognizing Chinese characters is a major challenge for beginning second-language learners, particularly those from alphabetic-language backgrounds, because its logographic writing system lacks grapheme–phoneme correspondence. Although intelligent tutoring systems (ITSs) have proven effective in domains such as mathematics and physics, their application to Chinese character learning remains underexplored. The purpose of this research was to 1) explore the design and usability of an interface of an intelligent tutoring system for recognizing Chinese characters, and 2) compare the pedagogical ef",
+      "summary_fr": "Recognizing Chinese characters is a major challenge for beginning second-language learners, particularly those from alphabetic-language backgrounds, because its logographic writing system lacks grapheme–phoneme correspondence. Although intelligent tutoring systems (ITSs) have proven effective in domains such as mathematics and physics, their application to Chinese character learning remains underexplored. The purpose of this research was to 1) explore the design and usability of an interface of an intelligent tutoring system for recognizing Chinese characters, and 2) compare the pedagogical ef",
+      "resume_fr": "Recognizing Chinese characters is a major challenge for beginning second-language learners, particularly those from alphabetic-language backgrounds, because its logographic writing system lacks grapheme–phoneme correspondence. Although intelligent tutoring systems (ITSs) have proven effective in domains such as mathematics and physics, their application to Chinese character learning remains underexplored. The purpose of this research was to 1) explore the design and usability of an interface of an intelligent tutoring system for recognizing Chinese characters, and 2) compare the pedagogical ef",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10721-z/MediaObjects/11423_2026_10721_Fig1_HTML.jpg"
+    },
     {
       "title": "Modality-Autoregressive World-Action Models",
       "url": "https://arxiv.org/abs/2609.17524v1",
@@ -305,25 +514,6 @@
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10712-0/MediaObjects/11423_2026_10712_Fig1_HTML.png"
     },
     {
-      "title": "Classroom Implementation of AI‐Assisted Fraction Instruction for Students With Mild Autism",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70333?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-09-13T22:59:53.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
       "title": "Evaluating AI Tutoring at the Speed of Innovation: Practitioner-Led Micro-Randomised Trials of an AI Tutoring Platform in GCSE Science",
       "url": "https://arxiv.org/abs/2609.14789v1",
       "source": "arXiv – cs.HC + education",
@@ -341,6 +531,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Classroom Implementation of AI‐Assisted Fraction Instruction for Students With Mild Autism",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70333?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-09-13T07:00:00.000Z",
+      "score": 85,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 5, October 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     },
     {
       "title": "Beyond Content Digitization: A Smart Contract‐Based Solution for Ownership and Motivation in Online Learning (Course‐Chain)",
@@ -1024,215 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Legibility is Not Interpretability: Comparing Judged and Actual Importance in Chain-Of-Thought Reasoning",
-      "url": "https://arxiv.org/abs/2609.04194v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-09-03T17:59:08.000Z",
-      "score": 70,
-      "summary_en": "Reasoning traces from chain-of-thought models appear to offer a legible window into how a model arrives at its answer. A growing body of work treats them as such, using LLM judges to diagnose errors, evaluate faithfulness, and provide step-level supervision via process reward models and generative critics. These practices rely on the text of a reasoning step carrying information about its functional role. But does the text actually encode information about which reasoning steps matter? We operationalize the importance of a reasoning step as its advantage: the change in expected reward, e.g., p",
-      "summary_fr": "Reasoning traces from chain-of-thought models appear to offer a legible window into how a model arrives at its answer. A growing body of work treats them as such, using LLM judges to diagnose errors, evaluate faithfulness, and provide step-level supervision via process reward models and generative critics. These practices rely on the text of a reasoning step carrying information about its functional role. But does the text actually encode information about which reasoning steps matter? We operationalize the importance of a reasoning step as its advantage: the change in expected reward, e.g., p",
-      "resume_fr": "Reasoning traces from chain-of-thought models appear to offer a legible window into how a model arrives at its answer. A growing body of work treats them as such, using LLM judges to diagnose errors, evaluate faithfulness, and provide step-level supervision via process reward models and generative critics. These practices rely on the text of a reasoning step carrying information about its functional role. But does the text actually encode information about which reasoning steps matter? We operationalize the importance of a reasoning step as its advantage: the change in expected reward, e.g., p",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "GIFT: Guided Intermediate Feature Training via Action-Oriented Structural Supervision for Robotic Manipulation",
-      "url": "https://arxiv.org/abs/2609.04193v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-03T17:59:03.000Z",
-      "score": 70,
-      "summary_en": "Vision-language pre-training and predictive world modeling provide robot policies with rich semantic and dynamic visual features, but their native action and visual-prediction objectives may omit critical physical and task structure while retaining control-irrelevant visual redundancy. We call this mismatch between visual richness and control utility the action-sufficiency gap. We investigate whether this gap can be bridged by guiding intermediate features to preserve three control-relevant structure in robotic manipulation: geometry governing motion feasibility, affordance encoding instructio",
-      "summary_fr": "Vision-language pre-training and predictive world modeling provide robot policies with rich semantic and dynamic visual features, but their native action and visual-prediction objectives may omit critical physical and task structure while retaining control-irrelevant visual redundancy. We call this mismatch between visual richness and control utility the action-sufficiency gap. We investigate whether this gap can be bridged by guiding intermediate features to preserve three control-relevant structure in robotic manipulation: geometry governing motion feasibility, affordance encoding instructio",
-      "resume_fr": "Vision-language pre-training and predictive world modeling provide robot policies with rich semantic and dynamic visual features, but their native action and visual-prediction objectives may omit critical physical and task structure while retaining control-irrelevant visual redundancy. We call this mismatch between visual richness and control utility the action-sufficiency gap. We investigate whether this gap can be bridged by guiding intermediate features to preserve three control-relevant structure in robotic manipulation: geometry governing motion feasibility, affordance encoding instructio",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Rethinking On-Policy Distillation of Large Language Models II: One Training Example",
-      "url": "https://arxiv.org/abs/2609.04172v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-09-03T17:54:38.000Z",
-      "score": 70,
-      "summary_en": "On-policy distillation (OPD) combines student-generated rollouts with dense token-level supervision from a teacher. Existing work has mainly studied its algorithmic behavior, leaving the role of training data unclear. We examine this role at the data-minimal limit by training on a single query. One-shot OPD keeps improving for hundreds of steps and recovers most of full-data OPD's gain across task domains and model families. We explain this result through the states visited during training and the rate at which the student aligns with the teacher. We measure \\emph{state coverage}, the fraction",
-      "summary_fr": "On-policy distillation (OPD) combines student-generated rollouts with dense token-level supervision from a teacher. Existing work has mainly studied its algorithmic behavior, leaving the role of training data unclear. We examine this role at the data-minimal limit by training on a single query. One-shot OPD keeps improving for hundreds of steps and recovers most of full-data OPD's gain across task domains and model families. We explain this result through the states visited during training and the rate at which the student aligns with the teacher. We measure \\emph{state coverage}, the fraction",
-      "resume_fr": "On-policy distillation (OPD) combines student-generated rollouts with dense token-level supervision from a teacher. Existing work has mainly studied its algorithmic behavior, leaving the role of training data unclear. We examine this role at the data-minimal limit by training on a single query. One-shot OPD keeps improving for hundreds of steps and recovers most of full-data OPD's gain across task domains and model families. We explain this result through the states visited during training and the rate at which the student aligns with the teacher. We measure \\emph{state coverage}, the fraction",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Decreasing Digital Distraction in College Students: Associated Online Learning Strategies Identified by Unsupervised Data Mining Approaches",
-      "url": "https://arxiv.org/abs/2609.04125v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-09-03T17:25:02.000Z",
-      "score": 100,
-      "summary_en": "The proliferation of digital tools in education offers numerous benefits but also introduces significant challenges, notably digital distractions that hinder academic performance, especially in online learning contexts. This study employed unsupervised data mining techniques, specifically association rule mining and clustering analysis, to identify effective learning strategies associated with lower levels of digital distractions among college students. Data from 530 participants revealed that self-regulated learning strategies (i.e., goal setting, environment structuring, and time management)",
-      "summary_fr": "The proliferation of digital tools in education offers numerous benefits but also introduces significant challenges, notably digital distractions that hinder academic performance, especially in online learning contexts. This study employed unsupervised data mining techniques, specifically association rule mining and clustering analysis, to identify effective learning strategies associated with lower levels of digital distractions among college students. Data from 530 participants revealed that self-regulated learning strategies (i.e., goal setting, environment structuring, and time management)",
-      "resume_fr": "The proliferation of digital tools in education offers numerous benefits but also introduces significant challenges, notably digital distractions that hinder academic performance, especially in online learning contexts. This study employed unsupervised data mining techniques, specifically association rule mining and clustering analysis, to identify effective learning strategies associated with lower levels of digital distractions among college students. Data from 530 participants revealed that self-regulated learning strategies (i.e., goal setting, environment structuring, and time management)",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Continuous Actions from Discrete Minds: Latent-Aligned Planning for End-to-End Autonomous Driving",
-      "url": "https://arxiv.org/abs/2609.04070v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-03T16:42:11.000Z",
-      "score": 70,
-      "summary_en": "Bridging the gap between the discrete reasoning of Vision-Language Models and the continuous, physics-constrained nature of autonomous driving remains a significant challenge. In this work, we introduce LaPla, a unified Vision-Language-Action (VLA) framework featuring latent-aligned planning to seamlessly ground semantic understanding in precise motion execution. We first design an action tokenizer based on a residual vector-quantized variational autoencoder (VQ-VAE), capturing vehicle kinematics and encoding trajectory features into a structured latent space. Rather than discrete codebook loo",
-      "summary_fr": "Bridging the gap between the discrete reasoning of Vision-Language Models and the continuous, physics-constrained nature of autonomous driving remains a significant challenge. In this work, we introduce LaPla, a unified Vision-Language-Action (VLA) framework featuring latent-aligned planning to seamlessly ground semantic understanding in precise motion execution. We first design an action tokenizer based on a residual vector-quantized variational autoencoder (VQ-VAE), capturing vehicle kinematics and encoding trajectory features into a structured latent space. Rather than discrete codebook loo",
-      "resume_fr": "Bridging the gap between the discrete reasoning of Vision-Language Models and the continuous, physics-constrained nature of autonomous driving remains a significant challenge. In this work, we introduce LaPla, a unified Vision-Language-Action (VLA) framework featuring latent-aligned planning to seamlessly ground semantic understanding in precise motion execution. We first design an action tokenizer based on a residual vector-quantized variational autoencoder (VQ-VAE), capturing vehicle kinematics and encoding trajectory features into a structured latent space. Rather than discrete codebook loo",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Subspace Inference Enables Efficient Active Reward Learning from Preferences",
-      "url": "https://arxiv.org/abs/2609.04066v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-03T16:39:55.000Z",
-      "score": 70,
-      "summary_en": "Reinforcement learning from human feedback (RLHF) has emerged as a powerful yet sample-inefficient approach for learning reward models from human preferences, making active learning a critical component in synthesizing informative preference queries. However, effective uncertainty quantification required for active learning remains a key challenge for large neural network reward models. In this paper, we introduce PreferenceEKF, a sample-efficient approach that tracks reward model uncertainty by framing active preference learning as a sequential Bayesian filtering problem. Instead of relying o",
-      "summary_fr": "Reinforcement learning from human feedback (RLHF) has emerged as a powerful yet sample-inefficient approach for learning reward models from human preferences, making active learning a critical component in synthesizing informative preference queries. However, effective uncertainty quantification required for active learning remains a key challenge for large neural network reward models. In this paper, we introduce PreferenceEKF, a sample-efficient approach that tracks reward model uncertainty by framing active preference learning as a sequential Bayesian filtering problem. Instead of relying o",
-      "resume_fr": "Reinforcement learning from human feedback (RLHF) has emerged as a powerful yet sample-inefficient approach for learning reward models from human preferences, making active learning a critical component in synthesizing informative preference queries. However, effective uncertainty quantification required for active learning remains a key challenge for large neural network reward models. In this paper, we introduce PreferenceEKF, a sample-efficient approach that tracks reward model uncertainty by framing active preference learning as a sequential Bayesian filtering problem. Instead of relying o",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Making Gender-Inclusive Practices Actionable: Evaluating a Research-Informed Computing Education Toolkit",
-      "url": "https://arxiv.org/abs/2609.03936v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-09-03T14:43:51.000Z",
-      "score": 85,
-      "summary_en": "The persistent gender imbalance in computing remains a global concern, and universities offer a key part of the pipeline to address it. Although research has identified practices that support under-represented student groups, translating this evidence into actionable guidance remains challenging. This paper first presents a novel web- based toolkit (TechMate) designed to address this gap by helping computing educators implement gender- inclusive initiatives through practical research-informed guidance. The toolkit defines over 25 actions, ranging from operational to strategic, and provides cas",
-      "summary_fr": "The persistent gender imbalance in computing remains a global concern, and universities offer a key part of the pipeline to address it. Although research has identified practices that support under-represented student groups, translating this evidence into actionable guidance remains challenging. This paper first presents a novel web- based toolkit (TechMate) designed to address this gap by helping computing educators implement gender- inclusive initiatives through practical research-informed guidance. The toolkit defines over 25 actions, ranging from operational to strategic, and provides cas",
-      "resume_fr": "The persistent gender imbalance in computing remains a global concern, and universities offer a key part of the pipeline to address it. Although research has identified practices that support under-represented student groups, translating this evidence into actionable guidance remains challenging. This paper first presents a novel web- based toolkit (TechMate) designed to address this gap by helping computing educators implement gender- inclusive initiatives through practical research-informed guidance. The toolkit defines over 25 actions, ranging from operational to strategic, and provides cas",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Differentiated impacts of GenAI-supported self-regulated game-based science learning: a behavioural and epistemic network analysis of high- and low-achieving students",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10709-9",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-09-03T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Integrating Generative Artificial Intelligence (GenAI) into digital game-based learning (DGBL) environments presents new opportunities for enhancing student learning through personalised support, immediate feedback, and adaptive interaction. While previous research has explored the effectiveness of GenAI in various educational contexts, limited studies have examined how GenAI can support students’ self-regulated learning (SRL) within game-based science learning environments. Addressing this gap, the present study aimed to explore the impact of GenAI-supported self-regulated digital game-based ",
-      "summary_fr": "Integrating Generative Artificial Intelligence (GenAI) into digital game-based learning (DGBL) environments presents new opportunities for enhancing student learning through personalised support, immediate feedback, and adaptive interaction. While previous research has explored the effectiveness of GenAI in various educational contexts, limited studies have examined how GenAI can support students’ self-regulated learning (SRL) within game-based science learning environments. Addressing this gap, the present study aimed to explore the impact of GenAI-supported self-regulated digital game-based ",
-      "resume_fr": "Integrating Generative Artificial Intelligence (GenAI) into digital game-based learning (DGBL) environments presents new opportunities for enhancing student learning through personalised support, immediate feedback, and adaptive interaction. While previous research has explored the effectiveness of GenAI in various educational contexts, limited studies have examined how GenAI can support students’ self-regulated learning (SRL) within game-based science learning environments. Addressing this gap, the present study aimed to explore the impact of GenAI-supported self-regulated digital game-based ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10709-9/MediaObjects/11423_2026_10709_Fig1_HTML.png"
-    },
-    {
-      "title": "The Builders Stage brings practical strategies for scaling startups to TechCrunch Disrupt 2026",
-      "url": "https://techcrunch.com/2026/09/02/the-builders-stage-brings-practical-strategies-for-scaling-startups-to-techcrunch-disrupt-2026/",
-      "source": "TechCrunch – Artificial Intelligence",
-      "published": "2026-09-02T23:01:00.000Z",
-      "score": 50,
-      "summary_en": "The Builders Stage is returning to TechCrunch Disrupt, bringing together founders, startup operators, and investors for practical conversations on what it takes to build and scale.",
-      "summary_fr": "The Builders Stage is returning to TechCrunch Disrupt, bringing together founders, startup operators, and investors for practical conversations on what it takes to build and scale.",
-      "resume_fr": "The Builders Stage is returning to TechCrunch Disrupt, bringing together founders, startup operators, and investors for practical conversations on what it takes to build and scale.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://techcrunch.com/wp-content/uploads/2026/07/Builders-Stage_ArticleHeader_tc26_V2.png?resize=1200,675"
-    },
-    {
-      "title": "GRADSOLVE: fast exact gradients for ODE ensembles on GPUs",
-      "url": "https://arxiv.org/abs/2609.02876v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-09-02T17:56:10.000Z",
-      "score": 70,
-      "summary_en": "Ordinary differential equations (ODEs) underlie models in science and engineering, and many applications need derivatives of their solutions with respect to parameters. Ensembles of independent trajectories suit graphics processing units (GPUs), but current GPU software forces a trade-off: the fastest ensemble solvers cannot be differentiated in reverse mode at the speed they solve, and the solvers built for differentiation solve more slowly. No single tool has yet offered a reverse-mode gradient at the speed of a fused-kernel solve. We present GRADSOLVE, an open-source JAX library for solving",
-      "summary_fr": "Ordinary differential equations (ODEs) underlie models in science and engineering, and many applications need derivatives of their solutions with respect to parameters. Ensembles of independent trajectories suit graphics processing units (GPUs), but current GPU software forces a trade-off: the fastest ensemble solvers cannot be differentiated in reverse mode at the speed they solve, and the solvers built for differentiation solve more slowly. No single tool has yet offered a reverse-mode gradient at the speed of a fused-kernel solve. We present GRADSOLVE, an open-source JAX library for solving",
-      "resume_fr": "Ordinary differential equations (ODEs) underlie models in science and engineering, and many applications need derivatives of their solutions with respect to parameters. Ensembles of independent trajectories suit graphics processing units (GPUs), but current GPU software forces a trade-off: the fastest ensemble solvers cannot be differentiated in reverse mode at the speed they solve, and the solvers built for differentiation solve more slowly. No single tool has yet offered a reverse-mode gradient at the speed of a fused-kernel solve. We present GRADSOLVE, an open-source JAX library for solving",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Towards Trustworthy Autonomous Robots: An Explainable AI-Based Decision Framework",
-      "url": "https://arxiv.org/abs/2609.02861v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-02T17:44:25.000Z",
-      "score": 70,
-      "summary_en": "Autonomous robots powered by deep learning face a fundamental auditability challenge: when incidents occur, investigators cannot reconstruct why the system made specific decisions. This paper presents TRACE (Transparent Reasoning Architecture for Credible Execution), a decision framework that ensures every autonomous action can be traced back to sensor evidence through documented causal chains. The framework organizes decision-making into four auditable layers: Semantic Perception for evidence-grounded entity recognition, Belief Reasoning for probabilistic state estimation with causal graphs, ",
-      "summary_fr": "Autonomous robots powered by deep learning face a fundamental auditability challenge: when incidents occur, investigators cannot reconstruct why the system made specific decisions. This paper presents TRACE (Transparent Reasoning Architecture for Credible Execution), a decision framework that ensures every autonomous action can be traced back to sensor evidence through documented causal chains. The framework organizes decision-making into four auditable layers: Semantic Perception for evidence-grounded entity recognition, Belief Reasoning for probabilistic state estimation with causal graphs, ",
-      "resume_fr": "Autonomous robots powered by deep learning face a fundamental auditability challenge: when incidents occur, investigators cannot reconstruct why the system made specific decisions. This paper presents TRACE (Transparent Reasoning Architecture for Credible Execution), a decision framework that ensures every autonomous action can be traced back to sensor evidence through documented causal chains. The framework organizes decision-making into four auditable layers: Semantic Perception for evidence-grounded entity recognition, Belief Reasoning for probabilistic state estimation with causal graphs, ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
