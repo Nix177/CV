@@ -63,4 +63,22 @@ jobs:
             public/rag/projects
 
       - name: Verify checked-in RAG files are current
-        run: git diff --exit-code -- public/profile.json public/rag/project-code-index.json public/rag/project-index-report.json public/rag/projects
+        run: |
+          if ! git diff --exit-code -- public/profile.json public/rag/project-code-index.json public/rag/project-index-report.json public/rag/projects; then
+            echo "::error title=Mise à jour RAG requise::Des différences ont été détectées entre vos projets et l'index RAG du chatbot."
+            echo "## ⚠️ Action requise : Mise à jour de l'index RAG" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Des modifications récentes dans vos dépôts ou votre CV ne sont pas encore enregistrées dans l'index du chatbot." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Que devez-vous faire ?" >> $GITHUB_STEP_SUMMARY
+            echo "1. Téléchargez l'artéfact **\`project-rag-index\`** généré dans ce run (qui contient déjà tous les fichiers mis à jour et validés)." >> $GITHUB_STEP_SUMMARY
+            echo "2. Décompressez-le et remplacez les fichiers dans votre projet local." >> $GITHUB_STEP_SUMMARY
+            echo "3. Committez et poussez les changements sur GitHub :" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`bash" >> $GITHUB_STEP_SUMMARY
+            echo "   git add public/profile.json public/rag/" >> $GITHUB_STEP_SUMMARY
+            echo "   git commit -m 'chore(rag): update chatbot index'" >> $GITHUB_STEP_SUMMARY
+            echo "   # puis envoyez les modifications sur GitHub (push)" >> $GITHUB_STEP_SUMMARY
+            echo "   \`\`\`" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+

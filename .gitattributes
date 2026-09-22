@@ -1,0 +1,4 @@
+# Enforce LF for RAG data to prevent false diffs across operating systems
+public/profile.json text eol=lf
+public/data/rag-knowledge-base.json text eol=lf
+public/rag/** text eol=lf
