@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T13:07:49.245Z",
+  "generatedAt": "2026-10-07T13:02:19.243Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,196 @@
     }
   },
   "items": [
+    {
+      "title": "Characterizing the role of reasoning tokens in large language models as state over tokens",
+      "url": "https://www.nature.com/articles/s42256-026-01303-y",
+      "source": "Nature Machine Intelligence",
+      "published": "2026-10-07T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01303-y/MediaObjects/42256_2026_1303_Fig1_HTML.png"
+    },
+    {
+      "title": "PEARS: Physical-Prior-Guided Efficient Adaptation via Failure Reasoning and Diffusion Steering for Tactile Manipulation",
+      "url": "https://arxiv.org/abs/2610.08784v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-06T17:59:03.000Z",
+      "score": 70,
+      "summary_en": "Pretrained robotic policies can suffer substantial performance degradation under out-of-distribution (OOD) conditions encountered during deployment, motivating post-training through real-world interaction. However, reinforcement-learning (RL)-based post-training typically requires substantial environment interactions, a burden that is especially significant in manipulation, where each trial can be slow, costly, or destructive. Therefore, we present PEARS, a physics-prior-guided hybrid RL framework for sample-efficient online adaptation of pretrained policies with tactile feedback. After each e",
+      "summary_fr": "Pretrained robotic policies can suffer substantial performance degradation under out-of-distribution (OOD) conditions encountered during deployment, motivating post-training through real-world interaction. However, reinforcement-learning (RL)-based post-training typically requires substantial environment interactions, a burden that is especially significant in manipulation, where each trial can be slow, costly, or destructive. Therefore, we present PEARS, a physics-prior-guided hybrid RL framework for sample-efficient online adaptation of pretrained policies with tactile feedback. After each e",
+      "resume_fr": "Pretrained robotic policies can suffer substantial performance degradation under out-of-distribution (OOD) conditions encountered during deployment, motivating post-training through real-world interaction. However, reinforcement-learning (RL)-based post-training typically requires substantial environment interactions, a burden that is especially significant in manipulation, where each trial can be slow, costly, or destructive. Therefore, we present PEARS, a physics-prior-guided hybrid RL framework for sample-efficient online adaptation of pretrained policies with tactile feedback. After each e",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Mission-Aware Attestation Envelopes for Time-Critical Autonomous Action: A Hardware-in-the-Loop V2I Study",
+      "url": "https://arxiv.org/abs/2610.08771v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-06T17:55:18.000Z",
+      "score": 70,
+      "summary_en": "An autonomous system that asks for a privileged physical action is usually gated on integrity evidence: a platform proves what it is running, and the request is granted or refused on that basis. Such a gate is normally treated as a predicate, yet the evidence behind it has an age, the decision that consumes it has a latency, and the physical system that waits for it has a deadline. We formulate mission-aware attestation as a runtime assurance contract that holds only when integrity is valid, the evidence is fresh enough, and the decision completes inside a budget derived from the current physi",
+      "summary_fr": "An autonomous system that asks for a privileged physical action is usually gated on integrity evidence: a platform proves what it is running, and the request is granted or refused on that basis. Such a gate is normally treated as a predicate, yet the evidence behind it has an age, the decision that consumes it has a latency, and the physical system that waits for it has a deadline. We formulate mission-aware attestation as a runtime assurance contract that holds only when integrity is valid, the evidence is fresh enough, and the decision completes inside a budget derived from the current physi",
+      "resume_fr": "An autonomous system that asks for a privileged physical action is usually gated on integrity evidence: a platform proves what it is running, and the request is granted or refused on that basis. Such a gate is normally treated as a predicate, yet the evidence behind it has an age, the decision that consumes it has a latency, and the physical system that waits for it has a deadline. We formulate mission-aware attestation as a runtime assurance contract that holds only when integrity is valid, the evidence is fresh enough, and the decision completes inside a budget derived from the current physi",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Neural Petri flows for chemical reactions",
+      "url": "https://arxiv.org/abs/2610.08750v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-06T17:44:56.000Z",
+      "score": 70,
+      "summary_en": "Petri nets have been used to describe chemical processes such as reactions.They map well to chemistry: Places are the bonds between atoms and the free valence of each atom, a token is a unit of bond order, a transition forms or breaks a bond, the conserved quantities are the valence budgets of the atoms, and the enabling rule is the valence rule. These semantics are not guaranteed by learned models of reactions or neural networks that are built on Petri nets that use the net as a scaffold for message passing. Here, we ask what architecture remains a Petri net for every value of its weights. We",
+      "summary_fr": "Petri nets have been used to describe chemical processes such as reactions.They map well to chemistry: Places are the bonds between atoms and the free valence of each atom, a token is a unit of bond order, a transition forms or breaks a bond, the conserved quantities are the valence budgets of the atoms, and the enabling rule is the valence rule. These semantics are not guaranteed by learned models of reactions or neural networks that are built on Petri nets that use the net as a scaffold for message passing. Here, we ask what architecture remains a Petri net for every value of its weights. We",
+      "resume_fr": "Petri nets have been used to describe chemical processes such as reactions.They map well to chemistry: Places are the bonds between atoms and the free valence of each atom, a token is a unit of bond order, a transition forms or breaks a bond, the conserved quantities are the valence budgets of the atoms, and the enabling rule is the valence rule. These semantics are not guaranteed by learned models of reactions or neural networks that are built on Petri nets that use the net as a scaffold for message passing. Here, we ask what architecture remains a Petri net for every value of its weights. We",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Linear Bandits under Exact Sliding-Window Constraints",
+      "url": "https://arxiv.org/abs/2610.08745v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-06T17:41:08.000Z",
+      "score": 70,
+      "summary_en": "We study linear bandits under exact sliding-window constraints, where every consecutive block of actions must belong to a prescribed feasible set. In the offline setting, where the reward function is known, we show that convexity and cyclic-shift invariance make a stationary solution optimal when $w\\mid T$ and within an additive $O(w)$ gap otherwise. In the online setting, we show that geometric structure alone is insufficient for learning, and sublinear regret can be impossible. We introduce a transition diameter $τ$ that quantifies feasible reachability and develop a rare-switching OFUL algo",
+      "summary_fr": "We study linear bandits under exact sliding-window constraints, where every consecutive block of actions must belong to a prescribed feasible set. In the offline setting, where the reward function is known, we show that convexity and cyclic-shift invariance make a stationary solution optimal when $w\\mid T$ and within an additive $O(w)$ gap otherwise. In the online setting, we show that geometric structure alone is insufficient for learning, and sublinear regret can be impossible. We introduce a transition diameter $τ$ that quantifies feasible reachability and develop a rare-switching OFUL algo",
+      "resume_fr": "We study linear bandits under exact sliding-window constraints, where every consecutive block of actions must belong to a prescribed feasible set. In the offline setting, where the reward function is known, we show that convexity and cyclic-shift invariance make a stationary solution optimal when $w\\mid T$ and within an additive $O(w)$ gap otherwise. In the online setting, we show that geometric structure alone is insufficient for learning, and sublinear regret can be impossible. We introduce a transition diameter $τ$ that quantifies feasible reachability and develop a rare-switching OFUL algo",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reinforcement Learning with Conformal Action Sets: An Application to Sequential Recommendation",
+      "url": "https://arxiv.org/abs/2610.08743v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-06T17:40:52.000Z",
+      "score": 70,
+      "summary_en": "Sequential recommenders typically use a fixed slate size even though the number of useful alternatives changes within a session. We propose Reinforcement Learning with Calibrated Pruning (RLCP), which adapts the retained action set using critic scores and an online threshold. The threshold is updated from binary feedback indicating whether the set contains an action in a proxy target. We prove a deterministic bound on the observed proxy miss rate along adaptive trajectories. To quantify the effect of pruning on reward, we derive an exact decomposition of value loss into filtering and selection",
+      "summary_fr": "Sequential recommenders typically use a fixed slate size even though the number of useful alternatives changes within a session. We propose Reinforcement Learning with Calibrated Pruning (RLCP), which adapts the retained action set using critic scores and an online threshold. The threshold is updated from binary feedback indicating whether the set contains an action in a proxy target. We prove a deterministic bound on the observed proxy miss rate along adaptive trajectories. To quantify the effect of pruning on reward, we derive an exact decomposition of value loss into filtering and selection",
+      "resume_fr": "Sequential recommenders typically use a fixed slate size even though the number of useful alternatives changes within a session. We propose Reinforcement Learning with Calibrated Pruning (RLCP), which adapts the retained action set using critic scores and an online threshold. The threshold is updated from binary feedback indicating whether the set contains an action in a proxy target. We prove a deterministic bound on the observed proxy miss rate along adaptive trajectories. To quantify the effect of pruning on reward, we derive an exact decomposition of value loss into filtering and selection",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A Pedagogically Demonstrative Model Visualizing the Pathway from Online Interactions to Personalized Recommendation",
+      "url": "https://arxiv.org/abs/2610.07744v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-10-06T04:38:45.000Z",
+      "score": 85,
+      "summary_en": "Personal digital activity increasingly shapes online experiences, yet few users have been educated regarding the processes transforming raw interactions into personalized suggestions. We developed an education artifact that illustratively simulates how AI leverages users' digital activities to shape online recommendations (e.g., ads). Our artifact processes users' digital activity using a locally-hosted LLM to generate user profiles of their inferred interests and personalized recommendations. A three-layered Sankey diagram maps data sources through inferred interests to personalized recommend",
+      "summary_fr": "Personal digital activity increasingly shapes online experiences, yet few users have been educated regarding the processes transforming raw interactions into personalized suggestions. We developed an education artifact that illustratively simulates how AI leverages users' digital activities to shape online recommendations (e.g., ads). Our artifact processes users' digital activity using a locally-hosted LLM to generate user profiles of their inferred interests and personalized recommendations. A three-layered Sankey diagram maps data sources through inferred interests to personalized recommend",
+      "resume_fr": "Personal digital activity increasingly shapes online experiences, yet few users have been educated regarding the processes transforming raw interactions into personalized suggestions. We developed an education artifact that illustratively simulates how AI leverages users' digital activities to shape online recommendations (e.g., ads). Our artifact processes users' digital activity using a locally-hosted LLM to generate user profiles of their inferred interests and personalized recommendations. A three-layered Sankey diagram maps data sources through inferred interests to personalized recommend",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Exploring AI literacy in elementary classrooms: students’ perspectives on generative AI, fairness, and ethical use",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10739-3",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-10-06T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "Generative Artificial Intelligence (GenAI) is rapidly entering educational contexts, yet little is known about how primary-aged students perceive, understand, and critically reflect on its applications and limitations. This exploratory study investigates the development of AI literacy among 92 upper elementary students (5th graders) through a structured educational intervention that introduces AI concepts and ethical considerations. A mixed-methods approach was adopted, combining pre- and post-intervention questionnaires with focus group discussions to capture participants’ quantitative trends",
+      "summary_fr": "Generative Artificial Intelligence (GenAI) is rapidly entering educational contexts, yet little is known about how primary-aged students perceive, understand, and critically reflect on its applications and limitations. This exploratory study investigates the development of AI literacy among 92 upper elementary students (5th graders) through a structured educational intervention that introduces AI concepts and ethical considerations. A mixed-methods approach was adopted, combining pre- and post-intervention questionnaires with focus group discussions to capture participants’ quantitative trends",
+      "resume_fr": "Generative Artificial Intelligence (GenAI) is rapidly entering educational contexts, yet little is known about how primary-aged students perceive, understand, and critically reflect on its applications and limitations. This exploratory study investigates the development of AI literacy among 92 upper elementary students (5th graders) through a structured educational intervention that introduces AI concepts and ethical considerations. A mixed-methods approach was adopted, combining pre- and post-intervention questionnaires with focus group discussions to capture participants’ quantitative trends",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10739-3/MediaObjects/11423_2026_10739_Fig1_HTML.jpg"
+    },
+    {
+      "title": "The impact of high-immersion virtual reality on anatomy learning, enjoyment, presence, and cognitive load",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10676-1",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-10-06T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "The acquisition of science concepts is necessary for fostering analytical and problem-solving skills. The complexity of heart anatomy, obscured within the human body, presents a challenge that high-immersion virtual reality (VR) holds promise in addressing. This study explored the impact of VR versus screencast video instruction in learning anatomy, which is a core life science topic within the broader science, technology, engineering, and mathematics (STEM) domain. College students ( = 91) were randomly distributed into two groups. One group learned heart anatomy through an immersive VR tutor",
+      "summary_fr": "The acquisition of science concepts is necessary for fostering analytical and problem-solving skills. The complexity of heart anatomy, obscured within the human body, presents a challenge that high-immersion virtual reality (VR) holds promise in addressing. This study explored the impact of VR versus screencast video instruction in learning anatomy, which is a core life science topic within the broader science, technology, engineering, and mathematics (STEM) domain. College students ( = 91) were randomly distributed into two groups. One group learned heart anatomy through an immersive VR tutor",
+      "resume_fr": "The acquisition of science concepts is necessary for fostering analytical and problem-solving skills. The complexity of heart anatomy, obscured within the human body, presents a challenge that high-immersion virtual reality (VR) holds promise in addressing. This study explored the impact of VR versus screencast video instruction in learning anatomy, which is a core life science topic within the broader science, technology, engineering, and mathematics (STEM) domain. College students ( = 91) were randomly distributed into two groups. One group learned heart anatomy through an immersive VR tutor",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10676-1/MediaObjects/11423_2026_10676_Fig1_HTML.jpg"
+    },
+    {
+      "title": "Desktop virtual reality with scaffolded interaction and reflective explanation: effects on cognitive, motivational, and learning outcomes in engineering education",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10722-y",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-10-06T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "This study examined how a sequenced virtual reality (VR)–supported learning activity influenced learning and motivation in undergraduate engineering education. Drawing on cognitive load theory, generative learning theory, and the cognitive theory of multimedia learning, the study evaluated a desktop VR instructional sequence that included exploration of a simulated mechanical system, scaffolded interaction tasks, and a reflective self-explanation activity. A small sample of 38 undergraduate students was randomly assigned to either a VR-supported instructional condition or a traditional instruc",
+      "summary_fr": "This study examined how a sequenced virtual reality (VR)–supported learning activity influenced learning and motivation in undergraduate engineering education. Drawing on cognitive load theory, generative learning theory, and the cognitive theory of multimedia learning, the study evaluated a desktop VR instructional sequence that included exploration of a simulated mechanical system, scaffolded interaction tasks, and a reflective self-explanation activity. A small sample of 38 undergraduate students was randomly assigned to either a VR-supported instructional condition or a traditional instruc",
+      "resume_fr": "This study examined how a sequenced virtual reality (VR)–supported learning activity influenced learning and motivation in undergraduate engineering education. Drawing on cognitive load theory, generative learning theory, and the cognitive theory of multimedia learning, the study evaluated a desktop VR instructional sequence that included exploration of a simulated mechanical system, scaffolded interaction tasks, and a reflective self-explanation activity. A small sample of 38 undergraduate students was randomly assigned to either a VR-supported instructional condition or a traditional instruc",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10722-y/MediaObjects/11423_2026_10722_Fig1_HTML.jpg"
+    },
     {
       "title": "Learning to Read the Contextual Tokens in Diffusion Transformers",
       "url": "https://arxiv.org/abs/2610.06844v1",
@@ -269,7 +459,7 @@
     {
       "title": "Understanding Generative AI Use in Programming MOOCs: The Role of Course Context and Learner Characteristics",
       "url": "https://arxiv.org/abs/2610.04447v1",
-      "source": "arXiv – cs.HC + education",
+      "source": "arXiv – cs.AI + education/MOOC",
       "published": "2026-10-03T11:28:06.000Z",
       "score": 85,
       "summary_en": "The increasing availability of generative artificial intelligence (GenAI) tools, such as ChatGPT and code-completion assistants, raises questions about how learners integrate these tools into learning activities, particularly in MOOCs that attract diverse participant populations. This study examines the use of GenAI in two programming MOOCs taught in Estonian that differ in duration, workload, topic complexity, and assignment volume: About Programming (4 weeks, 26 expected hours, n = 187) and Introduction to Programming (8 weeks, 78 expected hours, n = 182). Post-course questionnaire data were",
@@ -1044,196 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10725-9/MediaObjects/11423_2026_10725_Fig1_HTML.png"
-    },
-    {
-      "title": "Learning Robot Policies from Sparse Success Signals via STL-Guided Stein Variational Policy Gradient",
-      "url": "https://arxiv.org/abs/2609.31606v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-25T17:55:01.000Z",
-      "score": 85,
-      "summary_en": "Learning robot policies for tasks with sparse success signals is challenging when completion depends on coordinated actions, precise contact outcomes, or satisfying several conditions together. Intricate physical interactions with the world further complicate these requirements. Prior work using conventional reward shaping mechanisms provides dense feedback but local progress might not translate into eventual task completion. We present Signal Temporal Logic-guided Stein Variational Policy Gradient (STL-SVPG), a population-based method that uses smooth STL robustness as a trajectory-level trai",
-      "summary_fr": "Learning robot policies for tasks with sparse success signals is challenging when completion depends on coordinated actions, precise contact outcomes, or satisfying several conditions together. Intricate physical interactions with the world further complicate these requirements. Prior work using conventional reward shaping mechanisms provides dense feedback but local progress might not translate into eventual task completion. We present Signal Temporal Logic-guided Stein Variational Policy Gradient (STL-SVPG), a population-based method that uses smooth STL robustness as a trajectory-level trai",
-      "resume_fr": "Learning robot policies for tasks with sparse success signals is challenging when completion depends on coordinated actions, precise contact outcomes, or satisfying several conditions together. Intricate physical interactions with the world further complicate these requirements. Prior work using conventional reward shaping mechanisms provides dense feedback but local progress might not translate into eventual task completion. We present Signal Temporal Logic-guided Stein Variational Policy Gradient (STL-SVPG), a population-based method that uses smooth STL robustness as a trajectory-level trai",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "User Model Extraction via Belief Self-Distillation",
-      "url": "https://arxiv.org/abs/2609.31603v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-09-25T17:54:32.000Z",
-      "score": 70,
-      "summary_en": "Large language models (LLMs) implicitly infer attributes of their users and adapt their behavior accordingly, yet these beliefs remain difficult to inspect and causally manipulate. We introduce Belief Self-Distillation (BSD), a unified read-write framework that bridges linear and causal probing by learning a compact user representation that can be both decoded and written back into the model. The frozen LLM acts as its own teacher, distilling beliefs from natural conversations without external annotations. Unlike conventional probing, BSD isolates not only information present in activations, b",
-      "summary_fr": "Large language models (LLMs) implicitly infer attributes of their users and adapt their behavior accordingly, yet these beliefs remain difficult to inspect and causally manipulate. We introduce Belief Self-Distillation (BSD), a unified read-write framework that bridges linear and causal probing by learning a compact user representation that can be both decoded and written back into the model. The frozen LLM acts as its own teacher, distilling beliefs from natural conversations without external annotations. Unlike conventional probing, BSD isolates not only information present in activations, b",
-      "resume_fr": "Large language models (LLMs) implicitly infer attributes of their users and adapt their behavior accordingly, yet these beliefs remain difficult to inspect and causally manipulate. We introduce Belief Self-Distillation (BSD), a unified read-write framework that bridges linear and causal probing by learning a compact user representation that can be both decoded and written back into the model. The frozen LLM acts as its own teacher, distilling beliefs from natural conversations without external annotations. Unlike conventional probing, BSD isolates not only information present in activations, b",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer",
-      "url": "https://arxiv.org/abs/2609.31587v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-09-25T17:42:22.000Z",
-      "score": 85,
-      "summary_en": "We investigate whether natural-language documentation helps coding agents resolve software issues, and we build the tools to construct and evaluate it. We introduce a roundtrip benchmark that scores code descriptions by whether code regenerated from them passes the original tests, and show that completeness, not length, drives a description's fidelity. Using the benchmark as an optimization signal, we discover a description-writing prompt that reaches full fidelity and generalizes to unseen files. We then test the hypothesis that motivated the work: that better documentation helps an agent res",
-      "summary_fr": "We investigate whether natural-language documentation helps coding agents resolve software issues, and we build the tools to construct and evaluate it. We introduce a roundtrip benchmark that scores code descriptions by whether code regenerated from them passes the original tests, and show that completeness, not length, drives a description's fidelity. Using the benchmark as an optimization signal, we discover a description-writing prompt that reaches full fidelity and generalizes to unseen files. We then test the hypothesis that motivated the work: that better documentation helps an agent res",
-      "resume_fr": "We investigate whether natural-language documentation helps coding agents resolve software issues, and we build the tools to construct and evaluate it. We introduce a roundtrip benchmark that scores code descriptions by whether code regenerated from them passes the original tests, and show that completeness, not length, drives a description's fidelity. Using the benchmark as an optimization signal, we discover a description-writing prompt that reaches full fidelity and generalizes to unseen files. We then test the hypothesis that motivated the work: that better documentation helps an agent res",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Adapting for AI: How elementary teachers adjust their practices for an AI-integrated curriculum",
-      "url": "https://arxiv.org/abs/2609.31569v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-09-25T17:33:47.000Z",
-      "score": 85,
-      "summary_en": "Conversational AI tools are entering children's everyday experiences, and schools are interested in adopting them. However, successful classroom integration depends not only on the technology but also on the work teachers do to make it usable and appropriate for their students and classroom context. There is little known about how elementary teachers work as they implement conversational AI tools in real classrooms. In this study, we examine three teachers' experiences implementing an AI literacy and English Language Arts (ELA) curriculum built around ToyTalk, a conversational AI toy developme",
-      "summary_fr": "Conversational AI tools are entering children's everyday experiences, and schools are interested in adopting them. However, successful classroom integration depends not only on the technology but also on the work teachers do to make it usable and appropriate for their students and classroom context. There is little known about how elementary teachers work as they implement conversational AI tools in real classrooms. In this study, we examine three teachers' experiences implementing an AI literacy and English Language Arts (ELA) curriculum built around ToyTalk, a conversational AI toy developme",
-      "resume_fr": "Conversational AI tools are entering children's everyday experiences, and schools are interested in adopting them. However, successful classroom integration depends not only on the technology but also on the work teachers do to make it usable and appropriate for their students and classroom context. There is little known about how elementary teachers work as they implement conversational AI tools in real classrooms. In this study, we examine three teachers' experiences implementing an AI literacy and English Language Arts (ELA) curriculum built around ToyTalk, a conversational AI toy developme",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "DeepEdu-v1: Efficient and Scalable Agentic LLMs for Vietnamese Education",
-      "url": "https://arxiv.org/abs/2609.31568v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-09-25T17:33:41.000Z",
-      "score": 50,
-      "summary_en": "AI tutoring could markedly improve learning outcomes for students in developing regions such as Vietnam, yet the two obvious paths both fall short. Cloud assistants such as ChatGPT route sensitive student data to foreign servers---violating data-sovereignty laws such as Vietnam's Decree 53---and, pre-trained on Western-centric corpora, are not organized around the national textbook curriculum, so their knowledge of local content is unsystematic and frequently hallucinated. Self-hosting an open model keeps data on-premise but hits a two-fold wall: post-training quantization (AWQ, GPTQ) tames th",
-      "summary_fr": "AI tutoring could markedly improve learning outcomes for students in developing regions such as Vietnam, yet the two obvious paths both fall short. Cloud assistants such as ChatGPT route sensitive student data to foreign servers---violating data-sovereignty laws such as Vietnam's Decree 53---and, pre-trained on Western-centric corpora, are not organized around the national textbook curriculum, so their knowledge of local content is unsystematic and frequently hallucinated. Self-hosting an open model keeps data on-premise but hits a two-fold wall: post-training quantization (AWQ, GPTQ) tames th",
-      "resume_fr": "AI tutoring could markedly improve learning outcomes for students in developing regions such as Vietnam, yet the two obvious paths both fall short. Cloud assistants such as ChatGPT route sensitive student data to foreign servers---violating data-sovereignty laws such as Vietnam's Decree 53---and, pre-trained on Western-centric corpora, are not organized around the national textbook curriculum, so their knowledge of local content is unsystematic and frequently hallucinated. Self-hosting an open model keeps data on-premise but hits a two-fold wall: post-training quantization (AWQ, GPTQ) tames th",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning to Leverage Compliance: A Policy-Admittance Learning Framework for Robotic Insertion",
-      "url": "https://arxiv.org/abs/2609.31439v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-25T15:58:13.000Z",
-      "score": 70,
-      "summary_en": "Policy learning and compliant control offer a promising route to reliable autonomous assembly under pose errors and contact uncertainty. However, combining them does not ensure coordination: the policy may continue pushing against contact while the controller yields, producing sustained loading with limited progress. To address this problem, we propose LeCo (Leverage Compliance), a policy-admittance learning framework that guides a visual policy through execution-time interaction under fixed admittance. A multirate feedback mechanism aggregates high-rate contact-interaction records into policy",
-      "summary_fr": "Policy learning and compliant control offer a promising route to reliable autonomous assembly under pose errors and contact uncertainty. However, combining them does not ensure coordination: the policy may continue pushing against contact while the controller yields, producing sustained loading with limited progress. To address this problem, we propose LeCo (Leverage Compliance), a policy-admittance learning framework that guides a visual policy through execution-time interaction under fixed admittance. A multirate feedback mechanism aggregates high-rate contact-interaction records into policy",
-      "resume_fr": "Policy learning and compliant control offer a promising route to reliable autonomous assembly under pose errors and contact uncertainty. However, combining them does not ensure coordination: the policy may continue pushing against contact while the controller yields, producing sustained loading with limited progress. To address this problem, we propose LeCo (Leverage Compliance), a policy-admittance learning framework that guides a visual policy through execution-time interaction under fixed admittance. A multirate feedback mechanism aggregates high-rate contact-interaction records into policy",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Investigating Synchronous Interaction Behaviours Among Open University Students: A Latent Profile Analysis and Epistemic Network Analysis",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70339?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-09-25T03:09:21.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Students' Perceptions of University Preparation and Perceived Industry Relevance of AI Skills: A Study in UAE Higher Education",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70342?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-09-24T22:54:13.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "5 million robots are now at work in factories worldwide, reports the IFR",
-      "url": "https://www.therobotreport.com/5-million-robots-now-working-factories-worldwide-ifr-reports/",
-      "source": "Robotics Business Review",
-      "published": "2026-09-24T20:15:51.000Z",
-      "score": 50,
-      "summary_en": "China still leads the world in industrial robot installations, but the U.S. and Germany are also significant markets, found the IFR. The post 5 million robots are now at work in factories worldwide, reports the IFR appeared first on The Robot Report.",
-      "summary_fr": "China still leads the world in industrial robot installations, but the U.S. and Germany are also significant markets, found the IFR. The post 5 million robots are now at work in factories worldwide, reports the IFR appeared first on The Robot Report.",
-      "resume_fr": "China still leads the world in industrial robot installations, but the U.S. and Germany are also significant markets, found the IFR. The post 5 million robots are now at work in factories worldwide, reports the IFR appeared first on The Robot Report.",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://www.therobotreport.com/wp-content/uploads/2026/09/Graphic_World_Robotics_2026_GLOBAL.webp"
-    },
-    {
-      "title": "Mexican EPICS in IEEE Team Builds Portable Educational Platform",
-      "url": "https://spectrum.ieee.org/epics-in-ieee-portable-educational",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-09-24T18:00:04.000Z",
-      "score": 50,
-      "summary_en": "In Guadalajara, Mexico, many high schools have motivated teachers and talented students with an interest in science, technology, engineering, and mathematics, but they lack access to advanced tools such as robotics laboratories. The resources shortfall limits the students’ opportunities for hands-on learning on cutting-edge applications. A team from ITESO, Universidad Jesuita de Guadalajara, is working to change that. Through the EPICS in IEEE initiative, a multidisciplinary group of 15 engineering students, faculty advisors, and IEEE Guadalajara Section volunteers developed RoboMeshA. The por",
-      "summary_fr": "In Guadalajara, Mexico, many high schools have motivated teachers and talented students with an interest in science, technology, engineering, and mathematics, but they lack access to advanced tools such as robotics laboratories. The resources shortfall limits the students’ opportunities for hands-on learning on cutting-edge applications. A team from ITESO, Universidad Jesuita de Guadalajara, is working to change that. Through the EPICS in IEEE initiative, a multidisciplinary group of 15 engineering students, faculty advisors, and IEEE Guadalajara Section volunteers developed RoboMeshA. The por",
-      "resume_fr": "In Guadalajara, Mexico, many high schools have motivated teachers and talented students with an interest in science, technology, engineering, and mathematics, but they lack access to advanced tools such as robotics laboratories. The resources shortfall limits the students’ opportunities for hands-on learning on cutting-edge applications. A team from ITESO, Universidad Jesuita de Guadalajara, is working to change that. Through the EPICS in IEEE initiative, a multidisciplinary group of 15 engineering students, faculty advisors, and IEEE Guadalajara Section volunteers developed RoboMeshA. The por",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://spectrum.ieee.org/media-library/four-young-adult-students-laugh-together-while-one-of-them-holds-a-robot-shaped-like-a-hexagonal-cylinder.jpg?id=67845427&width=1200&height=600&coordinates=0%2C312%2C0%2C313"
     }
   ]
 }
