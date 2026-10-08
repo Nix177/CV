@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T13:02:19.243Z",
+  "generatedAt": "2026-10-08T13:09:31.417Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,158 @@
     }
   },
   "items": [
+    {
+      "title": "Learning Across Virtual and Real Bodies: Analysing Students Meaning Making of 3D Anatomy Models",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70346?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-10-08T03:23:52.000Z",
+      "score": 65,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "RoboPrompt: Intuitive Robot Policy Steering with Sparse Human Input",
+      "url": "https://arxiv.org/abs/2610.10534v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-07T17:58:53.000Z",
+      "score": 70,
+      "summary_en": "End-to-end robot policies trained through imitation learning remain constrained by limited data diversity, making reliable zero-shot deployment in real-world settings challenging. Shared-autonomy methods enable human correction through teleoperation, but specialized hardware and operator training hinder deployment at scale. Other approaches incorporate human guidance as additional policy inputs, often requiring architectural changes and dedicated training for steerability, which limits their applicability across policies. We present RoboPrompt, a general-purpose, lightweight robot policy steer",
+      "summary_fr": "End-to-end robot policies trained through imitation learning remain constrained by limited data diversity, making reliable zero-shot deployment in real-world settings challenging. Shared-autonomy methods enable human correction through teleoperation, but specialized hardware and operator training hinder deployment at scale. Other approaches incorporate human guidance as additional policy inputs, often requiring architectural changes and dedicated training for steerability, which limits their applicability across policies. We present RoboPrompt, a general-purpose, lightweight robot policy steer",
+      "resume_fr": "End-to-end robot policies trained through imitation learning remain constrained by limited data diversity, making reliable zero-shot deployment in real-world settings challenging. Shared-autonomy methods enable human correction through teleoperation, but specialized hardware and operator training hinder deployment at scale. Other approaches incorporate human guidance as additional policy inputs, often requiring architectural changes and dedicated training for steerability, which limits their applicability across policies. We present RoboPrompt, a general-purpose, lightweight robot policy steer",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Long-WAM: Scaling the Context of World-Action Models",
+      "url": "https://arxiv.org/abs/2610.10528v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-07T17:58:04.000Z",
+      "score": 70,
+      "summary_en": "Real-time robot control demands enough visual history to infer motion and task progress, but processing that history can delay action. We present Long-WAM, a model-system framework for scaling the context of causal world-action models under real-time control constraints. Our central finding is that access to history is not the same as using it: longer histories pay off far more when the video foundation is pretrained autoregressively (AR). We first learn causal prediction from robot and egocentric videos without action labels, then preserve this history-to-future structure during world-action ",
+      "summary_fr": "Real-time robot control demands enough visual history to infer motion and task progress, but processing that history can delay action. We present Long-WAM, a model-system framework for scaling the context of causal world-action models under real-time control constraints. Our central finding is that access to history is not the same as using it: longer histories pay off far more when the video foundation is pretrained autoregressively (AR). We first learn causal prediction from robot and egocentric videos without action labels, then preserve this history-to-future structure during world-action ",
+      "resume_fr": "Real-time robot control demands enough visual history to infer motion and task progress, but processing that history can delay action. We present Long-WAM, a model-system framework for scaling the context of causal world-action models under real-time control constraints. Our central finding is that access to history is not the same as using it: longer histories pay off far more when the video foundation is pretrained autoregressively (AR). We first learn causal prediction from robot and egocentric videos without action labels, then preserve this history-to-future structure during world-action ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Rephrase Before You Act: Characterizing and Mitigating Language Sensitivity in Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2610.10526v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-07T17:57:38.000Z",
+      "score": 70,
+      "summary_en": "Vision-language-action models (VLAs) are strikingly sensitive to instruction phrasing and do not inherit the language robustness of the vision-language models they are built on. A one-word edit can move success by tens of points: $π_{0.5}$ turns on a LIBERO stove 100% of the time for \"switch on the stove\" and 2% for \"switch on the hot plate\", and a $π_0$ checkpoint finetuned with rephrase augmentation still shows swings of up to 61 points. We characterize this sensitivity with statistically tested single-edit swings and an oracle phrase search, which shows that phrasing alone nearly closes the",
+      "summary_fr": "Vision-language-action models (VLAs) are strikingly sensitive to instruction phrasing and do not inherit the language robustness of the vision-language models they are built on. A one-word edit can move success by tens of points: $π_{0.5}$ turns on a LIBERO stove 100% of the time for \"switch on the stove\" and 2% for \"switch on the hot plate\", and a $π_0$ checkpoint finetuned with rephrase augmentation still shows swings of up to 61 points. We characterize this sensitivity with statistically tested single-edit swings and an oracle phrase search, which shows that phrasing alone nearly closes the",
+      "resume_fr": "Vision-language-action models (VLAs) are strikingly sensitive to instruction phrasing and do not inherit the language robustness of the vision-language models they are built on. A one-word edit can move success by tens of points: $π_{0.5}$ turns on a LIBERO stove 100% of the time for \"switch on the stove\" and 2% for \"switch on the hot plate\", and a $π_0$ checkpoint finetuned with rephrase augmentation still shows swings of up to 61 points. We characterize this sensitivity with statistically tested single-edit swings and an oracle phrase search, which shows that phrasing alone nearly closes the",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Factorized Tactile Representation and Control for Sim-to-Real Manipulation",
+      "url": "https://arxiv.org/abs/2610.10510v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-07T17:51:52.000Z",
+      "score": 70,
+      "summary_en": "Tactile sim-to-real learning must bridge simulated contact and device-specific sensor responses while preserving information needed for control. We propose a factorized tactile representation and control framework that maps normal force and contact patch to an effective contact response recoverable from sensor readings. The response is separated into contact geometry, force distribution, and temporal contact change, with representation-specific encoding and randomization. A Tactile Gated Policy preserves these representations separately through control and operates over all mask configurations",
+      "summary_fr": "Tactile sim-to-real learning must bridge simulated contact and device-specific sensor responses while preserving information needed for control. We propose a factorized tactile representation and control framework that maps normal force and contact patch to an effective contact response recoverable from sensor readings. The response is separated into contact geometry, force distribution, and temporal contact change, with representation-specific encoding and randomization. A Tactile Gated Policy preserves these representations separately through control and operates over all mask configurations",
+      "resume_fr": "Tactile sim-to-real learning must bridge simulated contact and device-specific sensor responses while preserving information needed for control. We propose a factorized tactile representation and control framework that maps normal force and contact patch to an effective contact response recoverable from sensor readings. The response is separated into contact geometry, force distribution, and temporal contact change, with representation-specific encoding and randomization. A Tactile Gated Policy preserves these representations separately through control and operates over all mask configurations",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How assigned AI use before class shapes active student engagement in class",
+      "url": "https://arxiv.org/abs/2610.10463v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-10-07T17:29:14.000Z",
+      "score": 85,
+      "summary_en": "AI learning tools are rapidly entering classrooms, but evidence about whether they help students learn is mixed and rests mostly on test scores. Comparatively less research addresses whether the use of AI changes students' live learning behaviors in class. Here, we report the results of a preregistered field experiment with 759 MBA students enrolled in ten sections of a course, in which each student was randomly assigned two of ten class sessions to prepare for with a purpose-built voice-based AI discussion partner. After two uses of the AI discussion partner, students made about 31% more volu",
+      "summary_fr": "AI learning tools are rapidly entering classrooms, but evidence about whether they help students learn is mixed and rests mostly on test scores. Comparatively less research addresses whether the use of AI changes students' live learning behaviors in class. Here, we report the results of a preregistered field experiment with 759 MBA students enrolled in ten sections of a course, in which each student was randomly assigned two of ten class sessions to prepare for with a purpose-built voice-based AI discussion partner. After two uses of the AI discussion partner, students made about 31% more volu",
+      "resume_fr": "AI learning tools are rapidly entering classrooms, but evidence about whether they help students learn is mixed and rests mostly on test scores. Comparatively less research addresses whether the use of AI changes students' live learning behaviors in class. Here, we report the results of a preregistered field experiment with 759 MBA students enrolled in ten sections of a course, in which each student was randomly assigned two of ten class sessions to prepare for with a purpose-built voice-based AI discussion partner. After two uses of the AI discussion partner, students made about 31% more volu",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "RunningTab: Direct Workspace Interaction with Environment-Side Tabs",
+      "url": "https://arxiv.org/abs/2610.10444v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-10-07T17:16:56.000Z",
+      "score": 70,
+      "summary_en": "Much knowledge work produces new deliverables from files a workspace already holds, and LLM agents are beginning to take such work over. Through direct corpus interaction, an agent can search and read any of those files from a terminal with no indexing, and producing a deliverable from many of them in this way is what we call direct workspace interaction (DWI). Reaching the files, however, is only half the task: nothing keeps track of what the task asks for, what has been read, and what was listed but never opened, all of which slip through the context window without leaving a trace, so an age",
+      "summary_fr": "Much knowledge work produces new deliverables from files a workspace already holds, and LLM agents are beginning to take such work over. Through direct corpus interaction, an agent can search and read any of those files from a terminal with no indexing, and producing a deliverable from many of them in this way is what we call direct workspace interaction (DWI). Reaching the files, however, is only half the task: nothing keeps track of what the task asks for, what has been read, and what was listed but never opened, all of which slip through the context window without leaving a trace, so an age",
+      "resume_fr": "Much knowledge work produces new deliverables from files a workspace already holds, and LLM agents are beginning to take such work over. Through direct corpus interaction, an agent can search and read any of those files from a terminal with no indexing, and producing a deliverable from many of them in this way is what we call direct workspace interaction (DWI). Reaching the files, however, is only half the task: nothing keeps track of what the task asks for, what has been read, and what was listed but never opened, all of which slip through the context window without leaving a trace, so an age",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "HiPHI: A Large-Scale Benchmark for High-Precision Human Motion and Object Interaction",
+      "url": "https://content.knowledgehub.wiley.com/hiphi-a-large-scale-benchmark-for-high-precision-human-motion-and-object-interaction/",
+      "source": "IEEE Spectrum – AI",
+      "published": "2026-10-07T13:49:48.000Z",
+      "score": 70,
+      "summary_en": "This White Paper gives robotics researchers and engineers an overview of a new large-scale motion capture dataset built to close the data gap limiting humanoid robot learning. It also shows how policies trained on the dataset transfer to a real humanoid robot. What you will learn about: Why humanoid robot learning, a central problem in embodied AI and Physical AI, needs data that internet video and existing motion capture datasets cannot provide. How FrameNet, a linguistic framework for human action, can guide motion capture collection to systematically cover a broad range of whole-body motion",
+      "summary_fr": "This White Paper gives robotics researchers and engineers an overview of a new large-scale motion capture dataset built to close the data gap limiting humanoid robot learning. It also shows how policies trained on the dataset transfer to a real humanoid robot. What you will learn about: Why humanoid robot learning, a central problem in embodied AI and Physical AI, needs data that internet video and existing motion capture datasets cannot provide. How FrameNet, a linguistic framework for human action, can guide motion capture collection to systematically cover a broad range of whole-body motion",
+      "resume_fr": "This White Paper gives robotics researchers and engineers an overview of a new large-scale motion capture dataset built to close the data gap limiting humanoid robot learning. It also shows how policies trained on the dataset transfer to a real humanoid robot. What you will learn about: Why humanoid robot learning, a central problem in embodied AI and Physical AI, needs data that internet video and existing motion capture datasets cannot provide. How FrameNet, a linguistic framework for human action, can guide motion capture collection to systematically cover a broad range of whole-body motion",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://content.knowledgehub.wiley.com/wp-content/uploads/2026/09/HiPHIMktImage2-scaled-e1790068839496-500x302.png"
+    },
     {
       "title": "Characterizing the role of reasoning tokens in large language models as state over tokens",
       "url": "https://www.nature.com/articles/s42256-026-01303-y",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "FORM: Robot Manipulation through Direct Material Law Identification",
-      "url": "https://arxiv.org/abs/2609.38105v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-29T17:46:40.000Z",
-      "score": 70,
-      "summary_en": "When interacting with an unfamiliar deformable material, a robot lacks prior knowledge of its physical properties and how it will respond to applied forces and motion. Rapid online identification is therefore essential for reliable manipulation. We present FORM (From Observed Response to Material laws), which identifies material properties from a single robot interaction and reuses the recovered model to plan manipulation under new actions and geometries. We use weak-form momentum balance to convert observed material motion and contact forces into linear equations in the unknown material param",
-      "summary_fr": "When interacting with an unfamiliar deformable material, a robot lacks prior knowledge of its physical properties and how it will respond to applied forces and motion. Rapid online identification is therefore essential for reliable manipulation. We present FORM (From Observed Response to Material laws), which identifies material properties from a single robot interaction and reuses the recovered model to plan manipulation under new actions and geometries. We use weak-form momentum balance to convert observed material motion and contact forces into linear equations in the unknown material param",
-      "resume_fr": "When interacting with an unfamiliar deformable material, a robot lacks prior knowledge of its physical properties and how it will respond to applied forces and motion. Rapid online identification is therefore essential for reliable manipulation. We present FORM (From Observed Response to Material laws), which identifies material properties from a single robot interaction and reuses the recovered model to plan manipulation under new actions and geometries. We use weak-form momentum balance to convert observed material motion and contact forces into linear equations in the unknown material param",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A New IEEE STEM Book Series for Tweens from TryEngineering",
-      "url": "https://spectrum.ieee.org/ieee-stem-books-tweens-tryengineering",
-      "source": "IEEE Spectrum – AI",
-      "published": "2026-09-28T18:00:03.000Z",
-      "score": 50,
-      "summary_en": "IEEE TryEngineering is dedicated to inspiring intellectual curiosity in children. The technologies shaping our world, including in the realms of artificial intelligence, electric vehicles, and ocean exploration, are evolving rapidly. Helping young learners understand the concepts is essential to preparing the next generation of problem-solvers, creators, and engineers. TryEngineering has introduced a STEM book series for youngsters ages 8 to 12 through the Lerner Publishing Group. The series, Tomorrow’s Technology With TryEngineering, Powered by IEEE, makes complex topics more approachable and",
-      "summary_fr": "IEEE TryEngineering is dedicated to inspiring intellectual curiosity in children. The technologies shaping our world, including in the realms of artificial intelligence, electric vehicles, and ocean exploration, are evolving rapidly. Helping young learners understand the concepts is essential to preparing the next generation of problem-solvers, creators, and engineers. TryEngineering has introduced a STEM book series for youngsters ages 8 to 12 through the Lerner Publishing Group. The series, Tomorrow’s Technology With TryEngineering, Powered by IEEE, makes complex topics more approachable and",
-      "resume_fr": "IEEE TryEngineering is dedicated to inspiring intellectual curiosity in children. The technologies shaping our world, including in the realms of artificial intelligence, electric vehicles, and ocean exploration, are evolving rapidly. Helping young learners understand the concepts is essential to preparing the next generation of problem-solvers, creators, and engineers. TryEngineering has introduced a STEM book series for youngsters ages 8 to 12 through the Lerner Publishing Group. The series, Tomorrow’s Technology With TryEngineering, Powered by IEEE, makes complex topics more approachable and",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://spectrum.ieee.org/media-library/a-grid-of-six-book-covers-related-to-engineering-topics-such-as-semiconductors-artificial-intelligence-and-communication-techno.jpg?id=67874961&width=1200&height=600&coordinates=0%2C250%2C0%2C250"
-    },
-    {
-      "title": "Statistical Learning of Contractive Dynamical Representations for Composite Adaptive Control",
-      "url": "https://arxiv.org/abs/2609.35758v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-09-28T17:59:07.000Z",
-      "score": 70,
-      "summary_en": "We present a representation-learning framework for composite adaptive tracking control under dynamically coupled disturbances. The framework connects classical disturbance-accommodating control (DAC) to recent last-layer adaptive disturbance-rejection methods. Specifically, we introduce a statistically principled hard expectation-maximization (hard-EM) procedure, with a Kalman smoother in the hard E-step, to identify dynamical representations of disturbance whose latent evolution is uniformly contractive. The learned representation evolves a latent disturbance-excitation state from measured pl",
-      "summary_fr": "We present a representation-learning framework for composite adaptive tracking control under dynamically coupled disturbances. The framework connects classical disturbance-accommodating control (DAC) to recent last-layer adaptive disturbance-rejection methods. Specifically, we introduce a statistically principled hard expectation-maximization (hard-EM) procedure, with a Kalman smoother in the hard E-step, to identify dynamical representations of disturbance whose latent evolution is uniformly contractive. The learned representation evolves a latent disturbance-excitation state from measured pl",
-      "resume_fr": "We present a representation-learning framework for composite adaptive tracking control under dynamically coupled disturbances. The framework connects classical disturbance-accommodating control (DAC) to recent last-layer adaptive disturbance-rejection methods. Specifically, we introduce a statistically principled hard expectation-maximization (hard-EM) procedure, with a Kalman smoother in the hard E-step, to identify dynamical representations of disturbance whose latent evolution is uniformly contractive. The learned representation evolves a latent disturbance-excitation state from measured pl",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "KV-streams for Efficient Compaction in Agentic Reinforcement Learning",
-      "url": "https://arxiv.org/abs/2609.35750v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-09-28T17:57:42.000Z",
-      "score": 70,
-      "summary_en": "Scaling the horizon of agentic LLMs is bottlenecked by the need to fit ever longer context traces in GPU memory. Context compaction has been the most popular mechanism to alleviate this issue, keeping GPU memory constant for a given trace. Unfortunately, most compaction strategies rely on prefilling the LLM context many times over, hindering training throughput. To alleviate this bottleneck and enable efficient trainable compaction, we propose KV-streams, a plug-and-play strategy compatible with any compaction strategy that substantially increases throughput while showing no evidence of hinder",
-      "summary_fr": "Scaling the horizon of agentic LLMs is bottlenecked by the need to fit ever longer context traces in GPU memory. Context compaction has been the most popular mechanism to alleviate this issue, keeping GPU memory constant for a given trace. Unfortunately, most compaction strategies rely on prefilling the LLM context many times over, hindering training throughput. To alleviate this bottleneck and enable efficient trainable compaction, we propose KV-streams, a plug-and-play strategy compatible with any compaction strategy that substantially increases throughput while showing no evidence of hinder",
-      "resume_fr": "Scaling the horizon of agentic LLMs is bottlenecked by the need to fit ever longer context traces in GPU memory. Context compaction has been the most popular mechanism to alleviate this issue, keeping GPU memory constant for a given trace. Unfortunately, most compaction strategies rely on prefilling the LLM context many times over, hindering training throughput. To alleviate this bottleneck and enable efficient trainable compaction, we propose KV-streams, a plug-and-play strategy compatible with any compaction strategy that substantially increases throughput while showing no evidence of hinder",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Agent Priors-guided Policy Learning",
-      "url": "https://arxiv.org/abs/2609.35690v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-09-28T17:37:00.000Z",
-      "score": 70,
-      "summary_en": "Robots that learn from a few demonstrations often require two forms of generalization. Compositional generalization recombines skills to solve new tasks, and skill generalization lets the learned policy behind each skill work in new situations. The two depend on each other, yet information is lost between composition and the skills it calls. Where a skill works is determined by the structure its policy is trained with, while composition sees the skill only through a separate description, such as a name, an instruction, or a symbolic operator, that omits this structure. Our key idea is to use e",
-      "summary_fr": "Robots that learn from a few demonstrations often require two forms of generalization. Compositional generalization recombines skills to solve new tasks, and skill generalization lets the learned policy behind each skill work in new situations. The two depend on each other, yet information is lost between composition and the skills it calls. Where a skill works is determined by the structure its policy is trained with, while composition sees the skill only through a separate description, such as a name, an instruction, or a symbolic operator, that omits this structure. Our key idea is to use e",
-      "resume_fr": "Robots that learn from a few demonstrations often require two forms of generalization. Compositional generalization recombines skills to solve new tasks, and skill generalization lets the learned policy behind each skill work in new situations. The two depend on each other, yet information is lost between composition and the skills it calls. Where a skill works is determined by the structure its policy is trained with, while composition sees the skill only through a separate description, such as a name, an instruction, or a symbolic operator, that omits this structure. Our key idea is to use e",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Alignment Games: A Framework for Conceptual Repair in Human-AI Collaboration",
-      "url": "https://arxiv.org/abs/2609.35197v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-09-28T13:57:07.000Z",
-      "score": 85,
-      "summary_en": "The meaning of a concept in use is shaped by the situation, task, goals, and prior knowledge. For example, a request to make a poster \"visually appealing for a five-year-old\" might evoke bright colors and cartoon imagery for one collaborator, but less text, bold shapes, and visual simplicity for another. We call such task-relevant differences conceptual misalignment. We introduce Alignment Games, a framework for making these differences visible and repairable during human-AI interaction. Drawing on theories of situated conceptualization, we characterize task-specific conceptual frames in terms",
-      "summary_fr": "The meaning of a concept in use is shaped by the situation, task, goals, and prior knowledge. For example, a request to make a poster \"visually appealing for a five-year-old\" might evoke bright colors and cartoon imagery for one collaborator, but less text, bold shapes, and visual simplicity for another. We call such task-relevant differences conceptual misalignment. We introduce Alignment Games, a framework for making these differences visible and repairable during human-AI interaction. Drawing on theories of situated conceptualization, we characterize task-specific conceptual frames in terms",
-      "resume_fr": "The meaning of a concept in use is shaped by the situation, task, goals, and prior knowledge. For example, a request to make a poster \"visually appealing for a five-year-old\" might evoke bright colors and cartoon imagery for one collaborator, but less text, bold shapes, and visual simplicity for another. We call such task-relevant differences conceptual misalignment. We introduce Alignment Games, a framework for making these differences visible and repairable during human-AI interaction. Drawing on theories of situated conceptualization, we characterize task-specific conceptual frames in terms",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Making the Invisible Visible: A Framework for Reflective AI Use in Software Engineering Education",
-      "url": "https://arxiv.org/abs/2609.34997v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-09-28T12:04:55.000Z",
-      "score": 85,
-      "summary_en": "Generative AI (GenAI) is increasingly embedded in software engineering education, supporting activities such as requirements development, design exploration, documentation, and prototyping. However, educators often have visibility only into final artefacts, with limited insight into how students evaluate, verify, and refine AI-generated outputs during the learning process. This creates challenges for assessing evaluative judgement and responsible AI-assisted practice. This paper introduces the AI Journal, a structured reflection framework designed to make student-GenAI interaction visible in f",
-      "summary_fr": "Generative AI (GenAI) is increasingly embedded in software engineering education, supporting activities such as requirements development, design exploration, documentation, and prototyping. However, educators often have visibility only into final artefacts, with limited insight into how students evaluate, verify, and refine AI-generated outputs during the learning process. This creates challenges for assessing evaluative judgement and responsible AI-assisted practice. This paper introduces the AI Journal, a structured reflection framework designed to make student-GenAI interaction visible in f",
-      "resume_fr": "Generative AI (GenAI) is increasingly embedded in software engineering education, supporting activities such as requirements development, design exploration, documentation, and prototyping. However, educators often have visibility only into final artefacts, with limited insight into how students evaluate, verify, and refine AI-generated outputs during the learning process. This creates challenges for assessing evaluative judgement and responsible AI-assisted practice. This paper introduces the AI Journal, a structured reflection framework designed to make student-GenAI interaction visible in f",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Beyond the lab: ecological validation of classroom-native multimodal learning analytics in an active learning classroom",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10725-9",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-09-26T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Multimodal Learning Analytics (MMLA) enables the collection of extensive data on students’ learning; however, its ecological validity in authentic classroom environments remains limited. Systems validated in controlled laboratory settings frequently encounter challenges when applied in complex, dynamic classrooms. To address this gap, this study presents a field-based evaluation of a Active Learning Classroom (ALC) system designed to capture and integrate behavioral, cognitive, and affective data streams. These data were used to derive instructionally relevant indicators of engagement, attenti",
-      "summary_fr": "Multimodal Learning Analytics (MMLA) enables the collection of extensive data on students’ learning; however, its ecological validity in authentic classroom environments remains limited. Systems validated in controlled laboratory settings frequently encounter challenges when applied in complex, dynamic classrooms. To address this gap, this study presents a field-based evaluation of a Active Learning Classroom (ALC) system designed to capture and integrate behavioral, cognitive, and affective data streams. These data were used to derive instructionally relevant indicators of engagement, attenti",
-      "resume_fr": "Multimodal Learning Analytics (MMLA) enables the collection of extensive data on students’ learning; however, its ecological validity in authentic classroom environments remains limited. Systems validated in controlled laboratory settings frequently encounter challenges when applied in complex, dynamic classrooms. To address this gap, this study presents a field-based evaluation of a Active Learning Classroom (ALC) system designed to capture and integrate behavioral, cognitive, and affective data streams. These data were used to derive instructionally relevant indicators of engagement, attenti",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10725-9/MediaObjects/11423_2026_10725_Fig1_HTML.png"
     }
   ]
 }
