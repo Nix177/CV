@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T11:11:25.876Z",
+  "generatedAt": "2026-10-16T11:06:20.580Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,139 @@
   },
   "items": [
     {
+      "title": "Value as Memory: Online Value-Guided Post-training for General Robot Policies",
+      "url": "https://arxiv.org/abs/2610.22368v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-15T17:59:31.000Z",
+      "score": 50,
+      "summary_en": "Real-world post-training of generalist robot policies faces two challenges: partial observability makes action selection ambiguous, while offline post-training methods delay feedback from deployment experience. We present Value as Memory (VaM), a framework that addresses these challenges through value caching and online real-world reinforcement learning (RL). Value caching conditions actions on recent value predictions as task-progress memory, while online updates enable timely policy improvement by combining offline demonstrations, off-policy interventions, and on-policy rollouts for sample-e",
+      "summary_fr": "Real-world post-training of generalist robot policies faces two challenges: partial observability makes action selection ambiguous, while offline post-training methods delay feedback from deployment experience. We present Value as Memory (VaM), a framework that addresses these challenges through value caching and online real-world reinforcement learning (RL). Value caching conditions actions on recent value predictions as task-progress memory, while online updates enable timely policy improvement by combining offline demonstrations, off-policy interventions, and on-policy rollouts for sample-e",
+      "resume_fr": "Real-world post-training of generalist robot policies faces two challenges: partial observability makes action selection ambiguous, while offline post-training methods delay feedback from deployment experience. We present Value as Memory (VaM), a framework that addresses these challenges through value caching and online real-world reinforcement learning (RL). Value caching conditions actions on recent value predictions as task-progress memory, while online updates enable timely policy improvement by combining offline demonstrations, off-policy interventions, and on-policy rollouts for sample-e",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Perceive, Predict, and Plan: a Unified World Action Model for Egocentric Dexterous Manipulation",
+      "url": "https://arxiv.org/abs/2610.22363v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-15T17:59:07.000Z",
+      "score": 70,
+      "summary_en": "We introduce P$^{3}$-WAM, a unified world action model for egocentric dexterous manipulation that learns 3D perception, action-conditioned prediction, and goal-directed planning through three complementary modes: Perceive, which reconstructs articulated hand motion and camera trajectories from video; Predict, which generates visual futures under prescribed actions; and Plan, which jointly generates action trajectories and their anticipated visual consequences conditioned on an initial image, a language instruction, and an optional visual goal. Our model integrates a compact, structured 3D acti",
+      "summary_fr": "We introduce P$^{3}$-WAM, a unified world action model for egocentric dexterous manipulation that learns 3D perception, action-conditioned prediction, and goal-directed planning through three complementary modes: Perceive, which reconstructs articulated hand motion and camera trajectories from video; Predict, which generates visual futures under prescribed actions; and Plan, which jointly generates action trajectories and their anticipated visual consequences conditioned on an initial image, a language instruction, and an optional visual goal. Our model integrates a compact, structured 3D acti",
+      "resume_fr": "We introduce P$^{3}$-WAM, a unified world action model for egocentric dexterous manipulation that learns 3D perception, action-conditioned prediction, and goal-directed planning through three complementary modes: Perceive, which reconstructs articulated hand motion and camera trajectories from video; Predict, which generates visual futures under prescribed actions; and Plan, which jointly generates action trajectories and their anticipated visual consequences conditioned on an initial image, a language instruction, and an optional visual goal. Our model integrates a compact, structured 3D acti",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CoDA: Co-Evolution of Data Engines and Action Policies",
+      "url": "https://arxiv.org/abs/2610.22362v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-15T17:59:02.000Z",
+      "score": 85,
+      "summary_en": "Generative simulation can automate robot environment construction, but physically valid environments are not necessarily useful for training. The challenge is to identify environments that address a policy's failures and supervision that helps it overcome them. We introduce CoDA, a framework in which a simulation data engine and an action policy co-evolve through a shared heterogeneous memory of environment construction, policy failures, and learning progress. The memory compiles validated diagnoses from a vision-language critic into generation programs that recreate difficulties and training ",
+      "summary_fr": "Generative simulation can automate robot environment construction, but physically valid environments are not necessarily useful for training. The challenge is to identify environments that address a policy's failures and supervision that helps it overcome them. We introduce CoDA, a framework in which a simulation data engine and an action policy co-evolve through a shared heterogeneous memory of environment construction, policy failures, and learning progress. The memory compiles validated diagnoses from a vision-language critic into generation programs that recreate difficulties and training ",
+      "resume_fr": "Generative simulation can automate robot environment construction, but physically valid environments are not necessarily useful for training. The challenge is to identify environments that address a policy's failures and supervision that helps it overcome them. We introduce CoDA, a framework in which a simulation data engine and an action policy co-evolve through a shared heterogeneous memory of environment construction, policy failures, and learning progress. The memory compiles validated diagnoses from a vision-language critic into generation programs that recreate difficulties and training ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "PathFM: Fast Generative Forecasting of Multivariate Trajectories",
+      "url": "https://arxiv.org/abs/2610.22358v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-15T17:58:45.000Z",
+      "score": 50,
+      "summary_en": "Time series foundation models are becoming increasingly popular for general-purpose forecasting. However, most leading models predict marginal quantiles, leaving the dependence structure of future trajectories unspecified. This distinction matters for trajectory-dependent quantities such as cumulative demand, peak load, and event timing, yet point and marginal scores do not reveal it. To model this dependence, we introduce PathFM, a trajectory-based forecasting model that uses flow matching to generate complete future paths. We further distill the model to one or two steps and share history at",
+      "summary_fr": "Time series foundation models are becoming increasingly popular for general-purpose forecasting. However, most leading models predict marginal quantiles, leaving the dependence structure of future trajectories unspecified. This distinction matters for trajectory-dependent quantities such as cumulative demand, peak load, and event timing, yet point and marginal scores do not reveal it. To model this dependence, we introduce PathFM, a trajectory-based forecasting model that uses flow matching to generate complete future paths. We further distill the model to one or two steps and share history at",
+      "resume_fr": "Time series foundation models are becoming increasingly popular for general-purpose forecasting. However, most leading models predict marginal quantiles, leaving the dependence structure of future trajectories unspecified. This distinction matters for trajectory-dependent quantities such as cumulative demand, peak load, and event timing, yet point and marginal scores do not reveal it. To model this dependence, we introduce PathFM, a trajectory-based forecasting model that uses flow matching to generate complete future paths. We further distill the model to one or two steps and share history at",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Spark-0: Scaling Spatially Aligned Tactile Pretraining for Robot Dexterous Manipulation",
+      "url": "https://arxiv.org/abs/2610.22342v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-15T17:56:17.000Z",
+      "score": 70,
+      "summary_en": "Generalist robot policies benefit from large-scale visual pretraining but often struggle with contact-rich dexterous manipulation, where force, compliance, and incipient slip are hard to observe from images. We present Spark-0, a spatially aligned vision-tactile-language-action (VTLA) model that uses touch in two complementary ways. During pretraining, image-space contact maps derived from tactile gloves, together with features from a frozen 3D geometry teacher, supervise the visual tokens; these objectives are removed at inference. In parallel, a tactile pathway encodes regional force histori",
+      "summary_fr": "Generalist robot policies benefit from large-scale visual pretraining but often struggle with contact-rich dexterous manipulation, where force, compliance, and incipient slip are hard to observe from images. We present Spark-0, a spatially aligned vision-tactile-language-action (VTLA) model that uses touch in two complementary ways. During pretraining, image-space contact maps derived from tactile gloves, together with features from a frozen 3D geometry teacher, supervise the visual tokens; these objectives are removed at inference. In parallel, a tactile pathway encodes regional force histori",
+      "resume_fr": "Generalist robot policies benefit from large-scale visual pretraining but often struggle with contact-rich dexterous manipulation, where force, compliance, and incipient slip are hard to observe from images. We present Spark-0, a spatially aligned vision-tactile-language-action (VTLA) model that uses touch in two complementary ways. During pretraining, image-space contact maps derived from tactile gloves, together with features from a frozen 3D geometry teacher, supervise the visual tokens; these objectives are removed at inference. In parallel, a tactile pathway encodes regional force histori",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?",
+      "url": "https://arxiv.org/abs/2610.22333v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-10-15T17:53:33.000Z",
+      "score": 70,
+      "summary_en": "Large language models (LLMs) can often tell when they are being tested. This ability, known as evaluation awareness, can lead models to act more cautiously during safety evaluations than in real use. Existing work has studied evaluation awareness almost entirely in English, although models serve users in many languages. Indic languages are spoken by over a billion people, yet evaluation awareness remains almost entirely unstudied in them. We test four instruction-tuned models from three families in five Indic languages alongside English. A set of cues varies whether the model is told that it i",
+      "summary_fr": "Large language models (LLMs) can often tell when they are being tested. This ability, known as evaluation awareness, can lead models to act more cautiously during safety evaluations than in real use. Existing work has studied evaluation awareness almost entirely in English, although models serve users in many languages. Indic languages are spoken by over a billion people, yet evaluation awareness remains almost entirely unstudied in them. We test four instruction-tuned models from three families in five Indic languages alongside English. A set of cues varies whether the model is told that it i",
+      "resume_fr": "Large language models (LLMs) can often tell when they are being tested. This ability, known as evaluation awareness, can lead models to act more cautiously during safety evaluations than in real use. Existing work has studied evaluation awareness almost entirely in English, although models serve users in many languages. Indic languages are spoken by over a billion people, yet evaluation awareness remains almost entirely unstudied in them. We test four instruction-tuned models from three families in five Indic languages alongside English. A set of cues varies whether the model is told that it i",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Can a Radioactive Ore Break China’s Grip on Rare Earths?",
+      "url": "https://spectrum.ieee.org/monazite-rare-earth",
+      "source": "IEEE Spectrum – AI",
+      "published": "2026-10-15T14:53:02.000Z",
+      "score": 70,
+      "summary_en": "The global campaigns to break China’s dominance of vital rare-earth markets are shaping up into one of the signature geostrategic struggles of the early 21st century. Hundreds of mining companies, government agencies, and industrial facilities scattered across North America, Australasia, and Europe are striving to wrest share from Chinese firms, which control roughly 90 percent of the markets for rare-earth oxides and rare-earth metals. Rare earths are the ingredients on which vast and crucial manufacturing categories depend: semiconductors, LEDs, lasers, displays, metal alloys, optical lenses",
+      "summary_fr": "The global campaigns to break China’s dominance of vital rare-earth markets are shaping up into one of the signature geostrategic struggles of the early 21st century. Hundreds of mining companies, government agencies, and industrial facilities scattered across North America, Australasia, and Europe are striving to wrest share from Chinese firms, which control roughly 90 percent of the markets for rare-earth oxides and rare-earth metals. Rare earths are the ingredients on which vast and crucial manufacturing categories depend: semiconductors, LEDs, lasers, displays, metal alloys, optical lenses",
+      "resume_fr": "The global campaigns to break China’s dominance of vital rare-earth markets are shaping up into one of the signature geostrategic struggles of the early 21st century. Hundreds of mining companies, government agencies, and industrial facilities scattered across North America, Australasia, and Europe are striving to wrest share from Chinese firms, which control roughly 90 percent of the markets for rare-earth oxides and rare-earth metals. Rare earths are the ingredients on which vast and crucial manufacturing categories depend: semiconductors, LEDs, lasers, displays, metal alloys, optical lenses",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://spectrum.ieee.org/media-library/image.jpg?id=68422625&width=1200&height=600&coordinates=0%2C312%2C0%2C313"
+    },
+    {
       "title": "Compact Analog Signal Generators for Fast RF Testing",
       "url": "https://content.knowledgehub.wiley.com/fast-rf-device-testing-with-analog-sources-a-practical-guide-to-amplifier-and-receiver-characterization/",
       "source": "IEEE Spectrum – AI",
@@ -113,6 +246,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://content.knowledgehub.wiley.com/wp-content/uploads/2026/10/Electro-Rent_Keysight-Anapico_IEEE-White-Paper-500x133.jpg"
+    },
+    {
+      "title": "Climate Physicalization: Bridging Tangible Interaction and Data Visualization for Environmental Communication",
+      "url": "https://arxiv.org/abs/2610.21401v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-10-15T07:21:06.000Z",
+      "score": 85,
+      "summary_en": "Raising awareness of climate topics, such as urban heat mitigation, requires communicating complex data to a broad audience. Data physicalization has emerged as a novel method to connect audiences to such complex topics through tangible forms while also leveraging interactivity to foster deeper engagement. This paper introduces an situated geospatial thermal physicalization prototype, designed to enhance communication and education of environmental information through hands-on engagement. The physical model depicts a 3D model of an urban neighborhood, with radiation data represented as a layer",
+      "summary_fr": "Raising awareness of climate topics, such as urban heat mitigation, requires communicating complex data to a broad audience. Data physicalization has emerged as a novel method to connect audiences to such complex topics through tangible forms while also leveraging interactivity to foster deeper engagement. This paper introduces an situated geospatial thermal physicalization prototype, designed to enhance communication and education of environmental information through hands-on engagement. The physical model depicts a 3D model of an urban neighborhood, with radiation data represented as a layer",
+      "resume_fr": "Raising awareness of climate topics, such as urban heat mitigation, requires communicating complex data to a broad audience. Data physicalization has emerged as a novel method to connect audiences to such complex topics through tangible forms while also leveraging interactivity to foster deeper engagement. This paper introduces an situated geospatial thermal physicalization prototype, designed to enhance communication and education of environmental information through hands-on engagement. The physical model depicts a 3D model of an urban neighborhood, with radiation data represented as a layer",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Hierarchical Residual Policy Learning for Real-World Mobile Manipulation with Sparse Human Guidance",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10728-6/MediaObjects/11423_2026_10728_Fig1_HTML.png"
-    },
-    {
-      "title": "Catching the spark: The role of electrodermal activity in understanding teacher enthusiasm and students' lesson enjoyment",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70092?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-10-03T16:47:59.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Understanding Generative AI Use in Programming MOOCs: The Role of Course Context and Learner Characteristics",
-      "url": "https://arxiv.org/abs/2610.04447v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-03T11:28:06.000Z",
-      "score": 85,
-      "summary_en": "The increasing availability of generative artificial intelligence (GenAI) tools, such as ChatGPT and code-completion assistants, raises questions about how learners integrate these tools into learning activities, particularly in MOOCs that attract diverse participant populations. This study examines the use of GenAI in two programming MOOCs taught in Estonian that differ in duration, workload, topic complexity, and assignment volume: About Programming (4 weeks, 26 expected hours, n = 187) and Introduction to Programming (8 weeks, 78 expected hours, n = 182). Post-course questionnaire data were",
-      "summary_fr": "The increasing availability of generative artificial intelligence (GenAI) tools, such as ChatGPT and code-completion assistants, raises questions about how learners integrate these tools into learning activities, particularly in MOOCs that attract diverse participant populations. This study examines the use of GenAI in two programming MOOCs taught in Estonian that differ in duration, workload, topic complexity, and assignment volume: About Programming (4 weeks, 26 expected hours, n = 187) and Introduction to Programming (8 weeks, 78 expected hours, n = 182). Post-course questionnaire data were",
-      "resume_fr": "The increasing availability of generative artificial intelligence (GenAI) tools, such as ChatGPT and code-completion assistants, raises questions about how learners integrate these tools into learning activities, particularly in MOOCs that attract diverse participant populations. This study examines the use of GenAI in two programming MOOCs taught in Estonian that differ in duration, workload, topic complexity, and assignment volume: About Programming (4 weeks, 26 expected hours, n = 187) and Introduction to Programming (8 weeks, 78 expected hours, n = 182). Post-course questionnaire data were",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Generative AI‐Supported Creative Writing Among Primary School Students: A Study of Creative Writing Performance, Writing Self‐Efficacy, and Flow State",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70347?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-10-03T03:27:29.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "LINK: A Corpus-Grounded Design Pattern Library for Educational Technologies",
-      "url": "https://arxiv.org/abs/2610.04154v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-10-02T23:53:11.000Z",
-      "score": 65,
-      "summary_en": "Designing learning interfaces is often an ill-structured problem: effective solutions depend on learning goals, subject matter, learner characteristics, and interaction context that are difficult to generalize. Designers must integrate knowledge from learning sciences, interaction design, and subject domains when translating learning goals into interface decisions. Yet, prior efforts to connect learning theory and design have largely focused on learning activities or specific technologies, leaving interface-level design knowledge fragmented across systems. In this work, we take a bottom-up app",
-      "summary_fr": "Designing learning interfaces is often an ill-structured problem: effective solutions depend on learning goals, subject matter, learner characteristics, and interaction context that are difficult to generalize. Designers must integrate knowledge from learning sciences, interaction design, and subject domains when translating learning goals into interface decisions. Yet, prior efforts to connect learning theory and design have largely focused on learning activities or specific technologies, leaving interface-level design knowledge fragmented across systems. In this work, we take a bottom-up app",
-      "resume_fr": "Designing learning interfaces is often an ill-structured problem: effective solutions depend on learning goals, subject matter, learner characteristics, and interaction context that are difficult to generalize. Designers must integrate knowledge from learning sciences, interaction design, and subject domains when translating learning goals into interface decisions. Yet, prior efforts to connect learning theory and design have largely focused on learning activities or specific technologies, leaving interface-level design knowledge fragmented across systems. In this work, we take a bottom-up app",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "EyeRobot 2.0: Active Gaze for Precise Manipulation without Wrist Cameras",
-      "url": "https://arxiv.org/abs/2610.03710v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-02T17:57:51.000Z",
-      "score": 70,
-      "summary_en": "Inspired by human vision, we introduce a framework using active gaze to enable fine-grained bimanual manipulation with only a single stereo camera. EyeRobot 2.0 physically attends to a 3D fixation point in the scene by swiveling two eye viewpoints to center their gaze on it. The resulting images are processed foveally by allocating more visual tokens to the image centers, focusing computation on task-relevant features. Such Active Visual Fixation (AVF) requires carefully coordinated gaze during task execution, which we accomplish hierarchically by first training a low-level gaze servoing polic",
-      "summary_fr": "Inspired by human vision, we introduce a framework using active gaze to enable fine-grained bimanual manipulation with only a single stereo camera. EyeRobot 2.0 physically attends to a 3D fixation point in the scene by swiveling two eye viewpoints to center their gaze on it. The resulting images are processed foveally by allocating more visual tokens to the image centers, focusing computation on task-relevant features. Such Active Visual Fixation (AVF) requires carefully coordinated gaze during task execution, which we accomplish hierarchically by first training a low-level gaze servoing polic",
-      "resume_fr": "Inspired by human vision, we introduce a framework using active gaze to enable fine-grained bimanual manipulation with only a single stereo camera. EyeRobot 2.0 physically attends to a 3D fixation point in the scene by swiveling two eye viewpoints to center their gaze on it. The resulting images are processed foveally by allocating more visual tokens to the image centers, focusing computation on task-relevant features. Such Active Visual Fixation (AVF) requires carefully coordinated gaze during task execution, which we accomplish hierarchically by first training a low-level gaze servoing polic",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Do Large Language Models Know Colombian Law? A Reliability Benchmark for the Colombian Legal System",
-      "url": "https://arxiv.org/abs/2610.03639v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-02T17:27:41.000Z",
-      "score": 85,
-      "summary_en": "Large language models (LLMs) are increasingly used to support legal practice, education, and research, yet their reliability in national legal systems outside the United States remains largely undocumented. We introduce an expert-validated benchmark for evaluating LLM reliability on the Colombian legal system. The benchmark comprises 1,042 items spanning ten areas of law and three question formats (closed multiple-choice, semi-open, and open-ended IRAC), built through a human-in-the-loop pipeline with multi-stage expert review. We evaluate 15 contemporary proprietary and open-weight models wit",
-      "summary_fr": "Large language models (LLMs) are increasingly used to support legal practice, education, and research, yet their reliability in national legal systems outside the United States remains largely undocumented. We introduce an expert-validated benchmark for evaluating LLM reliability on the Colombian legal system. The benchmark comprises 1,042 items spanning ten areas of law and three question formats (closed multiple-choice, semi-open, and open-ended IRAC), built through a human-in-the-loop pipeline with multi-stage expert review. We evaluate 15 contemporary proprietary and open-weight models wit",
-      "resume_fr": "Large language models (LLMs) are increasingly used to support legal practice, education, and research, yet their reliability in national legal systems outside the United States remains largely undocumented. We introduce an expert-validated benchmark for evaluating LLM reliability on the Colombian legal system. The benchmark comprises 1,042 items spanning ten areas of law and three question formats (closed multiple-choice, semi-open, and open-ended IRAC), built through a human-in-the-loop pipeline with multi-stage expert review. We evaluate 15 contemporary proprietary and open-weight models wit",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "FALCON: A Model and Dataset Agnostic Framework for Synthetic Data Generation for NL2SQL Pairs",
-      "url": "https://arxiv.org/abs/2610.03625v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-10-02T17:19:50.000Z",
-      "score": 70,
-      "summary_en": "Relational databases are among the most widely deployed forms of structured knowledge, and natural language access to them requires grounding language onto schema entities and relations while handling the ambiguity inherent in how people phrase requests. Existing synthetic NL-to-SQL data generation methods largely ignore this ambiguity and produce oversimplified queries that fail to prepare models for the complexity of real-world structured knowledge access. We present FALCON, a framework that generates realistic, ambiguity-aware NL-to-SQL data matching the complexity of challenging real-world",
-      "summary_fr": "Relational databases are among the most widely deployed forms of structured knowledge, and natural language access to them requires grounding language onto schema entities and relations while handling the ambiguity inherent in how people phrase requests. Existing synthetic NL-to-SQL data generation methods largely ignore this ambiguity and produce oversimplified queries that fail to prepare models for the complexity of real-world structured knowledge access. We present FALCON, a framework that generates realistic, ambiguity-aware NL-to-SQL data matching the complexity of challenging real-world",
-      "resume_fr": "Relational databases are among the most widely deployed forms of structured knowledge, and natural language access to them requires grounding language onto schema entities and relations while handling the ambiguity inherent in how people phrase requests. Existing synthetic NL-to-SQL data generation methods largely ignore this ambiguity and produce oversimplified queries that fail to prepare models for the complexity of real-world structured knowledge access. We present FALCON, a framework that generates realistic, ambiguity-aware NL-to-SQL data matching the complexity of challenging real-world",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "CORNAV: Construction-Aware Reasoning for Robot Navigation on Active Worksites",
-      "url": "https://arxiv.org/abs/2610.03622v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-02T17:19:05.000Z",
-      "score": 70,
-      "summary_en": "The construction industry faces persistent labor shortages, low productivity that costs the global economy over $1.6 trillion annually, and one of the highest injury rates among major industries. These factors motivate the use of autonomous robots to improve efficiency and worker safety. Existing language-grounded navigation systems, however, rely on semantic scene understanding alone and lack access to construction-specific context such as architectural plans, evolving work schedules, and safety constraints. As a result, they localize permanent building features unreliably and cannot safely n",
-      "summary_fr": "The construction industry faces persistent labor shortages, low productivity that costs the global economy over $1.6 trillion annually, and one of the highest injury rates among major industries. These factors motivate the use of autonomous robots to improve efficiency and worker safety. Existing language-grounded navigation systems, however, rely on semantic scene understanding alone and lack access to construction-specific context such as architectural plans, evolving work schedules, and safety constraints. As a result, they localize permanent building features unreliably and cannot safely n",
-      "resume_fr": "The construction industry faces persistent labor shortages, low productivity that costs the global economy over $1.6 trillion annually, and one of the highest injury rates among major industries. These factors motivate the use of autonomous robots to improve efficiency and worker safety. Existing language-grounded navigation systems, however, rely on semantic scene understanding alone and lack access to construction-specific context such as architectural plans, evolving work schedules, and safety constraints. As a result, they localize permanent building features unreliably and cannot safely n",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
