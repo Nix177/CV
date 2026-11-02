@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01T12:59:25.188Z",
+  "generatedAt": "2026-11-02T15:19:35.224Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,25 @@
   },
   "items": [
     {
+      "title": "Should there be a teacher in-the-loop? A study of generative AI-personalized tasks middle school",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10756-2",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-11-02T00:00:00.000Z",
+      "score": 50,
+      "summary_en": "Large language models can be used to design instructional tasks to align to students’ needs. These generative AI models can create tasks that correspond to students’ out-of-school interests in areas like sports or music, which may enhance students’ interest in learning. However, little is known about teachers’ processes for creating or modifying tasks with generative AI, despite commercial AI companies’ claims that they will save teachers time. In the present study, 7 middle school mathematics teachers used ChatGPT to create personalized versions of problems in their curriculum to correspond t",
+      "summary_fr": "Large language models can be used to design instructional tasks to align to students’ needs. These generative AI models can create tasks that correspond to students’ out-of-school interests in areas like sports or music, which may enhance students’ interest in learning. However, little is known about teachers’ processes for creating or modifying tasks with generative AI, despite commercial AI companies’ claims that they will save teachers time. In the present study, 7 middle school mathematics teachers used ChatGPT to create personalized versions of problems in their curriculum to correspond t",
+      "resume_fr": "Large language models can be used to design instructional tasks to align to students’ needs. These generative AI models can create tasks that correspond to students’ out-of-school interests in areas like sports or music, which may enhance students’ interest in learning. However, little is known about teachers’ processes for creating or modifying tasks with generative AI, despite commercial AI companies’ claims that they will save teachers time. In the present study, 7 middle school mathematics teachers used ChatGPT to create personalized versions of problems in their curriculum to correspond t",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10756-2/MediaObjects/11423_2026_10756_Fig1_HTML.png"
+    },
+    {
       "title": "Beyond Access: How GenAI Literacy Relates to Task Performance, Motivation, Cognitive Load and Interaction Patterns in AI‐Assisted Learning Environment",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70367?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -151,6 +170,101 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "Flide: Accelerating Decision Inference with Exact State Forking",
+      "url": "https://arxiv.org/abs/2610.42148v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-10-30T17:59:38.000Z",
+      "score": 70,
+      "summary_en": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
+      "summary_fr": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
+      "resume_fr": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Instance-dependent sequential limits as an exact information ledger",
+      "url": "https://arxiv.org/abs/2610.42133v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-10-30T17:57:44.000Z",
+      "score": 70,
+      "summary_en": "Instance-dependent limits for bandit regret, sequential tests, best-arm identification and Markov decision processes are proved by one chain. It runs from a divergence decomposition through data processing to a statistic, a testing step that turns a class guarantee into a requirement on the history, and optimization over alternatives and allocations. Only the first step is an identity. This work writes the chain as an exact ledger. By the chain rule, data processing loses exactly a conditional divergence, which vanishes for arms in natural exponential families at the per-arm counts and reward ",
+      "summary_fr": "Instance-dependent limits for bandit regret, sequential tests, best-arm identification and Markov decision processes are proved by one chain. It runs from a divergence decomposition through data processing to a statistic, a testing step that turns a class guarantee into a requirement on the history, and optimization over alternatives and allocations. Only the first step is an identity. This work writes the chain as an exact ledger. By the chain rule, data processing loses exactly a conditional divergence, which vanishes for arms in natural exponential families at the per-arm counts and reward ",
+      "resume_fr": "Instance-dependent limits for bandit regret, sequential tests, best-arm identification and Markov decision processes are proved by one chain. It runs from a divergence decomposition through data processing to a statistic, a testing step that turns a class guarantee into a requirement on the history, and optimization over alternatives and allocations. Only the first step is an identity. This work writes the chain as an exact ledger. By the chain rule, data processing loses exactly a conditional divergence, which vanishes for arms in natural exponential families at the per-arm counts and reward ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DecisionRank: On-Policy Distillation for Decision-Model Rerankers",
+      "url": "https://arxiv.org/abs/2610.42128v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-10-30T17:56:58.000Z",
+      "score": 70,
+      "summary_en": "Decision models target structured tasks by directly predicting choices or scores, avoiding autoregressive decoding latency. However, transferring a generative LLM's ranking knowledge to a decision model remains challenging: the teacher expresses preferences through a ranked list of document ID sequences, while the student determines the ranking using scores from the first-token position. To bridge this gap, we introduce DecisionRank, a decision model trained through item-space on-policy distillation (OPD). Item-space OPD constructs the student's rollout by sorting its document scores into a ra",
+      "summary_fr": "Decision models target structured tasks by directly predicting choices or scores, avoiding autoregressive decoding latency. However, transferring a generative LLM's ranking knowledge to a decision model remains challenging: the teacher expresses preferences through a ranked list of document ID sequences, while the student determines the ranking using scores from the first-token position. To bridge this gap, we introduce DecisionRank, a decision model trained through item-space on-policy distillation (OPD). Item-space OPD constructs the student's rollout by sorting its document scores into a ra",
+      "resume_fr": "Decision models target structured tasks by directly predicting choices or scores, avoiding autoregressive decoding latency. However, transferring a generative LLM's ranking knowledge to a decision model remains challenging: the teacher expresses preferences through a ranked list of document ID sequences, while the student determines the ranking using scores from the first-token position. To bridge this gap, we introduce DecisionRank, a decision model trained through item-space on-policy distillation (OPD). Item-space OPD constructs the student's rollout by sorting its document scores into a ra",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CausalWAM: Learning the Causes of Actions in World Action Models",
+      "url": "https://arxiv.org/abs/2610.42096v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-30T17:40:00.000Z",
+      "score": 70,
+      "summary_en": "World action models (WAMs) learn latent variables from observations and use these to both predict the evolution of the scene and to generate actions. The prediction has to be of the whole scene, whereas only a portion of the scene causes actions. WAMs fitted to demonstrations do not, in general, guarantee that they will generate actions solely from the latent causes of the demonstrated actions (the action-relevant latent variables), as the model could just as well learn to imitate in this way whilst entangling the action-relevant latent variables with the nuisance variables. We therefore separ",
+      "summary_fr": "World action models (WAMs) learn latent variables from observations and use these to both predict the evolution of the scene and to generate actions. The prediction has to be of the whole scene, whereas only a portion of the scene causes actions. WAMs fitted to demonstrations do not, in general, guarantee that they will generate actions solely from the latent causes of the demonstrated actions (the action-relevant latent variables), as the model could just as well learn to imitate in this way whilst entangling the action-relevant latent variables with the nuisance variables. We therefore separ",
+      "resume_fr": "World action models (WAMs) learn latent variables from observations and use these to both predict the evolution of the scene and to generate actions. The prediction has to be of the whole scene, whereas only a portion of the scene causes actions. WAMs fitted to demonstrations do not, in general, guarantee that they will generate actions solely from the latent causes of the demonstrated actions (the action-relevant latent variables), as the model could just as well learn to imitate in this way whilst entangling the action-relevant latent variables with the nuisance variables. We therefore separ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "A Hybrid Path Planning Framework for Assistive Wheelchair Navigation in Dynamic Pedestrian Environments",
+      "url": "https://arxiv.org/abs/2610.42049v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-10-30T17:16:59.000Z",
+      "score": 70,
+      "summary_en": "Autonomous wheelchairs can improve the quality of life for individuals with mobility impairments by providing greater independence. However, reliable navigation especially in human environments is a major challenge due to factors such as dynamic obstacles, unpredictable pedestrian behavior, and the users' need to complete multiple stops along the way before reaching their final destination. This paper presents a hybrid path planning framework for multi-goal navigation in dynamic environments. The framework integrates the Traveling Salesman Problem (TSP) for global task ordering with the Potent",
+      "summary_fr": "Autonomous wheelchairs can improve the quality of life for individuals with mobility impairments by providing greater independence. However, reliable navigation especially in human environments is a major challenge due to factors such as dynamic obstacles, unpredictable pedestrian behavior, and the users' need to complete multiple stops along the way before reaching their final destination. This paper presents a hybrid path planning framework for multi-goal navigation in dynamic environments. The framework integrates the Traveling Salesman Problem (TSP) for global task ordering with the Potent",
+      "resume_fr": "Autonomous wheelchairs can improve the quality of life for individuals with mobility impairments by providing greater independence. However, reliable navigation especially in human environments is a major challenge due to factors such as dynamic obstacles, unpredictable pedestrian behavior, and the users' need to complete multiple stops along the way before reaching their final destination. This paper presents a hybrid path planning framework for multi-goal navigation in dynamic environments. The framework integrates the Traveling Salesman Problem (TSP) for global task ordering with the Potent",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Assessing the Impact of Immersive Technologies on Academic Performance, Cognitive Load, Engagement, and Self‐Regulated Learning: A Quasi‐Experimental Study in Kazakhstan",
@@ -1111,120 +1225,6 @@
       "summary_en": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
       "summary_fr": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
       "resume_fr": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Stratified Multi-Rater Evaluation of LLM-Based Virtual Standardized Patients with a Deployed Data-Generation Platform",
-      "url": "https://arxiv.org/abs/2610.29312v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-10-21T07:08:59.000Z",
-      "score": 85,
-      "summary_en": "The Objective Structured Clinical Examination (OSCE) is widely used to assess clinical communication skills in medical education, requiring trainees to take histories and reason clinically with standardized patients (SPs). Large language model (LLM)-based virtual standardized patients (VSPs), typically built by persona-injected prompting, offer a practical alternative. However, existing evaluations rely on a single backbone LLM, small human rater panels, or LLM-as-a-judge scoring without an utterance-aligned human-expert reference, and so cannot identify the specific shortcomings of individual",
-      "summary_fr": "The Objective Structured Clinical Examination (OSCE) is widely used to assess clinical communication skills in medical education, requiring trainees to take histories and reason clinically with standardized patients (SPs). Large language model (LLM)-based virtual standardized patients (VSPs), typically built by persona-injected prompting, offer a practical alternative. However, existing evaluations rely on a single backbone LLM, small human rater panels, or LLM-as-a-judge scoring without an utterance-aligned human-expert reference, and so cannot identify the specific shortcomings of individual",
-      "resume_fr": "The Objective Structured Clinical Examination (OSCE) is widely used to assess clinical communication skills in medical education, requiring trainees to take histories and reason clinically with standardized patients (SPs). Large language model (LLM)-based virtual standardized patients (VSPs), typically built by persona-injected prompting, offer a practical alternative. However, existing evaluations rely on a single backbone LLM, small human rater panels, or LLM-as-a-judge scoring without an utterance-aligned human-expert reference, and so cannot identify the specific shortcomings of individual",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Same Probabilities, Different Advice: Gain-Loss Framing Effects in High-Stakes LLM Decision Support",
-      "url": "https://arxiv.org/abs/2610.29294v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-21T06:46:33.000Z",
-      "score": 65,
-      "summary_en": "Large language models (LLMs) are increasingly used to support consequential decisions, yet their reliability under equivalent representations of uncertainty remains unclear. Existing work has documented prompt sensitivity, cognitive biases, and confidence miscalibration, but it is still unknown whether high-stakes advice changes when the same probability is expressed through complementary gain and loss frames. We introduce FrameBench-HPS, a controlled benchmark of 2,880 prompts derived from 240 high-stakes scenarios across healthcare, finance, education/career, and legal/consumer-rights domain",
-      "summary_fr": "Large language models (LLMs) are increasingly used to support consequential decisions, yet their reliability under equivalent representations of uncertainty remains unclear. Existing work has documented prompt sensitivity, cognitive biases, and confidence miscalibration, but it is still unknown whether high-stakes advice changes when the same probability is expressed through complementary gain and loss frames. We introduce FrameBench-HPS, a controlled benchmark of 2,880 prompts derived from 240 high-stakes scenarios across healthcare, finance, education/career, and legal/consumer-rights domain",
-      "resume_fr": "Large language models (LLMs) are increasingly used to support consequential decisions, yet their reliability under equivalent representations of uncertainty remains unclear. Existing work has documented prompt sensitivity, cognitive biases, and confidence miscalibration, but it is still unknown whether high-stakes advice changes when the same probability is expressed through complementary gain and loss frames. We introduce FrameBench-HPS, a controlled benchmark of 2,880 prompts derived from 240 high-stakes scenarios across healthcare, finance, education/career, and legal/consumer-rights domain",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "What AI competency do K-12 teachers need? Framework construction based on teachers' work scenarios and the development and validation of a scale",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10741-9",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-10-21T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "With the deep integration of AI technologies across all aspects of basic education, teacher AI competency (TAIC) has become a core driver of digital transformation in education. However, existing assessment instruments lack specialized measures tailored to K-12 educational scenarios. Drawing on frameworks and standards such as UNESCO's “AI Competency Framework for Teachers,” this study constructs a three-dimensional integrated framework of “AI foundational competency–AI application competency–AI ethical norms” by analyzing the primary work scenarios of K-12 teachers and typical applications of",
-      "summary_fr": "With the deep integration of AI technologies across all aspects of basic education, teacher AI competency (TAIC) has become a core driver of digital transformation in education. However, existing assessment instruments lack specialized measures tailored to K-12 educational scenarios. Drawing on frameworks and standards such as UNESCO's “AI Competency Framework for Teachers,” this study constructs a three-dimensional integrated framework of “AI foundational competency–AI application competency–AI ethical norms” by analyzing the primary work scenarios of K-12 teachers and typical applications of",
-      "resume_fr": "With the deep integration of AI technologies across all aspects of basic education, teacher AI competency (TAIC) has become a core driver of digital transformation in education. However, existing assessment instruments lack specialized measures tailored to K-12 educational scenarios. Drawing on frameworks and standards such as UNESCO's “AI Competency Framework for Teachers,” this study constructs a three-dimensional integrated framework of “AI foundational competency–AI application competency–AI ethical norms” by analyzing the primary work scenarios of K-12 teachers and typical applications of",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10741-9/MediaObjects/11423_2026_10741_Fig1_HTML.png"
-    },
-    {
-      "title": "Sketch2Sim: an end-to-end modular framework for hand-drawn circuit analysis",
-      "url": "https://arxiv.org/abs/2610.28836v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-20T19:04:12.000Z",
-      "score": 85,
-      "summary_en": "This study proposes a sketch-to-simulation system to solve handwritten circuit diagrams. The system converts raw images into a Simulation Program with Integrated Circuit Emphasis (SPICE)-compatible netlist and automatically calculates the circuit's nodal voltages and currents. Another objective is to propose a holistic framework that benefits students and educators by enhancing the teaching and learning experience of electric circuits and expediting engineering design reviews. This article presents a multistage pipeline that converts raw photographs of handwritten electric circuits into execut",
-      "summary_fr": "This study proposes a sketch-to-simulation system to solve handwritten circuit diagrams. The system converts raw images into a Simulation Program with Integrated Circuit Emphasis (SPICE)-compatible netlist and automatically calculates the circuit's nodal voltages and currents. Another objective is to propose a holistic framework that benefits students and educators by enhancing the teaching and learning experience of electric circuits and expediting engineering design reviews. This article presents a multistage pipeline that converts raw photographs of handwritten electric circuits into execut",
-      "resume_fr": "This study proposes a sketch-to-simulation system to solve handwritten circuit diagrams. The system converts raw images into a Simulation Program with Integrated Circuit Emphasis (SPICE)-compatible netlist and automatically calculates the circuit's nodal voltages and currents. Another objective is to propose a holistic framework that benefits students and educators by enhancing the teaching and learning experience of electric circuits and expediting engineering design reviews. This article presents a multistage pipeline that converts raw photographs of handwritten electric circuits into execut",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Generative AI as a team moderator in CSCL: Facilitating students' multidimensional engagement through adaptive scaffolding for socially shared regulation of learning",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70096?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-10-20T08:21:22.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Can It Actually Work? Synthesizing Functional CAD Mechanisms",
-      "url": "https://arxiv.org/abs/2610.26861v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-10-19T17:59:58.000Z",
-      "score": 70,
-      "summary_en": "While LLM agents can generate visually plausible CAD assemblies, these designs often fail to fulfill their intended physical functions. We study functional CAD design, a setting where agents interpret underspecified requests to construct and iteratively revise mechanisms that satisfy functional requirements in physical simulation. Verifying these requirements is nontrivial: different candidate mechanisms may realize the same function through entirely different components, controls, and operating sequences. To bridge this gap, we propose FunCAD-Harness, a framework that translates abstract requ",
-      "summary_fr": "While LLM agents can generate visually plausible CAD assemblies, these designs often fail to fulfill their intended physical functions. We study functional CAD design, a setting where agents interpret underspecified requests to construct and iteratively revise mechanisms that satisfy functional requirements in physical simulation. Verifying these requirements is nontrivial: different candidate mechanisms may realize the same function through entirely different components, controls, and operating sequences. To bridge this gap, we propose FunCAD-Harness, a framework that translates abstract requ",
-      "resume_fr": "While LLM agents can generate visually plausible CAD assemblies, these designs often fail to fulfill their intended physical functions. We study functional CAD design, a setting where agents interpret underspecified requests to construct and iteratively revise mechanisms that satisfy functional requirements in physical simulation. Verifying these requirements is nontrivial: different candidate mechanisms may realize the same function through entirely different components, controls, and operating sequences. To bridge this gap, we propose FunCAD-Harness, a framework that translates abstract requ",
       "tags": [],
       "breakdown": {
         "research": 35,
