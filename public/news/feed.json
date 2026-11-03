@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T15:19:35.224Z",
+  "generatedAt": "2026-11-03T13:55:54.539Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,139 @@
   },
   "items": [
     {
+      "title": "Designing Teaching Agents for Human‐AI Collaborative Classrooms: A Design‐Based Study of Students' Sense of Presence and Learning Engagement",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70369?af=R",
+      "source": "Journal of Computer Assisted Learning (Wiley)",
+      "published": "2026-11-03T04:23:33.000Z",
+      "score": 50,
+      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
+      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
+    },
+    {
+      "title": "FADE: Factored Ability--Difficulty Filtering for Online RLVR Scheduling",
+      "url": "https://arxiv.org/abs/2611.03625v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-02T18:53:23.000Z",
+      "score": 70,
+      "summary_en": "Group-based reinforcement learning with verifiable rewards (RLVR) learns only from prompts whose sampled completions disagree: all-pass and all-fail groups produce zero relative advantage and burn generation budget without moving the policy. Adaptive schedulers try to steer rollouts toward informative prompts, yet they rely on per-prompt pass-rate trackers that entangle two quantities evolving at very different speeds---the policy's shifting competence across reasoning skills and each prompt's intrinsic difficulty. When a single exponential average or Beta counter tracks both at once, short me",
+      "summary_fr": "Group-based reinforcement learning with verifiable rewards (RLVR) learns only from prompts whose sampled completions disagree: all-pass and all-fail groups produce zero relative advantage and burn generation budget without moving the policy. Adaptive schedulers try to steer rollouts toward informative prompts, yet they rely on per-prompt pass-rate trackers that entangle two quantities evolving at very different speeds---the policy's shifting competence across reasoning skills and each prompt's intrinsic difficulty. When a single exponential average or Beta counter tracks both at once, short me",
+      "resume_fr": "Group-based reinforcement learning with verifiable rewards (RLVR) learns only from prompts whose sampled completions disagree: all-pass and all-fail groups produce zero relative advantage and burn generation budget without moving the policy. Adaptive schedulers try to steer rollouts toward informative prompts, yet they rely on per-prompt pass-rate trackers that entangle two quantities evolving at very different speeds---the policy's shifting competence across reasoning skills and each prompt's intrinsic difficulty. When a single exponential average or Beta counter tracks both at once, short me",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Seeing Through the Illusion: Test-Time Scaling for World Action Models",
+      "url": "https://arxiv.org/abs/2611.03585v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-02T18:32:18.000Z",
+      "score": 70,
+      "summary_en": "World action models (WAMs) jointly generate actions and imagined futures, but a plausible prediction need not be realized by its co-generated action. We introduce WISE (\\emph{World Action Inference Scaling through Evaluation}), a pre-execution selector that scores each sampled rollout on action validity and temporal regularity, inverse-dynamics consistency between the proposed action and the imagined motion, and instruction-conditioned task progress, and executes the highest-scoring candidate while keeping the WAM frozen. With four candidates per decision, WISE raises closed-loop success from ",
+      "summary_fr": "World action models (WAMs) jointly generate actions and imagined futures, but a plausible prediction need not be realized by its co-generated action. We introduce WISE (\\emph{World Action Inference Scaling through Evaluation}), a pre-execution selector that scores each sampled rollout on action validity and temporal regularity, inverse-dynamics consistency between the proposed action and the imagined motion, and instruction-conditioned task progress, and executes the highest-scoring candidate while keeping the WAM frozen. With four candidates per decision, WISE raises closed-loop success from ",
+      "resume_fr": "World action models (WAMs) jointly generate actions and imagined futures, but a plausible prediction need not be realized by its co-generated action. We introduce WISE (\\emph{World Action Inference Scaling through Evaluation}), a pre-execution selector that scores each sampled rollout on action validity and temporal regularity, inverse-dynamics consistency between the proposed action and the imagined motion, and instruction-conditioned task progress, and executes the highest-scoring candidate while keeping the WAM frozen. With four candidates per decision, WISE raises closed-loop success from ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Mediating Human-Swarm Interactions Through a Robot Helper: A Shepherding-Inspired Approach",
+      "url": "https://arxiv.org/abs/2611.03548v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-02T18:10:01.000Z",
+      "score": 70,
+      "summary_en": "This work investigates human-swarm interaction (HSI) for steering large collectives through an intermediary robot helper. While prior robot-swarm control and HSI techniques commonly assume swarm members are addressable, these assumptions often fail for ``ungovernable'' swarms such as wildlife flocks and schools of fish. Motivated by pastoral shepherding, we compare low-level teleoperation to a higher-autonomy motion-primitives interface in a virtual reality (VR) shepherding task under varied swarm cohesion dynamics. Results indicate that motion primitives that operate on collective shape (e.g.",
+      "summary_fr": "This work investigates human-swarm interaction (HSI) for steering large collectives through an intermediary robot helper. While prior robot-swarm control and HSI techniques commonly assume swarm members are addressable, these assumptions often fail for ``ungovernable'' swarms such as wildlife flocks and schools of fish. Motivated by pastoral shepherding, we compare low-level teleoperation to a higher-autonomy motion-primitives interface in a virtual reality (VR) shepherding task under varied swarm cohesion dynamics. Results indicate that motion primitives that operate on collective shape (e.g.",
+      "resume_fr": "This work investigates human-swarm interaction (HSI) for steering large collectives through an intermediary robot helper. While prior robot-swarm control and HSI techniques commonly assume swarm members are addressable, these assumptions often fail for ``ungovernable'' swarms such as wildlife flocks and schools of fish. Motivated by pastoral shepherding, we compare low-level teleoperation to a higher-autonomy motion-primitives interface in a virtual reality (VR) shepherding task under varied swarm cohesion dynamics. Results indicate that motion primitives that operate on collective shape (e.g.",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Playing Dumb: How a Chess Transformer Simulates Users Across Skill Levels",
+      "url": "https://arxiv.org/abs/2611.03439v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-02T16:54:20.000Z",
+      "score": 65,
+      "summary_en": "Generative models increasingly simulate users at different skill levels in education and AI evaluation. Yet it remains unclear whether lower-skill behavior reflects less internal knowledge or a different use of retained knowledge. This distinction is difficult to study in natural language, where proficiency and relevant knowledge are hard to measure. In this work, we study Maia-2, a chess transformer that predicts human moves conditioned on player skill, using quantitative skill ratings and deterministically labeled chess concepts. We hold board positions and model weights fixed and analyze po",
+      "summary_fr": "Generative models increasingly simulate users at different skill levels in education and AI evaluation. Yet it remains unclear whether lower-skill behavior reflects less internal knowledge or a different use of retained knowledge. This distinction is difficult to study in natural language, where proficiency and relevant knowledge are hard to measure. In this work, we study Maia-2, a chess transformer that predicts human moves conditioned on player skill, using quantitative skill ratings and deterministically labeled chess concepts. We hold board positions and model weights fixed and analyze po",
+      "resume_fr": "Generative models increasingly simulate users at different skill levels in education and AI evaluation. Yet it remains unclear whether lower-skill behavior reflects less internal knowledge or a different use of retained knowledge. This distinction is difficult to study in natural language, where proficiency and relevant knowledge are hard to measure. In this work, we study Maia-2, a chess transformer that predicts human moves conditioned on player skill, using quantitative skill ratings and deterministically labeled chess concepts. We hold board positions and model weights fixed and analyze po",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "DIKT: A Diagnostic and Interpretable Knowledge Tracing Framework for Prediction and Model-based Learning Analysis",
+      "url": "https://arxiv.org/abs/2611.02774v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-02T08:50:16.000Z",
+      "score": 85,
+      "summary_en": "Knowledge tracing is a key component of intelligent educational systems. However, most existing methods mainly focus on response prediction, providing limited support for explaining predicted outcomes and improving students'learning states. This paper proposes Diagnostic and Interpretable Knowledge Tracing (DIKT), which integrates response prediction, skill-level diagnosis, and model-based learning analysis. DIKT generates bounded cognitive-state trajectories and decomposes the final response probability into skill-wise probabilities. The trajectories reveal students'evolving strengths and wea",
+      "summary_fr": "Knowledge tracing is a key component of intelligent educational systems. However, most existing methods mainly focus on response prediction, providing limited support for explaining predicted outcomes and improving students'learning states. This paper proposes Diagnostic and Interpretable Knowledge Tracing (DIKT), which integrates response prediction, skill-level diagnosis, and model-based learning analysis. DIKT generates bounded cognitive-state trajectories and decomposes the final response probability into skill-wise probabilities. The trajectories reveal students'evolving strengths and wea",
+      "resume_fr": "Knowledge tracing is a key component of intelligent educational systems. However, most existing methods mainly focus on response prediction, providing limited support for explaining predicted outcomes and improving students'learning states. This paper proposes Diagnostic and Interpretable Knowledge Tracing (DIKT), which integrates response prediction, skill-level diagnosis, and model-based learning analysis. DIKT generates bounded cognitive-state trajectories and decomposes the final response probability into skill-wise probabilities. The trajectories reveal students'evolving strengths and wea",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "VisCodeBench: a new benchmark dataset for Text-to-Vis reflecting real-world practice",
+      "url": "https://arxiv.org/abs/2611.02353v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-11-02T01:00:32.000Z",
+      "score": 85,
+      "summary_en": "Generating visualisations from natural language requests (text-to-vis) enables users to explore data more efficiently. While LLMs can complete simple visualisation requests, their performance on challenging ones is not well covered by existing benchmarks. We introduce VisCodeBench, an end-to-end text-to-vis benchmark with 2,672 samples from three different domains: educational, scientific, and general audience scenarios with varying levels of complexity. We benchmark three visualisation systems---Codex, Claude Code, and LIDA---paired with a range of open and commercial LLMs across seven metric",
+      "summary_fr": "Generating visualisations from natural language requests (text-to-vis) enables users to explore data more efficiently. While LLMs can complete simple visualisation requests, their performance on challenging ones is not well covered by existing benchmarks. We introduce VisCodeBench, an end-to-end text-to-vis benchmark with 2,672 samples from three different domains: educational, scientific, and general audience scenarios with varying levels of complexity. We benchmark three visualisation systems---Codex, Claude Code, and LIDA---paired with a range of open and commercial LLMs across seven metric",
+      "resume_fr": "Generating visualisations from natural language requests (text-to-vis) enables users to explore data more efficiently. While LLMs can complete simple visualisation requests, their performance on challenging ones is not well covered by existing benchmarks. We introduce VisCodeBench, an end-to-end text-to-vis benchmark with 2,672 samples from three different domains: educational, scientific, and general audience scenarios with varying levels of complexity. We benchmark three visualisation systems---Codex, Claude Code, and LIDA---paired with a range of open and commercial LLMs across seven metric",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Should there be a teacher in-the-loop? A study of generative AI-personalized tasks middle school",
       "url": "https://link.springer.com/article/10.1007/s11423-026-10756-2",
       "source": "Educational Technology Research and Development (Springer)",
@@ -113,6 +246,63 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10756-2/MediaObjects/11423_2026_10756_Fig1_HTML.png"
+    },
+    {
+      "title": "Recursive Reasoning Exploration: Mathematical Research through Evolving Reasoning Graphs : case study: An Exact Certificate-Degree Theorem for Two-Term Tensor Decompositions : Phase III of the Math Instruments Program",
+      "url": "https://arxiv.org/abs/2611.02186v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-01T20:32:15.000Z",
+      "score": 85,
+      "summary_en": "Large collections of manuscripts and research notes offer ways to reuse arguments, while making it harder to retain hypotheses, check claims, and understand how results were obtained. We propose Recursive Reasoning Exploration (RRE), a framework for cumulative mathematical research through evolving reasoning graphs. RRE links claims and jointly required premises to research targets, attempted arguments, counterexamples, checks, and revisions. Each investigation can generate further targets, and its supported outcomes become available to subsequent investigations. This is Phase III of the Math ",
+      "summary_fr": "Large collections of manuscripts and research notes offer ways to reuse arguments, while making it harder to retain hypotheses, check claims, and understand how results were obtained. We propose Recursive Reasoning Exploration (RRE), a framework for cumulative mathematical research through evolving reasoning graphs. RRE links claims and jointly required premises to research targets, attempted arguments, counterexamples, checks, and revisions. Each investigation can generate further targets, and its supported outcomes become available to subsequent investigations. This is Phase III of the Math ",
+      "resume_fr": "Large collections of manuscripts and research notes offer ways to reuse arguments, while making it harder to retain hypotheses, check claims, and understand how results were obtained. We propose Recursive Reasoning Exploration (RRE), a framework for cumulative mathematical research through evolving reasoning graphs. RRE links claims and jointly required premises to research targets, attempted arguments, counterexamples, checks, and revisions. Each investigation can generate further targets, and its supported outcomes become available to subsequent investigations. This is Phase III of the Math ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Cross-Scale Spatial Reasoning: A Learning-Centered Framework for Designing Immersive Learning Environments",
+      "url": "https://arxiv.org/abs/2611.01364v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-11-01T00:04:21.000Z",
+      "score": 85,
+      "summary_en": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
+      "summary_fr": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
+      "resume_fr": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reasoning Across Scales: Learning Challenges and Opportunities for Immersive Technologies in Chip Design Education",
+      "url": "https://arxiv.org/abs/2611.01361v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-10-31T23:59:52.000Z",
+      "score": 65,
+      "summary_en": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
+      "summary_fr": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
+      "resume_fr": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Beyond Access: How GenAI Literacy Relates to Task Performance, Motivation, Cognitive Load and Interaction Patterns in AI‐Assisted Learning Environment",
@@ -1043,196 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Diagnosing the Explicit-to-Applied Theory of Mind Gap in LLMs",
-      "url": "https://arxiv.org/abs/2610.31060v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-22T10:39:50.000Z",
-      "score": 50,
-      "summary_en": "As large language models are deployed in high-stakes roles such as therapy, education, and personal assistance, their social cognition must be assessed reliably. Current Theory of Mind (ToM) benchmarks report aggregate scores that conflate two distinct competencies: explicit ToM (recognizing what someone believes) and applied ToM (using that belief to predict behavior). Building on this distinction, we investigate the gap and its recoverability using four structurally diverse benchmarks. Aggregate reporting obscures uneven competence: on SimpleToM, Llama-3.1-8B scores 51.5 percent overall whil",
-      "summary_fr": "As large language models are deployed in high-stakes roles such as therapy, education, and personal assistance, their social cognition must be assessed reliably. Current Theory of Mind (ToM) benchmarks report aggregate scores that conflate two distinct competencies: explicit ToM (recognizing what someone believes) and applied ToM (using that belief to predict behavior). Building on this distinction, we investigate the gap and its recoverability using four structurally diverse benchmarks. Aggregate reporting obscures uneven competence: on SimpleToM, Llama-3.1-8B scores 51.5 percent overall whil",
-      "resume_fr": "As large language models are deployed in high-stakes roles such as therapy, education, and personal assistance, their social cognition must be assessed reliably. Current Theory of Mind (ToM) benchmarks report aggregate scores that conflate two distinct competencies: explicit ToM (recognizing what someone believes) and applied ToM (using that belief to predict behavior). Building on this distinction, we investigate the gap and its recoverability using four structurally diverse benchmarks. Aggregate reporting obscures uneven competence: on SimpleToM, Llama-3.1-8B scores 51.5 percent overall whil",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Adaptive Uncertainty Visualization With jk-Plots",
-      "url": "https://arxiv.org/abs/2610.31050v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-10-22T10:28:15.000Z",
-      "score": 50,
-      "summary_en": "An important task of uncertainty visualizations is to communicate how the number of available observations influences the precision of estimates, such as a Normal distribution's mean. In this paper, we propose an adaptive approach to visualizing univariate data that produces salient representations while highlighting the uncertainty introduced by the sample size. We introduce jk-plots, inspired by educational material of Bayesian statistics, that combine visualizations of plausible reference models (emulating popular uncertainty visualization idioms) and the observations. We describe a visuali",
-      "summary_fr": "An important task of uncertainty visualizations is to communicate how the number of available observations influences the precision of estimates, such as a Normal distribution's mean. In this paper, we propose an adaptive approach to visualizing univariate data that produces salient representations while highlighting the uncertainty introduced by the sample size. We introduce jk-plots, inspired by educational material of Bayesian statistics, that combine visualizations of plausible reference models (emulating popular uncertainty visualization idioms) and the observations. We describe a visuali",
-      "resume_fr": "An important task of uncertainty visualizations is to communicate how the number of available observations influences the precision of estimates, such as a Normal distribution's mean. In this paper, we propose an adaptive approach to visualizing univariate data that produces salient representations while highlighting the uncertainty introduced by the sample size. We introduce jk-plots, inspired by educational material of Bayesian statistics, that combine visualizations of plausible reference models (emulating popular uncertainty visualization idioms) and the observations. We describe a visuali",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Algorithmic drift in generative adaptive learning",
-      "url": "https://arxiv.org/abs/2610.31041v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-22T10:19:03.000Z",
-      "score": 50,
-      "summary_en": "Generative artificial intelligence promises to democratize personalized tutoring, yet the longitudinal stability of adaptive systems remains under-theorized. Current ethical discourse focuses on static bias. This paper argues that a distinct threat lies in algorithmic drift: a feedback loop in which minor, demographically asymmetric observation errors compound over time into systemic inequities. We make three contributions. First, we formalize algorithmic drift as a coupled learner--tutor dynamical system. Second, we corroborate this theory with an agent-based Monte Carlo simulation in which e",
-      "summary_fr": "Generative artificial intelligence promises to democratize personalized tutoring, yet the longitudinal stability of adaptive systems remains under-theorized. Current ethical discourse focuses on static bias. This paper argues that a distinct threat lies in algorithmic drift: a feedback loop in which minor, demographically asymmetric observation errors compound over time into systemic inequities. We make three contributions. First, we formalize algorithmic drift as a coupled learner--tutor dynamical system. Second, we corroborate this theory with an agent-based Monte Carlo simulation in which e",
-      "resume_fr": "Generative artificial intelligence promises to democratize personalized tutoring, yet the longitudinal stability of adaptive systems remains under-theorized. Current ethical discourse focuses on static bias. This paper argues that a distinct threat lies in algorithmic drift: a feedback loop in which minor, demographically asymmetric observation errors compound over time into systemic inequities. We make three contributions. First, we formalize algorithmic drift as a coupled learner--tutor dynamical system. Second, we corroborate this theory with an agent-based Monte Carlo simulation in which e",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "TESSA: A Governance-Oriented Custom GPT for SME Guidance under the EU AI Act: Design, Implementation, and Evaluation",
-      "url": "https://arxiv.org/abs/2610.30822v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-22T06:52:56.000Z",
-      "score": 85,
-      "summary_en": "The increasing adoption of generative AI presents new opportunities while raising AI governance and regulatory challenges, particularly for small and medium-sized enterprises (SMEs) navigating the European Union Artificial Intelligence Act (EU AI Act). To support AI governance education, this study developed TESSA, a governance-oriented educational artifact within the OpenAI Custom GPT environment. Following a design science research approach, TESSA was evaluated against baseline ChatGPT using 100 benchmark scenarios through governance alignment assessment, human expert review, and consistency",
-      "summary_fr": "The increasing adoption of generative AI presents new opportunities while raising AI governance and regulatory challenges, particularly for small and medium-sized enterprises (SMEs) navigating the European Union Artificial Intelligence Act (EU AI Act). To support AI governance education, this study developed TESSA, a governance-oriented educational artifact within the OpenAI Custom GPT environment. Following a design science research approach, TESSA was evaluated against baseline ChatGPT using 100 benchmark scenarios through governance alignment assessment, human expert review, and consistency",
-      "resume_fr": "The increasing adoption of generative AI presents new opportunities while raising AI governance and regulatory challenges, particularly for small and medium-sized enterprises (SMEs) navigating the European Union Artificial Intelligence Act (EU AI Act). To support AI governance education, this study developed TESSA, a governance-oriented educational artifact within the OpenAI Custom GPT environment. Following a design science research approach, TESSA was evaluated against baseline ChatGPT using 100 benchmark scenarios through governance alignment assessment, human expert review, and consistency",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Agentic World Action Models",
-      "url": "https://arxiv.org/abs/2610.30136v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-21T17:59:56.000Z",
-      "score": 70,
-      "summary_en": "Recent world action models provide visual foresight and future prediction for robot manipulation, but lack explicit mechanisms for compositional skill reuse. Agentic robotics combines code-based planning and reasoning with reusable skills, but often lacks predictive grounding in physical dynamics. We introduce AW-0, an agentic world action model framework that integrates code-based planning with joint video and action prediction. We jointly model code, future video, and robot actions as three coupled generative streams within a unified mixture-of-transformers architecture. Within this architec",
-      "summary_fr": "Recent world action models provide visual foresight and future prediction for robot manipulation, but lack explicit mechanisms for compositional skill reuse. Agentic robotics combines code-based planning and reasoning with reusable skills, but often lacks predictive grounding in physical dynamics. We introduce AW-0, an agentic world action model framework that integrates code-based planning with joint video and action prediction. We jointly model code, future video, and robot actions as three coupled generative streams within a unified mixture-of-transformers architecture. Within this architec",
-      "resume_fr": "Recent world action models provide visual foresight and future prediction for robot manipulation, but lack explicit mechanisms for compositional skill reuse. Agentic robotics combines code-based planning and reasoning with reusable skills, but often lacks predictive grounding in physical dynamics. We introduce AW-0, an agentic world action model framework that integrates code-based planning with joint video and action prediction. We jointly model code, future video, and robot actions as three coupled generative streams within a unified mixture-of-transformers architecture. Within this architec",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A Quasipolynomial Algorithm for $\\ell_\\infty$ Contractions",
-      "url": "https://arxiv.org/abs/2610.30122v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-10-21T17:57:19.000Z",
-      "score": 70,
-      "summary_en": "We give an algorithm for computing an $\\eps$-approximate fixed point of any $d$-dimensional nonexpansion with respect to the $\\ell_\\infty$ norm in time $\\log(1/\\eps)^{O(\\log^2 d)}$. At its core, our method uses a boosting argument to geometrically shrink a search region. Among other consequences, our algorithm implies that simple stochastic games can be solved in quasipolynomial time.",
-      "summary_fr": "We give an algorithm for computing an $\\eps$-approximate fixed point of any $d$-dimensional nonexpansion with respect to the $\\ell_\\infty$ norm in time $\\log(1/\\eps)^{O(\\log^2 d)}$. At its core, our method uses a boosting argument to geometrically shrink a search region. Among other consequences, our algorithm implies that simple stochastic games can be solved in quasipolynomial time.",
-      "resume_fr": "We give an algorithm for computing an $\\eps$-approximate fixed point of any $d$-dimensional nonexpansion with respect to the $\\ell_\\infty$ norm in time $\\log(1/\\eps)^{O(\\log^2 d)}$. At its core, our method uses a boosting argument to geometrically shrink a search region. Among other consequences, our algorithm implies that simple stochastic games can be solved in quasipolynomial time.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "CW-WAM: A Structured Contact-Wrench World Action Model for Force-Sensitive Manipulation",
-      "url": "https://arxiv.org/abs/2610.30117v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-21T17:55:53.000Z",
-      "score": 70,
-      "summary_en": "Force-sensitive manipulation requires contact and load information that is not provided explicitly by visual observations. We present CW-WAM, a world action model that jointly predicts video, motion, and contact wrench. Inspired by hybrid motion-force control, it contains a unified interaction module that treats both motion and contact wrench as modeling targets and predicts time-aligned motion-wrench chunks as control references. A pair-causal attention mechanism structures the motion-wrench dependencies, while a long fixed-length wrench memory retains past interaction information. The predic",
-      "summary_fr": "Force-sensitive manipulation requires contact and load information that is not provided explicitly by visual observations. We present CW-WAM, a world action model that jointly predicts video, motion, and contact wrench. Inspired by hybrid motion-force control, it contains a unified interaction module that treats both motion and contact wrench as modeling targets and predicts time-aligned motion-wrench chunks as control references. A pair-causal attention mechanism structures the motion-wrench dependencies, while a long fixed-length wrench memory retains past interaction information. The predic",
-      "resume_fr": "Force-sensitive manipulation requires contact and load information that is not provided explicitly by visual observations. We present CW-WAM, a world action model that jointly predicts video, motion, and contact wrench. Inspired by hybrid motion-force control, it contains a unified interaction module that treats both motion and contact wrench as modeling targets and predicts time-aligned motion-wrench chunks as control references. A pair-causal attention mechanism structures the motion-wrench dependencies, while a long fixed-length wrench memory retains past interaction information. The predic",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Asymmetric On-Policy Distillation Learns In-Context Exploration",
-      "url": "https://arxiv.org/abs/2610.30105v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-21T17:50:31.000Z",
-      "score": 70,
-      "summary_en": "Sequential decision-making under partial observability is difficult because agents must explore to infer hidden, task-relevant information before acting effectively. Learning such information-gathering behaviors tabula rasa via online reinforcement learning is sample-inefficient, whereas offline imitation averages expert actions across hidden states and fails to learn exploration. In this work, we propose ASTEROID, a simple and effective student--teacher supervised learning framework that can learn test-time exploration. Although a privileged expert never needs to explore, we demonstrate that ",
-      "summary_fr": "Sequential decision-making under partial observability is difficult because agents must explore to infer hidden, task-relevant information before acting effectively. Learning such information-gathering behaviors tabula rasa via online reinforcement learning is sample-inefficient, whereas offline imitation averages expert actions across hidden states and fails to learn exploration. In this work, we propose ASTEROID, a simple and effective student--teacher supervised learning framework that can learn test-time exploration. Although a privileged expert never needs to explore, we demonstrate that ",
-      "resume_fr": "Sequential decision-making under partial observability is difficult because agents must explore to infer hidden, task-relevant information before acting effectively. Learning such information-gathering behaviors tabula rasa via online reinforcement learning is sample-inefficient, whereas offline imitation averages expert actions across hidden states and fails to learn exploration. In this work, we propose ASTEROID, a simple and effective student--teacher supervised learning framework that can learn test-time exploration. Although a privileged expert never needs to explore, we demonstrate that ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Did the Problem Actually Get Harder? Testing LLMs on Paired P and NP-Complete Problems Hardened by Adversarial Multi-Agent Rewriting",
-      "url": "https://arxiv.org/abs/2610.30103v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-10-21T17:50:19.000Z",
-      "score": 70,
-      "summary_en": "Many NP-complete (NPC) problems have a polynomial-time (P) twin that differs in a single structural detail, such as 3- versus 2-colouring a graph. A model that reasons rather than recalls should notice which side of this boundary a problem falls on, yet existing benchmarks either fix the wording of each task or ignore its complexity class, so they cannot separate the two. We introduce P2NPCBench, a benchmark of 12 problem families in which every NPC problem is paired with a P twin posed over the same surface. To remove the textbook cues that enable recall, we build it with AgentGAN, an adversa",
-      "summary_fr": "Many NP-complete (NPC) problems have a polynomial-time (P) twin that differs in a single structural detail, such as 3- versus 2-colouring a graph. A model that reasons rather than recalls should notice which side of this boundary a problem falls on, yet existing benchmarks either fix the wording of each task or ignore its complexity class, so they cannot separate the two. We introduce P2NPCBench, a benchmark of 12 problem families in which every NPC problem is paired with a P twin posed over the same surface. To remove the textbook cues that enable recall, we build it with AgentGAN, an adversa",
-      "resume_fr": "Many NP-complete (NPC) problems have a polynomial-time (P) twin that differs in a single structural detail, such as 3- versus 2-colouring a graph. A model that reasons rather than recalls should notice which side of this boundary a problem falls on, yet existing benchmarks either fix the wording of each task or ignore its complexity class, so they cannot separate the two. We introduce P2NPCBench, a benchmark of 12 problem families in which every NPC problem is paired with a P twin posed over the same surface. To remove the textbook cues that enable recall, we build it with AgentGAN, an adversa",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "GoiBERT: Compact Vietnamese Language Models via Two-Stage Knowledge Distillation",
-      "url": "https://arxiv.org/abs/2610.30067v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-10-21T17:24:36.000Z",
-      "score": 70,
-      "summary_en": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
-      "summary_fr": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
-      "resume_fr": "Vietnamese pre-trained encoders have improved rapidly, but the strongest ones are large, multilingual-vocabulary models or depend on external word segmentation, which makes them costly to deploy. We present GoiBERT, a family of two compact Vietnamese encoders with 26M and 49M parameters that operate directly on raw text. GoiBERT learns from two complementary teachers. A same-tokenizer Vietnamese encoder first teaches general-purpose representations. A much larger teacher then provides task-level guidance through soft labels that are generated without ever labeling its own training data. Across",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
