@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T14:07:54.705Z",
+  "generatedAt": "2026-11-05T14:25:33.093Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,139 @@
     }
   },
   "items": [
+    {
+      "title": "Fractal basin geometry and the limits to predictability and reproducibility in deep learning",
+      "url": "https://www.nature.com/articles/s42256-026-01336-3",
+      "source": "Nature Machine Intelligence",
+      "published": "2026-11-05T00:00:00.000Z",
+      "score": 70,
+      "summary_en": "",
+      "summary_fr": "",
+      "resume_fr": "",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs42256-026-01336-3/MediaObjects/42256_2026_1336_Fig1_HTML.png"
+    },
+    {
+      "title": "A Framework for Context Enrichment and Selective Robustness in LLM Social Agents",
+      "url": "https://arxiv.org/abs/2611.06914v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-04T18:58:23.000Z",
+      "score": 70,
+      "summary_en": "Researchers use large language models as agents in social simulations, where agents are prompted with observations and background information intended to shape their actions. Yet LLM agents have been shown to substantially change their behavior under meaning-preserving prompt variations, creating a validation problem for social simulation. One plausible hypothesis is that this brittleness reflects a lack of grounding and can be reduced by enriching the context provided to the agents. Whether richer context improves robustness remains unclear, in part because context richness and robustness are",
+      "summary_fr": "Researchers use large language models as agents in social simulations, where agents are prompted with observations and background information intended to shape their actions. Yet LLM agents have been shown to substantially change their behavior under meaning-preserving prompt variations, creating a validation problem for social simulation. One plausible hypothesis is that this brittleness reflects a lack of grounding and can be reduced by enriching the context provided to the agents. Whether richer context improves robustness remains unclear, in part because context richness and robustness are",
+      "resume_fr": "Researchers use large language models as agents in social simulations, where agents are prompted with observations and background information intended to shape their actions. Yet LLM agents have been shown to substantially change their behavior under meaning-preserving prompt variations, creating a validation problem for social simulation. One plausible hypothesis is that this brittleness reflects a lack of grounding and can be reduced by enriching the context provided to the agents. Whether richer context improves robustness remains unclear, in part because context richness and robustness are",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Reinforcement Learning Enables Scaling Generalist Robot Policy Improvement",
+      "url": "https://arxiv.org/abs/2611.06905v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-04T18:52:28.000Z",
+      "score": 70,
+      "summary_en": "The introduction of generalist robot policies has enabled a single, large model to learn to perform a variety of tasks from a vast pre-training corpus. While these models often exhibit powerful zero-shot generalization capabilities, they typically require an adaptation phase to achieve sufficient performance in deployment. Iterated self-improvement via reinforcement learning (RL) has demonstrated promise in enabling this adaptation, yet such approaches have been largely explored in single-task settings - where the goal is to simply improve on a narrow deployment task - which lies in stark cont",
+      "summary_fr": "The introduction of generalist robot policies has enabled a single, large model to learn to perform a variety of tasks from a vast pre-training corpus. While these models often exhibit powerful zero-shot generalization capabilities, they typically require an adaptation phase to achieve sufficient performance in deployment. Iterated self-improvement via reinforcement learning (RL) has demonstrated promise in enabling this adaptation, yet such approaches have been largely explored in single-task settings - where the goal is to simply improve on a narrow deployment task - which lies in stark cont",
+      "resume_fr": "The introduction of generalist robot policies has enabled a single, large model to learn to perform a variety of tasks from a vast pre-training corpus. While these models often exhibit powerful zero-shot generalization capabilities, they typically require an adaptation phase to achieve sufficient performance in deployment. Iterated self-improvement via reinforcement learning (RL) has demonstrated promise in enabling this adaptation, yet such approaches have been largely explored in single-task settings - where the goal is to simply improve on a narrow deployment task - which lies in stark cont",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "SpecCompact: Accelerating LLM Agent Context Compaction with Slot-Parallel Semantic Speculative Verification",
+      "url": "https://arxiv.org/abs/2611.06876v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-11-04T18:34:41.000Z",
+      "score": 70,
+      "summary_en": "LLM agents use context compaction to manage growing interaction histories, but summarizing long histories with large models can introduce substantial delays. Compaction therefore requires balancing information retention against latency. We observe that structured summary slots can retain information when generated independently. Based on this observation, we present SpecCompact, a framework that accelerates compaction through slot-parallel semantic speculation. SpecCompact fine-tunes a small drafter and generates slots in parallel. The target model verifies each proposed line and repairs rejec",
+      "summary_fr": "LLM agents use context compaction to manage growing interaction histories, but summarizing long histories with large models can introduce substantial delays. Compaction therefore requires balancing information retention against latency. We observe that structured summary slots can retain information when generated independently. Based on this observation, we present SpecCompact, a framework that accelerates compaction through slot-parallel semantic speculation. SpecCompact fine-tunes a small drafter and generates slots in parallel. The target model verifies each proposed line and repairs rejec",
+      "resume_fr": "LLM agents use context compaction to manage growing interaction histories, but summarizing long histories with large models can introduce substantial delays. Compaction therefore requires balancing information retention against latency. We observe that structured summary slots can retain information when generated independently. Based on this observation, we present SpecCompact, a framework that accelerates compaction through slot-parallel semantic speculation. SpecCompact fine-tunes a small drafter and generates slots in parallel. The target model verifies each proposed line and repairs rejec",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CounterFactual Retrieval for Evidence-Aware Individual Animal Identification",
+      "url": "https://arxiv.org/abs/2611.06864v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-04T18:19:26.000Z",
+      "score": 70,
+      "summary_en": "Automated identification of individual animals is moving from small curated studies toward shared benchmarks and reusable foundation models. This progress is useful, but current evaluation leaves the evidence behind a match unresolved, i.e., high retrieval accuracy does not show whether a model used animal features or identity-correlated shortcuts. We address this with Counterfactual Foreground Retrieval (CFR), an evidence-aware evaluation protocol. CFR evaluates the same query-gallery task under different views: full image, foreground-only, and shortcut-only. The full-image measures standard ",
+      "summary_fr": "Automated identification of individual animals is moving from small curated studies toward shared benchmarks and reusable foundation models. This progress is useful, but current evaluation leaves the evidence behind a match unresolved, i.e., high retrieval accuracy does not show whether a model used animal features or identity-correlated shortcuts. We address this with Counterfactual Foreground Retrieval (CFR), an evidence-aware evaluation protocol. CFR evaluates the same query-gallery task under different views: full image, foreground-only, and shortcut-only. The full-image measures standard ",
+      "resume_fr": "Automated identification of individual animals is moving from small curated studies toward shared benchmarks and reusable foundation models. This progress is useful, but current evaluation leaves the evidence behind a match unresolved, i.e., high retrieval accuracy does not show whether a model used animal features or identity-correlated shortcuts. We address this with Counterfactual Foreground Retrieval (CFR), an evidence-aware evaluation protocol. CFR evaluates the same query-gallery task under different views: full image, foreground-only, and shortcut-only. The full-image measures standard ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Rethinking Self-Repair in Code-as-Policy Agents: What Drives Retry Success?",
+      "url": "https://arxiv.org/abs/2611.06863v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-04T18:19:24.000Z",
+      "score": 70,
+      "summary_en": "Code-as-policy agents often use execution feedback to retry failed programs. Additional sampling and task guidance can also improve success, leaving the contribution of failure-specific feedback unclear. We study this question in simulated robot manipulation. A fixed lookup selects feedback templates using failure labels and the API variant. A frozen code model generates a fresh program after each scene reset. On the same 252 initial failures, Qwen2.5-Coder-7B recovers 85.3% within five retries, compared with 68.3% for resampling with the same retry cap. The advantage persists under fixed tota",
+      "summary_fr": "Code-as-policy agents often use execution feedback to retry failed programs. Additional sampling and task guidance can also improve success, leaving the contribution of failure-specific feedback unclear. We study this question in simulated robot manipulation. A fixed lookup selects feedback templates using failure labels and the API variant. A frozen code model generates a fresh program after each scene reset. On the same 252 initial failures, Qwen2.5-Coder-7B recovers 85.3% within five retries, compared with 68.3% for resampling with the same retry cap. The advantage persists under fixed tota",
+      "resume_fr": "Code-as-policy agents often use execution feedback to retry failed programs. Additional sampling and task guidance can also improve success, leaving the contribution of failure-specific feedback unclear. We study this question in simulated robot manipulation. A fixed lookup selects feedback templates using failure labels and the API variant. A frozen code model generates a fresh program after each scene reset. On the same 252 initial failures, Qwen2.5-Coder-7B recovers 85.3% within five retries, compared with 68.3% for resampling with the same retry cap. The advantage persists under fixed tota",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Matching minds and materials: the interplay of learner support and learner characteristics",
+      "url": "https://link.springer.com/article/10.1007/s11423-026-10750-8",
+      "source": "Educational Technology Research and Development (Springer)",
+      "published": "2026-11-04T00:00:00.000Z",
+      "score": 85,
+      "summary_en": "Prior knowledge is a central cognitive factor shaping how learners benefit from instructional support in digital learning environments. Pretraining and worked-out examples are known as single support strategies for activating or building prior knowledge and facilitating the integration of new knowledge. The interaction between prior knowledge and single support strategies has been widely studied. Yet the use of single support strategies does not reflect actual teaching practice, in which multiple forms of instructional support are tailored to learners’ characteristics so that all students can ",
+      "summary_fr": "Prior knowledge is a central cognitive factor shaping how learners benefit from instructional support in digital learning environments. Pretraining and worked-out examples are known as single support strategies for activating or building prior knowledge and facilitating the integration of new knowledge. The interaction between prior knowledge and single support strategies has been widely studied. Yet the use of single support strategies does not reflect actual teaching practice, in which multiple forms of instructional support are tailored to learners’ characteristics so that all students can ",
+      "resume_fr": "Prior knowledge is a central cognitive factor shaping how learners benefit from instructional support in digital learning environments. Pretraining and worked-out examples are known as single support strategies for activating or building prior knowledge and facilitating the integration of new knowledge. The interaction between prior knowledge and single support strategies has been widely studied. Yet the use of single support strategies does not reflect actual teaching practice, in which multiple forms of instructional support are tailored to learners’ characteristics so that all students can ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10750-8/MediaObjects/11423_2026_10750_Fig1_HTML.png"
+    },
     {
       "title": "DreamX: Video Diffusion Model is a Universal Latent Action Learner",
       "url": "https://arxiv.org/abs/2611.05377v1",
@@ -609,6 +742,25 @@
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
+      "title": "Multiphysics Modeling for Next-Generation Electromagnetic Manufacturing Technologies",
+      "url": "https://event.on24.com/wcc/r/5546816/67D0147A8B8D057FCE11A17D61A8BB0D",
+      "source": "IEEE Spectrum – AI",
+      "published": "2026-10-30T12:29:43.000Z",
+      "score": 85,
+      "summary_en": "Advances in sensing, manufacturing, computational resources, and data-driven methods are enabling new approaches to electromagnetic sensing, non-destructive evaluation, and advanced materials processing. This webinar will demonstrate how the COMSOL Multiphysics software supports predictive modeling by coupling electromagnetic fields with thermal, chemical, mechanical, and transport phenomena across multiple length and time scales. The first application we will show focuses on eddy-current thermometry for reconstructing three-dimensional temperature fields in metal plates. Temperature-dependent",
+      "summary_fr": "Advances in sensing, manufacturing, computational resources, and data-driven methods are enabling new approaches to electromagnetic sensing, non-destructive evaluation, and advanced materials processing. This webinar will demonstrate how the COMSOL Multiphysics software supports predictive modeling by coupling electromagnetic fields with thermal, chemical, mechanical, and transport phenomena across multiple length and time scales. The first application we will show focuses on eddy-current thermometry for reconstructing three-dimensional temperature fields in metal plates. Temperature-dependent",
+      "resume_fr": "Advances in sensing, manufacturing, computational resources, and data-driven methods are enabling new approaches to electromagnetic sensing, non-destructive evaluation, and advanced materials processing. This webinar will demonstrate how the COMSOL Multiphysics software supports predictive modeling by coupling electromagnetic fields with thermal, chemical, mechanical, and transport phenomena across multiple length and time scales. The first application we will show focuses on eddy-current thermometry for reconstructing three-dimensional temperature fields in metal plates. Temperature-dependent",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
+      "image": "https://www.google.com/s2/favicons?domain=event.on24.com&sz=128"
+    },
+    {
       "title": "Assessing the Impact of Immersive Technologies on Academic Performance, Cognitive Load, Engagement, and Self‐Regulated Learning: A Quasi‐Experimental Study in Kazakhstan",
       "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70358?af=R",
       "source": "Journal of Computer Assisted Learning (Wiley)",
@@ -1082,158 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Work Agents: Systems, Capabilities, and Optimization",
-      "url": "https://arxiv.org/abs/2610.35845v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-10-26T17:56:21.000Z",
-      "score": 50,
-      "summary_en": "As foundation models evolve from information generation to digital work execution, agents are increasingly capable of completing complex tasks across tools, applications, and workflows. However, existing research lacks a unified perspective on how agents reliably accomplish delegated work. To address this gap, we present a work-centric, system-level perspective that views work agents as systems combining foundation models and runtime harnesses to execute tasks in stateful workspaces and deliver verifiable outcomes. We introduce two complementary dimensions, work persistence and work openness, ",
-      "summary_fr": "As foundation models evolve from information generation to digital work execution, agents are increasingly capable of completing complex tasks across tools, applications, and workflows. However, existing research lacks a unified perspective on how agents reliably accomplish delegated work. To address this gap, we present a work-centric, system-level perspective that views work agents as systems combining foundation models and runtime harnesses to execute tasks in stateful workspaces and deliver verifiable outcomes. We introduce two complementary dimensions, work persistence and work openness, ",
-      "resume_fr": "As foundation models evolve from information generation to digital work execution, agents are increasingly capable of completing complex tasks across tools, applications, and workflows. However, existing research lacks a unified perspective on how agents reliably accomplish delegated work. To address this gap, we present a work-centric, system-level perspective that views work agents as systems combining foundation models and runtime harnesses to execute tasks in stateful workspaces and deliver verifiable outcomes. We introduce two complementary dimensions, work persistence and work openness, ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Profiling a Frontier Agent with EBench: From Direct Control to Harness with Policy",
-      "url": "https://arxiv.org/abs/2610.35832v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-10-26T17:51:02.000Z",
-      "score": 70,
-      "summary_en": "Frontier multimodal large language models (MLLMs) can control robots without robot-specific training, but how their capabilities compare and interact with post-trained vision-language-action (VLA) and world action model (WAM) policies across manipulation demands remains to be thoroughly evaluated. In this report, we evaluate GPT-6-Astra on EBench as the core of an agent that controls a robot through an agent harness under the same visual and proprioceptive observation protocol as post-trained policies. We study two agent configurations: direct control, in which the agent generates waypoint com",
-      "summary_fr": "Frontier multimodal large language models (MLLMs) can control robots without robot-specific training, but how their capabilities compare and interact with post-trained vision-language-action (VLA) and world action model (WAM) policies across manipulation demands remains to be thoroughly evaluated. In this report, we evaluate GPT-6-Astra on EBench as the core of an agent that controls a robot through an agent harness under the same visual and proprioceptive observation protocol as post-trained policies. We study two agent configurations: direct control, in which the agent generates waypoint com",
-      "resume_fr": "Frontier multimodal large language models (MLLMs) can control robots without robot-specific training, but how their capabilities compare and interact with post-trained vision-language-action (VLA) and world action model (WAM) policies across manipulation demands remains to be thoroughly evaluated. In this report, we evaluate GPT-6-Astra on EBench as the core of an agent that controls a robot through an agent harness under the same visual and proprioceptive observation protocol as post-trained policies. We study two agent configurations: direct control, in which the agent generates waypoint com",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "GenAI‐based metacognitive prompting in collaborative inquiry: A comparison across diverse preconception groups",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70095?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-10-26T05:15:25.000Z",
-      "score": 50,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Safe by Benchmark, Unsafe in Practice: Lessons from 1331 Child-Related AI Incidents",
-      "url": "https://arxiv.org/abs/2610.34705v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-26T01:50:27.000Z",
-      "score": 85,
-      "summary_en": "AI systems are increasingly present in children's everyday environments: education, entertainment, social networks, and toys. Their safety is typically assessed at the model level, through benchmarks, red-teaming, and content filtering. However, most AI harm taxonomies lack child-specific evidence and under-specify developmental harm and the stakeholder asymmetries unique to minors. Building on prior taxonomies, we construct a child-centered harm taxonomy mapped to sociotechnical failure modes. We curate and code 1331 publicly reported child-related AI incidents, annotating internal and extern",
-      "summary_fr": "AI systems are increasingly present in children's everyday environments: education, entertainment, social networks, and toys. Their safety is typically assessed at the model level, through benchmarks, red-teaming, and content filtering. However, most AI harm taxonomies lack child-specific evidence and under-specify developmental harm and the stakeholder asymmetries unique to minors. Building on prior taxonomies, we construct a child-centered harm taxonomy mapped to sociotechnical failure modes. We curate and code 1331 publicly reported child-related AI incidents, annotating internal and extern",
-      "resume_fr": "AI systems are increasingly present in children's everyday environments: education, entertainment, social networks, and toys. Their safety is typically assessed at the model level, through benchmarks, red-teaming, and content filtering. However, most AI harm taxonomies lack child-specific evidence and under-specify developmental harm and the stakeholder asymmetries unique to minors. Building on prior taxonomies, we construct a child-centered harm taxonomy mapped to sociotechnical failure modes. We curate and code 1331 publicly reported child-related AI incidents, annotating internal and extern",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "A five-dimensional framework for AI literacy in higher education: a human-in-the-loop computational meta-synthesis",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10752-6",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-10-26T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Despite the proliferation of artificial intelligence (AI) literacy frameworks across educational contexts, substantial inconsistencies remain in how key constructs are defined and operationalized, leading to conceptual fragmentation. To address this issue, this study introduces Human-AI Collaborative Meta-Synthesis (HACS), a systematic literature synthesis procedure in which human-in-the-loop governance leverages large language models to execute grounded theory-inspired open, axial, and selective coding. Applying HACS to a corpus of 71 peer-reviewed studies, the analysis reconciles divergent c",
-      "summary_fr": "Despite the proliferation of artificial intelligence (AI) literacy frameworks across educational contexts, substantial inconsistencies remain in how key constructs are defined and operationalized, leading to conceptual fragmentation. To address this issue, this study introduces Human-AI Collaborative Meta-Synthesis (HACS), a systematic literature synthesis procedure in which human-in-the-loop governance leverages large language models to execute grounded theory-inspired open, axial, and selective coding. Applying HACS to a corpus of 71 peer-reviewed studies, the analysis reconciles divergent c",
-      "resume_fr": "Despite the proliferation of artificial intelligence (AI) literacy frameworks across educational contexts, substantial inconsistencies remain in how key constructs are defined and operationalized, leading to conceptual fragmentation. To address this issue, this study introduces Human-AI Collaborative Meta-Synthesis (HACS), a systematic literature synthesis procedure in which human-in-the-loop governance leverages large language models to execute grounded theory-inspired open, axial, and selective coding. Applying HACS to a corpus of 71 peer-reviewed studies, the analysis reconciles divergent c",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10752-6/MediaObjects/11423_2026_10752_Fig1_HTML.png"
-    },
-    {
-      "title": "Embedding-Based Educational Taxonomies",
-      "url": "https://arxiv.org/abs/2610.33694v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-24T14:19:37.000Z",
-      "score": 65,
-      "summary_en": "Educational taxonomies organize educational content, such as exercise problems, into concepts, which are also called skills or knowledge components. These taxonomies define learning objectives in educational applications such as intelligent tutoring systems. Developed through human expertise and iterative refinement, they also provide fundamental structure for curricula, assessment, and models of student learning. Recent advances in semantic text embeddings make it possible to construct alternative educational taxonomies computationally from the content itself. In this paper, we investigate th",
-      "summary_fr": "Educational taxonomies organize educational content, such as exercise problems, into concepts, which are also called skills or knowledge components. These taxonomies define learning objectives in educational applications such as intelligent tutoring systems. Developed through human expertise and iterative refinement, they also provide fundamental structure for curricula, assessment, and models of student learning. Recent advances in semantic text embeddings make it possible to construct alternative educational taxonomies computationally from the content itself. In this paper, we investigate th",
-      "resume_fr": "Educational taxonomies organize educational content, such as exercise problems, into concepts, which are also called skills or knowledge components. These taxonomies define learning objectives in educational applications such as intelligent tutoring systems. Developed through human expertise and iterative refinement, they also provide fundamental structure for curricula, assessment, and models of student learning. Recent advances in semantic text embeddings make it possible to construct alternative educational taxonomies computationally from the content itself. In this paper, we investigate th",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "AI Alignment for Digital Democracy: Fairer Voters Representation against LLM Biases",
-      "url": "https://arxiv.org/abs/2610.32780v1",
-      "source": "arXiv – cs.AI + education/MOOC",
-      "published": "2026-10-23T15:27:40.000Z",
-      "score": 50,
-      "summary_en": "AI representation is emerging in digital democracy, assisting in voter emulation and decision-making. Large language models (LLMs) behave differently depending on the model, the prompt context, and the voter information they receive, representing some groups more accurately than others and potentially making the emulation unfair to certain groups. We investigate demographic biases in LLM-emulated electorates: how accurately LLMs represent individual votes, whether some voter groups are represented more accurately than others, and whether AI alignment can reduce these disparities without sacrif",
-      "summary_fr": "AI representation is emerging in digital democracy, assisting in voter emulation and decision-making. Large language models (LLMs) behave differently depending on the model, the prompt context, and the voter information they receive, representing some groups more accurately than others and potentially making the emulation unfair to certain groups. We investigate demographic biases in LLM-emulated electorates: how accurately LLMs represent individual votes, whether some voter groups are represented more accurately than others, and whether AI alignment can reduce these disparities without sacrif",
-      "resume_fr": "AI representation is emerging in digital democracy, assisting in voter emulation and decision-making. Large language models (LLMs) behave differently depending on the model, the prompt context, and the voter information they receive, representing some groups more accurately than others and potentially making the emulation unfair to certain groups. We investigate demographic biases in LLM-emulated electorates: how accurately LLMs represent individual votes, whether some voter groups are represented more accurately than others, and whether AI alignment can reduce these disparities without sacrif",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Correction to “The Effects of a Computerised Teacher‐Mediated Intervention on the Emotional Understanding of Autistic Children”",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70353?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-10-23T05:45:07.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
