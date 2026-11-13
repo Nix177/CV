@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T14:55:49.844Z",
+  "generatedAt": "2026-11-13T14:21:27.066Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -96,6 +96,101 @@
   },
   "items": [
     {
+      "title": "Negative-Only Policy Optimization for One-Sided Verifiable Rewards",
+      "url": "https://arxiv.org/abs/2611.17287v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-11-12T18:52:33.000Z",
+      "score": 70,
+      "summary_en": "Reinforcement learning with verifiable rewards (RLVR) typically relies on a verifier that can reliably judge whether sampled solutions are correct. However, in many realistic settings, complete verification is generally unavailable, while cheap checks can only falsify failures. We formalize this regime as one-sided verifiability (OSV): verified negatives are reliable counterexamples, but verified positives are merely non-falsified candidates and may contain many false positives. This asymmetry makes standard RLVR unreliable, because reinforcing verified positives can directly reward shortcuts ",
+      "summary_fr": "Reinforcement learning with verifiable rewards (RLVR) typically relies on a verifier that can reliably judge whether sampled solutions are correct. However, in many realistic settings, complete verification is generally unavailable, while cheap checks can only falsify failures. We formalize this regime as one-sided verifiability (OSV): verified negatives are reliable counterexamples, but verified positives are merely non-falsified candidates and may contain many false positives. This asymmetry makes standard RLVR unreliable, because reinforcing verified positives can directly reward shortcuts ",
+      "resume_fr": "Reinforcement learning with verifiable rewards (RLVR) typically relies on a verifier that can reliably judge whether sampled solutions are correct. However, in many realistic settings, complete verification is generally unavailable, while cheap checks can only falsify failures. We formalize this regime as one-sided verifiability (OSV): verified negatives are reliable counterexamples, but verified positives are merely non-falsified candidates and may contain many false positives. This asymmetry makes standard RLVR unreliable, because reinforcing verified positives can directly reward shortcuts ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "HEIR: Harness Egocentric Intent for Human-Robot Interactions",
+      "url": "https://arxiv.org/abs/2611.17238v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-12T18:25:41.000Z",
+      "score": 70,
+      "summary_en": "For robots to assist, serve, and collaborate with humans, they must not only interpret human requests conveyed through language and multimodal intentional cues, but also execute long-horizon tasks that interleave navigation and manipulation. In this paper, we introduce HEIR, a resource for studying how to Harness Egocentric Intent for Human-Robot Interaction. HEIR pairs human speech, measured gaze, and egocentric video with robot observations and teleoperated navigation-manipulation trajectories, while each session preserves successive episodes, with each request fulfilled through multiple exe",
+      "summary_fr": "For robots to assist, serve, and collaborate with humans, they must not only interpret human requests conveyed through language and multimodal intentional cues, but also execute long-horizon tasks that interleave navigation and manipulation. In this paper, we introduce HEIR, a resource for studying how to Harness Egocentric Intent for Human-Robot Interaction. HEIR pairs human speech, measured gaze, and egocentric video with robot observations and teleoperated navigation-manipulation trajectories, while each session preserves successive episodes, with each request fulfilled through multiple exe",
+      "resume_fr": "For robots to assist, serve, and collaborate with humans, they must not only interpret human requests conveyed through language and multimodal intentional cues, but also execute long-horizon tasks that interleave navigation and manipulation. In this paper, we introduce HEIR, a resource for studying how to Harness Egocentric Intent for Human-Robot Interaction. HEIR pairs human speech, measured gaze, and egocentric video with robot observations and teleoperated navigation-manipulation trajectories, while each session preserves successive episodes, with each request fulfilled through multiple exe",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "XBot-Omni: An Omni-Modal Model for Embodied Understanding and Interaction",
+      "url": "https://arxiv.org/abs/2611.17160v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-12T17:38:57.000Z",
+      "score": 70,
+      "summary_en": "Embodied interaction requires an agent to integrate multimodal perception with verbal and nonverbal behaviors to effectively communicate its intentions, including speech, body motion, and facial expressions. We present XBot-Omni, a Thinker--Talker--Actor architecture that extends the Omni paradigm to robotic modalities, including body motion and facial expressions, with ``X'' representing the extensibility to robotic-specific modalities. The Thinker processes text, images, audio, and video to formulate contextually appropriate responses, which are then realized by the Talker and Actor through ",
+      "summary_fr": "Embodied interaction requires an agent to integrate multimodal perception with verbal and nonverbal behaviors to effectively communicate its intentions, including speech, body motion, and facial expressions. We present XBot-Omni, a Thinker--Talker--Actor architecture that extends the Omni paradigm to robotic modalities, including body motion and facial expressions, with ``X'' representing the extensibility to robotic-specific modalities. The Thinker processes text, images, audio, and video to formulate contextually appropriate responses, which are then realized by the Talker and Actor through ",
+      "resume_fr": "Embodied interaction requires an agent to integrate multimodal perception with verbal and nonverbal behaviors to effectively communicate its intentions, including speech, body motion, and facial expressions. We present XBot-Omni, a Thinker--Talker--Actor architecture that extends the Omni paradigm to robotic modalities, including body motion and facial expressions, with ``X'' representing the extensibility to robotic-specific modalities. The Thinker processes text, images, audio, and video to formulate contextually appropriate responses, which are then realized by the Talker and Actor through ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Neural Representations as New Modes of Interactivity",
+      "url": "https://arxiv.org/abs/2611.17058v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-11-12T16:36:58.000Z",
+      "score": 85,
+      "summary_en": "Human-AI interaction today runs almost entirely through prompts and outputs, keeping AI systems opaque to general users. We introduce Neural Representation Interaction (NRI), a paradigm that treats the internal representations of neural networks as an interaction material people can inspect, steer, and edit. Situating NRI alongside graphical, tangible, and bio-computer interaction, we argue that the concepts and algorithms models encode internally offer representational affordances for richer human-AI interaction. We synthesize actionable mechanistic interpretability methods and, drawing on Ge",
+      "summary_fr": "Human-AI interaction today runs almost entirely through prompts and outputs, keeping AI systems opaque to general users. We introduce Neural Representation Interaction (NRI), a paradigm that treats the internal representations of neural networks as an interaction material people can inspect, steer, and edit. Situating NRI alongside graphical, tangible, and bio-computer interaction, we argue that the concepts and algorithms models encode internally offer representational affordances for richer human-AI interaction. We synthesize actionable mechanistic interpretability methods and, drawing on Ge",
+      "resume_fr": "Human-AI interaction today runs almost entirely through prompts and outputs, keeping AI systems opaque to general users. We introduce Neural Representation Interaction (NRI), a paradigm that treats the internal representations of neural networks as an interaction material people can inspect, steer, and edit. Situating NRI alongside graphical, tangible, and bio-computer interaction, we argue that the concepts and algorithms models encode internally offer representational affordances for richer human-AI interaction. We synthesize actionable mechanistic interpretability methods and, drawing on Ge",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Primer: An AI Framework for Instructor-Centered Educational Simulation Creation",
+      "url": "https://arxiv.org/abs/2611.16986v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-12T15:50:46.000Z",
+      "score": 85,
+      "summary_en": "Educational simulations are a well-established pedagogical technique that gives learners opportunities to apply knowledge, respond to challenges, and reflect on their performance. High-quality simulations, however, are difficult to build, requiring instructor input, scenario design, character development, scaffolding, technical implementation, and repeated revision. This paper presents Primer, an open-source, LLM-agnostic AI-supported system that helps educators create adaptive educational simulations. Educators contribute their knowledge of the subject, lesson, and students, while generative ",
+      "summary_fr": "Educational simulations are a well-established pedagogical technique that gives learners opportunities to apply knowledge, respond to challenges, and reflect on their performance. High-quality simulations, however, are difficult to build, requiring instructor input, scenario design, character development, scaffolding, technical implementation, and repeated revision. This paper presents Primer, an open-source, LLM-agnostic AI-supported system that helps educators create adaptive educational simulations. Educators contribute their knowledge of the subject, lesson, and students, while generative ",
+      "resume_fr": "Educational simulations are a well-established pedagogical technique that gives learners opportunities to apply knowledge, respond to challenges, and reflect on their performance. High-quality simulations, however, are difficult to build, requiring instructor input, scenario design, character development, scaffolding, technical implementation, and repeated revision. This paper presents Primer, an open-source, LLM-agnostic AI-supported system that helps educators create adaptive educational simulations. Educators contribute their knowledge of the subject, lesson, and students, while generative ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
       "title": "Proposing a culturally relevant theoretical framework for teacher educators’ information and communication technology (ICT) acceptance and use in Bhutan and similar cultural contexts",
       "url": "https://link.springer.com/article/10.1007/s11423-026-10758-0",
       "source": "Educational Technology Research and Development (Springer)",
@@ -113,6 +208,25 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
       "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10758-0/MediaObjects/11423_2026_10758_Fig1_HTML.png"
+    },
+    {
+      "title": "Terms of Care: Designing for Participation in Data Governance by Disability Communities",
+      "url": "https://arxiv.org/abs/2611.15720v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-11-11T16:58:37.000Z",
+      "score": 65,
+      "summary_en": "Improving disability representation in AI-generated media requires community-specific datasets, yet openly sharing such data can expose communities to misuse, decontextualization, and exploitation. We examine how disability communities can participate in dataset governance through context-sensitive licensing. Working with three disability advocacy organizations, we conducted semi-structured interviews, an educational webinar and modular license activity to promote community participation in data stewardship. Our findings show that governance in these high-context communities relies on organiza",
+      "summary_fr": "Improving disability representation in AI-generated media requires community-specific datasets, yet openly sharing such data can expose communities to misuse, decontextualization, and exploitation. We examine how disability communities can participate in dataset governance through context-sensitive licensing. Working with three disability advocacy organizations, we conducted semi-structured interviews, an educational webinar and modular license activity to promote community participation in data stewardship. Our findings show that governance in these high-context communities relies on organiza",
+      "resume_fr": "Improving disability representation in AI-generated media requires community-specific datasets, yet openly sharing such data can expose communities to misuse, decontextualization, and exploitation. We examine how disability communities can participate in dataset governance through context-sensitive licensing. Working with three disability advocacy organizations, we conducted semi-structured interviews, an educational webinar and modular license activity to promote community participation in data stewardship. Our findings show that governance in these high-context communities relies on organiza",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     },
     {
       "title": "Memories.ai builds standardized egocentric video pipeline",
@@ -1119,120 +1233,6 @@
         "impact": 15
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Cross-Scale Spatial Reasoning: A Learning-Centered Framework for Designing Immersive Learning Environments",
-      "url": "https://arxiv.org/abs/2611.01364v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-11-01T00:04:21.000Z",
-      "score": 85,
-      "summary_en": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
-      "summary_fr": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
-      "resume_fr": "Understanding complex scientific and engineering systems often requires learners to connect structures, processes, and behaviors across different spatial scales and levels of organization. Although research on spatial cognition, scale, multiple representations, and systems thinking has examined aspects of this challenge, these perspectives do not always provide explicit guidance for designing learning activities that require learners to integrate information across levels. Immersive technologies offer opportunities to explore otherwise inaccessible structures, coordinate representations, and i",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Reasoning Across Scales: Learning Challenges and Opportunities for Immersive Technologies in Chip Design Education",
-      "url": "https://arxiv.org/abs/2611.01361v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-10-31T23:59:52.000Z",
-      "score": 65,
-      "summary_en": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
-      "summary_fr": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
-      "resume_fr": "As demand for semiconductor talent grows, education must prepare learners for the complexity of modern chip design. Instruction typically relies on lectures, textbooks, software exercises, and limited laboratory experiences. Although foundational, these approaches offer limited support for understanding the spatial, multi-scale, and interconnected nature of chip design. Virtual reality (VR) can help learners visualize and interact with complex structures and processes, but its educational opportunities remain underexplored. We examined this gap through chip design curriculum analysis and semi-",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Beyond Access: How GenAI Literacy Relates to Task Performance, Motivation, Cognitive Load and Interaction Patterns in AI‐Assisted Learning Environment",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70367?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-10-31T00:24:19.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "ChatGPT‐Supported Literary Translation: Tense Accuracy and Dynamic Emotion Profiles in the Language Classroom",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70368?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-10-31T00:20:10.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "From Design to Classroom Adoption: Teachers' Perspectives on AI‐powered Writing Analytics in Resource‐Constrained Contexts",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70362?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-10-31T00:00:11.000Z",
-      "score": 50,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 0,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Flide: Accelerating Decision Inference with Exact State Forking",
-      "url": "https://arxiv.org/abs/2610.42148v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-10-30T17:59:38.000Z",
-      "score": 70,
-      "summary_en": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
-      "summary_fr": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
-      "resume_fr": "Decision models such as Jev have emerged as a highly promising paradigm for LLM agent systems, providing lightweight and reliable categorical reasoning for rapid System One execution. However, existing generation-oriented inference engines fail to support these workloads effectively, suffering from severe prefix recomputation overheads or distorted output probabilities. To address this challenge, we propose Flide, an efficient and exact inference engine that decouples the logical tree structure of a decision request from its physical execution within a single flattened token stream. Through Fo",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
