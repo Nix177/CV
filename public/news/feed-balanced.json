@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T17:47:59.496Z",
+  "generatedAt": "2026-11-24T17:20:40.646Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,215 @@
     }
   },
   "items": [
+    {
+      "title": "Pruning Autonomous Driving VLAs: What to Preserve for Reasoning and Action",
+      "url": "https://arxiv.org/abs/2611.31240v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-23T18:59:52.000Z",
+      "score": 70,
+      "summary_en": "Reasoning vision-language-action (VLA) models for autonomous driving use chain-of-thought (CoT) reasoning to guide action generation, but incur substantial memory and computational costs. We study structured pruning for these models, focusing on preserving both scene understanding and trajectory prediction. Our analysis of Taylor importance in Alpamayo-1.5-10B shows that reasoning and trajectory objectives assign different importance to the same vision-language model (VLM) structures. In the action expert, MLP channels exhibit more stable importance rankings across denoising steps than query h",
+      "summary_fr": "Reasoning vision-language-action (VLA) models for autonomous driving use chain-of-thought (CoT) reasoning to guide action generation, but incur substantial memory and computational costs. We study structured pruning for these models, focusing on preserving both scene understanding and trajectory prediction. Our analysis of Taylor importance in Alpamayo-1.5-10B shows that reasoning and trajectory objectives assign different importance to the same vision-language model (VLM) structures. In the action expert, MLP channels exhibit more stable importance rankings across denoising steps than query h",
+      "resume_fr": "Reasoning vision-language-action (VLA) models for autonomous driving use chain-of-thought (CoT) reasoning to guide action generation, but incur substantial memory and computational costs. We study structured pruning for these models, focusing on preserving both scene understanding and trajectory prediction. Our analysis of Taylor importance in Alpamayo-1.5-10B shows that reasoning and trajectory objectives assign different importance to the same vision-language model (VLM) structures. In the action expert, MLP channels exhibit more stable importance rankings across denoising steps than query h",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "How Far Can Linear Go? BiPert, a Unified Framework for Single-Cell Perturbation Modelling",
+      "url": "https://arxiv.org/abs/2611.31227v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-23T18:58:32.000Z",
+      "score": 70,
+      "summary_en": "Understanding how genetic perturbations affect cellular behaviour is essential for studying gene function and regulatory mechanisms. Large-scale CRISPR screens measure these effects across thousands of genes, but cover relatively few cellular contexts. Predicting perturbation responses in unseen cell types and identifying perturbed genes from their transcriptional effects therefore remain challenging. Here, we show that both tasks can be addressed through a common linear decomposition of transcriptional responses into shared and perturbation-specific components. Building on this principle, we ",
+      "summary_fr": "Understanding how genetic perturbations affect cellular behaviour is essential for studying gene function and regulatory mechanisms. Large-scale CRISPR screens measure these effects across thousands of genes, but cover relatively few cellular contexts. Predicting perturbation responses in unseen cell types and identifying perturbed genes from their transcriptional effects therefore remain challenging. Here, we show that both tasks can be addressed through a common linear decomposition of transcriptional responses into shared and perturbation-specific components. Building on this principle, we ",
+      "resume_fr": "Understanding how genetic perturbations affect cellular behaviour is essential for studying gene function and regulatory mechanisms. Large-scale CRISPR screens measure these effects across thousands of genes, but cover relatively few cellular contexts. Predicting perturbation responses in unseen cell types and identifying perturbed genes from their transcriptional effects therefore remain challenging. Here, we show that both tasks can be addressed through a common linear decomposition of transcriptional responses into shared and perturbation-specific components. Building on this principle, we ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Embo-Harness: Towards Understanding Frontier-Model-as-Policy Harness",
+      "url": "https://arxiv.org/abs/2611.31201v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-23T18:48:54.000Z",
+      "score": 70,
+      "summary_en": "Frontier multimodal models exhibit extraordinary generalization in generating robot actions from observations and instructions, enabling a new paradigm in which they serve directly as policies within closed-loop robotic harnesses. However, the design principles of such harnesses, and the capabilities underlying their strong performance, remain unclear. We present Embo-Harness, a framework for systematically studying frontier-model-as-policy harnesses. We investigate four components of the robotic agentic loop, namely, prompting, planning, action execution, and tool use, and distill six empiric",
+      "summary_fr": "Frontier multimodal models exhibit extraordinary generalization in generating robot actions from observations and instructions, enabling a new paradigm in which they serve directly as policies within closed-loop robotic harnesses. However, the design principles of such harnesses, and the capabilities underlying their strong performance, remain unclear. We present Embo-Harness, a framework for systematically studying frontier-model-as-policy harnesses. We investigate four components of the robotic agentic loop, namely, prompting, planning, action execution, and tool use, and distill six empiric",
+      "resume_fr": "Frontier multimodal models exhibit extraordinary generalization in generating robot actions from observations and instructions, enabling a new paradigm in which they serve directly as policies within closed-loop robotic harnesses. However, the design principles of such harnesses, and the capabilities underlying their strong performance, remain unclear. We present Embo-Harness, a framework for systematically studying frontier-model-as-policy harnesses. We investigate four components of the robotic agentic loop, namely, prompting, planning, action execution, and tool use, and distill six empiric",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ToolSmith: An Automatic Tool-Generation Framework for Multimodal Search Agents",
+      "url": "https://arxiv.org/abs/2611.31198v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-11-23T18:48:02.000Z",
+      "score": 70,
+      "summary_en": "Recent multimodal search agents use reasoning, vision, and live web search across many turns to answer questions beyond parametric knowledge by orchestrating a small library of hand-crafted search and visual tools. However, the library is laborious to create and maintain, and frozen when new query types, evidence formats, and failure modes are encountered in the wild. Human practitioners, by contrast, cope with insufficient tools by fashioning new ones from familiar parts and reusing them across tasks. Inspired by this, we propose ToolSmith, an automatic tool-generation framework that grows an",
+      "summary_fr": "Recent multimodal search agents use reasoning, vision, and live web search across many turns to answer questions beyond parametric knowledge by orchestrating a small library of hand-crafted search and visual tools. However, the library is laborious to create and maintain, and frozen when new query types, evidence formats, and failure modes are encountered in the wild. Human practitioners, by contrast, cope with insufficient tools by fashioning new ones from familiar parts and reusing them across tasks. Inspired by this, we propose ToolSmith, an automatic tool-generation framework that grows an",
+      "resume_fr": "Recent multimodal search agents use reasoning, vision, and live web search across many turns to answer questions beyond parametric knowledge by orchestrating a small library of hand-crafted search and visual tools. However, the library is laborious to create and maintain, and frozen when new query types, evidence formats, and failure modes are encountered in the wild. Human practitioners, by contrast, cope with insufficient tools by fashioning new ones from familiar parts and reusing them across tasks. Inspired by this, we propose ToolSmith, an automatic tool-generation framework that grows an",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "VITA-WAM: Manifold-Aligned World-Action Modeling for Real-Time Robot Control",
+      "url": "https://arxiv.org/abs/2611.31195v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-23T18:46:15.000Z",
+      "score": 70,
+      "summary_en": "World action model (WAM) is a promising paradigm for visuomotor control by jointly modeling world dynamics and actions. Notably, existing WAMs often rely on large generative models and iterative sampling which incur substantial latency for action generation, limiting real-time deployment. In particular, there are two root causes of inefficiency in conventional flow matching or diffusion based action models in WAMs: 1) transporting uninformative Gaussian noise into precise actions necessitating multiple ODE steps, and 2) repeatedly injecting task context through expensive cross-attention module",
+      "summary_fr": "World action model (WAM) is a promising paradigm for visuomotor control by jointly modeling world dynamics and actions. Notably, existing WAMs often rely on large generative models and iterative sampling which incur substantial latency for action generation, limiting real-time deployment. In particular, there are two root causes of inefficiency in conventional flow matching or diffusion based action models in WAMs: 1) transporting uninformative Gaussian noise into precise actions necessitating multiple ODE steps, and 2) repeatedly injecting task context through expensive cross-attention module",
+      "resume_fr": "World action model (WAM) is a promising paradigm for visuomotor control by jointly modeling world dynamics and actions. Notably, existing WAMs often rely on large generative models and iterative sampling which incur substantial latency for action generation, limiting real-time deployment. In particular, there are two root causes of inefficiency in conventional flow matching or diffusion based action models in WAMs: 1) transporting uninformative Gaussian noise into precise actions necessitating multiple ODE steps, and 2) repeatedly injecting task context through expensive cross-attention module",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "CO-GRAFT: Attributing Reinforcement Learning Gains in Search Agents via Role-Level Policy Grafting",
+      "url": "https://arxiv.org/abs/2611.31185v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-11-23T18:38:53.000Z",
+      "score": 70,
+      "summary_en": "Reinforcement learning (RL) improves large language model search agents by up to 32 exact-match (EM) points over their pre-RL initializations, yet overall accuracy gains do not identify which underlying functional capabilities improve or interact during training. We introduce CO-GRAFT, a reward-agnostic interventional attribution framework in which an RL-trained agent and its pre-RL initialization jointly generate a single trajectory under closed-loop execution with live retrieval. Each policy controls a mutually exclusive subset of four functional roles: intermediate reasoning, search-or-answ",
+      "summary_fr": "Reinforcement learning (RL) improves large language model search agents by up to 32 exact-match (EM) points over their pre-RL initializations, yet overall accuracy gains do not identify which underlying functional capabilities improve or interact during training. We introduce CO-GRAFT, a reward-agnostic interventional attribution framework in which an RL-trained agent and its pre-RL initialization jointly generate a single trajectory under closed-loop execution with live retrieval. Each policy controls a mutually exclusive subset of four functional roles: intermediate reasoning, search-or-answ",
+      "resume_fr": "Reinforcement learning (RL) improves large language model search agents by up to 32 exact-match (EM) points over their pre-RL initializations, yet overall accuracy gains do not identify which underlying functional capabilities improve or interact during training. We introduce CO-GRAFT, a reward-agnostic interventional attribution framework in which an RL-trained agent and its pre-RL initialization jointly generate a single trajectory under closed-loop execution with live retrieval. Each policy controls a mutually exclusive subset of four functional roles: intermediate reasoning, search-or-answ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "EmboEagle: An Efficient Agentic Embodied Framework for Long-horizon Robotic Manipulation",
+      "url": "https://arxiv.org/abs/2611.31173v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-23T18:31:43.000Z",
+      "score": 70,
+      "summary_en": "Long-horizon robotic manipulation demands reliable execution across interdependent stages, yet standalone World-Action Models (WAMs) suffer from compounding physical errors, while stateless Vision-Language Model (VLM) supervision incurs prohibitive chunkwise latency and lacks 3D spatial persistence. We present EmboEagle, a closed-loop agentic framework that unifies subtask-conditioned WAM control, latent-space adaptive supervision, and memory-guided geometric recovery. First, we adapt sequential WAMs via decoupled two-stage flow matching that preserves cross-stage visual history while calibrat",
+      "summary_fr": "Long-horizon robotic manipulation demands reliable execution across interdependent stages, yet standalone World-Action Models (WAMs) suffer from compounding physical errors, while stateless Vision-Language Model (VLM) supervision incurs prohibitive chunkwise latency and lacks 3D spatial persistence. We present EmboEagle, a closed-loop agentic framework that unifies subtask-conditioned WAM control, latent-space adaptive supervision, and memory-guided geometric recovery. First, we adapt sequential WAMs via decoupled two-stage flow matching that preserves cross-stage visual history while calibrat",
+      "resume_fr": "Long-horizon robotic manipulation demands reliable execution across interdependent stages, yet standalone World-Action Models (WAMs) suffer from compounding physical errors, while stateless Vision-Language Model (VLM) supervision incurs prohibitive chunkwise latency and lacks 3D spatial persistence. We present EmboEagle, a closed-loop agentic framework that unifies subtask-conditioned WAM control, latent-space adaptive supervision, and memory-guided geometric recovery. First, we adapt sequential WAMs via decoupled two-stage flow matching that preserves cross-stage visual history while calibrat",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Serialization and the Character-System: Measuring Narrative Concentration in French Fiction (1800--1940)",
+      "url": "https://arxiv.org/abs/2611.31133v1",
+      "source": "arXiv – cs.CL (NLP/LLM)",
+      "published": "2026-11-23T18:04:11.000Z",
+      "score": 70,
+      "summary_en": "Every novel divides a finite quantity of narrative attention among its characters, and whether the shape of that division, between a narrative organized around a single figure and one spread across a crowd, has a history is far less settled than the abundance of critical commentary on protagonists might suggest. We operationalize Woloch's notion of the character-system, the distribution of narrative attention across a novel's cast structured by the tension between \"the one\" and \"the many\", as the inequality (Gini coefficient) of the PageRank distribution over a character network. We trace this",
+      "summary_fr": "Every novel divides a finite quantity of narrative attention among its characters, and whether the shape of that division, between a narrative organized around a single figure and one spread across a crowd, has a history is far less settled than the abundance of critical commentary on protagonists might suggest. We operationalize Woloch's notion of the character-system, the distribution of narrative attention across a novel's cast structured by the tension between \"the one\" and \"the many\", as the inequality (Gini coefficient) of the PageRank distribution over a character network. We trace this",
+      "resume_fr": "Every novel divides a finite quantity of narrative attention among its characters, and whether the shape of that division, between a narrative organized around a single figure and one spread across a crowd, has a history is far less settled than the abundance of critical commentary on protagonists might suggest. We operationalize Woloch's notion of the character-system, the distribution of narrative attention across a novel's cast structured by the tension between \"the one\" and \"the many\", as the inequality (Gini coefficient) of the PageRank distribution over a character network. We trace this",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "WeaveVLA: 3D Relational Grounding for Vision-Language-Action Models",
+      "url": "https://arxiv.org/abs/2611.31126v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-23T17:59:32.000Z",
+      "score": 70,
+      "summary_en": "Vision-language-action (VLA) models leverage pretrained vision-language representations for instruction-conditioned robot control, yet their understanding of task-relevant 3D relations and how these relations evolve during manipulation remains largely implicit. To address this challenge, we introduce \\textbf{WeaveVLA}, a framework that enhances VLA action generation by explicitly modeling task-relevant relative 3D relations and maintaining relational context across observations. WeaveVLA employs a task-conditioned sparse graph neural network to encode relative 3D relations among objects, the g",
+      "summary_fr": "Vision-language-action (VLA) models leverage pretrained vision-language representations for instruction-conditioned robot control, yet their understanding of task-relevant 3D relations and how these relations evolve during manipulation remains largely implicit. To address this challenge, we introduce \\textbf{WeaveVLA}, a framework that enhances VLA action generation by explicitly modeling task-relevant relative 3D relations and maintaining relational context across observations. WeaveVLA employs a task-conditioned sparse graph neural network to encode relative 3D relations among objects, the g",
+      "resume_fr": "Vision-language-action (VLA) models leverage pretrained vision-language representations for instruction-conditioned robot control, yet their understanding of task-relevant 3D relations and how these relations evolve during manipulation remains largely implicit. To address this challenge, we introduce \\textbf{WeaveVLA}, a framework that enhances VLA action generation by explicitly modeling task-relevant relative 3D relations and maintaining relational context across observations. WeaveVLA employs a task-conditioned sparse graph neural network to encode relative 3D relations among objects, the g",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Adopting AI Technologies without Traps: A Multi-Agent Reinforcement Learning Framework",
+      "url": "https://arxiv.org/abs/2611.30200v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-23T07:41:07.000Z",
+      "score": 100,
+      "summary_en": "AI technologies and AI agents play increasingly important roles in human society, including in education, economics, and research. Adopting AI technologies can bring immediate, and sometimes tremendous, rewards such as through productivity boost, but they can also bring negative effects including but not limited to losses of job and training opportunities, and cognitive capability declines. Thus, it is important to investigate the optimal ways of adopting AI technologies without different traps. In this paper, we develop a general multi-agent Markov decision process (MDP) based reinforcement l",
+      "summary_fr": "AI technologies and AI agents play increasingly important roles in human society, including in education, economics, and research. Adopting AI technologies can bring immediate, and sometimes tremendous, rewards such as through productivity boost, but they can also bring negative effects including but not limited to losses of job and training opportunities, and cognitive capability declines. Thus, it is important to investigate the optimal ways of adopting AI technologies without different traps. In this paper, we develop a general multi-agent Markov decision process (MDP) based reinforcement l",
+      "resume_fr": "AI technologies and AI agents play increasingly important roles in human society, including in education, economics, and research. Adopting AI technologies can bring immediate, and sometimes tremendous, rewards such as through productivity boost, but they can also bring negative effects including but not limited to losses of job and training opportunities, and cognitive capability declines. Thus, it is important to investigate the optimal ways of adopting AI technologies without different traps. In this paper, we develop a general multi-agent Markov decision process (MDP) based reinforcement l",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Medical Specialty Prediction from Bangla Patient Narratives: A Comparative Study of ML, DL, Transformers, and LLMs",
+      "url": "https://arxiv.org/abs/2611.29151v1",
+      "source": "arXiv – cs.AI + education/MOOC",
+      "published": "2026-11-22T02:18:18.000Z",
+      "score": 65,
+      "summary_en": "Timely access to appropriate medical specialists remains a bottleneck in Bangladesh's healthcare system, as patients describe symptoms in informal Bangla rather than clinical terms, leading to ineffective referrals. This paper compares four model families for predicting medical specialties from Bangla patient narratives: six machine learning (ML) models using hybrid TF-IDF features, four deep learning (DL) models using Word2Vec embeddings trained on the corpus, four fine-tuned transformers, and five large language models (LLMs) evaluated zero-shot. From a corpus of 3798 patient records coverin",
+      "summary_fr": "Timely access to appropriate medical specialists remains a bottleneck in Bangladesh's healthcare system, as patients describe symptoms in informal Bangla rather than clinical terms, leading to ineffective referrals. This paper compares four model families for predicting medical specialties from Bangla patient narratives: six machine learning (ML) models using hybrid TF-IDF features, four deep learning (DL) models using Word2Vec embeddings trained on the corpus, four fine-tuned transformers, and five large language models (LLMs) evaluated zero-shot. From a corpus of 3798 patient records coverin",
+      "resume_fr": "Timely access to appropriate medical specialists remains a bottleneck in Bangladesh's healthcare system, as patients describe symptoms in informal Bangla rather than clinical terms, leading to ineffective referrals. This paper compares four model families for predicting medical specialties from Bangla patient narratives: six machine learning (ML) models using hybrid TF-IDF features, four deep learning (DL) models using Word2Vec embeddings trained on the corpus, four fine-tuned transformers, and five large language models (LLMs) evaluated zero-shot. From a corpus of 3798 patient records coverin",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 0,
+        "institution": 15,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=0, Institution=15, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Task2Hand: A Contact-Grounded Skill for Parametric Dexterous-Hand Morphology Design",
       "url": "https://arxiv.org/abs/2611.27967v1",
@@ -1025,215 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
       "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Pterodactyl: Pushing the Limits of Efficient Automated Translation Evaluation",
-      "url": "https://arxiv.org/abs/2611.14480v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-11-10T18:41:37.000Z",
-      "score": 70,
-      "summary_en": "In this paper, we present 1020 Group's submission to the WMT26 shared task on automated quality evaluation. Our system, Pterodactyl, was engineered specifically for subtasks 2 and 3, that is, segment-level quality score prediction and the detection of error-free segments. Pterodactyl is a highly customizable, ultra-low cost system optimized for binary classification in translation triage and data curation. It is based on an LLM-as-a-judge approach, with prompt engineering and model selection guided by ROC analysis. We also developed several variants of Pterodactyl that were specifically adapte",
-      "summary_fr": "In this paper, we present 1020 Group's submission to the WMT26 shared task on automated quality evaluation. Our system, Pterodactyl, was engineered specifically for subtasks 2 and 3, that is, segment-level quality score prediction and the detection of error-free segments. Pterodactyl is a highly customizable, ultra-low cost system optimized for binary classification in translation triage and data curation. It is based on an LLM-as-a-judge approach, with prompt engineering and model selection guided by ROC analysis. We also developed several variants of Pterodactyl that were specifically adapte",
-      "resume_fr": "In this paper, we present 1020 Group's submission to the WMT26 shared task on automated quality evaluation. Our system, Pterodactyl, was engineered specifically for subtasks 2 and 3, that is, segment-level quality score prediction and the detection of error-free segments. Pterodactyl is a highly customizable, ultra-low cost system optimized for binary classification in translation triage and data curation. It is based on an LLM-as-a-judge approach, with prompt engineering and model selection guided by ROC analysis. We also developed several variants of Pterodactyl that were specifically adapte",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "One Policy for 100 Household Tasks: Our Solution for the 2026 BEHAVIOR Challenge",
-      "url": "https://arxiv.org/abs/2611.14432v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-11-10T18:06:16.000Z",
-      "score": 70,
-      "summary_en": "We describe our solution for the 2026 BEHAVIOR Challenge: 100 long-horizon household tasks in the OmniGibson simulator. We placed 9th on the final leaderboard, the only independent team in the top 10. The core of the solution is a single vision-language-action (VLA) model, one checkpoint for all 100 tasks, built on our 1st-place 2025 solution, which is based on $π_{0.5}$. On the 50 tasks shared with 2025, its Q rises from 0.260 to 0.371; across all 100 tasks it scores 0.392. Our main conclusion from 2025 was that the model was undertrained, so most of the 2026 work went into training the model",
-      "summary_fr": "We describe our solution for the 2026 BEHAVIOR Challenge: 100 long-horizon household tasks in the OmniGibson simulator. We placed 9th on the final leaderboard, the only independent team in the top 10. The core of the solution is a single vision-language-action (VLA) model, one checkpoint for all 100 tasks, built on our 1st-place 2025 solution, which is based on $π_{0.5}$. On the 50 tasks shared with 2025, its Q rises from 0.260 to 0.371; across all 100 tasks it scores 0.392. Our main conclusion from 2025 was that the model was undertrained, so most of the 2026 work went into training the model",
-      "resume_fr": "We describe our solution for the 2026 BEHAVIOR Challenge: 100 long-horizon household tasks in the OmniGibson simulator. We placed 9th on the final leaderboard, the only independent team in the top 10. The core of the solution is a single vision-language-action (VLA) model, one checkpoint for all 100 tasks, built on our 1st-place 2025 solution, which is based on $π_{0.5}$. On the 50 tasks shared with 2025, its Q rises from 0.260 to 0.371; across all 100 tasks it scores 0.392. Our main conclusion from 2025 was that the model was undertrained, so most of the 2026 work went into training the model",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "SIGMO: Sigmoid Gated Interaction-Aware Motion Planning",
-      "url": "https://arxiv.org/abs/2611.14414v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-11-10T17:53:57.000Z",
-      "score": 70,
-      "summary_en": "Despite the widespread adoption of autonomous vehicle technologies, reliable navigation within cluttered environments remains arduous due to the necessity of interaction-aware strategies; example scenarios include: narrow passages with multiple agents, lane changing in dense traffic, and crossing unsignalized intersections. These scenarios often require highly proactive strategies, simultaneously demanding interpretability and quick adaptability, which challenge end-to-end and data-driven methods. An effective strategy requires: scalability to multiple agents, adaptability to changes in other ",
-      "summary_fr": "Despite the widespread adoption of autonomous vehicle technologies, reliable navigation within cluttered environments remains arduous due to the necessity of interaction-aware strategies; example scenarios include: narrow passages with multiple agents, lane changing in dense traffic, and crossing unsignalized intersections. These scenarios often require highly proactive strategies, simultaneously demanding interpretability and quick adaptability, which challenge end-to-end and data-driven methods. An effective strategy requires: scalability to multiple agents, adaptability to changes in other ",
-      "resume_fr": "Despite the widespread adoption of autonomous vehicle technologies, reliable navigation within cluttered environments remains arduous due to the necessity of interaction-aware strategies; example scenarios include: narrow passages with multiple agents, lane changing in dense traffic, and crossing unsignalized intersections. These scenarios often require highly proactive strategies, simultaneously demanding interpretability and quick adaptability, which challenge end-to-end and data-driven methods. An effective strategy requires: scalability to multiple agents, adaptability to changes in other ",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "From Video Frames to Robot Meta-Frames: A Unified Latent Interface for World Action Models",
-      "url": "https://arxiv.org/abs/2611.14365v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-11-10T17:21:37.000Z",
-      "score": 70,
-      "summary_en": "Pretrained video diffusion models (VDMs) offer a powerful foundation for World Action Models (WAMs), which jointly predict robot actions and future observations. Building such models requires injecting low-dimensional robot signals (e.g. proprioception, actions, and values) into a latent space shaped by natural videos, and a key design choice is the interface through which these signals enter: existing schemes treat it as a formatting detail, spending a separate latent frame on each signal or bolting on dedicated encoders and decoders. We argue that signal injection is instead a distribution-a",
-      "summary_fr": "Pretrained video diffusion models (VDMs) offer a powerful foundation for World Action Models (WAMs), which jointly predict robot actions and future observations. Building such models requires injecting low-dimensional robot signals (e.g. proprioception, actions, and values) into a latent space shaped by natural videos, and a key design choice is the interface through which these signals enter: existing schemes treat it as a formatting detail, spending a separate latent frame on each signal or bolting on dedicated encoders and decoders. We argue that signal injection is instead a distribution-a",
-      "resume_fr": "Pretrained video diffusion models (VDMs) offer a powerful foundation for World Action Models (WAMs), which jointly predict robot actions and future observations. Building such models requires injecting low-dimensional robot signals (e.g. proprioception, actions, and values) into a latent space shaped by natural videos, and a key design choice is the interface through which these signals enter: existing schemes treat it as a formatting detail, spending a separate latent frame on each signal or bolting on dedicated encoders and decoders. We argue that signal injection is instead a distribution-a",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Social Participatory Role Enactment in Asynchronous Discussion and Mobile Instant Messaging",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70376?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-11-10T07:09:58.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "SWAM: Scaling World Action Models with Cross-Modal Alignment",
-      "url": "https://arxiv.org/abs/2611.12870v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-11-09T18:55:04.000Z",
-      "score": 70,
-      "summary_en": "World action models jointly predict video and actions conditioned on language. Existing studies focus primarily on architectures and training mechanisms, typically treating language-video alignment acquired through video pretraining as an established foundation. However, introducing action learning may impair this alignment. Principled guidance on data and supervision design for maintaining language-video alignment during action learning remains limited. To investigate this, we curate a pool of approximately 47,000 hours of general videos, egocentric videos, UMI demonstrations, and robot demon",
-      "summary_fr": "World action models jointly predict video and actions conditioned on language. Existing studies focus primarily on architectures and training mechanisms, typically treating language-video alignment acquired through video pretraining as an established foundation. However, introducing action learning may impair this alignment. Principled guidance on data and supervision design for maintaining language-video alignment during action learning remains limited. To investigate this, we curate a pool of approximately 47,000 hours of general videos, egocentric videos, UMI demonstrations, and robot demon",
-      "resume_fr": "World action models jointly predict video and actions conditioned on language. Existing studies focus primarily on architectures and training mechanisms, typically treating language-video alignment acquired through video pretraining as an established foundation. However, introducing action learning may impair this alignment. Principled guidance on data and supervision design for maintaining language-video alignment during action learning remains limited. To investigate this, we curate a pool of approximately 47,000 hours of general videos, egocentric videos, UMI demonstrations, and robot demon",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Learning Heterogeneous Tactile Representation for General Dexterous Manipulation",
-      "url": "https://arxiv.org/abs/2611.12806v1",
-      "source": "arXiv – cs.RO (Robotics)",
-      "published": "2026-11-09T18:12:00.000Z",
-      "score": 70,
-      "summary_en": "Tactile sensing is an indispensable modality for contact-rich dexterous manipulation, a capability that hints at the ultimate frontiers of embodied intelligence. However, commercially available tactile sensors are still at a relatively early stage of development, with each type of sensor offering irreplaceable strengths alongside its own drawbacks. A key challenge is thus to free tactile understanding from sensor-specific physics, so that embodied models can effectively leverage heterogeneous tactile data. To this end, we develop LingBot-Touch, a tactile foundation model characterized by the f",
-      "summary_fr": "Tactile sensing is an indispensable modality for contact-rich dexterous manipulation, a capability that hints at the ultimate frontiers of embodied intelligence. However, commercially available tactile sensors are still at a relatively early stage of development, with each type of sensor offering irreplaceable strengths alongside its own drawbacks. A key challenge is thus to free tactile understanding from sensor-specific physics, so that embodied models can effectively leverage heterogeneous tactile data. To this end, we develop LingBot-Touch, a tactile foundation model characterized by the f",
-      "resume_fr": "Tactile sensing is an indispensable modality for contact-rich dexterous manipulation, a capability that hints at the ultimate frontiers of embodied intelligence. However, commercially available tactile sensors are still at a relatively early stage of development, with each type of sensor offering irreplaceable strengths alongside its own drawbacks. A key challenge is thus to free tactile understanding from sensor-specific physics, so that embodied models can effectively leverage heterogeneous tactile data. To this end, we develop LingBot-Touch, a tactile foundation model characterized by the f",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Research Trends of Artificial Intelligence‐Facilitated Computational Thinking in K‐12 STEM: A Systematic Review Through the Lens of Activity Theory",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70365?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-11-08T22:56:43.000Z",
-      "score": 70,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "Wording Matters: Understanding How GenAI Policy Rules Shape Teachers' and Students' Workflows and Perceptions",
-      "url": "https://arxiv.org/abs/2611.11072v1",
-      "source": "arXiv – cs.HC + education",
-      "published": "2026-11-08T02:01:21.000Z",
-      "score": 85,
-      "summary_en": "The growing use of generative AI (GenAI) in higher education has led institutions to develop policies governing its applications. However, we have little knowledge about how teachers and students adapt and adhere to the policies. In this paper, we analyzed GenAI policies from 101 U.S. universities, identifying nine recurring rules for GenAI use, and interviewed 20 students and 20 faculty members about the rules. We find that the wording of the rules can change how students perceive and act on the rules while introducing different challenges that teachers face in enforcing them in practice. For",
-      "summary_fr": "The growing use of generative AI (GenAI) in higher education has led institutions to develop policies governing its applications. However, we have little knowledge about how teachers and students adapt and adhere to the policies. In this paper, we analyzed GenAI policies from 101 U.S. universities, identifying nine recurring rules for GenAI use, and interviewed 20 students and 20 faculty members about the rules. We find that the wording of the rules can change how students perceive and act on the rules while introducing different challenges that teachers face in enforcing them in practice. For",
-      "resume_fr": "The growing use of generative AI (GenAI) in higher education has led institutions to develop policies governing its applications. However, we have little knowledge about how teachers and students adapt and adhere to the policies. In this paper, we analyzed GenAI policies from 101 U.S. universities, identifying nine recurring rules for GenAI use, and interviewed 20 students and 20 faculty members about the rules. We find that the wording of the rules can change how students perceive and act on the rules while introducing different challenges that teachers face in enforcing them in practice. For",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Student Responses to Cognitive Conflicts in GenAI‐Assisted Learning: A Covariate‐Dependent Markov Chain Analysis on Human‐AI Interactions",
-      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jcal.70366?af=R",
-      "source": "Journal of Computer Assisted Learning (Wiley)",
-      "published": "2026-11-07T07:46:26.000Z",
-      "score": 85,
-      "summary_en": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "summary_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "resume_fr": "Journal of Computer Assisted Learning, Volume 42, Issue 6, December 2026.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=onlinelibrary.wiley.com&sz=128"
-    },
-    {
-      "title": "The impact of an AI‐driven multimodal teaching analytics dashboard on pre‐service teachers' reflective learning in microteaching",
-      "url": "https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.70098?af=R",
-      "source": "British Journal of Educational Technology (Wiley)",
-      "published": "2026-11-07T04:51:23.000Z",
-      "score": 85,
-      "summary_en": "British Journal of Educational Technology, EarlyView.",
-      "summary_fr": "British Journal of Educational Technology, EarlyView.",
-      "resume_fr": "British Journal of Educational Technology, EarlyView.",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://www.google.com/s2/favicons?domain=bera-journals.onlinelibrary.wiley.com&sz=128"
     }
   ]
 }
