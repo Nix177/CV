@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T17:20:40.646Z",
+  "generatedAt": "2026-11-25T16:59:48.748Z",
   "model": "gpt-4o-mini",
   "profile": "balanced",
   "threshold": 65,
@@ -95,6 +95,82 @@
     }
   },
   "items": [
+    {
+      "title": "OmniAct: One Policy, One Million Embodiments",
+      "url": "https://arxiv.org/abs/2611.33158v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-24T18:59:58.000Z",
+      "score": 70,
+      "summary_en": "A single policy that controls diverse robots must not only transfer task knowledge across embodiments, but also adapt its behavior to each robot's capabilities. Existing approaches facilitate transfer through shared action representations, but these representations do not necessarily capture how differences in robot morphology should shape manipulation strategies. We introduce OmniAct, a cross-embodiment manipulation policy that conditions directly on each robot's kinematics in a specific scene to produce embodiment-specific behavior. This kinematic graph represents the robot's joint positions",
+      "summary_fr": "A single policy that controls diverse robots must not only transfer task knowledge across embodiments, but also adapt its behavior to each robot's capabilities. Existing approaches facilitate transfer through shared action representations, but these representations do not necessarily capture how differences in robot morphology should shape manipulation strategies. We introduce OmniAct, a cross-embodiment manipulation policy that conditions directly on each robot's kinematics in a specific scene to produce embodiment-specific behavior. This kinematic graph represents the robot's joint positions",
+      "resume_fr": "A single policy that controls diverse robots must not only transfer task knowledge across embodiments, but also adapt its behavior to each robot's capabilities. Existing approaches facilitate transfer through shared action representations, but these representations do not necessarily capture how differences in robot morphology should shape manipulation strategies. We introduce OmniAct, a cross-embodiment manipulation policy that conditions directly on each robot's kinematics in a specific scene to produce embodiment-specific behavior. This kinematic graph represents the robot's joint positions",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "ROAM-Bench: Evaluating Embodied Active Spatial Intelligence through Evidence Verification",
+      "url": "https://arxiv.org/abs/2611.33143v1",
+      "source": "arXiv – cs.RO (Robotics)",
+      "published": "2026-11-24T18:56:22.000Z",
+      "score": 70,
+      "summary_en": "Embodied spatial intelligence requires agents to gather information through exploration and interaction, then use it to reason and act. Existing benchmarks insufficiently distinguish correct outcomes from completion of these task requirements. We introduce ROAM-Bench to evaluate these abilities under robot motion and collision constraints. Independent checks use simulation state and episode records to assess outcomes and task requirements, with stronger checks of geometry, coverage, or placement. It comprises 250 manually validated tasks across 11 types in five groups and 27 indoor environment",
+      "summary_fr": "Embodied spatial intelligence requires agents to gather information through exploration and interaction, then use it to reason and act. Existing benchmarks insufficiently distinguish correct outcomes from completion of these task requirements. We introduce ROAM-Bench to evaluate these abilities under robot motion and collision constraints. Independent checks use simulation state and episode records to assess outcomes and task requirements, with stronger checks of geometry, coverage, or placement. It comprises 250 manually validated tasks across 11 types in five groups and 27 indoor environment",
+      "resume_fr": "Embodied spatial intelligence requires agents to gather information through exploration and interaction, then use it to reason and act. Existing benchmarks insufficiently distinguish correct outcomes from completion of these task requirements. We introduce ROAM-Bench to evaluate these abilities under robot motion and collision constraints. Independent checks use simulation state and episode records to assess outcomes and task requirements, with stronger checks of geometry, coverage, or placement. It comprises 250 manually validated tasks across 11 types in five groups and 27 indoor environment",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "iWAM: Efficient Action Prediction from World Models without Explicit Future Prediction",
+      "url": "https://arxiv.org/abs/2611.33141v1",
+      "source": "arXiv – cs.LG + learning analytics",
+      "published": "2026-11-24T18:56:04.000Z",
+      "score": 70,
+      "summary_en": "World-action models (WAMs) build policies on pretrained video-generation models, on the premise that predicting how a scene evolves helps determine how to act. However, generating future scenes is expensive for real-time control. This motivates efficient proxies for future imagination, but how to train such proxies without sacrificing action-prediction quality remains unclear. An effective proxy need not generate a high-resolution frame; it only needs to provide enough information to distinguish between possible futures. This leads to the design principle behind iWAM: rather than denoising an ",
+      "summary_fr": "World-action models (WAMs) build policies on pretrained video-generation models, on the premise that predicting how a scene evolves helps determine how to act. However, generating future scenes is expensive for real-time control. This motivates efficient proxies for future imagination, but how to train such proxies without sacrificing action-prediction quality remains unclear. An effective proxy need not generate a high-resolution frame; it only needs to provide enough information to distinguish between possible futures. This leads to the design principle behind iWAM: rather than denoising an ",
+      "resume_fr": "World-action models (WAMs) build policies on pretrained video-generation models, on the premise that predicting how a scene evolves helps determine how to act. However, generating future scenes is expensive for real-time control. This motivates efficient proxies for future imagination, but how to train such proxies without sacrificing action-prediction quality remains unclear. An effective proxy need not generate a high-resolution frame; it only needs to provide enough information to distinguish between possible futures. This leads to the design principle behind iWAM: rather than denoising an ",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 0
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
+    {
+      "title": "Found in Translation: Five Entry Points to Translate AI Literacy Frameworks in the Design of Educational Materials",
+      "url": "https://arxiv.org/abs/2611.32377v1",
+      "source": "arXiv – cs.HC + education",
+      "published": "2026-11-24T10:44:06.000Z",
+      "score": 85,
+      "summary_en": "While there is a plethora of AI literacy and informatics frameworks, in practice it is difficult for designers of educational materials and educators to decide where to start and how to use these in learning activities. At the same time, recent reviews show that despite the fact that most frameworks emphasize the socio-technical nature of AI, in practice interventions tend to center on preparing learners to use AI. To address these issues, we ask: How can multiple stakeholders negotiate and translate AI literacy framework ideas into common language that can be used to design introductory learn",
+      "summary_fr": "While there is a plethora of AI literacy and informatics frameworks, in practice it is difficult for designers of educational materials and educators to decide where to start and how to use these in learning activities. At the same time, recent reviews show that despite the fact that most frameworks emphasize the socio-technical nature of AI, in practice interventions tend to center on preparing learners to use AI. To address these issues, we ask: How can multiple stakeholders negotiate and translate AI literacy framework ideas into common language that can be used to design introductory learn",
+      "resume_fr": "While there is a plethora of AI literacy and informatics frameworks, in practice it is difficult for designers of educational materials and educators to decide where to start and how to use these in learning activities. At the same time, recent reviews show that despite the fact that most frameworks emphasize the socio-technical nature of AI, in practice interventions tend to center on preparing learners to use AI. To address these issues, we ask: How can multiple stakeholders negotiate and translate AI literacy framework ideas into common language that can be used to design introductory learn",
+      "tags": [],
+      "breakdown": {
+        "research": 35,
+        "policy": 35,
+        "institution": 0,
+        "impact": 15
+      },
+      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
+    },
     {
       "title": "Pruning Autonomous Driving VLAs: What to Preserve for Reasoning and Action",
       "url": "https://arxiv.org/abs/2611.31240v1",
@@ -1158,82 +1234,6 @@
       },
       "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=0.",
       "image": "https://www.therobotreport.com/wp-content/uploads/2026/11/memoriesai-featured.jpg"
-    },
-    {
-      "title": "The design and impacts of collaborative learning analytics dashboards: a systematic review and meta-analysis",
-      "url": "https://link.springer.com/article/10.1007/s11423-026-10729-5",
-      "source": "Educational Technology Research and Development (Springer)",
-      "published": "2026-11-11T00:00:00.000Z",
-      "score": 85,
-      "summary_en": "Collaborative learning analytics dashboards (CLADs), which present visualization-based feedback on collaborative learning processes, offer teachers and students a critical tool for data-informed reflection and decision-making. Previous reviews of learning analytics dashboards have focused on their impact on students’ performance, without specifically considering the design and effectiveness of the dashboards in collaborative learning contexts. The present study fills this gap by providing a systematic review and meta-analysis of the design, implementation, application, and effectiveness of CLA",
-      "summary_fr": "Collaborative learning analytics dashboards (CLADs), which present visualization-based feedback on collaborative learning processes, offer teachers and students a critical tool for data-informed reflection and decision-making. Previous reviews of learning analytics dashboards have focused on their impact on students’ performance, without specifically considering the design and effectiveness of the dashboards in collaborative learning contexts. The present study fills this gap by providing a systematic review and meta-analysis of the design, implementation, application, and effectiveness of CLA",
-      "resume_fr": "Collaborative learning analytics dashboards (CLADs), which present visualization-based feedback on collaborative learning processes, offer teachers and students a critical tool for data-informed reflection and decision-making. Previous reviews of learning analytics dashboards have focused on their impact on students’ performance, without specifically considering the design and effectiveness of the dashboards in collaborative learning contexts. The present study fills this gap by providing a systematic review and meta-analysis of the design, implementation, application, and effectiveness of CLA",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=15.",
-      "image": "https://media.springernature.com/m685/springer-static/image/art%3A10.1007%2Fs11423-026-10729-5/MediaObjects/11423_2026_10729_Fig1_HTML.png"
-    },
-    {
-      "title": "Classroom Technology Standardization Transforms the Faculty Experience",
-      "url": "https://edtechmagazine.com/higher/article/2026/11/classroom-technology-standardization-transforms-faculty-experience",
-      "source": "EdTech Magazine (Higher Ed)",
-      "published": "2026-11-10T19:40:35.000Z",
-      "score": 65,
-      "summary_en": "For higher education IT departments managing dozens or hundreds of classrooms, the cost of inconsistency compounds quickly in support hours, spare parts and instructor frustration. Standardization is emerging as a clear path forward to reduce this burden for all parties. In 2024, the University of Rhode Island began replacing the array of classroom audiovisual components it had purchased from multiple manufacturers with an AV over IP platform. The transition has helped make servicing — and using — classroom technology less challenging, according to Lead Information Technologist Jeffrey…",
-      "summary_fr": "For higher education IT departments managing dozens or hundreds of classrooms, the cost of inconsistency compounds quickly in support hours, spare parts and instructor frustration. Standardization is emerging as a clear path forward to reduce this burden for all parties. In 2024, the University of Rhode Island began replacing the array of classroom audiovisual components it had purchased from multiple manufacturers with an AV over IP platform. The transition has helped make servicing — and using — classroom technology less challenging, according to Lead Information Technologist Jeffrey…",
-      "resume_fr": "For higher education IT departments managing dozens or hundreds of classrooms, the cost of inconsistency compounds quickly in support hours, spare parts and instructor frustration. Standardization is emerging as a clear path forward to reduce this burden for all parties. In 2024, the University of Rhode Island began replacing the array of classroom audiovisual components it had purchased from multiple manufacturers with an AV over IP platform. The transition has helped make servicing — and using — classroom technology less challenging, according to Lead Information Technologist Jeffrey…",
-      "tags": [],
-      "breakdown": {
-        "research": 0,
-        "policy": 35,
-        "institution": 15,
-        "impact": 15
-      },
-      "reason": "Heuristique: Recherche=0, Politiques=35, Institution=15, Impact=15.",
-      "image": "https://edtechmagazine.com/higher/sites/edtechmagazine.com.higher/files/styles/cdw_hero/public/articles/%5Bcdw_tech_site%3Afield_site_shortname%5D/202611/HiEd_Q426_Brereton_hero.jpg?itok=tlrC3krn"
-    },
-    {
-      "title": "Emergent Biological Capabilities in a Foundation Model for Molecular Interactions",
-      "url": "https://arxiv.org/abs/2611.14504v1",
-      "source": "arXiv – cs.LG + learning analytics",
-      "published": "2026-11-10T18:53:01.000Z",
-      "score": 85,
-      "summary_en": "Foundation models trained on large unlabeled corpora develop emergent capabilities, tasks that go beyond the training objective. We extend this paradigm to multimodal biology with Bonbon, a foundation model for molecular interactions trained on approximately 3.2 trillion tokens of paired protein-ligand sequences. From a single representation space, Bonbon exhibits three zero-shot emergent capabilities at hierarchical levels of resolution: functional (mechanism of action), residue (binding site localization, including orthosteric/allosteric discrimination), and bond (covalent versus non-covalen",
-      "summary_fr": "Foundation models trained on large unlabeled corpora develop emergent capabilities, tasks that go beyond the training objective. We extend this paradigm to multimodal biology with Bonbon, a foundation model for molecular interactions trained on approximately 3.2 trillion tokens of paired protein-ligand sequences. From a single representation space, Bonbon exhibits three zero-shot emergent capabilities at hierarchical levels of resolution: functional (mechanism of action), residue (binding site localization, including orthosteric/allosteric discrimination), and bond (covalent versus non-covalen",
-      "resume_fr": "Foundation models trained on large unlabeled corpora develop emergent capabilities, tasks that go beyond the training objective. We extend this paradigm to multimodal biology with Bonbon, a foundation model for molecular interactions trained on approximately 3.2 trillion tokens of paired protein-ligand sequences. From a single representation space, Bonbon exhibits three zero-shot emergent capabilities at hierarchical levels of resolution: functional (mechanism of action), residue (binding site localization, including orthosteric/allosteric discrimination), and bond (covalent versus non-covalen",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 15,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=15, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
-    },
-    {
-      "title": "Comparative Analysis of Agent Evaluation Frameworks: Stability, Detection, and Discovery in Enterprise Analytics Agents",
-      "url": "https://arxiv.org/abs/2611.14493v1",
-      "source": "arXiv – cs.CL (NLP/LLM)",
-      "published": "2026-11-10T18:50:06.000Z",
-      "score": 70,
-      "summary_en": "Deploying LLM-based analytics agents in enterprise settings requires evaluation frameworks that can reliably detect failures across complex, multi-tool workflows. We present a three-phase comparative study of three evaluation frameworks, each representing a distinct evaluation paradigm (trace-based LLM judging, text-only LLM judging with red-teaming, and deterministic heuristics), applied to two analytics agents in a controlled research setting using frozen execution traces. Phase 1 quantifies evaluation harness stability through repeated measurements, finding that 97% of configurations meet t",
-      "summary_fr": "Deploying LLM-based analytics agents in enterprise settings requires evaluation frameworks that can reliably detect failures across complex, multi-tool workflows. We present a three-phase comparative study of three evaluation frameworks, each representing a distinct evaluation paradigm (trace-based LLM judging, text-only LLM judging with red-teaming, and deterministic heuristics), applied to two analytics agents in a controlled research setting using frozen execution traces. Phase 1 quantifies evaluation harness stability through repeated measurements, finding that 97% of configurations meet t",
-      "resume_fr": "Deploying LLM-based analytics agents in enterprise settings requires evaluation frameworks that can reliably detect failures across complex, multi-tool workflows. We present a three-phase comparative study of three evaluation frameworks, each representing a distinct evaluation paradigm (trace-based LLM judging, text-only LLM judging with red-teaming, and deterministic heuristics), applied to two analytics agents in a controlled research setting using frozen execution traces. Phase 1 quantifies evaluation harness stability through repeated measurements, finding that 97% of configurations meet t",
-      "tags": [],
-      "breakdown": {
-        "research": 35,
-        "policy": 35,
-        "institution": 0,
-        "impact": 0
-      },
-      "reason": "Heuristique: Recherche=35, Politiques=35, Institution=0, Impact=0.",
-      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png"
     }
   ]
 }
